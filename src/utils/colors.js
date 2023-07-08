@@ -1,0 +1,10 @@
+export const COLOR_BLUE = '#00A1E5';
+export const COLOR_WHITE = '#FFFFFF';
+export const OFF_WHITE = '#CBCBCB';
+export const COLOR_ERROR = '#FF5733';
+export const COLOR_GRAY = '#44444c';
+export const INTRO_BG_LINEARGRADIENT = ['#00A1E5', '#3A51BF'];
+export const COLOR_ORANGE = '#F18020';
+export const DISABLED_COLOR = '#373187';
+export const COLOR_BLACK = '#000000';
+export const COLOR_GRAY2 = '#D9D9D9';

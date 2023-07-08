@@ -1,0 +1,14 @@
+[
+  {
+    "label": "CGST",
+    "value": "1"
+  },
+  {
+    "label": "SGST",
+    "value": "2"
+  },
+  {
+    "label": "IGST",
+    "value": "3"
+  }
+]

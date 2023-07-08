@@ -1,0 +1,22 @@
+[
+  {
+    "label": "Household",
+    "value": "1"
+  },
+  {
+    "label": "Office",
+    "value": "2"
+  },
+  {
+    "label": "Industrial",
+    "value": "3"
+  },
+  {
+    "label": "Vehcile",
+    "value": "4"
+  },
+  {
+    "label": "Other",
+    "value": "5"
+  }
+]
