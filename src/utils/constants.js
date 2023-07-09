@@ -15,6 +15,8 @@ const AuthStackRoute = {
   ForgotPassword: 'ForgotPassword',
   Intro: 'Intro',
   Quotation: 'Quotation',// TODO: move this to respective route later
+  AddEnquiry: 'AddEnquiry',// TODO: move this to respective route later
+
 }
 const HomeStackRoute = {
   Home: 'Home',
