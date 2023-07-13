@@ -16,7 +16,9 @@ const AuthStackRoute = {
   Intro: 'Intro',
   Quotation: 'Quotation',// TODO: move this to respective route later
   AddEnquiry: 'AddEnquiry',// TODO: move this to respective route later
-
+  RegisterCompany: 'RegisterCompany',// TODO: move this to respective route later
+  AddBranch: 'AddBranch',// TODO: move this to respective route later
+  AddOrder: 'AddOrder',// TODO: move this to respective route later
 }
 const HomeStackRoute = {
   Home: 'Home',
