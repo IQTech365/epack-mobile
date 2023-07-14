@@ -15,13 +15,13 @@ const TabBar = ({state, descriptors, navigation}: any) => {
         switch (title) {
             case 'Home':
                 return <HomeIcon width={20} height={20} color="#000000" />
-            case 'Profile':
+            case 'Quotation':
                 return <ProfileIcon width={20} height={20} color="#000000" />
-            case 'Zoom':
+            case 'Enquiry':
                 return <ZoomIcon width={20} height={20} color="#000000" />
-            case 'Message':
+            case 'Order':
                 return <MessageIcon width={20} height={20} color="#000000" />
-            case 'Menu':
+            case 'Profile':
                 return <MenuIcon width={20} height={20} color="#000000" />
             default:
                 return <HomeIcon width={20} height={20} color="#000000" />
@@ -52,6 +52,7 @@ const TabBar = ({state, descriptors, navigation}: any) => {
                         accessibilityLabel={options.tabBarAccessibilityLabel}
                         testID={options.tabBarTestID}
                         onPress={onPress}
+                        key={`${index}`}
                     >
                         <View style={styles.tab} >
                             {isFocused ? <ActiveTabBackground width={50} height={50} /> : <View style={{width: 50, height: 50}} />}

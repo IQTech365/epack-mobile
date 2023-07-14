@@ -11,8 +11,6 @@ const HomePageView = (props) => {
         <View>
             <Header />
             <Text>Home</Text>
-            <HomeIcon width={200} height={200} />
-            <Lottie source={spinner} autoPlay loop style={{width: 50, height: 50}}/>
         </View>
     );
 }

@@ -24,19 +24,19 @@ const HomeStackRoute = {
   Home: 'Home',
 };
 
-const ProfileStackRoute = {
+const QuotationStackRoute = {
   Profile: 'Profile',
 };
 
-const MessageStackRoute = {
+const OrderStackRoute = {
   Message: 'Message',
 };
 
-const ZoomStackRoute = {
+const EnquiryStackRoute = {
   Zoom: 'Zoom',
 };
 
-const MenuStackRoute = {
+const ProfileStackRoute = {
   Menu: 'Menu',
 };
 
@@ -44,8 +44,8 @@ export {
   TabRoute,
   AuthStackRoute,
   HomeStackRoute,
+  QuotationStackRoute,
+  OrderStackRoute,
+  EnquiryStackRoute,
   ProfileStackRoute,
-  MessageStackRoute,
-  ZoomStackRoute,
-  MenuStackRoute,
 };
