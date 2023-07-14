@@ -5,7 +5,7 @@ import SignInPageView from "../views/signin";
 import SignUpPageView from "../views/signup";
 import ForgotPasswordPageView from "../views/forgotPassword";
 import IntroPageView from "../views/intro";
-import QuotationView from "../views/quotation";
+import QuotationView from "../views/quotation/addQuotation";
 import AddEnquiryView from "../views/enquiry/addEnquiry";
 import RegisterCompanyView from "../views/company/registerCompany";
 import AddBranchView from "../views/company/addBranch";

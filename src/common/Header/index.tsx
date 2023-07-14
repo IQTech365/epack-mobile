@@ -12,8 +12,7 @@ interface IHeaderProps {
   hasMoreOptions?: boolean;
 }
 
-const Header = (props: any) => {
-  const {onBack, canGoBack, hasMoreOptions, onMorePress, label} = props || {};
+const Header:React.FC<IHeaderProps> = ({onBackPress, canGoBack, hasMoreOptions, onMorePress, label}) => {
 
   return (
     <View style={styles.container}>
