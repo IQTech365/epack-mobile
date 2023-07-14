@@ -37,7 +37,8 @@ const EnquiryStackRoute = {
 };
 
 const ProfileStackRoute = {
-  Menu: 'Menu',
+  ProfileRoot: 'ProfileRoot',
+  Language: 'Language',
 };
 
 export {
