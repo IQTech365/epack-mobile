@@ -23,15 +23,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     logo: {
-        width: 54,
-        height: 38,
+        width: 24,
+        height: 24,
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: 5,
+        borderRadius: 12,
     },
     icon: {
-        width: 30,
-        height: 30,
+        width: 24,
+        height: 24,
         borderRadius: 15,
         alignItems: 'center',
         justifyContent: 'center'

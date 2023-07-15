@@ -54,7 +54,7 @@ const AddEnquiryView: React.FC<{}> = ({}) => {
   return (
     <AvoidSoftInputViewHOC>
       <View style={styles.container}>
-        <Header label="ADD ENQUIRY" />
+        <Header label="ADD ENQUIRY" canGoBack={true} />
         <Spacer height={4} />
         <CollapsibleView title="GENERAL INFO" collapsed={false}>
           <View>

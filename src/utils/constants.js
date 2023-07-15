@@ -25,7 +25,8 @@ const HomeStackRoute = {
 };
 
 const QuotationStackRoute = {
-  Profile: 'Profile',
+  QuotationRoot: 'QuotationRoot',
+  AddQuotation: 'AddQuotation'
 };
 
 const OrderStackRoute = {
@@ -33,7 +34,8 @@ const OrderStackRoute = {
 };
 
 const EnquiryStackRoute = {
-  Zoom: 'Zoom',
+  EnquiryRoot: 'EnquiryRoot',
+  AddEnquiry: 'AddEnquiry',
 };
 
 const ProfileStackRoute = {
