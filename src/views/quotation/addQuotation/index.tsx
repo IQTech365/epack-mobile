@@ -143,9 +143,11 @@ const requiredptions: Array<ICheckboxButton> = [
   },
 ];
 
-interface IAddQuotationProps {}
+interface IAddQuotationProps {
+  showHeader?: boolean;
+}
 
-const AddQuotationView: React.FC<IAddQuotationProps> = ({}) => {
+const AddQuotationView: React.FC<IAddQuotationProps> = ({showHeader = true}) => {
   const [switchState, setSwitchState] = useState<boolean>(false);
   const [state, dispatch] = useReducer(quotationReducer, initialState);
   // console.log('quotation-form-state----', JSON.stringify(state));
@@ -242,7 +244,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({}) => {
   return (
     <AvoidSoftInputViewHOC>
       <View style={styles.container}>
-        <Header label="CREATE QUOTATION" canGoBack={true} />
+        {showHeader ? <Header label="CREATE QUOTATION" canGoBack={true} /> : null}
         <Spacer height={4} />
         <CollapsibleView title="BASIC DETAILS" collapsed={true}>
           <View>

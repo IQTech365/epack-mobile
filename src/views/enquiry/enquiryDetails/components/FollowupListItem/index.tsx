@@ -1,0 +1,41 @@
+import React from 'react';
+import {View, Text} from 'react-native';
+import Spacer from '../../../../../common/Spacer';
+import styles from './style';
+import ClockIcon from '../../../../../images/icons/clock.svg';
+import UserIcon from '../../../../../images/icons/user.svg';
+
+interface IFollowupListItemProps {}
+
+const FollowupListItem: React.FC<IFollowupListItemProps> = ({}) => {
+  return (
+    <>
+      <View style={styles.container}>
+        <View style={styles.avatarContainer}>
+          <View style={styles.avatar}>
+            <UserIcon width={22} height={22} />
+          </View>
+        </View>
+        <View style={styles.rightContentContainer}>
+          <View style={styles.contentContainer}>
+            <Text style={styles.contentLabelText}>
+              Enquiry Manager - <Text style={styles.nameText}>Ramesh</Text>
+            </Text>
+            <Spacer width={4} />
+            <ClockIcon width={22} height={22} />
+            <Spacer width={4} />
+            <Text style={styles.contentLabelText}>20th Nov</Text>
+          </View>
+          <View style={styles.contentContainer}>
+            <Text style={styles.contentLabelText}>
+              Need to talk on 20th Nov in the morning around 10:00 am
+            </Text>
+          </View>
+        </View>
+      </View>
+      <Spacer height={6} />
+    </>
+  );
+};
+
+export default FollowupListItem;

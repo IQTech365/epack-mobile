@@ -36,6 +36,7 @@ const OrderStackRoute = {
 const EnquiryStackRoute = {
   EnquiryRoot: 'EnquiryRoot',
   AddEnquiry: 'AddEnquiry',
+  EnquiryDetails: 'EnquiryDetails',
 };
 
 const ProfileStackRoute = {

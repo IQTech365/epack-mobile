@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
     container: {
         width: width,
         flexDirection: 'row',
-        paddingVertical: 8,
+        paddingVertical: 12,
         paddingHorizontal: 8,
         backgroundColor: COLOR_BLUE,
         justifyContent: 'space-between',
@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 12,
+        marginRight: 10,
     },
     icon: {
         width: 24,

@@ -28,6 +28,10 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
     navigation.navigate(EnquiryStackRoute.AddEnquiry);
   };
 
+  const handleEnquiryDetailsClick = () => {
+    navigation.navigate(EnquiryStackRoute.EnquiryDetails);
+  }
+
   return (
     <View style={styles.container}>
       <Header label="Enquiry Management"/>
@@ -38,7 +42,7 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
         onPress={handleAddNew}
       />
       <Spacer height={12} />
-      <EnquiryListItem item={tempItem} index={1} onPress={() => {}} />
+      <EnquiryListItem item={tempItem} index={1} onPress={handleEnquiryDetailsClick} />
     </View>
   );
 };
