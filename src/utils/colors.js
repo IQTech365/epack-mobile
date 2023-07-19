@@ -9,3 +9,4 @@ export const COLOR_ORANGE = '#F18020';
 export const DISABLED_COLOR = '#373187';
 export const COLOR_BLACK = '#000000';
 export const COLOR_GRAY2 = '#D9D9D9';
+export const COLOR_GRAY3 = '#F9F9F9'

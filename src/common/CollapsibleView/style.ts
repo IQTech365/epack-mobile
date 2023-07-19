@@ -29,9 +29,9 @@ const style = StyleSheet.create<IContactDetailsStyle>({
     alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'row',
-    backgroundColor: COLOR_GRAY2,
+    // backgroundColor: COLOR_GRAY2,
     alignSelf: 'center',
-    paddingVertical: 16,
+    paddingVertical: 12,
     paddingHorizontal: 12,
   },
   headerText: {

@@ -9,6 +9,8 @@ import Tab from '../../../common/Tab';
 import AddQuotationView from '../../quotation/addQuotation';
 import FollowupListHeaderComponent from './components/FollowupListHeaderComponent';
 import FollowupView from './components/FollowupView';
+import SurveyView from './components/FollowupView';
+import DetailsView from './components/DetailsView';
 
 const EnquiryDetailsView: React.FC<{}> = ({}) => {
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
@@ -20,11 +22,11 @@ const EnquiryDetailsView: React.FC<{}> = ({}) => {
   const showTabItem = () => {
     switch (activeTabIndex) {
       case 0:
-        break;
+        return <DetailsView />
       case 1:
         return <FollowupView />
       case 2:
-        return <FollowupView />
+        return <SurveyView />
       case 3:
         return <AddQuotationView showHeader={false} />
       default:
