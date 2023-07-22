@@ -30,7 +30,9 @@ const QuotationStackRoute = {
 };
 
 const OrderStackRoute = {
-  Message: 'Message',
+  OrderRoot: 'Message',
+  AddOrder: 'AddOrder',
+  OrderDetails: 'OrderDetails',
 };
 
 const EnquiryStackRoute = {

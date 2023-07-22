@@ -62,7 +62,7 @@ const AddOrderView: React.FC<{}> = ({}) => {
   return (
     <AvoidSoftInputViewHOC>
       <View style={styles.container}>
-        <Header label="ADD ORDER" />
+        <Header label="ADD ORDER" canGoBack={true} />
         <Spacer height={4} />
         <CollapsibleView title="GENERAL INFO" collapsed={false}>
           <View>
