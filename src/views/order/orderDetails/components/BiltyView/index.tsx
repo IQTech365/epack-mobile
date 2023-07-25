@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text} from 'react-native';
+import {View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
 import DatePickerComponent from '../../../../../common/DatePickerComponent';
@@ -12,8 +12,6 @@ import {COLOR_BLACK, COLOR_BLUE} from '../../../../../utils/colors';
 import styles from './style';
 import shiftingLuggages from '../../../../../data/shiftingLuggage.json';
 import {Switch} from 'react-native-switch';
-import AccessoryView from '../AccessoryView';
-import accessories from '../../../../../data/accessories.json';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import BouncyCheckboxGroup, {
   ICheckboxButton,

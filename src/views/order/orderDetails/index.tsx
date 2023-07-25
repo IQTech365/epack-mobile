@@ -11,6 +11,7 @@ import DetailsView from './components/DetailsView';
 import MoneyReceiptView from './components/MoneyReceiptView';
 import CarConditionView from './components/CarConditionView';
 import BiltyView from './components/BiltyView';
+import InvoiceView from './components/InvoiceView';
 // import AddQuotationView from '../../quotation/addQuotation';
 // import FollowupListHeaderComponent from './components/FollowupListHeaderComponent';
 // import FollowupView from './components/FollowupView';
@@ -34,8 +35,8 @@ const OrderDetailsView: React.FC<{}> = ({}) => {
         return <CarConditionView />
       case 3:
         return <BiltyView />
-      // case 4:
-      //   return <BiltyView />
+      case 4:
+        return <InvoiceView />
       default:
         return null;
     }
