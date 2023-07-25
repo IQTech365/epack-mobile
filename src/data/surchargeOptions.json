@@ -1,10 +1,10 @@
 [
   {
-    "label": "Applicable",
+    "label": "Not Applicable",
     "value": "1"
   },
   {
-    "label": "Not Applicable",
+    "label": "Applicable",
     "value": "2"
   }
 ]

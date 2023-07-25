@@ -30,16 +30,18 @@ import gstPercentOptions from '../../../data/gstPercentOptions.json';
 import gstTypeOptions from '../../../data/gstTypeOptions.json';
 import insurancePercentOptions from '../../../data/insurancePercentOptions.json';
 import otherChargeOptions from '../../../data/otherChargeOptions.json';
-import { PincodeService } from '../../../service/PincodeService';
-import { PINCODE } from '../../../http/Endpoint';
+import {PincodeService} from '../../../service/PincodeService';
+import {PINCODE} from '../../../http/Endpoint';
+import loaryTypeOptions from '../../../data/loryTypeOptions.json';
+import surchargePercentOptions from '../../../data/surchargePercentOptions.json';
 
 const loadTypes: Array<ICheckboxButton> = [
   {
     id: '1',
     text: 'Part Load',
     fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', borderRadius: 0},
-    innerIconStyle: {borderWidth: 2, borderRadius: 0},
+    iconStyle: {borderColor: 'red', borderRadius: 0, width: 16, height: 16},
+    innerIconStyle: {borderWidth: 1, borderRadius: 0, width: 16, height: 16},
     textStyle: {fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none'},
     style: {paddingRight: 16},
   },
@@ -47,8 +49,8 @@ const loadTypes: Array<ICheckboxButton> = [
     id: '2',
     text: 'Full Load',
     fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', borderRadius: 0},
-    innerIconStyle: {borderWidth: 2, borderRadius: 0},
+    iconStyle: {borderColor: 'red', borderRadius: 0, width: 16, height: 16},
+    innerIconStyle: {borderWidth: 1, borderRadius: 0, width: 16, height: 16},
     textStyle: {fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none'},
   },
 ];
@@ -56,24 +58,44 @@ const loadTypes: Array<ICheckboxButton> = [
 const freightChargeOptions: Array<ICheckboxButton> = [
   {
     id: '1',
-    text: 'Included in freight',
+    text: 'Included',
     fillColor: COLOR_BLUE,
+    iconStyle: {borderColor: 'red', width: 16, height: 16},
+    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
     textStyle: {
       fontFamily: 'JosefinSans-Regular',
       textDecorationLine: 'none',
       fontSize: 14,
     },
-    style: {paddingRight: 8},
+    textContainerStyle: {marginLeft: 4, marginRight: 4},
+    style: {paddingRight: 10},
   },
   {
     id: '2',
-    text: 'Additional from freight',
+    text: 'Additional',
     fillColor: COLOR_BLUE,
+    iconStyle: {borderColor: 'red', width: 16, height: 16},
+    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
     textStyle: {
       fontFamily: 'JosefinSans-Regular',
       textDecorationLine: 'none',
       fontSize: 14,
     },
+    textContainerStyle: {marginLeft: 4, marginRight: 4},
+    style: {paddingRight: 10},
+  },
+  {
+    id: '3',
+    text: 'Not Required',
+    fillColor: COLOR_BLUE,
+    iconStyle: {borderColor: 'red', width: 16, height: 16},
+    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
+    textStyle: {
+      fontFamily: 'JosefinSans-Regular',
+      textDecorationLine: 'none',
+      fontSize: 14,
+    },
+    textContainerStyle: {marginLeft: 4, marginRight: 4},
   },
 ];
 
@@ -87,9 +109,10 @@ const GSTOptions: Array<ICheckboxButton> = [
       textDecorationLine: 'none',
       fontSize: 14,
     },
-    iconStyle: {borderColor: 'red', borderRadius: 0},
-    innerIconStyle: {borderWidth: 2, borderRadius: 0},
+    iconStyle: {borderColor: 'red', width: 16, height: 16},
+    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
     textContainerStyle: {marginLeft: 4, marginRight: 4},
+    style: {paddingRight: 16},
   },
   {
     id: '2',
@@ -100,9 +123,10 @@ const GSTOptions: Array<ICheckboxButton> = [
       textDecorationLine: 'none',
       fontSize: 14,
     },
-    iconStyle: {borderColor: 'red', borderRadius: 0},
-    innerIconStyle: {borderWidth: 2, borderRadius: 0},
+    iconStyle: {borderColor: 'red', width: 16, height: 16},
+    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
     textContainerStyle: {marginLeft: 4, marginRight: 4},
+    style: {paddingRight: 16},
   },
   {
     id: '3',
@@ -113,8 +137,8 @@ const GSTOptions: Array<ICheckboxButton> = [
       textDecorationLine: 'none',
       fontSize: 14,
     },
-    iconStyle: {borderColor: 'red', borderRadius: 0},
-    innerIconStyle: {borderWidth: 2, borderRadius: 0},
+    iconStyle: {borderColor: 'red', width: 16, height: 16},
+    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
     textContainerStyle: {marginLeft: 4, marginRight: 4},
   },
 ];
@@ -124,22 +148,28 @@ const requiredptions: Array<ICheckboxButton> = [
     id: '1',
     text: 'Required',
     fillColor: COLOR_BLUE,
+    iconStyle: {borderColor: 'red', width: 16, height: 16},
+    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
     textStyle: {
       fontFamily: 'JosefinSans-Regular',
       textDecorationLine: 'none',
       fontSize: 14,
     },
     style: {paddingRight: 8},
+    textContainerStyle: {marginLeft: 4, marginRight: 4},
   },
   {
     id: '2',
     text: 'Not Required',
     fillColor: COLOR_BLUE,
+    iconStyle: {borderColor: 'red', width: 16, height: 16},
+    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
     textStyle: {
       fontFamily: 'JosefinSans-Regular',
       textDecorationLine: 'none',
       fontSize: 14,
     },
+    textContainerStyle: {marginLeft: 4, marginRight: 4},
   },
 ];
 
@@ -147,9 +177,13 @@ interface IAddQuotationProps {
   showHeader?: boolean;
 }
 
-const AddQuotationView: React.FC<IAddQuotationProps> = ({showHeader = true}) => {
+const AddQuotationView: React.FC<IAddQuotationProps> = ({
+  showHeader = true,
+}) => {
   const [switchState, setSwitchState] = useState<boolean>(false);
   const [state, dispatch] = useReducer(quotationReducer, initialState);
+  const [isFullLoad, setIsFullLoad] = useState<boolean>(false);
+  const [isSurchargeApplicable, setIsSurchargeApplicable] = useState<boolean>(false);
   // console.log('quotation-form-state----', JSON.stringify(state));
 
   const switchWrapperStyle = switchState
@@ -232,11 +266,48 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({showHeader = true}) => 
     } catch (error) {
       console.log('error----', error);
     }
-  }
+  };
+
+  const handleFullLoad = useCallback(
+    (selectedItem: ICheckboxButton) => {
+      if (selectedItem.id == 2) {
+        setIsFullLoad(true);
+      } else {
+        setIsFullLoad(false);
+      }
+    },
+    [isFullLoad],
+  );
+
+  const handleSurcharge = useCallback((item: TDropdownItem) => {
+    if(item.value == '1') {
+      setIsSurchargeApplicable(false);
+    } else {
+      setIsSurchargeApplicable(true);
+    }
+  }, [isSurchargeApplicable]);
+
+  const renderLoryTypeView = () => {
+    if (isFullLoad) {
+      return (
+        <>
+          <Spacer height={4} />
+          <View style={styles.textContainer2}>
+            <Label text="Lory Type" style={styles.label} />
+            <DropdownComponent
+              data={loaryTypeOptions}
+              onSelect={handleShiftingType}
+            />
+          </View>
+        </>
+      );
+    }
+    return null;
+  };
 
   /** Effects */
   useEffect(() => {
-    if(state.pickupPincode && state.pickupPincode.length >= 6) {
+    if (state.pickupPincode && state.pickupPincode.length >= 6) {
       getAddressByPincode();
     }
   }, [state.pickupPincode]);
@@ -244,9 +315,11 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({showHeader = true}) => 
   return (
     <AvoidSoftInputViewHOC>
       <View style={styles.container}>
-        {showHeader ? <Header label="CREATE QUOTATION" canGoBack={true} /> : null}
+        {showHeader ? (
+          <Header label="CREATE QUOTATION" canGoBack={true} />
+        ) : null}
         <Spacer height={4} />
-        <CollapsibleView title="BASIC DETAILS" collapsed={true}>
+        <CollapsibleView title="BASIC DETAILS" collapsed={false}>
           <View>
             <View style={styles.mainWrapper}>
               <View style={styles.textContainer}>
@@ -263,7 +336,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({showHeader = true}) => 
             </View>
             <Spacer height={4} />
             <View style={styles.labelContainer}>
-              <Label text="Serial No." style={styles.label} />
+              <Label text="Quotation No." style={styles.label} />
             </View>
             <View style={[styles.mainWrapper, styles.switchMainWrapper3]}>
               <View style={[styles.textContainer, {alignItems: 'center'}]}>
@@ -300,12 +373,12 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({showHeader = true}) => 
             </View>
             <Spacer height={4} />
             <View style={styles.textContainer2}>
-              <Label text="Template" style={styles.label} />
+              <Label text="Quotation Design" style={styles.label} />
               <DropdownComponent data={templates} onSelect={handleTemplate} />
             </View>
             <Spacer height={4} />
             <View style={styles.textContainer2}>
-              <Label text="Company Name" style={styles.label} />
+              <Label text="Party Company Name" style={styles.label} />
               <Input
                 onChangeText={handleCompanyNameInputTextChange}
                 containerStyle={styles.inputContainer}
@@ -440,9 +513,11 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({showHeader = true}) => 
                 data={loadTypes}
                 onChange={(selectedItem: ICheckboxButton) => {
                   console.log('SelectedItem: ', JSON.stringify(selectedItem));
+                  handleFullLoad(selectedItem);
                 }}
               />
             </View>
+            {renderLoryTypeView()}
             <Spacer height={4} />
             <View style={styles.mainWrapper}>
               <View style={styles.textContainer}>
@@ -610,16 +685,14 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({showHeader = true}) => 
               <View style={styles.textContainer}>
                 <DropdownComponent
                   data={surchargeOptions}
-                  onSelect={handleShiftingType}
+                  onSelect={handleSurcharge}
                 />
               </View>
               <View style={styles.textContainer}>
-                <Input
-                  onChangeText={() => {}}
-                  containerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
-                  selectionColor={COLOR_BLACK}
-                  inputType="numeric"
+                <DropdownComponent
+                  data={surchargePercentOptions}
+                  onSelect={handleShiftingType}
+                  disable={!isSurchargeApplicable}
                 />
               </View>
             </View>
@@ -656,7 +729,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({showHeader = true}) => 
           </View>
         </CollapsibleView>
         <Spacer height={4} />
-        <CollapsibleView title="TRANSIT CHARGES" collapsed={true}>
+        <CollapsibleView title="INSURANCE DETAILS" collapsed={true}>
           <View>
             <Spacer height={8} />
             <View style={styles.textContainer2}>

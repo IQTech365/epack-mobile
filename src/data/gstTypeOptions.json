@@ -1,14 +1,10 @@
 [
   {
-    "label": "CGST",
+    "label": "CGST/SGST",
     "value": "1"
   },
   {
-    "label": "SGST",
-    "value": "2"
-  },
-  {
     "label": "IGST",
-    "value": "3"
+    "value": "2"
   }
 ]

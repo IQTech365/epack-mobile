@@ -18,6 +18,7 @@ const CollapsibleView: React.FC<IContactDetailsVProps> = ({children, title, coll
   const toggleCollapse = useCallback(() => {
     setIsCollapsed(!isCollapsed);
   }, [isCollapsed]);
+  
   const bottomPaddingStyle = isCollapsed ? {paddingBottom: 0} : {paddingBottom: 15};
   const headerStyle = isCollapsed ? {borderBottomStartRadius: 5, borderBottomEndRadius: 5,} : {borderBottomStartRadius: 0, borderBottomEndRadius: 0,};
   return (
