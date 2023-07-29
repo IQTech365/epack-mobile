@@ -1,17 +1,12 @@
 import React from "react";
 import {View, Text, TouchableOpacity} from 'react-native';
 import styles from "./style";
-import ProfileIcon from '../../images/icons/user.svg';
-import ZoomIcon from '../../images/icons/zoom.svg';
-import MessageIcon from '../../images/icons/message.svg';
-import MenuIcon from '../../images/icons/menu.svg';
-import ActiveTabBackground from '../../images/icons/active-tab-background.svg';
-import DashboardWhiteIcon from '../../images/icons/dashboard-white.svg';
-import DashboardBlackIcon from '../../images/icons/dashboard-black.svg';
+import DashboardWhiteIcon from '../../images/icons/home.svg';
+import DashboardBlackIcon from '../../images/icons/home2.svg';
 import QuotationBlackIcon from '../../images/icons/quotation-black.svg';
 import QuotationWhiteIcon from '../../images/icons/quotation-white.svg';
-import EnquiryBlackIcon from '../../images/icons/quotation-black.svg';
-import EnquiryWhiteIcon from '../../images/icons/quotation-white.svg';
+import HelpBlackIcon from '../../images/icons/help-black.svg';
+import HelpWhiteIcon from '../../images/icons/help-white.svg';
 import OrderBlackIcon from '../../images/icons/order-black.svg';
 import OrderWhiteIcon from '../../images/icons/order-white.svg';
 import ClientWhiteIcon from '../../images/icons/clients-white.svg';
@@ -27,7 +22,7 @@ const TabBar = ({state, descriptors, navigation}: any) => {
             case 'Quotation':
                 return isFocused ? <QuotationBlackIcon width={24} height={24} /> : <QuotationWhiteIcon width={24} height={24} />
             case 'Enquiry':
-                return <ZoomIcon width={20} height={20} color="#000000" />
+                return isFocused ? <HelpBlackIcon width={24} height={24} /> : <HelpWhiteIcon width={24} height={24} />
             case 'Order':
                 return isFocused ? <OrderBlackIcon width={24} height={24} /> : <OrderWhiteIcon width={24} height={24} />
             case 'Clients':

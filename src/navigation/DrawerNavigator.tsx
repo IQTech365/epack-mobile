@@ -19,6 +19,7 @@ import HeaderGridBackgroundImage from '../images/header-grid.png';
 import Spacer from '../common/Spacer';
 import HomeIcon from '../images/icons/home2.svg';
 import ProfileIcon from '../images/icons/user3.svg';
+import HelpIcon from '../images/icons/help-black.svg';
 import SubscriptionView from '../views/subscription';
 import HelpCenterView from '../views/helpCenter';
 import NewsRoomView from '../views/newsRoom';
@@ -96,7 +97,7 @@ export const DrawerNavigator = () => {
         name="Help Center"
         component={HelpCenterView}
         options={{
-          drawerIcon: () => <ProfileIcon width={24} height={24} />,
+          drawerIcon: () => <HelpIcon width={22} height={22} />,
         }}
       />
        <Drawer.Screen
