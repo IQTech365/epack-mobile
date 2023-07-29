@@ -1,23 +1,21 @@
-import {useDrawerStatus} from '@react-navigation/drawer';
 import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {View, TouchableOpacity, Text} from 'react-native';
 import ArrowLeftIcon from '../../images/icons/arrow-left.svg';
 import HamburgerIcon from '../../images/icons/hamburger.svg';
-import MoreIcon from '../../images/icons/more-vertical.svg';
+import BellIcon from '../../images/icons/bell.svg';
+import Spacer from '../Spacer';
 import styles from './styles';
 
 interface IHeaderProps {
   label?: string;
   onMorePress?: () => void;
   canGoBack?: boolean;
-  hasMoreOptions?: boolean;
   showDrawerIcon?: boolean;
 }
 
 const Header: React.FC<IHeaderProps> = ({
   canGoBack,
-  hasMoreOptions,
   onMorePress,
   label,
   showDrawerIcon = false,
@@ -32,6 +30,11 @@ const Header: React.FC<IHeaderProps> = ({
       navigation.goBack();
     }
   };
+
+  const handleProfileClick = () => {
+    //@ts-ignore
+    navigation.navigate("Profile");
+  }
   return (
     <View style={styles.container}>
       <View style={styles.leftContainer}>
@@ -47,8 +50,14 @@ const Header: React.FC<IHeaderProps> = ({
         <Text style={styles.text}>{label}</Text>
       </View>
       <View style={styles.actionContainer}>
+        <TouchableOpacity activeOpacity={0.6} onPress={handleProfileClick}>
+          <View style={styles.avtarContainer}>
+            <View style={styles.avatar} />
+          </View>
+        </TouchableOpacity>
+        <Spacer width={15} />
         <TouchableOpacity style={styles.icon} onPress={onMorePress}>
-          <MoreIcon />
+          <BellIcon />
         </TouchableOpacity>
       </View>
     </View>

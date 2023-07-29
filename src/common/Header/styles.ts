@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import { COLOR_BLUE, COLOR_WHITE } from '../../utils/colors';
+import { COLOR_BLUE, COLOR_GRAY, COLOR_WHITE } from '../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -44,6 +44,20 @@ const styles = StyleSheet.create({
     text: {
         color: COLOR_WHITE,
         fontSize: 16,
+    },
+    avtarContainer: {
+        width: 30,
+        height: 30,
+        borderRadius: 15,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: COLOR_WHITE,
+    },
+    avatar: {
+        width: 28,
+        height: 28,
+        backgroundColor: COLOR_GRAY,
+        borderRadius: 14,
     }
 });
 
