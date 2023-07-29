@@ -1,5 +1,11 @@
 import React from 'react';
-import {View, Text, StyleSheet, ImageBackground} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ImageBackground,
+  TouchableOpacity,
+} from 'react-native';
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
@@ -20,6 +26,10 @@ import Spacer from '../common/Spacer';
 import HomeIcon from '../images/icons/home2.svg';
 import ProfileIcon from '../images/icons/user3.svg';
 import HelpIcon from '../images/icons/help-black.svg';
+import SettingsIcon from '../images/icons/settings.svg';
+import SubscriptionIcon from '../images/icons/subscription.svg';
+import NewsRoomIcon from '../images/icons/newsroom.svg';
+import LogoutIcon from '../images/icons/logout.svg';
 import SubscriptionView from '../views/subscription';
 import HelpCenterView from '../views/helpCenter';
 import NewsRoomView from '../views/newsRoom';
@@ -58,7 +68,10 @@ const DrawerContent = (props: any) => {
         </View>
       </DrawerContentScrollView>
       <View style={styles.bottomContainer}>
-        <Text>Logout</Text>
+        <LogoutIcon width={24} height={24} />
+        <TouchableOpacity activeOpacity={0.6}>
+          <Text style={styles.logoutText}>Logout</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -90,28 +103,28 @@ export const DrawerNavigator = () => {
         component={SubscriptionView}
         options={{
           title: 'Subscription',
-          drawerIcon: () => <ProfileIcon width={24} height={24} />,
+          drawerIcon: () => <SubscriptionIcon width={24} height={24} />,
         }}
       />
-       <Drawer.Screen
+      <Drawer.Screen
         name="Help Center"
         component={HelpCenterView}
         options={{
           drawerIcon: () => <HelpIcon width={22} height={22} />,
         }}
       />
-       <Drawer.Screen
+      <Drawer.Screen
         name="News Room"
         component={NewsRoomView}
         options={{
-          drawerIcon: () => <ProfileIcon width={24} height={24} />,
+          drawerIcon: () => <NewsRoomIcon width={24} height={24} />,
         }}
       />
       <Drawer.Screen
         name="Settings"
         component={SettingsView}
         options={{
-          drawerIcon: () => <ProfileIcon width={24} height={24} />,
+          drawerIcon: () => <SettingsIcon width={24} height={24} />,
         }}
       />
     </Drawer.Navigator>
@@ -140,17 +153,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   avatarContainer: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: 90,
+    height: 90,
+    borderRadius: 45,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: COLOR_WHITE,
   },
   avatar: {
-    width: 98,
-    height: 98,
-    borderRadius: 49,
+    width: 88,
+    height: 88,
+    borderRadius: 44,
     backgroundColor: COLOR_GRAY,
   },
   nameText: {
@@ -166,5 +179,14 @@ const styles = StyleSheet.create({
     padding: 20,
     borderTopWidth: 1,
     borderTopColor: COLOR_GRAY2,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  logoutText: {
+    fontSize: 14,
+    color: COLOR_GRAY,
+    marginLeft: 10,
+    fontWeight: '500',
   },
 });
