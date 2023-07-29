@@ -13,6 +13,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLOR_WHITE,
   },
+  mainWrapper: {
+    width: width * 0.9,
+    alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   elementContainer: {
     width: width * 0.9,
     justifyContent: 'center',

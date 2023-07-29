@@ -16,6 +16,7 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import BouncyCheckboxGroup, {
   ICheckboxButton,
 } from 'react-native-bouncy-checkbox-group';
+import vehicleTypeOptions from '../../../../../data/vehicleTypeOptions.json';
 
 const riskTypeOptions: Array<ICheckboxButton> = [
   {
@@ -141,17 +142,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
           />
         </View>
         <Spacer height={4} />
-        <View style={styles.elementContainer}>
-          <View style={styles.itemContainer}>
-            <Label text="Landmark" style={styles.label} />
-            <Input
-              onChangeText={handleReceiptNoInputTextChange}
-              containerStyle={styles.inputContainer}
-              inputStyle={styles.input}
-              selectionColor={COLOR_BLACK}
-            />
-          </View>
-          <View style={styles.itemContainer}>
+        <View style={styles.elementContainer2}>
             <Label text="Pincode" style={styles.label} />
             <Input
               onChangeText={handleReceiptNoInputTextChange}
@@ -159,7 +150,6 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
             />
-          </View>
         </View>
         <Spacer height={4} />
         <View style={styles.elementContainer}>
@@ -265,7 +255,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
             </View>
             <View style={styles.elementContainer}>
               <View style={styles.itemContainer}>
-                <Label text="Choose Template" style={styles.label} />
+                <Label text="Choose Designs" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
                   onSelect={handleTemplate}
@@ -323,17 +313,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
               />
             </View>
             <Spacer height={4} />
-            <View style={styles.elementContainer}>
-              <View style={styles.itemContainer}>
-                <Label text="Landmark" style={styles.label} />
-                <Input
-                  onChangeText={handleReceiptNoInputTextChange}
-                  containerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
-                  selectionColor={COLOR_BLACK}
-                />
-              </View>
-              <View style={styles.itemContainer}>
+            <View style={styles.elementContainer2}>
                 <Label text="Pincode" style={styles.label} />
                 <Input
                   onChangeText={handleReceiptNoInputTextChange}
@@ -341,7 +321,6 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
                 />
-              </View>
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
@@ -443,17 +422,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
               />
             </View>
             <Spacer height={4} />
-            <View style={styles.elementContainer}>
-              <View style={styles.itemContainer}>
-                <Label text="Landmark" style={styles.label} />
-                <Input
-                  onChangeText={handleReceiptNoInputTextChange}
-                  containerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
-                  selectionColor={COLOR_BLACK}
-                />
-              </View>
-              <View style={styles.itemContainer}>
+            <View style={styles.elementContainer2}>
                 <Label text="Pincode" style={styles.label} />
                 <Input
                   onChangeText={handleReceiptNoInputTextChange}
@@ -461,7 +430,6 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
                 />
-              </View>
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
@@ -536,7 +504,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
               <View style={styles.itemContainer}>
                 <Label text="Vehicle Type" style={styles.label} />
                 <DropdownComponent
-                  data={shiftingLuggages}
+                  data={vehicleTypeOptions}
                   onSelect={handleTemplate}
                 />
               </View>

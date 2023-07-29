@@ -9,12 +9,14 @@ import Label from '../../../common/Label';
 import DropdownComponent from '../../../common/DropdownComponent';
 import Header from '../../../common/Header';
 import Input from '../../../common/Input';
-import {COLOR_BLACK} from '../../../utils/colors';
+import {COLOR_BLACK, COLOR_BLUE} from '../../../utils/colors';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import CollapsibleView from '../../../common/CollapsibleView';
 import shiftingTypes from '../../../data/shiftingType.json';
 import Button from '../../../common/Button';
 import DatePickerComponent from '../../../common/DatePickerComponent';
+import liftStatusOptions from '../../../data/liftStatusOptions.json';
+import floorOptions from '../../../data/floorOptions.json';
 
 const AddOrderView: React.FC<{}> = ({}) => {
   const state = {pickupPincode: '', deliveryPincode: ''};
@@ -66,12 +68,18 @@ const AddOrderView: React.FC<{}> = ({}) => {
         <Spacer height={4} />
         <CollapsibleView title="GENERAL INFO" collapsed={false}>
           <View>
-            <View style={styles.elementContainer}>
-              <Label text="Shifting Type" style={styles.label} />
-              <DropdownComponent
-                data={shiftingTypeOptions}
-                onSelect={handleShiftingType}
-              />
+            <View style={styles.mainWrapper}>
+              <View style={styles.textContainer}>
+                <Label text="Shifting Type" style={styles.label} />
+                <DropdownComponent
+                  data={shiftingTypeOptions}
+                  onSelect={handleShiftingType}
+                />
+              </View>
+              <View style={styles.textContainer}>
+                <Label text="Date of Moving" style={styles.label} />
+                <DatePickerComponent onDateSelect={handleQuotationDate} />
+              </View>
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
@@ -95,17 +103,7 @@ const AddOrderView: React.FC<{}> = ({}) => {
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
-              <Label text="Company Name" style={styles.label} />
-              <Input
-                onChangeText={handlePartyNameInputTextChange}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-              />
-            </View>
-            <Spacer height={4} />
-            <View style={styles.elementContainer}>
-              <Label text="Quotation Amount" style={styles.label} />
+              <Label text="Party Company Name" style={styles.label} />
               <Input
                 onChangeText={handlePartyNameInputTextChange}
                 containerStyle={styles.inputContainer}
@@ -140,11 +138,11 @@ const AddOrderView: React.FC<{}> = ({}) => {
             <View style={styles.elementContainer2}>
               <BouncyCheckbox
                 size={25}
-                fillColor="red"
                 unfillColor="#FFFFFF"
                 text="Household"
-                iconStyle={{borderColor: 'red'}}
-                innerIconStyle={{borderWidth: 2}}
+                fillColor={COLOR_BLUE}
+                iconStyle={{borderColor: 'red', borderRadius: 0, width: 16, height: 16}}
+                innerIconStyle={{borderWidth: 1, borderRadius: 0, width: 16, height: 16}}
                 textStyle={{
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
@@ -155,11 +153,11 @@ const AddOrderView: React.FC<{}> = ({}) => {
               />
               <BouncyCheckbox
                 size={25}
-                fillColor="red"
                 unfillColor="#FFFFFF"
                 text="Office"
-                iconStyle={{borderColor: 'red'}}
-                innerIconStyle={{borderWidth: 2}}
+                fillColor={COLOR_BLUE}
+                iconStyle={{borderColor: 'red', borderRadius: 0, width: 16, height: 16}}
+                innerIconStyle={{borderWidth: 1, borderRadius: 0, width: 16, height: 16}}
                 textStyle={{
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
@@ -170,11 +168,11 @@ const AddOrderView: React.FC<{}> = ({}) => {
               />
               <BouncyCheckbox
                 size={25}
-                fillColor="red"
                 unfillColor="#FFFFFF"
                 text="Industrial"
-                iconStyle={{borderColor: 'red'}}
-                innerIconStyle={{borderWidth: 2}}
+                fillColor={COLOR_BLUE}
+                iconStyle={{borderColor: 'red', borderRadius: 0, width: 16, height: 16}}
+                innerIconStyle={{borderWidth: 1, borderRadius: 0, width: 16, height: 16}}
                 textStyle={{
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
@@ -185,11 +183,11 @@ const AddOrderView: React.FC<{}> = ({}) => {
               />
               <BouncyCheckbox
                 size={25}
-                fillColor="red"
                 unfillColor="#FFFFFF"
                 text="Vehcicle"
-                iconStyle={{borderColor: 'red'}}
-                innerIconStyle={{borderWidth: 2}}
+                fillColor={COLOR_BLUE}
+                iconStyle={{borderColor: 'red', borderRadius: 0, width: 16, height: 16}}
+                innerIconStyle={{borderWidth: 1, borderRadius: 0, width: 16, height: 16}}
                 textStyle={{
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
@@ -200,11 +198,11 @@ const AddOrderView: React.FC<{}> = ({}) => {
               />
               <BouncyCheckbox
                 size={25}
-                fillColor="red"
                 unfillColor="#FFFFFF"
                 text="Other"
-                iconStyle={{borderColor: 'red'}}
-                innerIconStyle={{borderWidth: 2}}
+                fillColor={COLOR_BLUE}
+                iconStyle={{borderColor: 'red', borderRadius: 0, width: 16, height: 16}}
+                innerIconStyle={{borderWidth: 1, borderRadius: 0, width: 16, height: 16}}
                 textStyle={{
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
@@ -269,28 +267,18 @@ const AddOrderView: React.FC<{}> = ({}) => {
               />
             </View>
             <Spacer height={4} />
-            <View style={styles.elementContainer}>
-              <Label text="Landmark" style={styles.label} />
-              <Input
-                onChangeText={() => {}}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-              />
-            </View>
-            <Spacer height={4} />
             <View style={styles.twoColumnWrapper}>
               <View style={styles.textContainer}>
                 <Label text="Current Floor" style={styles.label} />
                 <DropdownComponent
-                  data={shiftingTypes}
+                  data={floorOptions}
                   onSelect={handleShiftingType}
                 />
               </View>
               <View style={styles.textContainer}>
                 <Label text="Lift Status" style={styles.label} />
                 <DropdownComponent
-                  data={shiftingTypes}
+                  data={liftStatusOptions}
                   onSelect={handleShiftingType}
                 />
               </View>
@@ -343,28 +331,18 @@ const AddOrderView: React.FC<{}> = ({}) => {
               />
             </View>
             <Spacer height={4} />
-            <View style={styles.elementContainer}>
-              <Label text="Landmark" style={styles.label} />
-              <Input
-                onChangeText={() => {}}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-              />
-            </View>
-            <Spacer height={4} />
             <View style={styles.twoColumnWrapper}>
               <View style={styles.textContainer}>
                 <Label text="Current Floor" style={styles.label} />
                 <DropdownComponent
-                  data={shiftingTypes}
+                  data={floorOptions}
                   onSelect={handleShiftingType}
                 />
               </View>
               <View style={styles.textContainer}>
                 <Label text="Lift Status" style={styles.label} />
                 <DropdownComponent
-                  data={shiftingTypes}
+                  data={liftStatusOptions}
                   onSelect={handleShiftingType}
                 />
               </View>

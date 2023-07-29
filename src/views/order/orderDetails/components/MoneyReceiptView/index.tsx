@@ -11,6 +11,10 @@ import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import {COLOR_BLACK} from '../../../../../utils/colors';
 import styles from './style';
 import shiftingLuggages from '../../../../../data/shiftingLuggage.json';
+import paymentTypeOptions from '../../../../../data/paymentTypeOptions.json';
+import receiptAgainstOptions from '../../../../../data/receiptAgainstOptions.json';
+import modeOfPaymentOptions from '../../../../../data/modeOfPaymentOptions.json';
+
 
 interface IMoneyReceiptViewProps {
   //
@@ -61,7 +65,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({}) => {
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer2}>
-              <Label text="Choose Template" style={styles.label} />
+              <Label text="Money Receipt Designs" style={styles.label} />
               <DropdownComponent
                 data={shiftingLuggages}
                 onSelect={handleTemplate}
@@ -71,7 +75,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({}) => {
             <View style={styles.elementContainer2}>
               <Label text="Payment Type" style={styles.label} />
               <DropdownComponent
-                data={shiftingLuggages}
+                data={paymentTypeOptions}
                 onSelect={handleTemplate}
               />
             </View>
@@ -80,7 +84,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({}) => {
               <View style={styles.itemContainer}>
                 <Label text="Receipt Against" style={styles.label} />
                 <DropdownComponent
-                  data={shiftingLuggages}
+                  data={receiptAgainstOptions}
                   onSelect={handleTemplate}
                 />
               </View>
@@ -98,7 +102,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({}) => {
             <View style={styles.elementContainer2}>
               <Label text="Mode Of Payments" style={styles.label} />
               <DropdownComponent
-                data={shiftingLuggages}
+                data={modeOfPaymentOptions}
                 onSelect={handleTemplate}
               />
             </View>
@@ -114,7 +118,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({}) => {
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer2}>
-              <Label text="Receipt No." style={styles.label} />
+              <Label text="Enter Amount" style={styles.label} />
               <Input
                 onChangeText={handleReceiptNoInputTextChange}
                 containerStyle={styles.inputContainer}

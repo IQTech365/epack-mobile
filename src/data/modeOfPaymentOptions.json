@@ -1,0 +1,22 @@
+[
+  {
+    "label": "Cash",
+    "value": "1"
+  },
+  {
+    "label": "Cheque",
+    "value": "2"
+  },
+  {
+    "label": "UPI",
+    "value": "3"
+  },
+  {
+    "label": "Bank Transfer",
+    "value": "4"
+  },
+  {
+    "label": "Other",
+    "value": "5"
+  }
+]

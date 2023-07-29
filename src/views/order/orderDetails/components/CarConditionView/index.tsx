@@ -271,7 +271,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({}) => {
         <CollapsibleView title="DENT/SCRATCHES DETAILS" collapsed={false}>
           <View>
             <View style={styles.elementContainer2}>
-              <Label text="Sscratches" style={styles.label} />
+              <Label text="Scratches" style={styles.label} />
               <Input
                 onChangeText={handleReceiptNoInputTextChange}
                 containerStyle={styles.inputContainer}

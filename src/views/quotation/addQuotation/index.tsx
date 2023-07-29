@@ -34,6 +34,8 @@ import {PincodeService} from '../../../service/PincodeService';
 import {PINCODE} from '../../../http/Endpoint';
 import loaryTypeOptions from '../../../data/loryTypeOptions.json';
 import surchargePercentOptions from '../../../data/surchargePercentOptions.json';
+import insuranceTypeOptions from '../../../data/insuranceTypeOptions.json';
+import discountPercentOptions from '../../../data/discountPercentOptions.json';
 
 const loadTypes: Array<ICheckboxButton> = [
   {
@@ -173,6 +175,96 @@ const requiredptions: Array<ICheckboxButton> = [
   },
 ];
 
+const insuranceWithOptions: Array<ICheckboxButton> = [
+  {
+    id: '1',
+    text: 'With Goods Value',
+    fillColor: COLOR_BLUE,
+    iconStyle: {borderColor: 'red', width: 16, height: 16},
+    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
+    textStyle: {
+      fontFamily: 'JosefinSans-Regular',
+      textDecorationLine: 'none',
+      fontSize: 14,
+    },
+    style: {paddingRight: 8},
+    textContainerStyle: {marginLeft: 4, marginRight: 4},
+  },
+  {
+    id: '2',
+    text: 'Without Goods Value',
+    fillColor: COLOR_BLUE,
+    iconStyle: {borderColor: 'red', width: 16, height: 16},
+    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
+    textStyle: {
+      fontFamily: 'JosefinSans-Regular',
+      textDecorationLine: 'none',
+      fontSize: 14,
+    },
+    textContainerStyle: {marginLeft: 4, marginRight: 4},
+  },
+];
+
+const yesNoOptions: Array<ICheckboxButton> = [
+  {
+    id: '1',
+    text: 'Yes',
+    fillColor: COLOR_BLUE,
+    iconStyle: {borderColor: 'red', width: 16, height: 16},
+    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
+    textStyle: {
+      fontFamily: 'JosefinSans-Regular',
+      textDecorationLine: 'none',
+      fontSize: 14,
+    },
+    style: {paddingRight: 20},
+    textContainerStyle: {marginLeft: 4, marginRight: 4},
+  },
+  {
+    id: '2',
+    text: 'No',
+    fillColor: COLOR_BLUE,
+    iconStyle: {borderColor: 'red', width: 16, height: 16},
+    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
+    textStyle: {
+      fontFamily: 'JosefinSans-Regular',
+      textDecorationLine: 'none',
+      fontSize: 14,
+    },
+    textContainerStyle: {marginLeft: 4, marginRight: 4},
+  },
+];
+
+const discountTypeOptions: Array<ICheckboxButton> = [
+  {
+    id: '1',
+    text: 'Discount @%',
+    fillColor: COLOR_BLUE,
+    iconStyle: {borderColor: 'red', width: 16, height: 16},
+    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
+    textStyle: {
+      fontFamily: 'JosefinSans-Regular',
+      textDecorationLine: 'none',
+      fontSize: 14,
+    },
+    style: {paddingRight: 20},
+    textContainerStyle: {marginLeft: 4, marginRight: 4},
+  },
+  {
+    id: '2',
+    text: 'Flat Discount',
+    fillColor: COLOR_BLUE,
+    iconStyle: {borderColor: 'red', width: 16, height: 16},
+    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
+    textStyle: {
+      fontFamily: 'JosefinSans-Regular',
+      textDecorationLine: 'none',
+      fontSize: 14,
+    },
+    textContainerStyle: {marginLeft: 4, marginRight: 4},
+  },
+];
+
 interface IAddQuotationProps {
   showHeader?: boolean;
 }
@@ -183,7 +275,12 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
   const [switchState, setSwitchState] = useState<boolean>(false);
   const [state, dispatch] = useReducer(quotationReducer, initialState);
   const [isFullLoad, setIsFullLoad] = useState<boolean>(false);
-  const [isSurchargeApplicable, setIsSurchargeApplicable] = useState<boolean>(false);
+  const [isSurchargeApplicable, setIsSurchargeApplicable] =
+    useState<boolean>(false);
+  const [isInsuranceRequired, setIsInsuranceRequired] =
+    useState<boolean>(false);
+  const [isWithGoodsValue, setIsWithGoodsValue] = useState<boolean>(false);
+  const [discountType, setDiscountType] = useState<string>('');
   // console.log('quotation-form-state----', JSON.stringify(state));
 
   const switchWrapperStyle = switchState
@@ -279,13 +376,46 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
     [isFullLoad],
   );
 
-  const handleSurcharge = useCallback((item: TDropdownItem) => {
-    if(item.value == '1') {
-      setIsSurchargeApplicable(false);
-    } else {
-      setIsSurchargeApplicable(true);
-    }
-  }, [isSurchargeApplicable]);
+  const handleSurcharge = useCallback(
+    (item: TDropdownItem) => {
+      if (item.value == '1') {
+        setIsSurchargeApplicable(false);
+      } else {
+        setIsSurchargeApplicable(true);
+      }
+    },
+    [isSurchargeApplicable],
+  );
+
+  const handleInsuranceRequired = useCallback(
+    (item: ICheckboxButton) => {
+      if (item.id == '1') {
+        setIsInsuranceRequired(true);
+      } else {
+        setIsInsuranceRequired(false);
+        setIsWithGoodsValue(false);
+      }
+    },
+    [isInsuranceRequired],
+  );
+
+  const handleWithGoodsValue = useCallback(
+    (item: ICheckboxButton) => {
+      if (item.id == '1') {
+        setIsWithGoodsValue(true);
+      } else {
+        setIsWithGoodsValue(false);
+      }
+    },
+    [isWithGoodsValue],
+  );
+
+  const handleDiscountType = useCallback(
+    (item: ICheckboxButton) => {
+      setDiscountType(item.id as string);
+    },
+    [discountType],
+  );
 
   const renderLoryTypeView = () => {
     if (isFullLoad) {
@@ -298,6 +428,93 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
               data={loaryTypeOptions}
               onSelect={handleShiftingType}
             />
+          </View>
+        </>
+      );
+    }
+    return null;
+  };
+
+  const renderDiscountTypeView = () => {
+    if (discountType === '1') {
+      return (
+        <>
+          <Spacer height={12} />
+          <View style={styles.textContainer2}>
+            <DropdownComponent
+              data={discountPercentOptions}
+              onSelect={handleShiftingType}
+            />
+          </View>
+        </>
+      );
+    } else if (discountType === '2') {
+      return (
+        <>
+          <Spacer height={12} />
+          <View style={styles.textContainer2}>
+            <Input
+              onChangeText={() => {}}
+              containerStyle={styles.inputContainer}
+              inputStyle={styles.input}
+              selectionColor={COLOR_BLACK}
+              inputType="numeric"
+              placeholder='Enter discount amount'
+            />
+          </View>
+        </>
+      );
+    }
+    return null;
+  };
+
+  const renderInsuranceWithOrWithoutGoodsValueView = () => {
+    if (isInsuranceRequired) {
+      return (
+        <>
+          <Spacer height={16} />
+          <View style={styles.textContainer2}>
+            <BouncyCheckboxGroup
+              data={insuranceWithOptions}
+              onChange={(selectedItem: ICheckboxButton) => {
+                console.log('SelectedItem: ', JSON.stringify(selectedItem));
+                handleWithGoodsValue(selectedItem);
+              }}
+            />
+          </View>
+        </>
+      );
+    }
+    return null;
+  };
+
+  const renderWithGoodsValueInputView = () => {
+    if (isWithGoodsValue) {
+      return (
+        <>
+          <Spacer height={4} />
+          <View style={styles.labelContainer}>
+            <Label text="Value of Goods" style={styles.label} />
+          </View>
+          <View style={styles.mainWrapper}>
+            <View style={styles.textContainer}>
+              <Input
+                onChangeText={() => {}}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                selectionColor={COLOR_BLACK}
+                inputType="numeric"
+              />
+            </View>
+            <View style={styles.textContainer}>
+              <Button
+                text="Submit"
+                onPress={() => {}}
+                disabled={false}
+                style={styles.buttonStyle}
+                textStyle={styles.textStyle}
+              />
+            </View>
           </View>
         </>
       );
@@ -330,8 +547,11 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                 />
               </View>
               <View style={styles.textContainer}>
-                <Label text="Date of Quotation" style={styles.label} />
-                <DatePickerComponent onDateSelect={handleQuotationDate} />
+                <Label text="Shifting Luggage" style={styles.label} />
+                <DropdownComponent
+                  data={shiftingLuggages}
+                  onSelect={handleShiftingLuggage}
+                />
               </View>
             </View>
             <Spacer height={4} />
@@ -364,12 +584,15 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
               </View>
             </View>
             <Spacer height={4} />
-            <View style={styles.textContainer2}>
-              <Label text="Shifting Luggage" style={styles.label} />
-              <DropdownComponent
-                data={shiftingLuggages}
-                onSelect={handleShiftingLuggage}
-              />
+            <View style={styles.mainWrapper}>
+              <View style={styles.textContainer}>
+                <Label text="Date of Quotation" style={styles.label} />
+                <DatePickerComponent onDateSelect={handleQuotationDate} />
+              </View>
+              <View style={styles.textContainer}>
+                <Label text="Date of Moving" style={styles.label} />
+                <DatePickerComponent onDateSelect={handleQuotationDate} />
+              </View>
             </View>
             <Spacer height={4} />
             <View style={styles.textContainer2}>
@@ -677,6 +900,17 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                 />
               </View>
             </View>
+            <Spacer height={4} />
+            <View style={styles.textContainer2}>
+              <Label text="Advance Amount" style={styles.label} />
+              <Input
+                onChangeText={() => {}}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                selectionColor={COLOR_BLACK}
+                inputType="numeric"
+              />
+            </View>
             <View style={styles.labelContainer}>
               <Label text="Surcharge" style={styles.label} />
             </View>
@@ -696,6 +930,21 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                 />
               </View>
             </View>
+            <Spacer height={4} />
+            <View style={styles.labelContainer}>
+              <Label text="Discount in Quotation" style={styles.label} />
+            </View>
+            <View style={styles.textContainer2}>
+              <BouncyCheckboxGroup
+                data={discountTypeOptions}
+                onChange={(selectedItem: ICheckboxButton) => {
+                  console.log('SelectedItem: ', JSON.stringify(selectedItem));
+                  handleDiscountType(selectedItem);
+                }}
+              />
+            </View>
+            {renderDiscountTypeView()}
+            <Spacer height={4} />
             <View style={styles.labelContainer}>
               <Label text="GST IN QUOTATION" style={styles.label} />
             </View>
@@ -737,40 +986,37 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                 data={requiredptions}
                 onChange={(selectedItem: ICheckboxButton) => {
                   console.log('SelectedItem: ', JSON.stringify(selectedItem));
+                  handleInsuranceRequired(selectedItem);
                 }}
               />
             </View>
+            {renderInsuranceWithOrWithoutGoodsValueView()}
+            <Spacer height={4} />
             <View style={styles.textContainer2}>
-              <Label text="Insurance %" style={styles.label} />
+              <Label text="Insurance Type" style={styles.label} />
               <DropdownComponent
-                data={insurancePercentOptions}
+                data={insuranceTypeOptions}
                 onSelect={handleShiftingType}
               />
             </View>
             <Spacer height={4} />
-            <View style={styles.labelContainer}>
-              <Label text="Value of Goods" style={styles.label} />
-            </View>
             <View style={styles.mainWrapper}>
               <View style={styles.textContainer}>
-                <Input
-                  onChangeText={() => {}}
-                  containerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
-                  selectionColor={COLOR_BLACK}
-                  inputType="numeric"
+                <Label text="Insurance Charge @%" style={styles.label} />
+                <DropdownComponent
+                  data={insurancePercentOptions}
+                  onSelect={handleShiftingType}
                 />
               </View>
               <View style={styles.textContainer}>
-                <Button
-                  text="Submit"
-                  onPress={() => {}}
-                  disabled={false}
-                  style={styles.buttonStyle}
-                  textStyle={styles.textStyle}
+                <Label text="GST %" style={styles.label} />
+                <DropdownComponent
+                  data={gstPercentOptions}
+                  onSelect={handleShiftingType}
                 />
               </View>
             </View>
+            {renderWithGoodsValueInputView()}
           </View>
         </CollapsibleView>
         <Spacer height={4} />
@@ -799,25 +1045,14 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
             <View style={styles.labelContainer}>
               <Label text="Amount" style={styles.label} />
             </View>
-            <View style={styles.mainWrapper}>
-              <View style={styles.textContainer}>
-                <Input
-                  onChangeText={() => {}}
-                  containerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
-                  selectionColor={COLOR_BLACK}
-                  inputType="numeric"
-                />
-              </View>
-              <View style={styles.textContainer}>
-                <Button
-                  text="Submit"
-                  onPress={() => {}}
-                  disabled={false}
-                  style={styles.buttonStyle}
-                  textStyle={styles.textStyle}
-                />
-              </View>
+            <View style={styles.textContainer2}>
+              <Input
+                onChangeText={() => {}}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                selectionColor={COLOR_BLACK}
+                inputType="numeric"
+              />
             </View>
           </View>
         </CollapsibleView>
@@ -863,6 +1098,75 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                   textStyle={styles.textStyle}
                 />
               </View>
+            </View>
+          </View>
+        </CollapsibleView>
+        <Spacer height={4} />
+        <CollapsibleView title="OTHER DETAILS" collapsed={true}>
+          <View>
+            <View style={styles.labelContainer}>
+              <Label
+                text="IS THERE EASY ACCESS FOR LOAD & UNLOADING AT ORIGIN & DESINATION (क्या लोड और अनलोडिंग आसान है?)"
+                style={styles.label}
+              />
+            </View>
+            <Spacer height={4} />
+            <View style={styles.textContainer2}>
+              <BouncyCheckboxGroup
+                data={yesNoOptions}
+                onChange={(selectedItem: ICheckboxButton) => {
+                  console.log('SelectedItem: ', JSON.stringify(selectedItem));
+                }}
+              />
+            </View>
+            <Spacer height={4} />
+            <View style={styles.labelContainer}>
+              <Label
+                text="SHOULD ANY ITEMS BE GOT DOWN THROUGH BALCONY ETC. (क्या किसी सामान को बालकनी से नीचे उतारना हैं?) eg.Almirah, Bed etc."
+                style={styles.label}
+              />
+            </View>
+            <Spacer height={4} />
+            <View style={styles.textContainer2}>
+              <Input
+                onChangeText={() => {}}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                selectionColor={COLOR_BLACK}
+                inputType="numeric"
+              />
+            </View>
+            <Spacer height={4} />
+            <View style={styles.labelContainer}>
+              <Label
+                text="ARE THERE ANY RESTRICTIONS FOR LOADING/UNLOADING AT ORIGIN/DESINATION (क्या लोडिंग/अनलोडिंग वाले स्थान पर कोई रोकटोक हैं?)"
+                style={styles.label}
+              />
+            </View>
+            <View style={styles.textContainer2}>
+              <BouncyCheckboxGroup
+                data={yesNoOptions}
+                onChange={(selectedItem: ICheckboxButton) => {
+                  console.log('SelectedItem: ', JSON.stringify(selectedItem));
+                }}
+              />
+            </View>
+            <Spacer height={4} />
+            <View style={styles.labelContainer}>
+              <Label
+                text="DO YOU HAVE ANY SPECIAL NEEDS OR CONCERNS (अन्य जरूरी आवश्यकताएं?)"
+                style={styles.label}
+              />
+            </View>
+            <Spacer height={4} />
+            <View style={styles.textContainer2}>
+              <Input
+                onChangeText={() => {}}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                selectionColor={COLOR_BLACK}
+                inputType="numeric"
+              />
             </View>
           </View>
         </CollapsibleView>
