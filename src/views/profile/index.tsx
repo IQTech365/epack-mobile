@@ -19,7 +19,7 @@ const ProfilePageView:React.FC<IProfilePageViewProps> = ({navigation}) => {
     }
 
     return <View style={styles.container}>
-        <Header label="Profile Management" />
+        <Header label="Client Management" canGoBack={true} showDrawerIcon={true} />
         <Spacer height={4} />
         <Button text="Language" onPress={handleLanguage} />
         <Text>{t('common:Hey')}</Text>

@@ -34,7 +34,7 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Header label="Enquiry Management"/>
+      <Header label="Enquiry Management" canGoBack={true} showDrawerIcon={true} />
       <Spacer height={4} />
       <AddNew
         countLabel="Total Enquiries"

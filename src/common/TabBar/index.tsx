@@ -14,6 +14,8 @@ import EnquiryBlackIcon from '../../images/icons/quotation-black.svg';
 import EnquiryWhiteIcon from '../../images/icons/quotation-white.svg';
 import OrderBlackIcon from '../../images/icons/order-black.svg';
 import OrderWhiteIcon from '../../images/icons/order-white.svg';
+import ClientWhiteIcon from '../../images/icons/clients-white.svg';
+import ClientBlackIcon from '../../images/icons/clients-black.svg';
 
 const TabBar = ({state, descriptors, navigation}: any) => {
 
@@ -28,8 +30,8 @@ const TabBar = ({state, descriptors, navigation}: any) => {
                 return <ZoomIcon width={20} height={20} color="#000000" />
             case 'Order':
                 return isFocused ? <OrderBlackIcon width={24} height={24} /> : <OrderWhiteIcon width={24} height={24} />
-            case 'Profile':
-                return <ProfileIcon width={20} height={20} color="#000000" />
+            case 'Clients':
+                return isFocused ? <ClientBlackIcon width={24} height={24} /> : <ClientWhiteIcon width={24} height={24} />
             default:
                 return null
         }

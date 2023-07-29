@@ -17,7 +17,7 @@ const TabNavigator = () => {
             <Tab.Screen name={TabRoute.ProfileStack} component={QuotationStackNavigator} options={{title: 'Quotation'}} />
             <Tab.Screen name={TabRoute.ZoomStack} component={EnquiryStackNavigator} options={{title: 'Enquiry'}} />
             <Tab.Screen name={TabRoute.MessageStack} component={OrderStackNavigator} options={{title: 'Order'}} />
-            <Tab.Screen name={TabRoute.MenuStack} component={ProfileStackNavigator} options={{title: 'Profile'}} />
+            <Tab.Screen name={TabRoute.MenuStack} component={ProfileStackNavigator} options={{title: 'Clients'}} />
         </Tab.Navigator>
     );
 }

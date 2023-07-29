@@ -33,7 +33,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Header label="Quotation Management" />
+      <Header label="Quotation Management" canGoBack={true} showDrawerIcon={true} />
       <Spacer height={4} />
       <AddNew countLabel='Total Quotations' count='200' onPress={handleAddNew} />
       <Spacer height={12} />

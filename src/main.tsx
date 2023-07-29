@@ -7,6 +7,7 @@ import TabNavigator from './navigation/TabNavigator';
 import AuthStackNavigator from './navigation/AuthStackNavigator';
 import {Provider} from 'react-redux';
 import {store} from './redux/store';
+import { DrawerNavigator } from './navigation/DrawerNavigator';
 
 const Main = () => {
   const authContext = useAuthContext();
@@ -19,7 +20,7 @@ const Main = () => {
   return (
     <NavigationContainer>
       <Provider store={store}>
-        {loggedIn ? <TabNavigator /> : <AuthStackNavigator />}
+        {loggedIn ? <DrawerNavigator /> : <AuthStackNavigator />}
       </Provider>
     </NavigationContainer>
   );

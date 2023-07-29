@@ -34,7 +34,7 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Header label="Order Management" />
+      <Header label="Order Management" canGoBack={true} showDrawerIcon={true} />
       <Spacer height={4} />
       <AddNew countLabel="Total Orders" count="1200" onPress={handleAddNew} />
       <Spacer height={12} />
