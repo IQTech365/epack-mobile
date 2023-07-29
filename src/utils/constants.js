@@ -41,9 +41,9 @@ const EnquiryStackRoute = {
   EnquiryDetails: 'EnquiryDetails',
 };
 
-const ProfileStackRoute = {
-  ProfileRoot: 'ProfileRoot',
-  Language: 'Language',
+const ClientStackRoute = {
+  ClientRoot: 'ClientRoot',
+  ClientDetails: 'ClientDetails',
 };
 
 export {
@@ -53,5 +53,5 @@ export {
   QuotationStackRoute,
   OrderStackRoute,
   EnquiryStackRoute,
-  ProfileStackRoute,
+  ClientStackRoute
 };

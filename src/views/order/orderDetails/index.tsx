@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {View, Text, FlatList} from 'react-native';
 import Header from '../../../common/Header';
 import Spacer from '../../../common/Spacer';
-// import EnquiryInfoView from './components/EnquiryInfoView';
 import styles from './style';
 import tabOptions from '../../../data/orderDetailsTabs.json';
 import Tab from '../../../common/Tab';
@@ -12,11 +11,6 @@ import MoneyReceiptView from './components/MoneyReceiptView';
 import CarConditionView from './components/CarConditionView';
 import BiltyView from './components/BiltyView';
 import InvoiceView from './components/InvoiceView';
-// import AddQuotationView from '../../quotation/addQuotation';
-// import FollowupListHeaderComponent from './components/FollowupListHeaderComponent';
-// import FollowupView from './components/FollowupView';
-// import SurveyView from './components/FollowupView';
-// import DetailsView from './components/DetailsView';
 
 const OrderDetailsView: React.FC<{}> = ({}) => {
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);

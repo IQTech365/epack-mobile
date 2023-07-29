@@ -5,7 +5,7 @@ import {View, Text} from 'react-native';
 import Button from "../../common/Button";
 import Header from "../../common/Header";
 import Spacer from "../../common/Spacer";
-import { ProfileStackRoute } from "../../utils/constants";
+import { ClientStackRoute } from "../../utils/constants";
 import styles from "./style";
 
 interface IProfilePageViewProps {
@@ -15,7 +15,7 @@ interface IProfilePageViewProps {
 const ProfilePageView:React.FC<IProfilePageViewProps> = ({navigation}) => {
     const { t, i18n } = useTranslation();
     const handleLanguage = () => {
-        navigation.navigate(ProfileStackRoute.Language);
+        navigation.navigate(ClientStackRoute.Language);
     }
 
     return <View style={styles.container}>

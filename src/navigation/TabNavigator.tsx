@@ -4,7 +4,7 @@ import { TabRoute } from '../utils/constants';
 import HomeStackNavigator from './HomeStackNavigator';
 import QuotationStackNavigator from './QuotationStackNavigator';
 import EnquiryStackNavigator from './EnquiryStackNavigator';
-import ProfileStackNavigator from './ProfileStackNavigator';
+import ClientStackNavigator from './ClientStackNavigator';
 import OrderStackNavigator from './OrderStackNavigator';
 import TabBar from '../common/TabBar';
 
@@ -17,7 +17,7 @@ const TabNavigator = () => {
             <Tab.Screen name={TabRoute.ProfileStack} component={QuotationStackNavigator} options={{title: 'Quotation'}} />
             <Tab.Screen name={TabRoute.ZoomStack} component={EnquiryStackNavigator} options={{title: 'Enquiry'}} />
             <Tab.Screen name={TabRoute.MessageStack} component={OrderStackNavigator} options={{title: 'Order'}} />
-            <Tab.Screen name={TabRoute.MenuStack} component={ProfileStackNavigator} options={{title: 'Clients'}} />
+            <Tab.Screen name={TabRoute.MenuStack} component={ClientStackNavigator} options={{title: 'Clients'}} />
         </Tab.Navigator>
     );
 }
