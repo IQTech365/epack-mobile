@@ -6,12 +6,8 @@ import styles from './style';
 import tabOptions from '../../../data/clientDetailsTabs.json';
 import Tab from '../../../common/Tab';
 import ClientInfoView from './components/ClientInfoView';
-// import OrderInfoView from './components/OrderInfoView';
-// import DetailsView from './components/DetailsView';
-// import MoneyReceiptView from './components/MoneyReceiptView';
-// import CarConditionView from './components/CarConditionView';
-// import BiltyView from './components/BiltyView';
-// import InvoiceView from './components/InvoiceView';
+import ContactDetailsView from './components/ContactDetailsView';
+import ShiftingDetailsView from './components/ShiftingDetailsView';
 
 const ClientDetailsView: React.FC<{}> = ({}) => {
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
@@ -23,15 +19,9 @@ const ClientDetailsView: React.FC<{}> = ({}) => {
   const showTabItem = () => {
     switch (activeTabIndex) {
       case 0:
-        // return <DetailsView />
+        return <ContactDetailsView />
       case 1:
-        // return <MoneyReceiptView />
-      case 2:
-        // return <CarConditionView />
-      case 3:
-        // return <BiltyView />
-      case 4:
-        // return <InvoiceView />
+        return <ShiftingDetailsView />
       default:
         return null;
     }
