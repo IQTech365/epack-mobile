@@ -1,7 +1,7 @@
 import {takeLatest, put, call} from 'redux-saga/effects';
 import {PayloadAction} from '@reduxjs/toolkit';
-import { SigninService } from '../service/SigninService';
-import { signinFailure, signinSuccess, signinRequest } from '../redux/slices/SigninSlice';
+import { SigninService } from '../service/OtpService';
+import { signinFailure, signinSuccess, signinRequest } from '../redux/slices/OtpSlice';
 import { ISignupRequest } from '../interface/signup/ISignupRequest';
 import { ISignupResponse } from '../interface/signup/ISignupResponse';
 

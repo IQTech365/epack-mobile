@@ -13,6 +13,7 @@ interface InputProps {
   inputStyle?: TextStyle;
   selectionColor?: string;
   editable?: boolean;
+  maxLength?: number;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -24,7 +25,8 @@ const Input: React.FC<InputProps> = ({
   containerStyle,
   inputStyle,
   selectionColor = COLOR_WHITE,
-  editable = true
+  editable = true,
+  maxLength
 }) => {
   return (
     <>
@@ -39,6 +41,7 @@ const Input: React.FC<InputProps> = ({
             selectionColor={selectionColor}
             keyboardType={inputType}
             editable={editable}
+            maxLength={maxLength}
           />
         </View>
       </View>

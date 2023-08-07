@@ -19,6 +19,7 @@ const AuthStackRoute = {
   RegisterCompany: 'RegisterCompany',// TODO: move this to respective route later
   AddBranch: 'AddBranch',// TODO: move this to respective route later
   AddOrder: 'AddOrder',// TODO: move this to respective route later
+  OTPInput: 'OTPInput', // TODO: move this to respective route later
 }
 const HomeStackRoute = {
   Home: 'Home',

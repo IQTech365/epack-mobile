@@ -10,15 +10,17 @@ import AddEnquiryView from "../views/enquiry/addEnquiry";
 import RegisterCompanyView from "../views/company/registerCompany";
 import AddBranchView from "../views/company/addBranch";
 import AddOrderView from "../views/order/addOrder";
+import OTPPageView from "../views/otp";
 
 const AuthStack = createNativeStackNavigator();
 
 const AuthStackNavigator = () => {
 
     return (
-        <AuthStack.Navigator screenOptions={{headerShown: false}} initialRouteName={AuthStackRoute.AddOrder} >
+        <AuthStack.Navigator screenOptions={{headerShown: false}} initialRouteName={AuthStackRoute.SignIn} >
             <AuthStack.Screen name={AuthStackRoute.SignIn} component={SignInPageView} />
             <AuthStack.Screen name={AuthStackRoute.SignUp} component={SignUpPageView} />
+            <AuthStack.Screen name={AuthStackRoute.OTPInput} component={OTPPageView} />
             <AuthStack.Screen name={AuthStackRoute.ForgotPassword} component={ForgotPasswordPageView} />
             <AuthStack.Screen name={AuthStackRoute.Intro} component={IntroPageView} />
             <AuthStack.Screen name={AuthStackRoute.Quotation} component={QuotationView} />

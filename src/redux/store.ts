@@ -5,7 +5,7 @@ import createSagaMiddleware from '@redux-saga/core';
 import {rootSaga} from '../sagas';
 
 //Slices
-import SigninSlice from './slices/SigninSlice';
+import OtpSlice from './slices/OtpSlice';
 import SignupSlice from './slices/SignupSlice';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -13,7 +13,7 @@ const middleware = [sagaMiddleware];
 
 export const store = configureStore({
     reducer: {
-        Signin: SigninSlice,
+        OTP: OtpSlice,
         Signup: SignupSlice,
     },
     middleware: (getDefaultMiddleware) => {
