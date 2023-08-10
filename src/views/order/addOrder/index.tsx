@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useReducer} from 'react';
 import {View, Text} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../common/Spacer';
@@ -17,14 +17,20 @@ import Button from '../../../common/Button';
 import DatePickerComponent from '../../../common/DatePickerComponent';
 import liftStatusOptions from '../../../data/liftStatusOptions.json';
 import floorOptions from '../../../data/floorOptions.json';
+import{
+  initialState,
+  addOrderReducer
+} from './addOrderReducer';
 
 const AddOrderView: React.FC<{}> = ({}) => {
+ 
   const state = {pickupPincode: '', deliveryPincode: ''};
+  
   const handleShiftingType = (item: TDropdownItem) => {
     // dispatch({
     //   type: QUOTATION_FORM_ACTION.SHIFTING_LUGGAGE,
     //   payload: item.label,
-    // });
+    // }); 
   };
 
   const handlePartyNameInputTextChange = (text: string) => {
