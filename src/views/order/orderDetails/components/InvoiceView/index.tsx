@@ -357,14 +357,14 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
 
   const handlePickupChargesInputTextChange = (item: TDropdownItem) => {
     dispatch({
-      type: INVOICE_FORM_ACTION.PACKING_CHARGES,
+      type: INVOICE_FORM_ACTION.PICKUP_CHARGES,
       payload: item.label,
     });
   };
 
   const handlePickupAmoutInputTextChange = (text: string) => {
     dispatch({
-      type: INVOICE_FORM_ACTION.PACKING_AMOUNT,
+      type: INVOICE_FORM_ACTION.PICKUP_CHARGES,
       payload: text,
     });
   };
