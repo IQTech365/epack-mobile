@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useReducer } from 'react';
 import {View, Text} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
@@ -14,27 +14,92 @@ import shiftingLuggages from '../../../../../data/shiftingLuggage.json';
 import paymentTypeOptions from '../../../../../data/paymentTypeOptions.json';
 import receiptAgainstOptions from '../../../../../data/receiptAgainstOptions.json';
 import modeOfPaymentOptions from '../../../../../data/modeOfPaymentOptions.json';
+import { MONEYRECEIPT_FORM_ACTION, initialState, moneyReceiptReducer } from '../../../moneyReceipt/moneyReceiptReducer';
+import { formatDate } from '../../../../../utils/formatter';
 
 
 interface IMoneyReceiptViewProps {
   //
 }
 
-const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({}) => {
+const MoneyReceiptView:React.FC<IMoneyReceiptViewProps> = ({}) => {
+  
+  const [reducerState, dispatch] = useReducer(moneyReceiptReducer, initialState);
   const handleReceiptDate = (date: Date) => {
-    // dispatch({
-    //   type: QUOTATION_FORM_ACTION.DATE_OF_QUOTATION,
-    //   payload: formatDate(date),
-    // });
+    dispatch({
+      type: MONEYRECEIPT_FORM_ACTION.RECEIPT_DATE,
+      payload: formatDate(date),
+    });
   };
 
   const handleReceiptNoInputTextChange = (text: string) => {
-    // dispatch({
-    //   type: QUOTATION_FORM_ACTION.COMPANY_NAME,
-    //   payload: text,
-    // });
+    dispatch({
+      type: MONEYRECEIPT_FORM_ACTION.RECEIPT_NO,
+      payload: text,
+    });
   };
 
+  const handleBillQuotation = (text:string)=>{
+    dispatch({
+      type: MONEYRECEIPT_FORM_ACTION.BILL_QUOTATION_NO,
+      payload: text,
+    });
+  }
+  const handleTemplateDesign =(item: TDropdownItem) =>{
+ dispatch({
+      type: MONEYRECEIPT_FORM_ACTION.MONEY_RECEIPT_DESIGNS,
+      payload: item.value
+  });
+}
+const handlePaymentType =(item: TDropdownItem)=>{
+  dispatch({
+    type: MONEYRECEIPT_FORM_ACTION.PAYMENT_TYPE,
+    payload: item.value
+  });
+}
+const handleReceiptAgainst =(item: TDropdownItem) =>{
+  dispatch({
+       type: MONEYRECEIPT_FORM_ACTION.RECEIPT_AGAINST,
+       payload: item.value
+   });
+ }
+
+  const handlePaymentMode = (item: TDropdownItem) => {
+    dispatch({
+      type: MONEYRECEIPT_FORM_ACTION.MODE_OF_PAYMENTS,
+      payload: item.value
+    });
+  };
+  const handleRefNo = (text:string)=>{
+    dispatch({
+      type: MONEYRECEIPT_FORM_ACTION.REF_NO,
+      payload: text,
+    });
+  }
+  const handleEnterAmount = (text:string)=>{
+    dispatch({
+      type: MONEYRECEIPT_FORM_ACTION.ENTER_AMOUNT,
+      payload: text,
+    });
+  }
+  const handleBiltyLrNo = (text:string)=>{
+    dispatch({
+      type: MONEYRECEIPT_FORM_ACTION.CN_BILTY_LR_NO,
+      payload: text,
+    });
+  }
+  const handleNoOfArticles = (text:string)=>{
+    dispatch({
+      type: MONEYRECEIPT_FORM_ACTION.NO_OF_ARTICLES,
+      payload: text,
+    });
+  }
+  const handleArivalDate = (date: Date) => {
+    dispatch({
+      type: MONEYRECEIPT_FORM_ACTION.DATE_OF_ARRIVAL,
+      payload: formatDate(date),
+    });
+  };
   const handleTemplate = (item: TDropdownItem) => {
     // dispatch({
     //   type: QUOTATION_FORM_ACTION.SHIFTING_LUGGAGE,
@@ -68,7 +133,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({}) => {
               <Label text="Money Receipt Designs" style={styles.label} />
               <DropdownComponent
                 data={shiftingLuggages}
-                onSelect={handleTemplate}
+                onSelect={handleTemplateDesign}
               />
             </View>
             <Spacer height={4} />
@@ -76,7 +141,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({}) => {
               <Label text="Payment Type" style={styles.label} />
               <DropdownComponent
                 data={paymentTypeOptions}
-                onSelect={handleTemplate}
+                onSelect={handlePaymentType}
               />
             </View>
             <Spacer height={4} />
@@ -85,13 +150,13 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({}) => {
                 <Label text="Receipt Against" style={styles.label} />
                 <DropdownComponent
                   data={receiptAgainstOptions}
-                  onSelect={handleTemplate}
+                  onSelect={handleReceiptAgainst}
                 />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Bill/Quotation" style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handleBillQuotation}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -103,14 +168,14 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({}) => {
               <Label text="Mode Of Payments" style={styles.label} />
               <DropdownComponent
                 data={modeOfPaymentOptions}
-                onSelect={handleTemplate}
+                onSelect={handlePaymentMode}
               />
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer2}>
               <Label text="Ref. No" style={styles.label} />
               <Input
-                onChangeText={handleReceiptNoInputTextChange}
+                onChangeText={handleRefNo}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -120,7 +185,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({}) => {
             <View style={styles.elementContainer2}>
               <Label text="Enter Amount" style={styles.label} />
               <Input
-                onChangeText={handleReceiptNoInputTextChange}
+                onChangeText={handleEnterAmount}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -134,7 +199,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({}) => {
             <View style={styles.elementContainer2}>
               <Label text="CN / Bilty / LR No." style={styles.label} />
               <Input
-                onChangeText={handleReceiptNoInputTextChange}
+                onChangeText={handleBiltyLrNo}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -145,7 +210,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({}) => {
               <View style={styles.itemContainer}>
                 <Label text="No. of Articles" style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handleNoOfArticles}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -153,7 +218,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({}) => {
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Date of Arrival" style={styles.label} />
-                <DatePickerComponent onDateSelect={handleReceiptDate} />
+                <DatePickerComponent onDateSelect={handleArivalDate} />
               </View>
             </View>
           </View>
@@ -163,5 +228,4 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({}) => {
     </AvoidSoftInputViewHOC>
   );
 };
-
 export default MoneyReceiptView;
