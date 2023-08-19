@@ -4,7 +4,7 @@ import {HttpClient} from './HttpClient';
 export class Api extends HttpClient {
   private static classInstance?: Api;
   // private static baseUrl: string = `http://localhost:5000/api/v1`;
-  private static baseUrl: string = `http://65.1.119.247/api/v1`;
+  private static baseUrl: string = `http://43.204.120.38:8080/api/v1`;
   // private static baseUrl: string = `http://10.0.2.2:5000/api/v1`;
 
   private constructor() {

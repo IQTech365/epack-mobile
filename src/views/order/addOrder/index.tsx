@@ -17,20 +17,16 @@ import Button from '../../../common/Button';
 import DatePickerComponent from '../../../common/DatePickerComponent';
 import liftStatusOptions from '../../../data/liftStatusOptions.json';
 import floorOptions from '../../../data/floorOptions.json';
-import{
-  initialState,
-  addOrderReducer
-} from './addOrderReducer';
+import {initialState, addOrderReducer} from './addOrderReducer';
 
 const AddOrderView: React.FC<{}> = ({}) => {
- 
   const state = {pickupPincode: '', deliveryPincode: ''};
-  
+
   const handleShiftingType = (item: TDropdownItem) => {
     // dispatch({
     //   type: QUOTATION_FORM_ACTION.SHIFTING_LUGGAGE,
     //   payload: item.label,
-    // }); 
+    // });
   };
 
   const handlePartyNameInputTextChange = (text: string) => {
@@ -118,24 +114,25 @@ const AddOrderView: React.FC<{}> = ({}) => {
               />
             </View>
             <Spacer height={4} />
-            <View style={styles.elementContainer}>
-              <Label text="Order Amount" style={styles.label} />
-              <Input
-                onChangeText={handlePartyNameInputTextChange}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-              />
-            </View>
-            <Spacer height={4} />
-            <View style={styles.elementContainer}>
-              <Label text="Token Amount" style={styles.label} />
-              <Input
-                onChangeText={handlePartyNameInputTextChange}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-              />
+            <View style={styles.mainWrapper}>
+              <View style={styles.textContainer}>
+                <Label text="Order Amount" style={styles.label} />
+                <Input
+                  onChangeText={handlePartyNameInputTextChange}
+                  containerStyle={styles.inputContainer}
+                  inputStyle={styles.input}
+                  selectionColor={COLOR_BLACK}
+                />
+              </View>
+              <View style={styles.textContainer}>
+                <Label text="Token Amount" style={styles.label} />
+                <Input
+                  onChangeText={handlePartyNameInputTextChange}
+                  containerStyle={styles.inputContainer}
+                  inputStyle={styles.input}
+                  selectionColor={COLOR_BLACK}
+                />
+              </View>
             </View>
             <Spacer height={4} />
             <View style={styles.labelContainer}>
@@ -147,8 +144,18 @@ const AddOrderView: React.FC<{}> = ({}) => {
                 unfillColor="#FFFFFF"
                 text="Household"
                 fillColor={COLOR_BLUE}
-                iconStyle={{borderColor: 'red', borderRadius: 0, width: 16, height: 16}}
-                innerIconStyle={{borderWidth: 1, borderRadius: 0, width: 16, height: 16}}
+                iconStyle={{
+                  borderColor: 'red',
+                  borderRadius: 0,
+                  width: 16,
+                  height: 16,
+                }}
+                innerIconStyle={{
+                  borderWidth: 1,
+                  borderRadius: 0,
+                  width: 16,
+                  height: 16,
+                }}
                 textStyle={{
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
@@ -162,8 +169,18 @@ const AddOrderView: React.FC<{}> = ({}) => {
                 unfillColor="#FFFFFF"
                 text="Office"
                 fillColor={COLOR_BLUE}
-                iconStyle={{borderColor: 'red', borderRadius: 0, width: 16, height: 16}}
-                innerIconStyle={{borderWidth: 1, borderRadius: 0, width: 16, height: 16}}
+                iconStyle={{
+                  borderColor: 'red',
+                  borderRadius: 0,
+                  width: 16,
+                  height: 16,
+                }}
+                innerIconStyle={{
+                  borderWidth: 1,
+                  borderRadius: 0,
+                  width: 16,
+                  height: 16,
+                }}
                 textStyle={{
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
@@ -177,8 +194,18 @@ const AddOrderView: React.FC<{}> = ({}) => {
                 unfillColor="#FFFFFF"
                 text="Industrial"
                 fillColor={COLOR_BLUE}
-                iconStyle={{borderColor: 'red', borderRadius: 0, width: 16, height: 16}}
-                innerIconStyle={{borderWidth: 1, borderRadius: 0, width: 16, height: 16}}
+                iconStyle={{
+                  borderColor: 'red',
+                  borderRadius: 0,
+                  width: 16,
+                  height: 16,
+                }}
+                innerIconStyle={{
+                  borderWidth: 1,
+                  borderRadius: 0,
+                  width: 16,
+                  height: 16,
+                }}
                 textStyle={{
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
@@ -192,8 +219,18 @@ const AddOrderView: React.FC<{}> = ({}) => {
                 unfillColor="#FFFFFF"
                 text="Vehcicle"
                 fillColor={COLOR_BLUE}
-                iconStyle={{borderColor: 'red', borderRadius: 0, width: 16, height: 16}}
-                innerIconStyle={{borderWidth: 1, borderRadius: 0, width: 16, height: 16}}
+                iconStyle={{
+                  borderColor: 'red',
+                  borderRadius: 0,
+                  width: 16,
+                  height: 16,
+                }}
+                innerIconStyle={{
+                  borderWidth: 1,
+                  borderRadius: 0,
+                  width: 16,
+                  height: 16,
+                }}
                 textStyle={{
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
@@ -207,8 +244,18 @@ const AddOrderView: React.FC<{}> = ({}) => {
                 unfillColor="#FFFFFF"
                 text="Other"
                 fillColor={COLOR_BLUE}
-                iconStyle={{borderColor: 'red', borderRadius: 0, width: 16, height: 16}}
-                innerIconStyle={{borderWidth: 1, borderRadius: 0, width: 16, height: 16}}
+                iconStyle={{
+                  borderColor: 'red',
+                  borderRadius: 0,
+                  width: 16,
+                  height: 16,
+                }}
+                innerIconStyle={{
+                  borderWidth: 1,
+                  borderRadius: 0,
+                  width: 16,
+                  height: 16,
+                }}
                 textStyle={{
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
@@ -216,13 +263,6 @@ const AddOrderView: React.FC<{}> = ({}) => {
                 style={{marginRight: 15}}
                 textContainerStyle={{paddingLeft: 0}}
                 onPress={(isChecked: boolean) => {}}
-              />
-            </View>
-            <View style={styles.elementContainer}>
-              <Label text="Date of Quotation" style={styles.label} />
-              <DatePickerComponent
-                onDateSelect={handleQuotationDate}
-                style={styles.datePickerContainer}
               />
             </View>
           </View>
@@ -239,13 +279,6 @@ const AddOrderView: React.FC<{}> = ({}) => {
                 selectionColor={COLOR_BLACK}
               />
             </View>
-            <View style={styles.elementContainer}>
-              <Label text="City" style={styles.label} />
-              <DropdownComponent
-                data={shiftingTypes}
-                onSelect={handleShiftingType}
-              />
-            </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
               <Label text="State" style={styles.label} />
@@ -254,9 +287,8 @@ const AddOrderView: React.FC<{}> = ({}) => {
                 onSelect={handleShiftingType}
               />
             </View>
-            <Spacer height={4} />
             <View style={styles.elementContainer}>
-              <Label text="Locality" style={styles.label} />
+              <Label text="City" style={styles.label} />
               <DropdownComponent
                 data={shiftingTypes}
                 onSelect={handleShiftingType}
@@ -303,13 +335,6 @@ const AddOrderView: React.FC<{}> = ({}) => {
                 selectionColor={COLOR_BLACK}
               />
             </View>
-            <View style={styles.elementContainer}>
-              <Label text="City" style={styles.label} />
-              <DropdownComponent
-                data={shiftingTypes}
-                onSelect={handleShiftingType}
-              />
-            </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
               <Label text="State" style={styles.label} />
@@ -318,9 +343,8 @@ const AddOrderView: React.FC<{}> = ({}) => {
                 onSelect={handleShiftingType}
               />
             </View>
-            <Spacer height={4} />
             <View style={styles.elementContainer}>
-              <Label text="Locality" style={styles.label} />
+              <Label text="City" style={styles.label} />
               <DropdownComponent
                 data={shiftingTypes}
                 onSelect={handleShiftingType}
