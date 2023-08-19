@@ -412,13 +412,6 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
                 selectionColor={COLOR_BLACK}
               />
             </View>
-            <View style={styles.elementContainer}>
-              <Label text="City" style={styles.label} />
-              <DropdownComponent
-                data={shiftingTypes}
-                onSelect={handlePickupCity}
-              />
-            </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
               <Label text="State" style={styles.label} />
@@ -427,12 +420,11 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
                 onSelect={handlePickupState}
               />
             </View>
-            <Spacer height={4} />
             <View style={styles.elementContainer}>
-              <Label text="Locality" style={styles.label} />
+              <Label text="City" style={styles.label} />
               <DropdownComponent
                 data={shiftingTypes}
-                onSelect={handlePickupLocality}
+                onSelect={handlePickupCity}
               />
             </View>
             <Spacer height={4} />
@@ -476,13 +468,6 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
                 selectionColor={COLOR_BLACK}
               />
             </View>
-            <View style={styles.elementContainer}>
-              <Label text="City" style={styles.label} />
-              <DropdownComponent
-                data={shiftingTypes}
-                onSelect={handleDeliveryCity}
-              />
-            </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
               <Label text="State" style={styles.label} />
@@ -491,12 +476,11 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
                 onSelect={handleDeliveryState}
               />
             </View>
-            <Spacer height={4} />
             <View style={styles.elementContainer}>
-              <Label text="Locality" style={styles.label} />
+              <Label text="City" style={styles.label} />
               <DropdownComponent
                 data={shiftingTypes}
-                onSelect={handleDeliveryLocality}
+                onSelect={handleDeliveryCity}
               />
             </View>
             <Spacer height={4} />

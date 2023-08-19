@@ -7,6 +7,7 @@ import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
 import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
 
 export const GetOtpService = async (payload: IOtpGetRequest): Promise<IOtpGetResponse> => {
+    console.log('GetOtpService--payload--', JSON.stringify(payload));
     const api = Api.getInstance();
     return await api.post<IOtpGetRequest, AxiosResponse<IOtpGetResponse>>(payload, GET_OTP);
 }

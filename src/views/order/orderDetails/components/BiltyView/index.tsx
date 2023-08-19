@@ -262,7 +262,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
                 />
               </View>
               <View style={styles.itemContainer}>
-                <Label text="Date of Bility/LR/CN No." style={styles.label} />
+                <Label text="Date of Bilty/LR/CN No." style={styles.label} />
                 <DatePickerComponent onDateSelect={handleReceiptDate} />
               </View>
             </View>

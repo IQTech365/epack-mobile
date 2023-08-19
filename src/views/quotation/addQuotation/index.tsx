@@ -36,6 +36,9 @@ import loaryTypeOptions from '../../../data/loryTypeOptions.json';
 import surchargePercentOptions from '../../../data/surchargePercentOptions.json';
 import insuranceTypeOptions from '../../../data/insuranceTypeOptions.json';
 import discountPercentOptions from '../../../data/discountPercentOptions.json';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import liftStatusOptions from '../../../data/liftStatusOptions.json';
+import floorOptions from '../../../data/floorOptions.json';
 
 const loadTypes: Array<ICheckboxButton> = [
   {
@@ -265,6 +268,38 @@ const discountTypeOptions: Array<ICheckboxButton> = [
   },
 ];
 
+const loadingUnloadingByOptions: Array<ICheckboxButton> = [
+  {
+    id: '1',
+    text: 'By Company',
+    fillColor: COLOR_BLUE,
+    isChecked: true,
+    iconStyle: {borderColor: 'red', width: 16, height: 16},
+    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
+    textStyle: {
+      fontFamily: 'JosefinSans-Regular',
+      textDecorationLine: 'none',
+      fontSize: 14,
+    },
+    textContainerStyle: {marginLeft: 4, marginRight: 4},
+    style: {paddingRight: 10},
+  },
+  {
+    id: '2',
+    text: 'By Party',
+    fillColor: COLOR_BLUE,
+    iconStyle: {borderColor: 'red', width: 16, height: 16},
+    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
+    textStyle: {
+      fontFamily: 'JosefinSans-Regular',
+      textDecorationLine: 'none',
+      fontSize: 14,
+    },
+    textContainerStyle: {marginLeft: 4, marginRight: 4},
+    style: {paddingRight: 10},
+  }
+];
+
 interface IAddQuotationProps {
   showHeader?: boolean;
 }
@@ -274,6 +309,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
 }) => {
   const [switchState, setSwitchState] = useState<boolean>(false);
   const [state, dispatch] = useReducer(quotationReducer, initialState);
+  const [isPartLoad, setIsPartLoad] = useState<boolean>(true);
   const [isFullLoad, setIsFullLoad] = useState<boolean>(false);
   const [isSurchargeApplicable, setIsSurchargeApplicable] =
     useState<boolean>(false);
@@ -281,11 +317,35 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
     useState<boolean>(false);
   const [isWithGoodsValue, setIsWithGoodsValue] = useState<boolean>(false);
   const [discountType, setDiscountType] = useState<string>('');
+  const [packingCharges, setPackingCharges] = useState<string>('');
+  const [packingMaterialCharges, setPackingMaterialCharges] = useState<string>('');
+  const [unpackingCharges, setUnpackingCharges] = useState<string>("");
+  const [loadingCharges, setLoadingCharges] = useState<string>("");
+  const [unloadingCharges, setUnloadingCharges] = useState<string>("");
+  const [loadingBy, setLoadingBy] = useState<string>("");
+  const [unLoadingBy, setUnLoadingBy] = useState<string>("");
+  const [gstInQuotation, setGstInQuotation] = useState<string>("");
+
   // console.log('quotation-form-state----', JSON.stringify(state));
 
   const switchWrapperStyle = switchState
     ? styles.switchMainWrapper
     : styles.switchMainWrapper2;
+
+  const getFreightInputsStyle = () => {
+    if(isPartLoad && isFullLoad) {
+      return styles.textContainer
+    } else if(isPartLoad && !isFullLoad) {
+      return styles.textContainer2;
+    } else if(!isPartLoad && isFullLoad) {
+      return styles.textContainer2;
+    }
+    return styles.textContainer;
+  }
+
+  const isPartLoadTypeOnly = isPartLoad && !isFullLoad;
+  const isFullLoadTypeOnly = !isPartLoad && isFullLoad;
+  const isBothLoadType = isPartLoad && isFullLoad;
 
   const handleQuotationDate = (date: Date) => {
     dispatch({
@@ -459,7 +519,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
               inputType="numeric"
-              placeholder='Enter discount amount'
+              placeholder="Enter discount amount"
             />
           </View>
         </>
@@ -594,11 +654,11 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                 <DatePickerComponent onDateSelect={handleQuotationDate} />
               </View>
             </View>
-            <Spacer height={4} />
+            {/* <Spacer height={4} />
             <View style={styles.textContainer2}>
               <Label text="Quotation Design" style={styles.label} />
               <DropdownComponent data={templates} onSelect={handleTemplate} />
-            </View>
+            </View> */}
             <Spacer height={4} />
             <View style={styles.textContainer2}>
               <Label text="Party Company Name" style={styles.label} />
@@ -635,7 +695,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
         <CollapsibleView title="PICKUP ADDRESS" collapsed={true}>
           <View>
             <View style={styles.textContainer2}>
-              <Label text="Pin code" style={styles.label} />
+              <Label text="PIN Code" style={styles.label} />
               <Input
                 onChangeText={handlePickupPinCode}
                 containerStyle={styles.inputContainer}
@@ -643,28 +703,21 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                 selectionColor={COLOR_BLACK}
               />
             </View>
-            <View style={styles.textContainer2}>
-              <Label text="City" style={styles.label} />
-              <DropdownComponent
-                data={shiftingTypes}
-                onSelect={handleShiftingType}
-              />
-            </View>
-            <Spacer height={4} />
-            <View style={styles.textContainer2}>
-              <Label text="State" style={styles.label} />
-              <DropdownComponent
-                data={shiftingTypes}
-                onSelect={handleShiftingType}
-              />
-            </View>
-            <Spacer height={4} />
-            <View style={styles.textContainer2}>
-              <Label text="Locality" style={styles.label} />
-              <DropdownComponent
-                data={shiftingTypes}
-                onSelect={handleShiftingType}
-              />
+            <View style={styles.mainWrapper}>
+              <View style={styles.textContainer}>
+                <Label text="State" style={styles.label} />
+                <DropdownComponent
+                  data={shiftingTypes}
+                  onSelect={handleShiftingType}
+                />
+              </View>
+              <View style={styles.textContainer}>
+                <Label text="City" style={styles.label} />
+                <DropdownComponent
+                  data={shiftingTypes}
+                  onSelect={handleShiftingType}
+                />
+              </View>
             </View>
             <Spacer height={4} />
             <View style={styles.textContainer2}>
@@ -676,13 +729,29 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                 selectionColor={COLOR_BLACK}
               />
             </View>
+            <View style={styles.mainWrapper}>
+                <View style={styles.textContainer}>
+                  <Label text="Current Floor" style={styles.label} />
+                  <DropdownComponent
+                    data={floorOptions}
+                    onSelect={handleShiftingType}
+                  />
+                </View>
+                <View style={styles.textContainer}>
+                  <Label text="Lift Status" style={styles.label} />
+                  <DropdownComponent
+                    data={liftStatusOptions}
+                    onSelect={handleShiftingType}
+                  />
+                </View>
+              </View>
           </View>
         </CollapsibleView>
         <Spacer height={4} />
         <CollapsibleView title="DELIVERY ADDRESS" collapsed={true}>
           <View>
             <View style={styles.textContainer2}>
-              <Label text="Pin code" style={styles.label} />
+              <Label text="PIN Code" style={styles.label} />
               <Input
                 onChangeText={handleDeliveryPinCode}
                 containerStyle={styles.inputContainer}
@@ -690,28 +759,21 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                 selectionColor={COLOR_BLACK}
               />
             </View>
-            <View style={styles.textContainer2}>
-              <Label text="City" style={styles.label} />
-              <DropdownComponent
-                data={shiftingTypes}
-                onSelect={handleShiftingType}
-              />
-            </View>
-            <Spacer height={4} />
-            <View style={styles.textContainer2}>
-              <Label text="State" style={styles.label} />
-              <DropdownComponent
-                data={shiftingTypes}
-                onSelect={handleShiftingType}
-              />
-            </View>
-            <Spacer height={4} />
-            <View style={styles.textContainer2}>
-              <Label text="Locality" style={styles.label} />
-              <DropdownComponent
-                data={shiftingTypes}
-                onSelect={handleShiftingType}
-              />
+            <View style={styles.mainWrapper}>
+              <View style={styles.textContainer}>
+                <Label text="State" style={styles.label} />
+                <DropdownComponent
+                  data={shiftingTypes}
+                  onSelect={handleShiftingType}
+                />
+              </View>
+              <View style={styles.textContainer}>
+                <Label text="City" style={styles.label} />
+                <DropdownComponent
+                  data={shiftingTypes}
+                  onSelect={handleShiftingType}
+                />
+              </View>
             </View>
             <Spacer height={4} />
             <View style={styles.textContainer2}>
@@ -723,6 +785,22 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                 selectionColor={COLOR_BLACK}
               />
             </View>
+            <View style={styles.mainWrapper}>
+                <View style={styles.textContainer}>
+                  <Label text="Current Floor" style={styles.label} />
+                  <DropdownComponent
+                    data={floorOptions}
+                    onSelect={handleShiftingType}
+                  />
+                </View>
+                <View style={styles.textContainer}>
+                  <Label text="Lift Status" style={styles.label} />
+                  <DropdownComponent
+                    data={liftStatusOptions}
+                    onSelect={handleShiftingType}
+                  />
+                </View>
+              </View>
           </View>
         </CollapsibleView>
         <Spacer height={4} />
@@ -731,19 +809,70 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
             <View style={styles.labelContainer}>
               <Label text="Load Type" style={styles.label} />
             </View>
-            <View style={styles.textContainer2}>
-              <BouncyCheckboxGroup
-                data={loadTypes}
-                onChange={(selectedItem: ICheckboxButton) => {
-                  console.log('SelectedItem: ', JSON.stringify(selectedItem));
-                  handleFullLoad(selectedItem);
+            <View style={styles.textContainer3}>
+              <BouncyCheckbox
+                size={25}
+                unfillColor="#FFFFFF"
+                text="Part Load"
+                fillColor={COLOR_BLUE}
+                isChecked={isPartLoad}
+                iconStyle={{
+                  borderColor: 'red',
+                  borderRadius: 0,
+                  width: 16,
+                  height: 16,
+                }}
+                innerIconStyle={{
+                  borderWidth: 1,
+                  borderRadius: 0,
+                  width: 16,
+                  height: 16,
+                }}
+                textStyle={{
+                  fontFamily: 'JosefinSans-Regular',
+                  textDecorationLine: 'none',
+                  fontSize: 14
+                }}
+                style={{marginRight: 45}}
+                textContainerStyle={{paddingLeft: 0, marginLeft: 10}}
+                onPress={(isChecked: boolean) => {
+                  setIsPartLoad(isChecked);
+                }}
+              />
+              <BouncyCheckbox
+                size={25}
+                unfillColor="#FFFFFF"
+                text="Full Load"
+                fillColor={COLOR_BLUE}
+                isChecked={isFullLoad}
+                iconStyle={{
+                  borderColor: 'red',
+                  borderRadius: 0,
+                  width: 16,
+                  height: 16,
+                }}
+                innerIconStyle={{
+                  borderWidth: 1,
+                  borderRadius: 0,
+                  width: 16,
+                  height: 16,
+                }}
+                textStyle={{
+                  fontFamily: 'JosefinSans-Regular',
+                  textDecorationLine: 'none',
+                  fontSize: 14
+                }}
+                style={{marginRight: 15}}
+                textContainerStyle={{paddingLeft: 0, marginLeft: 10}}
+                onPress={(isChecked: boolean) => {
+                  setIsFullLoad(isChecked);
                 }}
               />
             </View>
             {renderLoryTypeView()}
             <Spacer height={4} />
             <View style={styles.mainWrapper}>
-              <View style={styles.textContainer}>
+              {(isBothLoadType || isPartLoad) && <View style={[styles.textContainer, getFreightInputsStyle()]}>
                 <Label text="Freight Part" style={styles.label} />
                 <Input
                   onChangeText={() => {}}
@@ -752,8 +881,8 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                   selectionColor={COLOR_BLACK}
                   inputType="numeric"
                 />
-              </View>
-              <View style={styles.textContainer}>
+              </View>}
+              {(isBothLoadType || isFullLoad) && <View style={[styles.textContainer, getFreightInputsStyle()]}>
                 <Label text="Freight Full" style={styles.label} />
                 <Input
                   onChangeText={() => {}}
@@ -762,7 +891,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                   selectionColor={COLOR_BLACK}
                   inputType="numeric"
                 />
-              </View>
+              </View>}
             </View>
             <View style={styles.labelContainer}>
               <Label text="Packing Charges" style={styles.label} />
@@ -771,13 +900,13 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
               <BouncyCheckboxGroup
                 data={freightChargeOptions}
                 onChange={(selectedItem: ICheckboxButton) => {
-                  console.log('SelectedItem: ', JSON.stringify(selectedItem));
+                  setPackingCharges(selectedItem.id as string);
                 }}
               />
             </View>
             <Spacer height={4} />
-            <View style={styles.mainWrapper}>
-              <View style={styles.textContainer}>
+            {packingCharges === '2' && <View style={styles.mainWrapper}>
+              {(isBothLoadType || isPartLoad) && <View style={[styles.textContainer, getFreightInputsStyle()]}>
                 <Label text="Part Load" style={styles.label} />
                 <Input
                   onChangeText={() => {}}
@@ -786,8 +915,8 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                   selectionColor={COLOR_BLACK}
                   inputType="numeric"
                 />
-              </View>
-              <View style={styles.textContainer}>
+              </View>}
+              {(isBothLoadType || isFullLoad) && <View style={[styles.textContainer, getFreightInputsStyle()]}>
                 <Label text="Full Load" style={styles.label} />
                 <Input
                   onChangeText={() => {}}
@@ -796,22 +925,22 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                   selectionColor={COLOR_BLACK}
                   inputType="numeric"
                 />
-              </View>
-            </View>
+              </View>}
+            </View>}
             <View style={styles.labelContainer}>
-              <Label text="Unpacking Charges" style={styles.label} />
+              <Label text="Packing Material Charges" style={styles.label} />
             </View>
             <View style={styles.textContainer2}>
               <BouncyCheckboxGroup
                 data={freightChargeOptions}
                 onChange={(selectedItem: ICheckboxButton) => {
-                  console.log('SelectedItem: ', JSON.stringify(selectedItem));
+                  setPackingMaterialCharges(selectedItem.id as string);
                 }}
               />
             </View>
             <Spacer height={4} />
-            <View style={styles.mainWrapper}>
-              <View style={styles.textContainer}>
+            {packingMaterialCharges === '2' && <View style={styles.mainWrapper}>
+              {(isBothLoadType || isPartLoad) && <View style={[styles.textContainer, getFreightInputsStyle()]}>
                 <Label text="Part Load" style={styles.label} />
                 <Input
                   onChangeText={() => {}}
@@ -820,8 +949,8 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                   selectionColor={COLOR_BLACK}
                   inputType="numeric"
                 />
-              </View>
-              <View style={styles.textContainer}>
+              </View>}
+              {(isBothLoadType || isFullLoad) && <View style={[styles.textContainer, getFreightInputsStyle()]}>
                 <Label text="Full Load" style={styles.label} />
                 <Input
                   onChangeText={() => {}}
@@ -830,8 +959,8 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                   selectionColor={COLOR_BLACK}
                   inputType="numeric"
                 />
-              </View>
-            </View>
+              </View>}
+            </View>}
             <View style={styles.labelContainer}>
               <Label text="Loading Charges" style={styles.label} />
             </View>
@@ -839,13 +968,27 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
               <BouncyCheckboxGroup
                 data={freightChargeOptions}
                 onChange={(selectedItem: ICheckboxButton) => {
-                  console.log('SelectedItem: ', JSON.stringify(selectedItem));
+                  setLoadingCharges(selectedItem.id as string)
                 }}
               />
             </View>
+            {(loadingCharges === '1' || loadingCharges === '2') &&
+              <>
+                <Spacer height={12} />
+                <View style={styles.textContainer2}>
+                <BouncyCheckboxGroup
+                  data={loadingUnloadingByOptions}
+                  onChange={(selectedItem: ICheckboxButton) => {
+                    setLoadingBy(selectedItem.id as string)
+                  }}
+                />
+                </View>
+              </>
+            }
             <Spacer height={4} />
-            <View style={styles.mainWrapper}>
-              <View style={styles.textContainer}>
+            {loadingCharges !== '3' && <View style={styles.mainWrapper}>
+              {(loadingCharges === '2' && loadingBy === '1') && <>
+              {(isBothLoadType || isPartLoad) && <View style={[styles.textContainer, getFreightInputsStyle()]}>
                 <Label text="Part Load" style={styles.label} />
                 <Input
                   onChangeText={() => {}}
@@ -854,8 +997,8 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                   selectionColor={COLOR_BLACK}
                   inputType="numeric"
                 />
-              </View>
-              <View style={styles.textContainer}>
+              </View>}
+              {(isBothLoadType || isFullLoad) && <View style={[styles.textContainer, getFreightInputsStyle()]}>
                 <Label text="Full Load" style={styles.label} />
                 <Input
                   onChangeText={() => {}}
@@ -864,8 +1007,10 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                   selectionColor={COLOR_BLACK}
                   inputType="numeric"
                 />
-              </View>
+              </View>}
+              </>}
             </View>
+            }
             <View style={styles.labelContainer}>
               <Label text="Unloading Charges" style={styles.label} />
             </View>
@@ -873,13 +1018,62 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
               <BouncyCheckboxGroup
                 data={freightChargeOptions}
                 onChange={(selectedItem: ICheckboxButton) => {
-                  console.log('SelectedItem: ', JSON.stringify(selectedItem));
+                  setUnloadingCharges(selectedItem.id as string);
+                }}
+              />
+            </View>
+            {(unloadingCharges === '1' || unloadingCharges === '2') &&
+              <>
+                <Spacer height={12} />
+                <View style={styles.textContainer2}>
+                <BouncyCheckboxGroup
+                  data={loadingUnloadingByOptions}
+                  onChange={(selectedItem: ICheckboxButton) => {
+                    setUnLoadingBy(selectedItem.id as string)
+                  }}
+                />
+                </View>
+              </>
+            }
+            <Spacer height={4} />
+            {unloadingCharges !== '3' && <View style={styles.mainWrapper}>
+              {(unloadingCharges === '2' && unLoadingBy === '1') && <>
+                {(isBothLoadType || isPartLoad) && <View style={[styles.textContainer, getFreightInputsStyle()]}>
+                  <Label text="Part Load" style={styles.label} />
+                  <Input
+                    onChangeText={() => {}}
+                    containerStyle={styles.inputContainer}
+                    inputStyle={styles.input}
+                    selectionColor={COLOR_BLACK}
+                    inputType="numeric"
+                  />
+                </View>}
+                {(isBothLoadType || isFullLoad) && <View style={[styles.textContainer, getFreightInputsStyle()]}>
+                  <Label text="Full Load" style={styles.label} />
+                  <Input
+                    onChangeText={() => {}}
+                    containerStyle={styles.inputContainer}
+                    inputStyle={styles.input}
+                    selectionColor={COLOR_BLACK}
+                    inputType="numeric"
+                  />
+                </View>}
+              </>}
+            </View>}
+            <View style={styles.labelContainer}>
+              <Label text="Unpacking Charges" style={styles.label} />
+            </View>
+            <View style={styles.textContainer2}>
+              <BouncyCheckboxGroup
+                data={freightChargeOptions}
+                onChange={(selectedItem: ICheckboxButton) => {
+                  setUnpackingCharges(selectedItem.id as string);
                 }}
               />
             </View>
             <Spacer height={4} />
-            <View style={styles.mainWrapper}>
-              <View style={styles.textContainer}>
+            {unpackingCharges === '2' && <View style={styles.mainWrapper}>
+              {(isBothLoadType || isPartLoad) && <View style={[styles.textContainer, getFreightInputsStyle()]}>
                 <Label text="Part Load" style={styles.label} />
                 <Input
                   onChangeText={() => {}}
@@ -888,8 +1082,8 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                   selectionColor={COLOR_BLACK}
                   inputType="numeric"
                 />
-              </View>
-              <View style={styles.textContainer}>
+              </View>}
+              {(isBothLoadType || isFullLoad) && <View style={[styles.textContainer, getFreightInputsStyle()]}>
                 <Label text="Full Load" style={styles.label} />
                 <Input
                   onChangeText={() => {}}
@@ -898,8 +1092,8 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                   selectionColor={COLOR_BLACK}
                   inputType="numeric"
                 />
-              </View>
-            </View>
+              </View>}
+            </View>}
             <Spacer height={4} />
             <View style={styles.textContainer2}>
               <Label text="Advance Amount" style={styles.label} />
@@ -953,28 +1147,30 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                 <BouncyCheckboxGroup
                   data={GSTOptions}
                   onChange={(selectedItem: ICheckboxButton) => {
-                    console.log('SelectedItem: ', JSON.stringify(selectedItem));
+                    // console.log('SelectedItem: ', JSON.stringify(selectedItem));
+                    setGstInQuotation(selectedItem.id as string);
                   }}
                 />
               </View>
             </View>
-            <Spacer height={4} />
-            <View style={styles.mainWrapper}>
-              <View style={styles.textContainer}>
-                <Label text="GST %" style={styles.label} />
-                <DropdownComponent
-                  data={gstPercentOptions}
-                  onSelect={handleShiftingType}
-                />
+            {gstInQuotation === '1' && <>
+              <View style={styles.mainWrapper}>
+                <View style={styles.textContainer}>
+                  <Label text="GST %" style={styles.label} />
+                  <DropdownComponent
+                    data={gstPercentOptions}
+                    onSelect={handleShiftingType}
+                  />
+                </View>
+                <View style={styles.textContainer}>
+                  <Label text="GST Type" style={styles.label} />
+                  <DropdownComponent
+                    data={gstTypeOptions}
+                    onSelect={handleShiftingType}
+                  />
+                </View>
               </View>
-              <View style={styles.textContainer}>
-                <Label text="GST Type" style={styles.label} />
-                <DropdownComponent
-                  data={gstTypeOptions}
-                  onSelect={handleShiftingType}
-                />
-              </View>
-            </View>
+            </>}
           </View>
         </CollapsibleView>
         <Spacer height={4} />
@@ -990,7 +1186,6 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                 }}
               />
             </View>
-            {renderInsuranceWithOrWithoutGoodsValueView()}
             <Spacer height={4} />
             <View style={styles.textContainer2}>
               <Label text="Insurance Type" style={styles.label} />
@@ -1016,7 +1211,21 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                 />
               </View>
             </View>
-            {renderWithGoodsValueInputView()}
+            <Spacer height={4} />
+          <View style={styles.labelContainer}>
+            <Label text="Value of Goods" style={styles.label} />
+          </View>
+          <View style={styles.mainWrapper}>
+            <View style={styles.textContainer2}>
+              <Input
+                onChangeText={() => {}}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                selectionColor={COLOR_BLACK}
+                inputType="numeric"
+              />
+            </View>
+          </View>
           </View>
         </CollapsibleView>
         <Spacer height={4} />
@@ -1059,21 +1268,15 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
         <Spacer height={4} />
         <CollapsibleView title="OTHER CHARGES" collapsed={true}>
           <View>
-            <Spacer height={8} />
-            <View style={styles.textContainer2}>
-              <BouncyCheckboxGroup
-                data={requiredptions}
-                onChange={(selectedItem: ICheckboxButton) => {
-                  console.log('SelectedItem: ', JSON.stringify(selectedItem));
-                }}
-              />
-            </View>
             <View style={styles.textContainer2}>
               <Spacer height={12} />
-              <DropdownComponent
-                data={otherChargeOptions}
-                onSelect={handleShiftingType}
-              />
+              <Input
+                  onChangeText={() => {}}
+                  containerStyle={styles.inputContainer}
+                  inputStyle={styles.input}
+                  selectionColor={COLOR_BLACK}
+                  // inputType="numeric"
+                />
             </View>
             <Spacer height={4} />
             <View style={styles.labelContainer}>

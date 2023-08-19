@@ -32,7 +32,7 @@ const SignInPageView = (props: any) => {
       mobile: mobile,
     };
     dispatch(getOtpRequest(payload));
-  }, []);
+  }, [mobile]);
 
   useEffect(() => {
     if(!requesting && success) {

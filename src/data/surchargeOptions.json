@@ -6,5 +6,9 @@
   {
     "label": "Applicable",
     "value": "2"
+  },
+  {
+    "label": "Extra",
+    "value": "3"
   }
 ]

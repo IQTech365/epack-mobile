@@ -7,6 +7,10 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: COLOR_WHITE,
         alignItems: 'center'
+    },
+    tabsContainer: {
+        width: width,
+        height: 40,
     }
 });
 
