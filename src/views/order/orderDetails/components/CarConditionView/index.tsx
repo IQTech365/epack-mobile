@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useReducer, useState} from 'react';
 import {View, Text} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
@@ -14,6 +14,12 @@ import shiftingLuggages from '../../../../../data/shiftingLuggage.json';
 import {Switch} from 'react-native-switch';
 import AccessoryView from '../AccessoryView';
 import accessories from '../../../../../data/accessories.json';
+import {
+  initialState,
+  carConditionReducer,
+  CARCONDITION_FORM_ACTION,
+} from './carConditionReducer'
+import { formatDate } from '../../../../../utils/formatter';
 
 interface ICarConditionViewProps {
   //
@@ -21,6 +27,7 @@ interface ICarConditionViewProps {
 
 const CarConditionView: React.FC<ICarConditionViewProps> = ({}) => {
   const [switchState, setSwitchState] = useState<boolean>(false);
+  const [reducerState, dispatch] = useReducer(carConditionReducer,initialState)
   const switchWrapperStyle = switchState
     ? styles.switchMainWrapper
     : styles.switchMainWrapper2;
@@ -30,20 +37,154 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({}) => {
     //   payload: formatDate(date),
     // });
   };
-
-  const handleReceiptNoInputTextChange = (text: string) => {
-    // dispatch({
-    //   type: QUOTATION_FORM_ACTION.COMPANY_NAME,
-    //   payload: text,
-    // });
-  };
-
   const handleTemplate = (item: TDropdownItem) => {
     // dispatch({
     //   type: QUOTATION_FORM_ACTION.SHIFTING_LUGGAGE,
     //   payload: item.label,
     // });
   };
+  const handleReceiptNoInputTextChange = (text: string) => {
+    // dispatch({
+    //   type: QUOTATION_FORM_ACTION.COMPANY_NAME,
+    //   payload: text,
+    // });
+  };
+  const handleCarConditionNo = (text: string) => {
+    dispatch({
+      type: CARCONDITION_FORM_ACTION.CARCONDITION_NO,
+      payload: text,
+    });
+  };
+
+  
+  const handleChooseTemplate = (item: TDropdownItem) => {
+     dispatch({
+      type: CARCONDITION_FORM_ACTION.CHOOSE_TEMPLATE,
+      payload: item.label,
+     });
+  };
+
+  const handleCarConditionDate = (date: Date) => {
+    dispatch({
+      type: CARCONDITION_FORM_ACTION.DATE_OF_CARCONDITION,
+      payload: formatDate(date),
+    });
+  };
+  const handleCnBiltyLrNO = (text: string) => {
+    dispatch({
+      type: CARCONDITION_FORM_ACTION.CN_BILTY_LR_NO,
+      payload: text,
+    });
+  };
+   
+  const handleManufacturer = (item: TDropdownItem) => {
+    dispatch({
+     type: CARCONDITION_FORM_ACTION.MANUFACTURER,
+     payload: item.label,
+    });
+ };
+  const handleModel = (item: TDropdownItem) => {
+    dispatch({
+     type: CARCONDITION_FORM_ACTION.MODEL,
+     payload: item.label,
+    });
+ };
+  const handleColor = (item: TDropdownItem) => {
+    dispatch({
+     type: CARCONDITION_FORM_ACTION.COLOR,
+     payload: item.label,
+    });
+ };
+  const handleYear = (item: TDropdownItem) => {
+    dispatch({
+     type: CARCONDITION_FORM_ACTION.YEAR,
+     payload: item.label,
+    });
+ };
+ const handleVehicleRegNO = (text: string) => {
+  dispatch({
+    type: CARCONDITION_FORM_ACTION.VEHICLE_REG_NO,
+    payload: text,
+  });
+};
+ const handleVehicleKm = (text: string) => {
+  dispatch({
+    type: CARCONDITION_FORM_ACTION.VEHICLE_KM,
+    payload: text,
+  });
+};
+ const handleInsuranceCompany = (text: string) => {
+  dispatch({
+    type: CARCONDITION_FORM_ACTION.INSURANCE_COMPANY_NAME,
+    payload: text,
+  });
+};
+ const handlePolicyNo = (text: string) => {
+  dispatch({
+    type: CARCONDITION_FORM_ACTION.INSURANCE_POLICY_NO,
+    payload: text,
+  });
+};
+ const handleVehicleValue = (text: string) => {
+  dispatch({
+    type: CARCONDITION_FORM_ACTION.VEHICLE_VALUE,
+    payload: text,
+  });
+};
+ const handleChasisNo = (text: string) => {
+  dispatch({
+    type: CARCONDITION_FORM_ACTION.CHASIS_NO,
+    payload: text,
+  });
+};
+ const handleEngineNo = (text: string) => {
+  dispatch({
+    type: CARCONDITION_FORM_ACTION.ENGINE_NO,
+    payload: text,
+  });
+};
+ const handleBatteryNo = (text: string) => {
+  dispatch({
+    type: CARCONDITION_FORM_ACTION.BATTERY_NO,
+    payload: text,
+  });
+};
+ const handleTyreyNo = (text: string) => {
+  dispatch({
+    type: CARCONDITION_FORM_ACTION.TYRE_NO,
+    payload: text,
+  });
+};
+ const handleAnyOtherAccessories = (text: string) => {
+  dispatch({
+    type: CARCONDITION_FORM_ACTION.ANY_OTHER_ACCESSORIES,
+    payload: text,
+  });
+};
+ const handleRemark = (text: string) => {
+  dispatch({
+    type: CARCONDITION_FORM_ACTION.REMARK,
+    payload: text,
+  });
+};
+ const handleScratches = (text: string) => {
+  dispatch({
+    type: CARCONDITION_FORM_ACTION.SCARATCHES,
+    payload: text,
+  });
+};
+ const handleDent = (text: string) => {
+  dispatch({
+    type: CARCONDITION_FORM_ACTION.DENT,
+    payload: text,
+  });
+};
+ const handleAnyOtherObservation = (text: string) => {
+  dispatch({
+    type: CARCONDITION_FORM_ACTION.ANY_OTHER_OBSERVATION,
+    payload: text,
+  });
+};
 
   return (
     <AvoidSoftInputViewHOC>
@@ -63,14 +204,14 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({}) => {
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Date of Car Condition" style={styles.label} />
-                <DatePickerComponent onDateSelect={handleReceiptDate} />
+                <DatePickerComponent onDateSelect={handleCarConditionDate} />
               </View>
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer2}>
               <Label text="CN / Bilty / LR No." style={styles.label} />
               <Input
-                onChangeText={handleReceiptNoInputTextChange}
+                onChangeText={handleCnBiltyLrNO}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -82,14 +223,14 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({}) => {
                 <Label text="Manufacturer" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
-                  onSelect={handleTemplate}
+                  onSelect={handleManufacturer}
                 />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Model" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
-                  onSelect={handleTemplate}
+                  onSelect={handleModel}
                 />
               </View>
             </View>
@@ -99,14 +240,14 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({}) => {
                 <Label text="Color" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
-                  onSelect={handleTemplate}
+                  onSelect={handleColor}
                 />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Year" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
-                  onSelect={handleTemplate}
+                  onSelect={handleYear}
                 />
               </View>
             </View>
@@ -115,7 +256,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({}) => {
               <View style={styles.itemContainer}>
                 <Label text="Vehicle Reg. No." style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handleVehicleRegNO}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -124,7 +265,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({}) => {
               <View style={styles.itemContainer}>
                 <Label text="Vehicle KM" style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handleVehicleKm}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -135,7 +276,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({}) => {
             <View style={styles.elementContainer2}>
               <Label text="Insurance Company Name" style={styles.label} />
               <Input
-                onChangeText={handleReceiptNoInputTextChange}
+                onChangeText={handleInsuranceCompany}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -155,7 +296,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({}) => {
               <View style={styles.itemContainer}>
                 <Label text="Vehicle Value" style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handleVehicleValue}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -166,7 +307,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({}) => {
             <View style={styles.elementContainer2}>
               <Label text="Chasis No." style={styles.label} />
               <Input
-                onChangeText={handleReceiptNoInputTextChange}
+                onChangeText={handleChasisNo}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -176,7 +317,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({}) => {
             <View style={styles.elementContainer2}>
               <Label text="Engine No." style={styles.label} />
               <Input
-                onChangeText={handleReceiptNoInputTextChange}
+                onChangeText={handleEngineNo}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -203,7 +344,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({}) => {
               <View style={styles.itemContainer}>
                 <Label text="Battery No." style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handleBatteryNo}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -212,7 +353,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({}) => {
               <View style={styles.itemContainer}>
                 <Label text="Tyre No." style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handleTyreyNo}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -223,7 +364,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({}) => {
             <View style={styles.elementContainer2}>
               <Label text="Any Other Accessories" style={styles.label} />
               <Input
-                onChangeText={handleReceiptNoInputTextChange}
+                onChangeText={handleAnyOtherAccessories}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -233,7 +374,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({}) => {
             <View style={styles.elementContainer2}>
               <Label text="Remark" style={styles.label} />
               <Input
-                onChangeText={handleReceiptNoInputTextChange}
+                onChangeText={handleRemark}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -247,7 +388,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({}) => {
             <View style={styles.elementContainer2}>
               <Label text="Scratches" style={styles.label} />
               <Input
-                onChangeText={handleReceiptNoInputTextChange}
+                onChangeText={handleScratches}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -257,7 +398,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({}) => {
             <View style={styles.elementContainer2}>
               <Label text="Dent" style={styles.label} />
               <Input
-                onChangeText={handleReceiptNoInputTextChange}
+                onChangeText={handleDent}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -267,7 +408,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({}) => {
             <View style={styles.elementContainer2}>
               <Label text="Any Other Observation" style={styles.label} />
               <Input
-                onChangeText={handleReceiptNoInputTextChange}
+                onChangeText={handleAnyOtherObservation}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}

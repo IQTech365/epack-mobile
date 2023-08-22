@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useReducer} from 'react';
 import {View, Text} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../common/Spacer';
@@ -15,9 +15,13 @@ import CollapsibleView from '../../../common/CollapsibleView';
 import shiftingTypes from '../../../data/shiftingType.json';
 import Button from '../../../common/Button';
 import DatePickerComponent from '../../../common/DatePickerComponent';
+import{
+  initialState,
+  moneyReceiptReducer
+} from './moneyReceiptReducer';
 
 const AddOrderView: React.FC<{}> = ({}) => {
-  const state = {pickupPincode: '', deliveryPincode: ''};
+  const state = {pickupPincode: '', deliveryPincode: ''}
   const handleShiftingType = (item: TDropdownItem) => {
     // dispatch({
     //   type: QUOTATION_FORM_ACTION.SHIFTING_LUGGAGE,
