@@ -348,70 +348,70 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
   const isBothLoadType = isPartLoad && isFullLoad;
 
   const handleQuotationDate = (date: Date) => {
-    dispatch({
-      type: QUOTATION_FORM_ACTION.DATE_OF_QUOTATION,
-      payload: formatDate(date),
-    });
+    // dispatch({
+    //   type: QUOTATION_FORM_ACTION.DATE_OF_QUOTATION,
+    //   payload: formatDate(date),
+    // });
   };
 
   const handleShiftingType = (item: TDropdownItem) => {
-    dispatch({
-      type: QUOTATION_FORM_ACTION.SHIFTING_TYPE,
-      payload: item.label,
-    });
+    // dispatch({
+    //   type: QUOTATION_FORM_ACTION.SHIFTING_TYPE,
+    //   payload: item.label,
+    // });
   };
 
   const handleShiftingLuggage = (item: TDropdownItem) => {
-    dispatch({
-      type: QUOTATION_FORM_ACTION.SHIFTING_LUGGAGE,
-      payload: item.label,
-    });
+    // dispatch({
+    //   type: QUOTATION_FORM_ACTION.SHIFTING_LUGGAGE,
+    //   payload: item.label,
+    // });
   };
 
   const handleTemplate = (item: TDropdownItem) => {
-    dispatch({
-      type: QUOTATION_FORM_ACTION.TEMPLATE,
-      payload: item.label,
-    });
+    // dispatch({
+    //   type: QUOTATION_FORM_ACTION.TEMPLATE,
+    //   payload: item.label,
+    // });
   };
 
   const handleCompanyNameInputTextChange = (text: string) => {
-    dispatch({
-      type: QUOTATION_FORM_ACTION.COMPANY_NAME,
-      payload: text,
-    });
+    // dispatch({
+    //   type: QUOTATION_FORM_ACTION.COMPANY_NAME,
+    //   payload: text,
+    // });
   };
 
   const handlePartyNameInputTextChange = (text: string) => {
-    dispatch({
-      type: QUOTATION_FORM_ACTION.PARTY_NAME,
-      payload: text,
-    });
+    // dispatch({
+    //   type: QUOTATION_FORM_ACTION.PARTY_NAME,
+    //   payload: text,
+    // });
   };
 
   const handleMobileNumberInputTextChange = (text: string) => {
-    dispatch({
-      type: QUOTATION_FORM_ACTION.MOBILE_NUMBER,
-      payload: text,
-    });
+    // dispatch({
+    //   type: QUOTATION_FORM_ACTION.MOBILE_NUMBER,
+    //   payload: text,
+    // });
   };
 
   const handlePickupPinCode = useCallback(
     (text: string) => {
-      dispatch({
-        type: QUOTATION_FORM_ACTION.PICKUP_PINCODE,
-        payload: text,
-      });
+      // dispatch({
+      //   type: QUOTATION_FORM_ACTION.PICKUP_PINCODE,
+      //   payload: text,
+      // });
     },
     [state.pickupPincode],
   );
 
   const handleDeliveryPinCode = useCallback(
     (text: string) => {
-      dispatch({
-        type: QUOTATION_FORM_ACTION.DELIVERY_PINCODE,
-        payload: text,
-      });
+      // dispatch({
+      //   type: QUOTATION_FORM_ACTION.DELIVERY_PINCODE,
+      //   payload: text,
+      // });
     },
     [state.deliveryPincode],
   );

@@ -21,6 +21,40 @@ export enum QUOTATION_FORM_ACTION {
   DELIVERY_STATE = 'DELIVERY_STATE',
   DELIVERY_LOCALITY = 'DELIVERY_LOCALITY',
   DELIVERY_ADDRESS = 'DELIVERY_ADDRESS',
+  PART_LOAD = 'PART_LOAD ',
+  FULL_LOAD = 'FULL_LOAD',
+  PACKING_CHARGES = 'PACKING_CHARGES',
+  PACKING_MATERIAL_CHARGES = 'PACKING_MATERIAL_CHARGES',
+  LOADING_CHARGES ='LOADING_CHARGES ',
+  UNLOADING_CHARGES ='UNLOADING_CHARGES',
+  UNPACKING_CHARGES = 'UNPACKING_CHARGES',
+  ADVANCE_AMOUNT = 'ADVANCE_AMOUNT',
+  SURCHARGE = 'SURCHARGE',
+  DISCOUNT_IN_QUOTATION = 'DISCOUNT_IN_QUOTATION',
+  GST_IN_QUOTATION = 'GST_IN_QUOTATION',
+  INSURANCE_DETAILS = 'INSURANCE_DETAIL ',
+  INSURANCE_TYPE = 'INSURANCE_TYPE',
+  INSURANCE_CHARGE = 'INSURANCE_CHARGE',
+  VALUE_OF_GOODS = 'VALUE_OF_GOODS',
+  STORAGE_CHARGES ='STORAGE_CHARGES ',
+  FROM_DATE ='FROM_DATE',
+  TO_DATE = 'TO_DATE',
+  STORAGE_AMOUNT = 'STORAGE_AMOUNT',
+  OTHER_CHARGES = 'OTHER_CHARGES',
+  AMOUNT = 'AMOUNT',
+  OTHER_DETAILS = 'OTHER_DETAILS ',
+}
+
+export enum EChargeStatus {
+  INCLUDED = 'INCLUDED',
+  ADDITIONAL = 'ADDITIONAL',
+  NOT_REQUIRED = 'NOT REQUIRED',
+}
+
+export  type TCharge = {
+  status: EChargeStatus,
+  part_load_charge: string,
+  full_load_charge: string,
 }
 
 /** QUOTATOIN FORM STATE */
@@ -46,6 +80,31 @@ interface IQuotationFormState {
   deliveryState: string;
   deliveryLocality: string;
   deliveryAddress: string;
+  partLoad: string;
+  fullLoad: string;
+  packingCharges: TCharge | null;
+  packingMaterialCharges : TCharge | null ;
+  loadingCharges : TCharge | null ;
+  unLoadingCharges : TCharge | null ;
+  unPackingCharges : TCharge | null ;
+  advanceAmount : string;
+  surcharge : string ;
+  discountInQuotation : TCharge | null ;
+  gstInQuotation : TCharge | null ;
+  insuranceDetails : TCharge | null ;
+  insuranceType : string;
+  insuranceCharge: string ;
+  valueOfGoods: string;
+  storageCharges: TCharge | null;
+  fromDate: string ;
+  toDate : string ;
+  storageAmount :string ;
+  otherCharges :string ;
+  amount : string ;
+otherDetailsOne : boolean;
+otherDetailsTwo : boolean;
+otherDetailsThree : boolean;
+
 }
 
 /** ACTION INTERFACE */
@@ -77,6 +136,31 @@ export const initialState: IQuotationFormState = {
   deliveryState: '',
   deliveryLocality: '',
   deliveryAddress: '',
+  partLoad: '',
+  fullLoad: '',
+  packingCharges: null,
+  packingMaterialCharges : null,
+  loadingCharges : null,
+  unLoadingCharges : null,
+  unPackingCharges : null,
+  advanceAmount : '',
+  surcharge :'',
+  discountInQuotation : null,
+  gstInQuotation : null,
+  insuranceDetails :null ,
+  insuranceType : '',
+  insuranceCharge:'',
+  valueOfGoods: '',
+  storageCharges: null,
+  fromDate: '',
+  toDate : '',
+  storageAmount :'',
+  otherCharges :'',
+  amount : '',
+  otherDetailsOne : true,
+otherDetailsTwo : true,
+otherDetailsThree : true,
+
 };
 
 /** Quotation Reducer */
@@ -128,6 +212,46 @@ export const quotationReducer = (
       return {...state, deliveryLocality: payload};
     case QUOTATION_FORM_ACTION.DELIVERY_ADDRESS:
       return {...state, deliveryAddress: payload};
+    case QUOTATION_FORM_ACTION.PART_LOAD:
+      return {...state, partLoad: payload};
+    case QUOTATION_FORM_ACTION.FULL_LOAD:
+      return {...state, fullLoad: payload};
+    case QUOTATION_FORM_ACTION.PACKING_CHARGES:
+      return {...state, packingCharges: payload};
+    case QUOTATION_FORM_ACTION.PACKING_MATERIAL_CHARGES:
+      return {...state, packingMaterialCharges: payload};
+    case QUOTATION_FORM_ACTION.LOADING_CHARGES:
+      return {...state, loadingCharges: payload};
+    case QUOTATION_FORM_ACTION.UNLOADING_CHARGES:
+      return {...state, unLoadingCharges: payload};
+    case QUOTATION_FORM_ACTION.UNPACKING_CHARGES:
+      return {...state, unPackingCharges: payload};
+    case QUOTATION_FORM_ACTION.ADVANCE_AMOUNT:
+      return {...state, advanceAmount: payload};
+    case QUOTATION_FORM_ACTION.SURCHARGE:
+      return {...state, surcharge: payload};
+    case QUOTATION_FORM_ACTION.DISCOUNT_IN_QUOTATION:
+      return {...state, discountInQuotation: payload};
+    case QUOTATION_FORM_ACTION.GST_IN_QUOTATION:
+      return {...state, gstInQuotation: payload};
+    case QUOTATION_FORM_ACTION.INSURANCE_DETAILS:
+      return {...state, insuranceDetails: payload};
+    case QUOTATION_FORM_ACTION.INSURANCE_TYPE:
+      return {...state, insuranceType: payload};
+    case QUOTATION_FORM_ACTION.INSURANCE_CHARGE:
+      return {...state, insuranceCharge: payload};
+    case QUOTATION_FORM_ACTION.VALUE_OF_GOODS:
+      return {...state, valueOfGoods: payload};
+    case QUOTATION_FORM_ACTION.STORAGE_CHARGES:
+      return {...state, storageCharges: payload};
+    case QUOTATION_FORM_ACTION.FROM_DATE:
+      return {...state, fromDate: payload};
+    case QUOTATION_FORM_ACTION.TO_DATE:
+      return {...state, toDate: payload};
+    case QUOTATION_FORM_ACTION.AMOUNT:
+      return {...state, amount: payload};
+    case QUOTATION_FORM_ACTION.OTHER_DETAILS:
+      return {...state, otherDetails: payload};
     default:
       return state;
   }
