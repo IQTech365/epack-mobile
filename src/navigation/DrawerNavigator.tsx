@@ -20,7 +20,7 @@ import {
   COLOR_GRAY2,
   COLOR_WHITE,
 } from '../utils/colors';
-import {IAppUser} from '../interface/IAppUser';
+import { IAppUser } from '../interface/IAppUser';
 import HeaderGridBackgroundImage from '../images/header-grid.png';
 import Spacer from '../common/Spacer';
 import HomeIcon from '../images/icons/home2.svg';
@@ -34,6 +34,7 @@ import SubscriptionView from '../views/subscription';
 import HelpCenterView from '../views/helpCenter';
 import NewsRoomView from '../views/newsRoom';
 import SettingsView from '../views/settings';
+import SettingStackNavigator from './SettingStackNavigator';
 const Drawer = createDrawerNavigator();
 
 const appUser: IAppUser = {
@@ -48,7 +49,7 @@ const DrawerContent = (props: any) => {
     <View style={styles.container2}>
       <DrawerContentScrollView
         {...props}
-        contentContainerStyle={{backgroundColor: COLOR_BLUE}}>
+        contentContainerStyle={{ backgroundColor: COLOR_BLUE }}>
         <ImageBackground
           imageStyle={styles.container}
           source={HeaderGridBackgroundImage}>
@@ -63,7 +64,7 @@ const DrawerContent = (props: any) => {
             <Spacer height={8} />
           </View>
         </ImageBackground>
-        <View style={{backgroundColor: '#ffffff'}}>
+        <View style={{ backgroundColor: '#ffffff' }}>
           <DrawerItemList {...props} />
         </View>
       </DrawerContentScrollView>
@@ -81,7 +82,7 @@ export const DrawerNavigator = () => {
   return (
     <Drawer.Navigator
       drawerContent={props => <DrawerContent {...props} />}
-      screenOptions={{headerShown: false, drawerLabelStyle: {marginLeft: -25}}}>
+      screenOptions={{ headerShown: false, drawerLabelStyle: { marginLeft: -25 } }}>
       <Drawer.Screen
         name="TabNavigator"
         component={TabNavigator}
@@ -122,7 +123,7 @@ export const DrawerNavigator = () => {
       />
       <Drawer.Screen
         name="Settings"
-        component={SettingsView}
+        component={SettingStackNavigator}
         options={{
           drawerIcon: () => <SettingsIcon width={24} height={24} />,
         }}

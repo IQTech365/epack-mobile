@@ -1,15 +1,15 @@
-import React, {useCallback, useReducer} from 'react';
-import {View, Text} from 'react-native';
+import React, { useCallback, useReducer } from 'react';
+import { View, Text } from 'react-native';
 import AvoidSoftInputViewHOC from '../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../common/Spacer';
 import styles from './style';
 import shiftingTypeOptions from '../../../data/shiftingType.json';
-import {TDropdownItem} from '../../../type/TDropdownItem';
+import { TDropdownItem } from '../../../type/TDropdownItem';
 import Label from '../../../common/Label';
 import DropdownComponent from '../../../common/DropdownComponent';
 import Header from '../../../common/Header';
 import Input from '../../../common/Input';
-import {COLOR_BLACK, COLOR_BLUE} from '../../../utils/colors';
+import { COLOR_BLACK, COLOR_BLUE } from '../../../utils/colors';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import CollapsibleView from '../../../common/CollapsibleView';
 import shiftingTypes from '../../../data/shiftingType.json';
@@ -17,17 +17,11 @@ import Button from '../../../common/Button';
 import DatePickerComponent from '../../../common/DatePickerComponent';
 import liftStatusOptions from '../../../data/liftStatusOptions.json';
 import floorOptions from '../../../data/floorOptions.json';
-import {initialState, addOrderReducer} from './addOrderReducer';
+import { initialState, addOrderReducer } from './addOrderReducer';
 
-const AddOrderView: React.FC<{}> = ({}) => {
-  const state = {pickupPincode: '', deliveryPincode: ''};
+const AddOrderView: React.FC<{}> = ({ }) => {
+  const state = { pickupPincode: '', deliveryPincode: '' };
 
-  const handleShiftingType = (item: TDropdownItem) => {
-    // dispatch({
-    //   type: QUOTATION_FORM_ACTION.SHIFTING_LUGGAGE,
-    //   payload: item.label,
-    // });
-  };
 
   const handlePartyNameInputTextChange = (text: string) => {
     // dispatch({
@@ -181,7 +175,7 @@ const AddOrderView: React.FC<{}> = ({}) => {
     },
     [state.deliveryPincode],
   );
-  
+
   const handleDeliveryCurrentFloor = (item: TDropdownItem) => {
     // dispatch({
     //   type: ADDORDER_FORM_ACTION.DELIVERY_CURRENT_FLOOR,
@@ -292,9 +286,9 @@ const AddOrderView: React.FC<{}> = ({}) => {
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
                 }}
-                style={{marginRight: 15, marginBottom: 10}}
-                textContainerStyle={{paddingLeft: 0}}
-                onPress={(isChecked: boolean) => {}}
+                style={{ marginRight: 15, marginBottom: 10 }}
+                textContainerStyle={{ paddingLeft: 0 }}
+                onPress={(isChecked: boolean) => { }}
               />
               <BouncyCheckbox
                 size={25}
@@ -317,9 +311,9 @@ const AddOrderView: React.FC<{}> = ({}) => {
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
                 }}
-                style={{marginRight: 15}}
-                textContainerStyle={{paddingLeft: 0}}
-                onPress={(isChecked: boolean) => {}}
+                style={{ marginRight: 15 }}
+                textContainerStyle={{ paddingLeft: 0 }}
+                onPress={(isChecked: boolean) => { }}
               />
               <BouncyCheckbox
                 size={25}
@@ -342,9 +336,9 @@ const AddOrderView: React.FC<{}> = ({}) => {
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
                 }}
-                style={{marginRight: 15}}
-                textContainerStyle={{paddingLeft: 0}}
-                onPress={(isChecked: boolean) => {}}
+                style={{ marginRight: 15 }}
+                textContainerStyle={{ paddingLeft: 0 }}
+                onPress={(isChecked: boolean) => { }}
               />
               <BouncyCheckbox
                 size={25}
@@ -367,9 +361,9 @@ const AddOrderView: React.FC<{}> = ({}) => {
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
                 }}
-                style={{marginRight: 15}}
-                textContainerStyle={{paddingLeft: 0}}
-                onPress={(isChecked: boolean) => {}}
+                style={{ marginRight: 15 }}
+                textContainerStyle={{ paddingLeft: 0 }}
+                onPress={(isChecked: boolean) => { }}
               />
               <BouncyCheckbox
                 size={25}
@@ -392,9 +386,9 @@ const AddOrderView: React.FC<{}> = ({}) => {
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
                 }}
-                style={{marginRight: 15}}
-                textContainerStyle={{paddingLeft: 0}}
-                onPress={(isChecked: boolean) => {}}
+                style={{ marginRight: 15 }}
+                textContainerStyle={{ paddingLeft: 0 }}
+                onPress={(isChecked: boolean) => { }}
               />
             </View>
           </View>
@@ -430,7 +424,7 @@ const AddOrderView: React.FC<{}> = ({}) => {
             <View style={styles.elementContainer}>
               <Label text="Address" style={styles.label} />
               <Input
-                onChangeText={(handlePickupAddress) => {}}
+                onChangeText={(handlePickupAddress) => { }}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -486,7 +480,7 @@ const AddOrderView: React.FC<{}> = ({}) => {
             <View style={styles.elementContainer}>
               <Label text="Address" style={styles.label} />
               <Input
-                onChangeText={(handleDeliveryAddress) => {}}
+                onChangeText={(handleDeliveryAddress) => { }}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -514,7 +508,7 @@ const AddOrderView: React.FC<{}> = ({}) => {
         <Spacer height={12} />
         <Button
           text="SUBMIT"
-          onPress={() => {}}
+          onPress={() => { }}
           disabled={true}
           style={styles.previewButtonStyle}
           textStyle={styles.textStyle}

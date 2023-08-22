@@ -46,6 +46,10 @@ const ClientStackRoute = {
   ClientRoot: 'ClientRoot',
   ClientDetails: 'ClientDetails',
 };
+const SettingStackRoute = {
+  ProfileSetting: 'ProfileSetting',
+
+};
 
 export {
   TabRoute,
@@ -54,5 +58,6 @@ export {
   QuotationStackRoute,
   OrderStackRoute,
   EnquiryStackRoute,
-  ClientStackRoute
+  ClientStackRoute,
+  SettingStackRoute
 };
