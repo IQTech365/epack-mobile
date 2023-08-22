@@ -36,31 +36,163 @@ const AddOrderView: React.FC<{}> = ({}) => {
     // });
   };
 
-  const handlePickupPinCode = useCallback(
-    (text: string) => {
-      // dispatch({
-      //   type: QUOTATION_FORM_ACTION.PICKUP_PINCODE,
-      //   payload: text,
-      // });
-    },
-    [state.pickupPincode],
-  );
-
-  const handleDeliveryPinCode = useCallback(
-    (text: string) => {
-      // dispatch({
-      //   type: QUOTATION_FORM_ACTION.DELIVERY_PINCODE,
-      //   payload: text,
-      // });
-    },
-    [state.deliveryPincode],
-  );
 
   const handleQuotationDate = (date: Date) => {
     // dispatch({
     //   type: QUOTATION_FORM_ACTION.DATE_OF_QUOTATION,
     //   payload: formatDate(date),
     // });
+  };
+
+  const handleShiftingType = (item: TDropdownItem) => {
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.SHIFTING_TYPE,
+    //   payload: item.label,
+    // }); 
+  };
+
+  const handleDateOfMoving = (date: Date) => {
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.DATE_OF_MOVING,
+    //   payload: formatDate(date),
+    // });
+  };
+  const handlePartyName = (text: string) => {
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.PARTY_NAME,
+    //   payload: text,
+    // });
+  };
+  const handleMobile = (text: string) => {
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.MOBILE,
+    //   payload: text,
+    // });
+  };
+  const handlePartyCompanyName = (text: string) => {
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.PARTY_COMPANY_NAME,
+    //   payload: text,
+    // });
+  };
+  const handleOrderAmount = (text: string) => {
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.ORDER_AMOUNT,
+    //   payload: text,
+    // });
+  };
+  const handleTokenAmount = (text: string) => {
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.TOKEN_AMOUNT,
+    //   payload: text,
+    // });
+  };
+  const handleDateOfQuotation = (date: Date) => {
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.DATE_OF_QUOTATION,
+    //   payload: formatDate(date),
+    // });
+  };
+
+  //***Pickup Address***//
+  const handlePickupPinCode = useCallback(
+    (text: string) => {
+      // dispatch({
+      //   type: ADDORDER_FORM_ACTION.PICKUP_PINCODE,
+      //   payload: text,
+      // });
+    },
+    [state.pickupPincode],
+  );
+  const handlePickupCity = (item: TDropdownItem) => {
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.PICKUP_CITY,
+    //   payload: item.label,
+    // }); 
+  };
+  const handlePickupState = (item: TDropdownItem) => {
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.PICKUP_STATE,
+    //   payload: item.label,
+    // }); 
+  };
+  const handlePickupLocality = (item: TDropdownItem) => {
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.PICKUP_LOCALITY,
+    //   payload: item.label,
+    // }); 
+  };
+  const handlePickupAddress = useCallback(
+    (text: string) => {
+      // dispatch({
+      //   type: ADDORDER_FORM_ACTION.PICKUP_ADDRESS,
+      //   payload: text,
+      // });
+    },
+    [state.pickupPincode],
+  );
+  const handlePickupCurrentFloor = (item: TDropdownItem) => {
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.PICKUP_CURRENT_FLOOR,
+    //   payload: item.label,
+    // }); 
+  };
+  const handlePickupLiftStatus = (item: TDropdownItem) => {
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.PICKUP_LIFT_STATUS,
+    //   payload: item.label,
+    // }); 
+  };
+
+  //***Delivery Address***//
+  const handleDeliveryPinCode = useCallback(
+    (text: string) => {
+      // dispatch({
+      //   type: ADDORDER_FORM_ACTION.DELIVERY_PINCODE,
+      //   payload: text,
+      // });
+    },
+    [state.deliveryPincode],
+  );
+  const handleDeliveryCity = (item: TDropdownItem) => {
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.DELIVERY_CITY,
+    //   payload: item.label,
+    // }); 
+  };
+  const handleDeliveryState = (item: TDropdownItem) => {
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.DELIVERY_STATE,
+    //   payload: item.label,
+    // }); 
+  };
+  const handleDeliveryLocality = (item: TDropdownItem) => {
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.DELIVERY_LOCALITY,
+    //   payload: item.label,
+    // }); 
+  };
+  const handleDeliveryAddress = useCallback(
+    (text: string) => {
+      // dispatch({
+      //   type: ADDORDER_FORM_ACTION.DELIVERY_ADDRESS,
+      //   payload: text,
+      // });
+    },
+    [state.deliveryPincode],
+  );
+  
+  const handleDeliveryCurrentFloor = (item: TDropdownItem) => {
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.DELIVERY_CURRENT_FLOOR,
+    //   payload: item.label,
+    // }); 
+  };
+  const handleDeliveryLiftStatus = (item: TDropdownItem) => {
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.DELIVERY_LIFT_STATUS,
+    //   payload: item.label,
+    // }); 
   };
 
   return (
@@ -80,14 +212,14 @@ const AddOrderView: React.FC<{}> = ({}) => {
               </View>
               <View style={styles.textContainer}>
                 <Label text="Date of Moving" style={styles.label} />
-                <DatePickerComponent onDateSelect={handleQuotationDate} />
+                <DatePickerComponent onDateSelect={handleDateOfMoving} />
               </View>
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
               <Label text="Party Name" style={styles.label} />
               <Input
-                onChangeText={handlePartyNameInputTextChange}
+                onChangeText={handlePartyName}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -97,7 +229,7 @@ const AddOrderView: React.FC<{}> = ({}) => {
             <View style={styles.elementContainer}>
               <Label text="Mobile" style={styles.label} />
               <Input
-                onChangeText={handlePartyNameInputTextChange}
+                onChangeText={handleMobile}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -107,7 +239,7 @@ const AddOrderView: React.FC<{}> = ({}) => {
             <View style={styles.elementContainer}>
               <Label text="Party Company Name" style={styles.label} />
               <Input
-                onChangeText={handlePartyNameInputTextChange}
+                onChangeText={handlePartyCompanyName}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -284,21 +416,21 @@ const AddOrderView: React.FC<{}> = ({}) => {
               <Label text="State" style={styles.label} />
               <DropdownComponent
                 data={shiftingTypes}
-                onSelect={handleShiftingType}
+                onSelect={handlePickupState}
               />
             </View>
             <View style={styles.elementContainer}>
               <Label text="City" style={styles.label} />
               <DropdownComponent
                 data={shiftingTypes}
-                onSelect={handleShiftingType}
+                onSelect={handlePickupLocality}
               />
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
               <Label text="Address" style={styles.label} />
               <Input
-                onChangeText={() => {}}
+                onChangeText={(handlePickupAddress) => {}}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -310,14 +442,14 @@ const AddOrderView: React.FC<{}> = ({}) => {
                 <Label text="Current Floor" style={styles.label} />
                 <DropdownComponent
                   data={floorOptions}
-                  onSelect={handleShiftingType}
+                  onSelect={handlePickupCurrentFloor}
                 />
               </View>
               <View style={styles.textContainer}>
                 <Label text="Lift Status" style={styles.label} />
                 <DropdownComponent
                   data={liftStatusOptions}
-                  onSelect={handleShiftingType}
+                  onSelect={handlePickupLiftStatus}
                 />
               </View>
             </View>
@@ -340,21 +472,21 @@ const AddOrderView: React.FC<{}> = ({}) => {
               <Label text="State" style={styles.label} />
               <DropdownComponent
                 data={shiftingTypes}
-                onSelect={handleShiftingType}
+                onSelect={handleDeliveryState}
               />
             </View>
             <View style={styles.elementContainer}>
               <Label text="City" style={styles.label} />
               <DropdownComponent
                 data={shiftingTypes}
-                onSelect={handleShiftingType}
+                onSelect={handleDeliveryLocality}
               />
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
               <Label text="Address" style={styles.label} />
               <Input
-                onChangeText={() => {}}
+                onChangeText={(handleDeliveryAddress) => {}}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -366,14 +498,14 @@ const AddOrderView: React.FC<{}> = ({}) => {
                 <Label text="Current Floor" style={styles.label} />
                 <DropdownComponent
                   data={floorOptions}
-                  onSelect={handleShiftingType}
+                  onSelect={handleDeliveryCurrentFloor}
                 />
               </View>
               <View style={styles.textContainer}>
                 <Label text="Lift Status" style={styles.label} />
                 <DropdownComponent
                   data={liftStatusOptions}
-                  onSelect={handleShiftingType}
+                  onSelect={handleDeliveryLiftStatus}
                 />
               </View>
             </View>

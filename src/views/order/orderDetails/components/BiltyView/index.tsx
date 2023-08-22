@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useReducer, useState} from 'react';
 import {View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
@@ -17,6 +17,12 @@ import BouncyCheckboxGroup, {
   ICheckboxButton,
 } from 'react-native-bouncy-checkbox-group';
 import vehicleTypeOptions from '../../../../../data/vehicleTypeOptions.json';
+import {initialState,
+        biltyReducer,
+         BILTY_FORM_ACTION} 
+         from './biltyReducer';
+import { formatDate } from '../../../../../utils/formatter';
+         
 
 const riskTypeOptions: Array<ICheckboxButton> = [
   {
@@ -92,6 +98,8 @@ interface IBiltyViewProps {
 }
 
 const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
+  const state = {pickupPincode: '', deliveryPincode: ''};
+  const [reducerState,dispatch] = useReducer(biltyReducer,initialState);
   const [switchState, setSwitchState] = useState<boolean>(false);
   const [
     loadingAddressSameAsConsignerAddress,
@@ -107,34 +115,421 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
     ? styles.switchMainWrapper
     : styles.switchMainWrapper2;
 
-  const handleReceiptDate = (date: Date) => {
-    // dispatch({
-    //   type: QUOTATION_FORM_ACTION.DATE_OF_QUOTATION,
-    //   payload: formatDate(date),
-    // });
-  };
-
-  const handleReceiptNoInputTextChange = (text: string) => {
-    // dispatch({
-    //   type: QUOTATION_FORM_ACTION.COMPANY_NAME,
-    //   payload: text,
-    // });
-  };
-
   const handleTemplate = (item: TDropdownItem) => {
-    // dispatch({
-    //   type: QUOTATION_FORM_ACTION.SHIFTING_LUGGAGE,
-    //   payload: item.label,
-    // });
+    dispatch({
+      type: BILTY_FORM_ACTION.CHOOSE_DESIGN,
+      payload: item.label,
+    });
   };
-
+  const handleDateofBiltyLrCn = (date: Date) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.DATE_OF_BILTY,
+      payload: formatDate(date),
+    });
+  };
+  const handleConsignerName = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.CONSIGNER_NAME,
+      payload: text,
+    });
+  };
+  const handleConsignerGst = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.CONSIGNER_GST,
+      payload: text,
+    });
+  };
+  const handleConsignerMobileNo = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.CONSIGNER_MOBILE_NO,
+      payload: text,
+    });
+  };
+  const handleConsignerAddress = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.CONSIGNER_ADDRESS,
+      payload: text,
+    });
+  };
+  const handleConsignerPinCode = useCallback(
+    (text: string) => {
+      dispatch({
+        type: BILTY_FORM_ACTION.CONSIGNER_PINCODE,
+        payload: text,
+      });
+    },
+    [state.pickupPincode],
+  );
+  const handleConsignerState = (item: TDropdownItem) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.CONSIGNER_STATE,
+      payload: item.label,
+    });
+  };
+  const handleConsignerCity = (item: TDropdownItem) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.CONSIGNER_CITY,
+      payload: item.label,
+    });
+  };
+  const handleConsigneeName = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.CONSIGNEE_NAME,
+      payload: text,
+    });
+  };
+  const handleConsigneeGst = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.CONSIGNEE_GST,
+      payload: text,
+    });
+  };
+  const handleConsigneeMobileNo = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.CONSIGNEE_MOBILE_NO,
+      payload: text,
+    });
+  };
+  const handleConsigneeAddress = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.CONSIGNEE_ADDRESS,
+      payload: text,
+    });
+  };
+  const handleConsigneePinCode = useCallback(
+    (text: string) => {
+      dispatch({
+        type: BILTY_FORM_ACTION.CONSIGNEE_PINCODE,
+        payload: text,
+      });
+    },
+    [state.deliveryPincode],
+  );
+  const handleConsigneeState = (item: TDropdownItem) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.CONSIGNEE_STATE,
+      payload: item.label,
+    });
+  };
+  const handleConsigneeCity = (item: TDropdownItem) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.CONSIGNEE_CITY,
+      payload: item.label,
+    });
+  };
+  const handleInvoiceNo = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.INVOICE_NO,
+      payload: text,
+    });
+  };
+  const handleVehicleType= (item: TDropdownItem) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.VEHICLE_TYPE,
+      payload: item.label,
+    });
+  };
+  const handleVehicleNo = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.VEHICLE_NO,
+      payload: text,
+    });
+  };
+  const handleFromLocation = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.FROM_LOCATION,
+      payload: text,
+    });
+  };
+  const handleToLocation = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.TO_LOCATION,
+      payload: text,
+    });
+  };
+  const handleDriverName = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.DRIVER_NAME,
+      payload: text,
+    });
+  };
+  const handleDriverMobileNo = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.DRIVER_MOBILE_NO,
+      payload: text,
+    });
+  };
+  const handleDriverLicenceNo = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.DRIVER_LICENCE_NO,
+      payload: text,
+    });
+  };
+  const handleSealNo = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.SEAL_NO,
+      payload: text,
+    });
+  };
+  const handleInDate = (date: Date) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.IN_DATE,
+      payload: formatDate(date),
+    });
+  };
+  const handleOutDate = (date: Date) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.OUT_DATE,
+      payload: formatDate(date),
+    });
+  };
+  const handleEwayBillNo = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.E_WAY_BILL_NO,
+      payload: text,
+    });
+  };
+  const handleGeneratedOn = (date: Date) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.GENERATED_ON,
+      payload: formatDate(date),
+    });
+  };
+  const handleExpiryDate = (date: Date) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.EXPIRY_DATE,
+      payload: formatDate(date),
+    });
+  };
+  const handleMatrialName = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.MATERIAL_NAME,
+      payload: text,
+    });
+  };
+  const handleNumberOfArticles = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.NO_OF_ARTICLES,
+      payload: text,
+    });
+  };
+  const handlePackingType= (item: TDropdownItem) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.PACKING_TYPE,
+      payload: item.label,
+    });
+  };
+  const handleHsnCode = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.HSN_CODE,
+      payload: text,
+    });
+  };
+  const handleBillInnvoiceNo = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.BILL_INVOICE_NO,
+      payload: text,
+    });
+  };
+  const handleNetWeight = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.NET_WEIGHT,
+      payload: text,
+    });
+  };
+  const handleUnitOne= (item: TDropdownItem) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.UNITONE,
+      payload: item.label,
+    });
+  };
+  const handleValueOfGoods = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.VALUE_OF_GOODS,
+      payload: text,
+    });
+  };
+  const handleFreightCharges = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.FREIGHT_CHARGES,
+      payload: text,
+    });
+  };
+  const handlePicupCharges= (item: TDropdownItem) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.PICKUP_CHARGES,
+      payload: item.label,
+    });
+  };
+  const handlePicupChargesAmount = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.PICKUP_CHARGES_AMOUNT,
+      payload: text,
+    });
+  };
+  const handleDoorDeliveryCharges= (item: TDropdownItem) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.DOOR_DELIVERY_CHARGES,
+      payload: item.label,
+    });
+  };
+  const handleDoorDeliveryChargesAmount = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.DOOR_DELIVERY_CHARGES_AMOUNT,
+      payload: text,
+    });
+  };
+  const handleDoorPackingCharges= (item: TDropdownItem) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.PACKING_CHARGES,
+      payload: item.label,
+    });
+  };
+  const handlePackingChargesAmount = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.PACKING_CHARGES_AMOUNT,
+      payload: text,
+    });
+  };
+  const handlePackingMaterialCharges= (item: TDropdownItem) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.PACKING_MATERIAL_CHARGES,
+      payload: item.label,
+    });
+  };
+  const handlePackingMaterialChargesAmount = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.PACKING_MATERIAL_CHARGES_AMOUNT,
+      payload: text,
+    });
+  };
+  const handleUnPackingCharges= (item: TDropdownItem) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.UNPACKING_CHARGES,
+      payload: item.label,
+    });
+  };
+  const handleUnpackingChargesAmount = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.UNPACKING_CHARGES_AMOUNT,
+      payload: text,
+    });
+  };
+  const handleLoadingCharges= (item: TDropdownItem) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.LOADING_CHARGES,
+      payload: item.label,
+    });
+  };
+  const handleLoadingChargesAmount = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.LOADING_CHARGES_AMOUNT,
+      payload: text,
+    });
+  };
+  const handleUnloadingCharges= (item: TDropdownItem) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.UNLOADING_CHARGES,
+      payload: item.label,
+    });
+  };
+  const handleUnloadingChargesAmount = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.UNLOADING_CHARGES_AMOUNT,
+      payload: text,
+    });
+  };
+  const handleAdvanceAmount = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.ADVANCE_AMOUNT,
+      payload: text,
+    });
+  };
+  const handleBalancceAmount = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.BALANCE_AMOUNT,
+      payload: text,
+    });
+  };
+  const handleInsuranceCompany = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.INSURANCE_COMPANY,
+      payload: text,
+    });
+  };
+  const handlePolicyNo = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.POLICY_NO,
+      payload: text,
+    });
+  };
+  const handleInsuranceDate = (date: Date) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.INSURANCE_DATE,
+      payload: formatDate(date),
+    });
+  };
+  const handleInsuranceAmount = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.INSURANCE_AMOUNT,
+      payload: text,
+    });
+  };
+  const handleDemurrageCharge = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.DEMURRAGE_CHARGES,
+      payload: text,
+    });
+  };
+  const handleDemurrageChargeDate = (item: TDropdownItem) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.CHARGE_DATE,
+      payload: item.label,
+    });
+  };
+  const handleDemurrageChargeApplicableAfter= (item: TDropdownItem) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.CHARGE_APPLICABLE_AFTER,
+      payload: item.label,
+    });
+  };
+  const handleRemark = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.REMARK,
+      payload: text,
+    });
+  };
+  const handleActualWeight = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.ACTUAL_WEIGHT,
+      payload: text,
+    });
+  };
+  const handleApplicableWeight = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.APPLICABLE_WEIGHT,
+      payload: text,
+    });
+  };
+  const handleUnitTwo= (item: TDropdownItem) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.UNITTWO,
+      payload: item.label,
+    });
+  };
+  const handleRate = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.RATE,
+      payload: text,
+    });
+  };
   const renderLoadingAddressView = () => {
     return (
       <>
         <Spacer height={4} />
         <View style={styles.elementContainer2}>
           <Label text="Address" style={styles.label} />
-          <Input
+          {/* <Input
             onChangeText={handleReceiptNoInputTextChange}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
@@ -149,7 +544,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
-            />
+            /> */}
         </View>
         <Spacer height={4} />
         <View style={styles.elementContainer}>
@@ -180,7 +575,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
           <View style={styles.itemContainer}>
             <Label text="Actual Weight" style={styles.label} />
             <Input
-              onChangeText={handleReceiptNoInputTextChange}
+              onChangeText={handleActualWeight}
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
@@ -189,7 +584,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
           <View style={styles.itemContainer}>
             <Label text="Applicable Weight" style={styles.label} />
             <Input
-              onChangeText={handleReceiptNoInputTextChange}
+              onChangeText={handleApplicableWeight}
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
@@ -202,13 +597,13 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
             <Label text="Units" style={styles.label} />
             <DropdownComponent
               data={shiftingLuggages}
-              onSelect={handleTemplate}
+              onSelect={handleUnitTwo}
             />
           </View>
           <View style={styles.itemContainer}>
             <Label text="Rate" style={styles.label} />
             <Input
-              onChangeText={handleReceiptNoInputTextChange}
+              onChangeText={handleRate}
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
@@ -275,7 +670,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
             <View style={styles.elementContainer2}>
               <Label text="Consigner Name" style={styles.label} />
               <Input
-                onChangeText={handleReceiptNoInputTextChange}
+                onChangeText={handleConsignerName}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -286,7 +681,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
               <View style={styles.itemContainer}>
                 <Label text="Consigner GST" style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handleConsignerGst}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -295,7 +690,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
               <View style={styles.itemContainer}>
                 <Label text="Consigner Mobile No." style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handleConsignerMobileNo}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -306,7 +701,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
             <View style={styles.elementContainer2}>
               <Label text="Address" style={styles.label} />
               <Input
-                onChangeText={handleReceiptNoInputTextChange}
+                onChangeText={handleConsignerAddress}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -316,7 +711,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
             <View style={styles.elementContainer2}>
                 <Label text="Pincode" style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handleConsignerPinCode}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -328,14 +723,14 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
                 <Label text="State" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
-                  onSelect={handleTemplate}
+                  onSelect={handleConsignerState}
                 />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="City" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
-                  onSelect={handleTemplate}
+                  onSelect={handleConsignerCity}
                 />
               </View>
             </View>
@@ -384,7 +779,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
             <View style={styles.elementContainer2}>
               <Label text="Consignee Name" style={styles.label} />
               <Input
-                onChangeText={handleReceiptNoInputTextChange}
+                onChangeText={handleConsigneeName}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -395,7 +790,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
               <View style={styles.itemContainer}>
                 <Label text="Consignee GST" style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handleConsigneeGst}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -404,7 +799,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
               <View style={styles.itemContainer}>
                 <Label text="Consignee Mobile No." style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handleConsigneeMobileNo}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -415,7 +810,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
             <View style={styles.elementContainer2}>
               <Label text="Address" style={styles.label} />
               <Input
-                onChangeText={handleReceiptNoInputTextChange}
+                onChangeText={handleConsigneeAddress}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -425,7 +820,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
             <View style={styles.elementContainer2}>
                 <Label text="Pincode" style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handleConsigneePinCode}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -437,14 +832,14 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
                 <Label text="State" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
-                  onSelect={handleTemplate}
+                  onSelect={handleConsigneeState}
                 />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="City" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
-                  onSelect={handleTemplate}
+                  onSelect={handleConsigneeCity}
                 />
               </View>
             </View>
@@ -493,7 +888,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
             <View style={styles.elementContainer2}>
               <Label text="Invoice No." style={styles.label} />
               <Input
-                onChangeText={handleReceiptNoInputTextChange}
+                onChangeText={handleInvoiceNo}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -505,13 +900,13 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
                 <Label text="Vehicle Type" style={styles.label} />
                 <DropdownComponent
                   data={vehicleTypeOptions}
-                  onSelect={handleTemplate}
+                  onSelect={handleVehicleType}
                 />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Vehicle No." style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handleVehicleNo}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -523,7 +918,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
               <View style={styles.itemContainer}>
                 <Label text="From Location" style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handleFromLocation}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -532,7 +927,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
               <View style={styles.itemContainer}>
                 <Label text="To Location" style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handleToLocation}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -543,7 +938,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
             <View style={styles.elementContainer2}>
               <Label text="Driver Name" style={styles.label} />
               <Input
-                onChangeText={handleReceiptNoInputTextChange}
+                onChangeText={handleDriverName}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -554,7 +949,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
               <View style={styles.itemContainer}>
                 <Label text="Driver Mobile No." style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handleDriverMobileNo}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -563,7 +958,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
               <View style={styles.itemContainer}>
                 <Label text="Driver Licence No." style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handleDriverLicenceNo}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -574,7 +969,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
             <View style={styles.elementContainer2}>
               <Label text="Seal No." style={styles.label} />
               <Input
-                onChangeText={handleReceiptNoInputTextChange}
+                onChangeText={handleSealNo}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -584,11 +979,11 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
             <View style={styles.elementContainer}>
               <View style={styles.itemContainer}>
                 <Label text="In Date" style={styles.label} />
-                <DatePickerComponent onDateSelect={handleReceiptDate} />
+                <DatePickerComponent onDateSelect={handleInDate} />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Out Date" style={styles.label} />
-                <DatePickerComponent onDateSelect={handleReceiptDate} />
+                <DatePickerComponent onDateSelect={handleOutDate} />
               </View>
             </View>
           </View>
@@ -599,7 +994,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
             <View style={styles.elementContainer2}>
               <Label text="E-Way Bill No." style={styles.label} />
               <Input
-                onChangeText={handleReceiptNoInputTextChange}
+                onChangeText={handleEwayBillNo}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -609,11 +1004,11 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
             <View style={styles.elementContainer}>
               <View style={styles.itemContainer}>
                 <Label text="Generated On" style={styles.label} />
-                <DatePickerComponent onDateSelect={handleReceiptDate} />
+                <DatePickerComponent onDateSelect={handleGeneratedOn} />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Expiry Date" style={styles.label} />
-                <DatePickerComponent onDateSelect={handleReceiptDate} />
+                <DatePickerComponent onDateSelect={handleExpiryDate} />
               </View>
             </View>
           </View>
@@ -624,7 +1019,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
             <View style={styles.elementContainer2}>
               <Label text="Material Name" style={styles.label} />
               <Input
-                onChangeText={handleReceiptNoInputTextChange}
+                onChangeText={handleMatrialName}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -635,7 +1030,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
               <View style={styles.itemContainer}>
                 <Label text="No. of Articles" style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handleNumberOfArticles}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -645,7 +1040,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
                 <Label text="Packing Type" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
-                  onSelect={handleTemplate}
+                  onSelect={handlePackingType}
                 />
               </View>
             </View>
@@ -654,7 +1049,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
               <View style={styles.itemContainer}>
                 <Label text="HSN Code" style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handleHsnCode}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -663,7 +1058,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
               <View style={styles.itemContainer}>
                 <Label text="Bill/Invoice No." style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handleBillInnvoiceNo}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -675,7 +1070,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
               <View style={styles.itemContainer}>
                 <Label text="Net Weight" style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handleNetWeight}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -685,7 +1080,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
                 <Label text="Units" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
-                  onSelect={handleTemplate}
+                  onSelect={handleUnitOne}
                 />
               </View>
             </View>
@@ -693,7 +1088,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
             <View style={styles.elementContainer2}>
               <Label text="Value of Goods" style={styles.label} />
               <Input
-                onChangeText={handleReceiptNoInputTextChange}
+                onChangeText={handleValueOfGoods}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -759,7 +1154,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
             <View style={styles.elementContainer2}>
               <Label text="Freight Charges" style={styles.label} />
               <Input
-                onChangeText={handleReceiptNoInputTextChange}
+                onChangeText={handleFreightCharges}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -771,13 +1166,13 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
                 <Label text="Pickup Charges" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
-                  onSelect={handleTemplate}
+                  onSelect={handlePicupCharges}
                 />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Amount" style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handlePicupChargesAmount}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -790,13 +1185,13 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
                 <Label text="Door Delivery Charges" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
-                  onSelect={handleTemplate}
+                  onSelect={handleDoorDeliveryCharges}
                 />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Amount" style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handleDoorDeliveryChargesAmount}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -809,13 +1204,13 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
                 <Label text="Packing Charges" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
-                  onSelect={handleTemplate}
+                  onSelect={handleDoorPackingCharges}
                 />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Amount" style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handlePackingChargesAmount}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -828,13 +1223,13 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
                 <Label text="Packing Material Charges" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
-                  onSelect={handleTemplate}
+                  onSelect={handlePackingMaterialCharges}
                 />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Amount" style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handlePackingMaterialChargesAmount}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -847,13 +1242,13 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
                 <Label text="Unpacking Charges" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
-                  onSelect={handleTemplate}
+                  onSelect={handleUnPackingCharges}
                 />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Amount" style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handleUnpackingChargesAmount}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -866,13 +1261,13 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
                 <Label text="Loading Charges" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
-                  onSelect={handleTemplate}
+                  onSelect={handleLoadingCharges}
                 />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Amount" style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handleLoadingChargesAmount}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -885,13 +1280,13 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
                 <Label text="Unloading Charges" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
-                  onSelect={handleTemplate}
+                  onSelect={handleUnloadingCharges}
                 />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Amount" style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handleUnloadingChargesAmount}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -907,7 +1302,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
               <View style={styles.itemContainer}>
                 <Label text="Advance Amount" style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handleAdvanceAmount}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -916,7 +1311,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
               <View style={styles.itemContainer}>
                 <Label text="Balance Amount" style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handleBalancceAmount}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -940,7 +1335,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
             <View style={styles.elementContainer2}>
               <Label text="Insurance Company" style={styles.label} />
               <Input
-                onChangeText={handleReceiptNoInputTextChange}
+                onChangeText={handleInsuranceCompany}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -950,7 +1345,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
             <View style={styles.elementContainer2}>
               <Label text="Policy Number" style={styles.label} />
               <Input
-                onChangeText={handleReceiptNoInputTextChange}
+                onChangeText={handlePolicyNo}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -960,12 +1355,12 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
             <View style={styles.elementContainer}>
               <View style={styles.itemContainer}>
                 <Label text="Insurance Date" style={styles.label} />
-                <DatePickerComponent onDateSelect={handleReceiptDate} />
+                <DatePickerComponent onDateSelect={handleInsuranceDate} />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Insurance Amount" style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handleInsuranceAmount}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -980,7 +1375,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
             <View style={styles.elementContainer2}>
               <Label text="Demurrage Charge" style={styles.label} />
               <Input
-                onChangeText={handleReceiptNoInputTextChange}
+                onChangeText={handleDemurrageCharge}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -992,14 +1387,14 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
                 <Label text="Charge Date" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
-                  onSelect={handleTemplate}
+                  onSelect={handleDemurrageChargeDate}
                 />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Charge Applicable After" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
-                  onSelect={handleTemplate}
+                  onSelect={handleDemurrageChargeApplicableAfter}
                 />
               </View>
             </View>
@@ -1011,7 +1406,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
             <View style={styles.elementContainer2}>
               <Label text="Remark" style={styles.label} />
               <Input
-                onChangeText={handleReceiptNoInputTextChange}
+                onChangeText={handleRemark}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}

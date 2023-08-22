@@ -28,7 +28,7 @@ export enum ADDORDER_FORM_ACTION {
 
 /** ADD ORDER FORM STATE */
 
-interface IAddorderFormState {
+interface IAddOrderFormState {
   shiftingType: string;
   dateOfMoving: string;
   partyName: string;
@@ -36,7 +36,7 @@ interface IAddorderFormState {
   partyCompanyName: string;
   orderAmount: string;
   tokenAmount: string;
-  shiftingLuggage: [string];
+  shiftingLuggage: string;
   dateOfQuotation: string;
   pickupPincode: string;
   pickupCity: string;
@@ -56,14 +56,14 @@ interface IAddorderFormState {
 
 /** ACTION INTERFACE */
 
-interface IAddorderFormAction {
+interface IAddOrderFormAction {
   type: ADDORDER_FORM_ACTION;
-  payload: string | [string];
+  payload: string;
 }
 
 /** INITIAL STATE */
 
-export const initialState: IAddorderFormState = {
+export const initialState: IAddOrderFormState = {
   shiftingType: '',
   dateOfMoving: '',
   partyName: '',
@@ -71,7 +71,7 @@ export const initialState: IAddorderFormState = {
   partyCompanyName: '',
   orderAmount: '',
   tokenAmount: '',
-  shiftingLuggage: [''],
+  shiftingLuggage: '',
   dateOfQuotation: '',
   pickupPincode: '',
   pickupCity: '',
@@ -92,8 +92,8 @@ export const initialState: IAddorderFormState = {
 /** AddOrder Reducer */
 
 export const addOrderReducer = (
-  state: IAddorderFormState,
-  action: IAddorderFormAction,
+  state: IAddOrderFormState,
+  action: IAddOrderFormAction,
 ) => {
   const {type, payload} = action;
   switch (type) {
