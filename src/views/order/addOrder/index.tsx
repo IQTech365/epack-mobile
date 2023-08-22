@@ -17,21 +17,18 @@ import Button from '../../../common/Button';
 import DatePickerComponent from '../../../common/DatePickerComponent';
 import liftStatusOptions from '../../../data/liftStatusOptions.json';
 import floorOptions from '../../../data/floorOptions.json';
-import{
-  initialState,
-  addOrderReducer,
-  ADDORDER_FORM_ACTION,
-} from './addOrderReducer';
-import { formatDate } from '../../../utils/formatter';
+import {initialState, addOrderReducer} from './addOrderReducer';
 
-interface IAddOrderViewProps {
-  //
-}
-
-const AddOrderView: React.FC<IAddOrderViewProps> = ({}) => {
-  const [reducerState, dispatch] = useReducer(addOrderReducer, initialState);
- 
+const AddOrderView: React.FC<{}> = ({}) => {
   const state = {pickupPincode: '', deliveryPincode: ''};
+
+  const handleShiftingType = (item: TDropdownItem) => {
+    // dispatch({
+    //   type: QUOTATION_FORM_ACTION.SHIFTING_LUGGAGE,
+    //   payload: item.label,
+    // });
+  };
+
   const handlePartyNameInputTextChange = (text: string) => {
     // dispatch({
     //   type: QUOTATION_FORM_ACTION.PARTY_NAME,
@@ -48,154 +45,154 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({}) => {
   };
 
   const handleShiftingType = (item: TDropdownItem) => {
-    dispatch({
-      type: ADDORDER_FORM_ACTION.SHIFTING_TYPE,
-      payload: item.label,
-    }); 
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.SHIFTING_TYPE,
+    //   payload: item.label,
+    // }); 
   };
 
   const handleDateOfMoving = (date: Date) => {
-    dispatch({
-      type: ADDORDER_FORM_ACTION.DATE_OF_MOVING,
-      payload: formatDate(date),
-    });
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.DATE_OF_MOVING,
+    //   payload: formatDate(date),
+    // });
   };
   const handlePartyName = (text: string) => {
-    dispatch({
-      type: ADDORDER_FORM_ACTION.PARTY_NAME,
-      payload: text,
-    });
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.PARTY_NAME,
+    //   payload: text,
+    // });
   };
   const handleMobile = (text: string) => {
-    dispatch({
-      type: ADDORDER_FORM_ACTION.MOBILE,
-      payload: text,
-    });
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.MOBILE,
+    //   payload: text,
+    // });
   };
   const handlePartyCompanyName = (text: string) => {
-    dispatch({
-      type: ADDORDER_FORM_ACTION.PARTY_COMPANY_NAME,
-      payload: text,
-    });
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.PARTY_COMPANY_NAME,
+    //   payload: text,
+    // });
   };
   const handleOrderAmount = (text: string) => {
-    dispatch({
-      type: ADDORDER_FORM_ACTION.ORDER_AMOUNT,
-      payload: text,
-    });
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.ORDER_AMOUNT,
+    //   payload: text,
+    // });
   };
   const handleTokenAmount = (text: string) => {
-    dispatch({
-      type: ADDORDER_FORM_ACTION.TOKEN_AMOUNT,
-      payload: text,
-    });
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.TOKEN_AMOUNT,
+    //   payload: text,
+    // });
   };
   const handleDateOfQuotation = (date: Date) => {
-    dispatch({
-      type: ADDORDER_FORM_ACTION.DATE_OF_QUOTATION,
-      payload: formatDate(date),
-    });
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.DATE_OF_QUOTATION,
+    //   payload: formatDate(date),
+    // });
   };
 
   //***Pickup Address***//
   const handlePickupPinCode = useCallback(
     (text: string) => {
-      dispatch({
-        type: ADDORDER_FORM_ACTION.PICKUP_PINCODE,
-        payload: text,
-      });
+      // dispatch({
+      //   type: ADDORDER_FORM_ACTION.PICKUP_PINCODE,
+      //   payload: text,
+      // });
     },
     [state.pickupPincode],
   );
   const handlePickupCity = (item: TDropdownItem) => {
-    dispatch({
-      type: ADDORDER_FORM_ACTION.PICKUP_CITY,
-      payload: item.label,
-    }); 
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.PICKUP_CITY,
+    //   payload: item.label,
+    // }); 
   };
   const handlePickupState = (item: TDropdownItem) => {
-    dispatch({
-      type: ADDORDER_FORM_ACTION.PICKUP_STATE,
-      payload: item.label,
-    }); 
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.PICKUP_STATE,
+    //   payload: item.label,
+    // }); 
   };
   const handlePickupLocality = (item: TDropdownItem) => {
-    dispatch({
-      type: ADDORDER_FORM_ACTION.PICKUP_LOCALITY,
-      payload: item.label,
-    }); 
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.PICKUP_LOCALITY,
+    //   payload: item.label,
+    // }); 
   };
   const handlePickupAddress = useCallback(
     (text: string) => {
-      dispatch({
-        type: ADDORDER_FORM_ACTION.PICKUP_ADDRESS,
-        payload: text,
-      });
+      // dispatch({
+      //   type: ADDORDER_FORM_ACTION.PICKUP_ADDRESS,
+      //   payload: text,
+      // });
     },
     [state.pickupPincode],
   );
   const handlePickupCurrentFloor = (item: TDropdownItem) => {
-    dispatch({
-      type: ADDORDER_FORM_ACTION.PICKUP_CURRENT_FLOOR,
-      payload: item.label,
-    }); 
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.PICKUP_CURRENT_FLOOR,
+    //   payload: item.label,
+    // }); 
   };
   const handlePickupLiftStatus = (item: TDropdownItem) => {
-    dispatch({
-      type: ADDORDER_FORM_ACTION.PICKUP_LIFT_STATUS,
-      payload: item.label,
-    }); 
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.PICKUP_LIFT_STATUS,
+    //   payload: item.label,
+    // }); 
   };
 
   //***Delivery Address***//
   const handleDeliveryPinCode = useCallback(
     (text: string) => {
-      dispatch({
-        type: ADDORDER_FORM_ACTION.DELIVERY_PINCODE,
-        payload: text,
-      });
+      // dispatch({
+      //   type: ADDORDER_FORM_ACTION.DELIVERY_PINCODE,
+      //   payload: text,
+      // });
     },
     [state.deliveryPincode],
   );
   const handleDeliveryCity = (item: TDropdownItem) => {
-    dispatch({
-      type: ADDORDER_FORM_ACTION.DELIVERY_CITY,
-      payload: item.label,
-    }); 
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.DELIVERY_CITY,
+    //   payload: item.label,
+    // }); 
   };
   const handleDeliveryState = (item: TDropdownItem) => {
-    dispatch({
-      type: ADDORDER_FORM_ACTION.DELIVERY_STATE,
-      payload: item.label,
-    }); 
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.DELIVERY_STATE,
+    //   payload: item.label,
+    // }); 
   };
   const handleDeliveryLocality = (item: TDropdownItem) => {
-    dispatch({
-      type: ADDORDER_FORM_ACTION.DELIVERY_LOCALITY,
-      payload: item.label,
-    }); 
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.DELIVERY_LOCALITY,
+    //   payload: item.label,
+    // }); 
   };
   const handleDeliveryAddress = useCallback(
     (text: string) => {
-      dispatch({
-        type: ADDORDER_FORM_ACTION.DELIVERY_ADDRESS,
-        payload: text,
-      });
+      // dispatch({
+      //   type: ADDORDER_FORM_ACTION.DELIVERY_ADDRESS,
+      //   payload: text,
+      // });
     },
     [state.deliveryPincode],
   );
   
   const handleDeliveryCurrentFloor = (item: TDropdownItem) => {
-    dispatch({
-      type: ADDORDER_FORM_ACTION.DELIVERY_CURRENT_FLOOR,
-      payload: item.label,
-    }); 
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.DELIVERY_CURRENT_FLOOR,
+    //   payload: item.label,
+    // }); 
   };
   const handleDeliveryLiftStatus = (item: TDropdownItem) => {
-    dispatch({
-      type: ADDORDER_FORM_ACTION.DELIVERY_LIFT_STATUS,
-      payload: item.label,
-    }); 
+    // dispatch({
+    //   type: ADDORDER_FORM_ACTION.DELIVERY_LIFT_STATUS,
+    //   payload: item.label,
+    // }); 
   };
 
   return (
@@ -249,24 +246,25 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({}) => {
               />
             </View>
             <Spacer height={4} />
-            <View style={styles.elementContainer}>
-              <Label text="Order Amount" style={styles.label} />
-              <Input
-                onChangeText={handleOrderAmount}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-              />
-            </View>
-            <Spacer height={4} />
-            <View style={styles.elementContainer}>
-              <Label text="Token Amount" style={styles.label} />
-              <Input
-                onChangeText={handleTokenAmount}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-              />
+            <View style={styles.mainWrapper}>
+              <View style={styles.textContainer}>
+                <Label text="Order Amount" style={styles.label} />
+                <Input
+                  onChangeText={handlePartyNameInputTextChange}
+                  containerStyle={styles.inputContainer}
+                  inputStyle={styles.input}
+                  selectionColor={COLOR_BLACK}
+                />
+              </View>
+              <View style={styles.textContainer}>
+                <Label text="Token Amount" style={styles.label} />
+                <Input
+                  onChangeText={handlePartyNameInputTextChange}
+                  containerStyle={styles.inputContainer}
+                  inputStyle={styles.input}
+                  selectionColor={COLOR_BLACK}
+                />
+              </View>
             </View>
             <Spacer height={4} />
             <View style={styles.labelContainer}>
@@ -278,8 +276,18 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({}) => {
                 unfillColor="#FFFFFF"
                 text="Household"
                 fillColor={COLOR_BLUE}
-                iconStyle={{borderColor: 'red', borderRadius: 0, width: 16, height: 16}}
-                innerIconStyle={{borderWidth: 1, borderRadius: 0, width: 16, height: 16}}
+                iconStyle={{
+                  borderColor: 'red',
+                  borderRadius: 0,
+                  width: 16,
+                  height: 16,
+                }}
+                innerIconStyle={{
+                  borderWidth: 1,
+                  borderRadius: 0,
+                  width: 16,
+                  height: 16,
+                }}
                 textStyle={{
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
@@ -293,8 +301,18 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({}) => {
                 unfillColor="#FFFFFF"
                 text="Office"
                 fillColor={COLOR_BLUE}
-                iconStyle={{borderColor: 'red', borderRadius: 0, width: 16, height: 16}}
-                innerIconStyle={{borderWidth: 1, borderRadius: 0, width: 16, height: 16}}
+                iconStyle={{
+                  borderColor: 'red',
+                  borderRadius: 0,
+                  width: 16,
+                  height: 16,
+                }}
+                innerIconStyle={{
+                  borderWidth: 1,
+                  borderRadius: 0,
+                  width: 16,
+                  height: 16,
+                }}
                 textStyle={{
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
@@ -308,8 +326,18 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({}) => {
                 unfillColor="#FFFFFF"
                 text="Industrial"
                 fillColor={COLOR_BLUE}
-                iconStyle={{borderColor: 'red', borderRadius: 0, width: 16, height: 16}}
-                innerIconStyle={{borderWidth: 1, borderRadius: 0, width: 16, height: 16}}
+                iconStyle={{
+                  borderColor: 'red',
+                  borderRadius: 0,
+                  width: 16,
+                  height: 16,
+                }}
+                innerIconStyle={{
+                  borderWidth: 1,
+                  borderRadius: 0,
+                  width: 16,
+                  height: 16,
+                }}
                 textStyle={{
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
@@ -323,8 +351,18 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({}) => {
                 unfillColor="#FFFFFF"
                 text="Vehcicle"
                 fillColor={COLOR_BLUE}
-                iconStyle={{borderColor: 'red', borderRadius: 0, width: 16, height: 16}}
-                innerIconStyle={{borderWidth: 1, borderRadius: 0, width: 16, height: 16}}
+                iconStyle={{
+                  borderColor: 'red',
+                  borderRadius: 0,
+                  width: 16,
+                  height: 16,
+                }}
+                innerIconStyle={{
+                  borderWidth: 1,
+                  borderRadius: 0,
+                  width: 16,
+                  height: 16,
+                }}
                 textStyle={{
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
@@ -338,8 +376,18 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({}) => {
                 unfillColor="#FFFFFF"
                 text="Other"
                 fillColor={COLOR_BLUE}
-                iconStyle={{borderColor: 'red', borderRadius: 0, width: 16, height: 16}}
-                innerIconStyle={{borderWidth: 1, borderRadius: 0, width: 16, height: 16}}
+                iconStyle={{
+                  borderColor: 'red',
+                  borderRadius: 0,
+                  width: 16,
+                  height: 16,
+                }}
+                innerIconStyle={{
+                  borderWidth: 1,
+                  borderRadius: 0,
+                  width: 16,
+                  height: 16,
+                }}
                 textStyle={{
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
@@ -347,13 +395,6 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({}) => {
                 style={{marginRight: 15}}
                 textContainerStyle={{paddingLeft: 0}}
                 onPress={(isChecked: boolean) => {}}
-              />
-            </View>
-            <View style={styles.elementContainer}>
-              <Label text="Date of Quotation" style={styles.label} />
-              <DatePickerComponent
-                onDateSelect={handleDateOfQuotation}
-                style={styles.datePickerContainer}
               />
             </View>
           </View>
@@ -370,13 +411,6 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({}) => {
                 selectionColor={COLOR_BLACK}
               />
             </View>
-            <View style={styles.elementContainer}>
-              <Label text="City" style={styles.label} />
-              <DropdownComponent
-                data={shiftingTypes}
-                onSelect={handlePickupCity}
-              />
-            </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
               <Label text="State" style={styles.label} />
@@ -385,9 +419,8 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({}) => {
                 onSelect={handlePickupState}
               />
             </View>
-            <Spacer height={4} />
             <View style={styles.elementContainer}>
-              <Label text="Locality" style={styles.label} />
+              <Label text="City" style={styles.label} />
               <DropdownComponent
                 data={shiftingTypes}
                 onSelect={handlePickupLocality}
@@ -434,13 +467,6 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({}) => {
                 selectionColor={COLOR_BLACK}
               />
             </View>
-            <View style={styles.elementContainer}>
-              <Label text="City" style={styles.label} />
-              <DropdownComponent
-                data={shiftingTypes}
-                onSelect={handleDeliveryCity}
-              />
-            </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
               <Label text="State" style={styles.label} />
@@ -449,9 +475,8 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({}) => {
                 onSelect={handleDeliveryState}
               />
             </View>
-            <Spacer height={4} />
             <View style={styles.elementContainer}>
-              <Label text="Locality" style={styles.label} />
+              <Label text="City" style={styles.label} />
               <DropdownComponent
                 data={shiftingTypes}
                 onSelect={handleDeliveryLocality}

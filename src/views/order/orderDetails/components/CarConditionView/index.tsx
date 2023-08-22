@@ -192,41 +192,15 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({}) => {
         <Spacer height={4} />
         <CollapsibleView title="VEHCILE DETAILS" collapsed={false}>
           <View>
-            <View style={styles.labelContainer}>
-              <Label text="Car Condition No." style={styles.label} />
-            </View>
-            <View style={[styles.elementContainer, styles.switchMainWrapper3]}>
-              <View style={[styles.itemContainer, {alignItems: 'center'}]}>
-                <Switch
-                  containerStyle={styles.switchStyle}
-                  value={switchState}
-                  onValueChange={val => setSwitchState(val)}
-                  disabled={false}
-                  activeText={'Auto'}
-                  inActiveText={'Manual'}
-                  outerCircleStyle={styles.outerCircleStyle}
-                  renderActiveText={true}
-                  renderInActiveText={true}
-                  switchWidthMultiplier={3.5}
-                />
-              </View>
-              <View style={[styles.itemContainer, switchWrapperStyle]}>
-                <Input
-                  onChangeText={() => {}}
-                  containerStyle={styles.switchInputContainer}
-                  inputStyle={styles.input}
-                  selectionColor={COLOR_BLACK}
-                  editable={!switchState}
-                />
-              </View>
-            </View>
             <View style={styles.elementContainer}>
               <View style={styles.itemContainer}>
-                <Label text="Choose Template" style={styles.label} />
-                <DropdownComponent
-                  data={shiftingLuggages}
-                  onSelect={handleChooseTemplate}
-                />
+                <Label text="Car Condition No." style={styles.label} />
+                <Input
+                onChangeText={handleReceiptNoInputTextChange}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                selectionColor={COLOR_BLACK}
+              />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Date of Car Condition" style={styles.label} />

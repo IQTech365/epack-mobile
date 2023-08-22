@@ -1,0 +1,23 @@
+[
+    {
+        "label": "Basic Details" 
+    },
+    {
+        "label": "Address" 
+    },
+    {
+        "label": "Registration Details" 
+    },
+    {
+        "label": "Account Details" 
+    },
+    {
+        "label": "UPI Details" 
+    },
+    {
+        "label": "Packer's Signature" 
+    },
+    {
+        "label": "Terms & Conditions" 
+    }
+]

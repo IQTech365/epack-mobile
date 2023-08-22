@@ -33,6 +33,7 @@ const EnquiryDetailsView: React.FC<{}> = ({}) => {
         return null;
     }
   };
+  
   return (
     <View style={styles.container}>
       <Header label="ENQUIRY DETAILS" canGoBack={true} />

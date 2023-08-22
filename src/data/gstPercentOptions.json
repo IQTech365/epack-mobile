@@ -1,18 +1,22 @@
 [
   {
-    "label": "5%",
-    "value": "1"
+  "label": "0%",
+  "value": "1"
   },
   {
-    "label": "12%",
+    "label": "5%",
     "value": "2"
   },
   {
-    "label": "18%",
+    "label": "12%",
     "value": "3"
   },
   {
-    "label": "25%",
+    "label": "18%",
     "value": "4"
+  },
+  {
+    "label": "25%",
+    "value": "5"
   }
 ]
