@@ -44,12 +44,12 @@ const AddOrderView: React.FC<{}> = ({}) => {
     // });
   };
 
-  const handleShiftingType = (item: TDropdownItem) => {
-    // dispatch({
-    //   type: ADDORDER_FORM_ACTION.SHIFTING_TYPE,
-    //   payload: item.label,
-    // }); 
-  };
+  // const handleShiftingType = (item: TDropdownItem) => {
+  //   // dispatch({
+  //   //   type: ADDORDER_FORM_ACTION.SHIFTING_TYPE,
+  //   //   payload: item.label,
+  //   // }); 
+  // };
 
   const handleDateOfMoving = (date: Date) => {
     // dispatch({
