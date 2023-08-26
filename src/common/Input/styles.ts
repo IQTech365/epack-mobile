@@ -32,7 +32,8 @@ const styles = StyleSheet.create({
     error: {
         color: COLOR_ERROR,
         fontSize: 12,
-        marginLeft: 18,
+        marginLeft: 2,
+        marginTop: 4,
     }
 });
 

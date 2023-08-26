@@ -1,7 +1,10 @@
+import {Reducer} from 'react';
+
 //** ALL ACTIONS */
 export enum QUOTATION_FORM_ACTION {
   SHIFTING_TYPE = 'SHIFTING_TYPE',
   DATE_OF_QUOTATION = 'DATE_OF_QUOTATION',
+  DATE_OF_MOVING = 'DATE_OF_MOVING',
   SERIAL_NUMBER = 'SERIAL_NUMBER',
   SHIFTING_LUGGAGE = 'SHIFTING_LUGGAGE',
   TEMPLATE = 'TEMPLATE',
@@ -16,17 +19,24 @@ export enum QUOTATION_FORM_ACTION {
   PICKUP_STATE = 'PICKUP_STATE',
   PICKUP_LOCALITY = 'PICKUP_LOCALITY',
   PICKUP_ADDRESS = 'PICKUP_ADDRESS',
+  PICKUP_CURRENT_FLOOR = 'PICKUP_CURRENT_FLOOR',
+  PICKUP_LIFT_STATUS = 'PICKUP_LIFT_STATUS',
   DELIVERY_PINCODE = 'DELIVERY_PINCODE',
   DELIVERY_CITY = 'DELIVERY_CITY',
   DELIVERY_STATE = 'DELIVERY_STATE',
   DELIVERY_LOCALITY = 'DELIVERY_LOCALITY',
   DELIVERY_ADDRESS = 'DELIVERY_ADDRESS',
+  DELIVERY_CURRENT_FLOOR = 'DELIVERY_CURRENT_FLOOR',
+  DELIVERY_LIFT_STATUS = 'DELIVERY_LIFT_STATUS',
   PART_LOAD = 'PART_LOAD ',
   FULL_LOAD = 'FULL_LOAD',
+  FREIGHT_PART_CHARGE = '',
+  FREIGHT_FULL_CHARGE = '',
+  LORRY_TYPE = 'LORRY_TYPE',
   PACKING_CHARGES = 'PACKING_CHARGES',
   PACKING_MATERIAL_CHARGES = 'PACKING_MATERIAL_CHARGES',
-  LOADING_CHARGES ='LOADING_CHARGES ',
-  UNLOADING_CHARGES ='UNLOADING_CHARGES',
+  LOADING_CHARGES = 'LOADING_CHARGES ',
+  UNLOADING_CHARGES = 'UNLOADING_CHARGES',
   UNPACKING_CHARGES = 'UNPACKING_CHARGES',
   ADVANCE_AMOUNT = 'ADVANCE_AMOUNT',
   SURCHARGE = 'SURCHARGE',
@@ -36,13 +46,15 @@ export enum QUOTATION_FORM_ACTION {
   INSURANCE_TYPE = 'INSURANCE_TYPE',
   INSURANCE_CHARGE = 'INSURANCE_CHARGE',
   VALUE_OF_GOODS = 'VALUE_OF_GOODS',
-  STORAGE_CHARGES ='STORAGE_CHARGES ',
-  FROM_DATE ='FROM_DATE',
-  TO_DATE = 'TO_DATE',
+  STORAGE_CHARGES = 'STORAGE_CHARGES ',
+  STORAGE_FROM_DATE = 'STORAGE_FROM_DATE',
+  STORAGE_TO_DATE = 'STORAGE_TO_DATE',
   STORAGE_AMOUNT = 'STORAGE_AMOUNT',
   OTHER_CHARGES = 'OTHER_CHARGES',
   AMOUNT = 'AMOUNT',
   OTHER_DETAILS = 'OTHER_DETAILS ',
+  // ERRORS
+  PICKUP_PINCODE_ERROR = 'PICKUP_PINCODE_ERROR',
 }
 
 export enum EChargeStatus {
@@ -51,16 +63,17 @@ export enum EChargeStatus {
   NOT_REQUIRED = 'NOT REQUIRED',
 }
 
-export  type TCharge = {
-  status: EChargeStatus,
-  part_load_charge: string,
-  full_load_charge: string,
-}
+export type TCharge = {
+  status: EChargeStatus;
+  part_load_charge: string;
+  full_load_charge: string;
+};
 
 /** QUOTATOIN FORM STATE */
-interface IQuotationFormState {
+export interface IQuotationFormState {
   shiftingType: string;
   dateOfQuotation: string;
+  dateOfMoving: string;
   serialNumber: string;
   shiftingLuggage: string;
   template: string;
@@ -75,48 +88,106 @@ interface IQuotationFormState {
   pickupState: string;
   pickupLocality: string;
   pickupAddress: string;
+  pickupCurrentFloor: string;
+  pickupLiftStatus: string;
   deliveryPincode: string;
   deliveryCity: string;
   deliveryState: string;
   deliveryLocality: string;
   deliveryAddress: string;
-  partLoad: string;
-  fullLoad: string;
+  deliveryCurrentFloor: string;
+  deliveryLiftStatus: string;
+  partLoad: boolean;
+  fullLoad: boolean;
+  lorryType: string;
+  freightPartCharge: string;
+  freightFullCharge: string;
   packingCharges: TCharge | null;
-  packingMaterialCharges : TCharge | null ;
-  loadingCharges : TCharge | null ;
-  unLoadingCharges : TCharge | null ;
-  unPackingCharges : TCharge | null ;
-  advanceAmount : string;
-  surcharge : string ;
-  discountInQuotation : TCharge | null ;
-  gstInQuotation : TCharge | null ;
-  insuranceDetails : TCharge | null ;
-  insuranceType : string;
-  insuranceCharge: string ;
+  packingMaterialCharges: TCharge | null;
+  loadingCharges: TCharge | null;
+  unLoadingCharges: TCharge | null;
+  unPackingCharges: TCharge | null;
+  advanceAmount: string;
+  surcharge: string;
+  discountInQuotation: TCharge | null;
+  gstInQuotation: TCharge | null;
+  insuranceDetails: TCharge | null;
+  insuranceType: string;
+  insuranceCharge: string;
   valueOfGoods: string;
   storageCharges: TCharge | null;
-  fromDate: string ;
-  toDate : string ;
-  storageAmount :string ;
-  otherCharges :string ;
-  amount : string ;
-otherDetailsOne : boolean;
-otherDetailsTwo : boolean;
-otherDetailsThree : boolean;
-
+  fromDate: string;
+  toDate: string;
+  storageAmount: string;
+  otherCharges: string;
+  amount: string;
+  otherDetailsOne: boolean;
+  otherDetailsTwo: boolean;
+  otherDetailsThree: boolean;
+  //Errors
+  errors: {
+    shiftingType: string;
+    dateOfQuotation: string;
+    dateOfMoving: string;
+    serialNumber: string;
+    shiftingLuggage: string;
+    template: string;
+    vehcileType: string;
+    manufacturer: string;
+    model: string;
+    companyName: string;
+    partyName: string;
+    mobileNumber: string;
+    pickupPincode: string;
+    pickupCity: string;
+    pickupState: string;
+    pickupLocality: string;
+    pickupAddress: string;
+    deliveryPincode: string;
+    deliveryCity: string;
+    deliveryState: string;
+    deliveryLocality: string;
+    deliveryAddress: string;
+    partLoad: string;
+    fullLoad: string;
+    packingCharges: string;
+    packingMaterialCharges: string;
+    loadingCharges: string;
+    unLoadingCharges: string;
+    unPackingCharges: string;
+    advanceAmount: string;
+    surcharge: string;
+    discountInQuotation: string;
+    gstInQuotation: string;
+    insuranceDetails: string;
+    insuranceType: string;
+    insuranceCharge: string;
+    valueOfGoods: string;
+    storageCharges: string;
+    fromDate: string;
+    toDate: string;
+    storageAmount: string;
+    otherCharges: string;
+    amount: string;
+    otherDetailsOne: string;
+    otherDetailsTwo: string;
+    otherDetailsThree: string;
+  };
 }
 
+type TPayload = string | TCharge | boolean;
+
 /** ACTION INTERFACE */
-interface IQuotationAction {
+export interface IQuotationAction {
   type: QUOTATION_FORM_ACTION;
-  payload: string;
+  payload: TPayload;
 }
 
 /** INITIAL STATE */
 export const initialState: IQuotationFormState = {
-  shiftingType: '',
+  shiftingType: 'LOCAL',
   dateOfQuotation: '',
+  dateOfMoving: '',
   serialNumber: '',
   shiftingLuggage: '',
   template: '',
@@ -131,127 +202,203 @@ export const initialState: IQuotationFormState = {
   pickupState: '',
   pickupLocality: '',
   pickupAddress: '',
+  pickupCurrentFloor: '',
+  pickupLiftStatus: '',
   deliveryPincode: '',
   deliveryCity: '',
   deliveryState: '',
   deliveryLocality: '',
   deliveryAddress: '',
-  partLoad: '',
-  fullLoad: '',
+  deliveryCurrentFloor: '',
+  deliveryLiftStatus: '',
+  partLoad: true,
+  fullLoad: false,
+  lorryType: '',
+  freightPartCharge: '',
+  freightFullCharge: '',
   packingCharges: null,
-  packingMaterialCharges : null,
-  loadingCharges : null,
-  unLoadingCharges : null,
-  unPackingCharges : null,
-  advanceAmount : '',
-  surcharge :'',
-  discountInQuotation : null,
-  gstInQuotation : null,
-  insuranceDetails :null ,
-  insuranceType : '',
-  insuranceCharge:'',
+  packingMaterialCharges: null,
+  loadingCharges: null,
+  unLoadingCharges: null,
+  unPackingCharges: null,
+  advanceAmount: '',
+  surcharge: '',
+  discountInQuotation: null,
+  gstInQuotation: null,
+  insuranceDetails: null,
+  insuranceType: '',
+  insuranceCharge: '',
   valueOfGoods: '',
   storageCharges: null,
   fromDate: '',
-  toDate : '',
-  storageAmount :'',
-  otherCharges :'',
-  amount : '',
-  otherDetailsOne : true,
-otherDetailsTwo : true,
-otherDetailsThree : true,
-
+  toDate: '',
+  storageAmount: '',
+  otherCharges: '',
+  amount: '',
+  otherDetailsOne: true,
+  otherDetailsTwo: true,
+  otherDetailsThree: true,
+  errors: {
+    shiftingType: '',
+    dateOfQuotation: '',
+    dateOfMoving: '',
+    serialNumber: '',
+    shiftingLuggage: '',
+    template: '',
+    vehcileType: '',
+    manufacturer: '',
+    model: '',
+    companyName: '',
+    partyName: '',
+    mobileNumber: '',
+    pickupPincode: '',
+    pickupCity: '',
+    pickupState: '',
+    pickupLocality: '',
+    pickupAddress: '',
+    deliveryPincode: '',
+    deliveryCity: '',
+    deliveryState: '',
+    deliveryLocality: '',
+    deliveryAddress: '',
+    partLoad: '',
+    fullLoad: '',
+    packingCharges: '',
+    packingMaterialCharges: '',
+    loadingCharges: '',
+    unLoadingCharges: '',
+    unPackingCharges: '',
+    advanceAmount: '',
+    surcharge: '',
+    discountInQuotation: '',
+    gstInQuotation: '',
+    insuranceDetails: '',
+    insuranceType: '',
+    insuranceCharge: '',
+    valueOfGoods: '',
+    storageCharges: '',
+    fromDate: '',
+    toDate: '',
+    storageAmount: '',
+    otherCharges: '',
+    amount: '',
+    otherDetailsOne: '',
+    otherDetailsTwo: '',
+    otherDetailsThree: '',
+  },
 };
 
 /** Quotation Reducer */
-export const quotationReducer = (
-  state: IQuotationFormState,
-  action: IQuotationAction,
-) => {
+export const quotationReducer: Reducer<
+  IQuotationFormState,
+  IQuotationAction
+> = (state: IQuotationFormState, action: IQuotationAction) => {
   const {type, payload} = action;
   switch (type) {
     case QUOTATION_FORM_ACTION.SHIFTING_TYPE:
-      return {...state, shiftingType: payload};
+      return {...state, shiftingType: payload as string};
     case QUOTATION_FORM_ACTION.DATE_OF_QUOTATION:
-      return {...state, dateOfQuotation: payload};
+      return {...state, dateOfQuotation: payload as string};
+    case QUOTATION_FORM_ACTION.DATE_OF_MOVING:
+      return {...state, dateOfMoving: payload as string};
     case QUOTATION_FORM_ACTION.SERIAL_NUMBER:
-      return {...state, serialNumber: payload};
+      return {...state, serialNumber: payload as string};
     case QUOTATION_FORM_ACTION.SHIFTING_LUGGAGE:
-      return {...state, shiftingLuggage: payload};
+      return {...state, shiftingLuggage: payload as string};
     case QUOTATION_FORM_ACTION.TEMPLATE:
-      return {...state, template: payload};
+      return {...state, template: payload as string};
     case QUOTATION_FORM_ACTION.VEHCILE_TYPE:
-      return {...state, vehcileType: payload};
+      return {...state, vehcileType: payload as string};
     case QUOTATION_FORM_ACTION.MANUFACTURER:
-      return {...state, manufacturer: payload};
+      return {...state, manufacturer: payload as string};
     case QUOTATION_FORM_ACTION.MODEL:
-      return {...state, model: payload};
+      return {...state, model: payload as string};
     case QUOTATION_FORM_ACTION.COMPANY_NAME:
-      return {...state, companyName: payload};
+      return {...state, companyName: payload as string};
     case QUOTATION_FORM_ACTION.PARTY_NAME:
-      return {...state, partyName: payload};
+      return {...state, partyName: payload as string};
     case QUOTATION_FORM_ACTION.MOBILE_NUMBER:
-      return {...state, mobileNumber: payload};
+      return {...state, mobileNumber: payload as string};
     case QUOTATION_FORM_ACTION.PICKUP_PINCODE:
-      return {...state, pickupPincode: payload};
+      return {...state, pickupPincode: payload as string};
     case QUOTATION_FORM_ACTION.PICKUP_CITY:
-      return {...state, pickupCity: payload};
+      return {...state, pickupCity: payload as string};
     case QUOTATION_FORM_ACTION.PICKUP_STATE:
-      return {...state, pickupState: payload};
+      return {...state, pickupState: payload as string};
     case QUOTATION_FORM_ACTION.PICKUP_LOCALITY:
-      return {...state, pickupLocality: payload};
+      return {...state, pickupLocality: payload as string};
     case QUOTATION_FORM_ACTION.PICKUP_ADDRESS:
-      return {...state, pickupAddress: payload};
+      return {...state, pickupAddress: payload as string};
+    case QUOTATION_FORM_ACTION.PICKUP_CURRENT_FLOOR:
+      return {...state, pickupCurrentFloor: payload as string};
+    case QUOTATION_FORM_ACTION.PICKUP_LIFT_STATUS:
+      return {...state, pickupLiftStatus: payload as string};
     case QUOTATION_FORM_ACTION.DELIVERY_PINCODE:
-      return {...state, deliveryPincode: payload};
+      return {...state, deliveryPincode: payload as string};
     case QUOTATION_FORM_ACTION.DELIVERY_CITY:
-      return {...state, deliveryCity: payload};
+      return {...state, deliveryCity: payload as string};
     case QUOTATION_FORM_ACTION.DELIVERY_STATE:
-      return {...state, deliveryState: payload};
+      return {...state, deliveryState: payload as string};
     case QUOTATION_FORM_ACTION.DELIVERY_LOCALITY:
-      return {...state, deliveryLocality: payload};
+      return {...state, deliveryLocality: payload as string};
     case QUOTATION_FORM_ACTION.DELIVERY_ADDRESS:
-      return {...state, deliveryAddress: payload};
+      return {...state, deliveryAddress: payload as string};
+    case QUOTATION_FORM_ACTION.DELIVERY_CURRENT_FLOOR:
+      return {...state, deliveryCurrentFloor: payload as string};
+    case QUOTATION_FORM_ACTION.DELIVERY_LIFT_STATUS:
+      return {...state, deliveryLiftStatus: payload as string};
     case QUOTATION_FORM_ACTION.PART_LOAD:
-      return {...state, partLoad: payload};
+      return {...state, partLoad: payload as boolean};
     case QUOTATION_FORM_ACTION.FULL_LOAD:
-      return {...state, fullLoad: payload};
+      return {...state, fullLoad: payload as boolean};
+    case QUOTATION_FORM_ACTION.LORRY_TYPE:
+      return {...state, lorryType: payload as string};
+    case QUOTATION_FORM_ACTION.FREIGHT_PART_CHARGE:
+      return {...state, freightPartCharge: payload as string};
+    case QUOTATION_FORM_ACTION.FREIGHT_FULL_CHARGE:
+      return {...state, freightFullCharge: payload as string};
     case QUOTATION_FORM_ACTION.PACKING_CHARGES:
-      return {...state, packingCharges: payload};
+      return {...state, packingCharges: payload as TCharge};
     case QUOTATION_FORM_ACTION.PACKING_MATERIAL_CHARGES:
-      return {...state, packingMaterialCharges: payload};
+      return {...state, packingMaterialCharges: payload as TCharge};
     case QUOTATION_FORM_ACTION.LOADING_CHARGES:
-      return {...state, loadingCharges: payload};
+      return {...state, loadingCharges: payload as TCharge};
     case QUOTATION_FORM_ACTION.UNLOADING_CHARGES:
-      return {...state, unLoadingCharges: payload};
+      return {...state, unLoadingCharges: payload as TCharge};
     case QUOTATION_FORM_ACTION.UNPACKING_CHARGES:
-      return {...state, unPackingCharges: payload};
+      return {...state, unPackingCharges: payload as TCharge};
     case QUOTATION_FORM_ACTION.ADVANCE_AMOUNT:
-      return {...state, advanceAmount: payload};
+      return {...state, advanceAmount: payload as string};
     case QUOTATION_FORM_ACTION.SURCHARGE:
-      return {...state, surcharge: payload};
+      return {...state, surcharge: payload as string};
     case QUOTATION_FORM_ACTION.DISCOUNT_IN_QUOTATION:
-      return {...state, discountInQuotation: payload};
+      return {...state, discountInQuotation: payload as TCharge};
     case QUOTATION_FORM_ACTION.GST_IN_QUOTATION:
-      return {...state, gstInQuotation: payload};
+      return {...state, gstInQuotation: payload as TCharge};
     case QUOTATION_FORM_ACTION.INSURANCE_DETAILS:
-      return {...state, insuranceDetails: payload};
+      return {...state, insuranceDetails: payload as TCharge};
     case QUOTATION_FORM_ACTION.INSURANCE_TYPE:
-      return {...state, insuranceType: payload};
+      return {...state, insuranceType: payload as string};
     case QUOTATION_FORM_ACTION.INSURANCE_CHARGE:
-      return {...state, insuranceCharge: payload};
+      return {...state, insuranceCharge: payload as string};
     case QUOTATION_FORM_ACTION.VALUE_OF_GOODS:
-      return {...state, valueOfGoods: payload};
+      return {...state, valueOfGoods: payload as string};
     case QUOTATION_FORM_ACTION.STORAGE_CHARGES:
-      return {...state, storageCharges: payload};
-    case QUOTATION_FORM_ACTION.FROM_DATE:
-      return {...state, fromDate: payload};
-    case QUOTATION_FORM_ACTION.TO_DATE:
-      return {...state, toDate: payload};
+      return {...state, storageCharges: payload as TCharge};
+    case QUOTATION_FORM_ACTION.STORAGE_FROM_DATE:
+      return {...state, fromDate: payload as string};
+    case QUOTATION_FORM_ACTION.STORAGE_TO_DATE:
+      return {...state, toDate: payload as string};
     case QUOTATION_FORM_ACTION.AMOUNT:
-      return {...state, amount: payload};
+      return {...state, amount: payload as string};
     case QUOTATION_FORM_ACTION.OTHER_DETAILS:
-      return {...state, otherDetails: payload};
+      return {...state, otherDetails: payload as string};
+    //Errors
+    case QUOTATION_FORM_ACTION.PICKUP_PINCODE_ERROR:
+      return {
+        ...state,
+        errors: {...state.errors, pickupAddress: payload as string},
+      };
     default:
       return state;
   }
