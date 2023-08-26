@@ -8,14 +8,12 @@ export enum ENQUIRY_FORM_ACTION {
   PICKUP_PINCODE = 'PICKUP_PINCODE',
   PICKUP_CITY = 'PICKUP_CITY',
   PICKUP_STATE = 'PICKUP_STATE',
-  PICKUP_LOCALITY = 'PICKUP_LOCALITY',
   PICKUP_ADDRESS = 'PICKUP_ADDRESS',
   PICKUP_CURRENT_FLOOR = 'PICKUP_CURRENT_FLOOR',
   PICKUP_CURRENT_LIFT_STATUS = 'PICKUP_CURRENT_LIFT_STATUS',
   DELIVERY_PINCODE = 'DELIVERY_PINCODE',
   DELIVERY_CITY = 'DELIVERY_CITY',
   DELIVERY_STATE = 'DELIVERY_STATE',
-  DELIVERY_LOCALITY = 'DELIVERY_LOCALITY',
   DELIVERY_ADDRESS = 'DELIVERY_ADDRESS',
   DELIVERY_CURRENT_FLOOR = 'DELIVERY_CURRENT_FLOOR',
   DELIVERY_CURRENT_LIFT_STATUS = 'DELIVERY_CURRENT_LIFT_STATUS',
@@ -31,14 +29,12 @@ interface EnquiryFormState {
   pickupPincode: string;
   pickupCity: string;
   pickupState: string;
-  pickupLocality: string;
   pickupAddress: string;
   pickupCurrentFloor: String;
   pickupCurrentLiftStatus: String;
   deliveryPincode: string;
   deliveryCity: string;
   deliveryState: string;
-  deliveryLocality: string;
   deliveryAddress: string;
   deliveryCurrentFloor: String;
   deliveryCurrentLiftStatus: String;
@@ -60,14 +56,12 @@ export const initialState: EnquiryFormState = {
   pickupPincode: '',
   pickupCity: '',
   pickupState: '',
-  pickupLocality: '',
   pickupAddress: '',
   pickupCurrentFloor: '',
   pickupCurrentLiftStatus: '',
   deliveryPincode: '',
   deliveryCity: '',
   deliveryState: '',
-  deliveryLocality: '',
   deliveryAddress: '',
   deliveryCurrentFloor: '',
   deliveryCurrentLiftStatus: '',
@@ -96,8 +90,6 @@ export const enquiryReducer = (
       return {...state, pickupCity: payload};
     case ENQUIRY_FORM_ACTION.PICKUP_STATE:
       return {...state, pickupState: payload};
-    case ENQUIRY_FORM_ACTION.PICKUP_LOCALITY:
-      return {...state, pickupLocality: payload};
     case ENQUIRY_FORM_ACTION.PICKUP_ADDRESS:
       return {...state, pickupAddress: payload};
     case ENQUIRY_FORM_ACTION.PICKUP_CURRENT_FLOOR:
@@ -110,8 +102,6 @@ export const enquiryReducer = (
       return {...state, deliveryCity: payload};
     case ENQUIRY_FORM_ACTION.DELIVERY_STATE:
       return {...state, deliveryState: payload};
-    case ENQUIRY_FORM_ACTION.DELIVERY_LOCALITY:
-      return {...state, deliveryLocality: payload};
     case ENQUIRY_FORM_ACTION.DELIVERY_ADDRESS:
       return {...state, deliveryAddress: payload};
     case ENQUIRY_FORM_ACTION.DELIVERY_CURRENT_FLOOR:

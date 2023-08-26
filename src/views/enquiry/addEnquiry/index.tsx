@@ -100,15 +100,15 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
     [state.pickupState],
   );
 
-  const handlePickupLocality = useCallback(
-    (item: TDropdownItem) => {
-      dispatch({
-        type: ENQUIRY_FORM_ACTION.PICKUP_LOCALITY,
-        payload: item.label,
-      });
-    },
-    [state.pickupLocality],
-  );
+  // const handlePickupLocality = useCallback(
+  //   (item: TDropdownItem) => {
+  //     dispatch({
+  //       type: ENQUIRY_FORM_ACTION.PICKUP_LOCALITY,
+  //       payload: item.label,
+  //     });
+  //   },
+  //   [state.pickupLocality],
+  // );
 
   const handlePickupAddress = useCallback(
     (text: string) => {
@@ -170,15 +170,15 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
     [state.deliveryState],
   );
 
-  const handleDeliveryLocality = useCallback(
-    (item: TDropdownItem) => {
-      dispatch({
-        type: ENQUIRY_FORM_ACTION.DELIVERY_LOCALITY,
-        payload: item.label,
-      });
-    },
-    [state.deliveryLocality],
-  );
+  // const handleDeliveryLocality = useCallback(
+  //   (item: TDropdownItem) => {
+  //     dispatch({
+  //       type: ENQUIRY_FORM_ACTION.DELIVERY_LOCALITY,
+  //       payload: item.label,
+  //     });
+  //   },
+  //   [state.deliveryLocality],
+  // );
 
   const handleDeliveryAddress = useCallback(
     (text: String) => {

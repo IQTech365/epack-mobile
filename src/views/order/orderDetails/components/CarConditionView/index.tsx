@@ -58,10 +58,10 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({}) => {
 
   
   const handleChooseTemplate = (item: TDropdownItem) => {
-     dispatch({
-      type: CARCONDITION_FORM_ACTION.CHOOSE_TEMPLATE,
-      payload: item.label,
-     });
+    //  dispatch({
+    //   type: CARCONDITION_FORM_ACTION.CHOOSE_TEMPLATE,
+    //   payload: item.label,
+    //  });
   };
 
   const handleCarConditionDate = (date: Date) => {

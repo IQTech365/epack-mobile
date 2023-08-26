@@ -2,7 +2,6 @@
 
 export enum CARCONDITION_FORM_ACTION {
   CARCONDITION_NO = 'CARCONDITION_NO ',
-  CHOOSE_TEMPLATE = 'CHOOSE_TEMPLATE ',
   DATE_OF_CARCONDITION = 'DATE_OF_CARCONDITION',
   CN_BILTY_LR_NO = 'CN_BILTY_LR_NO ',
   MANUFACTURER = 'MANUFACTURER',
@@ -43,7 +42,6 @@ export enum CARCONDITION_FORM_ACTION {
 
 interface ICarConditionFormState {
   carConditionNo: string;
-  chooseTemplate: string;
   dateOfCarCondition: string;
   cnBiltyLrNo: string;
   manufacturer: string;
@@ -91,7 +89,6 @@ interface ICarConditionFormAction {
 
 export const initialState: ICarConditionFormState = {
   carConditionNo: '',
-  chooseTemplate: '',
   dateOfCarCondition: '',
   cnBiltyLrNo: '',
   manufacturer: '',
@@ -138,8 +135,6 @@ export const carConditionReducer = (
   switch (type) {
     case CARCONDITION_FORM_ACTION.CARCONDITION_NO:
       return {...state, carConditionNo: payload};
-    case CARCONDITION_FORM_ACTION.CHOOSE_TEMPLATE:
-      return {...state, chooseTemplate: payload};
     case CARCONDITION_FORM_ACTION.DATE_OF_CARCONDITION:
       return {...state, dateOfCarCondition: payload};
     case CARCONDITION_FORM_ACTION.CN_BILTY_LR_NO:
