@@ -5,6 +5,7 @@ export enum QUOTATION_FORM_ACTION {
   SHIFTING_TYPE = 'SHIFTING_TYPE',
   DATE_OF_QUOTATION = 'DATE_OF_QUOTATION',
   DATE_OF_MOVING = 'DATE_OF_MOVING',
+  BILLING_BY = 'BILLING_BY',
   SERIAL_NUMBER = 'SERIAL_NUMBER',
   SHIFTING_LUGGAGE = 'SHIFTING_LUGGAGE',
   TEMPLATE = 'TEMPLATE',
@@ -30,8 +31,8 @@ export enum QUOTATION_FORM_ACTION {
   DELIVERY_LIFT_STATUS = 'DELIVERY_LIFT_STATUS',
   PART_LOAD = 'PART_LOAD ',
   FULL_LOAD = 'FULL_LOAD',
-  FREIGHT_PART_CHARGE = '',
-  FREIGHT_FULL_CHARGE = '',
+  FREIGHT_PART_CHARGE = 'FREIGHT_PART_CHARGE',
+  FREIGHT_FULL_CHARGE = 'FREIGHT_FULL_CHARGE',
   LORRY_TYPE = 'LORRY_TYPE',
   PACKING_CHARGES = 'PACKING_CHARGES',
   PACKING_MATERIAL_CHARGES = 'PACKING_MATERIAL_CHARGES',
@@ -57,10 +58,32 @@ export enum QUOTATION_FORM_ACTION {
   PICKUP_PINCODE_ERROR = 'PICKUP_PINCODE_ERROR',
 }
 
+// ** Billing Info
+export type TBillingInfo = {
+  company_name: string;
+  approval_authority: string;
+  authority_person_name: string;
+  authority_mobile_number: string;
+  company_address: string;
+  company_gst: string;
+  employee_name: string;
+  employee_designation: string;
+  employee_mobile_number: string;
+}
+
+// ** Billing By
+export type TBillingBy = {
+  billing_by: string;
+  billing_info: TBillingInfo | null;
+}
+
+// ** Packing Charge
 export enum EChargeStatus {
   INCLUDED = 'INCLUDED',
   ADDITIONAL = 'ADDITIONAL',
   NOT_REQUIRED = 'NOT REQUIRED',
+  LOADING_BY_PARTY = 'LOADING_BY_PARTY',
+  UNLOADING_BY_PARTY = 'UNLOADING_BY_PARTY',
 }
 
 export type TCharge = {
@@ -69,11 +92,84 @@ export type TCharge = {
   full_load_charge: string;
 };
 
+// ** Surchage
+export enum ESurchageStatus {
+  APPLICABLE = 'APPLICABLE',
+  NOT_APPLICABLE = 'NOT APPLICABLE',
+  EXTRA = 'EXTRA',
+}
+
+export type TSurcharge = {
+  status: ESurchageStatus,
+  surcharge_percent: string,
+}
+
+// ** GST in Quotation
+export enum EGstInQuotationStatus {
+  WITH_GST = 'WITH GST',
+  WITHOUT_GST = 'WITHOUT GST',
+  GST_EXEMPTED = 'GST EXEMPTED',
+}
+
+export type TGstInQuotation = {
+  status: EGstInQuotationStatus,
+  gst_percent: string,
+  gst_type: string,
+}
+
+// ** Discount in quotation
+export enum EDiscountInQuotationType {
+  PERCENT = 'PERCENT',
+  FLAT = 'FLAT',
+}
+export type TDiscountInQuotation = {
+  discount_type: EDiscountInQuotationType,
+  discount_value: string,
+}
+
+// ** Insurance details
+export type TInsuranceDetails = {
+  status: 'Required' | 'Not Required',
+  shifting_luggage: string,
+  insurance_type: string,
+  insurance_charge_percent: string,
+  insurance_gst_percent: string,
+  insurance_goods_value: string,
+}
+
+// ** storage charge
+export type TStorageCharge = {
+  status: 'Required' | 'Not Required',
+  storage_duration_type: string,
+  storage_from_date: string,
+  storage_to_date: string,
+  storage_amount: string,
+}
+
+export type TOtherChargeItem = {
+  name: string,
+  value: string,
+}
+
+// ** Other charges
+export type TOtherCharges = {
+  other_items?: TOtherChargeItem[]
+}
+
+// ** Other Details
+export type TOtherDetails = {
+  easy_access_for_loading_unloading: string,
+  any_restrcition_for_loading_unloading: string,
+  items_got_down_from_balcony: string,
+  any_needs_or_concern: string,
+}
+
 /** QUOTATOIN FORM STATE */
 export interface IQuotationFormState {
   shiftingType: string;
   dateOfQuotation: string;
   dateOfMoving: string;
+  billingBy: TBillingBy | null;
   serialNumber: string;
   shiftingLuggage: string;
   template: string;
@@ -108,22 +204,13 @@ export interface IQuotationFormState {
   unLoadingCharges: TCharge | null;
   unPackingCharges: TCharge | null;
   advanceAmount: string;
-  surcharge: string;
-  discountInQuotation: TCharge | null;
-  gstInQuotation: TCharge | null;
-  insuranceDetails: TCharge | null;
-  insuranceType: string;
-  insuranceCharge: string;
-  valueOfGoods: string;
-  storageCharges: TCharge | null;
-  fromDate: string;
-  toDate: string;
-  storageAmount: string;
-  otherCharges: string;
-  amount: string;
-  otherDetailsOne: boolean;
-  otherDetailsTwo: boolean;
-  otherDetailsThree: boolean;
+  surcharge: TSurcharge | null;
+  discountInQuotation: TDiscountInQuotation | null;
+  gstInQuotation: TGstInQuotation | null;
+  insuranceDetails: TInsuranceDetails | null;
+  storageCharges: TStorageCharge | null;
+  otherCharges: TOtherCharges | null;
+  otherDetails: TOtherDetails | null;
   //Errors
   errors: {
     shiftingType: string;
@@ -160,22 +247,13 @@ export interface IQuotationFormState {
     discountInQuotation: string;
     gstInQuotation: string;
     insuranceDetails: string;
-    insuranceType: string;
-    insuranceCharge: string;
-    valueOfGoods: string;
     storageCharges: string;
-    fromDate: string;
-    toDate: string;
-    storageAmount: string;
     otherCharges: string;
-    amount: string;
-    otherDetailsOne: string;
-    otherDetailsTwo: string;
-    otherDetailsThree: string;
+    otherDetails: string;
   };
 }
 
-type TPayload = string | TCharge | boolean;
+type TPayload = string | TCharge | boolean | TSurcharge | TGstInQuotation | TDiscountInQuotation | TInsuranceDetails | TStorageCharge | TOtherCharges | TOtherDetails | TBillingBy;
 
 /** ACTION INTERFACE */
 export interface IQuotationAction {
@@ -188,6 +266,7 @@ export const initialState: IQuotationFormState = {
   shiftingType: 'LOCAL',
   dateOfQuotation: '',
   dateOfMoving: '',
+  billingBy: {billing_by: 'Billing By Individual', billing_info: null},
   serialNumber: '',
   shiftingLuggage: '',
   template: '',
@@ -222,22 +301,13 @@ export const initialState: IQuotationFormState = {
   unLoadingCharges: null,
   unPackingCharges: null,
   advanceAmount: '',
-  surcharge: '',
+  surcharge: null,
   discountInQuotation: null,
   gstInQuotation: null,
   insuranceDetails: null,
-  insuranceType: '',
-  insuranceCharge: '',
-  valueOfGoods: '',
   storageCharges: null,
-  fromDate: '',
-  toDate: '',
-  storageAmount: '',
-  otherCharges: '',
-  amount: '',
-  otherDetailsOne: true,
-  otherDetailsTwo: true,
-  otherDetailsThree: true,
+  otherCharges: null,
+  otherDetails: null,
   errors: {
     shiftingType: '',
     dateOfQuotation: '',
@@ -273,18 +343,9 @@ export const initialState: IQuotationFormState = {
     discountInQuotation: '',
     gstInQuotation: '',
     insuranceDetails: '',
-    insuranceType: '',
-    insuranceCharge: '',
-    valueOfGoods: '',
     storageCharges: '',
-    fromDate: '',
-    toDate: '',
-    storageAmount: '',
     otherCharges: '',
-    amount: '',
-    otherDetailsOne: '',
-    otherDetailsTwo: '',
-    otherDetailsThree: '',
+    otherDetails: '',
   },
 };
 
@@ -301,6 +362,8 @@ export const quotationReducer: Reducer<
       return {...state, dateOfQuotation: payload as string};
     case QUOTATION_FORM_ACTION.DATE_OF_MOVING:
       return {...state, dateOfMoving: payload as string};
+    case QUOTATION_FORM_ACTION.BILLING_BY:
+      return {...state, billingBy: payload as TBillingBy};
     case QUOTATION_FORM_ACTION.SERIAL_NUMBER:
       return {...state, serialNumber: payload as string};
     case QUOTATION_FORM_ACTION.SHIFTING_LUGGAGE:
@@ -370,29 +433,19 @@ export const quotationReducer: Reducer<
     case QUOTATION_FORM_ACTION.ADVANCE_AMOUNT:
       return {...state, advanceAmount: payload as string};
     case QUOTATION_FORM_ACTION.SURCHARGE:
-      return {...state, surcharge: payload as string};
+      return {...state, surcharge: payload as TSurcharge};
     case QUOTATION_FORM_ACTION.DISCOUNT_IN_QUOTATION:
-      return {...state, discountInQuotation: payload as TCharge};
+      return {...state, discountInQuotation: payload as TDiscountInQuotation};
     case QUOTATION_FORM_ACTION.GST_IN_QUOTATION:
-      return {...state, gstInQuotation: payload as TCharge};
+      return {...state, gstInQuotation: payload as TGstInQuotation};
     case QUOTATION_FORM_ACTION.INSURANCE_DETAILS:
-      return {...state, insuranceDetails: payload as TCharge};
-    case QUOTATION_FORM_ACTION.INSURANCE_TYPE:
-      return {...state, insuranceType: payload as string};
-    case QUOTATION_FORM_ACTION.INSURANCE_CHARGE:
-      return {...state, insuranceCharge: payload as string};
-    case QUOTATION_FORM_ACTION.VALUE_OF_GOODS:
-      return {...state, valueOfGoods: payload as string};
+      return {...state, insuranceDetails: payload as TInsuranceDetails};
     case QUOTATION_FORM_ACTION.STORAGE_CHARGES:
-      return {...state, storageCharges: payload as TCharge};
-    case QUOTATION_FORM_ACTION.STORAGE_FROM_DATE:
-      return {...state, fromDate: payload as string};
-    case QUOTATION_FORM_ACTION.STORAGE_TO_DATE:
-      return {...state, toDate: payload as string};
-    case QUOTATION_FORM_ACTION.AMOUNT:
-      return {...state, amount: payload as string};
+      return {...state, storageCharges: payload as TStorageCharge};
+    case QUOTATION_FORM_ACTION.OTHER_CHARGES:
+      return {...state, otherCharges: payload as TOtherCharges};
     case QUOTATION_FORM_ACTION.OTHER_DETAILS:
-      return {...state, otherDetails: payload as string};
+      return {...state, otherDetails: payload as TOtherDetails};
     //Errors
     case QUOTATION_FORM_ACTION.PICKUP_PINCODE_ERROR:
       return {

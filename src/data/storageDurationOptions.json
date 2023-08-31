@@ -1,0 +1,14 @@
+[
+  {
+    "label": "Per Day Charges",
+    "value": "1"
+  },
+  {
+    "label": "Warehouse Handling Charges",
+    "value": "2"
+  },
+  {
+    "label": "Charges During Period",
+    "value": "3"
+  }
+]
