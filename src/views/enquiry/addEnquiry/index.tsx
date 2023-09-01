@@ -400,6 +400,7 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
             </View>
           </View>
         </CollapsibleView>
+        <Spacer height={4} />
         <CollapsibleView title="BILLING DETAILS" collapsed={false}>
           <View>
             <View style={styles.elementContainer}>

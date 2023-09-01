@@ -54,8 +54,6 @@ const RegisterCompanyView: React.FC<{}> = ({}) => {
   return (
     <AvoidSoftInputViewHOC>
       <View style={styles.container}>
-        <Header label="REGISTER COMPANY" />
-        <Spacer height={4} />
           <View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
@@ -107,14 +105,6 @@ const RegisterCompanyView: React.FC<{}> = ({}) => {
             <Spacer height={4} />
             <View style={styles.elementContainer}>
               <Label text="State" style={styles.label} />
-              <DropdownComponent
-                data={shiftingTypes}
-                onSelect={handleShiftingType}
-              />
-            </View>
-            <Spacer height={4} />
-            <View style={styles.elementContainer}>
-              <Label text="Locality" style={styles.label} />
               <DropdownComponent
                 data={shiftingTypes}
                 onSelect={handleShiftingType}
