@@ -1,6 +1,7 @@
 //** ALL ACTIONS */
 export enum ENQUIRY_FORM_ACTION {
   SHIFTING_TYPE = 'SHIFTING_TYPE',
+  BILLING_BY = 'BILLING_BY',
   COMPANY_NAME_PARTY = 'COMPANY_NAME_PARTY',
   PARTY_NAME = 'PARTY_NAME',
   MOBILE_NUMBER = 'MOBILE_NUMBER',
@@ -21,9 +22,29 @@ export enum ENQUIRY_FORM_ACTION {
   DELIVERY_CURRENT_LIFT_STATUS = 'DELIVERY_CURRENT_LIFT_STATUS',
 }
 
+// ** Billing Info
+export type TBillingInfo = {
+  company_name: string;
+  approval_authority: string;
+  authority_person_name: string;
+  authority_mobile_number: string;
+  company_address: string;
+  company_gst: string;
+  employee_name: string;
+  employee_designation: string;
+  employee_mobile_number: string;
+}
+
+// ** Billing By
+export type TBillingBy = {
+  billing_by: string;
+  billing_info: TBillingInfo | null;
+}
+
 /** ENQUIRY FORM STATE */
 interface EnquiryFormState {
   shiftingType: string;
+  billingBy: TBillingBy | null;
   companyNameParty: string;
   partyName: string;
   mobileNumber: string;
@@ -44,15 +65,18 @@ interface EnquiryFormState {
   deliveryCurrentLiftStatus: String;
 }
 
+type TPayload = string | TBillingInfo | TBillingBy ;
+
 /** ACTION INTERFACE */
 interface EnquiryAction {
   type: ENQUIRY_FORM_ACTION;
-  payload: string;
+  payload: TPayload;
 }
 
 /** INITIAL STATE */
 export const initialState: EnquiryFormState = {
   shiftingType: '',
+  billingBy: null,
   companyNameParty: '',
   shiftingLuggage: {},
   partyName: '',
@@ -82,6 +106,8 @@ export const enquiryReducer = (
   switch (type) {
     case ENQUIRY_FORM_ACTION.SHIFTING_TYPE:
       return {...state, shiftingType: payload};
+      case ENQUIRY_FORM_ACTION.BILLING_BY:
+        return {...state, billingBy: payload as TBillingBy};
     case ENQUIRY_FORM_ACTION.SHIFTING_LUGGAGE:
       return {...state, shiftingLuggage: payload};
     case ENQUIRY_FORM_ACTION.COMPANY_NAME_PARTY:

@@ -13,6 +13,7 @@ import { COLOR_BLACK, COLOR_BLUE } from '../../../utils/colors';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import CollapsibleView from '../../../common/CollapsibleView';
 import shiftingTypes from '../../../data/shiftingType.json';
+import billingByOptions from '../../../data/billingByOptions.json';
 import Button from '../../../common/Button';
 import liftStatusOptions from '../../../data/liftStatusOptions.json';
 import floorOptions from '../../../data/floorOptions.json';
@@ -210,6 +211,238 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
     [state.deliveryCurrentLiftStatus],
   );
 
+  const showBillingByIndividualView = () => {
+    if (state.billingBy?.billing_by === 'Billing by Company') return null;
+    return (
+      <>
+        <Spacer height={4} />
+        <View style={styles.textContainer2}>
+          <Label text="Party Name" style={styles.label} />
+          <Input
+            onChangeText={handlePartyNameInputTextChange}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+          />
+        </View>
+        <Spacer height={4} />
+        <View style={styles.textContainer2}>
+          <Label text="Mobile Number *" style={styles.label} />
+          <Input
+            onChangeText={handleMobileNumberInputTextChange}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+          />
+        </View>
+      </>
+    );
+  };
+
+  const showBillingByCompanyView = () => {
+    if (state.billingBy?.billing_by === 'Billing By Individual') return null;
+    return (
+      <>
+        <Spacer height={4} />
+        <View style={styles.textContainer2}>
+          <Label text="Company Name" style={styles.label} />
+          <Input
+            onChangeText={(text: string) => {
+              const {billingBy} = state;
+              const tempObj = {
+                ...billingBy,
+                billing_info: {...billingBy?.billing_info, company_name: text},
+              };
+              dispatch({
+                type: ENQUIRY_FORM_ACTION.BILLING_BY,
+                payload: tempObj as TBillingBy,
+              });
+            }}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+          />
+        </View>
+        <Spacer height={4} />
+        <View style={styles.textContainer2}>
+          <Label text="Approval Authority" style={styles.label} />
+          <DropdownComponent
+            data={approvalAuthorityOptions}
+            onSelect={(item: TDropdownItem) => {
+              const {billingBy} = state;
+              const tempObj = {
+                ...billingBy,
+                billing_info: {
+                  ...billingBy?.billing_info,
+                  approval_authority: item.label,
+                },
+              };
+              dispatch({
+                type: ENQUIRY_FORM_ACTION.BILLING_BY,
+                payload: tempObj as TBillingBy,
+              });
+            }}
+          />
+        </View>
+        <Spacer height={4} />
+        <View style={styles.textContainer2}>
+          <Label text="Authority Person Name" style={styles.label} />
+          <Input
+            onChangeText={(text: string) => {
+              const {billingBy} = state;
+              const tempObj = {
+                ...billingBy,
+                billing_info: {
+                  ...billingBy?.billing_info,
+                  authority_person_name: text,
+                },
+              };
+              dispatch({
+                type: ENQUIRY_FORM_ACTION.BILLING_BY,
+                payload: tempObj as TBillingBy,
+              });
+            }}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+          />
+        </View>
+        <Spacer height={4} />
+        <View style={styles.textContainer2}>
+          <Label text="Authority Mobile Number" style={styles.label} />
+          <Input
+            onChangeText={(text: string) => {
+              const {billingBy} = state;
+              const tempObj = {
+                ...billingBy,
+                billing_info: {
+                  ...billingBy?.billing_info,
+                  authority_mobile_number: text,
+                },
+              };
+              dispatch({
+                type: ENQUIRY_FORM_ACTION.BILLING_BY,
+                payload: tempObj as TBillingBy,
+              });
+            }}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+          />
+        </View>
+        <Spacer height={4} />
+        <View style={styles.textContainer2}>
+          <Label text="Company GST" style={styles.label} />
+          <Input
+            onChangeText={(text: string) => {
+              const {billingBy} = state;
+              const tempObj = {
+                ...billingBy,
+                billing_info: {...billingBy?.billing_info, company_gst: text},
+              };
+              dispatch({
+                type: ENQUIRY_FORM_ACTION.BILLING_BY,
+                payload: tempObj as TBillingBy,
+              });
+            }}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+          />
+        </View>
+        <Spacer height={4} />
+        <View style={styles.textContainer2}>
+          <Label text="Employee Name" style={styles.label} />
+          <Input
+            onChangeText={(text: string) => {
+              const {billingBy} = state;
+              const tempObj = {
+                ...billingBy,
+                billing_info: {...billingBy?.billing_info, employee_name: text},
+              };
+              dispatch({
+                type: ENQUIRY_FORM_ACTION.BILLING_BY,
+                payload: tempObj as TBillingBy,
+              });
+            }}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+          />
+        </View>
+        <Spacer height={4} />
+        <View style={styles.textContainer2}>
+          <Label text="Employee Designation" style={styles.label} />
+          <Input
+            onChangeText={(text: string) => {
+              const {billingBy} = state;
+              const tempObj = {
+                ...billingBy,
+                billing_info: {
+                  ...billingBy?.billing_info,
+                  employee_designation: text,
+                },
+              };
+              dispatch({
+                type: ENQUIRY_FORM_ACTION.BILLING_BY,
+                payload: tempObj as TBillingBy,
+              });
+            }}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+          />
+        </View>
+        <Spacer height={4} />
+        <View style={styles.textContainer2}>
+          <Label text="Employee Mobile Number" style={styles.label} />
+          <Input
+            onChangeText={(text: string) => {
+              const {billingBy} = state;
+              const tempObj = {
+                ...billingBy,
+                billing_info: {
+                  ...billingBy?.billing_info,
+                  employee_mobile_number: text,
+                },
+              };
+              dispatch({
+                type: ENQUIRY_FORM_ACTION.BILLING_BY,
+                payload: tempObj as TBillingBy,
+              });
+            }}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+          />
+        </View>
+        <Spacer height={4} />
+        <View style={styles.textContainer2}>
+          <Label text="Company Address" style={styles.label} />
+          <Input
+            onChangeText={(text: string) => {
+              const {billingBy} = state;
+              const tempObj = {
+                ...billingBy,
+                billing_info: {
+                  ...billingBy?.billing_info,
+                  company_address: text,
+                },
+              };
+              dispatch({
+                type: ENQUIRY_FORM_ACTION.BILLING_BY,
+                payload: tempObj as TBillingBy,
+              });
+            }}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+          />
+        </View>
+      </>
+    );
+  };
+
   return (
     <AvoidSoftInputViewHOC>
       <View style={styles.container}>
@@ -226,12 +459,10 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
-              <Label text="Company Name of Party" style={styles.label} />
-              <Input
-                onChangeText={handleCompanyPartyNameInputTextChange}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
+              <Label text="Billing By" style={styles.label} />
+              <DropdownComponent
+                data={billingByOptions}
+                onSelect={handleShiftingType}
               />
             </View>
             <Spacer height={4} />
@@ -434,7 +665,7 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
               />
-            </View> 
+            </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
               <View style={styles.elementContainer}>
