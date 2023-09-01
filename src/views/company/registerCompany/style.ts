@@ -64,6 +64,9 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR_BLUE,
     borderRadius: 5,
   },
+  datePickerWidth: {
+    width: width * 0.9,
+  }
 });
 
 export default styles;
