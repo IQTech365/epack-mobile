@@ -104,7 +104,6 @@ interface IQuotationFormState {
 otherDetailsOne : boolean;
 otherDetailsTwo : boolean;
 otherDetailsThree : boolean;
-
 }
 
 /** ACTION INTERFACE */
