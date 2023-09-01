@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
 import {Dropdown} from 'react-native-element-dropdown';
 import {TDropdownItem} from '../../type/TDropdownItem';
+import { COLOR_BLUE } from '../../utils/colors';
 import styles from './style';
 interface IDropdownProps {
   data: Array<TDropdownItem>;
@@ -24,7 +25,7 @@ const DropdownComponent: React.FC<IDropdownProps> = ({data, onSelect, defaultVal
   return (
     <View style={styles.container}>
       <Dropdown
-        style={[styles.dropdown, isFocus && {borderColor: 'blue'}]}
+        style={[styles.dropdown, isFocus && {borderColor: COLOR_BLUE}]}
         placeholderStyle={styles.placeholderStyle}
         selectedTextStyle={styles.selectedTextStyle}
         inputSearchStyle={styles.inputSearchStyle}

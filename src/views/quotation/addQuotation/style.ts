@@ -102,6 +102,14 @@ const styles = StyleSheet.create({
         backgroundColor: COLOR_BLUE,
         borderRadius: 5,
     },
+    otherChargeItemWrapper: {
+        width: width * 0.9,
+        alignSelf: 'center',
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 10,
+        justifyContent: 'space-between',
+    },
 });
 
 export default styles;

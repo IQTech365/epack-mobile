@@ -20,7 +20,7 @@ import { AuthStackRoute } from '../../utils/constants';
 const SignInPageView = (props: any) => {
   const {navigation} = props;
   const dispatch = useAppDispatch();
-  const {requesting, success, error, failure} = useAppSelector(state => state.OTP);
+  const {requesting, success, error, failure, otpData} = useAppSelector(state => state.OTP);
   const [mobile, setMobile] = useState<string>('');
 
   const onChangeMobileText = (text: string) => {
@@ -36,6 +36,7 @@ const SignInPageView = (props: any) => {
 
   useEffect(() => {
     if(!requesting && success) {
+      console.log('otpData--------', JSON.stringify(otpData));
       navigation.navigate(AuthStackRoute.OTPInput);
     } else if(!requesting && error) {
       Alert.alert('Something went wrong. Please try again!');

@@ -1,0 +1,10 @@
+[
+  {
+    "label": "Billing By Individual",
+    "value": "1"
+  },
+  {
+    "label": "Billing by Company",
+    "value": "2"
+  }
+]

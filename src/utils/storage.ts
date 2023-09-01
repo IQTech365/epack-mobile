@@ -15,3 +15,27 @@ export const getLoginStatus = async () => {
     console.log('AsyncStorage Error in fetching', e);
   }
 };
+
+export const getAuthToken = async () => {
+  try {
+    return await AsyncStorage.getItem('authToken');
+  } catch (e) {
+    console.log('AsyncStorage Error in fetching auth-token', e);
+  }
+};
+
+export const setAuthToken = async (token: string) => {
+  try {
+    await AsyncStorage.setItem('authToken', token);
+  } catch (error) {
+    console.log('AsyncStorage Error in saving authToken', error);
+  }
+};
+
+export const removeToken = async () => {
+  try {
+    return await AsyncStorage.removeItem('authToken');
+  } catch (e) {
+    console.log('AsyncStorage Error in removing auth-token', e);
+  }
+};
