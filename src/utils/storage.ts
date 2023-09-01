@@ -24,6 +24,14 @@ export const getAuthToken = async () => {
   }
 };
 
+export const setAuthToken = async (token: string) => {
+  try {
+    await AsyncStorage.setItem('authToken', token);
+  } catch (error) {
+    console.log('AsyncStorage Error in saving authToken', error);
+  }
+};
+
 export const removeToken = async () => {
   try {
     return await AsyncStorage.removeItem('authToken');

@@ -14,8 +14,9 @@ import {INTRO_BG_LINEARGRADIENT} from '../../utils/colors';
 import Label from '../../common/Label';
 import OTPInput from '../../common/OtpInput';
 import {IOtpGetRequest} from '../../interface/otp/IOtpGetRequest';
-import {getOtpRequest} from '../../redux/slices/OtpSlice';
+import {getOtpRequest, verifyOtpRequest} from '../../redux/slices/OtpSlice';
 import Header from '../../common/Header';
+import { IOtpVerifyRequest } from '../../interface/otp/IOtpVerifyRequest';
 
 const OTPPageView = (props: any) => {
   const {navigation} = props;
@@ -25,6 +26,8 @@ const OTPPageView = (props: any) => {
     verifyOtpSuccess,
     verifyOtpError,
     verifyOtpFailure,
+    verifiedData,
+    otpData,
   } = useAppSelector(state => state.OTP);
   const [otp1, setOtp1] = useState<string>('');
   const [otp2, setOtp2] = useState<string>('');
@@ -87,11 +90,12 @@ const OTPPageView = (props: any) => {
   };
 
   const onVerifyOtpPress = useCallback(() => {
-    const payload: IOtpGetRequest = {
-      mobile: `${otp1}${otp2}${otp3}${otp4}${otp5}${otp6}`,
+    const payload: IOtpVerifyRequest = {
+      id: otpData?.data.id as string,
+      otp: `${otp1}${otp2}${otp3}${otp4}${otp5}${otp6}`,
     };
-    dispatch(getOtpRequest(payload));
-  }, []);
+    dispatch(verifyOtpRequest(payload));
+  }, [otp1, otp2, otp3, otp4, otp5, otp6]);
 
   const onSignUpPress = useCallback(() => {
     navigation.navigate(AuthStackRoute.SignUp);
@@ -102,6 +106,8 @@ const OTPPageView = (props: any) => {
   useEffect(() => {
     if(!verifyOtpRequesting && verifyOtpSuccess) {
       //TODO: set token in local storage and go to Home Screen
+      console.log('verifiedData------', JSON.stringify(verifiedData));
+      
     } else if(!verifyOtpRequesting && verifyOtpFailure) {
       //
     }
