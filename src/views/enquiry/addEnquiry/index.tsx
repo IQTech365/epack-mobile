@@ -213,7 +213,7 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
   return (
     <AvoidSoftInputViewHOC>
       <View style={styles.container}>
-        <Header label="ADD ENQUIRY" canGoBack={true} />
+        <Header label="ADD ENQUIRY " canGoBack={true} />
         <Spacer height={4} />
         <CollapsibleView title="GENERAL INFO" collapsed={false}>
           <View>
@@ -398,6 +398,95 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
                 }}
               />
             </View>
+          </View>
+        </CollapsibleView>
+        <CollapsibleView title="BILLING DETAILS" collapsed={false}>
+          <View>
+            <View style={styles.elementContainer}>
+              <Label text="Company Name" style={styles.label} />
+              <Input
+                containerStyle={styles.inputContainer} />
+            </View>
+            <View style={styles.elementContainer}>
+              <Label text="Approval Authority" style={styles.label} />
+              <DropdownComponent
+                data={shiftingTypeOptions}
+                onSelect={handleShiftingType}
+              />
+            </View>
+            <Spacer height={4} />
+            <View style={styles.elementContainer}>
+              <Label text="Authoority Person Name" style={styles.label} />
+              <Input
+                onChangeText={handleCompanyPartyNameInputTextChange}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                selectionColor={COLOR_BLACK}
+              />
+            </View>
+            <Spacer height={4} />
+            <View style={styles.elementContainer}>
+              <Label text="Authority Person Mobile" style={styles.label} />
+              <Input
+                onChangeText={handlePartyNameInputTextChange}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                selectionColor={COLOR_BLACK}
+              />
+            </View> 
+            <Spacer height={4} />
+            <View style={styles.elementContainer}>
+              <View style={styles.elementContainer}>
+                <Label text="Address" style={styles.label} />
+                <Input
+                  onChangeText={handlePickupAddress}
+                  containerStyle={styles.inputContainer}
+                  inputStyle={styles.input}
+                  selectionColor={COLOR_BLACK}
+                />
+              </View>
+            </View>
+            <Spacer height={4} />
+            <View style={styles.labelContainer}>
+              <Label text="Company GST" style={styles.label} />
+              <Input
+                onChangeText={handlePickupAddress}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                selectionColor={COLOR_BLACK}
+              />
+            </View>
+            <Spacer height={4} />
+            <View style={styles.labelContainer}>
+              <Label text="Employee Name" style={styles.label} />
+              <Input
+                onChangeText={handlePickupAddress}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                selectionColor={COLOR_BLACK}
+              />
+            </View>
+            <Spacer height={4} />
+            <View style={styles.labelContainer}>
+              <Label text="Employee Designation" style={styles.label} />
+              <Input
+                onChangeText={handlePickupAddress}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                selectionColor={COLOR_BLACK}
+              />
+            </View>
+            <Spacer height={4} />
+            <View style={styles.labelContainer}>
+              <Label text="Emplyee Mobile No" style={styles.label} />
+              <Input
+                onChangeText={handlePickupAddress}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                selectionColor={COLOR_BLACK}
+              />
+            </View>
+
           </View>
         </CollapsibleView>
         <Spacer height={4} />
