@@ -205,14 +205,14 @@ const RegisterCompanyView: React.FC<{}> = ({}) => {
             </View>
           </View>
         <Spacer height={12} />
-        <Button
+        {/* <Button
           text="SUBMIT"
           onPress={() => {}}
           disabled={true}
           style={styles.previewButtonStyle}
           textStyle={styles.textStyle}
         />
-        <Spacer height={12} />
+        <Spacer height={12} /> */}
       </View>
     </AvoidSoftInputViewHOC>
   );

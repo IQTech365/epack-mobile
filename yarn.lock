@@ -6272,7 +6272,7 @@ prompts@^2.0.1, prompts@^2.4.0:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@*, prop-types@^15.6.0, prop-types@^15.7.2, prop-types@^15.8.1:
+prop-types@*, prop-types@^15.5.10, prop-types@^15.6.0, prop-types@^15.7.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.npmjs.org/prop-types/-/prop-types-15.8.1.tgz"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -6420,6 +6420,11 @@ react-native-gradle-plugin@^0.71.19:
   resolved "https://registry.npmjs.org/react-native-gradle-plugin/-/react-native-gradle-plugin-0.71.19.tgz"
   integrity sha512-1dVk9NwhoyKHCSxcrM6vY6cxmojeATsBobDicX0ZKr7DgUF2cBQRTKsimQFvzH8XhOVXyH8p4HyDSZNIFI8OlQ==
 
+react-native-image-picker@^5.6.1:
+  version "5.6.1"
+  resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-5.6.1.tgz#34ec5e26c48d5caa88ae7b273663c59d1793eecc"
+  integrity sha512-LPPlgJi97EzCDY4NWp7z0oUWmCbagnB6HSoKcLJHJD/DaFYN/dJPrqjqKaqqw8K/5Ze6DIsNg9PZohjNEYQQWQ==
+
 react-native-linear-gradient@^2.6.2:
   version "2.6.2"
   resolved "https://registry.npmjs.org/react-native-linear-gradient/-/react-native-linear-gradient-2.6.2.tgz"
@@ -6471,6 +6476,13 @@ react-native-shadow-2@^7.0.8:
   integrity sha512-6QlmbJvHCmDGa85jwtfrVxhro1oGm/ezTlciom0A+i0UFAzxlvmRiMHyKXg1hEB2PQkKPoG6ZpANju4mpqPqGA==
   dependencies:
     colord "2.9.2"
+
+react-native-signature-capture@^0.4.12:
+  version "0.4.12"
+  resolved "https://registry.yarnpkg.com/react-native-signature-capture/-/react-native-signature-capture-0.4.12.tgz#9e24cdd2a45fd9eeeb70f78ab5f1083052388aba"
+  integrity sha512-DtRqYABtrXxcKhMYJaRFcptAgugDjsn/09KCbcNtZHVtEFyUvdSriOx2i6OgtTRHlQbN/+YBWnezeikcXu7UnQ==
+  dependencies:
+    prop-types "^15.5.10"
 
 react-native-svg-transformer@^1.0.0:
   version "1.0.0"
