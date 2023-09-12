@@ -7,6 +7,7 @@ import {TDropdownItem} from '../../../type/TDropdownItem';
 import Label from '../../../common/Label';
 import DropdownComponent from '../../../common/DropdownComponent';
 import Input from '../../../common/Input';
+<<<<<<< HEAD
 import {COLOR_BLACK, COLOR_BLUE} from '../../../utils/colors';
 import companyTypeOptions from '../../../data/companyType.json';
 import {
@@ -52,6 +53,14 @@ const ibaApprovalOptions: Array<ICheckboxButton> = [
     style: {paddingRight: 10},
   },
 ];
+=======
+import {COLOR_BLACK} from '../../../utils/colors';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import CollapsibleView from '../../../common/CollapsibleView';
+import shiftingTypes from '../../../data/shiftingType.json';
+import Button from '../../../common/Button';
+import DatePickerComponent from '../../../common/DatePickerComponent';
+>>>>>>> refs/remotes/origin/main
 
 const RegisterCompanyView: React.FC<{}> = ({}) => {
   const [state, dispatch] = useReducer(
@@ -165,6 +174,7 @@ const RegisterCompanyView: React.FC<{}> = ({}) => {
     [state.pinCode],
   );
 
+<<<<<<< HEAD
   useEffect(() => {
     if(companyType == '1' || companyType == '2') {
       setDocumentTypeLabel('PAN');
@@ -180,10 +190,28 @@ const RegisterCompanyView: React.FC<{}> = ({}) => {
       setCities(getCities(result));
     }
   }, [result]);
+=======
+  const handleDeliveryPinCode = useCallback(
+    (text: string) => {
+      // dispatch({
+      //   type: QUOTATION_FORM_ACTION.DELIVERY_PINCODE,
+      //   payload: text,
+      // });
+    },
+    [state.deliveryPincode],
+  );
+  const handleQuotationDate = (date: Date) => {
+    // dispatch({
+    //   type: QUOTATION_FORM_ACTION.DATE_OF_QUOTATION,
+    //   payload: formatDate(date),
+    // });
+  };
+>>>>>>> refs/remotes/origin/main
 
   return (
     <AvoidSoftInputViewHOC>
       <View style={styles.container}>
+<<<<<<< HEAD
         <View>
         <Spacer height={4} />
         <View><Text style={styles.titleText}>Company Basic Information</Text></View>
@@ -196,6 +224,152 @@ const RegisterCompanyView: React.FC<{}> = ({}) => {
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
             />
+=======
+          <View>
+            <Spacer height={4} />
+            <View style={styles.elementContainer}>
+              <Label text="Company Name" style={styles.label} />
+              <Input
+                onChangeText={handlePartyNameInputTextChange}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                selectionColor={COLOR_BLACK}
+              />
+            </View>
+            <Spacer height={4} />
+            <View style={styles.elementContainer}>
+              <Label text="Contact Person" style={styles.label} />
+              <Input
+                onChangeText={handlePartyNameInputTextChange}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                selectionColor={COLOR_BLACK}
+              />
+            </View>
+            <Spacer height={4} />
+            <View style={styles.elementContainer}>
+              <Label text="Company Email" style={styles.label} />
+              <Input
+                onChangeText={handlePartyNameInputTextChange}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                selectionColor={COLOR_BLACK}
+              />
+            </View>
+            <Spacer height={4} />
+            <View style={styles.elementContainer}>
+              <Label text="Pin code" style={styles.label} />
+              <Input
+                onChangeText={handlePickupPinCode}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                selectionColor={COLOR_BLACK}
+              />
+            </View>
+            <View style={styles.elementContainer}>
+              <Label text="City" style={styles.label} />
+              <DropdownComponent
+                data={shiftingTypes}
+                onSelect={handleShiftingType}
+              />
+            </View>
+            <Spacer height={4} />
+            <View style={styles.elementContainer}>
+              <Label text="State" style={styles.label} />
+              <DropdownComponent
+                data={shiftingTypes}
+                onSelect={handleShiftingType}
+              />
+            </View>
+            <Spacer height={4} />
+            <View style={styles.elementContainer}>
+              <Label text="Address" style={styles.label} />
+              <Input
+                onChangeText={() => {}}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                selectionColor={COLOR_BLACK}
+              />
+            </View>
+            <Spacer height={4} />
+            <View style={styles.elementContainer}>
+              <Label text="Company Type" style={styles.label} />
+              <DropdownComponent
+                data={shiftingTypes}
+                onSelect={handleShiftingType}
+              />
+            </View>
+            <Spacer height={4} />
+            <View style={styles.elementContainer}>
+              <Label text="Enter PAN No." style={styles.label} />
+              <Input
+                onChangeText={() => {}}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                selectionColor={COLOR_BLACK}
+              />
+            </View>
+            <View style={styles.elementContainer}>
+              <Label text="GST No" style={styles.label} />
+              <Input
+                onChangeText={() => {}}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                selectionColor={COLOR_BLACK}
+              />
+            </View>
+            <View style={styles.labelContainer}>
+              <Label text="IBA Approval" style={styles.label} />
+            </View>
+            <View style={styles.elementContainer2}>
+              <BouncyCheckbox
+                size={25}
+                fillColor="red"
+                unfillColor="#FFFFFF"
+                text="Approved"
+                iconStyle={{borderColor: 'red'}}
+                innerIconStyle={{borderWidth: 2}}
+                textStyle={{
+                  fontFamily: 'JosefinSans-Regular',
+                  textDecorationLine: 'none',
+                }}
+                style={{marginRight: 15}}
+                textContainerStyle={{paddingLeft: 0}}
+                onPress={(isChecked: boolean) => {}}
+              />
+              <BouncyCheckbox
+                size={25}
+                fillColor="red"
+                unfillColor="#FFFFFF"
+                text="Not Approved"
+                iconStyle={{borderColor: 'red'}}
+                innerIconStyle={{borderWidth: 2}}
+                textStyle={{
+                  fontFamily: 'JosefinSans-Regular',
+                  textDecorationLine: 'none',
+                }}
+                style={{marginRight: 15}}
+                textContainerStyle={{paddingLeft: 0}}
+                onPress={(isChecked: boolean) => {}}
+              />
+            </View>
+            <Spacer height={4} />
+            <View style={styles.elementContainer}>
+              <Label text="IBA Approval Code" style={styles.label} />
+              <Input
+                onChangeText={() => {}}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                selectionColor={COLOR_BLACK}
+              />
+            </View>
+            <Spacer height={4} />
+            <View style={styles.elementContainer}>
+              <Label text="IBA Code Valid Till" style={styles.label} />
+                  <DatePickerComponent onDateSelect={handleQuotationDate} style={styles.datePickerWidth} />
+            </View>
+            
+>>>>>>> refs/remotes/origin/main
           </View>
           <Spacer height={4} />
           <View style={styles.elementContainer}>

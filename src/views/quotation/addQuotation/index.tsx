@@ -5,8 +5,8 @@ import React, {
   useEffect,
   Reducer,
 } from 'react';
-import {Text, View} from 'react-native';
-import {Switch} from 'react-native-switch';
+import { Text, View } from 'react-native';
+import { Switch } from 'react-native-switch';
 import AvoidSoftInputViewHOC from '../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../common/CollapsibleView';
 import DatePickerComponent from '../../../common/DatePickerComponent';
@@ -15,9 +15,9 @@ import Header from '../../../common/Header';
 import Input from '../../../common/Input';
 import Label from '../../../common/Label';
 import Spacer from '../../../common/Spacer';
-import {COLOR_BLACK, COLOR_BLUE} from '../../../utils/colors';
+import { COLOR_BLACK, COLOR_BLUE } from '../../../utils/colors';
 import styles from './style';
-import {TDropdownItem} from '../../../type/TDropdownItem';
+import { TDropdownItem } from '../../../type/TDropdownItem';
 import shiftingTypes from '../../../data/shiftingType.json';
 import shiftingLuggages from '../../../data/shiftingLuggage.json';
 import templates from '../../../data/template.json';
@@ -36,7 +36,7 @@ import {
   TGstInQuotation,
   TBillingBy,
 } from './quotationReducer';
-import {formatDate, getCities, getStates} from '../../../utils/formatter';
+import { formatDate, getCities, getStates } from '../../../utils/formatter';
 import BouncyCheckboxGroup, {
   ICheckboxButton,
 } from 'react-native-bouncy-checkbox-group';
@@ -60,25 +60,25 @@ import usePincodeHook, {
   PINCODE_REQUEST_KEY,
 } from '../../../hooks/usePincodeHook';
 import Spinner from '../../../common/Spinner';
-import {getStatusValue} from '../utils/utils';
+import { getStatusValue } from '../utils/utils';
 
 const loadTypes: Array<ICheckboxButton> = [
   {
     id: '1',
     text: 'Part Load',
     fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', borderRadius: 0, width: 16, height: 16},
-    innerIconStyle: {borderWidth: 1, borderRadius: 0, width: 16, height: 16},
-    textStyle: {fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none'},
-    style: {paddingRight: 16},
+    iconStyle: { borderColor: 'red', borderRadius: 0, width: 16, height: 16 },
+    innerIconStyle: { borderWidth: 1, borderRadius: 0, width: 16, height: 16 },
+    textStyle: { fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none' },
+    style: { paddingRight: 16 },
   },
   {
     id: '2',
     text: 'Full Load',
     fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', borderRadius: 0, width: 16, height: 16},
-    innerIconStyle: {borderWidth: 1, borderRadius: 0, width: 16, height: 16},
-    textStyle: {fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none'},
+    iconStyle: { borderColor: 'red', borderRadius: 0, width: 16, height: 16 },
+    innerIconStyle: { borderWidth: 1, borderRadius: 0, width: 16, height: 16 },
+    textStyle: { fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none' },
   },
 ];
 
@@ -87,42 +87,42 @@ const freightChargeOptions: Array<ICheckboxButton> = [
     id: '1',
     text: 'Included',
     fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', width: 16, height: 16},
-    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
+    iconStyle: { borderColor: 'red', width: 16, height: 16 },
+    innerIconStyle: { borderWidth: 1, width: 16, height: 16 },
     textStyle: {
       fontFamily: 'JosefinSans-Regular',
       textDecorationLine: 'none',
       fontSize: 14,
     },
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
-    style: {paddingRight: 10},
+    textContainerStyle: { marginLeft: 4, marginRight: 4 },
+    style: { paddingRight: 10 },
   },
   {
     id: '2',
     text: 'Additional',
     fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', width: 16, height: 16},
-    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
+    iconStyle: { borderColor: 'red', width: 16, height: 16 },
+    innerIconStyle: { borderWidth: 1, width: 16, height: 16 },
     textStyle: {
       fontFamily: 'JosefinSans-Regular',
       textDecorationLine: 'none',
       fontSize: 14,
     },
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
-    style: {paddingRight: 10},
+    textContainerStyle: { marginLeft: 4, marginRight: 4 },
+    style: { paddingRight: 10 },
   },
   {
     id: '3',
     text: 'Not Required',
     fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', width: 16, height: 16},
-    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
+    iconStyle: { borderColor: 'red', width: 16, height: 16 },
+    innerIconStyle: { borderWidth: 1, width: 16, height: 16 },
     textStyle: {
       fontFamily: 'JosefinSans-Regular',
       textDecorationLine: 'none',
       fontSize: 14,
     },
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
+    textContainerStyle: { marginLeft: 4, marginRight: 4 },
   },
 ];
 
@@ -131,56 +131,56 @@ const loadingChargeOptions: Array<ICheckboxButton> = [
     id: '1',
     text: 'Included',
     fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', width: 16, height: 16},
-    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
+    iconStyle: { borderColor: 'red', width: 16, height: 16 },
+    innerIconStyle: { borderWidth: 1, width: 16, height: 16 },
     textStyle: {
       fontFamily: 'JosefinSans-Regular',
       textDecorationLine: 'none',
       fontSize: 14,
     },
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
-    style: {paddingRight: 10},
+    textContainerStyle: { marginLeft: 4, marginRight: 4 },
+    style: { paddingRight: 10 },
   },
   {
     id: '2',
     text: 'Additional',
     fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', width: 16, height: 16},
-    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
+    iconStyle: { borderColor: 'red', width: 16, height: 16 },
+    innerIconStyle: { borderWidth: 1, width: 16, height: 16 },
     textStyle: {
       fontFamily: 'JosefinSans-Regular',
       textDecorationLine: 'none',
       fontSize: 14,
     },
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
-    style: {paddingRight: 10},
+    textContainerStyle: { marginLeft: 4, marginRight: 4 },
+    style: { paddingRight: 10 },
   },
   {
     id: '3',
     text: 'Not Required',
     fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', width: 16, height: 16},
-    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
+    iconStyle: { borderColor: 'red', width: 16, height: 16 },
+    innerIconStyle: { borderWidth: 1, width: 16, height: 16 },
     textStyle: {
       fontFamily: 'JosefinSans-Regular',
       textDecorationLine: 'none',
       fontSize: 14,
     },
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
+    textContainerStyle: { marginLeft: 4, marginRight: 4 },
   },
   {
     id: '4',
     text: 'Loading by Party',
     fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', width: 16, height: 16},
-    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
+    iconStyle: { borderColor: 'red', width: 16, height: 16 },
+    innerIconStyle: { borderWidth: 1, width: 16, height: 16 },
     textStyle: {
       fontFamily: 'JosefinSans-Regular',
       textDecorationLine: 'none',
       fontSize: 14,
     },
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
-    style: {marginTop: 16, marginBottom: 10},
+    textContainerStyle: { marginLeft: 4, marginRight: 4 },
+    style: { marginTop: 16, marginBottom: 10 },
   },
 ];
 
@@ -189,56 +189,56 @@ const unloadingChargeOptions: Array<ICheckboxButton> = [
     id: '1',
     text: 'Included',
     fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', width: 16, height: 16},
-    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
+    iconStyle: { borderColor: 'red', width: 16, height: 16 },
+    innerIconStyle: { borderWidth: 1, width: 16, height: 16 },
     textStyle: {
       fontFamily: 'JosefinSans-Regular',
       textDecorationLine: 'none',
       fontSize: 14,
     },
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
-    style: {paddingRight: 10},
+    textContainerStyle: { marginLeft: 4, marginRight: 4 },
+    style: { paddingRight: 10 },
   },
   {
     id: '2',
     text: 'Additional',
     fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', width: 16, height: 16},
-    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
+    iconStyle: { borderColor: 'red', width: 16, height: 16 },
+    innerIconStyle: { borderWidth: 1, width: 16, height: 16 },
     textStyle: {
       fontFamily: 'JosefinSans-Regular',
       textDecorationLine: 'none',
       fontSize: 14,
     },
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
-    style: {paddingRight: 10},
+    textContainerStyle: { marginLeft: 4, marginRight: 4 },
+    style: { paddingRight: 10 },
   },
   {
     id: '3',
     text: 'Not Required',
     fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', width: 16, height: 16},
-    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
+    iconStyle: { borderColor: 'red', width: 16, height: 16 },
+    innerIconStyle: { borderWidth: 1, width: 16, height: 16 },
     textStyle: {
       fontFamily: 'JosefinSans-Regular',
       textDecorationLine: 'none',
       fontSize: 14,
     },
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
+    textContainerStyle: { marginLeft: 4, marginRight: 4 },
   },
   {
     id: '4',
     text: 'Unloading by Party',
     fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', width: 16, height: 16},
-    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
+    iconStyle: { borderColor: 'red', width: 16, height: 16 },
+    innerIconStyle: { borderWidth: 1, width: 16, height: 16 },
     textStyle: {
       fontFamily: 'JosefinSans-Regular',
       textDecorationLine: 'none',
       fontSize: 14,
     },
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
-    style: {marginTop: 16, marginBottom: 10},
+    textContainerStyle: { marginLeft: 4, marginRight: 4 },
+    style: { marginTop: 16, marginBottom: 10 },
   },
 ];
 
@@ -252,10 +252,10 @@ const GSTOptions: Array<ICheckboxButton> = [
       textDecorationLine: 'none',
       fontSize: 14,
     },
-    iconStyle: {borderColor: 'red', width: 16, height: 16},
-    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
-    style: {paddingRight: 16},
+    iconStyle: { borderColor: 'red', width: 16, height: 16 },
+    innerIconStyle: { borderWidth: 1, width: 16, height: 16 },
+    textContainerStyle: { marginLeft: 4, marginRight: 4 },
+    style: { paddingRight: 16 },
   },
   {
     id: '2',
@@ -266,10 +266,10 @@ const GSTOptions: Array<ICheckboxButton> = [
       textDecorationLine: 'none',
       fontSize: 14,
     },
-    iconStyle: {borderColor: 'red', width: 16, height: 16},
-    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
-    style: {paddingRight: 16},
+    iconStyle: { borderColor: 'red', width: 16, height: 16 },
+    innerIconStyle: { borderWidth: 1, width: 16, height: 16 },
+    textContainerStyle: { marginLeft: 4, marginRight: 4 },
+    style: { paddingRight: 16 },
   },
   {
     id: '3',
@@ -280,10 +280,10 @@ const GSTOptions: Array<ICheckboxButton> = [
       textDecorationLine: 'none',
       fontSize: 14,
     },
-    iconStyle: {borderColor: 'red', width: 16, height: 16},
-    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
-    style: {paddingRight: 16},
+    iconStyle: { borderColor: 'red', width: 16, height: 16 },
+    innerIconStyle: { borderWidth: 1, width: 16, height: 16 },
+    textContainerStyle: { marginLeft: 4, marginRight: 4 },
+    style: { paddingRight: 16 },
   },
   {
     id: '4',
@@ -294,10 +294,10 @@ const GSTOptions: Array<ICheckboxButton> = [
       textDecorationLine: 'none',
       fontSize: 14,
     },
-    iconStyle: {borderColor: 'red', width: 16, height: 16},
-    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
-    style: {marginTop: 16, marginBottom: 10},
+    iconStyle: { borderColor: 'red', width: 16, height: 16 },
+    innerIconStyle: { borderWidth: 1, width: 16, height: 16 },
+    textContainerStyle: { marginLeft: 4, marginRight: 4 },
+    style: { marginTop: 16, marginBottom: 10 },
   },
 ];
 
@@ -306,28 +306,28 @@ const requiredptions: Array<ICheckboxButton> = [
     id: '1',
     text: 'Required',
     fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', width: 16, height: 16},
-    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
+    iconStyle: { borderColor: 'red', width: 16, height: 16 },
+    innerIconStyle: { borderWidth: 1, width: 16, height: 16 },
     textStyle: {
       fontFamily: 'JosefinSans-Regular',
       textDecorationLine: 'none',
       fontSize: 14,
     },
-    style: {paddingRight: 8},
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
+    style: { paddingRight: 8 },
+    textContainerStyle: { marginLeft: 4, marginRight: 4 },
   },
   {
     id: '2',
     text: 'Not Required',
     fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', width: 16, height: 16},
-    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
+    iconStyle: { borderColor: 'red', width: 16, height: 16 },
+    innerIconStyle: { borderWidth: 1, width: 16, height: 16 },
     textStyle: {
       fontFamily: 'JosefinSans-Regular',
       textDecorationLine: 'none',
       fontSize: 14,
     },
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
+    textContainerStyle: { marginLeft: 4, marginRight: 4 },
   },
 ];
 
@@ -336,28 +336,28 @@ const insuranceWithOptions: Array<ICheckboxButton> = [
     id: '1',
     text: 'With Goods Value',
     fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', width: 16, height: 16},
-    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
+    iconStyle: { borderColor: 'red', width: 16, height: 16 },
+    innerIconStyle: { borderWidth: 1, width: 16, height: 16 },
     textStyle: {
       fontFamily: 'JosefinSans-Regular',
       textDecorationLine: 'none',
       fontSize: 14,
     },
-    style: {paddingRight: 8},
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
+    style: { paddingRight: 8 },
+    textContainerStyle: { marginLeft: 4, marginRight: 4 },
   },
   {
     id: '2',
     text: 'Without Goods Value',
     fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', width: 16, height: 16},
-    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
+    iconStyle: { borderColor: 'red', width: 16, height: 16 },
+    innerIconStyle: { borderWidth: 1, width: 16, height: 16 },
     textStyle: {
       fontFamily: 'JosefinSans-Regular',
       textDecorationLine: 'none',
       fontSize: 14,
     },
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
+    textContainerStyle: { marginLeft: 4, marginRight: 4 },
   },
 ];
 
@@ -366,28 +366,28 @@ const yesNoOptions: Array<ICheckboxButton> = [
     id: '1',
     text: 'Yes',
     fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', width: 16, height: 16},
-    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
+    iconStyle: { borderColor: 'red', width: 16, height: 16 },
+    innerIconStyle: { borderWidth: 1, width: 16, height: 16 },
     textStyle: {
       fontFamily: 'JosefinSans-Regular',
       textDecorationLine: 'none',
       fontSize: 14,
     },
-    style: {paddingRight: 20},
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
+    style: { paddingRight: 20 },
+    textContainerStyle: { marginLeft: 4, marginRight: 4 },
   },
   {
     id: '2',
     text: 'No',
     fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', width: 16, height: 16},
-    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
+    iconStyle: { borderColor: 'red', width: 16, height: 16 },
+    innerIconStyle: { borderWidth: 1, width: 16, height: 16 },
     textStyle: {
       fontFamily: 'JosefinSans-Regular',
       textDecorationLine: 'none',
       fontSize: 14,
     },
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
+    textContainerStyle: { marginLeft: 4, marginRight: 4 },
   },
 ];
 
@@ -396,28 +396,28 @@ const discountTypeOptions: Array<ICheckboxButton> = [
     id: '1',
     text: 'Discount @%',
     fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', width: 16, height: 16},
-    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
+    iconStyle: { borderColor: 'red', width: 16, height: 16 },
+    innerIconStyle: { borderWidth: 1, width: 16, height: 16 },
     textStyle: {
       fontFamily: 'JosefinSans-Regular',
       textDecorationLine: 'none',
       fontSize: 14,
     },
-    style: {paddingRight: 20},
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
+    style: { paddingRight: 20 },
+    textContainerStyle: { marginLeft: 4, marginRight: 4 },
   },
   {
     id: '2',
     text: 'Flat Discount',
     fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', width: 16, height: 16},
-    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
+    iconStyle: { borderColor: 'red', width: 16, height: 16 },
+    innerIconStyle: { borderWidth: 1, width: 16, height: 16 },
     textStyle: {
       fontFamily: 'JosefinSans-Regular',
       textDecorationLine: 'none',
       fontSize: 14,
     },
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
+    textContainerStyle: { marginLeft: 4, marginRight: 4 },
   },
 ];
 
@@ -427,29 +427,29 @@ const loadingUnloadingByOptions: Array<ICheckboxButton> = [
     text: 'By Company',
     fillColor: COLOR_BLUE,
     isChecked: true,
-    iconStyle: {borderColor: 'red', width: 16, height: 16},
-    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
+    iconStyle: { borderColor: 'red', width: 16, height: 16 },
+    innerIconStyle: { borderWidth: 1, width: 16, height: 16 },
     textStyle: {
       fontFamily: 'JosefinSans-Regular',
       textDecorationLine: 'none',
       fontSize: 14,
     },
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
-    style: {paddingRight: 10},
+    textContainerStyle: { marginLeft: 4, marginRight: 4 },
+    style: { paddingRight: 10 },
   },
   {
     id: '2',
     text: 'By Party',
     fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', width: 16, height: 16},
-    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
+    iconStyle: { borderColor: 'red', width: 16, height: 16 },
+    innerIconStyle: { borderWidth: 1, width: 16, height: 16 },
     textStyle: {
       fontFamily: 'JosefinSans-Regular',
       textDecorationLine: 'none',
       fontSize: 14,
     },
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
-    style: {paddingRight: 10},
+    textContainerStyle: { marginLeft: 4, marginRight: 4 },
+    style: { paddingRight: 10 },
   },
 ];
 
@@ -505,7 +505,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
       payload: '',
     });
   };
-  const {result, fetching, setPincode} = usePincodeHook(
+  const { result, fetching, setPincode } = usePincodeHook(
     setPincodeError,
     resetPincodeError,
   );
@@ -545,7 +545,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
   };
 
   const handleBillingBy = (item: TDropdownItem) => {
-    const {billingBy} = state;
+    const { billingBy } = state;
     const tempObj = {
       ...billingBy,
       billing_by: item.label,
@@ -723,7 +723,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
   };
 
   const handlePackingChargeChange = (text: string, type: string) => {
-    const {packingCharges: statePackageCharges} = state;
+    const { packingCharges: statePackageCharges } = state;
     if (type === 'part') {
       const tempObj = {
         ...statePackageCharges,
@@ -748,7 +748,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
   };
 
   const handlePackingMaterialChargeChange = (text: string, type: string) => {
-    const {packingCharges: statePackageCharges} = state;
+    const { packingCharges: statePackageCharges } = state;
     if (type === 'part') {
       const tempObj = {
         ...statePackageCharges,
@@ -774,7 +774,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
 
   //handleLoadingCharges
   const handleLoadingCharges = (text: string, type: string) => {
-    const {loadingCharges} = state;
+    const { loadingCharges } = state;
     if (type === 'part') {
       const tempObj = {
         ...loadingCharges,
@@ -797,7 +797,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
   };
 
   const handleUnLoadingCharges = (text: string, type: string) => {
-    const {unLoadingCharges} = state;
+    const { unLoadingCharges } = state;
     if (type === 'part') {
       const tempObj = {
         ...unLoadingCharges,
@@ -820,7 +820,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
   };
 
   const handleUnPackingCharges = (text: string, type: string) => {
-    const {unLoadingCharges} = state;
+    const { unLoadingCharges } = state;
     if (type === 'part') {
       const tempObj = {
         ...unLoadingCharges,
@@ -851,7 +851,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
 
   const handleSurcharge = useCallback(
     (item: TDropdownItem) => {
-      const {surcharge} = state;
+      const { surcharge } = state;
       const tempObj = {
         ...surcharge,
         status: item.label,
@@ -870,7 +870,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
   );
 
   const handleSurchargePercent = (item: TDropdownItem) => {
-    const {surcharge} = state;
+    const { surcharge } = state;
     const tempObj = {
       ...surcharge,
       surcharge_percent: item.label,
@@ -894,7 +894,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
   );
 
   const handleInsuranceType = (item: TDropdownItem) => {
-    const {insuranceDetails} = state;
+    const { insuranceDetails } = state;
     const tempObj = {
       ...insuranceDetails,
       insurance_type: item.label,
@@ -906,7 +906,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
   };
 
   const handleInsuranceCharge = (item: TDropdownItem) => {
-    const {insuranceDetails} = state;
+    const { insuranceDetails } = state;
     const tempObj = {
       ...insuranceDetails,
       insurance_charge_percent: item.label,
@@ -918,7 +918,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
   };
 
   const handleInsuranceGSTPercent = (item: TDropdownItem) => {
-    const {insuranceDetails} = state;
+    const { insuranceDetails } = state;
     const tempObj = {
       ...insuranceDetails,
       insurance_gst_percent: item.label,
@@ -930,7 +930,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
   };
 
   const handleInsuranceGoodsValueInputTextChange = (text: string) => {
-    const {insuranceDetails} = state;
+    const { insuranceDetails } = state;
     const tempObj = {
       ...insuranceDetails,
       insurance_goods_value: text,
@@ -942,7 +942,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
   };
 
   const handleStorageFromDate = (date: Date) => {
-    const {storageCharges} = state;
+    const { storageCharges } = state;
     const tempObj = {
       ...storageCharges,
       storage_from_date: formatDate(date),
@@ -954,7 +954,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
   };
 
   const handleStorageToDate = (date: Date) => {
-    const {storageCharges} = state;
+    const { storageCharges } = state;
     const tempObj = {
       ...storageCharges,
       storage_to_date: formatDate(date),
@@ -966,7 +966,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
   };
 
   const handleStorageAmountInputTextChange = (text: string) => {
-    const {storageCharges} = state;
+    const { storageCharges } = state;
     const tempObj = {
       ...storageCharges,
       storage_amount: text,
@@ -986,7 +986,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
   };
 
   const handleAddOtherItemCharges = () => {
-    const {otherCharges} = state;
+    const { otherCharges } = state;
     const tempArr: TOtherChargeItem[] = otherCharges?.other_items || [];
     const newItem: TOtherChargeItem = {
       name: tempOtherChargeItemName,
@@ -1006,8 +1006,8 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
   };
 
   const renderOtherItemList = () => {
-    const {otherCharges} = state;
-    const {other_items} = otherCharges || {};
+    const { otherCharges } = state;
+    const { other_items } = otherCharges || {};
     if (other_items && other_items?.length > 0) {
       return other_items.map((otherItem, index) => {
         return (
@@ -1043,11 +1043,11 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
         </>
       );
     }
-    return null;
+    return null
   };
 
   const handleQuotationDiscountPercent = (item: TDropdownItem) => {
-    const {discountInQuotation} = state;
+    const { discountInQuotation } = state;
     const tempObj = {
       ...discountInQuotation,
       discount_value: item.label,
@@ -1059,7 +1059,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
   };
 
   const handleQuotationFlatDiscountInputTextChange = (text: string) => {
-    const {discountInQuotation} = state;
+    const { discountInQuotation } = state;
     const tempObj = {
       ...discountInQuotation,
       discount_value: text,
@@ -1104,7 +1104,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
   };
 
   const handleQuotationGstPercent = (item: TDropdownItem) => {
-    const {gstInQuotation} = state;
+    const { gstInQuotation } = state;
     const tempObj = {
       ...gstInQuotation,
       gst_percent: item.label,
@@ -1116,7 +1116,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
   };
 
   const handleQuotationGstType = (item: TDropdownItem) => {
-    const {gstInQuotation} = state;
+    const { gstInQuotation } = state;
     const tempObj = {
       ...gstInQuotation,
       gst_type: item.label,
@@ -1164,10 +1164,10 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
           <Label text="Company Name" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const {billingBy} = state;
+              const { billingBy } = state;
               const tempObj = {
                 ...billingBy,
-                billing_info: {...billingBy?.billing_info, company_name: text},
+                billing_info: { ...billingBy?.billing_info, company_name: text },
               };
               dispatch({
                 type: QUOTATION_FORM_ACTION.BILLING_BY,
@@ -1185,7 +1185,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
           <DropdownComponent
             data={approvalAuthorityOptions}
             onSelect={(item: TDropdownItem) => {
-              const {billingBy} = state;
+              const { billingBy } = state;
               const tempObj = {
                 ...billingBy,
                 billing_info: {
@@ -1205,7 +1205,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
           <Label text="Authority Person Name" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const {billingBy} = state;
+              const { billingBy } = state;
               const tempObj = {
                 ...billingBy,
                 billing_info: {
@@ -1228,7 +1228,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
           <Label text="Authority Mobile Number" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const {billingBy} = state;
+              const { billingBy } = state;
               const tempObj = {
                 ...billingBy,
                 billing_info: {
@@ -1251,10 +1251,10 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
           <Label text="Company GST" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const {billingBy} = state;
+              const { billingBy } = state;
               const tempObj = {
                 ...billingBy,
-                billing_info: {...billingBy?.billing_info, company_gst: text},
+                billing_info: { ...billingBy?.billing_info, company_gst: text },
               };
               dispatch({
                 type: QUOTATION_FORM_ACTION.BILLING_BY,
@@ -1271,10 +1271,10 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
           <Label text="Employee Name" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const {billingBy} = state;
+              const { billingBy } = state;
               const tempObj = {
                 ...billingBy,
-                billing_info: {...billingBy?.billing_info, employee_name: text},
+                billing_info: { ...billingBy?.billing_info, employee_name: text },
               };
               dispatch({
                 type: QUOTATION_FORM_ACTION.BILLING_BY,
@@ -1291,7 +1291,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
           <Label text="Employee Designation" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const {billingBy} = state;
+              const { billingBy } = state;
               const tempObj = {
                 ...billingBy,
                 billing_info: {
@@ -1314,7 +1314,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
           <Label text="Employee Mobile Number" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const {billingBy} = state;
+              const { billingBy } = state;
               const tempObj = {
                 ...billingBy,
                 billing_info: {
@@ -1337,7 +1337,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
           <Label text="Company Address" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const {billingBy} = state;
+              const { billingBy } = state;
               const tempObj = {
                 ...billingBy,
                 billing_info: {
@@ -1407,7 +1407,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                 <Label text="Quotation No." style={styles.label} />
               </View>
               <View style={[styles.mainWrapper, styles.switchMainWrapper3]}>
-                <View style={[styles.textContainer, {alignItems: 'center'}]}>
+                <View style={[styles.textContainer, { alignItems: 'center' }]}>
                   <Switch
                     containerStyle={styles.switchStyle}
                     value={switchState}
@@ -1598,8 +1598,8 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                     textDecorationLine: 'none',
                     fontSize: 14,
                   }}
-                  style={{marginRight: 45}}
-                  textContainerStyle={{paddingLeft: 0, marginLeft: 10}}
+                  style={{ marginRight: 45 }}
+                  textContainerStyle={{ paddingLeft: 0, marginLeft: 10 }}
                   onPress={(isChecked: boolean) => {
                     setIsPartLoad(isChecked);
                     dispatch({
@@ -1631,8 +1631,8 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                     textDecorationLine: 'none',
                     fontSize: 14,
                   }}
-                  style={{marginRight: 15}}
-                  textContainerStyle={{paddingLeft: 0, marginLeft: 10}}
+                  style={{ marginRight: 15 }}
+                  textContainerStyle={{ paddingLeft: 0, marginLeft: 10 }}
                   onPress={(isChecked: boolean) => {
                     setIsFullLoad(isChecked);
                     dispatch({
@@ -1679,7 +1679,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                   onChange={(selectedItem: ICheckboxButton) => {
                     const key = selectedItem.id as string;
                     setPackingCharges(key);
-                    const {packingCharges: statePackageCharges} = state;
+                    const { packingCharges: statePackageCharges } = state;
                     if (key == '1' || key == '3') {
                       const tempObj = {
                         ...statePackageCharges,
@@ -1739,7 +1739,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                   onChange={(selectedItem: ICheckboxButton) => {
                     const key = selectedItem.id as string;
                     setPackingMaterialCharges(key);
-                    const {packingCharges: statePackageCharges} = state;
+                    const { packingCharges: statePackageCharges } = state;
                     if (key == '1' || key == '3') {
                       const tempObj = {
                         ...statePackageCharges,
@@ -1798,7 +1798,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                   data={loadingChargeOptions}
                   onChange={(selectedItem: ICheckboxButton) => {
                     setLoadingCharges(selectedItem.id as string);
-                    const {loadingCharges} = state;
+                    const { loadingCharges } = state;
                     const tempObj = {
                       ...loadingCharges,
                       status: selectedItem.text,
@@ -1808,7 +1808,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                       payload: tempObj as TCharge,
                     });
                   }}
-                  style={{flexDirection: 'row', flexWrap: 'wrap'}}
+                  style={{ flexDirection: 'row', flexWrap: 'wrap' }}
                 />
               </View>
               <Spacer height={4} />
@@ -1864,7 +1864,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                   data={unloadingChargeOptions}
                   onChange={(selectedItem: ICheckboxButton) => {
                     setUnloadingCharges(selectedItem.id as string);
-                    const {unLoadingCharges} = state;
+                    const { unLoadingCharges } = state;
                     const tempObj = {
                       ...unLoadingCharges,
                       status: selectedItem.text,
@@ -1874,7 +1874,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                       payload: tempObj as TCharge,
                     });
                   }}
-                  style={{flexDirection: 'row', flexWrap: 'wrap'}}
+                  style={{ flexDirection: 'row', flexWrap: 'wrap' }}
                 />
               </View>
               <Spacer height={4} />
@@ -1930,7 +1930,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                   data={freightChargeOptions}
                   onChange={(selectedItem: ICheckboxButton) => {
                     setUnpackingCharges(selectedItem.id as string);
-                    const {unPackingCharges} = state;
+                    const { unPackingCharges } = state;
                     const tempObj = {
                       ...unPackingCharges,
                       status: selectedItem.text,
@@ -2016,7 +2016,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                   data={discountTypeOptions}
                   onChange={(selectedItem: ICheckboxButton) => {
                     handleDiscountType(selectedItem);
-                    const {discountInQuotation} = state;
+                    const { discountInQuotation } = state;
                     const tempObj = {
                       ...discountInQuotation,
                       discount_type: selectedItem.text,
@@ -2039,7 +2039,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                     data={GSTOptions}
                     onChange={(selectedItem: ICheckboxButton) => {
                       setGstInQuotation(selectedItem.id as string);
-                      const {gstInQuotation} = state;
+                      const { gstInQuotation } = state;
                       const tempObj = {
                         ...gstInQuotation,
                         status: selectedItem.text,
@@ -2049,7 +2049,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                         payload: tempObj as TGstInQuotation,
                       });
                     }}
-                    style={{flexDirection: 'row', flexWrap: 'wrap'}}
+                    style={{ flexDirection: 'row', flexWrap: 'wrap' }}
                   />
                 </View>
               </View>
@@ -2086,7 +2086,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                     console.log('SelectedItem: ', JSON.stringify(selectedItem));
                     handleInsuranceRequired(selectedItem);
                     const key = selectedItem.id as string;
-                    const {insuranceDetails} = state;
+                    const { insuranceDetails } = state;
                     const tempObj = {
                       ...insuranceDetails,
                       status: key == '1' ? 'required' : 'not required',
@@ -2104,7 +2104,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                 <DropdownComponent
                   data={shiftingLuggages}
                   onSelect={(item: TDropdownItem) => {
-                    const {insuranceDetails} = state;
+                    const { insuranceDetails } = state;
                     const tempObj = {
                       ...insuranceDetails,
                       shifting_luggage: item.label,
@@ -2167,7 +2167,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                   data={requiredptions}
                   onChange={(selectedItem: ICheckboxButton) => {
                     console.log('SelectedItem: ', JSON.stringify(selectedItem));
-                    const {storageCharges} = state;
+                    const { storageCharges } = state;
                     const tempObj = {
                       ...storageCharges,
                       status: selectedItem.text,
@@ -2186,7 +2186,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                     <DropdownComponent
                       data={storageDurationOptions}
                       onSelect={(item: TDropdownItem) => {
-                        const {storageCharges} = state;
+                        const { storageCharges } = state;
                         const tempObj = {
                           ...storageCharges,
                           storage_duration_type: item.label,
@@ -2202,17 +2202,17 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
               )}
               {state.storageCharges?.storage_duration_type ==
                 'Charges During Period' && (
-                <View style={styles.mainWrapper}>
-                  <View style={styles.textContainer}>
-                    <Label text="From Date" style={styles.label} />
-                    <DatePickerComponent onDateSelect={handleStorageFromDate} />
+                  <View style={styles.mainWrapper}>
+                    <View style={styles.textContainer}>
+                      <Label text="From Date" style={styles.label} />
+                      <DatePickerComponent onDateSelect={handleStorageFromDate} />
+                    </View>
+                    <View style={styles.textContainer}>
+                      <Label text="To Date" style={styles.label} />
+                      <DatePickerComponent onDateSelect={handleStorageToDate} />
+                    </View>
                   </View>
-                  <View style={styles.textContainer}>
-                    <Label text="To Date" style={styles.label} />
-                    <DatePickerComponent onDateSelect={handleStorageToDate} />
-                  </View>
-                </View>
-              )}
+                )}
               <Spacer height={4} />
               <View style={styles.labelContainer}>
                 <Label text="Amount" style={styles.label} />
@@ -2238,7 +2238,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
-                  // inputType="numeric"
+                // inputType="numeric"
                 />
               </View>
               <Spacer height={4} />
@@ -2282,7 +2282,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                 <BouncyCheckboxGroup
                   data={yesNoOptions}
                   onChange={(selectedItem: ICheckboxButton) => {
-                    const {otherDetails} = state;
+                    const { otherDetails } = state;
                     const tempObj = {
                       ...otherDetails,
                       easy_access_for_loading_unloading: selectedItem.text,
@@ -2305,7 +2305,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
               <View style={styles.textContainer2}>
                 <Input
                   onChangeText={(text: string) => {
-                    const {otherDetails} = state;
+                    const { otherDetails } = state;
                     const tempObj = {
                       ...otherDetails,
                       items_got_down_from_balcony: text,
@@ -2332,7 +2332,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                 <BouncyCheckboxGroup
                   data={yesNoOptions}
                   onChange={(selectedItem: ICheckboxButton) => {
-                    const {otherDetails} = state;
+                    const { otherDetails } = state;
                     const tempObj = {
                       ...otherDetails,
                       any_restrcition_for_loading_unloading: selectedItem.text,
@@ -2355,7 +2355,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
               <View style={styles.textContainer2}>
                 <Input
                   onChangeText={(text: string) => {
-                    const {otherDetails} = state;
+                    const { otherDetails } = state;
                     const tempObj = {
                       ...otherDetails,
                       any_needs_or_concern: text,
@@ -2376,7 +2376,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
           <Spacer height={12} />
           <Button
             text="PREVIEW"
-            onPress={() => {}}
+            onPress={() => { }}
             disabled={true}
             style={styles.previewButtonStyle}
             textStyle={styles.textStyle}

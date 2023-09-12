@@ -71,6 +71,9 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     paddingHorizontal: 16,
 },
+  datePickerWidth: {
+    width: width * 0.9,
+  }
 });
 
 export default styles;
