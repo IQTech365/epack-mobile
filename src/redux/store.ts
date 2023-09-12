@@ -7,6 +7,7 @@ import {rootSaga} from '../sagas';
 //Slices
 import OtpSlice from './slices/OtpSlice';
 import SignupSlice from './slices/SignupSlice';
+import CompanySlice from './slices/CompanySlice';
 
 const sagaMiddleware = createSagaMiddleware();
 const middleware = [sagaMiddleware];
@@ -15,6 +16,7 @@ export const store = configureStore({
     reducer: {
         OTP: OtpSlice,
         Signup: SignupSlice,
+        Company: CompanySlice,
     },
     middleware: (getDefaultMiddleware) => {
         return getDefaultMiddleware().concat(middleware);

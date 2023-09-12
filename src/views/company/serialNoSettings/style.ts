@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import { COLOR_GRAY, COLOR_GRAY2 } from '../../../utils/colors';
+import { COLOR_BLACK, COLOR_GRAY, COLOR_GRAY2 } from '../../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -43,6 +43,9 @@ const styles = StyleSheet.create({
         width: '100%',
         borderWidth: 1,
         borderColor: COLOR_GRAY2,
+      },
+      input: {
+        color: COLOR_BLACK
       },
       buttonStyle: {
         width: '100%',

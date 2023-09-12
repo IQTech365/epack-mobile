@@ -1,0 +1,18 @@
+[
+  {
+    "label": "Propritorship",
+    "value": "1"
+  },
+  {
+    "label": "Partnership",
+    "value": "2"
+  },
+  {
+    "label": "Pvt. Ltd. Company",
+    "value": "3"
+  },
+  {
+    "label": "LLP",
+    "value": "4"
+  }
+]

@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import { Alert, View } from 'react-native';
+import {Alert, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import AvoidSoftInputViewHOC from '../../common/AvoidSoftInputViewHOC';
 import styles from './styles';
@@ -13,15 +13,19 @@ import Spinner from '../../common/Spinner';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {INTRO_BG_LINEARGRADIENT} from '../../utils/colors';
 import Label from '../../common/Label';
-import { IOtpGetRequest } from '../../interface/otp/IOtpGetRequest';
-import { getOtpRequest } from '../../redux/slices/OtpSlice';
-import { AuthStackRoute } from '../../utils/constants';
+import {IOtpGetRequest} from '../../interface/otp/IOtpGetRequest';
+import {getOtpRequest} from '../../redux/slices/OtpSlice';
+import {AuthStackRoute} from '../../utils/constants';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
 
 const SignInPageView = (props: any) => {
   const {navigation} = props;
   const dispatch = useAppDispatch();
-  const {requesting, success, error, failure, otpData} = useAppSelector(state => state.OTP);
+  const {requesting, success, error, failure, otpData} = useAppSelector(
+    state => state.OTP,
+  );
   const [mobile, setMobile] = useState<string>('');
+  const [isStaffLogin, setIsStaffLogin] = useState<boolean>(false);
 
   const onChangeMobileText = (text: string) => {
     setMobile(text);
@@ -35,10 +39,10 @@ const SignInPageView = (props: any) => {
   }, [mobile]);
 
   useEffect(() => {
-    if(!requesting && success) {
+    if (!requesting && success) {
       console.log('otpData--------', JSON.stringify(otpData));
       navigation.navigate(AuthStackRoute.OTPInput);
-    } else if(!requesting && error) {
+    } else if (!requesting && error) {
       Alert.alert('Something went wrong. Please try again!');
     }
   }, [requesting, success, failure]);
@@ -50,20 +54,53 @@ const SignInPageView = (props: any) => {
           <LogoIcon width={232} height={56} />
         </View>
         <Spacer height={30} />
-        <Label text='Signin OR Register' style={{fontSize: 18}} />
+        <Label text="Signin OR Register" style={{fontSize: 18}} />
         <Spacer height={20} />
-        <Label text='Enter mobile number' />
+        <Label text="Enter mobile number" />
         <Input
           icon={<MobileIcon width={22} height={22} />}
           placeholder="Mobile Number"
-          inputType='numeric'
+          inputType="numeric"
           onChangeText={onChangeMobileText}
           error={null}
           maxLength={10}
         />
         <Spacer />
+        {isStaffLogin && (
+          <Input
+            icon={<MobileIcon width={22} height={22} />}
+            placeholder="Password"
+            inputType="numeric"
+            onChangeText={onChangeMobileText}
+            error={null}
+            maxLength={10}
+          />
+        )}
+        <Spacer />
+        <BouncyCheckbox
+          size={25}
+          fillColor="red"
+          unfillColor="#FFFFFF"
+          text="SignIn as Staff"
+          iconStyle={{borderColor: 'red'}}
+          innerIconStyle={{borderWidth: 2}}
+          textStyle={{
+            fontFamily: 'JosefinSans-Regular',
+            textDecorationLine: 'none',
+            color: '#FFFFFF',
+          }}
+          style={{marginRight: 15, marginBottom: 10}}
+          textContainerStyle={{paddingLeft: 0}}
+          onPress={(isChecked: boolean) => {
+            setIsStaffLogin(isChecked)
+          }}
+        />
         <Spacer height={50} />
-        <Button text="GET OTP" onPress={onLoginPress} disabled={!mobile || mobile.length < 10} />
+        <Button
+          text="GET OTP"
+          onPress={onLoginPress}
+          disabled={!mobile || mobile.length < 10}
+        />
         <Spacer height={50} />
         <Spinner show={requesting} />
       </LinearGradient>

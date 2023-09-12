@@ -15,13 +15,16 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   header: {
-    fontSize: 20,
+    fontSize: 18,
     color: COLOR_BLACK,
-    // backgroundColor: '#fff',
   },
   title: {
     fontSize: 24,
   },
+  templateContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  }
 });
 
 export default styles;

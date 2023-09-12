@@ -1,49 +1,57 @@
-import React from 'react';
-import {View, Text, FlatList, SectionList} from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, ScrollView} from 'react-native';
 import styles from './style';
 import TemplateCard, {ITemplate} from '../templateCard';
 
-interface ITemplateSectionData {
+
+
+export interface ITemplateListData {
   title: string;
-  data: ITemplateListData[]
+  data: ITemplate[];
 }
 
-interface ITemplateListData {
-  data: ITemplate[]
+interface ITemplateListViewProps2 {
+  data: ITemplateListData[];
+  onTemplateSelect: (planCategory: string, plan: number, planName: string) => void;
 }
 
-interface ITemplateListViewProps {
-  data: ITemplateSectionData[];
-}
+const TemplateListView: React.FC<ITemplateListViewProps2> = ({data, onTemplateSelect}) => {
+  const [currentTemplateIndex, setCurrentTemplateIndex] = useState<number>(-1);
+  const [currentParentIndex, setCurrentParentIndex] = useState<number>(-1);
 
-const TemplateListView: React.FC<ITemplateListViewProps> = ({data}) => {
+  const handleIndexChange = (index: number, parentIndex: number, planName: string) => {
+    const planCategory = data.find((_, index) => index == parentIndex);
+    setCurrentTemplateIndex(index);
+    setCurrentParentIndex(parentIndex);
+    onTemplateSelect(planCategory?.title as string, index, planName);
+  }
 
-  const _renderListItem = (data: ITemplateListData, index: number) => {
-    return (
-      <FlatList
-        key={`${index}`}
-        style={styles.container}
-        data={data.data}
-        numColumns={2}
-        renderItem={({item, index}) => (
-          <TemplateCard data={item} index={index} onPress={() => {}} />
-        )}
-      />
-    );
-  };
   return (
-    <View>
-      <SectionList
-        sections={data}
-        // keyExtractor={(item, index) => index}
-        renderSectionHeader={({section: {title}}) => (
-          <View style={styles.headerContainer}>
-            <Text style={styles.header}>{title}</Text>
+    <ScrollView>
+      {data.map((ele, index) => {
+        return (
+          <View>
+            <View style={styles.headerContainer}>
+              <Text style={styles.header}>{ele.title}</Text>
+            </View>
+            <View style={styles.templateContainer}>
+              {ele.data.map((temp, idx) => {
+                return (
+                  <TemplateCard
+                    data={temp}
+                    index={idx}
+                    onPress={handleIndexChange}
+                    selectedTemplateIndex={currentTemplateIndex}
+                    parentIndex={index}
+                    currentParentIndex={currentParentIndex}
+                  />
+                );
+              })}
+            </View>
           </View>
-        )}
-        renderItem={({item, index}) => _renderListItem(item, index)}
-      />
-    </View>
+        );
+      })}
+    </ScrollView>
   );
 };
 

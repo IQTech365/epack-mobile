@@ -65,6 +65,12 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR_BLUE,
     borderRadius: 5,
   },
+  titleText: {
+    fontSize: 18,
+    color: COLOR_BLACK,
+    fontWeight: '400',
+    paddingHorizontal: 16,
+},
 });
 
 export default styles;

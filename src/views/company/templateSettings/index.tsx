@@ -1,60 +1,122 @@
-import React, {useState} from 'react';
-import {View, Text, Image, TouchableOpacity, FlatList} from 'react-native';
-import styles from './style';
-import AvoidSoftInputViewHOC from '../../../common/AvoidSoftInputViewHOC';
-import Spacer from '../../../common/Spacer';
-import Input from '../../../common/Input';
-import Button from '../../../common/Button';
-import tabOptions from '../../../data/documentsDesignTabOptions.json';
-import Tab from '../../../common/Tab';
-import TemplateListView from './components/templateListView';
-import mockTemplateData from '../../../data/mockTemplateData.json';
+import React, { useReducer } from 'react';
+import { useWindowDimensions } from 'react-native';
+import mockTemplateData2 from '../../../data/mockTemplateData2.json';
+import QuotationTemplateView from './components/quotationTemplateView';
+import BiltyTemplateView from './components/BiltyTemplateView';
+import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
+import InvoiceTemplateView from './components/InvoiceTemplateView';
+import CarConditionTemplateView from './components/CarConditionTemplateView';
+import MoneyReceiptTemplateView from './components/MoneyReceiptTemplateView';
+import { COMPANY_REGISTRATION_ACTION, IDocumentTemplate, companyRegistrationReducer, initialState } from '../registrationReducer';
 
 interface ITemplateSettingPageView {
   //
 }
 
 const TemplateSettingPageView: React.FC<ITemplateSettingPageView> = ({}) => {
-  const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
+  const layout = useWindowDimensions();
+  const [state, dispatch] = useReducer(
+    companyRegistrationReducer,
+    initialState,
+  );
+  const [index, setIndex] = React.useState(0);
+  console.log('state--------', JSON.stringify(state, null, ' '));
 
-  const handleTabChange = (index: number) => {
-    setActiveTabIndex(index);
-  };
-
-  const showSelectedTemplateView = () => {
-    //
+  const handleQuotationTemplateSelect = (planCategory: string, planIndex: number, planName: string) => {
+    const { documentTemplates } = state;
+    const tempObj = {
+      ...documentTemplates,
+      quotation: {planType: planCategory, templateId: planName}
+    }
+    dispatch({
+      type: COMPANY_REGISTRATION_ACTION.DOCUMENT_TEMPLATES,
+      payload: tempObj as IDocumentTemplate
+    });
   }
 
+  const handleBiltyTemplateSelect = (planCategory: string, planIndex: number, planName: string) => {
+    const { documentTemplates } = state;
+    const tempObj = {
+      ...documentTemplates,
+      bilty: {planType: planCategory, templateId: planName}
+    }
+    dispatch({
+      type: COMPANY_REGISTRATION_ACTION.DOCUMENT_TEMPLATES,
+      payload: tempObj as IDocumentTemplate
+    });
+  }
+
+  const handleInvoiceTemplateSelect = (planCategory: string, planIndex: number, planName: string) => {
+    const { documentTemplates } = state;
+    const tempObj = {
+      ...documentTemplates,
+      invoice: {planType: planCategory, templateId: planName}
+    }
+    dispatch({
+      type: COMPANY_REGISTRATION_ACTION.DOCUMENT_TEMPLATES,
+      payload: tempObj as IDocumentTemplate
+    });
+  }
+
+  const handleCarConditionTemplateSelect = (planCategory: string, planIndex: number, planName: string) => {
+    const { documentTemplates } = state;
+    const tempObj = {
+      ...documentTemplates,
+      car_condition: {planType: planCategory, templateId: planName}
+    }
+    dispatch({
+      type: COMPANY_REGISTRATION_ACTION.DOCUMENT_TEMPLATES,
+      payload: tempObj as IDocumentTemplate
+    });
+  }
+
+  const handleMoneyReceiptTemplateSelect = (planCategory: string, planIndex: number, planName: string) => {
+    const { documentTemplates } = state;
+    const tempObj = {
+      ...documentTemplates,
+      money_receipt: {planType: planCategory, templateId: planName}
+    }
+    dispatch({
+      type: COMPANY_REGISTRATION_ACTION.DOCUMENT_TEMPLATES,
+      payload: tempObj as IDocumentTemplate
+    });
+  }
+
+  const QuotationTemplateRoute = () => <QuotationTemplateView data={mockTemplateData2} onTemplateSelect={handleQuotationTemplateSelect} />;
+  const BiltyTemplateRoute = () => <BiltyTemplateView data={mockTemplateData2} onTemplateSelect={handleBiltyTemplateSelect} />;
+  const InvoiceTemplateRoute = () => <InvoiceTemplateView data={mockTemplateData2} onTemplateSelect={handleInvoiceTemplateSelect} />;
+  const CarConditionTemplateRoute = () => <CarConditionTemplateView data={mockTemplateData2} onTemplateSelect={handleCarConditionTemplateSelect} />;
+  const MoneyReceiptTemplateRoute = () => <MoneyReceiptTemplateView data={mockTemplateData2} onTemplateSelect={handleMoneyReceiptTemplateSelect} />;
+
+const renderScene = SceneMap({
+  first: QuotationTemplateRoute,
+  second: BiltyTemplateRoute,
+  third: InvoiceTemplateRoute,
+  fourth: CarConditionTemplateRoute,
+  fifth: MoneyReceiptTemplateRoute,
+});
+
+const handleSave = () => {
+  
+}
+
+  const [routes] = React.useState([
+    {key: 'first', title: 'Quotation'},
+    {key: 'second', title: 'Bilty'},
+    {key: 'third', title: 'Invoice'},
+    {key: 'fourth', title: 'Car Condition'},
+    {key: 'fifth', title: 'Money Receipt'}
+  ]);
+
   return (
-    <View style={styles.container}>
-      <AvoidSoftInputViewHOC>
-        <>
-          <Spacer />
-          <Text style={styles.titleText}>
-            Set Template Design for the documents
-          </Text>
-          <Spacer height={10} />
-          <View style={styles.tabsContainer}>
-            <FlatList
-              style={{paddingHorizontal: 8}}
-              data={tabOptions}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              renderItem={({item, index}) => (
-                <Tab
-                  label={item.label}
-                  index={index}
-                  onPress={handleTabChange}
-                  activeIndex={activeTabIndex}
-                />
-              )}
-            />
-          </View>
-          <Spacer />
-          <TemplateListView data={mockTemplateData} />
-        </>
-      </AvoidSoftInputViewHOC>
-    </View>
+    <TabView
+      navigationState={{index, routes}}
+      renderScene={renderScene}
+      onIndexChange={setIndex}
+      initialLayout={{width: layout.width}}
+      overScrollMode="always"
+      renderTabBar={(props) => <TabBar {...props} scrollEnabled={true} /> }
+    />
   );
 };
 

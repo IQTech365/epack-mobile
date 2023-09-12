@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useReducer, useState } from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import styles from './style';
 import LogoPlaceholder from '../../../images/logo_placeholder.png';
 import {launchCamera, launchImageLibrary, CameraType, MediaType, PhotoQuality} from 'react-native-image-picker';
+import CameraIcon from '../../../images/icons/camera.svg';
+import GalleryIcon from '../../../images/icons/gallery.svg';
+import { COMPANY_REGISTRATION_ACTION, companyRegistrationReducer, initialState } from '../registrationReducer';
+import Spacer from '../../../common/Spacer';
 
 interface IOptions {
     mediaType: MediaType;
@@ -18,7 +22,7 @@ const options: IOptions = {
     maxHeight: 200,
     quality: 1,
     cameraType: 'back',
-  }
+}
 
 interface ICompanyLogoPageView {
   //
@@ -26,6 +30,10 @@ interface ICompanyLogoPageView {
 
 const CompanyLogoPageView: React.FC<ICompanyLogoPageView> = ({}) => {
     const [companyLogo, setCompanyLogo] = useState<string>('');
+    const [state, dispatch] = useReducer(
+      companyRegistrationReducer,
+      initialState,
+    );
 
     const handleLaunchCamera = async () => {
         try {
@@ -34,7 +42,11 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageView> = ({}) => {
             const {assets} = result || {};
             if(assets && Array.isArray(assets) && assets.length > 0) {
                 const imageObj = assets[0];
-                setCompanyLogo(imageObj.fileName as string);
+                setCompanyLogo(imageObj.uri as string);
+                dispatch({
+                  type: COMPANY_REGISTRATION_ACTION.COMPANY_LOGO,
+                  payload: imageObj.uri as string,
+                });
             }
           }
           console.log('Camera-result----', JSON.stringify(result));
@@ -55,17 +67,21 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageView> = ({}) => {
       }
   return (
     <View style={styles.container}>
+      <Spacer />
+      <View><Text style={styles.titleText}>Select Company Logo</Text></View>
+      <Spacer />
       <View style={styles.logoContainer}>
-        <Image source={companyLogo ? companyLogo : LogoPlaceholder} style={styles.logo} />
+        {companyLogo ? <Image source={companyLogo ? {uri: companyLogo} : LogoPlaceholder} style={styles.logo} /> : <Text>Company Logo Preview</Text>}
       </View>
+      <Spacer />
       <View style={styles.galleryContainer}>
         <TouchableOpacity style={styles.button} onPress={handleLaunchGallery}>
-          <Text style={styles.text}>Gallery</Text>
+          <GalleryIcon width={50} height={50} />
         </TouchableOpacity>
       </View>
       <View style={styles.cameraContainer}>
         <TouchableOpacity style={styles.button} onPress={handleLaunchCamera}>
-          <Text style={styles.text}>Camera</Text>
+        <CameraIcon width={50} height={50} />
         </TouchableOpacity>
       </View>
     </View>
