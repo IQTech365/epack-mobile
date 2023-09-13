@@ -1,0 +1,19 @@
+[
+    {
+        "label": "select contact" ,
+        "value": "1"
+    },
+    {
+        "label": "EMAIL" ,
+        "value": "2"
+    },
+    {
+        "label": "LANDLINE" ,
+        "value": "3"
+    },
+    {
+        "label": "MOBILE" ,
+        "value": "4"
+    },
+   
+]
