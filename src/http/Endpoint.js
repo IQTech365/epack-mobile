@@ -5,3 +5,7 @@ export const ADD_COMPANY = `/company/add`;
 export const EDIT_COMPANY = `/company/edit`;
 export const GET_COMPANY = (company_id) => `/company/${company_id}`;
 export const DELETE_COMPANY = (company_id) => `/company/${company_id}`;
+export const ADD_ENQUIRY = `/enquiry/add`;
+export const EDIT_ENQUIRY = (enquiry_id) => `/enquiry/edit/${enquiry_id}`;
+export const DELETE_ENQUIRY = (enquiry_id) => `/enquiry/${enquiry_id}`;
+export const GET_ENQUIRY = (enquiry_id) => `enquiry/${enquiry_id}`;

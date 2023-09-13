@@ -1,20 +1,8 @@
 import {takeLatest, put, call} from 'redux-saga/effects';
 import {PayloadAction} from '@reduxjs/toolkit';
 import * as CompanyService from '../service/CompanyService';
-import { 
-    getOtpSuccess, 
-    getOtpFailure, 
-    getOtpRequest, 
-    verifyOtpSuccess, 
-    verifyOtpFailure, 
-    verifyOtpRequest
- } from '../redux/slices/OtpSlice';
-import { IOtpGetRequest } from '../interface/otp/IOtpGetRequest';
-import { IOtpGetResponse } from '../interface/otp/IOtpGetResponse';
-import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
-import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
 import { ICompanyRegistrationResponse } from '../interface/companyRegistration/ICompanyRegistrationResponse';
-import { addCompanyFailure, addCompanySuccess } from '../redux/slices/CompanySlice';
+import { addCompanyFailure, addCompanyRequest, addCompanySuccess } from '../redux/slices/CompanySlice';
 import { ICompanyRegistrationRequest } from '../interface/companyRegistration/ICompanyRegistrationRequest';
 
 export function* addCompanySaga(action: PayloadAction<ICompanyRegistrationRequest>) {
@@ -41,6 +29,6 @@ export function* addCompanySaga(action: PayloadAction<ICompanyRegistrationReques
 // }
 
 export function* watcherOtpSaga() {
-    yield takeLatest(getOtpRequest.type, addCompanySaga);
+    yield takeLatest(addCompanyRequest.type, addCompanySaga);
     // yield takeLatest(verifyOtpRequest.type, verifyOtpSaga);
 }

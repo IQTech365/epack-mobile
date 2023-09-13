@@ -8,6 +8,7 @@ import {rootSaga} from '../sagas';
 import OtpSlice from './slices/OtpSlice';
 import SignupSlice from './slices/SignupSlice';
 import CompanySlice from './slices/CompanySlice';
+import EnquirySlice from './slices/EnquirySlice';
 
 const sagaMiddleware = createSagaMiddleware();
 const middleware = [sagaMiddleware];
@@ -17,6 +18,7 @@ export const store = configureStore({
         OTP: OtpSlice,
         Signup: SignupSlice,
         Company: CompanySlice,
+        Enquiry: EnquirySlice,
     },
     middleware: (getDefaultMiddleware) => {
         return getDefaultMiddleware().concat(middleware);

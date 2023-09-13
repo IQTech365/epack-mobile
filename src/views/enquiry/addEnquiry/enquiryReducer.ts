@@ -1,3 +1,5 @@
+import {Reducer} from 'react';
+
 //** ALL ACTIONS */
 export enum ENQUIRY_FORM_ACTION {
   SHIFTING_TYPE = 'SHIFTING_TYPE',
@@ -33,12 +35,22 @@ export type TBillingInfo = {
   employee_name: string;
   employee_designation: string;
   employee_mobile_number: string;
-}
+};
 
 // ** Billing By
 export type TBillingBy = {
   billing_by: string;
   billing_info: TBillingInfo | null;
+};
+
+// ** Shifting Luggage
+export type TShifingLuggage = {
+  items: string[];
+};
+
+const defaultBillingBy: TBillingBy = {
+  billing_by: 'Billing By Individual',
+  billing_info: null,
 }
 
 /** ENQUIRY FORM STATE */
@@ -48,7 +60,7 @@ interface EnquiryFormState {
   companyNameParty: string;
   partyName: string;
   mobileNumber: string;
-  shiftingLuggage: Object;
+  shiftingLuggage: TShifingLuggage | null;
   pickupPincode: string;
   pickupCity: string;
   pickupState: string;
@@ -65,7 +77,7 @@ interface EnquiryFormState {
   deliveryCurrentLiftStatus: String;
 }
 
-type TPayload = string | TBillingInfo | TBillingBy ;
+type TPayload = string | TBillingBy | TShifingLuggage;
 
 /** ACTION INTERFACE */
 interface EnquiryAction {
@@ -75,10 +87,10 @@ interface EnquiryAction {
 
 /** INITIAL STATE */
 export const initialState: EnquiryFormState = {
-  shiftingType: '',
-  billingBy: null,
+  shiftingType: 'Local',
+  billingBy: defaultBillingBy,
   companyNameParty: '',
-  shiftingLuggage: {},
+  shiftingLuggage: null,
   partyName: '',
   mobileNumber: '',
   pickupPincode: '',
@@ -98,52 +110,52 @@ export const initialState: EnquiryFormState = {
 };
 
 /** Quotation Reducer */
-export const enquiryReducer = (
+export const enquiryReducer: Reducer<EnquiryFormState, EnquiryAction> = (
   state: EnquiryFormState,
   action: EnquiryAction,
 ) => {
   const {type, payload} = action;
   switch (type) {
     case ENQUIRY_FORM_ACTION.SHIFTING_TYPE:
-      return {...state, shiftingType: payload};
-      case ENQUIRY_FORM_ACTION.BILLING_BY:
-        return {...state, billingBy: payload as TBillingBy};
+      return {...state, shiftingType: payload as string};
+    case ENQUIRY_FORM_ACTION.BILLING_BY:
+      return {...state, billingBy: payload as TBillingBy};
     case ENQUIRY_FORM_ACTION.SHIFTING_LUGGAGE:
-      return {...state, shiftingLuggage: payload};
+      return {...state, shiftingLuggage: payload as TShifingLuggage};
     case ENQUIRY_FORM_ACTION.COMPANY_NAME_PARTY:
-      return {...state, companyNameParty: payload};
+      return {...state, companyNameParty: payload as string};
     case ENQUIRY_FORM_ACTION.PARTY_NAME:
-      return {...state, partyName: payload};
+      return {...state, partyName: payload as string};
     case ENQUIRY_FORM_ACTION.MOBILE_NUMBER:
-      return {...state, mobileNumber: payload};
+      return {...state, mobileNumber: payload as string};
     case ENQUIRY_FORM_ACTION.PICKUP_PINCODE:
-      return {...state, pickupPincode: payload};
+      return {...state, pickupPincode: payload as string};
     case ENQUIRY_FORM_ACTION.PICKUP_CITY:
-      return {...state, pickupCity: payload};
+      return {...state, pickupCity: payload as string};
     case ENQUIRY_FORM_ACTION.PICKUP_STATE:
-      return {...state, pickupState: payload};
+      return {...state, pickupState: payload as string};
     case ENQUIRY_FORM_ACTION.PICKUP_LOCALITY:
-      return {...state, pickupLocality: payload};
+      return {...state, pickupLocality: payload as string};
     case ENQUIRY_FORM_ACTION.PICKUP_ADDRESS:
-      return {...state, pickupAddress: payload};
+      return {...state, pickupAddress: payload as string};
     case ENQUIRY_FORM_ACTION.PICKUP_CURRENT_FLOOR:
-      return {...state, pickupCurrentFloor: payload};
+      return {...state, pickupCurrentFloor: payload as string};
     case ENQUIRY_FORM_ACTION.PICKUP_CURRENT_LIFT_STATUS:
-      return {...state, pickupCurrentLiftStatus: payload};
+      return {...state, pickupCurrentLiftStatus: payload as string};
     case ENQUIRY_FORM_ACTION.DELIVERY_PINCODE:
-      return {...state, deliveryPincode: payload};
+      return {...state, deliveryPincode: payload as string};
     case ENQUIRY_FORM_ACTION.DELIVERY_CITY:
-      return {...state, deliveryCity: payload};
+      return {...state, deliveryCity: payload as string};
     case ENQUIRY_FORM_ACTION.DELIVERY_STATE:
-      return {...state, deliveryState: payload};
+      return {...state, deliveryState: payload as string};
     case ENQUIRY_FORM_ACTION.DELIVERY_LOCALITY:
-      return {...state, deliveryLocality: payload};
+      return {...state, deliveryLocality: payload as string};
     case ENQUIRY_FORM_ACTION.DELIVERY_ADDRESS:
-      return {...state, deliveryAddress: payload};
+      return {...state, deliveryAddress: payload as string};
     case ENQUIRY_FORM_ACTION.DELIVERY_CURRENT_FLOOR:
-      return {...state, deliveryCurrentFloor: payload};
+      return {...state, deliveryCurrentFloor: payload as string};
     case ENQUIRY_FORM_ACTION.DELIVERY_CURRENT_LIFT_STATUS:
-      return {...state, deliveryCurrentLiftStatus: payload};
+      return {...state, deliveryCurrentLiftStatus: payload as string};
     default:
       return state;
   }

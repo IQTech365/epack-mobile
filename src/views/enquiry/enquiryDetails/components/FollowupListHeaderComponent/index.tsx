@@ -7,9 +7,12 @@ import Spacer from '../../../../../common/Spacer';
 import {COLOR_BLACK} from '../../../../../utils/colors';
 import styles from './style';
 
-interface IFollowupListHeaderComponentProps {}
+interface IFollowupListHeaderComponentProps {
+  taskName: string;
+  assigneeRole: string;
+}
 
-const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> = ({}) => {
+const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> = ({taskName, assigneeRole}) => {
   const handleFollowupDate = (date: Date) => {
     // dispatch({
     //   type: QUOTATION_FORM_ACTION.DATE_OF_QUOTATION,
@@ -28,12 +31,12 @@ const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> =
     <View style={styles.container}>
       <Spacer height={4} />
       <View style={styles.labelContainer}>
-        <Text style={styles.labelText}>FOLLOWUP</Text>
+        <Text style={styles.labelText}>{taskName}</Text>
       </View>
       <Spacer height={8} />
       <View style={styles.contentContainer}>
         <Text style={styles.contentLabelText}>
-          Enquiry Manager - <Text style={styles.nameText}>Ramesh</Text>
+          {assigneeRole} Manager - <Text style={styles.nameText}>Ramesh</Text>
         </Text>
       </View>
       <Spacer height={8} />

@@ -1,15 +1,15 @@
-import React, { useCallback, useReducer, useState } from 'react';
-import { View, Text } from 'react-native';
+import React, {useCallback, useReducer, useState} from 'react';
+import {View, Text} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../common/Spacer';
 import styles from './style';
 import shiftingTypeOptions from '../../../data/shiftingType.json';
-import { TDropdownItem } from '../../../type/TDropdownItem';
+import {TDropdownItem} from '../../../type/TDropdownItem';
 import Label from '../../../common/Label';
 import DropdownComponent from '../../../common/DropdownComponent';
 import Header from '../../../common/Header';
 import Input from '../../../common/Input';
-import { COLOR_BLACK, COLOR_BLUE } from '../../../utils/colors';
+import {COLOR_BLACK, COLOR_BLUE} from '../../../utils/colors';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import CollapsibleView from '../../../common/CollapsibleView';
 import shiftingTypes from '../../../data/shiftingType.json';
@@ -17,20 +17,17 @@ import billingByOptions from '../../../data/billingByOptions.json';
 import Button from '../../../common/Button';
 import liftStatusOptions from '../../../data/liftStatusOptions.json';
 import floorOptions from '../../../data/floorOptions.json';
+import approvalAuthorityOptions from '../../../data/ApprovalAuthorityOptions.json';
 import {
   ENQUIRY_FORM_ACTION,
+  TBillingBy,
   enquiryReducer,
   initialState,
 } from './enquiryReducer';
 
-const AddEnquiryView: React.FC<{}> = ({ }) => {
+const AddEnquiryView: React.FC<{}> = ({}) => {
   const [state, dispatch] = useReducer(enquiryReducer, initialState);
-  const [shiftLugData, setshiftLugData] = useState<Object>({
-    household: false,
-    office: false,
-    industrial: false,
-    Other: false,
-  });
+  const [billingBy, setBillingBy] = useState<string>("1");
 
   const handleShiftingType = (item: TDropdownItem) => {
     dispatch({
@@ -39,10 +36,16 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
     });
   };
 
-  const handleCompanyPartyNameInputTextChange = (text: String) => {
+  const handleBillingBy = (item: TDropdownItem) => {
+    const {billingBy} = state;
+    const tempObj = {
+      ...billingBy,
+      billing_by: item.label,
+      billing_info: null,
+    }
     dispatch({
-      type: ENQUIRY_FORM_ACTION.COMPANY_NAME_PARTY,
-      payload: text,
+      type: ENQUIRY_FORM_ACTION.BILLING_BY,
+      payload: tempObj as TBillingBy,
     });
   };
 
@@ -64,11 +67,11 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
   );
 
   const handleShiftingLugInputTextChange = useCallback(() => {
-    setshiftLugData({ ...shiftLugData });
-    dispatch({
-      type: ENQUIRY_FORM_ACTION.SHIFTING_LUGGAGE,
-      payload: shiftLugData,
-    });
+    // setshiftLugData({...shiftLugData});
+    // dispatch({
+    //   type: ENQUIRY_FORM_ACTION.SHIFTING_LUGGAGE,
+    //   payload: shiftLugData,
+    // });
   }, [state.shiftingLuggage]);
 
   const handlePickupPinCode = useCallback(
@@ -99,16 +102,6 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
       });
     },
     [state.pickupState],
-  );
-
-  const handlePickupLocality = useCallback(
-    (item: TDropdownItem) => {
-      dispatch({
-        type: ENQUIRY_FORM_ACTION.PICKUP_LOCALITY,
-        payload: item.label,
-      });
-    },
-    [state.pickupLocality],
   );
 
   const handlePickupAddress = useCallback(
@@ -171,21 +164,11 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
     [state.deliveryState],
   );
 
-  const handleDeliveryLocality = useCallback(
-    (item: TDropdownItem) => {
-      dispatch({
-        type: ENQUIRY_FORM_ACTION.DELIVERY_LOCALITY,
-        payload: item.label,
-      });
-    },
-    [state.deliveryLocality],
-  );
-
   const handleDeliveryAddress = useCallback(
     (text: String) => {
       dispatch({
         type: ENQUIRY_FORM_ACTION.DELIVERY_ADDRESS,
-        payload: text,
+        payload: text as string,
       });
     },
     [state.deliveryAddress],
@@ -212,11 +195,11 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
   );
 
   const showBillingByIndividualView = () => {
-    if (state.billingBy?.billing_by === 'Billing by Company') return null;
+    if (state.billingBy?.billing_by == 'Billing by Company') return null;
     return (
       <>
         <Spacer height={4} />
-        <View style={styles.textContainer2}>
+        <View style={styles.elementContainer}>
           <Label text="Party Name" style={styles.label} />
           <Input
             onChangeText={handlePartyNameInputTextChange}
@@ -226,10 +209,10 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
           />
         </View>
         <Spacer height={4} />
-        <View style={styles.textContainer2}>
+        <View style={styles.elementContainer}>
           <Label text="Mobile Number *" style={styles.label} />
           <Input
-            onChangeText={handleMobileNumberInputTextChange}
+            onChangeText={handleMobileNumInputTextChange}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
@@ -240,11 +223,11 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
   };
 
   const showBillingByCompanyView = () => {
-    if (state.billingBy?.billing_by === 'Billing By Individual') return null;
+    if (state.billingBy?.billing_by == 'Billing By Individual') return null;
     return (
       <>
         <Spacer height={4} />
-        <View style={styles.textContainer2}>
+        <View style={styles.elementContainer}>
           <Label text="Company Name" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
@@ -264,7 +247,7 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
           />
         </View>
         <Spacer height={4} />
-        <View style={styles.textContainer2}>
+        <View style={styles.elementContainer}>
           <Label text="Approval Authority" style={styles.label} />
           <DropdownComponent
             data={approvalAuthorityOptions}
@@ -285,7 +268,7 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
           />
         </View>
         <Spacer height={4} />
-        <View style={styles.textContainer2}>
+        <View style={styles.elementContainer}>
           <Label text="Authority Person Name" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
@@ -308,7 +291,7 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
           />
         </View>
         <Spacer height={4} />
-        <View style={styles.textContainer2}>
+        <View style={styles.elementContainer}>
           <Label text="Authority Mobile Number" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
@@ -331,7 +314,7 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
           />
         </View>
         <Spacer height={4} />
-        <View style={styles.textContainer2}>
+        <View style={styles.elementContainer}>
           <Label text="Company GST" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
@@ -351,7 +334,7 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
           />
         </View>
         <Spacer height={4} />
-        <View style={styles.textContainer2}>
+        <View style={styles.elementContainer}>
           <Label text="Employee Name" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
@@ -371,7 +354,7 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
           />
         </View>
         <Spacer height={4} />
-        <View style={styles.textContainer2}>
+        <View style={styles.elementContainer}>
           <Label text="Employee Designation" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
@@ -394,7 +377,7 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
           />
         </View>
         <Spacer height={4} />
-        <View style={styles.textContainer2}>
+        <View style={styles.elementContainer}>
           <Label text="Employee Mobile Number" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
@@ -417,7 +400,7 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
           />
         </View>
         <Spacer height={4} />
-        <View style={styles.textContainer2}>
+        <View style={styles.elementContainer}>
           <Label text="Company Address" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
@@ -462,29 +445,12 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
               <Label text="Billing By" style={styles.label} />
               <DropdownComponent
                 data={billingByOptions}
-                onSelect={handleShiftingType}
+                onSelect={handleBillingBy}
               />
             </View>
             <Spacer height={4} />
-            <View style={styles.elementContainer}>
-              <Label text="Party Name" style={styles.label} />
-              <Input
-                onChangeText={handlePartyNameInputTextChange}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-              />
-            </View>
-            <Spacer height={4} />
-            <View style={styles.elementContainer}>
-              <Label text="Mobile" style={styles.label} />
-              <Input
-                onChangeText={handleMobileNumInputTextChange}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-              />
-            </View>
+            {showBillingByIndividualView()}
+            {showBillingByCompanyView()}
             <Spacer height={4} />
             <View style={styles.labelContainer}>
               <Label text="Shifting Luggage" style={styles.label} />
@@ -509,10 +475,10 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
                 }}
-                style={{ marginRight: 15, marginBottom: 10 }}
-                textContainerStyle={{ paddingLeft: 0 }}
+                style={{marginRight: 15, marginBottom: 10}}
+                textContainerStyle={{paddingLeft: 0}}
                 onPress={(isChecked: boolean) => {
-                  shiftLugData.household = isChecked;
+                  // shiftLugData.household = isChecked;
                   handleShiftingLugInputTextChange();
                 }}
               />
@@ -537,10 +503,10 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
                 }}
-                style={{ marginRight: 15 }}
-                textContainerStyle={{ paddingLeft: 0 }}
+                style={{marginRight: 15}}
+                textContainerStyle={{paddingLeft: 0}}
                 onPress={(isChecked: boolean) => {
-                  shiftLugData.office = isChecked;
+                  // shiftLugData.office = isChecked;
                   handleShiftingLugInputTextChange();
                 }}
               />
@@ -565,10 +531,10 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
                 }}
-                style={{ marginRight: 15 }}
-                textContainerStyle={{ paddingLeft: 0 }}
+                style={{marginRight: 15}}
+                textContainerStyle={{paddingLeft: 0}}
                 onPress={(isChecked: boolean) => {
-                  shiftLugData.industrial = isChecked;
+                  // shiftLugData.industrial = isChecked;
                   handleShiftingLugInputTextChange();
                 }}
               />
@@ -593,10 +559,10 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
                 }}
-                style={{ marginRight: 15 }}
-                textContainerStyle={{ paddingLeft: 0 }}
+                style={{marginRight: 15}}
+                textContainerStyle={{paddingLeft: 0}}
                 onPress={(isChecked: boolean) => {
-                  shiftLugData.Vehcicle = isChecked;
+                  // shiftLugData.Vehcicle = isChecked;
                   handleShiftingLugInputTextChange();
                 }}
               />
@@ -621,10 +587,10 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
                 }}
-                style={{ marginRight: 15 }}
-                textContainerStyle={{ paddingLeft: 0 }}
+                style={{marginRight: 15}}
+                textContainerStyle={{paddingLeft: 0}}
                 onPress={(isChecked: boolean) => {
-                  shiftLugData.Other = isChecked;
+                  // shiftLugData.Other = isChecked;
                   handleShiftingLugInputTextChange();
                 }}
               />
@@ -632,12 +598,11 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
           </View>
         </CollapsibleView>
         <Spacer height={4} />
-        <CollapsibleView title="BILLING DETAILS" collapsed={false}>
+        {/* <CollapsibleView title="BILLING DETAILS" collapsed={false}>
           <View>
             <View style={styles.elementContainer}>
               <Label text="Company Name" style={styles.label} />
-              <Input
-                containerStyle={styles.inputContainer} />
+              <Input containerStyle={styles.inputContainer} onChangeText={() => {}} />
             </View>
             <View style={styles.elementContainer}>
               <Label text="Approval Authority" style={styles.label} />
@@ -718,9 +683,8 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
                 selectionColor={COLOR_BLACK}
               />
             </View>
-
           </View>
-        </CollapsibleView>
+        </CollapsibleView> */}
         <Spacer height={4} />
         <CollapsibleView title="PICKUP ADDRESS" collapsed={true}>
           <View>

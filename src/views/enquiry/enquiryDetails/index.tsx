@@ -24,9 +24,9 @@ const EnquiryDetailsView: React.FC<{}> = ({}) => {
       case 0:
         return <DetailsView />
       case 1:
-        return <FollowupView />
+        return <FollowupView taskName='FOLLOW UP' assigneeRole='Enequiry' />
       case 2:
-        return <SurveyView />
+        return <SurveyView taskName='SURVEY' assigneeRole='Survey' />
       case 3:
         return <AddQuotationView showHeader={false} />
       default:
