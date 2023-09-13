@@ -1,5 +1,6 @@
 export interface IAddFollowupRequest {
-    enquiry_manager: string;
-    followup_date: string;
+    enquiryId: string;
+    authId: string;
+    followUpDate: string;
     comment: string;
 }

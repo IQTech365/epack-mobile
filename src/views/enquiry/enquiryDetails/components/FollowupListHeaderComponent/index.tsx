@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {View, Text} from 'react-native';
 import Button from '../../../../../common/Button';
 import DatePickerComponent from '../../../../../common/DatePickerComponent';
@@ -6,6 +6,7 @@ import Input from '../../../../../common/Input';
 import Spacer from '../../../../../common/Spacer';
 import {COLOR_BLACK} from '../../../../../utils/colors';
 import styles from './style';
+import { formatDate } from '../../../../../utils/formatter';
 
 interface IFollowupListHeaderComponentProps {
   taskName: string;
@@ -13,19 +14,24 @@ interface IFollowupListHeaderComponentProps {
 }
 
 const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> = ({taskName, assigneeRole}) => {
+  const [comment, setComment] = useState<string>('');
+  const [date, setDate] = useState<string>('');
+
   const handleFollowupDate = (date: Date) => {
-    // dispatch({
-    //   type: QUOTATION_FORM_ACTION.DATE_OF_QUOTATION,
-    //   payload: formatDate(date),
-    // });
+    setDate(formatDate(date));
   };
 
   const handleCommentInputTextChange = (text: string) => {
-    // dispatch({
-    //   type: QUOTATION_FORM_ACTION.PARTY_NAME,
-    //   payload: text,
-    // });
+    setComment(text);
   };
+
+  const handleSave = () => {
+    if(taskName == 'FOLLOW UP') {
+      //TODO: call api here
+    } else if(taskName == 'SURVEY') {
+      //TODO: call api here
+    }
+  }
 
   return (
     <View style={styles.container}>

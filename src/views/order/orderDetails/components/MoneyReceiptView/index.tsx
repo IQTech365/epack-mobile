@@ -14,7 +14,7 @@ import shiftingLuggages from '../../../../../data/shiftingLuggage.json';
 import paymentTypeOptions from '../../../../../data/paymentTypeOptions.json';
 import receiptAgainstOptions from '../../../../../data/receiptAgainstOptions.json';
 import modeOfPaymentOptions from '../../../../../data/modeOfPaymentOptions.json';
-import { MONEYRECEIPT_FORM_ACTION, initialState, moneyReceiptReducer } from '../../../moneyReceipt/moneyReceiptReducer';
+import { MONEYRECEIPT_FORM_ACTION, initialState, moneyReceiptReducer } from './moneyReceiptReducer';
 import { formatDate } from '../../../../../utils/formatter';
 
 
