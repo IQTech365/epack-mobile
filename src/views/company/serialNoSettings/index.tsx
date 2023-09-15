@@ -7,17 +7,19 @@ import Input from '../../../common/Input';
 import Button from '../../../common/Button';
 import { COMPANY_REGISTRATION_ACTION, IDocumentSerialNo, companyRegistrationReducer, initialState } from '../registrationReducer';
 import { COLOR_BLACK, COLOR_GRAY, COLOR_GRAY2, COLOR_GRAY3 } from '../../../utils/colors';
+import { useCompanyRegistrationContextHook } from '../../../provider/CompanyRegistrationContextProvider';
 
 interface ICompanyLogoPageView {
   //
 }
 
 const SerialNoSettingPageView: React.FC<ICompanyLogoPageView> = ({}) => {
-  const [state, dispatch] = useReducer(
-    companyRegistrationReducer,
-    initialState,
-  );
-  console.log('state--------', JSON.stringify(state, null, ' '));
+  // const [state, dispatch] = useReducer(
+  //   companyRegistrationReducer,
+  //   initialState,
+  // );
+  const {state, setDocumentSerialNumber} = useCompanyRegistrationContextHook();
+  // console.log('state--------', JSON.stringify(state, null, ' '));
 
   const handleQuotationSerialNoInputTextChange = (text: string) => {
     const { documentSerialNumbers } = state;
@@ -25,10 +27,11 @@ const SerialNoSettingPageView: React.FC<ICompanyLogoPageView> = ({}) => {
       ...documentSerialNumbers,
       quotation: text,
     };
-    dispatch({
-      type: COMPANY_REGISTRATION_ACTION.DOCUMENT_SERIAL_NUMBERS,
-      payload: tempObj as IDocumentSerialNo,
-    });
+    // dispatch({
+    //   type: COMPANY_REGISTRATION_ACTION.DOCUMENT_SERIAL_NUMBERS,
+    //   payload: tempObj as IDocumentSerialNo,
+    // });
+    setDocumentSerialNumber(tempObj as IDocumentSerialNo);
   };
 
   const handleInvoiceSerialNoInputTextChange = (text: string) => {
@@ -37,10 +40,11 @@ const SerialNoSettingPageView: React.FC<ICompanyLogoPageView> = ({}) => {
       ...documentSerialNumbers,
       invoice: text,
     };
-    dispatch({
-      type: COMPANY_REGISTRATION_ACTION.DOCUMENT_SERIAL_NUMBERS,
-      payload: tempObj as IDocumentSerialNo,
-    });
+    // dispatch({
+    //   type: COMPANY_REGISTRATION_ACTION.DOCUMENT_SERIAL_NUMBERS,
+    //   payload: tempObj as IDocumentSerialNo,
+    // });
+    setDocumentSerialNumber(tempObj as IDocumentSerialNo);
   };
 
   const handleBiltySerialNoInputTextChange = (text: string) => {
@@ -49,10 +53,11 @@ const SerialNoSettingPageView: React.FC<ICompanyLogoPageView> = ({}) => {
       ...documentSerialNumbers,
       bilty: text,
     };
-    dispatch({
-      type: COMPANY_REGISTRATION_ACTION.DOCUMENT_SERIAL_NUMBERS,
-      payload: tempObj as IDocumentSerialNo,
-    });
+    // dispatch({
+    //   type: COMPANY_REGISTRATION_ACTION.DOCUMENT_SERIAL_NUMBERS,
+    //   payload: tempObj as IDocumentSerialNo,
+    // });
+    setDocumentSerialNumber(tempObj as IDocumentSerialNo);
   };
 
   const handleCarConditionSerialNoInputTextChange = (text: string) => {
@@ -61,10 +66,11 @@ const SerialNoSettingPageView: React.FC<ICompanyLogoPageView> = ({}) => {
       ...documentSerialNumbers,
       car_condition: text,
     };
-    dispatch({
-      type: COMPANY_REGISTRATION_ACTION.DOCUMENT_SERIAL_NUMBERS,
-      payload: tempObj as IDocumentSerialNo,
-    });
+    // dispatch({
+    //   type: COMPANY_REGISTRATION_ACTION.DOCUMENT_SERIAL_NUMBERS,
+    //   payload: tempObj as IDocumentSerialNo,
+    // });
+    setDocumentSerialNumber(tempObj as IDocumentSerialNo);
   };
 
   const handleMoneyReceiptSerialNoInputTextChange = (text: string) => {
@@ -73,10 +79,11 @@ const SerialNoSettingPageView: React.FC<ICompanyLogoPageView> = ({}) => {
       ...documentSerialNumbers,
       money_receipt: text,
     };
-    dispatch({
-      type: COMPANY_REGISTRATION_ACTION.DOCUMENT_SERIAL_NUMBERS,
-      payload: tempObj as IDocumentSerialNo,
-    });
+    // dispatch({
+    //   type: COMPANY_REGISTRATION_ACTION.DOCUMENT_SERIAL_NUMBERS,
+    //   payload: tempObj as IDocumentSerialNo,
+    // });
+    setDocumentSerialNumber(tempObj as IDocumentSerialNo);
   };
 
   return (

@@ -11,7 +11,7 @@ import Input from '../../common/Input';
 import Spacer from '../../common/Spacer';
 import Spinner from '../../common/Spinner';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
-import {INTRO_BG_LINEARGRADIENT} from '../../utils/colors';
+import {COLOR_BLUE, INTRO_BG_LINEARGRADIENT} from '../../utils/colors';
 import Label from '../../common/Label';
 import {IOtpGetRequest} from '../../interface/otp/IOtpGetRequest';
 import {getOtpRequest} from '../../redux/slices/OtpSlice';
@@ -79,11 +79,11 @@ const SignInPageView = (props: any) => {
         <Spacer />
         <BouncyCheckbox
           size={25}
-          fillColor="red"
+          fillColor={COLOR_BLUE}
           unfillColor="#FFFFFF"
-          text="SignIn as Staff"
-          iconStyle={{borderColor: 'red'}}
-          innerIconStyle={{borderWidth: 2}}
+          text="SignIn as Staff OR Member"
+          iconStyle={{borderColor: 'white', borderRadius: 0}}
+          innerIconStyle={{borderWidth: 1, borderRadius: 0}}
           textStyle={{
             fontFamily: 'JosefinSans-Regular',
             textDecorationLine: 'none',

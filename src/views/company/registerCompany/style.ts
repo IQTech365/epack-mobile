@@ -10,9 +10,11 @@ const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
-    height: '100%',
-    width: '100%',
+    flex: 1,
     backgroundColor: COLOR_WHITE,
+  },
+  contentContainer: {
+    flex: 0.9
   },
   elementContainer: {
     width: width * 0.9,
@@ -70,10 +72,30 @@ const styles = StyleSheet.create({
     color: COLOR_BLACK,
     fontWeight: '400',
     paddingHorizontal: 16,
-},
+  },
   datePickerWidth: {
     width: width * 0.9,
-  }
+  },
+  buttonContainer: {
+    flex: 0.1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: "center",
+  },
+  prevButtonContainer: {
+    width: '50%',
+  },
+  nextButtonContainer: {
+    width: '50%',
+  },
+  buttonStyle: {
+    backgroundColor: COLOR_BLUE,
+    width: '80%',
+    alignSelf: 'center',
+  },
+  buttonTextStyle: {
+    color: COLOR_WHITE,
+  },
 });
 
 export default styles;

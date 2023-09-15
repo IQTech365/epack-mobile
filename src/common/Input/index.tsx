@@ -14,6 +14,7 @@ interface InputProps {
   selectionColor?: string;
   editable?: boolean;
   maxLength?: number;
+  value?: string;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -26,11 +27,13 @@ const Input: React.FC<InputProps> = ({
   inputStyle,
   selectionColor = COLOR_WHITE,
   editable = true,
-  maxLength
+  maxLength,
+  value
 }) => {
+  const errorStyle = error ? styles.errorContainer : null;
   return (
     <>
-      <View style={[styles.container, containerStyle]}>
+      <View style={[styles.container, containerStyle, errorStyle]}>
         {icon && <View style={styles.iconContainer}>{icon}</View>}
         <View style={styles.inputContainer}>
           <TextInput
@@ -42,6 +45,7 @@ const Input: React.FC<InputProps> = ({
             keyboardType={inputType}
             editable={editable}
             maxLength={maxLength}
+            value={value}
           />
         </View>
       </View>

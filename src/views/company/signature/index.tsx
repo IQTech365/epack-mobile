@@ -19,6 +19,7 @@ import {
   PhotoQuality,
 } from 'react-native-image-picker';
 import { COMPANY_REGISTRATION_ACTION, companyRegistrationReducer, initialState } from '../registrationReducer';
+import { useCompanyRegistrationContextHook } from '../../../provider/CompanyRegistrationContextProvider';
 
 interface IOptions {
   mediaType: MediaType;
@@ -41,21 +42,22 @@ interface ISignatureViewProps {
 }
 
 const SignatureViewPage: React.FC<ISignatureViewProps> = ({}) => {
-  const [signatureUri, setSignatureUri] = useState<any>();
+  const {state, setOwnerSignature} = useCompanyRegistrationContextHook();
+  const [signatureUri, setSignatureUri] = useState<any>(state.ownerSignature);
   const [isBase64Image, setIsBase64Image] = useState<boolean>(false);
   const signatureRef = useRef();
-  const [state, dispatch] = useReducer(
-    companyRegistrationReducer,
-    initialState,
-  );
-
+  // const [state, dispatch] = useReducer(
+  //   companyRegistrationReducer,
+  //   initialState,
+  // );
   const _onSaveEvent = (result: any) => {
     console.log(result);
     setSignatureUri(result?.encoded);
-    dispatch({
-      type: COMPANY_REGISTRATION_ACTION.OWNER_SIGNATURE,
-      payload: result?.encoded as string,
-    });
+    // dispatch({
+    //   type: COMPANY_REGISTRATION_ACTION.OWNER_SIGNATURE,
+    //   payload: result?.encoded as string,
+    // });
+    setOwnerSignature(result?.encoded as string);
   };
 
   const _onDragEvent = () => {
@@ -71,10 +73,11 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({}) => {
   const resetSign = () => {
     setIsBase64Image(false);
     setSignatureUri('');
-    dispatch({
-      type: COMPANY_REGISTRATION_ACTION.OWNER_SIGNATURE,
-      payload: '' as string,
-    });
+    // dispatch({
+    //   type: COMPANY_REGISTRATION_ACTION.OWNER_SIGNATURE,
+    //   payload: '' as string,
+    // });
+    setOwnerSignature('' as string);
     //@ts-ignore
     signatureRef.current?.resetImage();
   };
@@ -88,10 +91,11 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({}) => {
         if (assets && Array.isArray(assets) && assets.length > 0) {
           const imageObj = assets[0];
           setSignatureUri(imageObj.uri as string);
-          dispatch({
-            type: COMPANY_REGISTRATION_ACTION.OWNER_SIGNATURE,
-            payload: imageObj.uri as string,
-          });
+          // dispatch({
+          //   type: COMPANY_REGISTRATION_ACTION.OWNER_SIGNATURE,
+          //   payload: imageObj.uri as string,
+          // });
+          setOwnerSignature(imageObj.uri as string);
         }
       }
       console.log('Camera-result----', JSON.stringify(result));

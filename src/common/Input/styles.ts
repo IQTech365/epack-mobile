@@ -34,6 +34,9 @@ const styles = StyleSheet.create({
         fontSize: 12,
         marginLeft: 2,
         marginTop: 4,
+    },
+    errorContainer: {
+        borderColor: COLOR_ERROR
     }
 });
 

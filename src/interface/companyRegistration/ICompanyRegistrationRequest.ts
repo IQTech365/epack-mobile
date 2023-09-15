@@ -38,8 +38,8 @@ export interface ICompanyRegistrationRequest {
     companyProfile: string;
     district: string;
     postOffice: string;
-    govRegdDetails: IGovtRegdDetail,
-    accountDetails?: IAccountDetail[],
+    govRegdDetails?: IGovtRegdDetail | null,
+    accountDetails?: IAccountDetail[] | [],
     packerSignature: string;
     termsconditions: string;
 }

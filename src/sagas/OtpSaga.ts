@@ -22,7 +22,7 @@ export function* getOtpSaga(action: PayloadAction<IOtpGetRequest>) {
         yield put(getOtpSuccess(response));
     } catch (error) {
         console.log('getOtpSaga-error----', error);
-        yield put(getOtpFailure(error));
+        yield put(getOtpFailure(JSON.stringify(error)));
     }
 }
 

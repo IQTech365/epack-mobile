@@ -7,6 +7,7 @@ import CameraIcon from '../../../images/icons/camera.svg';
 import GalleryIcon from '../../../images/icons/gallery.svg';
 import { COMPANY_REGISTRATION_ACTION, companyRegistrationReducer, initialState } from '../registrationReducer';
 import Spacer from '../../../common/Spacer';
+import { useCompanyRegistrationContextHook } from '../../../provider/CompanyRegistrationContextProvider';
 
 interface IOptions {
     mediaType: MediaType;
@@ -29,12 +30,13 @@ interface ICompanyLogoPageView {
 }
 
 const CompanyLogoPageView: React.FC<ICompanyLogoPageView> = ({}) => {
-    const [companyLogo, setCompanyLogo] = useState<string>('');
-    const [state, dispatch] = useReducer(
-      companyRegistrationReducer,
-      initialState,
-    );
-
+    const {state, setCompanyLogo: setCompanyLogo2} = useCompanyRegistrationContextHook();
+    const [companyLogo, setCompanyLogo] = useState<string>(state.companyLogo);
+    // const [state, dispatch] = useReducer(
+    //   companyRegistrationReducer,
+    //   initialState,
+    // );
+    // console.log('CompanyLogoPageView-state--', JSON.stringify(state, null, ' '));
     const handleLaunchCamera = async () => {
         try {
           const result = await launchCamera(options);
@@ -43,10 +45,11 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageView> = ({}) => {
             if(assets && Array.isArray(assets) && assets.length > 0) {
                 const imageObj = assets[0];
                 setCompanyLogo(imageObj.uri as string);
-                dispatch({
-                  type: COMPANY_REGISTRATION_ACTION.COMPANY_LOGO,
-                  payload: imageObj.uri as string,
-                });
+                setCompanyLogo2(imageObj.uri as string);
+                // dispatch({
+                //   type: COMPANY_REGISTRATION_ACTION.COMPANY_LOGO,
+                //   payload: imageObj.uri as string,
+                // });
             }
           }
           console.log('Camera-result----', JSON.stringify(result));

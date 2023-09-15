@@ -8,6 +8,7 @@ import InvoiceTemplateView from './components/InvoiceTemplateView';
 import CarConditionTemplateView from './components/CarConditionTemplateView';
 import MoneyReceiptTemplateView from './components/MoneyReceiptTemplateView';
 import { COMPANY_REGISTRATION_ACTION, IDocumentTemplate, companyRegistrationReducer, initialState } from '../registrationReducer';
+import { useCompanyRegistrationContextHook } from '../../../provider/CompanyRegistrationContextProvider';
 
 interface ITemplateSettingPageView {
   //
@@ -15,12 +16,13 @@ interface ITemplateSettingPageView {
 
 const TemplateSettingPageView: React.FC<ITemplateSettingPageView> = ({}) => {
   const layout = useWindowDimensions();
-  const [state, dispatch] = useReducer(
-    companyRegistrationReducer,
-    initialState,
-  );
+  // const [state, dispatch] = useReducer(
+  //   companyRegistrationReducer,
+  //   initialState,
+  // );
+  const {state, setDocumentTemplates} = useCompanyRegistrationContextHook();
   const [index, setIndex] = React.useState(0);
-  console.log('state--------', JSON.stringify(state, null, ' '));
+  // console.log('state--------', JSON.stringify(state, null, ' '));
 
   const handleQuotationTemplateSelect = (planCategory: string, planIndex: number, planName: string) => {
     const { documentTemplates } = state;
@@ -28,10 +30,11 @@ const TemplateSettingPageView: React.FC<ITemplateSettingPageView> = ({}) => {
       ...documentTemplates,
       quotation: {planType: planCategory, templateId: planName}
     }
-    dispatch({
-      type: COMPANY_REGISTRATION_ACTION.DOCUMENT_TEMPLATES,
-      payload: tempObj as IDocumentTemplate
-    });
+    // dispatch({
+    //   type: COMPANY_REGISTRATION_ACTION.DOCUMENT_TEMPLATES,
+    //   payload: tempObj as IDocumentTemplate
+    // });
+    setDocumentTemplates(tempObj as IDocumentTemplate);
   }
 
   const handleBiltyTemplateSelect = (planCategory: string, planIndex: number, planName: string) => {
@@ -40,10 +43,11 @@ const TemplateSettingPageView: React.FC<ITemplateSettingPageView> = ({}) => {
       ...documentTemplates,
       bilty: {planType: planCategory, templateId: planName}
     }
-    dispatch({
-      type: COMPANY_REGISTRATION_ACTION.DOCUMENT_TEMPLATES,
-      payload: tempObj as IDocumentTemplate
-    });
+    // dispatch({
+    //   type: COMPANY_REGISTRATION_ACTION.DOCUMENT_TEMPLATES,
+    //   payload: tempObj as IDocumentTemplate
+    // });
+    setDocumentTemplates(tempObj as IDocumentTemplate);
   }
 
   const handleInvoiceTemplateSelect = (planCategory: string, planIndex: number, planName: string) => {
@@ -52,10 +56,11 @@ const TemplateSettingPageView: React.FC<ITemplateSettingPageView> = ({}) => {
       ...documentTemplates,
       invoice: {planType: planCategory, templateId: planName}
     }
-    dispatch({
-      type: COMPANY_REGISTRATION_ACTION.DOCUMENT_TEMPLATES,
-      payload: tempObj as IDocumentTemplate
-    });
+    // dispatch({
+    //   type: COMPANY_REGISTRATION_ACTION.DOCUMENT_TEMPLATES,
+    //   payload: tempObj as IDocumentTemplate
+    // });
+    setDocumentTemplates(tempObj as IDocumentTemplate);
   }
 
   const handleCarConditionTemplateSelect = (planCategory: string, planIndex: number, planName: string) => {
@@ -64,10 +69,11 @@ const TemplateSettingPageView: React.FC<ITemplateSettingPageView> = ({}) => {
       ...documentTemplates,
       car_condition: {planType: planCategory, templateId: planName}
     }
-    dispatch({
-      type: COMPANY_REGISTRATION_ACTION.DOCUMENT_TEMPLATES,
-      payload: tempObj as IDocumentTemplate
-    });
+    // dispatch({
+    //   type: COMPANY_REGISTRATION_ACTION.DOCUMENT_TEMPLATES,
+    //   payload: tempObj as IDocumentTemplate
+    // });
+    setDocumentTemplates(tempObj as IDocumentTemplate);
   }
 
   const handleMoneyReceiptTemplateSelect = (planCategory: string, planIndex: number, planName: string) => {
@@ -76,10 +82,11 @@ const TemplateSettingPageView: React.FC<ITemplateSettingPageView> = ({}) => {
       ...documentTemplates,
       money_receipt: {planType: planCategory, templateId: planName}
     }
-    dispatch({
-      type: COMPANY_REGISTRATION_ACTION.DOCUMENT_TEMPLATES,
-      payload: tempObj as IDocumentTemplate
-    });
+    // dispatch({
+    //   type: COMPANY_REGISTRATION_ACTION.DOCUMENT_TEMPLATES,
+    //   payload: tempObj as IDocumentTemplate
+    // });
+    setDocumentTemplates(tempObj as IDocumentTemplate);
   }
 
   const QuotationTemplateRoute = () => <QuotationTemplateView data={mockTemplateData2} onTemplateSelect={handleQuotationTemplateSelect} />;

@@ -19,7 +19,7 @@ const usePincodeHook = (setError: () => void, resetError: () => void) => {
     setPincode('');
   };
 
-  console.log('pincode---------', pincode);
+  // console.log('pincode---------', pincode);
   const getAddressByPincode = async () => {
     try {
       resetPincodeHookState();

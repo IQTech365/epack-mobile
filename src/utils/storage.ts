@@ -39,3 +39,27 @@ export const removeToken = async () => {
     console.log('AsyncStorage Error in removing auth-token', e);
   }
 };
+
+export const setIsRegistrationComplete = async () => {
+  try {
+    await AsyncStorage.setItem('registration', 'complete');
+  } catch (error) {
+    console.log('AsyncStorage Error in saving', error);
+  }
+};
+
+export const getIsRegistrationComplete = async () => {
+  try {
+    return await AsyncStorage.getItem('registration');
+  } catch (e) {
+    console.log('AsyncStorage Error in fetching registration', e);
+  }
+};
+
+export const removeIsRegistrationComplete = async () => {
+  try {
+    return await AsyncStorage.removeItem('registration');
+  } catch (e) {
+    console.log('AsyncStorage Error in removing registration', e);
+  }
+};

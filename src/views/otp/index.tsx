@@ -1,5 +1,5 @@
 import React, {useCallback, useState, useRef, useEffect} from 'react';
-import {View} from 'react-native';
+import {Alert, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import AvoidSoftInputViewHOC from '../../common/AvoidSoftInputViewHOC';
 import styles from './styles';
@@ -17,6 +17,7 @@ import {IOtpGetRequest} from '../../interface/otp/IOtpGetRequest';
 import {getOtpRequest, verifyOtpRequest} from '../../redux/slices/OtpSlice';
 import Header from '../../common/Header';
 import { IOtpVerifyRequest } from '../../interface/otp/IOtpVerifyRequest';
+import { getIsRegistrationComplete, setLoginStatus } from '../../utils/storage';
 
 const OTPPageView = (props: any) => {
   const {navigation} = props;
@@ -103,13 +104,21 @@ const OTPPageView = (props: any) => {
 
   const disabled = !otp1 || !otp2 || !otp3 || !otp4 || !otp5 || !otp6;
 
+  const checkRegistration = async () => {
+    const registrationComplete = await getIsRegistrationComplete();
+    if(registrationComplete == 'complete') {
+      setLoginStatus();
+    } else {
+      navigation.navigate(AuthStackRoute.RegisterCompany);
+    }
+  }
+
   useEffect(() => {
     if(!verifyOtpRequesting && verifyOtpSuccess) {
-      //TODO: set token in local storage and go to Home Screen
       console.log('verifiedData------', JSON.stringify(verifiedData));
-      
+      checkRegistration();
     } else if(!verifyOtpRequesting && verifyOtpFailure) {
-      //
+      Alert.alert('Otp verification failed');
     }
   }, [verifyOtpRequesting, verifyOtpSuccess, verifyOtpFailure]);
 
