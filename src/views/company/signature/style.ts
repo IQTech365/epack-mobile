@@ -1,10 +1,17 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import {COLOR_BLACK, COLOR_GRAY} from '../../../utils/colors';
+import {
+  COLOR_BLACK,
+  COLOR_BLUE,
+  COLOR_GRAY,
+  COLOR_WHITE,
+} from '../../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   signatureWrapper: {
     width: width * 0.95,
@@ -39,7 +46,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   button: {
     width: '48%',
@@ -67,8 +74,33 @@ const styles = StyleSheet.create({
   sign: {
     width: 200,
     height: 160,
-    resizeMode: 'contain'
-  }
+    resizeMode: 'contain',
+  },
+  contentContainer: {
+    flex: 0.9,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonContainer: {
+    flex: 0.1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  prevButtonContainer: {
+    width: '50%',
+  },
+  nextButtonContainer: {
+    width: '50%',
+  },
+  buttonStyle2: {
+    backgroundColor: COLOR_BLUE,
+    width: '80%',
+    alignSelf: 'center',
+  },
+  buttonTextStyle: {
+    color: COLOR_WHITE,
+  },
 });
 
 export default styles;

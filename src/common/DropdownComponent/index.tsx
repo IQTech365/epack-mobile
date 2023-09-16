@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View} from 'react-native';
+import {Text, View} from 'react-native';
 import {Dropdown} from 'react-native-element-dropdown';
 import {TDropdownItem} from '../../type/TDropdownItem';
 import { COLOR_BLUE } from '../../utils/colors';
@@ -10,9 +10,10 @@ interface IDropdownProps {
   defaultValue?: TDropdownItem;
   showSearchInput?:boolean;
   disable?: boolean;
+  error?: string;
 }
 
-const DropdownComponent: React.FC<IDropdownProps> = ({data, onSelect, defaultValue, showSearchInput = false, disable = false}) => {
+const DropdownComponent: React.FC<IDropdownProps> = ({data, onSelect, defaultValue, showSearchInput = false, disable = false, error}) => {
   const [value, setValue] = useState<TDropdownItem>(data[0]);
   const [isFocus, setIsFocus] = useState<boolean>(false);
 
@@ -22,10 +23,12 @@ const DropdownComponent: React.FC<IDropdownProps> = ({data, onSelect, defaultVal
     }
   }, []);
 
+  const errorBorderColor = error ? {borderColor: 'red', borderWidth: 1} : null;
+
   return (
     <View style={styles.container}>
       <Dropdown
-        style={[styles.dropdown, isFocus && {borderColor: COLOR_BLUE}]}
+        style={[styles.dropdown, isFocus && {borderColor: COLOR_BLUE, borderWidth: 1}, errorBorderColor]}
         placeholderStyle={styles.placeholderStyle}
         selectedTextStyle={styles.selectedTextStyle}
         inputSearchStyle={styles.inputSearchStyle}
@@ -47,6 +50,7 @@ const DropdownComponent: React.FC<IDropdownProps> = ({data, onSelect, defaultVal
         }}
         disable={disable}
       />
+      {error && <View style={styles.errorContainer}><Text style={styles.errorText}>{error}</Text></View>}
     </View>
   );
 };

@@ -1,10 +1,10 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import { COLOR_GRAY, COLOR_GRAY2 } from '../../../utils/colors';
+import { COLOR_BLUE, COLOR_GRAY, COLOR_GRAY2, COLOR_WHITE } from '../../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     container: {
-        height: '80%',
+        flex: 1,
         alignItems: 'center'
     },
     labelContainer: {
@@ -32,26 +32,32 @@ const styles = StyleSheet.create({
       tabsContainer: {
         width: width,
         height: 40,
-      }
-      // rowContainer: {
-      //   width: width * 0.9,
-      //   flexDirection: 'row',
-      //   alignSelf: 'center',
-      //   alignItems: 'center',
-      //   justifyContent: 'space-between'
-      // },
-      // elementContainer: {
-      //   width: '48%'
-      // },
-      // inputStyle: {
-      //   width: '100%',
-      //   borderWidth: 1,
-      //   borderColor: COLOR_GRAY2,
-      // },
-      // buttonStyle: {
-      //   width: '100%',
-      //   backgroundColor: COLOR_GRAY2,
-      // }
+      },
+      contentContainer: {
+        flex: 0.9,
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      buttonContainer: {
+        flex: 0.1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      },
+      prevButtonContainer: {
+        width: '50%',
+      },
+      nextButtonContainer: {
+        width: '50%',
+      },
+      buttonStyle2: {
+        backgroundColor: COLOR_BLUE,
+        width: '80%',
+        alignSelf: 'center',
+      },
+      buttonTextStyle: {
+        color: COLOR_WHITE,
+      },
 });
 
 export default styles;

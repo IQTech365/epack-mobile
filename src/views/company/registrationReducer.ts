@@ -162,7 +162,7 @@ export const companyRegistrationReducer: Reducer<
     case COMPANY_REGISTRATION_ACTION.EMAIL:
       return {...state, email: payload as string};
     case COMPANY_REGISTRATION_ACTION.MOBILE:
-      return {...state, email: payload as string};
+      return {...state, mobile: payload as string};
     case COMPANY_REGISTRATION_ACTION.PIN_CODE:
       return {...state, pinCode: payload as string};
     case COMPANY_REGISTRATION_ACTION.CITY:

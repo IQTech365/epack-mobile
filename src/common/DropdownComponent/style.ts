@@ -1,5 +1,6 @@
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Dimensions} from 'react-native';
 import { COLOR_GRAY2 } from '../../utils/colors';
+const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -40,6 +41,16 @@ const styles = StyleSheet.create({
     height: 40,
     fontSize: 16,
   },
+  errorContainer: {
+    width: width * 0.9,
+    alignSelf: 'center',
+    textAlign: 'left',
+    marginTop: 5,
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+  }
 });
 
 export default styles;

@@ -11,12 +11,25 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         paddingHorizontal: 8,
     },
+    errorBorderColor: {
+        borderColor: 'red',
+    },
     contentContainer: {
         width: '100%',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-    }
+    },
+    errorContainer: {
+        width: width * 0.9,
+        alignSelf: 'center',
+        textAlign: 'left',
+        marginTop: 5,
+      },
+      errorText: {
+        color: 'red',
+        fontSize: 12,
+      }
 });
 
 export default styles;

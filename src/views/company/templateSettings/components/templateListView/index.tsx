@@ -3,8 +3,6 @@ import {View, Text, ScrollView} from 'react-native';
 import styles from './style';
 import TemplateCard, {ITemplate} from '../templateCard';
 
-
-
 export interface ITemplateListData {
   title: string;
   data: ITemplate[];
@@ -12,19 +10,30 @@ export interface ITemplateListData {
 
 interface ITemplateListViewProps2 {
   data: ITemplateListData[];
-  onTemplateSelect: (planCategory: string, plan: number, planName: string) => void;
+  onTemplateSelect: (
+    planCategory: string,
+    plan: number,
+    planName: string,
+  ) => void;
 }
 
-const TemplateListView: React.FC<ITemplateListViewProps2> = ({data, onTemplateSelect}) => {
+const TemplateListView: React.FC<ITemplateListViewProps2> = ({
+  data,
+  onTemplateSelect,
+}) => {
   const [currentTemplateIndex, setCurrentTemplateIndex] = useState<number>(-1);
   const [currentParentIndex, setCurrentParentIndex] = useState<number>(-1);
 
-  const handleIndexChange = (index: number, parentIndex: number, planName: string) => {
+  const handleIndexChange = (
+    index: number,
+    parentIndex: number,
+    planName: string,
+  ) => {
     const planCategory = data.find((_, index) => index == parentIndex);
     setCurrentTemplateIndex(index);
     setCurrentParentIndex(parentIndex);
     onTemplateSelect(planCategory?.title as string, index, planName);
-  }
+  };
 
   return (
     <ScrollView>
@@ -38,6 +47,7 @@ const TemplateListView: React.FC<ITemplateListViewProps2> = ({data, onTemplateSe
               {ele.data.map((temp, idx) => {
                 return (
                   <TemplateCard
+                    key={idx}
                     data={temp}
                     index={idx}
                     onPress={handleIndexChange}

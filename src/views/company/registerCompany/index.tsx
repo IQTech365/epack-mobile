@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useReducer, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {View, Text} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../common/Spacer';
@@ -9,11 +9,6 @@ import DropdownComponent from '../../../common/DropdownComponent';
 import Input from '../../../common/Input';
 import {COLOR_BLACK, COLOR_BLUE} from '../../../utils/colors';
 import companyTypeOptions from '../../../data/companyType.json';
-import {
-  COMPANY_REGISTRATION_ACTION,
-  companyRegistrationReducer,
-  initialState,
-} from '../registrationReducer';
 import {formatDate, getCities, getStates} from '../../../utils/formatter';
 import DatePickerComponent from '../../../common/DatePickerComponent';
 import BouncyCheckboxGroup, {
@@ -84,6 +79,22 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
     setCompanyType: setCompanyType2,
     setDocument,
     setCompanyNameError,
+    setContactPersonError,
+    setMobileError,
+    setEmailError,
+    setPincodeError: setPincodeError2,
+    setStateError,
+    setCityError,
+    setIbaApprovalCodeError,
+    setIbaApprovalTillDateError,
+    setAddressError,
+    setCompanyTypeError,
+    setDocumentError,
+    setCompanyLogoError,
+    setOwnerSignatureError,
+    setShiftingLuggageError,
+    setDocumentSerialNumberError,
+    setDocumentTemplatesError,
   } = useCompanyRegistrationContextHook();
   const [ibaApproval, setIbaApproval] = useState<boolean>(false);
   const [companyType, setCompanyType] = useState<string>('1');
@@ -161,22 +172,90 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
   }, []);
 
   const validateRegistrationForm = () => {
-    console.log(
-      'Validator.isEmpty(companyName)---',
-      Validator.isEmpty(state.companyName),
-    );
-
     if (Validator.isEmpty(state.companyName)) {
       setCompanyNameError('Company name required');
     } else {
       setCompanyNameError('');
     }
+
+    if (Validator.isEmpty(state.contactPerson)) {
+      setContactPersonError('Contact person name required');
+    } else {
+      setContactPersonError('');
+    }
+
+    if (Validator.isEmpty(state.mobile)) {
+      setMobileError('Mobile name required');
+    } else {
+      setMobileError('');
+    }
+
+    if (Validator.isEmpty(state.email)) {
+      setEmailError('Email name required');
+    } else {
+      setEmailError('');
+    }
+
+    if (Validator.isEmpty(state.pinCode)) {
+      setPincodeError2('Pincode required');
+    } else {
+      setPincodeError2('');
+    }
+
+    if (Validator.isEmpty(state.state)) {
+      setStateError('State required');
+    } else {
+      setStateError('');
+    }
+
+    if (Validator.isEmpty(state.city)) {
+      setCityError('City required');
+    } else {
+      setCityError('');
+    }
+
+    if (Validator.isEmpty(state.address)) {
+      setAddressError('Address required');
+    } else {
+      setAddressError('');
+    }
+
+    if (Validator.isEmpty(state.ibaApprovalCode)) {
+      setIbaApprovalCodeError('IBA Approval code required');
+    } else {
+      setIbaApprovalCodeError('');
+    }
+
+    if (Validator.isEmpty(state.ibaApprovalValidTill)) {
+      setIbaApprovalTillDateError('IBA Approval Date required');
+    } else {
+      setIbaApprovalTillDateError('');
+    }
+
+    if (Validator.isEmpty(state.companyType)) {
+      setCompanyTypeError('Company Type required');
+    } else {
+      setCompanyTypeError('');
+    }
+
+    if (Validator.isEmpty(state.document)) {
+      setDocumentError('Document required');
+    } else {
+      setDocumentError('');
+    }
+    const errorValues = Object.values(state.errors);
+    console.log('errorValues----', JSON.stringify(errorValues));
+    return errorValues.some(ev => !Validator.isEmpty(ev));
+    
   };
 
   const handleNextClick = useCallback(() => {
     if (currentStep >= 1 && currentStep < 5) {
-      validateRegistrationForm();
-      setCurrentStep(currentStep + 1);
+      const hasErrors = validateRegistrationForm();
+      console.log('hasErrors------', hasErrors);
+      if(!hasErrors) {
+        setCurrentStep(currentStep + 1);
+      }
     }
   }, []);
 
@@ -271,6 +350,7 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
                 <DropdownComponent
                   data={states}
                   onSelect={handleStateSelectChange}
+                  error={state.errors.state}
                 />
               </View>
               <View style={styles.elementContainer}>
@@ -278,6 +358,7 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
                 <DropdownComponent
                   data={cities}
                   onSelect={handleCitySelectChange}
+                  error={state.errors.city}
                 />
               </View>
               <Spacer height={4} />
@@ -329,6 +410,7 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
                     <DatePickerComponent
                       onDateSelect={handleIbaCodeValidTillDate}
                       style={{width: '100%'}}
+                      error={state.errors.ibaApprovalValidTill}
                     />
                   </View>
                 </>
@@ -339,6 +421,7 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
                 <DropdownComponent
                   data={companyTypeOptions}
                   onSelect={handleCompanyTypeSelectChange}
+                  error={state.errors.companyType}
                 />
               </View>
               <Spacer height={4} />

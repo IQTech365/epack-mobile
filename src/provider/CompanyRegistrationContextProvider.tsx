@@ -34,7 +34,7 @@ const useCompanyRegistrationContext = () => {
         type: COMPANY_REGISTRATION_ACTION.CONTACT_PERSON,
         payload: text,
       }),
-    [],
+    [state.contactPerson],
   );
 
   const setMobile = useCallback(
@@ -43,7 +43,7 @@ const useCompanyRegistrationContext = () => {
         type: COMPANY_REGISTRATION_ACTION.MOBILE,
         payload: text,
       }),
-    [],
+    [state.mobile],
   );
 
   const setEmail = useCallback(
@@ -52,7 +52,7 @@ const useCompanyRegistrationContext = () => {
         type: COMPANY_REGISTRATION_ACTION.EMAIL,
         payload: text,
       }),
-    [],
+    [state.email],
   );
 
   const setPincode = useCallback(
@@ -61,7 +61,7 @@ const useCompanyRegistrationContext = () => {
         type: COMPANY_REGISTRATION_ACTION.PIN_CODE,
         payload: text,
       }),
-    [],
+    [state.pinCode],
   );
 
   const setState = useCallback(
@@ -70,7 +70,7 @@ const useCompanyRegistrationContext = () => {
         type: COMPANY_REGISTRATION_ACTION.STATE,
         payload: text,
       }),
-    [],
+    [state.state],
   );
 
   const setCity = useCallback(
@@ -79,7 +79,7 @@ const useCompanyRegistrationContext = () => {
         type: COMPANY_REGISTRATION_ACTION.CITY,
         payload: text,
       }),
-    [],
+    [state.city],
   );
 
   const setAddress = useCallback(
@@ -88,7 +88,7 @@ const useCompanyRegistrationContext = () => {
         type: COMPANY_REGISTRATION_ACTION.ADDRESS,
         payload: text,
       }),
-    [],
+    [state.address],
   );
 
   const setIbaApprovalCode = useCallback(
@@ -97,7 +97,7 @@ const useCompanyRegistrationContext = () => {
         type: COMPANY_REGISTRATION_ACTION.IBA_APPROVAL_CODE,
         payload: text,
       }),
-    [],
+    [state.ibaApprovalCode],
   );
 
   const setIbaApprovalTillDate = useCallback(
@@ -106,7 +106,7 @@ const useCompanyRegistrationContext = () => {
         type: COMPANY_REGISTRATION_ACTION.IBA_CODE_VALID_TILL,
         payload: text,
       }),
-    [],
+    [state.ibaApprovalValidTill],
   );
 
   const setCompanyType = useCallback(
@@ -115,7 +115,7 @@ const useCompanyRegistrationContext = () => {
         type: COMPANY_REGISTRATION_ACTION.COMPANY_TYPE,
         payload: text,
       }),
-    [],
+    [state.companyType],
   );
 
   const setDocument = useCallback(
@@ -124,7 +124,7 @@ const useCompanyRegistrationContext = () => {
         type: COMPANY_REGISTRATION_ACTION.DOCUMENT,
         payload: text,
       }),
-    [],
+    [state.document],
   );
 
   const setCompanyLogo = useCallback(
@@ -133,7 +133,7 @@ const useCompanyRegistrationContext = () => {
         type: COMPANY_REGISTRATION_ACTION.COMPANY_LOGO,
         payload: text,
       }),
-    [],
+    [state.companyLogo],
   );
 
   const setOwnerSignature = useCallback(
@@ -142,7 +142,7 @@ const useCompanyRegistrationContext = () => {
         type: COMPANY_REGISTRATION_ACTION.OWNER_SIGNATURE,
         payload: text,
       }),
-    [],
+    [state.ownerSignature],
   );
 
   const setShiftingLuggage = useCallback(
@@ -151,7 +151,7 @@ const useCompanyRegistrationContext = () => {
         type: COMPANY_REGISTRATION_ACTION.SHIFTING_LUGGAGE,
         payload: text,
       }),
-    [],
+    [state.shiftingLuggage],
   );
 
   const setDocumentSerialNumber = useCallback(
@@ -160,7 +160,7 @@ const useCompanyRegistrationContext = () => {
         type: COMPANY_REGISTRATION_ACTION.DOCUMENT_SERIAL_NUMBERS,
         payload: document as IDocumentSerialNo,
       }),
-    [],
+    [state.documentSerialNumbers],
   );
 
   const setDocumentTemplates = useCallback(
@@ -169,7 +169,7 @@ const useCompanyRegistrationContext = () => {
         type: COMPANY_REGISTRATION_ACTION.DOCUMENT_TEMPLATES,
         payload: document as IDocumentTemplate,
       }),
-    [],
+    [state.documentTemplates],
   );
 
   // Errors
@@ -179,7 +179,7 @@ const useCompanyRegistrationContext = () => {
         type: COMPANY_REGISTRATION_ACTION.COMPANY_NAME_ERROR,
         payload: text,
       }),
-    [],
+    [state.errors.companyName],
   );
 
   const setContactPersonError = useCallback(
@@ -188,7 +188,7 @@ const useCompanyRegistrationContext = () => {
         type: COMPANY_REGISTRATION_ACTION.CONTACT_PERSON_ERROR,
         payload: text,
       }),
-    [],
+    [state.errors.contactPerson],
   );
 
   const setMobileError = useCallback(
@@ -197,7 +197,7 @@ const useCompanyRegistrationContext = () => {
         type: COMPANY_REGISTRATION_ACTION.MOBILE_ERROR,
         payload: text,
       }),
-    [],
+    [state.errors.mobile],
   );
 
   const setEmailError = useCallback(
@@ -206,7 +206,7 @@ const useCompanyRegistrationContext = () => {
         type: COMPANY_REGISTRATION_ACTION.EMAIL_ERROR,
         payload: text,
       }),
-    [],
+    [state.errors.email],
   );
 
   const setPincodeError = useCallback(
@@ -215,7 +215,7 @@ const useCompanyRegistrationContext = () => {
         type: COMPANY_REGISTRATION_ACTION.PINCODE_ERROR,
         payload: text,
       }),
-    [],
+    [state.errors.pinCode],
   );
 
   const setStateError = useCallback(
@@ -224,7 +224,7 @@ const useCompanyRegistrationContext = () => {
         type: COMPANY_REGISTRATION_ACTION.STATE_ERROR,
         payload: text,
       }),
-    [],
+    [state.errors.state],
   );
 
   const setCityError = useCallback(
@@ -233,7 +233,7 @@ const useCompanyRegistrationContext = () => {
         type: COMPANY_REGISTRATION_ACTION.CITY_ERROR,
         payload: text,
       }),
-    [],
+    [state.errors.city],
   );
 
   const setAddressError = useCallback(
@@ -242,7 +242,7 @@ const useCompanyRegistrationContext = () => {
         type: COMPANY_REGISTRATION_ACTION.ADDRESS_ERROR,
         payload: text,
       }),
-    [],
+    [state.errors.address],
   );
 
   const setIbaApprovalCodeError = useCallback(
@@ -251,7 +251,7 @@ const useCompanyRegistrationContext = () => {
         type: COMPANY_REGISTRATION_ACTION.IBA_APPROVAL_CODE_ERROR,
         payload: text,
       }),
-    [],
+    [state.errors.ibaApprovalCode],
   );
 
   const setIbaApprovalTillDateError = useCallback(
@@ -260,7 +260,7 @@ const useCompanyRegistrationContext = () => {
         type: COMPANY_REGISTRATION_ACTION.IBA_CODE_VALID_TILL_ERROR,
         payload: text,
       }),
-    [],
+    [state.errors.ibaApprovalValidTill],
   );
 
   const setCompanyTypeError = useCallback(
@@ -269,7 +269,7 @@ const useCompanyRegistrationContext = () => {
         type: COMPANY_REGISTRATION_ACTION.COMPANY_TYPE_ERROR,
         payload: text,
       }),
-    [],
+    [state.errors.companyType],
   );
 
   const setDocumentError = useCallback(
@@ -278,7 +278,7 @@ const useCompanyRegistrationContext = () => {
         type: COMPANY_REGISTRATION_ACTION.DOCUMENT_ERROR,
         payload: text,
       }),
-    [],
+    [state.errors.document],
   );
 
   const setCompanyLogoError = useCallback(
@@ -287,7 +287,7 @@ const useCompanyRegistrationContext = () => {
         type: COMPANY_REGISTRATION_ACTION.COMPANY_LOGO_ERROR,
         payload: text,
       }),
-    [],
+    [state.errors.companyLogo],
   );
 
   const setOwnerSignatureError = useCallback(
@@ -296,7 +296,7 @@ const useCompanyRegistrationContext = () => {
         type: COMPANY_REGISTRATION_ACTION.OWNER_SIGNATURE_ERROR,
         payload: text,
       }),
-    [],
+    [state.errors.ownerSignature],
   );
 
   const setShiftingLuggageError = useCallback(
@@ -305,7 +305,7 @@ const useCompanyRegistrationContext = () => {
         type: COMPANY_REGISTRATION_ACTION.SHIFTING_LUGGAGE_ERROR,
         payload: text,
       }),
-    [],
+    [state.errors.shiftingLuggage],
   );
 
   const setDocumentSerialNumberError = useCallback(
@@ -314,7 +314,7 @@ const useCompanyRegistrationContext = () => {
         type: COMPANY_REGISTRATION_ACTION.DOCUMENT_SERIAL_NUMBERS_ERROR,
         payload: text,
       }),
-    [],
+    [state.errors.documentSerialNumbers],
   );
 
   const setDocumentTemplatesError = useCallback(
@@ -323,7 +323,7 @@ const useCompanyRegistrationContext = () => {
         type: COMPANY_REGISTRATION_ACTION.DOCUMENT_TEMPLATES_ERROR,
         payload: text,
       }),
-    [],
+    [state.errors.documentTemplates],
   );
 
   return {
