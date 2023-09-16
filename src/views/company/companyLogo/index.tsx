@@ -74,13 +74,13 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
       // validateRegistrationForm();
       setCurrentStep(currentStep + 1);
     }
-  }, []);
+  }, [state]);
 
   const handlePreviousClick = useCallback(() => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
     }
-  }, []);
+  }, [state]);
 
   return (
     <View style={styles.container}>

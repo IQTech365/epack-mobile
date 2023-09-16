@@ -27,6 +27,7 @@ export function* getOtpSaga(action: PayloadAction<IOtpGetRequest>) {
 }
 
 export function* verifyOtpSaga(action: PayloadAction<IOtpVerifyRequest>) {
+    console.log('verifyOtpSaga--action--', JSON.stringify(action));
     try {
         const response: IOtpVerifyResponse = yield call(OtpService.VerifyOtpService, action.payload);
         console.log('verifyOtpSaga-response----', JSON.stringify(response));

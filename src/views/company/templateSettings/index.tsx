@@ -11,10 +11,14 @@ import {IDocumentTemplate} from '../registrationReducer';
 import {useCompanyRegistrationContextHook} from '../../../provider/CompanyRegistrationContextProvider';
 import styles from './style';
 import Button from '../../../common/Button';
-import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
-import { setIsRegistrationComplete, setLoginStatus } from '../../../utils/storage';
-import { ICompanyRegistrationRequest } from '../../../interface/companyRegistration/ICompanyRegistrationRequest';
-
+import {useAppDispatch, useAppSelector} from '../../../redux/hooks';
+import {
+  setIsRegistrationComplete,
+  setLoginStatus,
+} from '../../../utils/storage';
+import {ICompanyRegistrationRequest} from '../../../interface/companyRegistration/ICompanyRegistrationRequest';
+import {addCompanyRequest} from '../../../redux/slices/CompanySlice';
+import Spinner from '../../../common/Spinner';
 
 interface ITemplateSettingPageViewProps {
   currentStep: number;
@@ -29,7 +33,17 @@ const TemplateSettingPageView: React.FC<ITemplateSettingPageViewProps> = ({
   const {state, setDocumentTemplates} = useCompanyRegistrationContextHook();
   const [index, setIndex] = React.useState(0);
   const dispatch = useAppDispatch();
-  const {requesting, success, error, failure, companyInfo} = useAppSelector(state => state.Company);
+  const {requesting, success, error, failure, companyInfo} = useAppSelector(
+    state => state.Company,
+  );
+  const {
+    // verifyOtpRequesting,
+    // verifyOtpSuccess,
+    // verifyOtpError,
+    // verifyOtpFailure,
+    // verifiedData,
+    otpData,
+  } = useAppSelector(state => state.OTP);
 
   const handleQuotationTemplateSelect = (
     planCategory: string,
@@ -147,7 +161,7 @@ const TemplateSettingPageView: React.FC<ITemplateSettingPageViewProps> = ({
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
     }
-  }, []);
+  }, [state]);
 
   const completeRegistration = async () => {
     await setIsRegistrationComplete();
@@ -164,65 +178,71 @@ const TemplateSettingPageView: React.FC<ITemplateSettingPageViewProps> = ({
 
   const handleSaveClick = useCallback(() => {
     const data: ICompanyRegistrationRequest = {
-        authId: '',
-        companyName: state.companyName,
-        contactPerson: state.contactPerson,
-        email: state.email,
-        companyMobile: state.mobile,
-        companyAddress: state.address,
-        state: state.state,
-        city: state.city,
-        pincode: state.pinCode,
-        iba_approval_code: state.ibaApprovalCode,
-        iba_valid_date: state.ibaApprovalValidTill,
-        companyWebite: 'www.abc.com',
-        CINNumber: state.document,
-        companyLogo: state.companyLogo,
-        punchLine: 'na',
-        companyProfile: '',
-        district: '',
-        postOffice: '',
-        govRegdDetails: null,
-        accountDetails: [],
-        packerSignature: state.ownerSignature,
-        termsconditions: 'NA',
-      };
-      console.log('data----------', JSON.stringify(data), null, ' ');
-  }, []);
+      authId: otpData?.data.id as string,
+      companyName: state.companyName,
+      contactPerson: state.contactPerson,
+      email: state.email,
+      companyMobile: state.mobile,
+      companyAddress: state.address,
+      state: state.state,
+      city: state.city,
+      pincode: state.pinCode,
+      iba_approval_code: state.ibaApprovalCode,
+      iba_valid_date: state.ibaApprovalValidTill,
+      companyWebite: 'www.abc.com',
+      CINNumber: state.document,
+      companyLogo: state.companyLogo,
+      punchLine: 'na',
+      companyProfile: '',
+      district: '',
+      postOffice: '',
+      govRegdDetails: null,
+      accountDetails: [],
+      packerSignature: state.ownerSignature,
+      termsconditions: 'NA',
+    };
+    console.log('data----------', JSON.stringify(data), null, ' ');
+    dispatch(addCompanyRequest(data));
+  }, [state]);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.contentContainer}>
-        <TabView
-          navigationState={{index, routes}}
-          renderScene={renderScene}
-          onIndexChange={setIndex}
-          initialLayout={{width: layout.width}}
-          overScrollMode="always"
-          renderTabBar={props => <TabBar {...props} scrollEnabled={true} style={{height: 44}} />}
-        />
-      </View>
-      <View style={styles.buttonContainer}>
-        <View style={styles.prevButtonContainer}>
-          {currentStep > 1 ? (
+    <>
+      <View style={styles.container}>
+        <View style={styles.contentContainer}>
+          <TabView
+            navigationState={{index, routes}}
+            renderScene={renderScene}
+            onIndexChange={setIndex}
+            initialLayout={{width: layout.width}}
+            overScrollMode="always"
+            renderTabBar={props => (
+              <TabBar {...props} scrollEnabled={true} style={{height: 44}} />
+            )}
+          />
+        </View>
+        <View style={styles.buttonContainer}>
+          <View style={styles.prevButtonContainer}>
+            {currentStep > 1 ? (
+              <Button
+                text="Previous"
+                onPress={handlePreviousClick}
+                style={styles.buttonStyle2}
+                textStyle={styles.buttonTextStyle}
+              />
+            ) : null}
+          </View>
+          <View style={styles.nextButtonContainer}>
             <Button
-              text="Previous"
-              onPress={handlePreviousClick}
+              text={'Save'}
+              onPress={handleSaveClick}
               style={styles.buttonStyle2}
               textStyle={styles.buttonTextStyle}
             />
-          ) : null}
-        </View>
-        <View style={styles.nextButtonContainer}>
-          <Button
-            text={'Save'}
-            onPress={handleSaveClick}
-            style={styles.buttonStyle2}
-            textStyle={styles.buttonTextStyle}
-          />
+          </View>
         </View>
       </View>
-    </View>
+      <Spinner show={requesting} />
+    </>
   );
 };
 

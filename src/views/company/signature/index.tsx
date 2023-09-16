@@ -1,4 +1,4 @@
-import React, {useCallback, useReducer, useRef, useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -18,13 +18,10 @@ import {
   MediaType,
   PhotoQuality,
 } from 'react-native-image-picker';
-import {
-  COMPANY_REGISTRATION_ACTION,
-  companyRegistrationReducer,
-  initialState,
-} from '../registrationReducer';
 import {useCompanyRegistrationContextHook} from '../../../provider/CompanyRegistrationContextProvider';
 import Button from '../../../common/Button';
+import Alert, {STATUS_CODE} from '../../../common/Alert';
+import { Validator } from '../../../utils/validation';
 
 interface IOptions {
   mediaType: MediaType;
@@ -54,18 +51,12 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
   const {state, setOwnerSignature} = useCompanyRegistrationContextHook();
   const [signatureUri, setSignatureUri] = useState<any>(state.ownerSignature);
   const [isBase64Image, setIsBase64Image] = useState<boolean>(false);
+  const [showSignatureRequiredAlert, setShowSignatureRequiredAlert] = useState<boolean>(false);
   const signatureRef = useRef();
-  // const [state, dispatch] = useReducer(
-  //   companyRegistrationReducer,
-  //   initialState,
-  // );
+
   const _onSaveEvent = (result: any) => {
     console.log(result);
     setSignatureUri(result?.encoded);
-    // dispatch({
-    //   type: COMPANY_REGISTRATION_ACTION.OWNER_SIGNATURE,
-    //   payload: result?.encoded as string,
-    // });
     setOwnerSignature(result?.encoded as string);
   };
 
@@ -82,10 +73,6 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
   const resetSign = () => {
     setIsBase64Image(false);
     setSignatureUri('');
-    // dispatch({
-    //   type: COMPANY_REGISTRATION_ACTION.OWNER_SIGNATURE,
-    //   payload: '' as string,
-    // });
     setOwnerSignature('' as string);
     //@ts-ignore
     signatureRef.current?.resetImage();
@@ -100,10 +87,6 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
         if (assets && Array.isArray(assets) && assets.length > 0) {
           const imageObj = assets[0];
           setSignatureUri(imageObj.uri as string);
-          // dispatch({
-          //   type: COMPANY_REGISTRATION_ACTION.OWNER_SIGNATURE,
-          //   payload: imageObj.uri as string,
-          // });
           setOwnerSignature(imageObj.uri as string);
         }
       }
@@ -127,87 +110,98 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
     }
-  }, []);
+  }, [state]);
 
   const handleNextClick = useCallback(() => {
     if (currentStep >= 1 && currentStep < 5) {
-      // validateRegistrationForm();
-      setCurrentStep(currentStep + 1);
+      if(Validator.isEmpty(state.ownerSignature)) {
+        setShowSignatureRequiredAlert(true);
+      } else {
+        setShowSignatureRequiredAlert(false);
+        setCurrentStep(currentStep + 1);
+      }
     }
-  }, []);
+  }, [state]);
+
+  const handleAlertPress = () => {
+    setShowSignatureRequiredAlert(false);
+  }
 
   const signature = isBase64Image
     ? {uri: `data:image/png;base64,${signatureUri}`}
     : {uri: signatureUri};
 
   return (
-    <View style={style.container}>
-      <View style={style.contentContainer}>
-        <View style={{flex: 1, flexDirection: 'column'}}>
-          <Text style={style.titleText}>
-            Sign below or take your signature photo from Camera or Gallery.
-          </Text>
-          <Spacer />
-          <View style={style.signatureWrapper}>
-            <SignatureCapture
-              style={style.signature}
-              ref={signatureRef}
-              onSaveEvent={_onSaveEvent}
-              onDragEvent={_onDragEvent}
-              saveImageFileInExtStorage={false}
-              showNativeButtons={false}
-              showTitleLabel={false}
-              backgroundColor="#ffffff"
-              strokeColor="#000000"
-              minStrokeWidth={4}
-              maxStrokeWidth={4}
-              viewMode={'portrait'}
-            />
-          </View>
-          <Spacer />
-          <View style={style.rowContainer}>
-            <TouchableOpacity style={style.button} onPress={handleLaunchCamera}>
-              <Text style={style.text}>Camera</Text>
-              <Spacer width={10} />
-              <CameraIcon width={30} height={30} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={style.button}
-              onPress={handleLaunchGallery}>
-              <Text style={style.text}>Gallery</Text>
-              <Spacer width={10} />
-              <GalleryIcon width={30} height={30} />
-            </TouchableOpacity>
-          </View>
-          <Spacer />
-          <View style={{flexDirection: 'row'}}>
-            <TouchableHighlight
-              style={style.buttonStyle}
-              onPress={() => {
-                saveSign();
-              }}>
-              <Text>Save</Text>
-            </TouchableHighlight>
+    <>
+      <View style={style.container}>
+        <View style={style.contentContainer}>
+          <View style={{flex: 1, flexDirection: 'column'}}>
+            <Text style={style.titleText}>
+              Sign below or take your signature photo from Camera or Gallery.
+            </Text>
+            <Spacer />
+            <View style={style.signatureWrapper}>
+              <SignatureCapture
+                style={style.signature}
+                ref={signatureRef}
+                onSaveEvent={_onSaveEvent}
+                onDragEvent={_onDragEvent}
+                saveImageFileInExtStorage={false}
+                showNativeButtons={false}
+                showTitleLabel={false}
+                backgroundColor="#ffffff"
+                strokeColor="#000000"
+                minStrokeWidth={4}
+                maxStrokeWidth={4}
+                viewMode={'portrait'}
+              />
+            </View>
+            <Spacer />
+            <View style={style.rowContainer}>
+              <TouchableOpacity
+                style={style.button}
+                onPress={handleLaunchCamera}>
+                <Text style={style.text}>Camera</Text>
+                <Spacer width={10} />
+                <CameraIcon width={30} height={30} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={style.button}
+                onPress={handleLaunchGallery}>
+                <Text style={style.text}>Gallery</Text>
+                <Spacer width={10} />
+                <GalleryIcon width={30} height={30} />
+              </TouchableOpacity>
+            </View>
+            <Spacer />
+            <View style={{flexDirection: 'row'}}>
+              <TouchableHighlight
+                style={style.buttonStyle}
+                onPress={() => {
+                  saveSign();
+                }}>
+                <Text>Save</Text>
+              </TouchableHighlight>
 
-            <TouchableHighlight
-              style={style.buttonStyle}
-              onPress={() => {
-                resetSign();
-              }}>
-              <Text>Reset</Text>
-            </TouchableHighlight>
-          </View>
-          <Spacer />
-          <View style={style.signatureImageContainer}>
-            {signature.uri ? (
-              <Image source={signature} style={style.sign} />
-            ) : (
-              <Text>Signature Preview</Text>
-            )}
+              <TouchableHighlight
+                style={style.buttonStyle}
+                onPress={() => {
+                  resetSign();
+                }}>
+                <Text>Reset</Text>
+              </TouchableHighlight>
+            </View>
+            <Spacer />
+            <View style={style.signatureImageContainer}>
+              {signature.uri ? (
+                <Image source={signature} style={style.sign} />
+              ) : (
+                <Text>Signature Preview</Text>
+              )}
+            </View>
           </View>
         </View>
-      </View>
-      <View style={style.buttonContainer}>
+        <View style={style.buttonContainer}>
           <View style={style.prevButtonContainer}>
             {currentStep > 1 ? (
               <Button
@@ -227,7 +221,14 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
             />
           </View>
         </View>
-    </View>
+      </View>
+      {showSignatureRequiredAlert ? <Alert
+        variant={STATUS_CODE.ERROR}
+        message="Please provide your signature"
+        onPress={handleAlertPress}
+        visible={showSignatureRequiredAlert}
+      /> : null}
+    </>
   );
 };
 
