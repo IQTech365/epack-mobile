@@ -1,3 +1,27 @@
 export interface ICreateCarConditionRequest {
-    //
+  companyId: string;
+  orderId: string;
+  templateId: string;
+  carConditionNumber: string;
+  dateOfCarCondition: string;
+  vehicleType: string;
+  manufacturer: string;
+  model: string;
+  yearOfManufacturing: string;
+  color: string;
+  vehicleRegistrationNumber: string;
+  vehicleCoveredDistanceInKM: string;
+  vehicleValue: string;
+  insurancePolicyNumber: string;
+  insuranceCompany: string;
+  chasisNumber: string;
+  engineNumber: string;
+  batteryNumber: string;
+  tyreNumber: string;
+  anyOtherAccessorie: string;
+  scratches: string;
+  dent: string;
+  visibleObservation: string;
+  remarks: string;
+  addedBy: string;
 }

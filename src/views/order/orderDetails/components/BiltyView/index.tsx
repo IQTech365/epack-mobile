@@ -523,6 +523,12 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
       payload: text,
     });
   };
+  const handleReceiptDate = (date: Date) => {
+    // dispatch({
+    //   type: MONEYRECEIPT_FORM_ACTION.RECEIPT_DATE,
+    //   payload: formatDate(date),
+    // });
+  };
   const renderLoadingAddressView = () => {
     return (
       <>
