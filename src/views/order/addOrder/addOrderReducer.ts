@@ -3,6 +3,7 @@
 export enum ADDORDER_FORM_ACTION {
   SHIFTING_TYPE = 'SHIFTING_TYPE',
   DATE_OF_MOVING = 'DATE_OF_MOVING',
+  BILLING_BY = 'BILLING_BY',
   PARTY_NAME = 'PARTY_NAME',
   MOBILE = 'MOBILE',
   PARTY_COMPANY_NAME = 'PARTY_COMPANY_NAME',
@@ -26,17 +27,37 @@ export enum ADDORDER_FORM_ACTION {
   DELIVERY_LIFT_STATUS = 'DELIVERY_LIFT_STATUS',
 }
 
+// ** Billing Info
+export type TBillingInfo = {
+  company_name: string;
+  approval_authority: string;
+  authority_person_name: string;
+  authority_mobile_number: string;
+  company_address: string;
+  company_gst: string;
+  employee_name: string;
+  employee_designation: string;
+  employee_mobile_number: string;
+};
+
+// ** Billing By
+export type TBillingBy = {
+  billing_by: string;
+  billing_info: TBillingInfo | null;
+};
+
 /** ADD ORDER FORM STATE */
 
 interface IAddOrderFormState {
   shiftingType: string;
   dateOfMoving: string;
+  billingBy: TBillingBy | null;
   partyName: string;
   mobile: string;
   partyCompanyName: string;
   orderAmount: string;
   tokenAmount: string;
-  shiftingLuggage: string;
+  shiftingLuggage: [string] | [];
   dateOfQuotation: string;
   pickupPincode: string;
   pickupCity: string;
@@ -58,20 +79,26 @@ interface IAddOrderFormState {
 
 interface IAddOrderFormAction {
   type: ADDORDER_FORM_ACTION;
-  payload: string;
+  payload: string | TBillingBy | [string];
 }
+
+const defaultBillingBy: TBillingBy = {
+  billing_by: 'Billing By Individual',
+  billing_info: null,
+};
 
 /** INITIAL STATE */
 
 export const initialState: IAddOrderFormState = {
   shiftingType: '',
   dateOfMoving: '',
+  billingBy: defaultBillingBy,
   partyName: '',
   mobile: '',
   partyCompanyName: '',
   orderAmount: '',
   tokenAmount: '',
-  shiftingLuggage: '',
+  shiftingLuggage: [],
   dateOfQuotation: '',
   pickupPincode: '',
   pickupCity: '',
@@ -98,49 +125,53 @@ export const addOrderReducer = (
   const {type, payload} = action;
   switch (type) {
     case ADDORDER_FORM_ACTION.SHIFTING_TYPE:
-      return {...state, shiftingType: payload};
+      return {...state, shiftingType: payload as string};
+    case ADDORDER_FORM_ACTION.BILLING_BY:
+      return {...state, billingBy: payload as TBillingBy};
     case ADDORDER_FORM_ACTION.DATE_OF_MOVING:
-      return {...state, dateOfMoving: payload};
+      return {...state, dateOfMoving: payload  as string};
     case ADDORDER_FORM_ACTION.PARTY_NAME:
-      return {...state, partyName: payload};
+      return {...state, partyName: payload  as string};
     case ADDORDER_FORM_ACTION.MOBILE:
-      return {...state, mobile: payload};
+      return {...state, mobile: payload  as string};
     case ADDORDER_FORM_ACTION.PARTY_COMPANY_NAME:
-      return {...state, partyCompanyName: payload};
+      return {...state, partyCompanyName: payload  as string};
     case ADDORDER_FORM_ACTION.ORDER_AMOUNT:
-      return {...state, orderAmount: payload};
+      return {...state, orderAmount: payload  as string};
     case ADDORDER_FORM_ACTION.TOKEN_AMOUNT:
-      return {...state, tokenAmount: payload};
+      return {...state, tokenAmount: payload  as string};
     case ADDORDER_FORM_ACTION.SHIFTING_LUGGAGE:
-      return {...state, shiftingLuggage: payload};
+      return {...state, shiftingLuggage: payload as [string]};
     case ADDORDER_FORM_ACTION.DATE_OF_QUOTATION:
-      return {...state, dateOfQuotation: payload};
+      return {...state, dateOfQuotation: payload  as string};
     case ADDORDER_FORM_ACTION.PICKUP_PINCODE:
-      return {...state, pickupPincode: payload};
+      return {...state, pickupPincode: payload  as string};
     case ADDORDER_FORM_ACTION.PICKUP_CITY:
-      return {...state, pickupCity: payload};
+      return {...state, pickupCity: payload  as string};
     case ADDORDER_FORM_ACTION.PICKUP_STATE:
-      return {...state, pickupState: payload};
+      return {...state, pickupState: payload  as string};
     case ADDORDER_FORM_ACTION.PICKUP_LOCALITY:
-      return {...state, pickupLocality: payload};
+      return {...state, pickupLocality: payload  as string};
     case ADDORDER_FORM_ACTION.PICKUP_ADDRESS:
-      return {...state, pickupAddress: payload};
+      return {...state, pickupAddress: payload  as string};
     case ADDORDER_FORM_ACTION.PICKUP_CURRENT_FLOOR:
-      return {...state, pickupCurrentFloor: payload};
+      return {...state, pickupCurrentFloor: payload  as string};
+    case ADDORDER_FORM_ACTION.PICKUP_LIFT_STATUS:
+      return {...state, pickupLiftStatus: payload  as string};
     case ADDORDER_FORM_ACTION.DELIVERY_PINCODE:
-      return {...state, deliveryPincode: payload};
+      return {...state, deliveryPincode: payload  as string};
     case ADDORDER_FORM_ACTION.DELIVERY_CITY:
-      return {...state, deliveryCity: payload};
+      return {...state, deliveryCity: payload  as string};
     case ADDORDER_FORM_ACTION.DELIVERY_STATE:
-      return {...state, deliveryState: payload};
+      return {...state, deliveryState: payload  as string};
     case ADDORDER_FORM_ACTION.DELIVERY_LOCALITY:
-      return {...state, deliveryLocality: payload};
+      return {...state, deliveryLocality: payload  as string};
     case ADDORDER_FORM_ACTION.DELIVERY_ADDRESS:
-      return {...state, deliveryAddress: payload};
+      return {...state, deliveryAddress: payload  as string};
     case ADDORDER_FORM_ACTION.DELIVERY_CURRENT_FLOOR:
-      return {...state, deliveryCurrentFloor: payload};
+      return {...state, deliveryCurrentFloor: payload  as string};
     case ADDORDER_FORM_ACTION.DELIVERY_LIFT_STATUS:
-      return {...state, deliveryLiftStatus: payload};
+      return {...state, deliveryLiftStatus: payload  as string};
     default:
       return state;
   }

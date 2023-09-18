@@ -28,7 +28,7 @@ export function* addEnquirySaga(action: PayloadAction<IAddEnquiryRequest>) {
 //     }
 // }
 
-export function* watcherOtpSaga() {
+export function* watcherEnquirySaga() {
     yield takeLatest(addEnquiryRequest.type, addEnquirySaga);
     // yield takeLatest(verifyOtpRequest.type, verifyOtpSaga);
 }

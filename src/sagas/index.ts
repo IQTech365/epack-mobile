@@ -1,9 +1,15 @@
 import {all, fork} from 'redux-saga/effects';
 //watcher Sagas
-import { watcherOtpSaga } from './OtpSaga';
+import {watcherOtpSaga} from './OtpSaga';
+import {watcherCompanySaga} from './CompanySaga';
+import {watcherEnquirySaga} from './EnquirySaga';
+import {watcherOrderSaga} from './OrderSaga';
 
 export function* rootSaga() {
-    yield all([
-        fork(watcherOtpSaga),
-    ])
+  yield all([
+    fork(watcherOtpSaga),
+    fork(watcherCompanySaga),
+    fork(watcherEnquirySaga),
+    fork(watcherOrderSaga),
+  ]);
 }

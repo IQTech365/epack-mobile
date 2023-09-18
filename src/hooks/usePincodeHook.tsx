@@ -5,6 +5,8 @@ import {PincodeService} from '../service/PincodeService';
 export enum PINCODE_REQUEST_KEY {
   ADD_QUOTATION_PICKUP_ADDRESS = 'ADD_QUOTATION_PICKUP_ADDRESS',
   ADD_QUOTATION_DELIVERY_ADDRESS = 'ADD_QUOTATION_DELIVERY_ADDRESS',
+  ADD_ORDER_PICKUP_ADDRESS = 'ADD_ORDER_PICKUP_ADDRESS',
+  ADD_ORDER_DELIVERY_ADDRESS = 'ADD_ORDER_DELIVERY_ADDRESS',
 }
 
 const usePincodeHook = (setError: () => void, resetError: () => void) => {

@@ -90,11 +90,6 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
     setAddressError,
     setCompanyTypeError,
     setDocumentError,
-    setCompanyLogoError,
-    setOwnerSignatureError,
-    setShiftingLuggageError,
-    setDocumentSerialNumberError,
-    setDocumentTemplatesError,
   } = useCompanyRegistrationContextHook();
   const [ibaApproval, setIbaApproval] = useState<boolean>(false);
   const [companyType, setCompanyType] = useState<string>('1');
@@ -104,17 +99,11 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
   console.log('RegisterCompanyView-state--', JSON.stringify(state, null, ' '));
 
   const setPincodeError = () => {
-    // dispatch({
-    //   type: COMPANY_REGISTRATION_ACTION.PINCODE_ERROR,
-    //   payload: 'Invalid PIN Code',
-    // });
+    setPincodeError2('Invalid Pincode');
   };
 
   const resetPincodeError = () => {
-    // dispatch({
-    //   type: COMPANY_REGISTRATION_ACTION.PINCODE_ERROR,
-    //   payload: '',
-    // });
+    setPincodeError2('');
   };
   const {result, fetching, setPincode} = usePincodeHook(
     setPincodeError,
@@ -309,7 +298,6 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
   const handleNextClick = useCallback(() => {
     if (currentStep >= 1 && currentStep < 5) {
       const isValidForm = validateRegistrationForm();
-      console.log('isValidForm------', isValidForm);
       if (isValidForm) {
         setCurrentStep(currentStep + 1);
       }

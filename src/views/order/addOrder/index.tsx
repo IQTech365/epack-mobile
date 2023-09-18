@@ -1,192 +1,537 @@
-import React, { useCallback, useReducer } from 'react';
-import { View, Text } from 'react-native';
+import React, {useCallback, useEffect, useReducer, useState} from 'react';
+import {View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../common/Spacer';
 import styles from './style';
 import shiftingTypeOptions from '../../../data/shiftingType.json';
-import { TDropdownItem } from '../../../type/TDropdownItem';
+import {TDropdownItem} from '../../../type/TDropdownItem';
 import Label from '../../../common/Label';
 import DropdownComponent from '../../../common/DropdownComponent';
 import Header from '../../../common/Header';
 import Input from '../../../common/Input';
-import { COLOR_BLACK, COLOR_BLUE } from '../../../utils/colors';
+import {COLOR_BLACK, COLOR_BLUE} from '../../../utils/colors';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import CollapsibleView from '../../../common/CollapsibleView';
-import shiftingTypes from '../../../data/shiftingType.json';
 import Button from '../../../common/Button';
 import DatePickerComponent from '../../../common/DatePickerComponent';
 import liftStatusOptions from '../../../data/liftStatusOptions.json';
 import floorOptions from '../../../data/floorOptions.json';
-import { initialState, addOrderReducer } from './addOrderReducer';
+import {
+  initialState,
+  addOrderReducer,
+  ADDORDER_FORM_ACTION,
+  TBillingBy,
+} from './addOrderReducer';
+import approvalAuthorityOptions from '../../../data/ApprovalAuthorityOptions.json';
+import billingByOptions from '../../../data/billingByOptions.json';
+import {formatDate, getCities, getStates} from '../../../utils/formatter';
+import shiftingLuggageOptions from '../../../data/shiftingLuggage.json';
+import usePincodeHook, {
+  PINCODE_REQUEST_KEY,
+} from '../../../hooks/usePincodeHook';
+import Spinner from '../../../common/Spinner';
+import {IAddOrderRequest} from '../../../interface/order/IAddOrderRequest';
+import {addOrderRequest} from '../../../redux/slices/OrderSlice';
+import {useAppDispatch, useAppSelector} from '../../../redux/hooks';
 
-const AddOrderView: React.FC<{}> = ({ }) => {
-  const state = { pickupPincode: '', deliveryPincode: '' };
+const AddOrderView: React.FC<{}> = ({}) => {
+  const [state, dispatch] = useReducer(addOrderReducer, initialState);
+  const dispatch2 = useAppDispatch();
+  const {addOrderRequesting, addOrderSuccess, addOrderFailure, addOrderError} =
+    useAppSelector(state => state.Order);
+  const [pincodeRequestKey, setPincodeRequestKey] =
+    useState<PINCODE_REQUEST_KEY>(PINCODE_REQUEST_KEY.ADD_ORDER_PICKUP_ADDRESS);
+  const [pickupStates, setPickupStates] = useState<TDropdownItem[]>([]);
+  const [pickupCities, setPickupCities] = useState<TDropdownItem[]>([]);
+  const [deliveryStates, setDeliveryStates] = useState<TDropdownItem[]>([]);
+  const [deliveryCities, setDeliveryCities] = useState<TDropdownItem[]>([]);
+  console.log('AddOrderView--state----', state);
 
+  const setPincodeError = () => {
+    // setPincodeError2('Invalid Pincode');
+  };
+
+  const resetPincodeError = () => {
+    // setPincodeError2('');
+  };
+  const {result, fetching, setPincode} = usePincodeHook(
+    setPincodeError,
+    resetPincodeError,
+  );
 
   const handlePartyNameInputTextChange = (text: string) => {
-    // dispatch({
-    //   type: QUOTATION_FORM_ACTION.PARTY_NAME,
-    //   payload: text,
-    // });
+    dispatch({
+      type: ADDORDER_FORM_ACTION.PARTY_NAME,
+      payload: text,
+    });
   };
 
-
-  const handleQuotationDate = (date: Date) => {
-    // dispatch({
-    //   type: QUOTATION_FORM_ACTION.DATE_OF_QUOTATION,
-    //   payload: formatDate(date),
-    // });
+  const handleBillingBy = (item: TDropdownItem) => {
+    const {billingBy} = state;
+    const tempObj = {
+      ...billingBy,
+      billing_by: item.label,
+      billing_info: null,
+    };
+    dispatch({
+      type: ADDORDER_FORM_ACTION.BILLING_BY,
+      payload: tempObj as TBillingBy,
+    });
   };
 
-  // const handleShiftingType = (item: TDropdownItem) => {
-  //   // dispatch({
-  //   //   type: ADDORDER_FORM_ACTION.SHIFTING_TYPE,
-  //   //   payload: item.label,
-  //   // }); 
-  // };
+  const handleMobileNumInputTextChange = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ADDORDER_FORM_ACTION.MOBILE,
+        payload: text,
+      });
+    },
+    [state.mobile],
+  );
+
+  const handleShiftingType = (item: TDropdownItem) => {
+    dispatch({
+      type: ADDORDER_FORM_ACTION.SHIFTING_TYPE,
+      payload: item.label,
+    });
+  };
 
   const handleDateOfMoving = (date: Date) => {
-    // dispatch({
-    //   type: ADDORDER_FORM_ACTION.DATE_OF_MOVING,
-    //   payload: formatDate(date),
-    // });
-  };
-  const handlePartyName = (text: string) => {
-    // dispatch({
-    //   type: ADDORDER_FORM_ACTION.PARTY_NAME,
-    //   payload: text,
-    // });
-  };
-  const handleMobile = (text: string) => {
-    // dispatch({
-    //   type: ADDORDER_FORM_ACTION.MOBILE,
-    //   payload: text,
-    // });
-  };
-  const handlePartyCompanyName = (text: string) => {
-    // dispatch({
-    //   type: ADDORDER_FORM_ACTION.PARTY_COMPANY_NAME,
-    //   payload: text,
-    // });
+    dispatch({
+      type: ADDORDER_FORM_ACTION.DATE_OF_MOVING,
+      payload: formatDate(date),
+    });
   };
   const handleOrderAmount = (text: string) => {
-    // dispatch({
-    //   type: ADDORDER_FORM_ACTION.ORDER_AMOUNT,
-    //   payload: text,
-    // });
+    dispatch({
+      type: ADDORDER_FORM_ACTION.ORDER_AMOUNT,
+      payload: text,
+    });
   };
   const handleTokenAmount = (text: string) => {
-    // dispatch({
-    //   type: ADDORDER_FORM_ACTION.TOKEN_AMOUNT,
-    //   payload: text,
-    // });
-  };
-  const handleDateOfQuotation = (date: Date) => {
-    // dispatch({
-    //   type: ADDORDER_FORM_ACTION.DATE_OF_QUOTATION,
-    //   payload: formatDate(date),
-    // });
+    dispatch({
+      type: ADDORDER_FORM_ACTION.TOKEN_AMOUNT,
+      payload: text,
+    });
   };
 
   //***Pickup Address***//
   const handlePickupPinCode = useCallback(
     (text: string) => {
-      // dispatch({
-      //   type: ADDORDER_FORM_ACTION.PICKUP_PINCODE,
-      //   payload: text,
-      // });
+      setPincodeRequestKey(PINCODE_REQUEST_KEY.ADD_ORDER_PICKUP_ADDRESS);
+      setPincode(text);
+      dispatch({
+        type: ADDORDER_FORM_ACTION.PICKUP_PINCODE,
+        payload: text,
+      });
     },
     [state.pickupPincode],
   );
   const handlePickupCity = (item: TDropdownItem) => {
-    // dispatch({
-    //   type: ADDORDER_FORM_ACTION.PICKUP_CITY,
-    //   payload: item.label,
-    // }); 
+    dispatch({
+      type: ADDORDER_FORM_ACTION.PICKUP_CITY,
+      payload: item.label,
+    });
   };
   const handlePickupState = (item: TDropdownItem) => {
-    // dispatch({
-    //   type: ADDORDER_FORM_ACTION.PICKUP_STATE,
-    //   payload: item.label,
-    // }); 
+    dispatch({
+      type: ADDORDER_FORM_ACTION.PICKUP_STATE,
+      payload: item.label,
+    });
   };
-  const handlePickupLocality = (item: TDropdownItem) => {
-    // dispatch({
-    //   type: ADDORDER_FORM_ACTION.PICKUP_LOCALITY,
-    //   payload: item.label,
-    // }); 
-  };
+
   const handlePickupAddress = useCallback(
     (text: string) => {
-      // dispatch({
-      //   type: ADDORDER_FORM_ACTION.PICKUP_ADDRESS,
-      //   payload: text,
-      // });
+      dispatch({
+        type: ADDORDER_FORM_ACTION.PICKUP_ADDRESS,
+        payload: text,
+      });
     },
     [state.pickupPincode],
   );
   const handlePickupCurrentFloor = (item: TDropdownItem) => {
-    // dispatch({
-    //   type: ADDORDER_FORM_ACTION.PICKUP_CURRENT_FLOOR,
-    //   payload: item.label,
-    // }); 
+    dispatch({
+      type: ADDORDER_FORM_ACTION.PICKUP_CURRENT_FLOOR,
+      payload: item.label,
+    });
   };
   const handlePickupLiftStatus = (item: TDropdownItem) => {
-    // dispatch({
-    //   type: ADDORDER_FORM_ACTION.PICKUP_LIFT_STATUS,
-    //   payload: item.label,
-    // }); 
+    dispatch({
+      type: ADDORDER_FORM_ACTION.PICKUP_LIFT_STATUS,
+      payload: item.label,
+    });
   };
 
   //***Delivery Address***//
   const handleDeliveryPinCode = useCallback(
     (text: string) => {
-      // dispatch({
-      //   type: ADDORDER_FORM_ACTION.DELIVERY_PINCODE,
-      //   payload: text,
-      // });
+      setPincodeRequestKey(PINCODE_REQUEST_KEY.ADD_ORDER_DELIVERY_ADDRESS);
+      setPincode(text);
+      dispatch({
+        type: ADDORDER_FORM_ACTION.DELIVERY_PINCODE,
+        payload: text,
+      });
     },
     [state.deliveryPincode],
   );
   const handleDeliveryCity = (item: TDropdownItem) => {
-    // dispatch({
-    //   type: ADDORDER_FORM_ACTION.DELIVERY_CITY,
-    //   payload: item.label,
-    // }); 
+    dispatch({
+      type: ADDORDER_FORM_ACTION.DELIVERY_CITY,
+      payload: item.label,
+    });
   };
   const handleDeliveryState = (item: TDropdownItem) => {
-    // dispatch({
-    //   type: ADDORDER_FORM_ACTION.DELIVERY_STATE,
-    //   payload: item.label,
-    // }); 
+    dispatch({
+      type: ADDORDER_FORM_ACTION.DELIVERY_STATE,
+      payload: item.label,
+    });
   };
-  const handleDeliveryLocality = (item: TDropdownItem) => {
-    // dispatch({
-    //   type: ADDORDER_FORM_ACTION.DELIVERY_LOCALITY,
-    //   payload: item.label,
-    // }); 
-  };
+
   const handleDeliveryAddress = useCallback(
     (text: string) => {
-      // dispatch({
-      //   type: ADDORDER_FORM_ACTION.DELIVERY_ADDRESS,
-      //   payload: text,
-      // });
+      dispatch({
+        type: ADDORDER_FORM_ACTION.DELIVERY_ADDRESS,
+        payload: text,
+      });
     },
     [state.deliveryPincode],
   );
 
   const handleDeliveryCurrentFloor = (item: TDropdownItem) => {
-    // dispatch({
-    //   type: ADDORDER_FORM_ACTION.DELIVERY_CURRENT_FLOOR,
-    //   payload: item.label,
-    // }); 
+    dispatch({
+      type: ADDORDER_FORM_ACTION.DELIVERY_CURRENT_FLOOR,
+      payload: item.label,
+    });
   };
   const handleDeliveryLiftStatus = (item: TDropdownItem) => {
-    // dispatch({
-    //   type: ADDORDER_FORM_ACTION.DELIVERY_LIFT_STATUS,
-    //   payload: item.label,
-    // }); 
+    dispatch({
+      type: ADDORDER_FORM_ACTION.DELIVERY_LIFT_STATUS,
+      payload: item.label,
+    });
+  };
+
+  const handleShiftingLuggage = (isChecked: boolean, value: string) => {
+    const {shiftingLuggage} = state;
+    let temp = [...shiftingLuggage];
+    const itemIndex = temp.findIndex(itm => itm == value);
+    if (itemIndex == -1 && isChecked) {
+      temp.push(value);
+    } else if (itemIndex != -1 && !isChecked) {
+      temp = temp.filter(itm => itm != value);
+    }
+    dispatch({
+      type: ADDORDER_FORM_ACTION.SHIFTING_LUGGAGE,
+      payload: temp as [string],
+    });
+  };
+
+  const handleAddOrder = () => {
+    const data: IAddOrderRequest = {
+      companyId: '',
+      authId: '',
+      enquiryManager: '',
+      shiftingType: state.shiftingType,
+      partyCompanyName: '',
+      partyName: state.partyName,
+      email: '',
+      mobile: state.mobile,
+      phone: state.mobile,
+      shiftingLuggage: state.shiftingLuggage as [string],
+      enquirySource: '',
+      gstNumber: '',
+      alternateNumbers: '',
+      shiftingDate: state.dateOfMoving,
+      pickupAddress: {
+        shiftingFrom: '',
+        state: state.pickupState,
+        city: state.pickupCity,
+        address: state.pickupAddress,
+        pincode: state.pickupPincode,
+        locality: '',
+        landmark: '',
+        floor: state.pickupCurrentFloor,
+        isLiftAvailable: state.pickupLiftStatus,
+      },
+      dropAddress: {
+        shiftingTo: '',
+        state: state.deliveryState,
+        city: state.deliveryCity,
+        address: state.deliveryAddress,
+        pincode: state.deliveryPincode,
+        locality: '',
+        landmark: '',
+        floor: state.deliveryCurrentFloor,
+        isLiftAvailable: state.deliveryLiftStatus,
+      },
+      billingBy: state.billingBy?.billing_by as string,
+      billingDetails: {
+        companyName: state.billingBy?.billing_info?.company_name as string,
+        approvalAuthority: state.billingBy?.billing_info
+          ?.approval_authority as string,
+        authorityPersonName: state.billingBy?.billing_info
+          ?.authority_person_name as string,
+        authorityPersonMobile: state.billingBy?.billing_info
+          ?.authority_mobile_number as string,
+        companyAddress: state.billingBy?.billing_info
+          ?.company_address as string,
+        companyGST: state.billingBy?.billing_info?.company_gst as string,
+        employeeName: state.billingBy?.billing_info?.employee_name as string,
+        employeeDesignation: state.billingBy?.billing_info
+          ?.employee_designation as string,
+        employeeMobile: state.billingBy?.billing_info
+          ?.employee_mobile_number as string,
+      },
+      status: 'New',
+    };
+    dispatch2(addOrderRequest(data));
+  };
+
+  useEffect(() => {
+    if (result && result.Status != 'Error') {
+      if (
+        pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_QUOTATION_PICKUP_ADDRESS
+      ) {
+        setPickupStates(getStates(result));
+        setPickupCities(getCities(result));
+      } else if (
+        pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_QUOTATION_DELIVERY_ADDRESS
+      ) {
+        setDeliveryStates(getStates(result));
+        setDeliveryCities(getStates(result));
+      }
+    }
+  }, [result]);
+
+  const showBillingByIndividualView = () => {
+    if (state.billingBy?.billing_by == 'Billing by Company') return null;
+    return (
+      <>
+        <Spacer height={4} />
+        <View style={styles.elementContainer}>
+          <Label text="Party Name" style={styles.label} />
+          <Input
+            onChangeText={handlePartyNameInputTextChange}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+          />
+        </View>
+        <Spacer height={4} />
+        <View style={styles.elementContainer}>
+          <Label text="Mobile Number *" style={styles.label} />
+          <Input
+            onChangeText={handleMobileNumInputTextChange}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+          />
+        </View>
+      </>
+    );
+  };
+
+  const showBillingByCompanyView = () => {
+    if (state.billingBy?.billing_by == 'Billing By Individual') return null;
+    return (
+      <>
+        <Spacer height={4} />
+        <View style={styles.elementContainer}>
+          <Label text="Company Name" style={styles.label} />
+          <Input
+            onChangeText={(text: string) => {
+              const {billingBy} = state;
+              const tempObj = {
+                ...billingBy,
+                billing_info: {...billingBy?.billing_info, company_name: text},
+              };
+              dispatch({
+                type: ADDORDER_FORM_ACTION.BILLING_BY,
+                payload: tempObj as TBillingBy,
+              });
+            }}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+          />
+        </View>
+        <Spacer height={4} />
+        <View style={styles.elementContainer}>
+          <Label text="Approval Authority" style={styles.label} />
+          <DropdownComponent
+            data={approvalAuthorityOptions}
+            onSelect={(item: TDropdownItem) => {
+              const {billingBy} = state;
+              const tempObj = {
+                ...billingBy,
+                billing_info: {
+                  ...billingBy?.billing_info,
+                  approval_authority: item.label,
+                },
+              };
+              dispatch({
+                type: ADDORDER_FORM_ACTION.BILLING_BY,
+                payload: tempObj as TBillingBy,
+              });
+            }}
+          />
+        </View>
+        <Spacer height={4} />
+        <View style={styles.elementContainer}>
+          <Label text="Authority Person Name" style={styles.label} />
+          <Input
+            onChangeText={(text: string) => {
+              const {billingBy} = state;
+              const tempObj = {
+                ...billingBy,
+                billing_info: {
+                  ...billingBy?.billing_info,
+                  authority_person_name: text,
+                },
+              };
+              dispatch({
+                type: ADDORDER_FORM_ACTION.BILLING_BY,
+                payload: tempObj as TBillingBy,
+              });
+            }}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+          />
+        </View>
+        <Spacer height={4} />
+        <View style={styles.elementContainer}>
+          <Label text="Authority Mobile Number" style={styles.label} />
+          <Input
+            onChangeText={(text: string) => {
+              const {billingBy} = state;
+              const tempObj = {
+                ...billingBy,
+                billing_info: {
+                  ...billingBy?.billing_info,
+                  authority_mobile_number: text,
+                },
+              };
+              dispatch({
+                type: ADDORDER_FORM_ACTION.BILLING_BY,
+                payload: tempObj as TBillingBy,
+              });
+            }}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+          />
+        </View>
+        <Spacer height={4} />
+        <View style={styles.elementContainer}>
+          <Label text="Company GST" style={styles.label} />
+          <Input
+            onChangeText={(text: string) => {
+              const {billingBy} = state;
+              const tempObj = {
+                ...billingBy,
+                billing_info: {...billingBy?.billing_info, company_gst: text},
+              };
+              dispatch({
+                type: ADDORDER_FORM_ACTION.BILLING_BY,
+                payload: tempObj as TBillingBy,
+              });
+            }}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+          />
+        </View>
+        <Spacer height={4} />
+        <View style={styles.elementContainer}>
+          <Label text="Employee Name" style={styles.label} />
+          <Input
+            onChangeText={(text: string) => {
+              const {billingBy} = state;
+              const tempObj = {
+                ...billingBy,
+                billing_info: {...billingBy?.billing_info, employee_name: text},
+              };
+              dispatch({
+                type: ADDORDER_FORM_ACTION.BILLING_BY,
+                payload: tempObj as TBillingBy,
+              });
+            }}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+          />
+        </View>
+        <Spacer height={4} />
+        <View style={styles.elementContainer}>
+          <Label text="Employee Designation" style={styles.label} />
+          <Input
+            onChangeText={(text: string) => {
+              const {billingBy} = state;
+              const tempObj = {
+                ...billingBy,
+                billing_info: {
+                  ...billingBy?.billing_info,
+                  employee_designation: text,
+                },
+              };
+              dispatch({
+                type: ADDORDER_FORM_ACTION.BILLING_BY,
+                payload: tempObj as TBillingBy,
+              });
+            }}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+          />
+        </View>
+        <Spacer height={4} />
+        <View style={styles.elementContainer}>
+          <Label text="Employee Mobile Number" style={styles.label} />
+          <Input
+            onChangeText={(text: string) => {
+              const {billingBy} = state;
+              const tempObj = {
+                ...billingBy,
+                billing_info: {
+                  ...billingBy?.billing_info,
+                  employee_mobile_number: text,
+                },
+              };
+              dispatch({
+                type: ADDORDER_FORM_ACTION.BILLING_BY,
+                payload: tempObj as TBillingBy,
+              });
+            }}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+          />
+        </View>
+        <Spacer height={4} />
+        <View style={styles.elementContainer}>
+          <Label text="Company Address" style={styles.label} />
+          <Input
+            onChangeText={(text: string) => {
+              const {billingBy} = state;
+              const tempObj = {
+                ...billingBy,
+                billing_info: {
+                  ...billingBy?.billing_info,
+                  company_address: text,
+                },
+              };
+              dispatch({
+                type: ADDORDER_FORM_ACTION.BILLING_BY,
+                payload: tempObj as TBillingBy,
+              });
+            }}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+          />
+        </View>
+      </>
+    );
   };
 
   return (
@@ -211,40 +556,21 @@ const AddOrderView: React.FC<{}> = ({ }) => {
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
-              <Label text="Party Name" style={styles.label} />
-              <Input
-                onChangeText={handlePartyName}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
+              <Label text="Billing By" style={styles.label} />
+              <DropdownComponent
+                data={billingByOptions}
+                onSelect={handleBillingBy}
               />
             </View>
             <Spacer height={4} />
-            <View style={styles.elementContainer}>
-              <Label text="Mobile" style={styles.label} />
-              <Input
-                onChangeText={handleMobile}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-              />
-            </View>
-            <Spacer height={4} />
-            <View style={styles.elementContainer}>
-              <Label text="Party Company Name" style={styles.label} />
-              <Input
-                onChangeText={handlePartyCompanyName}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-              />
-            </View>
+            {showBillingByIndividualView()}
+            {showBillingByCompanyView()}
             <Spacer height={4} />
             <View style={styles.mainWrapper}>
               <View style={styles.textContainer}>
                 <Label text="Order Amount" style={styles.label} />
                 <Input
-                  onChangeText={handlePartyNameInputTextChange}
+                  onChangeText={handleOrderAmount}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -253,7 +579,7 @@ const AddOrderView: React.FC<{}> = ({ }) => {
               <View style={styles.textContainer}>
                 <Label text="Token Amount" style={styles.label} />
                 <Input
-                  onChangeText={handlePartyNameInputTextChange}
+                  onChangeText={handleTokenAmount}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -265,131 +591,38 @@ const AddOrderView: React.FC<{}> = ({ }) => {
               <Label text="Shifting Luggage" style={styles.label} />
             </View>
             <View style={styles.elementContainer2}>
-              <BouncyCheckbox
-                size={25}
-                unfillColor="#FFFFFF"
-                text="Household"
-                fillColor={COLOR_BLUE}
-                iconStyle={{
-                  borderColor: 'red',
-                  borderRadius: 0,
-                  width: 16,
-                  height: 16,
-                }}
-                innerIconStyle={{
-                  borderWidth: 1,
-                  borderRadius: 0,
-                  width: 16,
-                  height: 16,
-                }}
-                textStyle={{
-                  fontFamily: 'JosefinSans-Regular',
-                  textDecorationLine: 'none',
-                }}
-                style={{ marginRight: 15, marginBottom: 10 }}
-                textContainerStyle={{ paddingLeft: 0 }}
-                onPress={(isChecked: boolean) => { }}
-              />
-              <BouncyCheckbox
-                size={25}
-                unfillColor="#FFFFFF"
-                text="Office"
-                fillColor={COLOR_BLUE}
-                iconStyle={{
-                  borderColor: 'red',
-                  borderRadius: 0,
-                  width: 16,
-                  height: 16,
-                }}
-                innerIconStyle={{
-                  borderWidth: 1,
-                  borderRadius: 0,
-                  width: 16,
-                  height: 16,
-                }}
-                textStyle={{
-                  fontFamily: 'JosefinSans-Regular',
-                  textDecorationLine: 'none',
-                }}
-                style={{ marginRight: 15 }}
-                textContainerStyle={{ paddingLeft: 0 }}
-                onPress={(isChecked: boolean) => { }}
-              />
-              <BouncyCheckbox
-                size={25}
-                unfillColor="#FFFFFF"
-                text="Industrial"
-                fillColor={COLOR_BLUE}
-                iconStyle={{
-                  borderColor: 'red',
-                  borderRadius: 0,
-                  width: 16,
-                  height: 16,
-                }}
-                innerIconStyle={{
-                  borderWidth: 1,
-                  borderRadius: 0,
-                  width: 16,
-                  height: 16,
-                }}
-                textStyle={{
-                  fontFamily: 'JosefinSans-Regular',
-                  textDecorationLine: 'none',
-                }}
-                style={{ marginRight: 15 }}
-                textContainerStyle={{ paddingLeft: 0 }}
-                onPress={(isChecked: boolean) => { }}
-              />
-              <BouncyCheckbox
-                size={25}
-                unfillColor="#FFFFFF"
-                text="Vehcicle"
-                fillColor={COLOR_BLUE}
-                iconStyle={{
-                  borderColor: 'red',
-                  borderRadius: 0,
-                  width: 16,
-                  height: 16,
-                }}
-                innerIconStyle={{
-                  borderWidth: 1,
-                  borderRadius: 0,
-                  width: 16,
-                  height: 16,
-                }}
-                textStyle={{
-                  fontFamily: 'JosefinSans-Regular',
-                  textDecorationLine: 'none',
-                }}
-                style={{ marginRight: 15 }}
-                textContainerStyle={{ paddingLeft: 0 }}
-                onPress={(isChecked: boolean) => { }}
-              />
-              <BouncyCheckbox
-                size={25}
-                unfillColor="#FFFFFF"
-                text="Other"
-                fillColor={COLOR_BLUE}
-                iconStyle={{
-                  borderColor: 'red',
-                  borderRadius: 0,
-                  width: 16,
-                  height: 16,
-                }}
-                innerIconStyle={{
-                  borderWidth: 1,
-                  borderRadius: 0,
-                  width: 16,
-                  height: 16,
-                }}
-                textStyle={{
-                  fontFamily: 'JosefinSans-Regular',
-                  textDecorationLine: 'none',
-                }}
-                style={{ marginRight: 15 }}
-                textContainerStyle={{ paddingLeft: 0 }}
-                onPress={(isChecked: boolean) => { }}
-              />
+              {shiftingLuggageOptions.map((item, index) => {
+                return (
+                  <BouncyCheckbox
+                    key={item.value}
+                    size={25}
+                    unfillColor="#FFFFFF"
+                    text={item.label}
+                    fillColor={COLOR_BLUE}
+                    iconStyle={{
+                      borderColor: 'red',
+                      borderRadius: 0,
+                      width: 16,
+                      height: 16,
+                    }}
+                    innerIconStyle={{
+                      borderWidth: 1,
+                      borderRadius: 0,
+                      width: 16,
+                      height: 16,
+                    }}
+                    textStyle={{
+                      fontFamily: 'JosefinSans-Regular',
+                      textDecorationLine: 'none',
+                    }}
+                    style={{marginRight: 15, marginBottom: 10}}
+                    textContainerStyle={{paddingLeft: 0}}
+                    onPress={(isChecked: boolean) => {
+                      handleShiftingLuggage(isChecked, item.label);
+                    }}
+                  />
+                );
+              })}
             </View>
           </View>
         </CollapsibleView>
@@ -409,22 +642,22 @@ const AddOrderView: React.FC<{}> = ({ }) => {
             <View style={styles.elementContainer}>
               <Label text="State" style={styles.label} />
               <DropdownComponent
-                data={shiftingTypes}
+                data={pickupStates}
                 onSelect={handlePickupState}
               />
             </View>
             <View style={styles.elementContainer}>
               <Label text="City" style={styles.label} />
               <DropdownComponent
-                data={shiftingTypes}
-                onSelect={handlePickupLocality}
+                data={pickupCities}
+                onSelect={handlePickupCity}
               />
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
               <Label text="Address" style={styles.label} />
               <Input
-                onChangeText={(handlePickupAddress) => { }}
+                onChangeText={handlePickupAddress}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -465,22 +698,22 @@ const AddOrderView: React.FC<{}> = ({ }) => {
             <View style={styles.elementContainer}>
               <Label text="State" style={styles.label} />
               <DropdownComponent
-                data={shiftingTypes}
+                data={deliveryStates}
                 onSelect={handleDeliveryState}
               />
             </View>
             <View style={styles.elementContainer}>
               <Label text="City" style={styles.label} />
               <DropdownComponent
-                data={shiftingTypes}
-                onSelect={handleDeliveryLocality}
+                data={deliveryCities}
+                onSelect={handleDeliveryCity}
               />
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
               <Label text="Address" style={styles.label} />
               <Input
-                onChangeText={(handleDeliveryAddress) => { }}
+                onChangeText={handleDeliveryAddress}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -508,12 +741,13 @@ const AddOrderView: React.FC<{}> = ({ }) => {
         <Spacer height={12} />
         <Button
           text="SUBMIT"
-          onPress={() => { }}
+          onPress={() => {}}
           disabled={true}
           style={styles.previewButtonStyle}
           textStyle={styles.textStyle}
         />
         <Spacer height={12} />
+        <Spinner show={fetching} />
       </View>
     </AvoidSoftInputViewHOC>
   );

@@ -28,7 +28,7 @@ export function* addCompanySaga(action: PayloadAction<ICompanyRegistrationReques
 //     }
 // }
 
-export function* watcherOtpSaga() {
+export function* watcherCompanySaga() {
     yield takeLatest(addCompanyRequest.type, addCompanySaga);
     // yield takeLatest(verifyOtpRequest.type, verifyOtpSaga);
 }
