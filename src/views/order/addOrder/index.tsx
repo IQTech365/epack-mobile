@@ -741,13 +741,13 @@ const AddOrderView: React.FC<{}> = ({}) => {
         <Spacer height={12} />
         <Button
           text="SUBMIT"
-          onPress={() => {}}
+          onPress={handleAddOrder}
           disabled={true}
           style={styles.previewButtonStyle}
           textStyle={styles.textStyle}
         />
         <Spacer height={12} />
-        <Spinner show={fetching} />
+        <Spinner show={fetching || addOrderRequesting} />
       </View>
     </AvoidSoftInputViewHOC>
   );
