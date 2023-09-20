@@ -1,5 +1,5 @@
-import React, {useReducer, useState} from 'react';
-import {View, Text} from 'react-native';
+import React, { useReducer, useState, useCallback, useEffect } from 'react';
+import { View, Text, Alert } from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
 import DatePickerComponent from '../../../../../common/DatePickerComponent';
@@ -7,11 +7,11 @@ import DropdownComponent from '../../../../../common/DropdownComponent';
 import Input from '../../../../../common/Input';
 import Label from '../../../../../common/Label';
 import Spacer from '../../../../../common/Spacer';
-import {TDropdownItem} from '../../../../../type/TDropdownItem';
-import {COLOR_BLACK} from '../../../../../utils/colors';
+import { TDropdownItem } from '../../../../../type/TDropdownItem';
+import { COLOR_BLACK } from '../../../../../utils/colors';
 import styles from './style';
 import shiftingLuggages from '../../../../../data/shiftingLuggage.json';
-import {Switch} from 'react-native-switch';
+import { Switch } from 'react-native-switch';
 import AccessoryView from '../AccessoryView';
 import accessories from '../../../../../data/accessories.json';
 import {
@@ -20,14 +20,26 @@ import {
   CARCONDITION_FORM_ACTION,
 } from './carConditionReducer'
 import { formatDate } from '../../../../../utils/formatter';
+import Button from '../../../../../common/Button';
+import { ICreateCarConditionRequest } from '../../../../../interface/order/ICreateCarConditionRequest';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
+import { createCarConditionRequest } from '../../../../../redux/slices/OrderSlice';
+import Spinner from '../../../../../common/Spinner';
 
 interface ICarConditionViewProps {
   //
 }
 
-const CarConditionView: React.FC<ICarConditionViewProps> = ({}) => {
+const CarConditionView: React.FC<ICarConditionViewProps> = ({ }) => {
   const [switchState, setSwitchState] = useState<boolean>(false);
-  const [reducerState, dispatch] = useReducer(carConditionReducer,initialState)
+  const [reducerState, dispatch] = useReducer(carConditionReducer, initialState);
+  const {
+    createCarConditionRequesting,
+    createCarConditionSuccess,
+    createCarConditionError,
+    createCarConditionFailure,
+  } = useAppSelector(state => state.Order);
+  const dispatch2 = useAppDispatch();
   const switchWrapperStyle = switchState
     ? styles.switchMainWrapper
     : styles.switchMainWrapper2;
@@ -56,12 +68,12 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({}) => {
     });
   };
 
-  
+
   const handleChooseTemplate = (item: TDropdownItem) => {
-     dispatch({
+    dispatch({
       type: CARCONDITION_FORM_ACTION.CHOOSE_TEMPLATE,
       payload: item.label,
-     });
+    });
   };
 
   const handleCarConditionDate = (date: Date) => {
@@ -76,115 +88,136 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({}) => {
       payload: text,
     });
   };
-   
+
   const handleManufacturer = (item: TDropdownItem) => {
     dispatch({
-     type: CARCONDITION_FORM_ACTION.MANUFACTURER,
-     payload: item.label,
+      type: CARCONDITION_FORM_ACTION.MANUFACTURER,
+      payload: item.label,
     });
- };
+  };
   const handleModel = (item: TDropdownItem) => {
     dispatch({
-     type: CARCONDITION_FORM_ACTION.MODEL,
-     payload: item.label,
+      type: CARCONDITION_FORM_ACTION.MODEL,
+      payload: item.label,
     });
- };
+  };
   const handleColor = (item: TDropdownItem) => {
     dispatch({
-     type: CARCONDITION_FORM_ACTION.COLOR,
-     payload: item.label,
+      type: CARCONDITION_FORM_ACTION.COLOR,
+      payload: item.label,
     });
- };
+  };
   const handleYear = (item: TDropdownItem) => {
     dispatch({
-     type: CARCONDITION_FORM_ACTION.YEAR,
-     payload: item.label,
+      type: CARCONDITION_FORM_ACTION.YEAR,
+      payload: item.label,
     });
- };
- const handleVehicleRegNO = (text: string) => {
-  dispatch({
-    type: CARCONDITION_FORM_ACTION.VEHICLE_REG_NO,
-    payload: text,
-  });
-};
- const handleVehicleKm = (text: string) => {
-  dispatch({
-    type: CARCONDITION_FORM_ACTION.VEHICLE_KM,
-    payload: text,
-  });
-};
- const handleInsuranceCompany = (text: string) => {
-  dispatch({
-    type: CARCONDITION_FORM_ACTION.INSURANCE_COMPANY_NAME,
-    payload: text,
-  });
-};
- const handlePolicyNo = (text: string) => {
-  dispatch({
-    type: CARCONDITION_FORM_ACTION.INSURANCE_POLICY_NO,
-    payload: text,
-  });
-};
- const handleVehicleValue = (text: string) => {
-  dispatch({
-    type: CARCONDITION_FORM_ACTION.VEHICLE_VALUE,
-    payload: text,
-  });
-};
- const handleChasisNo = (text: string) => {
-  dispatch({
-    type: CARCONDITION_FORM_ACTION.CHASIS_NO,
-    payload: text,
-  });
-};
- const handleEngineNo = (text: string) => {
-  dispatch({
-    type: CARCONDITION_FORM_ACTION.ENGINE_NO,
-    payload: text,
-  });
-};
- const handleBatteryNo = (text: string) => {
-  dispatch({
-    type: CARCONDITION_FORM_ACTION.BATTERY_NO,
-    payload: text,
-  });
-};
- const handleTyreyNo = (text: string) => {
-  dispatch({
-    type: CARCONDITION_FORM_ACTION.TYRE_NO,
-    payload: text,
-  });
-};
- const handleAnyOtherAccessories = (text: string) => {
-  dispatch({
-    type: CARCONDITION_FORM_ACTION.ANY_OTHER_ACCESSORIES,
-    payload: text,
-  });
-};
- const handleRemark = (text: string) => {
-  dispatch({
-    type: CARCONDITION_FORM_ACTION.REMARK,
-    payload: text,
-  });
-};
- const handleScratches = (text: string) => {
-  dispatch({
-    type: CARCONDITION_FORM_ACTION.SCARATCHES,
-    payload: text,
-  });
-};
- const handleDent = (text: string) => {
-  dispatch({
-    type: CARCONDITION_FORM_ACTION.DENT,
-    payload: text,
-  });
-};
- const handleAnyOtherObservation = (text: string) => {
-  dispatch({
-    type: CARCONDITION_FORM_ACTION.ANY_OTHER_OBSERVATION,
-    payload: text,
-  });
-};
+  };
+  const handleVehicleRegNO = (text: string) => {
+    dispatch({
+      type: CARCONDITION_FORM_ACTION.VEHICLE_REG_NO,
+      payload: text,
+    });
+  };
+  const handleVehicleKm = (text: string) => {
+    dispatch({
+      type: CARCONDITION_FORM_ACTION.VEHICLE_KM,
+      payload: text,
+    });
+  };
+  const handleInsuranceCompany = (text: string) => {
+    dispatch({
+      type: CARCONDITION_FORM_ACTION.INSURANCE_COMPANY_NAME,
+      payload: text,
+    });
+  };
+  const handlePolicyNo = (text: string) => {
+    dispatch({
+      type: CARCONDITION_FORM_ACTION.INSURANCE_POLICY_NO,
+      payload: text,
+    });
+  };
+  const handleVehicleValue = (text: string) => {
+    dispatch({
+      type: CARCONDITION_FORM_ACTION.VEHICLE_VALUE,
+      payload: text,
+    });
+  };
+  const handleChasisNo = (text: string) => {
+    dispatch({
+      type: CARCONDITION_FORM_ACTION.CHASIS_NO,
+      payload: text,
+    });
+  };
+  const handleEngineNo = (text: string) => {
+    dispatch({
+      type: CARCONDITION_FORM_ACTION.ENGINE_NO,
+      payload: text,
+    });
+  };
+  const handleBatteryNo = (text: string) => {
+    dispatch({
+      type: CARCONDITION_FORM_ACTION.BATTERY_NO,
+      payload: text,
+    });
+  };
+  const handleTyreyNo = (text: string) => {
+    dispatch({
+      type: CARCONDITION_FORM_ACTION.TYRE_NO,
+      payload: text,
+    });
+  };
+  const handleAnyOtherAccessories = (text: string) => {
+    dispatch({
+      type: CARCONDITION_FORM_ACTION.ANY_OTHER_ACCESSORIES,
+      payload: text,
+    });
+  };
+  const handleRemark = (text: string) => {
+    dispatch({
+      type: CARCONDITION_FORM_ACTION.REMARK,
+      payload: text,
+    });
+  };
+  const handleScratches = (text: string) => {
+    dispatch({
+      type: CARCONDITION_FORM_ACTION.SCARATCHES,
+      payload: text,
+    });
+  };
+  const handleDent = (text: string) => {
+    dispatch({
+      type: CARCONDITION_FORM_ACTION.DENT,
+      payload: text,
+    });
+  };
+  const handleAnyOtherObservation = (text: string) => {
+    dispatch({
+      type: CARCONDITION_FORM_ACTION.ANY_OTHER_OBSERVATION,
+      payload: text,
+    });
+  };
+
+
+  const handleCreateCarCondition = useCallback(() => {
+    const payload: ICreateCarConditionRequest = reducerState;
+    console.log(payload, 'payload carconditon req');
+
+    dispatch2(createCarConditionRequest(payload));
+  }, [dispatch2, reducerState]);
+
+  useEffect(() => {
+    if (!createCarConditionRequesting && createCarConditionSuccess) {
+      // console.log('otpData--------', JSON.stringify(otpData));
+      // navigation.navigate(AuthStackRoute.OTPInput);
+    } else if (!createCarConditionRequesting && createCarConditionError) {
+      Alert.alert('Something went wrong. Please try again!');
+    }
+  }, [
+    createCarConditionRequesting,
+    createCarConditionSuccess,
+    createCarConditionFailure,
+  ]);
 
   return (
     <AvoidSoftInputViewHOC>
@@ -196,11 +229,11 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({}) => {
               <View style={styles.itemContainer}>
                 <Label text="Car Condition No." style={styles.label} />
                 <Input
-                onChangeText={handleReceiptNoInputTextChange}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-              />
+                  onChangeText={handleReceiptNoInputTextChange}
+                  containerStyle={styles.inputContainer}
+                  inputStyle={styles.input}
+                  selectionColor={COLOR_BLACK}
+                />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Date of Car Condition" style={styles.label} />
@@ -333,8 +366,8 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({}) => {
                 <View key={index}>
                   <AccessoryView
                     label={accessory.label}
-                    onYesPress={() => {}}
-                    onNoPress={() => {}}
+                    onYesPress={() => { }}
+                    onNoPress={() => { }}
                   />
                   <Spacer height={8} />
                 </View>
@@ -417,6 +450,15 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({}) => {
           </View>
         </CollapsibleView>
         <Spacer height={8} />
+        <Button
+          text="CREATE"
+          onPress={handleCreateCarCondition}
+          disabled={false}
+          style={styles.previewButtonStyle}
+          textStyle={styles.textStyle}
+        />
+        <Spacer height={8} />
+        <Spinner show={createCarConditionRequesting} />
       </View>
     </AvoidSoftInputViewHOC>
   );

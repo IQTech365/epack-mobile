@@ -1,15 +1,15 @@
-import React, {useCallback, useReducer, useState} from 'react';
-import {View, Text} from 'react-native';
+import React, { useCallback, useReducer, useState } from 'react';
+import { View, Text } from 'react-native';
 import AvoidSoftInputViewHOC from '../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../common/Spacer';
 import styles from './style';
 import shiftingTypeOptions from '../../../data/shiftingType.json';
-import {TDropdownItem} from '../../../type/TDropdownItem';
+import { TDropdownItem } from '../../../type/TDropdownItem';
 import Label from '../../../common/Label';
 import DropdownComponent from '../../../common/DropdownComponent';
 import Header from '../../../common/Header';
 import Input from '../../../common/Input';
-import {COLOR_BLACK, COLOR_BLUE} from '../../../utils/colors';
+import { COLOR_BLACK, COLOR_BLUE } from '../../../utils/colors';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import CollapsibleView from '../../../common/CollapsibleView';
 import shiftingTypes from '../../../data/shiftingType.json';
@@ -24,10 +24,14 @@ import {
   enquiryReducer,
   initialState,
 } from './enquiryReducer';
+import { useAppDispatch } from '../../../redux/hooks';
+import { addEnquiryRequest } from '../../../redux/slices/EnquirySlice';
+import { IAddEnquiryRequest } from '../../../interface/enquiry/IAddEnquiryRequest';
 
-const AddEnquiryView: React.FC<{}> = ({}) => {
+const AddEnquiryView: React.FC<{}> = ({ }) => {
   const [state, dispatch] = useReducer(enquiryReducer, initialState);
-  const [billingBy, setBillingBy] = useState<string>("1");
+  const [billingBy, setBillingBy] = useState<string>('1');
+  const dispatched = useAppDispatch();
 
   const handleShiftingType = (item: TDropdownItem) => {
     dispatch({
@@ -37,12 +41,12 @@ const AddEnquiryView: React.FC<{}> = ({}) => {
   };
 
   const handleBillingBy = (item: TDropdownItem) => {
-    const {billingBy} = state;
+    const { billingBy } = state;
     const tempObj = {
       ...billingBy,
       billing_by: item.label,
       billing_info: null,
-    }
+    };
     dispatch({
       type: ENQUIRY_FORM_ACTION.BILLING_BY,
       payload: tempObj as TBillingBy,
@@ -76,123 +80,191 @@ const AddEnquiryView: React.FC<{}> = ({}) => {
 
   const handlePickupPinCode = useCallback(
     (text: string) => {
+      const { pickupAddress } = state;
+      const tempObj = {
+        ...pickupAddress,
+        pincode: text,
+      };
+
       dispatch({
-        type: ENQUIRY_FORM_ACTION.PICKUP_PINCODE,
-        payload: text,
+        type: ENQUIRY_FORM_ACTION.PICKUP_ADDRESS,
+        payload: tempObj,
       });
     },
-    [state.pickupPincode],
+    [state],
   );
 
   const handlePickupCity = useCallback(
     (item: TDropdownItem) => {
+      const { pickupAddress } = state;
+      const tempObj = {
+        ...pickupAddress,
+        city: item.label,
+      };
       dispatch({
-        type: ENQUIRY_FORM_ACTION.PICKUP_CITY,
-        payload: item.label,
+        type: ENQUIRY_FORM_ACTION.PICKUP_ADDRESS,
+        payload: tempObj,
       });
     },
-    [state.pickupCity],
+    [state],
   );
 
   const handlePickupState = useCallback(
     (item: TDropdownItem) => {
+      const { pickupAddress } = state;
+      const tempObj = {
+        ...pickupAddress,
+        state: item.label,
+      };
       dispatch({
-        type: ENQUIRY_FORM_ACTION.PICKUP_STATE,
-        payload: item.label,
+        type: ENQUIRY_FORM_ACTION.PICKUP_ADDRESS,
+        payload: tempObj,
       });
     },
-    [state.pickupState],
+    [state],
   );
 
   const handlePickupAddress = useCallback(
     (text: string) => {
+      const { pickupAddress } = state;
+      const tempObj = {
+        ...pickupAddress,
+        address: text,
+      };
       dispatch({
         type: ENQUIRY_FORM_ACTION.PICKUP_ADDRESS,
-        payload: text,
+        payload: tempObj,
       });
     },
-    [state.pickupAddress],
+    [state],
   );
 
   const handlePickupCurrentFloor = useCallback(
     (item: TDropdownItem) => {
+      const { pickupAddress } = state;
+      const tempObj = {
+        ...pickupAddress,
+        floor: item.label,
+      };
       dispatch({
-        type: ENQUIRY_FORM_ACTION.PICKUP_CURRENT_FLOOR,
-        payload: item.label,
+        type: ENQUIRY_FORM_ACTION.PICKUP_ADDRESS,
+        payload: tempObj,
       });
     },
-    [state.pickupCurrentFloor],
+    [state],
   );
 
   const handlePickupCurrentLiftStatus = useCallback(
     (item: TDropdownItem) => {
+      const { pickupAddress } = state;
+      const tempObj = {
+        ...pickupAddress,
+        isLiftAvailable: item.label,
+      };
       dispatch({
-        type: ENQUIRY_FORM_ACTION.PICKUP_CURRENT_LIFT_STATUS,
-        payload: item.label,
+        type: ENQUIRY_FORM_ACTION.PICKUP_ADDRESS,
+        payload: tempObj,
       });
     },
-    [state.pickupCurrentLiftStatus],
+    [state],
   );
 
   const handleDeliveryPinCode = useCallback(
     (text: string) => {
+      const { dropAddress } = state;
+      const tempObj = {
+        ...dropAddress,
+        pincode: text,
+      };
       dispatch({
-        type: ENQUIRY_FORM_ACTION.DELIVERY_PINCODE,
-        payload: text,
+        type: ENQUIRY_FORM_ACTION.DROP_ADDRESS,
+        payload: tempObj,
       });
     },
-    [state.deliveryPincode],
+    [state],
   );
 
   const handleDeliveryCity = useCallback(
     (item: TDropdownItem) => {
+      const { dropAddress } = state;
+      const tempObj = {
+        ...dropAddress,
+        city: item.label,
+      };
       dispatch({
-        type: ENQUIRY_FORM_ACTION.DELIVERY_CITY,
-        payload: item.label,
+        type: ENQUIRY_FORM_ACTION.DROP_ADDRESS,
+        payload: tempObj,
       });
     },
-    [state.deliveryCity],
+    [state],
   );
 
   const handleDeliveryState = useCallback(
     (item: TDropdownItem) => {
+      const { dropAddress } = state;
+      const tempObj = {
+        ...dropAddress,
+        state: item.label,
+      };
       dispatch({
-        type: ENQUIRY_FORM_ACTION.DELIVERY_STATE,
-        payload: item.label,
+        type: ENQUIRY_FORM_ACTION.DROP_ADDRESS,
+        payload: tempObj,
       });
     },
-    [state.deliveryState],
+    [state],
   );
 
   const handleDeliveryAddress = useCallback(
     (text: String) => {
+      const { dropAddress } = state;
+      const tempObj = {
+        ...dropAddress,
+        address: text,
+      };
       dispatch({
-        type: ENQUIRY_FORM_ACTION.DELIVERY_ADDRESS,
-        payload: text as string,
+        type: ENQUIRY_FORM_ACTION.DROP_ADDRESS,
+        payload: tempObj as string,
       });
     },
-    [state.deliveryAddress],
+    [state],
   );
 
   const handleDeliveryCurrentFloor = useCallback(
     (item: TDropdownItem) => {
+      const { dropAddress } = state;
+      const tempObj = {
+        ...dropAddress,
+        floor: item.label,
+      };
       dispatch({
-        type: ENQUIRY_FORM_ACTION.DELIVERY_CURRENT_FLOOR,
-        payload: item.label,
+        type: ENQUIRY_FORM_ACTION.DROP_ADDRESS,
+        payload: tempObj,
       });
     },
-    [state.deliveryCurrentFloor],
+    [state],
   );
 
   const handleDeliveryCCurrentLiftStatus = useCallback(
     (item: TDropdownItem) => {
+      const { dropAddress } = state;
+      const tempObj = {
+        ...dropAddress,
+        isLiftAvailable: item.label,
+      };
       dispatch({
         type: ENQUIRY_FORM_ACTION.DELIVERY_CURRENT_LIFT_STATUS,
-        payload: item.label,
+        payload: tempObj,
       });
     },
-    [state.deliveryCurrentLiftStatus],
+    [state],
   );
+
+  const handleSubmit = useCallback(() => {
+    const payload: IAddEnquiryRequest = state;
+    console.log(payload, 'payload..');
+
+    dispatched(addEnquiryRequest(payload));
+  }, [state]);
 
   const showBillingByIndividualView = () => {
     if (state.billingBy?.billing_by == 'Billing by Company') return null;
@@ -231,10 +303,10 @@ const AddEnquiryView: React.FC<{}> = ({}) => {
           <Label text="Company Name" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const {billingBy} = state;
+              const { billingBy } = state;
               const tempObj = {
                 ...billingBy,
-                billing_info: {...billingBy?.billing_info, company_name: text},
+                billing_info: { ...billingBy?.billing_info, company_name: text },
               };
               dispatch({
                 type: ENQUIRY_FORM_ACTION.BILLING_BY,
@@ -252,7 +324,7 @@ const AddEnquiryView: React.FC<{}> = ({}) => {
           <DropdownComponent
             data={approvalAuthorityOptions}
             onSelect={(item: TDropdownItem) => {
-              const {billingBy} = state;
+              const { billingBy } = state;
               const tempObj = {
                 ...billingBy,
                 billing_info: {
@@ -272,7 +344,7 @@ const AddEnquiryView: React.FC<{}> = ({}) => {
           <Label text="Authority Person Name" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const {billingBy} = state;
+              const { billingBy } = state;
               const tempObj = {
                 ...billingBy,
                 billing_info: {
@@ -295,7 +367,7 @@ const AddEnquiryView: React.FC<{}> = ({}) => {
           <Label text="Authority Mobile Number" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const {billingBy} = state;
+              const { billingBy } = state;
               const tempObj = {
                 ...billingBy,
                 billing_info: {
@@ -318,10 +390,10 @@ const AddEnquiryView: React.FC<{}> = ({}) => {
           <Label text="Company GST" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const {billingBy} = state;
+              const { billingBy } = state;
               const tempObj = {
                 ...billingBy,
-                billing_info: {...billingBy?.billing_info, company_gst: text},
+                billing_info: { ...billingBy?.billing_info, company_gst: text },
               };
               dispatch({
                 type: ENQUIRY_FORM_ACTION.BILLING_BY,
@@ -338,10 +410,10 @@ const AddEnquiryView: React.FC<{}> = ({}) => {
           <Label text="Employee Name" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const {billingBy} = state;
+              const { billingBy } = state;
               const tempObj = {
                 ...billingBy,
-                billing_info: {...billingBy?.billing_info, employee_name: text},
+                billing_info: { ...billingBy?.billing_info, employee_name: text },
               };
               dispatch({
                 type: ENQUIRY_FORM_ACTION.BILLING_BY,
@@ -358,7 +430,7 @@ const AddEnquiryView: React.FC<{}> = ({}) => {
           <Label text="Employee Designation" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const {billingBy} = state;
+              const { billingBy } = state;
               const tempObj = {
                 ...billingBy,
                 billing_info: {
@@ -381,7 +453,7 @@ const AddEnquiryView: React.FC<{}> = ({}) => {
           <Label text="Employee Mobile Number" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const {billingBy} = state;
+              const { billingBy } = state;
               const tempObj = {
                 ...billingBy,
                 billing_info: {
@@ -404,7 +476,7 @@ const AddEnquiryView: React.FC<{}> = ({}) => {
           <Label text="Company Address" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const {billingBy} = state;
+              const { billingBy } = state;
               const tempObj = {
                 ...billingBy,
                 billing_info: {
@@ -475,8 +547,8 @@ const AddEnquiryView: React.FC<{}> = ({}) => {
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
                 }}
-                style={{marginRight: 15, marginBottom: 10}}
-                textContainerStyle={{paddingLeft: 0}}
+                style={{ marginRight: 15, marginBottom: 10 }}
+                textContainerStyle={{ paddingLeft: 0 }}
                 onPress={(isChecked: boolean) => {
                   // shiftLugData.household = isChecked;
                   handleShiftingLugInputTextChange();
@@ -503,8 +575,8 @@ const AddEnquiryView: React.FC<{}> = ({}) => {
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
                 }}
-                style={{marginRight: 15}}
-                textContainerStyle={{paddingLeft: 0}}
+                style={{ marginRight: 15 }}
+                textContainerStyle={{ paddingLeft: 0 }}
                 onPress={(isChecked: boolean) => {
                   // shiftLugData.office = isChecked;
                   handleShiftingLugInputTextChange();
@@ -531,8 +603,8 @@ const AddEnquiryView: React.FC<{}> = ({}) => {
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
                 }}
-                style={{marginRight: 15}}
-                textContainerStyle={{paddingLeft: 0}}
+                style={{ marginRight: 15 }}
+                textContainerStyle={{ paddingLeft: 0 }}
                 onPress={(isChecked: boolean) => {
                   // shiftLugData.industrial = isChecked;
                   handleShiftingLugInputTextChange();
@@ -559,8 +631,8 @@ const AddEnquiryView: React.FC<{}> = ({}) => {
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
                 }}
-                style={{marginRight: 15}}
-                textContainerStyle={{paddingLeft: 0}}
+                style={{ marginRight: 15 }}
+                textContainerStyle={{ paddingLeft: 0 }}
                 onPress={(isChecked: boolean) => {
                   // shiftLugData.Vehcicle = isChecked;
                   handleShiftingLugInputTextChange();
@@ -587,8 +659,8 @@ const AddEnquiryView: React.FC<{}> = ({}) => {
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
                 }}
-                style={{marginRight: 15}}
-                textContainerStyle={{paddingLeft: 0}}
+                style={{ marginRight: 15 }}
+                textContainerStyle={{ paddingLeft: 0 }}
                 onPress={(isChecked: boolean) => {
                   // shiftLugData.Other = isChecked;
                   handleShiftingLugInputTextChange();
@@ -800,9 +872,7 @@ const AddEnquiryView: React.FC<{}> = ({}) => {
         <Spacer height={12} />
         <Button
           text="SUBMIT"
-          onPress={() => {
-            console.log(state, 'submitted data');
-          }}
+          onPress={handleSubmit}
           disabled={false}
           style={styles.previewButtonStyle}
           textStyle={styles.textStyle}

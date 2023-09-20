@@ -33,7 +33,7 @@ export enum CARCONDITION_FORM_ACTION {
   BATTERY_NO = 'BATTERY_NO',
   TYRE_NO = 'TYRE_NO',
   ANY_OTHER_ACCESSORIES = 'ANY_OTHER_ACCESSORIES',
-  REMARK = 'REMARK',
+  remarks = 'remarks',
   SCARATCHES = 'SCARATCHES',
   DENT = 'DENT',
   ANY_OTHER_OBSERVATION = 'ANY_OTHER_OBSERVATION',
@@ -42,21 +42,21 @@ export enum CARCONDITION_FORM_ACTION {
 /** CAR CONDITION FORM STATE */
 
 interface ICarConditionFormState {
-  carConditionNo: string;
+  carConditionNumber: string;
   chooseTemplate: string;
   dateOfCarCondition: string;
   cnBiltyLrNo: string;
   manufacturer: string;
   model: string;
   color: string;
-  year: string;
-  vehicleRegNo: string;
-  vehicleKm: string;
-  insuranceCompanyName: string;
-  insurancePolicyNo: string;
+  yearOfManufacturing: string;
+  vehicleRegistrationNumber: string;
+  vehicleCoveredDistanceInKM: string;
+  insuranceCompany: string;
+  insurancePolicyNumber: string;
   vehicleValue: string;
-  chasisNo: string;
-  engineNo: string;
+  chasisNumber: string;
+  engineNumber: string;
   stepney: string;
   wheelCaps: string;
   sideRareViewMirror: string;
@@ -71,13 +71,13 @@ interface ICarConditionFormState {
   floorRubberCarpet: string;
   fuel: string;
   carCover: string;
-  batteryNo: string;
-  tyreNo: string;
-  anyOtherAccessories: string;
-  remark: string;
+  batteryNumber: string;
+  tyreNumber: string;
+  anyOtherAccessorie: string;
+  remarks: string;
   scaratches: string;
   dent: string;
-  anyOtherObservation: string;
+  visibleObservation: string;
 }
 
 /** ACTION INTERFACE */
@@ -90,21 +90,21 @@ interface ICarConditionFormAction {
 /** INITIAL STATE */
 
 export const initialState: ICarConditionFormState = {
-  carConditionNo: '',
+  carConditionNumber: '',
   chooseTemplate: '',
   dateOfCarCondition: '',
   cnBiltyLrNo: '',
   manufacturer: '',
   model: '',
   color: '',
-  year: '',
-  vehicleRegNo: '',
-  vehicleKm: '',
-  insuranceCompanyName: '',
-  insurancePolicyNo: '',
+  yearOfManufacturing: '',
+  vehicleRegistrationNumber: '',
+  vehicleCoveredDistanceInKM: '',
+  insuranceCompany: '',
+  insurancePolicyNumber: '',
   vehicleValue: '',
-  chasisNo: '',
-  engineNo: '',
+  chasisNumber: '',
+  engineNumber: '',
   stepney: '',
   wheelCaps: '',
   sideRareViewMirror: '',
@@ -119,13 +119,13 @@ export const initialState: ICarConditionFormState = {
   floorRubberCarpet: '',
   fuel: '',
   carCover: '',
-  batteryNo: '',
-  tyreNo: '',
-  anyOtherAccessories: '',
-  remark: '',
+  batteryNumber: '',
+  tyreNumber: '',
+  anyOtherAccessorie: '',
+  remarks: '',
   scaratches: '',
   dent: '',
-  anyOtherObservation: '',
+  visibleObservation: '',
 };
 
 /** Car Condition Reducer */
@@ -137,7 +137,7 @@ export const carConditionReducer = (
   const {type, payload} = action;
   switch (type) {
     case CARCONDITION_FORM_ACTION.CARCONDITION_NO:
-      return {...state, carConditionNo: payload};
+      return {...state, carConditionNumber: payload};
     case CARCONDITION_FORM_ACTION.CHOOSE_TEMPLATE:
       return {...state, chooseTemplate: payload};
     case CARCONDITION_FORM_ACTION.DATE_OF_CARCONDITION:
@@ -151,21 +151,21 @@ export const carConditionReducer = (
     case CARCONDITION_FORM_ACTION.COLOR:
       return {...state, color: payload};
     case CARCONDITION_FORM_ACTION.YEAR:
-      return {...state, year: payload};
+      return {...state, yearOfManufacturing: payload};
     case CARCONDITION_FORM_ACTION.VEHICLE_REG_NO:
-      return {...state, vehicleRegNo: payload};
+      return {...state, vehicleRegistrationNumber: payload};
     case CARCONDITION_FORM_ACTION.VEHICLE_KM:
-      return {...state, vehicleKm: payload};
+      return {...state, vehicleCoveredDistanceInKM: payload};
     case CARCONDITION_FORM_ACTION.INSURANCE_COMPANY_NAME:
-      return {...state, insuranceCompanyName: payload};
+      return {...state, insuranceCompany: payload};
     case CARCONDITION_FORM_ACTION.INSURANCE_POLICY_NO:
-      return {...state, insurancePolicyNo: payload};
+      return {...state, insurancePolicyNumber: payload};
     case CARCONDITION_FORM_ACTION.VEHICLE_VALUE:
       return {...state, vehicleValue: payload};
     case CARCONDITION_FORM_ACTION.CHASIS_NO:
-      return {...state, chasisNo: payload};
+      return {...state, chasisNumber: payload};
     case CARCONDITION_FORM_ACTION.ENGINE_NO:
-      return {...state, engineNo: payload};
+      return {...state, engineNumber: payload};
     case CARCONDITION_FORM_ACTION.STEPNEY:
       return {...state, stepney: payload};
     case CARCONDITION_FORM_ACTION.WHEEL_CAPS:
@@ -195,19 +195,19 @@ export const carConditionReducer = (
     case CARCONDITION_FORM_ACTION.CAR_COVER:
       return {...state, carCover: payload};
     case CARCONDITION_FORM_ACTION.BATTERY_NO:
-      return {...state, batteryNo: payload};
+      return {...state, batteryNumber: payload};
     case CARCONDITION_FORM_ACTION.TYRE_NO:
-      return {...state, tyreNo: payload};
+      return {...state, tyreNumber: payload};
     case CARCONDITION_FORM_ACTION.ANY_OTHER_ACCESSORIES:
-      return {...state, anyOtherAccessories: payload};
-    case CARCONDITION_FORM_ACTION.REMARK:
-      return {...state, remark: payload};
+      return {...state, anyOtherAccessorie: payload};
+    case CARCONDITION_FORM_ACTION.remarks:
+      return {...state, remarks: payload};
     case CARCONDITION_FORM_ACTION.SCARATCHES:
       return {...state, scaratches: payload};
     case CARCONDITION_FORM_ACTION.DENT:
       return {...state, dent: payload};
     case CARCONDITION_FORM_ACTION.ANY_OTHER_OBSERVATION:
-      return {...state, anyOtherObservation: payload};
+      return {...state, visibleObservation: payload};
     default:
       return state;
   }

@@ -18,18 +18,18 @@ export enum MONEYRECEIPT_FORM_ACTION {
 /** MONEY RECEIPT FORM STATE */
 
 interface IMoneyReceiptFormState {
-  receiptNo: string;
+  receiptNumber: string;
   receiptDate: string;
   moneyReceiptDesigns: string;
   paymentType: string;
   receiptAgainst: string;
   billQuotationNo: string;
-  modeOfPayment: string;
-  refNo: string;
-  enterAmount: string;
+  paymentMode: string;
+  referenceNumber: string;
+  paymentAmount: string;
   cnBiltyLrNo: string;
-  noOfArticels: string;
-  dateOfArival: string;
+  numbersOfArticles: string;
+  arivalDate: string;
 }
 
 /** ACTION INTERFACE */
@@ -42,18 +42,18 @@ interface IMoneyReceiptFormAction {
 /** INITIAL STATE */
 
 export const initialState: IMoneyReceiptFormState = {
-  receiptNo: '',
+  receiptNumber: '',
   receiptDate: '',
   moneyReceiptDesigns: '',
   paymentType: '',
   receiptAgainst: '',
   billQuotationNo: '',
-  modeOfPayment: '',
-  refNo: '',
-  enterAmount: '',
+  paymentMode: '',
+  referenceNumber: '',
+  paymentAmount: '',
   cnBiltyLrNo: '',
-  noOfArticels: '',
-  dateOfArival: '',
+  numbersOfArticles: '',
+  arivalDate: '',
 };
 
 /** AddOrder Reducer */
@@ -65,7 +65,7 @@ export const moneyReceiptReducer = (
   const {type, payload} = action;
   switch (type) {
     case MONEYRECEIPT_FORM_ACTION.RECEIPT_NO:
-      return {...state, receiptNo: payload};
+      return {...state, receiptNumber: payload};
     case MONEYRECEIPT_FORM_ACTION.RECEIPT_DATE:
       return {...state, receiptDate: payload};
     case MONEYRECEIPT_FORM_ACTION.MONEY_RECEIPT_DESIGNS:
@@ -77,17 +77,17 @@ export const moneyReceiptReducer = (
     case MONEYRECEIPT_FORM_ACTION.BILL_QUOTATION_NO:
       return {...state, billQuotationNo: payload};
     case MONEYRECEIPT_FORM_ACTION.MODE_OF_PAYMENTS:
-      return {...state, modeOfPayment: payload};
+      return {...state, paymentMode: payload};
     case MONEYRECEIPT_FORM_ACTION.REF_NO:
-      return {...state, refNo: payload};
+      return {...state, referenceNumber: payload};
     case MONEYRECEIPT_FORM_ACTION.ENTER_AMOUNT:
-      return {...state, enterAmount: payload};
+      return {...state, paymentAmount: payload};
     case MONEYRECEIPT_FORM_ACTION.CN_BILTY_LR_NO:
       return {...state, cnBiltyLrNo: payload};
     case MONEYRECEIPT_FORM_ACTION.NO_OF_ARTICLES:
-      return {...state, noOfArticels: payload};
+      return {...state, numbersOfArticles: payload};
     case MONEYRECEIPT_FORM_ACTION.DATE_OF_ARRIVAL:
-      return {...state, dateOfArival: payload};
+      return {...state, arivalDate: payload};
     default:
       return state;
   }

@@ -1,5 +1,5 @@
-import React, {useCallback, useReducer, useState} from 'react';
-import {View} from 'react-native';
+import React, { useCallback, useReducer, useState } from 'react';
+import { View } from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
 import DatePickerComponent from '../../../../../common/DatePickerComponent';
@@ -7,40 +7,47 @@ import DropdownComponent from '../../../../../common/DropdownComponent';
 import Input from '../../../../../common/Input';
 import Label from '../../../../../common/Label';
 import Spacer from '../../../../../common/Spacer';
-import {TDropdownItem} from '../../../../../type/TDropdownItem';
-import {COLOR_BLACK, COLOR_BLUE} from '../../../../../utils/colors';
+import { TDropdownItem } from '../../../../../type/TDropdownItem';
+import { COLOR_BLACK, COLOR_BLUE } from '../../../../../utils/colors';
 import styles from './style';
 import shiftingLuggages from '../../../../../data/shiftingLuggage.json';
-import {Switch} from 'react-native-switch';
+import { Switch } from 'react-native-switch';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import BouncyCheckboxGroup, {
   ICheckboxButton,
 } from 'react-native-bouncy-checkbox-group';
 import vehicleTypeOptions from '../../../../../data/vehicleTypeOptions.json';
-import {initialState,
-        biltyReducer,
-         BILTY_FORM_ACTION} 
-         from './biltyReducer';
+import {
+  initialState,
+  biltyReducer,
+  BILTY_FORM_ACTION
+}
+  from './biltyReducer';
 import { formatDate } from '../../../../../utils/formatter';
-         
+import { ICreateBiltyRequest } from '../../../../../interface/order/ICreateBiltyRequest';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
+import Button from '../../../../../common/Button';
+import { createBiltyRequest } from '../../../../../redux/slices/OrderSlice';
+import Spinner from '../../../../../common/Spinner';
+
 
 const riskTypeOptions: Array<ICheckboxButton> = [
   {
     id: '1',
     text: 'Owners Risk',
     fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', borderRadius: 0, width: 15, height: 15},
-    innerIconStyle: {borderWidth: 1, borderRadius: 0, width: 15, height: 15},
-    textStyle: {fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none'},
-    style: {paddingRight: 16},
+    iconStyle: { borderColor: 'red', borderRadius: 0, width: 15, height: 15 },
+    innerIconStyle: { borderWidth: 1, borderRadius: 0, width: 15, height: 15 },
+    textStyle: { fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none' },
+    style: { paddingRight: 16 },
   },
   {
     id: '2',
     text: 'Carrier Risk',
     fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', borderRadius: 0, width: 15, height: 15},
-    innerIconStyle: {borderWidth: 1, borderRadius: 0, width: 15, height: 15},
-    textStyle: {fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none'},
+    iconStyle: { borderColor: 'red', borderRadius: 0, width: 15, height: 15 },
+    innerIconStyle: { borderWidth: 1, borderRadius: 0, width: 15, height: 15 },
+    textStyle: { fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none' },
   },
 ];
 
@@ -49,27 +56,27 @@ const payTypeOptions: Array<ICheckboxButton> = [
     id: '1',
     text: 'To Be Billed',
     fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', borderRadius: 0, width: 15, height: 15},
-    innerIconStyle: {borderWidth: 1, borderRadius: 0, width: 15, height: 15},
-    textStyle: {fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none'},
-    style: {paddingRight: 16},
+    iconStyle: { borderColor: 'red', borderRadius: 0, width: 15, height: 15 },
+    innerIconStyle: { borderWidth: 1, borderRadius: 0, width: 15, height: 15 },
+    textStyle: { fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none' },
+    style: { paddingRight: 16 },
   },
   {
     id: '2',
     text: 'To Pay',
     fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', borderRadius: 0, width: 15, height: 15},
-    innerIconStyle: {borderWidth: 1, borderRadius: 0, width: 15, height: 15},
-    textStyle: {fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none'},
-    style: {paddingRight: 16},
+    iconStyle: { borderColor: 'red', borderRadius: 0, width: 15, height: 15 },
+    innerIconStyle: { borderWidth: 1, borderRadius: 0, width: 15, height: 15 },
+    textStyle: { fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none' },
+    style: { paddingRight: 16 },
   },
   {
     id: '3',
     text: 'Paid',
     fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', borderRadius: 0, width: 15, height: 15},
-    innerIconStyle: {borderWidth: 1, borderRadius: 0, width: 15, height: 15},
-    textStyle: {fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none'},
+    iconStyle: { borderColor: 'red', borderRadius: 0, width: 15, height: 15 },
+    innerIconStyle: { borderWidth: 1, borderRadius: 0, width: 15, height: 15 },
+    textStyle: { fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none' },
   },
 ];
 
@@ -78,18 +85,18 @@ const insuranceOptions: Array<ICheckboxButton> = [
     id: '1',
     text: 'Insured',
     fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', borderRadius: 0, width: 15, height: 15},
-    innerIconStyle: {borderWidth: 1, borderRadius: 0, width: 15, height: 15},
-    textStyle: {fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none'},
-    style: {paddingRight: 16},
+    iconStyle: { borderColor: 'red', borderRadius: 0, width: 15, height: 15 },
+    innerIconStyle: { borderWidth: 1, borderRadius: 0, width: 15, height: 15 },
+    textStyle: { fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none' },
+    style: { paddingRight: 16 },
   },
   {
     id: '2',
     text: 'Not Insured',
     fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', borderRadius: 0, width: 15, height: 15},
-    innerIconStyle: {borderWidth: 1, borderRadius: 0, width: 15, height: 15},
-    textStyle: {fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none'},
+    iconStyle: { borderColor: 'red', borderRadius: 0, width: 15, height: 15 },
+    innerIconStyle: { borderWidth: 1, borderRadius: 0, width: 15, height: 15 },
+    textStyle: { fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none' },
   },
 ];
 
@@ -97,9 +104,9 @@ interface IBiltyViewProps {
   //
 }
 
-const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
-  const state = {pickupPincode: '', deliveryPincode: ''};
-  const [reducerState,dispatch] = useReducer(biltyReducer,initialState);
+const BiltyView: React.FC<IBiltyViewProps> = ({ }) => {
+  const state = { pickupPincode: '', deliveryPincode: '' };
+  const [reducerState, dispatch] = useReducer(biltyReducer, initialState);
   const [switchState, setSwitchState] = useState<boolean>(false);
   const [
     loadingAddressSameAsConsignerAddress,
@@ -110,6 +117,13 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
     setIsDeliveryAddressSameAsConsigneeAddress,
   ] = useState<boolean>(true);
   const [fixedFreight, setFixedFreight] = useState<boolean>(false);
+  const {
+    createBiltyRequesting,
+    createBiltySuccess,
+    createBiltyError,
+    createBiltyFailure,
+  } = useAppSelector(state => state.Order);
+  const dispatch2 = useAppDispatch();
 
   const switchWrapperStyle = switchState
     ? styles.switchMainWrapper
@@ -223,7 +237,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
       payload: text,
     });
   };
-  const handleVehicleType= (item: TDropdownItem) => {
+  const handleVehicleType = (item: TDropdownItem) => {
     dispatch({
       type: BILTY_FORM_ACTION.VEHICLE_TYPE,
       payload: item.label,
@@ -313,7 +327,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
       payload: text,
     });
   };
-  const handlePackingType= (item: TDropdownItem) => {
+  const handlePackingType = (item: TDropdownItem) => {
     dispatch({
       type: BILTY_FORM_ACTION.PACKING_TYPE,
       payload: item.label,
@@ -337,7 +351,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
       payload: text,
     });
   };
-  const handleUnitOne= (item: TDropdownItem) => {
+  const handleUnitOne = (item: TDropdownItem) => {
     dispatch({
       type: BILTY_FORM_ACTION.UNITONE,
       payload: item.label,
@@ -355,7 +369,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
       payload: text,
     });
   };
-  const handlePicupCharges= (item: TDropdownItem) => {
+  const handlePicupCharges = (item: TDropdownItem) => {
     dispatch({
       type: BILTY_FORM_ACTION.PICKUP_CHARGES,
       payload: item.label,
@@ -367,7 +381,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
       payload: text,
     });
   };
-  const handleDoorDeliveryCharges= (item: TDropdownItem) => {
+  const handleDoorDeliveryCharges = (item: TDropdownItem) => {
     dispatch({
       type: BILTY_FORM_ACTION.DOOR_DELIVERY_CHARGES,
       payload: item.label,
@@ -379,7 +393,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
       payload: text,
     });
   };
-  const handleDoorPackingCharges= (item: TDropdownItem) => {
+  const handleDoorPackingCharges = (item: TDropdownItem) => {
     dispatch({
       type: BILTY_FORM_ACTION.PACKING_CHARGES,
       payload: item.label,
@@ -391,7 +405,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
       payload: text,
     });
   };
-  const handlePackingMaterialCharges= (item: TDropdownItem) => {
+  const handlePackingMaterialCharges = (item: TDropdownItem) => {
     dispatch({
       type: BILTY_FORM_ACTION.PACKING_MATERIAL_CHARGES,
       payload: item.label,
@@ -403,7 +417,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
       payload: text,
     });
   };
-  const handleUnPackingCharges= (item: TDropdownItem) => {
+  const handleUnPackingCharges = (item: TDropdownItem) => {
     dispatch({
       type: BILTY_FORM_ACTION.UNPACKING_CHARGES,
       payload: item.label,
@@ -415,7 +429,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
       payload: text,
     });
   };
-  const handleLoadingCharges= (item: TDropdownItem) => {
+  const handleLoadingCharges = (item: TDropdownItem) => {
     dispatch({
       type: BILTY_FORM_ACTION.LOADING_CHARGES,
       payload: item.label,
@@ -427,7 +441,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
       payload: text,
     });
   };
-  const handleUnloadingCharges= (item: TDropdownItem) => {
+  const handleUnloadingCharges = (item: TDropdownItem) => {
     dispatch({
       type: BILTY_FORM_ACTION.UNLOADING_CHARGES,
       payload: item.label,
@@ -487,7 +501,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
       payload: item.label,
     });
   };
-  const handleDemurrageChargeApplicableAfter= (item: TDropdownItem) => {
+  const handleDemurrageChargeApplicableAfter = (item: TDropdownItem) => {
     dispatch({
       type: BILTY_FORM_ACTION.CHARGE_APPLICABLE_AFTER,
       payload: item.label,
@@ -511,7 +525,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
       payload: text,
     });
   };
-  const handleUnitTwo= (item: TDropdownItem) => {
+  const handleUnitTwo = (item: TDropdownItem) => {
     dispatch({
       type: BILTY_FORM_ACTION.UNITTWO,
       payload: item.label,
@@ -529,6 +543,14 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
     //   payload: formatDate(date),
     // });
   };
+
+  const handleCreateBilty = useCallback(() => {
+    const payload: ICreateBiltyRequest = reducerState;
+    console.log(payload, 'payload carconditon req');
+
+    dispatch2(createBiltyRequest(payload));
+  }, [dispatch2, reducerState]);
+
   const renderLoadingAddressView = () => {
     return (
       <>
@@ -630,7 +652,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
               <Label text="Bilty / LR / CN No." style={styles.label} />
             </View>
             <View style={[styles.elementContainer, styles.switchMainWrapper3]}>
-              <View style={[styles.itemContainer, {alignItems: 'center'}]}>
+              <View style={[styles.itemContainer, { alignItems: 'center' }]}>
                 <Switch
                   containerStyle={styles.switchStyle}
                   value={switchState}
@@ -646,7 +668,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
               </View>
               <View style={[styles.itemContainer, switchWrapperStyle]}>
                 <Input
-                  onChangeText={() => {}}
+                  onChangeText={() => { }}
                   containerStyle={styles.switchInputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -715,13 +737,13 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer2}>
-                <Label text="Pincode" style={styles.label} />
-                <Input
-                  onChangeText={handleConsignerPinCode}
-                  containerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
-                  selectionColor={COLOR_BLACK}
-                />
+              <Label text="Pincode" style={styles.label} />
+              <Input
+                onChangeText={handleConsignerPinCode}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                selectionColor={COLOR_BLACK}
+              />
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
@@ -766,8 +788,8 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
                 }}
-                style={{marginRight: 15}}
-                textContainerStyle={{paddingLeft: 0}}
+                style={{ marginRight: 15 }}
+                textContainerStyle={{ paddingLeft: 0 }}
                 onPress={(isChecked: boolean) => {
                   setIsLoadingAddressSameAsConsignerAddress(isChecked);
                 }}
@@ -824,13 +846,13 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer2}>
-                <Label text="Pincode" style={styles.label} />
-                <Input
-                  onChangeText={handleConsigneePinCode}
-                  containerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
-                  selectionColor={COLOR_BLACK}
-                />
+              <Label text="Pincode" style={styles.label} />
+              <Input
+                onChangeText={handleConsigneePinCode}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                selectionColor={COLOR_BLACK}
+              />
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
@@ -875,8 +897,8 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
                 }}
-                style={{marginRight: 15}}
-                textContainerStyle={{paddingLeft: 0}}
+                style={{ marginRight: 15 }}
+                textContainerStyle={{ paddingLeft: 0 }}
                 onPress={(isChecked: boolean) => {
                   setIsDeliveryAddressSameAsConsigneeAddress(isChecked);
                 }}
@@ -1148,8 +1170,8 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
                 }}
-                style={{marginRight: 15}}
-                textContainerStyle={{paddingLeft: 0}}
+                style={{ marginRight: 15 }}
+                textContainerStyle={{ paddingLeft: 0 }}
                 onPress={(isChecked: boolean) => {
                   setFixedFreight(isChecked);
                 }}
@@ -1421,6 +1443,15 @@ const BiltyView: React.FC<IBiltyViewProps> = ({}) => {
           </View>
         </CollapsibleView>
         <Spacer height={8} />
+        <Button
+          text="CREATE"
+          onPress={handleCreateBilty}
+          disabled={false}
+          style={styles.previewButtonStyle}
+          textStyle={styles.textStyle}
+        />
+        <Spacer height={8} />
+        <Spinner show={createBiltyRequesting} />
       </View>
     </AvoidSoftInputViewHOC>
   );
