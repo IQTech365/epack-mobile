@@ -8,7 +8,9 @@ import DropdownComponent from '../../../../../common/DropdownComponent';
 import { COLOR_BLUE } from '../../../../../utils/colors';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import styles from './style';
-import accountType from '../../../../../data/accountType.json';
+import signatureType from '../../../../../data/signatureType.json';
+import roleType from '../../../../../data/roleType.json';
+import employeName from '../../../../../data/employeName.json';
 
 interface ISigatureUpdateProps { }
 
@@ -24,7 +26,7 @@ const SignatureUpdateView: React.FC<ISigatureUpdateProps> = ({ }) => {
                 <View style={styles.textContainer2}>
                     <Label text="Choose Signature Type" style={styles.label} />
                     <DropdownComponent
-                        data={accountType}
+                        data={signatureType}
                         onSelect={handleAccountType}
                     />
                 </View>
@@ -32,7 +34,7 @@ const SignatureUpdateView: React.FC<ISigatureUpdateProps> = ({ }) => {
                 <View style={styles.textContainer2}>
                     <Label text="Role Type" style={styles.label} />
                     <DropdownComponent
-                        data={accountType}
+                        data={roleType}
                         onSelect={handleAccountType}
                     />
                 </View>
@@ -42,7 +44,7 @@ const SignatureUpdateView: React.FC<ISigatureUpdateProps> = ({ }) => {
                 <View style={styles.textContainer2}>
                     <Label text="Name of Employe" style={styles.label} />
                     <DropdownComponent
-                        data={accountType}
+                        data={employeName}
                         onSelect={handleAccountType}
                     />
                 </View>

@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {View, Text, FlatList} from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, FlatList } from 'react-native';
 import Header from '../../../common/Header';
 import Spacer from '../../../common/Spacer';
 import EnquiryInfoView from './components/EnquiryInfoView';
@@ -11,8 +11,9 @@ import FollowupListHeaderComponent from './components/FollowupListHeaderComponen
 import FollowupView from './components/FollowupView';
 import SurveyView from './components/FollowupView';
 import DetailsView from './components/DetailsView';
+import PackingMaterialsView from './components/PackingMaterialsView';
 
-const EnquiryDetailsView: React.FC<{}> = ({}) => {
+const EnquiryDetailsView: React.FC<{}> = ({ }) => {
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
 
   const handleTabChange = (index: number) => {
@@ -29,11 +30,13 @@ const EnquiryDetailsView: React.FC<{}> = ({}) => {
         return <SurveyView taskName='SURVEY' assigneeRole='Survey' />
       case 3:
         return <AddQuotationView showHeader={false} />
+      case 4:
+        return <PackingMaterialsView />
       default:
         return null;
     }
   };
-  
+
   return (
     <View style={styles.container}>
       <Header label="ENQUIRY DETAILS" canGoBack={true} />
@@ -41,11 +44,11 @@ const EnquiryDetailsView: React.FC<{}> = ({}) => {
       <Spacer height={10} />
       <View style={styles.tabsContainer}>
         <FlatList
-          style={{paddingHorizontal: 8}}
+          style={{ paddingHorizontal: 8 }}
           data={tabOptions}
           horizontal
           showsHorizontalScrollIndicator={false}
-          renderItem={({item, index}) => (
+          renderItem={({ item, index }) => (
             <Tab
               label={item.label}
               index={index}

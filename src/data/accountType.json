@@ -1,12 +1,12 @@
 [
     {
-      "label": "Saving",
+      "label": "Banking Account",
       "value": "1"
     },
     {
-      "label": "Credit",
+      "label": "UPI",
       "value": "2"
-    },
+    }
     
   ]
   

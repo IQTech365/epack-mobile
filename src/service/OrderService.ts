@@ -1,6 +1,6 @@
 import {AxiosResponse} from 'axios';
 import {Api} from '../http/Api';
-import {ADD_ENQUIRY, EDIT_COMPANY} from '../http/Endpoint';
+import {ADD_ENQUIRY, CREATE_BILTY, CREATE_CAR_CONDITION, CREATE_MONEY_RECEIPT, EDIT_COMPANY} from '../http/Endpoint';
 import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
 import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
 import { IOrderDetailsResponse } from '../interface/order/IOrderDetailsResponse';
@@ -30,19 +30,19 @@ export const AddOrderService = async (payload: IAddOrderRequest): Promise<IAddOr
 export const CreateCarConditionService = async (payload: ICreateCarConditionRequest): Promise<ICreateCarConditionResponse> => {
     console.log('CreateCarConditionService--payload--', JSON.stringify(payload));
     const api = Api.getInstance();
-    return await api.post<ICreateCarConditionRequest, AxiosResponse<ICreateCarConditionResponse>>(payload, ADD_ENQUIRY);
+    return await api.post<ICreateCarConditionRequest, AxiosResponse<ICreateCarConditionResponse>>(payload, CREATE_CAR_CONDITION);
 }
 
 export const CreateBiltyService = async (payload: ICreateBiltyRequest): Promise<ICreateBiltyResponse> => {
     console.log('CreateBiltyService--payload--', JSON.stringify(payload));
     const api = Api.getInstance();
-    return await api.post<ICreateBiltyRequest, AxiosResponse<ICreateBiltyResponse>>(payload, ADD_ENQUIRY);
+    return await api.post<ICreateBiltyRequest, AxiosResponse<ICreateBiltyResponse>>(payload, CREATE_BILTY);
 }
 
 export const CreateMoneyReceiptService = async (payload: ICreateMoneyReceiptRequest): Promise<ICreateMoneyReceiptResponse> => {
     console.log('CreateMoneyReceiptService--payload--', JSON.stringify(payload));
     const api = Api.getInstance();
-    return await api.post<ICreateMoneyReceiptRequest, AxiosResponse<ICreateMoneyReceiptResponse>>(payload, ADD_ENQUIRY);
+    return await api.post<ICreateMoneyReceiptRequest, AxiosResponse<ICreateMoneyReceiptResponse>>(payload, CREATE_MONEY_RECEIPT);
 }
 
 export const CreateInvoiceService = async (payload: ICreateInvoiceRequest): Promise<ICreateInvoiceResponse> => {

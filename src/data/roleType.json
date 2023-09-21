@@ -1,0 +1,22 @@
+[
+    {
+      "label": "Admin",
+      "value": "1"
+    },
+    {
+      "label": "Head Office Manager",
+      "value": "2"
+    },
+    {
+        "label": "Enquriy Manager",
+        "value": "3"
+      },
+      {
+        "label": "Surveyor",
+        "value": "4"
+      },
+      {
+        "label": "Shifting Manager",
+        "value": "5"
+      }
+  ]

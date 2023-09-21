@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import { COLOR_BLACK, COLOR_GRAY2, COLOR_WHITE } from '../../../../../utils/colors';
+import { COLOR_BLACK, COLOR_BLUE, COLOR_GRAY2, COLOR_WHITE } from '../../../../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -81,7 +81,14 @@ const styles = StyleSheet.create({
     },
     datePickerContainer: {
         width: width * 0.9,
-    }
+    },
+    textStyle: {
+        color: COLOR_WHITE,
+      },
+      previewButtonStyle: {
+        backgroundColor: COLOR_BLUE,
+        borderRadius: 5,
+      },
 });
 
 export default styles;
