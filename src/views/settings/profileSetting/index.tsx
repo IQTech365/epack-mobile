@@ -11,8 +11,9 @@ import FooterContentUpdateView from './components/FooterContentUpdateView';
 import DocumentUpdateView from './components/DocumentUpdateView';
 import SignatureUpdateView from './components/SignatureUpdateView';
 import ContactDetailUpdateView from './components/contactDetailUpdateView';
+import AddAccountView from './components/AddAccountView';
 
-const PackersProfileSetting = props => {
+const PackersProfileSetting = (props: any) => {
     const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
 
     const handleTabChange = (index: number) => {
@@ -22,7 +23,7 @@ const PackersProfileSetting = props => {
     const showTabItem = () => {
         switch (activeTabIndex) {
             case 0:
-                return <AccountDetailUpdateView />
+                return <AddAccountView />
             case 1:
                 return <FooterContentUpdateView />
             case 2:

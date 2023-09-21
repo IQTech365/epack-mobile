@@ -19,15 +19,16 @@ const SettingsView = ({ navigation }) => {
             <Spacer height={40} />
             <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
                 <SettingCard
-                    item={'Packers Profile Setting'}
+                    item={'Packers Profile'}
                     onPress={handleProfileSetting}
+                    cardName='Profile'
                 />
-                <SettingCard item={'Set Serial No'} />
+                <SettingCard item={'Serial Number'} cardName='SerialNo' />
             </View>
             <Spacer height={20} />
             <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-                <SettingCard item={'Tempates Setting'} />
-                <SettingCard item={'Roll Management'} />
+                <SettingCard item={'Tempates'} cardName='Template' />
+                <SettingCard item={'Roll Management'} cardName='Role' />
             </View>
         </View>
     );

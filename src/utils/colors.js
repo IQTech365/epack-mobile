@@ -13,3 +13,7 @@ export const COLOR_GRAY2 = '#D9D9D9';
 export const COLOR_GRAY3 = '#F9F9F9'
 export const COLOR_ERROR2 = '#DF240F';
 export const COLOR_GREEN = '#1A9F56';
+export const COLOR_PURPLE = '#F1D5FE';
+export const COLOR_PINK = '#FCC4DF';
+export const COLOR_YELLOW = '#F5E7CB';
+export const COLOR_ORANGE2 = '#FFD4D3';

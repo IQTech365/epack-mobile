@@ -13,6 +13,12 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR_WHITE,
     flex: 1,
   },
+  closeContainer: {
+    width: width * 0.9,
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
   contentWrapper: {
     flex: 1,
   },

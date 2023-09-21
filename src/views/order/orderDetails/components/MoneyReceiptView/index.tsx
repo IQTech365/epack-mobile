@@ -125,11 +125,9 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({ }) => {
   };
 
   const handleCreate = useCallback(() => {
-
-    const payload: ICreateMoneyReceiptRequest = reducerState;
-    console.log(payload, 'payload create money');
-
-    dispatch2(createMoneyReceiptRequest(payload));
+    // const payload: ICreateMoneyReceiptRequest = reducerState;
+    // console.log(payload, 'payload create money');
+    // dispatch2(createMoneyReceiptRequest(payload));
   }, []);
 
   useEffect(() => {
