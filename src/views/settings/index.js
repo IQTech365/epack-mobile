@@ -10,9 +10,21 @@ const spinner = require('../../images/loader.json');
 
 const SettingsView = ({ navigation }) => {
     const handleProfileSetting = () => {
-        console.log('pres...');
         navigation.navigate(SettingStackRoute.ProfileSetting);
     };
+
+    const handleSerialNoSetting = () => {
+        navigation.navigate(SettingStackRoute.SerialNoSetting);
+    }
+
+    const handleTemplateSetting = () => {
+        navigation.navigate(SettingStackRoute.TemplateSetting);
+    }
+    
+    const handleRoleSetting = () => {
+        navigation.navigate(SettingStackRoute.RoleSetting);
+    }
+
     return (
         <View style={{ backgroundColor: COLOR_WHITE, flex: 1 }}>
             <Header canGoBack={true} label="Settings" />
@@ -23,12 +35,12 @@ const SettingsView = ({ navigation }) => {
                     onPress={handleProfileSetting}
                     cardName='Profile'
                 />
-                <SettingCard item={'Serial Number'} cardName='SerialNo' />
+                <SettingCard item={'Serial Number'} cardName='SerialNo' onPress={handleSerialNoSetting} />
             </View>
             <Spacer height={20} />
             <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-                <SettingCard item={'Tempates'} cardName='Template' />
-                <SettingCard item={'Roll Management'} cardName='Role' />
+                <SettingCard item={'Tempates'} cardName='Template' onPress={handleTemplateSetting} />
+                <SettingCard item={'Roll Management'} cardName='Role' onPress={handleRoleSetting} />
             </View>
         </View>
     );

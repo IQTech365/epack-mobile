@@ -1,11 +1,15 @@
 import React, {ReactElement, useCallback, useMemo, forwardRef} from 'react';
-import {View, TouchableOpacity} from 'react-native';
+import {View } from 'react-native';
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
 } from '@gorhom/bottom-sheet';
 import styles from './style';
 import CloseIcon from '../../../images/icons/close_icon.svg';
+
+import {
+  TouchableOpacity,
+} from 'react-native-gesture-handler';
 
 interface IFormModalProps {
   children: ReactElement;
@@ -14,7 +18,7 @@ interface IFormModalProps {
 
 const FormModal = forwardRef<BottomSheet, IFormModalProps>(
   ({children, onClose}, ref) => {
-    const snapPoints = useMemo(() => ['50%', '100%'], []);
+    const snapPoints = useMemo(() => ['150%'], []);
 
     const handleSheetChanges = useCallback((index: number) => {
       console.log('handleSheetChanges', index);

@@ -12,15 +12,14 @@ import {
   COLOR_GRAY,
 } from '../../../utils/colors';
 import {useCompanyRegistrationContextHook} from '../../../provider/CompanyRegistrationContextProvider';
+import Header from '../../../common/Header';
 
 interface ISerialNoSettingPageViewProps {
-  currentStep: number;
-  setCurrentStep: (step: number) => void;
+  
 }
 
 const SerialNoSettingPageView: React.FC<ISerialNoSettingPageViewProps> = ({
-  currentStep,
-  setCurrentStep,
+  
 }) => {
   const {state, setDocumentSerialNumber} = useCompanyRegistrationContextHook();
   // console.log('state--------', JSON.stringify(state, null, ' '));
@@ -71,16 +70,16 @@ const SerialNoSettingPageView: React.FC<ISerialNoSettingPageViewProps> = ({
   };
 
   const handlePreviousClick = useCallback(() => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
-    }
+    // if (currentStep > 1) {
+    //   setCurrentStep(currentStep - 1);
+    // }
   }, []);
 
   const handleNextClick = useCallback(() => {
-    if (currentStep >= 1 && currentStep < 5) {
-      // validateRegistrationForm();
-      setCurrentStep(currentStep + 1);
-    }
+    // if (currentStep >= 1 && currentStep < 5) {
+    //   // validateRegistrationForm();
+    //   setCurrentStep(currentStep + 1);
+    // }
   }, [state]);
 
   return (
@@ -214,26 +213,6 @@ const SerialNoSettingPageView: React.FC<ISerialNoSettingPageViewProps> = ({
             </View>
           </>
         </AvoidSoftInputViewHOC>
-      </View>
-      <View style={styles.buttonContainer}>
-        <View style={styles.prevButtonContainer}>
-          {currentStep > 1 ? (
-            <Button
-              text="Previous"
-              onPress={handlePreviousClick}
-              style={styles.buttonStyle2}
-              textStyle={styles.buttonTextStyle}
-            />
-          ) : null}
-        </View>
-        <View style={styles.nextButtonContainer}>
-          <Button
-            text={currentStep == 5 ? 'Save' : 'Next'}
-            onPress={handleNextClick}
-            style={styles.buttonStyle2}
-            textStyle={styles.buttonTextStyle}
-          />
-        </View>
       </View>
     </View>
   );

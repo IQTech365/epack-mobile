@@ -7,8 +7,6 @@ import styles from './style';
 import RegisterCompanyView from './registerCompany';
 import SignatureViewPage from './signature';
 import CompanyLogoPageView from './companyLogo';
-import SerialNoSettingPageView from './serialNoSettings';
-import TemplateSettingPageView from './templateSettings';
 import {CompanyRegistrationContextProvider} from '../../provider/CompanyRegistrationContextProvider';
 
 interface IRegistrationPageViewProps {
@@ -30,10 +28,6 @@ const RegistrationPageView: React.FC<IRegistrationPageViewProps> = ({navigation}
         return <CompanyLogoPageView currentStep={currentStep} setCurrentStep={handleCurrentStep} />;
       case 3:
         return <SignatureViewPage currentStep={currentStep} setCurrentStep={handleCurrentStep} />;
-      case 4:
-        return <SerialNoSettingPageView currentStep={currentStep} setCurrentStep={handleCurrentStep} />;
-      case 5:
-        return <TemplateSettingPageView currentStep={currentStep} setCurrentStep={handleCurrentStep} />;
       default:
         return null;
     }

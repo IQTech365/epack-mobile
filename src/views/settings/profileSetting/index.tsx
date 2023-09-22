@@ -12,6 +12,7 @@ import DocumentUpdateView from './components/DocumentUpdateView';
 import SignatureUpdateView from './components/SignatureUpdateView';
 import ContactDetailUpdateView from './components/contactDetailUpdateView';
 import AddAccountView from './components/AddAccountView';
+import AddContactView from './components/AddContactView';
 
 const PackersProfileSetting = (props: any) => {
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
@@ -31,7 +32,7 @@ const PackersProfileSetting = (props: any) => {
       case 3:
         return <SignatureUpdateView />;
       case 4:
-        return <ContactDetailUpdateView />;
+        return <AddContactView />;
       default:
         return null;
     }

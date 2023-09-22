@@ -48,7 +48,9 @@ const ClientStackRoute = {
 };
 const SettingStackRoute = {
   ProfileSetting: 'ProfileSetting',
-
+  SerialNoSetting: 'SerialNoSetting',
+  RoleSetting: 'RoleSetting',
+  TemplateSetting: 'TemplateSetting',
 };
 
 export {
