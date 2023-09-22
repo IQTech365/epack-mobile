@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     },
     emptyContainer: {
         width: width * 0.8,
-        paddingVertical: 50,
+        // paddingVertical: 50,
         borderRadius: 5,
         borderWidth: 1,
         borderColor: COLOR_GRAY,

@@ -1,0 +1,17 @@
+[
+    {
+        "template": "Quotation"
+    },
+    {
+        "template": "Invoice"
+    },
+    {
+        "template": "Bilty"
+    },
+    {
+        "template": "Car Condition"
+    },
+    {
+        "template": "Money Receipt"
+    }
+]

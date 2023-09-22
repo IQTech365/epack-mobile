@@ -26,10 +26,14 @@ const styles = StyleSheet.create({
     width: width * 0.9,
     alignSelf: 'center',
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'space-around'
   },
-
+  applicableWrapper: {
+    width: width * 0.9,
+    alignSelf: 'center',
+    alignItems: 'flex-start',
+  },
   textContainer: {
     width: width * 0.44,
     justifyContent: 'space-between',
@@ -42,7 +46,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     alignSelf: 'center',
   },
-
   inputContainer: {
     width: '100%',
     borderColor: COLOR_GRAY2,
@@ -83,6 +86,9 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR_BLUE,
     borderRadius: 5,
   },
+  checkboxItem: {
+    paddingVertical: 5,
+  }
 });
 
 export default styles;

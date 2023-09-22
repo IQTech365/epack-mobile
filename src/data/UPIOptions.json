@@ -1,0 +1,22 @@
+[
+  {
+    "label": "Paytm",
+    "value": "1"
+  },
+  {
+    "label": "Phone Pay",
+    "value": "2"
+  },
+  {
+    "label": "BHIM UPI",
+    "value": "3"
+  },
+  {
+    "label": "Bharat Pay",
+    "value": "4"
+  },
+  {
+    "label": "Other",
+    "value": "5"
+  }
+]

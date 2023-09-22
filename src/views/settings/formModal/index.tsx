@@ -1,59 +1,56 @@
-import React, {ReactElement, useCallback, useMemo, useRef, forwardRef} from 'react';
-import {View, Text, Dimensions} from 'react-native';
-import BottomSheet, { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet';
+import React, {ReactElement, useCallback, useMemo, forwardRef} from 'react';
+import {View, TouchableOpacity} from 'react-native';
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetBackdropProps,
+} from '@gorhom/bottom-sheet';
 import styles from './style';
-const {height} = Dimensions.get('window');
+import CloseIcon from '../../../images/icons/close_icon.svg';
 
 interface IFormModalProps {
   children: ReactElement;
+  onClose: () => void;
 }
 
-const FormModal = forwardRef<BottomSheetModal, IFormModalProps>(({children}, ref) => {
-    const snapPoints = useMemo(() => [1000], []);
+const FormModal = forwardRef<BottomSheet, IFormModalProps>(
+  ({children, onClose}, ref) => {
+    const snapPoints = useMemo(() => ['50%', '100%'], []);
 
     const handleSheetChanges = useCallback((index: number) => {
       console.log('handleSheetChanges', index);
     }, []);
-  
-    return (
-      <View style={styles.container}>
-        <BottomSheetModal
-          ref={ref}
-          index={-1}
-          snapPoints={snapPoints}
-          backdropComponent={BottomSheetBackdrop}
-          onChange={handleSheetChanges}>
-          <View style={styles.contentContainer}>
-            {children}
-          </View>
-        </BottomSheetModal>
-      </View>
+
+    const renderBackdrop = useCallback(
+      (props: BottomSheetBackdropProps) => (
+        <BottomSheetBackdrop
+          {...props}
+          disappearsOnIndex={0}
+          appearsOnIndex={1}
+          style={{backgroundColor: 'red'}}
+        />
+      ),
+      [],
     );
 
-});
-
-// const FormModal: React.FC<IFormModalProps> = ({children, onClose}) => {
-//   const bottomSheetRef = useRef<BottomSheet>(null);
-
-//   const snapPoints = useMemo(() => ['25%', '50%'], []);
-
-//   const handleSheetChanges = useCallback((index: number) => {
-//     console.log('handleSheetChanges', index);
-//   }, []);
-
-//   return (
-//     <View style={styles.container}>
-//       <BottomSheet
-//         ref={bottomSheetRef}
-//         index={1}
-//         snapPoints={snapPoints}
-//         onChange={handleSheetChanges}>
-//         <View style={styles.contentContainer}>
-//           {children}
-//         </View>
-//       </BottomSheet>
-//     </View>
-//   );
-// };
+    return (
+      <BottomSheet
+        ref={ref}
+        index={-1}
+        snapPoints={snapPoints}
+        backdropComponent={renderBackdrop}
+        containerStyle={{flex: 1}}
+        onChange={handleSheetChanges}>
+        <View style={{flex: 1}}>
+          <View style={styles.closeContainer}>
+            <TouchableOpacity onPress={onClose} activeOpacity={0.4}>
+              <CloseIcon width={32} height={32} />
+            </TouchableOpacity>
+          </View>
+          {children}
+        </View>
+      </BottomSheet>
+    );
+  },
+);
 
 export default FormModal;

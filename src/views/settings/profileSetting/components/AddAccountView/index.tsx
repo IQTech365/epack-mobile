@@ -1,16 +1,19 @@
 import React, {useRef} from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, Dimensions} from 'react-native';
 import styles from './style';
-import BottomSheet, {BottomSheetModal,} from '@gorhom/bottom-sheet';
+import BottomSheet from '@gorhom/bottom-sheet';
 import FormModal from '../../../formModal';
 import AccountDetailUpdateView from '../AccountDetailUpdateView';
-import {GestureHandlerRootView, TouchableOpacity} from 'react-native-gesture-handler';
+import {
+  TouchableOpacity,
+} from 'react-native-gesture-handler';
+const {height} = Dimensions.get('screen');
 
 const AddAccountView = () => {
-  const bottomSheetRef = useRef<BottomSheetModal>(null);
+  const bottomSheetRef = useRef<BottomSheet>(null);
 
   const presentModal = () => {
-    bottomSheetRef.current?.present();
+    bottomSheetRef.current?.snapToIndex(1);
   };
 
   const dismissModal = () => {
@@ -24,8 +27,8 @@ const AddAccountView = () => {
           <Text>Add Account</Text>
         </TouchableOpacity>
       </View>
-      <FormModal ref={bottomSheetRef}>
-        <AccountDetailUpdateView onClose={dismissModal} />
+      <FormModal ref={bottomSheetRef} onClose={dismissModal}>
+        <AccountDetailUpdateView />
       </FormModal>
     </View>
   );

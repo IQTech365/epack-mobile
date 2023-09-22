@@ -22,13 +22,13 @@ const Main = () => {
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <NavigationContainer>
-        <PortalProvider>
+        {/* <PortalProvider> */}
           <BottomSheetModalProvider>
             <Provider store={store}>
               {loggedIn ? <DrawerNavigator /> : <AuthStackNavigator />}
             </Provider>
           </BottomSheetModalProvider>
-        </PortalProvider>
+        {/* </PortalProvider> */}
       </NavigationContainer>
     </GestureHandlerRootView>
   );

@@ -9,9 +9,9 @@ const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     width: width,
     backgroundColor: COLOR_WHITE,
-    flex: 1,
   },
   tabsContainer: {
     width: width,
