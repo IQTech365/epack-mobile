@@ -67,6 +67,25 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR_BLUE,
     borderRadius: 5,
   },
+  applicableWrapper: {
+    width: width * 0.9,
+    alignSelf: 'center',
+    alignItems: 'flex-start',
+  },
+  checkboxItem: {
+    paddingVertical: 5,
+  },
+  toolbarContentContainer: {
+    width: width * 0.9,
+    alignSelf: 'center',
+  },
+  editorContentContainer: {
+    width: width * 0.9,
+    alignSelf: 'center',
+    height: 250,
+    borderWidth: 1,
+    borderColor: COLOR_GRAY2,
+  }
 });
 
 export default styles;

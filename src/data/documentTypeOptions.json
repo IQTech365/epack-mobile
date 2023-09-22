@@ -1,0 +1,44 @@
+[
+    {
+      "label": "GST Number",
+      "value": "1"
+    },
+    {
+      "label": "ISO Certificate",
+      "value": "2"
+    },
+    {
+      "label": "Shop Act Number",
+      "value": "3"
+    },
+    {
+      "label": "MSME Regd. Number",
+      "value": "4"
+    },
+    {
+      "label": "IBA Approval",
+      "value": "5"
+    },
+    
+    {
+      "label": "Proprietorship",
+      "value": "6"
+    },
+    {
+      "label": "Partnership Firm",
+      "value": "7"
+    },
+    {
+      "label": "Pvt. Ltd. Company",
+      "value": "8"
+    },
+    {
+      "label": "LLP",
+      "value": "9"
+    },
+    {
+      "label": "Other",
+      "value": "10"
+    }
+  ]
+  
