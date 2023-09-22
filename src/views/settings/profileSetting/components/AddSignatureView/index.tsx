@@ -9,8 +9,9 @@ import Spacer from '../../../../../common/Spacer';
 import EmptyView from '../../../emptyView';
 import DocumentUpdateView from '../DocumentUpdateView';
 import FooterContentUpdateView from '../FooterContentUpdateView';
+import SignatureUpdateView from '../SignatureUpdateView';
 
-const AddFooterContentView = () => {
+const AddSignatureView = () => {
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   const presentModal = () => {
@@ -33,14 +34,14 @@ const AddFooterContentView = () => {
         }}
         renderItem={({item, index}) => null}
         ListEmptyComponent={
-          <EmptyView message="You have not added any footer content yet!" onPress={presentModal} />
+          <EmptyView message="You have not added any signature yet!" onPress={presentModal} />
         }
       />
       <FormModal ref={bottomSheetRef} onClose={dismissModal}>
-        <FooterContentUpdateView />
+        <SignatureUpdateView />
       </FormModal>
     </View>
   );
 };
 
-export default AddFooterContentView;
+export default AddSignatureView;

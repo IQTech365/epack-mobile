@@ -15,6 +15,7 @@ import AddAccountView from './components/AddAccountView';
 import AddContactView from './components/AddContactView';
 import AddDocumentView from './components/AddDocumentView';
 import AddFooterContentView from './components/AddFooterContentView';
+import AddSignatureView from './components/AddSignatureView';
 
 const PackersProfileSetting = (props: any) => {
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
@@ -32,7 +33,7 @@ const PackersProfileSetting = (props: any) => {
       case 2:
         return <AddDocumentView />;
       case 3:
-        return <SignatureUpdateView />;
+        return <AddSignatureView />;
       case 4:
         return <AddContactView />;
       default:

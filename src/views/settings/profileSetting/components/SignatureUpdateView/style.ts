@@ -2,6 +2,7 @@ import {StyleSheet, Dimensions} from 'react-native';
 import {
   COLOR_BLACK,
   COLOR_BLUE,
+  COLOR_GRAY,
   COLOR_GRAY2,
   COLOR_WHITE,
 } from '../../../../../utils/colors';
@@ -99,6 +100,62 @@ const styles = StyleSheet.create({
   previewButtonStyle: {
     backgroundColor: COLOR_BLUE,
     borderRadius: 5,
+  },
+  signatureWrapper: {
+    width: width * 0.90,
+    height: 200,
+    alignSelf: 'center',
+    borderColor: COLOR_GRAY2,
+    borderWidth: 1,
+  },
+  signature: {
+    width: width * 0.88,
+    height: 198,
+    alignSelf: 'center',
+    borderColor: COLOR_GRAY2,
+    borderWidth: 1,
+  },
+  rowContainer: {
+    width: width * 0.80,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    alignSelf: 'center',
+  },
+  rowContainer2: {
+    width: width * 0.95,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    alignSelf: 'center',
+  },
+  button: {
+    width: '44%',
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: COLOR_BLACK,
+    flexDirection: 'row',
+  },
+  buttonStyle2: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 50,
+    backgroundColor: '#eeeeee',
+    margin: 10,
+  },
+  signatureUploadContainer: {
+    width: width * 0.90,
+    height: 198,
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderColor: COLOR_GRAY,
+    borderWidth: 1,
+    borderRadius: 5,
+    borderStyle: 'dashed'
   },
 });
 
