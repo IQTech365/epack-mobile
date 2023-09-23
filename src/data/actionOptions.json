@@ -1,0 +1,14 @@
+[
+    {
+        "action": "Add"
+    },
+    {
+        "action": "View"
+    },
+    {
+        "action": "Edit"
+    },
+    {
+        "action": "Assign"
+    }
+]
