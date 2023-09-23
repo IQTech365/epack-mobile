@@ -1,0 +1,14 @@
+import React from 'react';
+import TemplateListView, { ITemplateListData } from '../templateListView';
+
+interface IQuotationTemplateViewProps {
+    data: ITemplateListData[];
+    onTemplateSelect: (planCategory: string, planIndex: number, planName: string) => void;
+}
+const QuotationTemplateView:React.FC<IQuotationTemplateViewProps> = ({data, onTemplateSelect}) => {
+
+    return <TemplateListView data={data} onTemplateSelect={onTemplateSelect} />
+
+}
+
+export default QuotationTemplateView
