@@ -5,6 +5,7 @@ export const OFF_WHITE = '#CBCBCB';
 export const COLOR_ERROR = '#FF5733';
 export const COLOR_GRAY = '#44444c';
 export const COLOR_GRAY4 = '#737373';
+export const COLOR_LIGHT_GREEN = '#F5FCFF';
 export const INTRO_BG_LINEARGRADIENT = ['#00A1E5', '#3A51BF'];
 export const COLOR_ORANGE = '#F18020';
 export const DISABLED_COLOR = '#373187';
