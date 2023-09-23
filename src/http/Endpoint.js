@@ -1,6 +1,6 @@
-export const GET_OTP_OLD = `/auth/authenticate`;
-export const GET_OTP = `/userlogin/authenticate`;
-export const VERIFY_OTP = `/userlogin/verifyotp`;
+export const GET_OTP = `/auth/authenticate`;
+export const GET_OTP_OLD = `/userlogin/authenticate`;
+export const VERIFY_OTP = `/auth/verifyotp`;
 export const PINCODE = (pincode) => `https://api.postalpincode.in/pincode/${pincode}`;
 
 // Company Registration Module
