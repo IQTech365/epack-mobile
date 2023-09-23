@@ -1,18 +1,17 @@
-import React, { useCallback, useReducer, useState } from 'react';
-import { View, Text } from 'react-native';
+import React, {useCallback, useEffect, useReducer, useState} from 'react';
+import {View, Text} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../common/Spacer';
 import styles from './style';
 import shiftingTypeOptions from '../../../data/shiftingType.json';
-import { TDropdownItem } from '../../../type/TDropdownItem';
+import {TDropdownItem} from '../../../type/TDropdownItem';
 import Label from '../../../common/Label';
 import DropdownComponent from '../../../common/DropdownComponent';
 import Header from '../../../common/Header';
 import Input from '../../../common/Input';
-import { COLOR_BLACK, COLOR_BLUE } from '../../../utils/colors';
+import {COLOR_BLACK, COLOR_BLUE} from '../../../utils/colors';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import CollapsibleView from '../../../common/CollapsibleView';
-import shiftingTypes from '../../../data/shiftingType.json';
 import billingByOptions from '../../../data/billingByOptions.json';
 import Button from '../../../common/Button';
 import liftStatusOptions from '../../../data/liftStatusOptions.json';
@@ -23,15 +22,48 @@ import {
   TBillingBy,
   enquiryReducer,
   initialState,
+  TPickupAddressInfo,
+  TDropAddressInfo,
 } from './enquiryReducer';
-import { useAppDispatch } from '../../../redux/hooks';
-import { addEnquiryRequest } from '../../../redux/slices/EnquirySlice';
-import { IAddEnquiryRequest } from '../../../interface/enquiry/IAddEnquiryRequest';
+import {useAppDispatch} from '../../../redux/hooks';
+import {addEnquiryRequest} from '../../../redux/slices/EnquirySlice';
+import {IAddEnquiryRequest} from '../../../interface/enquiry/IAddEnquiryRequest';
+import usePincodeHook, {
+  PINCODE_REQUEST_KEY,
+} from '../../../hooks/usePincodeHook';
+import {getCities, getStates} from '../../../utils/formatter';
+import shiftingLuggageOptions from '../../../data/shiftingLuggage.json';
+import Spinner from '../../../common/Spinner';
 
-const AddEnquiryView: React.FC<{}> = ({ }) => {
+const AddEnquiryView: React.FC<{}> = ({}) => {
   const [state, dispatch] = useReducer(enquiryReducer, initialState);
-  const [billingBy, setBillingBy] = useState<string>('1');
+  const [pincodeRequestKey, setPincodeRequestKey] =
+    useState<PINCODE_REQUEST_KEY>(
+      PINCODE_REQUEST_KEY.ADD_ENQUIRY_PICKUP_ADDRESS,
+    );
+  const [pickupStates, setPickupStates] = useState<TDropdownItem[]>([]);
+  const [pickupCities, setPickupCities] = useState<TDropdownItem[]>([]);
+  const [deliveryStates, setDeliveryStates] = useState<TDropdownItem[]>([]);
+  const [deliveryCities, setDeliveryCities] = useState<TDropdownItem[]>([]);
   const dispatched = useAppDispatch();
+
+  const setPincodeError = () => {
+    dispatch({
+      type: ENQUIRY_FORM_ACTION.PICKUP_PINCODE_ERROR,
+      payload: 'Invalid PIN Code',
+    });
+  };
+
+  const resetPincodeError = () => {
+    dispatch({
+      type: ENQUIRY_FORM_ACTION.PICKUP_PINCODE_ERROR,
+      payload: '',
+    });
+  };
+  const {result, fetching, setPincode} = usePincodeHook(
+    setPincodeError,
+    resetPincodeError,
+  );
 
   const handleShiftingType = (item: TDropdownItem) => {
     dispatch({
@@ -41,7 +73,7 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
   };
 
   const handleBillingBy = (item: TDropdownItem) => {
-    const { billingBy } = state;
+    const {billingBy} = state;
     const tempObj = {
       ...billingBy,
       billing_by: item.label,
@@ -67,43 +99,51 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
         payload: text,
       });
     },
-    [state.mobileNumber],
+    [state.mobile],
   );
 
-  const handleShiftingLugInputTextChange = useCallback(() => {
-    // setshiftLugData({...shiftLugData});
-    // dispatch({
-    //   type: ENQUIRY_FORM_ACTION.SHIFTING_LUGGAGE,
-    //   payload: shiftLugData,
-    // });
+  const handleShiftingLugInputTextChange = useCallback((isChecked: boolean, value: string) => {
+    const {shiftingLuggage} = state;
+    let tempObj = [...shiftingLuggage];
+    const itemIndex = tempObj.findIndex(e => e == value);
+    if(itemIndex == -1 && isChecked) {
+      tempObj.push(value);
+    } else if(itemIndex != -1 && !isChecked) {
+      tempObj = tempObj.filter(e => e != value);
+    }
+    dispatch({
+      type: ENQUIRY_FORM_ACTION.SHIFTING_LUGGAGE,
+      payload: tempObj as [string],
+    });
   }, [state.shiftingLuggage]);
 
   const handlePickupPinCode = useCallback(
     (text: string) => {
-      const { pickupAddress } = state;
+      setPincodeRequestKey(PINCODE_REQUEST_KEY.ADD_ENQUIRY_PICKUP_ADDRESS);
+      setPincode(text);
+      const {pickupAddress} = state;
       const tempObj = {
         ...pickupAddress,
         pincode: text,
       };
-
       dispatch({
         type: ENQUIRY_FORM_ACTION.PICKUP_ADDRESS,
-        payload: tempObj,
+        payload: tempObj as TPickupAddressInfo,
       });
     },
-    [state],
+    [state.pickupAddress],
   );
 
   const handlePickupCity = useCallback(
     (item: TDropdownItem) => {
-      const { pickupAddress } = state;
+      const {pickupAddress} = state;
       const tempObj = {
         ...pickupAddress,
         city: item.label,
       };
       dispatch({
         type: ENQUIRY_FORM_ACTION.PICKUP_ADDRESS,
-        payload: tempObj,
+        payload: tempObj as TPickupAddressInfo,
       });
     },
     [state],
@@ -111,14 +151,14 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
 
   const handlePickupState = useCallback(
     (item: TDropdownItem) => {
-      const { pickupAddress } = state;
+      const {pickupAddress} = state;
       const tempObj = {
         ...pickupAddress,
         state: item.label,
       };
       dispatch({
         type: ENQUIRY_FORM_ACTION.PICKUP_ADDRESS,
-        payload: tempObj,
+        payload: tempObj as TPickupAddressInfo,
       });
     },
     [state],
@@ -126,14 +166,14 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
 
   const handlePickupAddress = useCallback(
     (text: string) => {
-      const { pickupAddress } = state;
+      const {pickupAddress} = state;
       const tempObj = {
         ...pickupAddress,
         address: text,
       };
       dispatch({
         type: ENQUIRY_FORM_ACTION.PICKUP_ADDRESS,
-        payload: tempObj,
+        payload: tempObj as TPickupAddressInfo,
       });
     },
     [state],
@@ -141,14 +181,14 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
 
   const handlePickupCurrentFloor = useCallback(
     (item: TDropdownItem) => {
-      const { pickupAddress } = state;
+      const {pickupAddress} = state;
       const tempObj = {
         ...pickupAddress,
         floor: item.label,
       };
       dispatch({
         type: ENQUIRY_FORM_ACTION.PICKUP_ADDRESS,
-        payload: tempObj,
+        payload: tempObj as TPickupAddressInfo,
       });
     },
     [state],
@@ -156,14 +196,14 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
 
   const handlePickupCurrentLiftStatus = useCallback(
     (item: TDropdownItem) => {
-      const { pickupAddress } = state;
+      const {pickupAddress} = state;
       const tempObj = {
         ...pickupAddress,
         isLiftAvailable: item.label,
       };
       dispatch({
         type: ENQUIRY_FORM_ACTION.PICKUP_ADDRESS,
-        payload: tempObj,
+        payload: tempObj as TPickupAddressInfo,
       });
     },
     [state],
@@ -171,29 +211,31 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
 
   const handleDeliveryPinCode = useCallback(
     (text: string) => {
-      const { dropAddress } = state;
+      setPincodeRequestKey(PINCODE_REQUEST_KEY.ADD_ENQUIRY_DELIVERY_ADDRESS);
+      setPincode(text);
+      const {dropAddress} = state;
       const tempObj = {
         ...dropAddress,
         pincode: text,
       };
       dispatch({
         type: ENQUIRY_FORM_ACTION.DROP_ADDRESS,
-        payload: tempObj,
+        payload: tempObj as TDropAddressInfo,
       });
     },
-    [state],
+    [state.dropAddress],
   );
 
   const handleDeliveryCity = useCallback(
     (item: TDropdownItem) => {
-      const { dropAddress } = state;
+      const {dropAddress} = state;
       const tempObj = {
         ...dropAddress,
         city: item.label,
       };
       dispatch({
         type: ENQUIRY_FORM_ACTION.DROP_ADDRESS,
-        payload: tempObj,
+        payload: tempObj as TDropAddressInfo,
       });
     },
     [state],
@@ -201,14 +243,14 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
 
   const handleDeliveryState = useCallback(
     (item: TDropdownItem) => {
-      const { dropAddress } = state;
+      const {dropAddress} = state;
       const tempObj = {
         ...dropAddress,
         state: item.label,
       };
       dispatch({
         type: ENQUIRY_FORM_ACTION.DROP_ADDRESS,
-        payload: tempObj,
+        payload: tempObj as TDropAddressInfo,
       });
     },
     [state],
@@ -216,14 +258,14 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
 
   const handleDeliveryAddress = useCallback(
     (text: String) => {
-      const { dropAddress } = state;
+      const {dropAddress} = state;
       const tempObj = {
         ...dropAddress,
         address: text,
       };
       dispatch({
         type: ENQUIRY_FORM_ACTION.DROP_ADDRESS,
-        payload: tempObj as string,
+        payload: tempObj as TDropAddressInfo,
       });
     },
     [state],
@@ -231,14 +273,14 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
 
   const handleDeliveryCurrentFloor = useCallback(
     (item: TDropdownItem) => {
-      const { dropAddress } = state;
+      const {dropAddress} = state;
       const tempObj = {
         ...dropAddress,
         floor: item.label,
       };
       dispatch({
         type: ENQUIRY_FORM_ACTION.DROP_ADDRESS,
-        payload: tempObj,
+        payload: tempObj as TDropAddressInfo,
       });
     },
     [state],
@@ -246,23 +288,91 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
 
   const handleDeliveryCCurrentLiftStatus = useCallback(
     (item: TDropdownItem) => {
-      const { dropAddress } = state;
+      const {dropAddress} = state;
       const tempObj = {
         ...dropAddress,
         isLiftAvailable: item.label,
       };
       dispatch({
-        type: ENQUIRY_FORM_ACTION.DELIVERY_CURRENT_LIFT_STATUS,
-        payload: tempObj,
+        type: ENQUIRY_FORM_ACTION.DROP_ADDRESS,
+        payload: tempObj as TDropAddressInfo,
       });
     },
     [state],
   );
 
-  const handleSubmit = useCallback(() => {
-    const payload: IAddEnquiryRequest = state;
-    console.log(payload, 'payload..');
+  useEffect(() => {
+    if (result && result.Status != 'Error') {
+      if (
+        pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_ENQUIRY_PICKUP_ADDRESS
+      ) {
+        setPickupStates(getStates(result));
+        setPickupCities(getCities(result));
+      } else if (
+        pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_ENQUIRY_DELIVERY_ADDRESS
+      ) {
+        setDeliveryStates(getStates(result));
+        setDeliveryCities(getStates(result));
+      }
+    }
+  }, [result]);
 
+  const handleSubmit = useCallback(() => {
+    const payload: IAddEnquiryRequest = {
+      companyId: '',
+      authId: '',
+      enquiryManager: '',
+      shiftingType: state.shiftingType,
+      partyCompanyName: '',
+      partyName: state.partyName,
+      email: '',
+      mobile: state.mobile,
+      phone: '',
+      shiftingLuggage: state.shiftingLuggage as [string],
+      enquirySource: '',
+      gstNumber: state.billingBy?.billing_info?.company_gst as string,
+      alternateNumbers: '',
+      shiftingDate: '',
+      pickupAddress: {
+        shiftingFrom: state.pickupAddress?.shiftingFrom as string,
+        state: state.pickupAddress?.state as string,
+        city: state.pickupAddress?.city as string,
+        address: state.pickupAddress?.address as string,
+        pincode: state.pickupAddress?.pincode as string,
+        landmark: state.pickupAddress?.landmark as string,
+        floor: state.pickupAddress?.floor as string,
+        isLiftAvailable: state.pickupAddress?.isLiftAvailable as string,
+      },
+      dropAddress: {
+        shiftingTo: state.dropAddress?.shiftingTo as string,
+        state: state.dropAddress?.state as string,
+        city: state.dropAddress?.city as string,
+        address: state.dropAddress?.address as string,
+        pincode: state.dropAddress?.pincode as string,
+        landmark: state.dropAddress?.landmark as string,
+        floor: state.dropAddress?.floor as string,
+        isLiftAvailable: state.dropAddress?.isLiftAvailable as string,
+      },
+      billingBy: state.billingBy?.billing_by as string,
+      billingDetails: {
+        companyName: state.billingBy?.billing_info?.company_name as string,
+        approvalAuthority: state.billingBy?.billing_info
+          ?.approval_authority as string,
+        authorityPersonName: state.billingBy?.billing_info
+          ?.authority_person_name as string,
+        authorityPersonMobile: state.billingBy?.billing_info
+          ?.authority_mobile_number as string,
+        companyAddress: state.billingBy?.billing_info
+          ?.company_address as string,
+        companyGST: state.billingBy?.billing_info?.company_gst as string,
+        employeeName: state.billingBy?.billing_info?.employee_name as string,
+        employeeDesignation: state.billingBy?.billing_info
+          ?.employee_designation as string,
+        employeeMobile: state.billingBy?.billing_info
+          ?.employee_mobile_number as string,
+      },
+      status: 'NEW',
+    };
     dispatched(addEnquiryRequest(payload));
   }, [state]);
 
@@ -303,10 +413,10 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
           <Label text="Company Name" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const { billingBy } = state;
+              const {billingBy} = state;
               const tempObj = {
                 ...billingBy,
-                billing_info: { ...billingBy?.billing_info, company_name: text },
+                billing_info: {...billingBy?.billing_info, company_name: text},
               };
               dispatch({
                 type: ENQUIRY_FORM_ACTION.BILLING_BY,
@@ -324,7 +434,7 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
           <DropdownComponent
             data={approvalAuthorityOptions}
             onSelect={(item: TDropdownItem) => {
-              const { billingBy } = state;
+              const {billingBy} = state;
               const tempObj = {
                 ...billingBy,
                 billing_info: {
@@ -344,7 +454,7 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
           <Label text="Authority Person Name" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const { billingBy } = state;
+              const {billingBy} = state;
               const tempObj = {
                 ...billingBy,
                 billing_info: {
@@ -367,7 +477,7 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
           <Label text="Authority Mobile Number" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const { billingBy } = state;
+              const {billingBy} = state;
               const tempObj = {
                 ...billingBy,
                 billing_info: {
@@ -390,10 +500,10 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
           <Label text="Company GST" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const { billingBy } = state;
+              const {billingBy} = state;
               const tempObj = {
                 ...billingBy,
-                billing_info: { ...billingBy?.billing_info, company_gst: text },
+                billing_info: {...billingBy?.billing_info, company_gst: text},
               };
               dispatch({
                 type: ENQUIRY_FORM_ACTION.BILLING_BY,
@@ -410,10 +520,10 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
           <Label text="Employee Name" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const { billingBy } = state;
+              const {billingBy} = state;
               const tempObj = {
                 ...billingBy,
-                billing_info: { ...billingBy?.billing_info, employee_name: text },
+                billing_info: {...billingBy?.billing_info, employee_name: text},
               };
               dispatch({
                 type: ENQUIRY_FORM_ACTION.BILLING_BY,
@@ -430,7 +540,7 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
           <Label text="Employee Designation" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const { billingBy } = state;
+              const {billingBy} = state;
               const tempObj = {
                 ...billingBy,
                 billing_info: {
@@ -453,7 +563,7 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
           <Label text="Employee Mobile Number" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const { billingBy } = state;
+              const {billingBy} = state;
               const tempObj = {
                 ...billingBy,
                 billing_info: {
@@ -476,7 +586,7 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
           <Label text="Company Address" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const { billingBy } = state;
+              const {billingBy} = state;
               const tempObj = {
                 ...billingBy,
                 billing_info: {
@@ -528,235 +638,39 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
               <Label text="Shifting Luggage" style={styles.label} />
             </View>
             <View style={styles.elementContainer2}>
-              <BouncyCheckbox
-                text="Household"
-                fillColor={COLOR_BLUE}
-                iconStyle={{
-                  borderColor: 'red',
-                  borderRadius: 0,
-                  width: 16,
-                  height: 16,
-                }}
-                innerIconStyle={{
-                  borderWidth: 1,
-                  borderRadius: 0,
-                  width: 16,
-                  height: 16,
-                }}
-                textStyle={{
-                  fontFamily: 'JosefinSans-Regular',
-                  textDecorationLine: 'none',
-                }}
-                style={{ marginRight: 15, marginBottom: 10 }}
-                textContainerStyle={{ paddingLeft: 0 }}
-                onPress={(isChecked: boolean) => {
-                  // shiftLugData.household = isChecked;
-                  handleShiftingLugInputTextChange();
-                }}
-              />
-              <BouncyCheckbox
-                size={25}
-                unfillColor="#FFFFFF"
-                text="Office"
-                fillColor={COLOR_BLUE}
-                iconStyle={{
-                  borderColor: 'red',
-                  borderRadius: 0,
-                  width: 16,
-                  height: 16,
-                }}
-                innerIconStyle={{
-                  borderWidth: 1,
-                  borderRadius: 0,
-                  width: 16,
-                  height: 16,
-                }}
-                textStyle={{
-                  fontFamily: 'JosefinSans-Regular',
-                  textDecorationLine: 'none',
-                }}
-                style={{ marginRight: 15 }}
-                textContainerStyle={{ paddingLeft: 0 }}
-                onPress={(isChecked: boolean) => {
-                  // shiftLugData.office = isChecked;
-                  handleShiftingLugInputTextChange();
-                }}
-              />
-              <BouncyCheckbox
-                size={25}
-                unfillColor="#FFFFFF"
-                text="Industrial"
-                fillColor={COLOR_BLUE}
-                iconStyle={{
-                  borderColor: 'red',
-                  borderRadius: 0,
-                  width: 16,
-                  height: 16,
-                }}
-                innerIconStyle={{
-                  borderWidth: 1,
-                  borderRadius: 0,
-                  width: 16,
-                  height: 16,
-                }}
-                textStyle={{
-                  fontFamily: 'JosefinSans-Regular',
-                  textDecorationLine: 'none',
-                }}
-                style={{ marginRight: 15 }}
-                textContainerStyle={{ paddingLeft: 0 }}
-                onPress={(isChecked: boolean) => {
-                  // shiftLugData.industrial = isChecked;
-                  handleShiftingLugInputTextChange();
-                }}
-              />
-              <BouncyCheckbox
-                size={25}
-                unfillColor="#FFFFFF"
-                text="Vehcicle"
-                fillColor={COLOR_BLUE}
-                iconStyle={{
-                  borderColor: 'red',
-                  borderRadius: 0,
-                  width: 16,
-                  height: 16,
-                }}
-                innerIconStyle={{
-                  borderWidth: 1,
-                  borderRadius: 0,
-                  width: 16,
-                  height: 16,
-                }}
-                textStyle={{
-                  fontFamily: 'JosefinSans-Regular',
-                  textDecorationLine: 'none',
-                }}
-                style={{ marginRight: 15 }}
-                textContainerStyle={{ paddingLeft: 0 }}
-                onPress={(isChecked: boolean) => {
-                  // shiftLugData.Vehcicle = isChecked;
-                  handleShiftingLugInputTextChange();
-                }}
-              />
-              <BouncyCheckbox
-                size={25}
-                unfillColor="#FFFFFF"
-                text="Other"
-                fillColor={COLOR_BLUE}
-                iconStyle={{
-                  borderColor: 'red',
-                  borderRadius: 0,
-                  width: 16,
-                  height: 16,
-                }}
-                innerIconStyle={{
-                  borderWidth: 1,
-                  borderRadius: 0,
-                  width: 16,
-                  height: 16,
-                }}
-                textStyle={{
-                  fontFamily: 'JosefinSans-Regular',
-                  textDecorationLine: 'none',
-                }}
-                style={{ marginRight: 15 }}
-                textContainerStyle={{ paddingLeft: 0 }}
-                onPress={(isChecked: boolean) => {
-                  // shiftLugData.Other = isChecked;
-                  handleShiftingLugInputTextChange();
-                }}
-              />
+              {shiftingLuggageOptions.map((item, index) => {
+                return (
+                  <BouncyCheckbox
+                    key={index}
+                    text={item.label}
+                    fillColor={COLOR_BLUE}
+                    iconStyle={{
+                      borderColor: 'red',
+                      borderRadius: 0,
+                      width: 16,
+                      height: 16,
+                    }}
+                    innerIconStyle={{
+                      borderWidth: 1,
+                      borderRadius: 0,
+                      width: 16,
+                      height: 16,
+                    }}
+                    textStyle={{
+                      fontFamily: 'JosefinSans-Regular',
+                      textDecorationLine: 'none',
+                    }}
+                    style={{marginRight: 15, marginBottom: 10}}
+                    textContainerStyle={{paddingLeft: 0}}
+                    onPress={(isChecked: boolean) => {
+                      handleShiftingLugInputTextChange(isChecked, item.label);
+                    }}
+                  />
+                );
+              })}
             </View>
           </View>
         </CollapsibleView>
-        <Spacer height={4} />
-        {/* <CollapsibleView title="BILLING DETAILS" collapsed={false}>
-          <View>
-            <View style={styles.elementContainer}>
-              <Label text="Company Name" style={styles.label} />
-              <Input containerStyle={styles.inputContainer} onChangeText={() => {}} />
-            </View>
-            <View style={styles.elementContainer}>
-              <Label text="Approval Authority" style={styles.label} />
-              <DropdownComponent
-                data={shiftingTypeOptions}
-                onSelect={handleShiftingType}
-              />
-            </View>
-            <Spacer height={4} />
-            <View style={styles.elementContainer}>
-              <Label text="Authoority Person Name" style={styles.label} />
-              <Input
-                onChangeText={handleCompanyPartyNameInputTextChange}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-              />
-            </View>
-            <Spacer height={4} />
-            <View style={styles.elementContainer}>
-              <Label text="Authority Person Mobile" style={styles.label} />
-              <Input
-                onChangeText={handlePartyNameInputTextChange}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-              />
-            </View>
-            <Spacer height={4} />
-            <View style={styles.elementContainer}>
-              <View style={styles.elementContainer}>
-                <Label text="Address" style={styles.label} />
-                <Input
-                  onChangeText={handlePickupAddress}
-                  containerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
-                  selectionColor={COLOR_BLACK}
-                />
-              </View>
-            </View>
-            <Spacer height={4} />
-            <View style={styles.labelContainer}>
-              <Label text="Company GST" style={styles.label} />
-              <Input
-                onChangeText={handlePickupAddress}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-              />
-            </View>
-            <Spacer height={4} />
-            <View style={styles.labelContainer}>
-              <Label text="Employee Name" style={styles.label} />
-              <Input
-                onChangeText={handlePickupAddress}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-              />
-            </View>
-            <Spacer height={4} />
-            <View style={styles.labelContainer}>
-              <Label text="Employee Designation" style={styles.label} />
-              <Input
-                onChangeText={handlePickupAddress}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-              />
-            </View>
-            <Spacer height={4} />
-            <View style={styles.labelContainer}>
-              <Label text="Emplyee Mobile No" style={styles.label} />
-              <Input
-                onChangeText={handlePickupAddress}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-              />
-            </View>
-          </View>
-        </CollapsibleView> */}
         <Spacer height={4} />
         <CollapsibleView title="PICKUP ADDRESS" collapsed={true}>
           <View>
@@ -773,14 +687,14 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
             <View style={styles.elementContainer}>
               <Label text="State" style={styles.label} />
               <DropdownComponent
-                data={shiftingTypes}
+                data={pickupStates}
                 onSelect={handlePickupState}
               />
             </View>
             <View style={styles.elementContainer}>
               <Label text="City" style={styles.label} />
               <DropdownComponent
-                data={shiftingTypes}
+                data={pickupCities}
                 onSelect={handlePickupCity}
               />
             </View>
@@ -829,14 +743,14 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
             <View style={styles.elementContainer}>
               <Label text="State" style={styles.label} />
               <DropdownComponent
-                data={shiftingTypes}
+                data={deliveryStates}
                 onSelect={handleDeliveryState}
               />
             </View>
             <View style={styles.elementContainer}>
               <Label text="City" style={styles.label} />
               <DropdownComponent
-                data={shiftingTypes}
+                data={deliveryCities}
                 onSelect={handleDeliveryCity}
               />
             </View>
@@ -878,6 +792,7 @@ const AddEnquiryView: React.FC<{}> = ({ }) => {
           textStyle={styles.textStyle}
         />
         <Spacer height={12} />
+        <Spinner show={fetching} />
       </View>
     </AvoidSoftInputViewHOC>
   );

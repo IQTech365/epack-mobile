@@ -1,5 +1,16 @@
-interface IAddress {
+interface IPickupAddress {
   shiftingFrom: string;
+  state: string;
+  city: string;
+  address: string;
+  pincode: string;
+  landmark?: string;
+  floor: string;
+  isLiftAvailable: string;
+}
+
+interface IDropAddress {
+  shiftingTo: string;
   state: string;
   city: string;
   address: string;
@@ -36,8 +47,8 @@ export interface IAddEnquiryRequest {
   gstNumber: string;
   alternateNumbers: string;
   shiftingDate: string;
-  pickupAddress: IAddress;
-  dropAddress: IAddress;
+  pickupAddress: IPickupAddress;
+  dropAddress: IDropAddress;
   billingBy: string;
   billingDetails: IBillingInfo;
   status: string;

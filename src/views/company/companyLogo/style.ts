@@ -29,11 +29,12 @@ const styles = StyleSheet.create({
     button: {
         width: width * 0.8,
         borderRadius: 10,
-        borderWidth: 2,
+        borderWidth: 1,
         borderColor: COLOR_BLACK,
         alignItems: 'center',
         alignSelf: 'center',
-        paddingVertical: 20
+        paddingVertical: 20,
+        borderStyle: 'dashed'
     },
     text: {
         fontSize: 18,

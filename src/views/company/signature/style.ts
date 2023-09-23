@@ -53,9 +53,11 @@ const styles = StyleSheet.create({
     height: 40,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: COLOR_BLACK,
     flexDirection: 'row',
+    borderStyle: 'dashed',
+    borderRadius: 5,
   },
   text: {
     fontSize: 14,

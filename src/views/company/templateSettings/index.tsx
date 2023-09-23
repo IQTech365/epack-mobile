@@ -36,14 +36,7 @@ const TemplateSettingPageView: React.FC<ITemplateSettingPageViewProps> = ({
   const {requesting, success, error, failure, companyInfo} = useAppSelector(
     state => state.Company,
   );
-  const {
-    // verifyOtpRequesting,
-    // verifyOtpSuccess,
-    // verifyOtpError,
-    // verifyOtpFailure,
-    // verifiedData,
-    otpData,
-  } = useAppSelector(state => state.OTP);
+  const {otpData} = useAppSelector(state => state.OTP);
 
   const handleQuotationTemplateSelect = (
     planCategory: string,

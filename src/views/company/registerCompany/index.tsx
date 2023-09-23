@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, Alert} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../common/Spacer';
 import styles from './style';
@@ -19,6 +19,9 @@ import Spinner from '../../../common/Spinner';
 import {useCompanyRegistrationContextHook} from '../../../provider/CompanyRegistrationContextProvider';
 import {Validator} from '../../../utils/validation';
 import Button from '../../../common/Button';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { addCompanyRequest } from '../../../redux/slices/CompanySlice';
+import { ICompanyRegistrationRequest } from '../../../interface/companyRegistration/ICompanyRegistrationRequest';
 //Ram Naresh Bhardwaj
 const ibaApprovalOptions: Array<ICheckboxButton> = [
   {
@@ -97,6 +100,14 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
   const [states, setStates] = useState<TDropdownItem[]>([]);
   const [cities, setCities] = useState<TDropdownItem[]>([]);
   console.log('RegisterCompanyView-state--', JSON.stringify(state, null, ' '));
+
+  const dispatch = useAppDispatch();
+  const {requesting, success, error, failure, companyInfo} = useAppSelector(
+    state => state.Company,
+  );
+  console.log('RegisterCompanyView-companyInfo--', JSON.stringify(companyInfo, null, ' '));
+
+  const {otpData} = useAppSelector(state => state.OTP);
 
   const setPincodeError = () => {
     setPincodeError2('Invalid Pincode');
@@ -299,10 +310,44 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
     if (currentStep >= 1 && currentStep < 5) {
       const isValidForm = validateRegistrationForm();
       if (isValidForm) {
-        setCurrentStep(currentStep + 1);
+        const data: ICompanyRegistrationRequest = {
+          authId: otpData?.data.id as string,
+          companyName: state.companyName,
+          contactPerson: state.contactPerson,
+          email: state.email,
+          companyMobile: state.mobile,
+          companyAddress: state.address,
+          state: state.state,
+          city: state.city,
+          pincode: state.pinCode,
+          iba_approval_code: state.ibaApprovalCode,
+          iba_valid_date: state.ibaApprovalValidTill,
+          companyWebite: 'www.abc.com',
+          CINNumber: state.document,
+          companyLogo: '',
+          punchLine: 'na',
+          companyProfile: '',
+          district: '',
+          postOffice: '',
+          govRegdDetails: null,
+          accountDetails: [],
+          packerSignature: '',
+          termsconditions: 'NA',
+        };
+        console.log('data----------', JSON.stringify(data), null, ' ');
+        dispatch(addCompanyRequest(data));
       }
     }
   }, [state]);
+
+  useEffect(() => {
+    if (!requesting && success && !error) {
+      // completeRegistration();
+      setCurrentStep(currentStep + 1);
+    } else if (!requesting && !success && error) {
+      Alert.alert('Error in registering the company');
+    }
+  }, [requesting, success, error]);
 
   useEffect(() => {
     if (companyType == '1' || companyType == '2') {
@@ -507,13 +552,14 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
         </View>
         <View style={styles.nextButtonContainer}>
           <Button
-            text={currentStep == 5 ? 'Save' : 'Next'}
+            text='Submit'
             onPress={handleNextClick}
             style={styles.buttonStyle}
             textStyle={styles.buttonTextStyle}
           />
         </View>
       </View>
+      <Spinner show={requesting} />
     </View>
   );
 };

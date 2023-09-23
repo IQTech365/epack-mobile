@@ -10,6 +10,8 @@ export enum ENQUIRY_FORM_ACTION {
   SHIFTING_LUGGAGE = 'SHIFTING_LUGGAGE',
   PICKUP_ADDRESS = 'PICKUP_ADDRESS',
   DROP_ADDRESS = 'DROP_ADDRESS',
+  PICKUP_PINCODE_ERROR = 'PICKUP_PINCODE_ERROR',
+  DROP_PINCODE_ERROR = 'DROP_PINCODE_ERROR',
 }
 
 // ** Billing Info
@@ -98,12 +100,21 @@ interface EnquiryFormState {
   partyCompanyName: string;
   partyName: string;
   mobile: string;
-  shiftingLuggage: TShifingLuggage | null;
+  shiftingLuggage: string[] | [];
   pickupAddress: TPickupAddressInfo | null;
   dropAddress: TDropAddressInfo | null;
+  errors: {
+    pickupPincode: string;
+    dropPincode: string;
+  };
 }
 
-type TPayload = string | TBillingBy | TShifingLuggage;
+type TPayload =
+  | string
+  | TBillingBy
+  | [string]
+  | TPickupAddressInfo
+  | TDropAddressInfo;
 
 /** ACTION INTERFACE */
 interface EnquiryAction {
@@ -116,11 +127,15 @@ export const initialState: EnquiryFormState = {
   shiftingType: 'Local',
   billingBy: defaultBillingBy,
   partyCompanyName: '',
-  shiftingLuggage: null,
+  shiftingLuggage: [],
   partyName: '',
   mobile: '',
   pickupAddress: defaultPickupAddress,
   dropAddress: defaultDropAddress,
+  errors: {
+    pickupPincode: '',
+    dropPincode: '',
+  },
 };
 
 /** Quotation Reducer */
@@ -135,7 +150,7 @@ export const enquiryReducer: Reducer<EnquiryFormState, EnquiryAction> = (
     case ENQUIRY_FORM_ACTION.BILLING_BY:
       return {...state, billingBy: payload as TBillingBy};
     case ENQUIRY_FORM_ACTION.SHIFTING_LUGGAGE:
-      return {...state, shiftingLuggage: payload as TShifingLuggage};
+      return {...state, shiftingLuggage: payload as [string]};
     case ENQUIRY_FORM_ACTION.COMPANY_NAME_PARTY:
       return {...state, partyCompanyName: payload as string};
     case ENQUIRY_FORM_ACTION.PARTY_NAME:
@@ -146,6 +161,10 @@ export const enquiryReducer: Reducer<EnquiryFormState, EnquiryAction> = (
       return {...state, pickupAddress: payload as TPickupAddressInfo};
     case ENQUIRY_FORM_ACTION.DROP_ADDRESS:
       return {...state, dropAddress: payload as TDropAddressInfo};
+    case ENQUIRY_FORM_ACTION.PICKUP_PINCODE_ERROR:
+      return {...state, pickupPincode: payload as string};
+    case ENQUIRY_FORM_ACTION.DROP_PINCODE_ERROR:
+      return {...state, dropPincode: payload as string};
     default:
       return state;
   }

@@ -87,7 +87,7 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
       <View style={styles.contentContainer}>
         <Spacer />
         <View>
-          <Text style={styles.titleText}>Select Company Logo</Text>
+          <Text style={styles.titleText}>Upload Company Logo</Text>
         </View>
         <Spacer />
         <View style={styles.logoContainer}>
@@ -103,12 +103,18 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
         <Spacer />
         <View style={styles.galleryContainer}>
           <TouchableOpacity style={styles.button} onPress={handleLaunchGallery}>
+            <>
+            <Text>Pick from Gallery</Text>
             <GalleryIcon width={50} height={50} />
+            </>
           </TouchableOpacity>
         </View>
         <View style={styles.cameraContainer}>
           <TouchableOpacity style={styles.button} onPress={handleLaunchCamera}>
+            <>
+            <Text>Take from Camera</Text>
             <CameraIcon width={50} height={50} />
+            </>
           </TouchableOpacity>
         </View>
       </View>
@@ -116,7 +122,7 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
           <View style={styles.prevButtonContainer}>
             {currentStep > 1 ? (
               <Button
-                text="Previous"
+                text="Upload"
                 onPress={handlePreviousClick}
                 style={styles.buttonStyle}
                 textStyle={styles.buttonTextStyle}

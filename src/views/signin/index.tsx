@@ -102,7 +102,7 @@ const SignInPageView = (props: any) => {
           disabled={!mobile || mobile.length < 10}
         />
         <Spacer height={50} />
-        <Spinner show={requesting} />
+        <Spinner show={requesting} variant='white' />
       </LinearGradient>
     </AvoidSoftInputViewHOC>
   );

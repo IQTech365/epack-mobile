@@ -38,7 +38,7 @@ const RegistrationPageView: React.FC<IRegistrationPageViewProps> = ({navigation}
       <View style={styles.container}>
           <Spacer height={4} />
           <Header
-            label={`Company Registration ${currentStep}/5`}
+            label={`Company Registration ${currentStep}/3`}
             canGoBack={true}
             showDrawerIcon={false}
           />
