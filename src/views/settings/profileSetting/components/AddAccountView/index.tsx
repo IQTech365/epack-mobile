@@ -112,6 +112,7 @@ const AddAccountView = () => {
           }}
           renderItem={({ item, index }) => rederItemBankAccount(index)
           }
+          keyExtractor={item => item}
         />
       </EmptyView>
 
@@ -127,6 +128,7 @@ const AddAccountView = () => {
           }}
           renderItem={({ item, index }) => rederItemUPIDeatail(index)
           }
+          keyExtractor={item => item}
         />
       </EmptyView>
 

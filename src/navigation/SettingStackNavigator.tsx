@@ -7,6 +7,8 @@ import SerialNoSettingPageView from '../views/company/serialNoSettings';
 import AddSerialNoView from '../views/settings/profileSetting/components/AddSerialNoView';
 import RoleManagementView from '../views/settings/roleManagement';
 import TemplateSettingPageView from '../views/settings/templateSettings';
+import AddBranchView from '../views/settings/AddBranchView';
+import AddFranchiseView from '../views/settings/AddFranchiseView';
 
 const SettingStack = createNativeStackNavigator();
 
@@ -15,7 +17,7 @@ const SettingStackNavigator = () => {
         <SettingStack.Navigator screenOptions={{ headerShown: false }}>
             <SettingStack.Screen
                 name={"Setting"}
-                component={SettingsView}
+                component={AddFranchiseView}
             />
             <SettingStack.Screen
                 name={SettingStackRoute.ProfileSetting}
