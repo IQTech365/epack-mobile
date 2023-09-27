@@ -68,6 +68,12 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR_BLUE,
     borderRadius: 5,
   },
+  emptyView: {
+    width: width * 0.9,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
 });
 
 export default styles;

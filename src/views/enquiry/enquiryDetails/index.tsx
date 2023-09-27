@@ -12,8 +12,13 @@ import FollowupView from './components/FollowupView';
 import SurveyView from './components/FollowupView';
 import DetailsView from './components/DetailsView';
 import PackingMaterialsView from './components/PackingMaterialsView';
+import { EnquiryStackParamList } from '../../../navigation/params/EnquiryStackParamList';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-const EnquiryDetailsView: React.FC<{}> = ({ }) => {
+type Props = NativeStackScreenProps<EnquiryStackParamList, 'EnquiryDetails'>;
+
+const EnquiryDetailsView: React.FC<Props> = ({route, navigation}) => {
+  const enquiryId: string | undefined = route.params?.enquiryId;
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
 
   const handleTabChange = (index: number) => {
@@ -25,9 +30,9 @@ const EnquiryDetailsView: React.FC<{}> = ({ }) => {
       case 0:
         return <DetailsView />
       case 1:
-        return <FollowupView taskName='FOLLOW UP' assigneeRole='Enequiry' />
+        return <FollowupView taskName='FOLLOW UP' assigneeRole='Enequiry' enquiryId={enquiryId as string} />
       case 2:
-        return <SurveyView taskName='SURVEY' assigneeRole='Survey' />
+        return <SurveyView taskName='SURVEY' assigneeRole='Survey' enquiryId={enquiryId as string} />
       case 3:
         return <AddQuotationView showHeader={false} />
       case 4:

@@ -6,9 +6,10 @@ const styles = StyleSheet.create({
   cardWrapper: {
     borderRadius: 8,
     alignItems: 'center',
+    alignSelf: 'center',
   },
   container: {
-    width: width * 0.95,
+    width: width * 0.90,
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',

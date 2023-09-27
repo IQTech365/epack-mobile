@@ -15,6 +15,7 @@ export interface IEnquiryItem {
   shiftingType: string;
   shiftingLuggage: string;
   phoneNumber: string;
+  enquiryId: string;
 }
 
 interface IEnquiryListItemProps {
@@ -28,7 +29,7 @@ interface IEnquiryListItemProps {
 
 const EnquiryListItem: React.FC<IEnquiryListItemProps> = ({item, index, onPress}) => {
   return (
-    <Shadow style={styles.cardWrapper} distance={4}>
+    <Shadow style={styles.cardWrapper} distance={8}>
       <TouchableOpacity style={styles.container} activeOpacity={0.6} onPress={onPress}>
         <View style={styles.dateAndQuotationNumberContainer}>
           <View style={styles.nameContainer}>

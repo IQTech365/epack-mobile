@@ -133,6 +133,13 @@ export const EnquirySlice = createSlice({
       state.addEnquiryFailure = true;
       state.addEnquiryError = action.payload;
     },
+    resetAddEnquiryRequest: (state, action: PayloadAction) => {
+      state.addEnquiryRequesting = false;
+      state.addEnquirySuccess = false;
+      state.addEnquiryFailure = false;
+      state.addEnquiryInfo = null;
+      state.addEnquiryError = null;
+    },
     // Edit Enquiry
     editEnquiryRequest: (
       state,
@@ -196,6 +203,13 @@ export const EnquirySlice = createSlice({
       state.addFollowupFailure = true;
       state.addFollowupError = action.payload;
     },
+    resetAddFollowupRequest: (state, action: PayloadAction) => {
+      state.addFollowupRequesting = false;
+      state.addFollowupSuccess = false;
+      state.addFollowupFailure = false;
+      state.addFollowupError = null;
+      state.addEnquiryInfo = null;
+    },
     // Get Followups
     getFollowupsRequest: (state, action: PayloadAction<string>) => {
       state.getFollowupsRequesting = true;
@@ -246,6 +260,7 @@ export const {
   addEnquiryRequest,
   addEnquirySuccess,
   addEnquiryFailure,
+  resetAddEnquiryRequest,
   // Edit Enquiry
   editEnquiryRequest,
   editEnquirySuccess,
@@ -258,6 +273,7 @@ export const {
   addFollowupRequest,
   addFollowupSuccess,
   addFollowupFailure,
+  resetAddFollowupRequest,
   // Get Followups
   getFollowupsRequest,
   getFollowupsSuccess,

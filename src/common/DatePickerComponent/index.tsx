@@ -39,6 +39,7 @@ const DatePickerComponent: React.FC<IDatePickerProps> = ({
             setDate(date);
             onDateSelect && onDateSelect(date);
           }}
+          minimumDate={new Date()}
           onCancel={() => {
             setOpen(false);
           }}

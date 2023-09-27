@@ -29,8 +29,8 @@ export interface ICompanyRegistrationRequest {
     state: string;
     city: string;
     pincode: string;
-    iba_approval_code: string;
-    iba_valid_date: string;
+    ibaApprovalCode: string;
+    ibaValidDate: string;
     companyWebite?: string;
     CINNumber: string;
     companyLogo: string;
@@ -38,7 +38,7 @@ export interface ICompanyRegistrationRequest {
     companyProfile: string;
     district: string;
     postOffice: string;
-    govRegdDetails?: IGovtRegdDetail | null,
+    govRegdDetails?: IGovtRegdDetail | {},
     accountDetails?: IAccountDetail[] | [],
     packerSignature: string;
     termsconditions: string;

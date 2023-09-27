@@ -24,12 +24,18 @@ export abstract class HttpClient {
   }
 
   private _handleRequest = async (config: AxiosRequestConfig) => {
-    const authToken = await getAuthToken();
+    // const authToken = await getAuthToken();
+    const authToken = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NTBlZmIyZDdlMzk2OGM0YzIxN2EzNGYiLCJpZCI6IjY1MGVmYjJkN2UzOTY4YzRjMjE3YTM0ZiIsImlhdCI6MTY5NTc5NjA2MSwiZXhwIjoxNjk1ODgyNDYxfQ.Gnye7M9JpL3ZZ4ltIqViZOKD0Yx4qeCakYSR_VnhPeY`;
     console.log('authToken----', authToken);
     if(authToken) {
       //@ts-ignore
-      config.headers['Authorization'] = authToken;
+      config.headers['token'] = authToken;
     }
+    console.log('HttpClient-data-', JSON.stringify(config.data));
+    // if(config.data.logo) {
+    //   //@ts-ignore
+    //   config.headers['Content-Type'] = "multipart/form-data";
+    // }
     return config;
   } 
 

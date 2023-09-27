@@ -9,7 +9,7 @@ import DropdownComponent from '../../../common/DropdownComponent';
 import Input from '../../../common/Input';
 import {COLOR_BLACK, COLOR_BLUE} from '../../../utils/colors';
 import companyTypeOptions from '../../../data/companyType.json';
-import {formatDate, getCities, getStates} from '../../../utils/formatter';
+import {formatDate, formatDate2, getCities, getStates} from '../../../utils/formatter';
 import DatePickerComponent from '../../../common/DatePickerComponent';
 import BouncyCheckboxGroup, {
   ICheckboxButton,
@@ -35,6 +35,7 @@ const ibaApprovalOptions: Array<ICheckboxButton> = [
       textDecorationLine: 'none',
       fontSize: 14,
     },
+    isChecked: true,
     textContainerStyle: {marginLeft: 4, marginRight: 4},
     style: {paddingRight: 10},
   },
@@ -184,7 +185,7 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
   };
 
   const handleIbaCodeValidTillDate = (date: Date) => {
-    setIbaApprovalTillDate(formatDate(date));
+    setIbaApprovalTillDate(formatDate2(date));
   };
 
   const handlePickupPinCode = useCallback((text: string) => {
@@ -262,18 +263,20 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
       setAddressError('');
     }
 
-    if (Validator.isEmpty(state.ibaApprovalCode)) {
-      setIbaApprovalCodeError('IBA Approval code required');
-    } else {
-      ibaApprovalCodeFilled = true;
-      setIbaApprovalCodeError('');
-    }
-
-    if (Validator.isEmpty(state.ibaApprovalValidTill)) {
-      setIbaApprovalTillDateError('IBA Approval Date required');
-    } else {
-      ibaApprovalValidTillFilled = true;
-      setIbaApprovalTillDateError('');
+    if(ibaApproval) {
+      if (Validator.isEmpty(state.ibaApprovalCode)) {
+        setIbaApprovalCodeError('IBA Approval code required');
+      } else {
+        ibaApprovalCodeFilled = true;
+        setIbaApprovalCodeError('');
+      }
+  
+      if (Validator.isEmpty(state.ibaApprovalValidTill)) {
+        setIbaApprovalTillDateError('IBA Approval Date required');
+      } else {
+        ibaApprovalValidTillFilled = true;
+        setIbaApprovalTillDateError('');
+      }
     }
 
     if (Validator.isEmpty(state.companyType)) {
@@ -309,6 +312,7 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
   const handleNextClick = useCallback(() => {
     if (currentStep >= 1 && currentStep < 5) {
       const isValidForm = validateRegistrationForm();
+      // setCurrentStep(currentStep + 1);
       if (isValidForm) {
         const data: ICompanyRegistrationRequest = {
           authId: otpData?.data.id as string,
@@ -319,9 +323,11 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
           companyAddress: state.address,
           state: state.state,
           city: state.city,
+          // state: 'Haryana',
+          // city: 'Grugaon',
           pincode: state.pinCode,
-          iba_approval_code: state.ibaApprovalCode,
-          iba_valid_date: state.ibaApprovalValidTill,
+          ibaApprovalCode: state.ibaApprovalCode,
+          ibaValidDate: state.ibaApprovalValidTill,
           companyWebite: 'www.abc.com',
           CINNumber: state.document,
           companyLogo: '',
@@ -329,7 +335,7 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
           companyProfile: '',
           district: '',
           postOffice: '',
-          govRegdDetails: null,
+          govRegdDetails: {},
           accountDetails: [],
           packerSignature: '',
           termsconditions: 'NA',

@@ -25,8 +25,8 @@ import {
   TPickupAddressInfo,
   TDropAddressInfo,
 } from './enquiryReducer';
-import {useAppDispatch} from '../../../redux/hooks';
-import {addEnquiryRequest} from '../../../redux/slices/EnquirySlice';
+import {useAppDispatch, useAppSelector} from '../../../redux/hooks';
+import {addEnquiryRequest, resetAddEnquiryRequest} from '../../../redux/slices/EnquirySlice';
 import {IAddEnquiryRequest} from '../../../interface/enquiry/IAddEnquiryRequest';
 import usePincodeHook, {
   PINCODE_REQUEST_KEY,
@@ -34,6 +34,7 @@ import usePincodeHook, {
 import {getCities, getStates} from '../../../utils/formatter';
 import shiftingLuggageOptions from '../../../data/shiftingLuggage.json';
 import Spinner from '../../../common/Spinner';
+import Toast from 'react-native-toast-message';
 
 const AddEnquiryView: React.FC<{}> = ({}) => {
   const [state, dispatch] = useReducer(enquiryReducer, initialState);
@@ -45,7 +46,16 @@ const AddEnquiryView: React.FC<{}> = ({}) => {
   const [pickupCities, setPickupCities] = useState<TDropdownItem[]>([]);
   const [deliveryStates, setDeliveryStates] = useState<TDropdownItem[]>([]);
   const [deliveryCities, setDeliveryCities] = useState<TDropdownItem[]>([]);
-  const dispatched = useAppDispatch();
+  const dispatch2 = useAppDispatch();
+  const {
+    addEnquiryRequesting,
+    addEnquirySuccess,
+    addEnquiryFailure,
+    addEnquiryInfo,
+  } = useAppSelector(state => state.Enquiry);
+
+  console.log('AddEnquiry-addEnquiryInfo--', JSON.stringify(addEnquiryInfo));
+  
 
   const setPincodeError = () => {
     dispatch({
@@ -317,12 +327,30 @@ const AddEnquiryView: React.FC<{}> = ({}) => {
     }
   }, [result]);
 
+  useEffect(() => {
+    if(!addEnquiryRequesting && addEnquirySuccess) {
+      Toast.show({
+        type: 'success',
+        text1: 'Enquriy',
+        text2: 'Enquiry has been added successfully'
+      });
+      dispatch2(resetAddEnquiryRequest());
+    } else if(!addEnquiryRequesting && addEnquiryFailure) {
+      Toast.show({
+        type: 'error',
+        text1: 'Enquriy',
+        text2: 'Error in adding enquiry. Please try again!'
+      });
+      dispatch2(resetAddEnquiryRequest());
+    }
+  }, [addEnquiryRequesting, addEnquirySuccess, addEnquiryFailure]);
+
   const handleSubmit = useCallback(() => {
     const payload: IAddEnquiryRequest = {
-      companyId: '',
-      authId: '',
+      companyId: '6511695bad8a273529a2a59a',
+      authId: '650efb2d7e3968c4c217a34f',
       enquiryManager: '',
-      shiftingType: state.shiftingType,
+      shiftingType: state.shiftingType.toUpperCase(),
       partyCompanyName: '',
       partyName: state.partyName,
       email: '',
@@ -334,24 +362,24 @@ const AddEnquiryView: React.FC<{}> = ({}) => {
       alternateNumbers: '',
       shiftingDate: '',
       pickupAddress: {
-        shiftingFrom: state.pickupAddress?.shiftingFrom as string,
+        shiftingFrom: state.pickupAddress?.city as string,
         state: state.pickupAddress?.state as string,
         city: state.pickupAddress?.city as string,
         address: state.pickupAddress?.address as string,
         pincode: state.pickupAddress?.pincode as string,
         landmark: state.pickupAddress?.landmark as string,
         floor: state.pickupAddress?.floor as string,
-        isLiftAvailable: state.pickupAddress?.isLiftAvailable as string,
+        isLiftAvailable: state.pickupAddress?.isLiftAvailable.toLocaleUpperCase() as string,
       },
       dropAddress: {
-        shiftingTo: state.dropAddress?.shiftingTo as string,
+        shiftingTo: state.dropAddress?.city as string,
         state: state.dropAddress?.state as string,
         city: state.dropAddress?.city as string,
         address: state.dropAddress?.address as string,
         pincode: state.dropAddress?.pincode as string,
         landmark: state.dropAddress?.landmark as string,
         floor: state.dropAddress?.floor as string,
-        isLiftAvailable: state.dropAddress?.isLiftAvailable as string,
+        isLiftAvailable: state.dropAddress?.isLiftAvailable.toLocaleUpperCase() as string,
       },
       billingBy: state.billingBy?.billing_by as string,
       billingDetails: {
@@ -373,7 +401,7 @@ const AddEnquiryView: React.FC<{}> = ({}) => {
       },
       status: 'NEW',
     };
-    dispatched(addEnquiryRequest(payload));
+    dispatch2(addEnquiryRequest(payload));
   }, [state]);
 
   const showBillingByIndividualView = () => {
@@ -792,7 +820,7 @@ const AddEnquiryView: React.FC<{}> = ({}) => {
           textStyle={styles.textStyle}
         />
         <Spacer height={12} />
-        <Spinner show={fetching} />
+        <Spinner show={fetching || addEnquiryRequesting} />
       </View>
     </AvoidSoftInputViewHOC>
   );

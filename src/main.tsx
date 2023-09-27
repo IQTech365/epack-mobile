@@ -10,6 +10,7 @@ import {DrawerNavigator} from './navigation/DrawerNavigator';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {PortalProvider} from '@gorhom/portal';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import Toast from 'react-native-toast-message';
 
 const Main = () => {
   const authContext = useAuthContext();
@@ -26,6 +27,7 @@ const Main = () => {
           <BottomSheetModalProvider>
             <Provider store={store}>
               {loggedIn ? <DrawerNavigator /> : <AuthStackNavigator />}
+              <Toast />
             </Provider>
           </BottomSheetModalProvider>
         {/* </PortalProvider> */}

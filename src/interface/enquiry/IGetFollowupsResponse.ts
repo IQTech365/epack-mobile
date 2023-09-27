@@ -1,5 +1,10 @@
-export interface IGetFollowupsData {
-    //
+import { IAddFollowupRequest } from "./IAddFollowupRequest";
+
+export interface IGetFollowupsData extends IAddFollowupRequest {
+    _id: string;
+    isActive: boolean;
+    isDeleted: boolean;
+    createdAt: string;
 }
 
 export interface IGetFollowupsResponse {

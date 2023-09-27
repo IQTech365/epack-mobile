@@ -21,6 +21,18 @@ interface ICompanyState {
   deleteCompanySuccess: boolean;
   deleteCompanyFailure: boolean;
   deleteCompanyError: any;
+  // Upload Company Logo
+  uploadLogoInfo: any;
+  uploadLogoRequesting: boolean;
+  uploadLogoSuccess: boolean;
+  uploadLogoFailure: boolean;
+  uploadLogoError: any;
+  // Upload Signature
+  uploadSignatureInfo: any;
+  uploadSignatureRequesting: boolean;
+  uploadSignatureSuccess: boolean;
+  uploadSignatureFailure: boolean;
+  uploadSignatureError: any;
 }
 
 const initialState: ICompanyState = {
@@ -42,6 +54,19 @@ const initialState: ICompanyState = {
   deleteCompanySuccess: false,
   deleteCompanyFailure: false,
   deleteCompanyError: null,
+  // Upload Company Logo
+  uploadLogoInfo: null,
+  uploadLogoRequesting: false,
+  uploadLogoSuccess: false,
+  uploadLogoFailure: false,
+  uploadLogoError: null,
+  // Upload Signature
+  uploadSignatureInfo: null,
+  uploadSignatureRequesting: false,
+  uploadSignatureSuccess: false,
+  uploadSignatureFailure: false,
+  uploadSignatureError: null,
+
 };
 
 export const CompanySlice = createSlice({
@@ -111,6 +136,48 @@ export const CompanySlice = createSlice({
       state.deleteCompanyFailure = true;
       state.deleteCompanyError = action.payload;
     },
+    // Upload Company Logo
+    uploadCompanyLogoRequest: (
+      state,
+      action: PayloadAction<any>,
+    ) => {
+      state.uploadLogoRequesting = true;
+    },
+    uploadCompanyLogoSuccess: (
+      state,
+      action: PayloadAction<any>,
+    ) => {
+      state.uploadLogoRequesting = false;
+      state.uploadLogoSuccess = true;
+      state.uploadLogoInfo = action.payload;
+    },
+    uploadCompanyLogoFailure: (state, action: PayloadAction<any>) => {
+      state.uploadLogoRequesting = false;
+      state.uploadLogoSuccess = false;
+      state.uploadLogoFailure = true;
+      state.uploadLogoError = action.payload;
+    },
+    // Upload Signature
+    uploadSignatureRequest: (
+      state,
+      action: PayloadAction<any>,
+    ) => {
+      state.uploadSignatureRequesting = true;
+    },
+    uploadSignatureSuccess: (
+      state,
+      action: PayloadAction<any>,
+    ) => {
+      state.uploadSignatureRequesting = false;
+      state.uploadSignatureSuccess = true;
+      state.uploadSignatureInfo = action.payload;
+    },
+    uploadSignatureFailure: (state, action: PayloadAction<any>) => {
+      state.uploadSignatureRequesting = false;
+      state.uploadSignatureSuccess = false;
+      state.uploadSignatureFailure = true;
+      state.uploadSignatureError = action.payload;
+    },
   },
 });
 
@@ -128,5 +195,14 @@ export const {
   // Delete Company
   deleteCompanyRequest,
   deleteCompanySuccess,
-  deleteCompanyFailure
+  deleteCompanyFailure,
+  // Upload Company Logo
+  uploadCompanyLogoRequest,
+  uploadCompanyLogoSuccess,
+  uploadCompanyLogoFailure,
+  // Upload Signature
+  uploadSignatureRequest,
+  uploadSignatureSuccess,
+  uploadSignatureFailure,
+
 } = CompanySlice.actions;

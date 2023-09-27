@@ -1,4 +1,4 @@
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -22,6 +22,9 @@ import {useCompanyRegistrationContextHook} from '../../../provider/CompanyRegist
 import Button from '../../../common/Button';
 import Alert, {STATUS_CODE} from '../../../common/Alert';
 import { Validator } from '../../../utils/validation';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { uploadSignatureRequest } from '../../../redux/slices/CompanySlice';
+import { setAuthToken, setIsRegistrationComplete } from '../../../utils/storage';
 
 interface IOptions {
   mediaType: MediaType;
@@ -53,6 +56,14 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
   const [isBase64Image, setIsBase64Image] = useState<boolean>(false);
   const [showSignatureRequiredAlert, setShowSignatureRequiredAlert] = useState<boolean>(false);
   const signatureRef = useRef();
+  const dispatch = useAppDispatch();
+  const { verifiedData } = useAppSelector(state => state.OTP);
+  const {
+    uploadSignatureRequesting,
+    uploadSignatureSuccess,
+    uploadSignatureFailure,
+    uploadSignatureError,
+  } = useAppSelector(state => state.Company);
 
   const _onSaveEvent = (result: any) => {
     console.log(result);
@@ -112,13 +123,18 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
     }
   }, [state]);
 
-  const handleNextClick = useCallback(() => {
+  const handleUploadClick = useCallback(() => {
     if (currentStep >= 1 && currentStep < 5) {
       if(Validator.isEmpty(state.ownerSignature)) {
         setShowSignatureRequiredAlert(true);
       } else {
-        setShowSignatureRequiredAlert(false);
-        setCurrentStep(currentStep + 1);
+        // setShowSignatureRequiredAlert(false);
+        //TODO: Upload signature here...
+        const formData = new FormData();
+        formData.append('logo', {companyLogo: signatureUri});
+        formData.append('id', verifiedData?.data.id);
+        dispatch(uploadSignatureRequest(formData));
+        // setCurrentStep(currentStep + 1);
       }
     }
   }, [state]);
@@ -127,9 +143,16 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
     setShowSignatureRequiredAlert(false);
   }
 
-  const signature = isBase64Image
-    ? {uri: `data:image/png;base64,${signatureUri}`}
-    : {uri: signatureUri};
+  const signature = isBase64Image ? {uri: `data:image/png;base64,${signatureUri}`} : {uri: signatureUri};
+
+  useEffect(() => {
+    if(!uploadSignatureRequesting && uploadSignatureSuccess) {
+      setIsRegistrationComplete();
+      setAuthToken(verifiedData?.data.token as string);
+    } else if(!uploadSignatureRequesting && uploadSignatureFailure) {
+      console.log('Error in uploading signature. Try again!');
+    }
+  }, [uploadSignatureRequesting, uploadSignatureSuccess, uploadSignatureFailure]);
 
   return (
     <>
@@ -214,8 +237,8 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
           </View>
           <View style={style.nextButtonContainer}>
             <Button
-              text={currentStep == 5 ? 'Save' : 'Next'}
-              onPress={handleNextClick}
+              text="Upload"
+              onPress={handleUploadClick}
               style={style.buttonStyle2}
               textStyle={style.buttonTextStyle}
             />

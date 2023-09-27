@@ -17,7 +17,7 @@ import {IOtpGetRequest} from '../../interface/otp/IOtpGetRequest';
 import {getOtpRequest, verifyOtpRequest} from '../../redux/slices/OtpSlice';
 import Header from '../../common/Header';
 import { IOtpVerifyRequest } from '../../interface/otp/IOtpVerifyRequest';
-import { getIsRegistrationComplete, setLoginStatus } from '../../utils/storage';
+import { getIsRegistrationComplete, setAuthToken, setLoginStatus } from '../../utils/storage';
 
 const OTPPageView = (props: any) => {
   const {navigation} = props;
@@ -116,6 +116,10 @@ const OTPPageView = (props: any) => {
   useEffect(() => {
     if(!verifyOtpRequesting && verifyOtpSuccess) {
       console.log('verifiedData------', JSON.stringify(verifiedData));
+      // const {data, status, error, message} = verifiedData || {};
+      // if(data?.token) {
+      //   setAuthToken(data.token);
+      // }
       checkRegistration();
     } else if(!verifyOtpRequesting && verifyOtpFailure) {
       Alert.alert('Otp verification failed');
@@ -138,6 +142,7 @@ const OTPPageView = (props: any) => {
             //@ts-ignore
             ref={inputRef1}
             onChangeText={onChangeOtpText1}
+            autoFocus={true}
           />
           <OTPInput
             //@ts-ignore

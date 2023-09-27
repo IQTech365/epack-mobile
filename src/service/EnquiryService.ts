@@ -1,13 +1,16 @@
 import {AxiosResponse} from 'axios';
 import {Api} from '../http/Api';
-import {ADD_ENQUIRY, EDIT_COMPANY} from '../http/Endpoint';
+import {ADD_ENQUIRY, EDIT_COMPANY, GET_ENQUIRY_LIST, ADD_FOLLOWUP, GET_FOLLOWUP_COMMENTS} from '../http/Endpoint';
 import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
 import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
 import { IAddEnquiryRequest } from '../interface/enquiry/IAddEnquiryRequest';
 import { IAddEnquiryResponse } from '../interface/enquiry/IAddEnquiryResponse';
+import { IGetEnquiriesResponse } from '../interface/enquiry/IGetEnquiriesResponse';
+import { IAddFollowupRequest } from '../interface/enquiry/IAddFollowupRequest';
+import { IAddFollowupResponse } from '../interface/enquiry/IAddFollowupResponse';
+import { IGetFollowupsResponse } from '../interface/enquiry/IGetFollowupsResponse';
 
 export const AddEnquiryService = async (payload: IAddEnquiryRequest): Promise<IAddEnquiryResponse> => {
-    console.log('AddEnquiryService--payload--', JSON.stringify(payload));
     const api = Api.getInstance();
     return await api.post<IAddEnquiryRequest, AxiosResponse<IAddEnquiryResponse>>(payload, ADD_ENQUIRY);
 }
@@ -16,6 +19,21 @@ export const AddEnquiryService = async (payload: IAddEnquiryRequest): Promise<IA
 export const EditEnquiryService = async (payload: IOtpVerifyRequest): Promise<IOtpVerifyResponse> => {
     const api = Api.getInstance();
     return await api.update<IOtpVerifyRequest, AxiosResponse<IOtpVerifyResponse>>(payload, EDIT_COMPANY);
+}
+
+export const GetEnquiriesService = async (payload: string): Promise<IGetEnquiriesResponse> => {
+    const api = Api.getInstance();
+    return await api.get<IGetEnquiriesResponse>(GET_ENQUIRY_LIST(payload));
+}
+
+export const AddFollowupService = async (payload: IAddFollowupRequest): Promise<IAddFollowupResponse> => {
+    const api = Api.getInstance();
+    return await api.post<IAddFollowupRequest, AxiosResponse<IAddFollowupResponse>>(payload, ADD_FOLLOWUP);
+}
+
+export const GetFollowupsService = async (payload: string): Promise<IGetFollowupsResponse> => {
+    const api = Api.getInstance();
+    return await api.get<IGetFollowupsResponse>(GET_FOLLOWUP_COMMENTS(payload));
 }
 
 // TODO: refactor code once in use

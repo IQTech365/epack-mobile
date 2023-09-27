@@ -2,7 +2,15 @@ import {takeLatest, put, call} from 'redux-saga/effects';
 import {PayloadAction} from '@reduxjs/toolkit';
 import * as CompanyService from '../service/CompanyService';
 import { ICompanyRegistrationResponse } from '../interface/companyRegistration/ICompanyRegistrationResponse';
-import { addCompanyFailure, addCompanyRequest, addCompanySuccess } from '../redux/slices/CompanySlice';
+import {
+  addCompanyFailure,
+  addCompanyRequest,
+  addCompanySuccess,
+  uploadCompanyLogoFailure,
+  uploadCompanyLogoRequest,
+  uploadCompanyLogoSuccess,
+  uploadSignatureRequest,
+} from '../redux/slices/CompanySlice';
 import { ICompanyRegistrationRequest } from '../interface/companyRegistration/ICompanyRegistrationRequest';
 
 export function* addCompanySaga(action: PayloadAction<ICompanyRegistrationRequest>) {
@@ -17,18 +25,32 @@ export function* addCompanySaga(action: PayloadAction<ICompanyRegistrationReques
     }
 }
 
-// export function* verifyOtpSaga(action: PayloadAction<IOtpVerifyRequest>) {
-//     try {
-//         const response: IOtpVerifyResponse = yield call(OtpService.VerifyOtpService, action.payload);
-//         console.log('verifyOtpSaga-response----', JSON.stringify(response));
-//         yield put(verifyOtpSuccess(response));
-//     } catch (error) {
-//         console.log('verifyOtpSaga-error----', JSON.stringify(error));
-//         yield put(verifyOtpFailure(error));
-//     }
-// }
+export function* uploadCompanyLogoSaga(action: PayloadAction<any>) {
+    try {
+        //@ts-ignore
+        const response: any = yield call(CompanyService.UploadCompanyLogoService, action.payload);
+        console.log('uploadCompanyLogoSaga-response----', JSON.stringify(response));
+        yield put(uploadCompanyLogoSuccess(response));
+    } catch (error) {
+        console.log('uploadCompanyLogoSaga-error----', JSON.stringify(error));
+        yield put(uploadCompanyLogoFailure(error));
+    }
+}
+
+export function* uploadSignatureSaga(action: PayloadAction<any>) {
+    try {
+        //@ts-ignore
+        const response: any = yield call(CompanyService.UploadSignatureService, action.payload);
+        console.log('uploadSignatureSaga-response----', JSON.stringify(response));
+        yield put(uploadCompanyLogoSuccess(response));
+    } catch (error) {
+        console.log('uploadSignatureSaga-error----', JSON.stringify(error));
+        yield put(uploadCompanyLogoFailure(error));
+    }
+}
 
 export function* watcherCompanySaga() {
     yield takeLatest(addCompanyRequest.type, addCompanySaga);
-    // yield takeLatest(verifyOtpRequest.type, verifyOtpSaga);
+    yield takeLatest(uploadCompanyLogoRequest.type, uploadCompanyLogoSaga);
+    yield takeLatest(uploadSignatureRequest.type, uploadSignatureSaga);
 }
