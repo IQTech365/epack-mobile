@@ -10,6 +10,7 @@ import SignupSlice from './slices/SignupSlice';
 import CompanySlice from './slices/CompanySlice';
 import EnquirySlice from './slices/EnquirySlice';
 import OrderSlice from './slices/OrderSlice';
+import QuotationSlice from './slices/QuotationSlice';
 
 const sagaMiddleware = createSagaMiddleware();
 const middleware = [sagaMiddleware];
@@ -21,6 +22,7 @@ export const store = configureStore({
         Company: CompanySlice,
         Enquiry: EnquirySlice,
         Order: OrderSlice,
+        Quotation: QuotationSlice,
     },
     middleware: (getDefaultMiddleware) => {
         return getDefaultMiddleware().concat(middleware);

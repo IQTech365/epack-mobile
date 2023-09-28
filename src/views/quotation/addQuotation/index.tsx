@@ -36,7 +36,7 @@ import {
   TGstInQuotation,
   TBillingBy,
 } from './quotationReducer';
-import { formatDate, getCities, getStates } from '../../../utils/formatter';
+import { formatDate, formatDate3, getCities, getStates } from '../../../utils/formatter';
 import BouncyCheckboxGroup, {
   ICheckboxButton,
 } from 'react-native-bouncy-checkbox-group';
@@ -61,6 +61,11 @@ import usePincodeHook, {
 } from '../../../hooks/usePincodeHook';
 import Spinner from '../../../common/Spinner';
 import { getStatusValue } from '../utils/utils';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { IAddQuotationRequest } from '../../../interface/quotation/IAddQuotationRequest';
+import { State } from 'react-native-gesture-handler';
+import { addQuotationRequest, resetaddQuotationRequest } from '../../../redux/slices/QuotationSlice';
+import Toast from 'react-native-toast-message';
 
 const loadTypes: Array<ICheckboxButton> = [
   {
@@ -492,6 +497,15 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
   const [tempOtherChargeItemValue, setTempOtherChargeItemValue] =
     useState<string>('');
 
+  const dispatch2 = useAppDispatch();
+
+  const {
+    addQuotationRequesting,
+    addQuotationSuccess,
+    addQuotationFailure,
+    addQuotationInfo,
+  } = useAppSelector(state => state.Quotation);
+
   const setPincodeError = () => {
     dispatch({
       type: QUOTATION_FORM_ACTION.PICKUP_PINCODE_ERROR,
@@ -533,7 +547,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
   const handleQuotationDate = (date: Date) => {
     dispatch({
       type: QUOTATION_FORM_ACTION.DATE_OF_QUOTATION,
-      payload: formatDate(date),
+      payload: formatDate3(date),
     });
   };
 
@@ -1043,7 +1057,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
         </>
       );
     }
-    return null
+    return null;
   };
 
   const handleQuotationDiscountPercent = (item: TDropdownItem) => {
@@ -1375,6 +1389,140 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
       }
     }
   }, [result]);
+
+  useEffect(() => {
+    if (!addQuotationRequesting && addQuotationSuccess) {
+      Toast.show({
+        type: 'success',
+        text1: 'Quotation',
+        text2: 'Quotation has been added successfully'
+      });
+      dispatch2(resetaddQuotationRequest());
+    } else if (!addQuotationRequesting && addQuotationFailure) {
+      Toast.show({
+        type: 'error',
+        text1: 'Quotation',
+        text2: 'Error in adding Quotation. Please try again!'
+      });
+      dispatch2(resetaddQuotationRequest());
+    }
+  }, [addQuotationRequesting, addQuotationSuccess, addQuotationFailure]);
+
+
+  const handleSubmit = useCallback(() => {
+    const payload: IAddQuotationRequest = {
+      authId: '650efb2d7e3968c4c217a34f',
+      shiftingType: state.shiftingType.toUpperCase(),
+      shiftingLuggage: state.shiftingLuggage as string,
+      vehicleType: state.vehcileType as string,
+      manufacture: state.manufacturer as string,
+      model: state.model as string,
+      templateId: "5555",
+      quotationDate: state.dateOfQuotation as string,
+      quotationNumber: state.serialNumber as string,
+      enquirySource: '',
+      partyCompanyName: '',
+      partyName: state.partyName,
+      email: '',
+      mobile: state.mobileNumber,
+      shiftingDate: '',
+      pickupAddress: {
+        shiftingFrom: state.pickupCity as string,
+        state: state.pickupState as string,
+        city: state.pickupCity as string,
+        pincode: state.pickupPincode as string,
+        locality: state.pickupLocality as string,
+        landmark: state.pickupAddress as string,
+        floor: state.pickupCurrentFloor as string,
+        isLiftAvailable: state.pickupLiftStatus.toLocaleUpperCase() as string,
+      },
+      dropAddress: {
+        shiftingTo: state.deliveryCity as string,
+        state: state.deliveryState as string,
+        city: state.deliveryCity as string,
+        locality: state.deliveryLocality as string,
+        pincode: state.deliveryPincode as string,
+        landmark: state.deliveryAddress as string,
+        floor: state.deliveryCurrentFloor as string,
+        isLiftAvailable: state.deliveryLiftStatus.toLocaleUpperCase() as string,
+      },
+      partLoad: state.partLoad,
+      fullLoad: state.fullLoad,
+      openBody: true,
+      closeBody: true,
+      lorryType: state.lorryType as string,
+      freightChargesStatus: "NOT_REQUIRED",
+      partLoadCharge: "",
+      fullLoadCharge: "",
+      packagingChargesStatus: state.packingCharges?.status as string,
+      packagingPartLoadCharges: state.packingCharges?.part_load_charge as string,
+      packagingFullLoadCharges: state.packingCharges?.full_load_charge as string,
+      unPackagingChargesStatus: state.unPackingCharges?.status as string,
+      unPackagingPartLoadCharges: state.unPackingCharges?.part_load_charge as string,
+      unPackagingFullLoadCharges: state.unPackingCharges?.full_load_charge as string,
+      unLoadingChargesStatus: state.unLoadingCharges?.status as string,
+      unLoadingPartLoadCharges: state.unLoadingCharges?.part_load_charge as string,
+      unLoadingFullLoadCharges: state.unLoadingCharges?.full_load_charge as string,
+      packingMaterialChargesStatus: state.packingMaterialCharges?.status as string,
+      packingMaterialPartLoadCharges: state.packingMaterialCharges?.part_load_charge as string,
+      packingMaterialFullLoadCharges: state.packingMaterialCharges?.full_load_charge as string,
+      loadingChargesStatus: state.loadingCharges?.status as string,
+      loadingPartLoadCharges: state.loadingCharges?.part_load_charge as string,
+      loadingFullLoadCharges: state.loadingCharges?.full_load_charge as string,
+      gstStatus: state.gstInQuotation?.status as string,
+      gstType: state.gstInQuotation?.gst_type as string,
+      gstPercentage: state.gstInQuotation?.gst_percent as string,
+      surchargeIsRequired: state.surcharge?.status as string,
+      surchargeCharges: state.surcharge?.surcharge_percent as string,
+      discountType: state.discountInQuotation?.discount_type as string,
+      discountAmount: state.discountInQuotation?.discount_value as string,
+      transitInsurance: {
+        isRequired: state.insuranceDetails?.status as string,
+        transitType: state.insuranceDetails?.insurance_type as string,
+        charges: [{
+          luggageType: state.insuranceDetails?.shifting_luggage as string,
+          insurancePerc: state.insuranceDetails?.insurance_charge_percent as string,
+          gst: state.insuranceDetails?.insurance_gst_percent as string,
+          value: state.insuranceDetails?.insurance_goods_value as string,
+
+        }]
+      },
+      storageCharges: {
+        isRequired: state.storageCharges?.status as string,
+        storageChargesType: state.storageCharges?.storage_duration_type as string,
+        fromDate: state.storageCharges?.storage_from_date as string,
+        toDate: state.storageCharges?.storage_to_date as string,
+        amount: state.storageCharges?.storage_amount as string,
+      },
+      otherCharges: [{
+        jobType: "",
+        amount: ""
+      }],
+      quotationAmount: "1233",
+      advanceAmount: "1233",
+      billingBy: state.billingBy?.billing_by as string,
+      billingDetails: {
+        companyName: state.billingBy?.billing_info?.company_name as string,
+        approvalAuthority: state.billingBy?.billing_info
+          ?.approval_authority as string,
+        authorityPersonName: state.billingBy?.billing_info
+          ?.authority_person_name as string,
+        authorityPersonMobile: state.billingBy?.billing_info
+          ?.authority_mobile_number as string,
+        companyAddress: state.billingBy?.billing_info
+          ?.company_address as string,
+        companyGST: state.billingBy?.billing_info?.company_gst as string,
+        employeeName: state.billingBy?.billing_info?.employee_name as string,
+        employeeDesignation: state.billingBy?.billing_info
+          ?.employee_designation as string,
+        employeeMobile: state.billingBy?.billing_info
+          ?.employee_mobile_number as string,
+      },
+      otherDetails: state.otherDetails?.any_needs_or_concern as string
+
+    };
+    dispatch2(addQuotationRequest(payload));
+  }, [state]);
 
   return (
     <>
@@ -2376,15 +2524,15 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
           <Spacer height={12} />
           <Button
             text="PREVIEW"
-            onPress={() => { }}
-            disabled={true}
+            onPress={handleSubmit}
+            disabled={false}
             style={styles.previewButtonStyle}
             textStyle={styles.textStyle}
           />
           <Spacer height={12} />
         </View>
       </AvoidSoftInputViewHOC>
-      <Spinner show={fetching} />
+      <Spinner show={fetching || addQuotationRequesting} />
     </>
   );
 };
