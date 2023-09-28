@@ -1,6 +1,6 @@
 import {AxiosResponse} from 'axios';
 import {Api} from '../http/Api';
-import {ADD_ENQUIRY, EDIT_COMPANY, GET_ENQUIRY_LIST, ADD_FOLLOWUP, GET_FOLLOWUP_COMMENTS} from '../http/Endpoint';
+import {ADD_ENQUIRY, EDIT_COMPANY, GET_ENQUIRY_LIST, ADD_FOLLOWUP, GET_FOLLOWUP_COMMENTS, ADD_SURVEY, GET_SURVEY_COMMENTS} from '../http/Endpoint';
 import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
 import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
 import { IAddEnquiryRequest } from '../interface/enquiry/IAddEnquiryRequest';
@@ -9,6 +9,9 @@ import { IGetEnquiriesResponse } from '../interface/enquiry/IGetEnquiriesRespons
 import { IAddFollowupRequest } from '../interface/enquiry/IAddFollowupRequest';
 import { IAddFollowupResponse } from '../interface/enquiry/IAddFollowupResponse';
 import { IGetFollowupsResponse } from '../interface/enquiry/IGetFollowupsResponse';
+import { IAddSurveyRequest } from '../interface/enquiry/IAddSurveyRequest';
+import { IAddSurveyResponse } from '../interface/enquiry/IAddSurveyResponse';
+import { IGetSurveyListResponse } from '../interface/enquiry/IGetSurveyListResponse';
 
 export const AddEnquiryService = async (payload: IAddEnquiryRequest): Promise<IAddEnquiryResponse> => {
     const api = Api.getInstance();
@@ -34,6 +37,16 @@ export const AddFollowupService = async (payload: IAddFollowupRequest): Promise<
 export const GetFollowupsService = async (payload: string): Promise<IGetFollowupsResponse> => {
     const api = Api.getInstance();
     return await api.get<IGetFollowupsResponse>(GET_FOLLOWUP_COMMENTS(payload));
+}
+
+export const AddSurveyService = async (payload: IAddSurveyRequest): Promise<IAddSurveyResponse> => {
+    const api = Api.getInstance();
+    return await api.post<IAddSurveyRequest, AxiosResponse<IAddSurveyResponse>>(payload, ADD_SURVEY);
+}
+
+export const GetSurveyListService = async (payload: string): Promise<IGetSurveyListResponse> => {
+    const api = Api.getInstance();
+    return await api.get<IGetSurveyListResponse>(GET_SURVEY_COMMENTS(payload));
 }
 
 // TODO: refactor code once in use

@@ -19,7 +19,7 @@ export const DELETE_ENQUIRY = (enquiry_id) => `/enquiry/${enquiry_id}`;
 export const GET_ENQUIRY = (enquiry_id) => `/enquiry/${enquiry_id}`;
 export const GET_ENQUIRIES = (company_id) => `/enquiry/${company_id}`;
 export const ADD_SURVEY = `/survey/add`;
-export const GET_SURVEY_COMMENTS = (enquiry_id) => ``;
+export const GET_SURVEY_COMMENTS = (enquiry_id) => `/survey/${enquiry_id}`;
 export const ADD_FOLLOWUP = `/followup/add`;
 export const GET_FOLLOWUP_COMMENTS = (enquiry_id) => `/followup/${enquiry_id}`;
 export const ADD_QUOTATION = `/quotation/add`;
