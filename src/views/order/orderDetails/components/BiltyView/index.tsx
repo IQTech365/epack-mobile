@@ -1,5 +1,5 @@
-import React, { useCallback, useReducer, useState } from 'react';
-import { View } from 'react-native';
+import React, { useCallback, useEffect, useReducer, useState } from 'react';
+import { Alert, View } from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
 import DatePickerComponent from '../../../../../common/DatePickerComponent';
@@ -697,6 +697,19 @@ const BiltyView: React.FC<IBiltyViewProps> = ({ }) => {
 
     dispatch2(createBiltyRequest(payload));
   }, [dispatch2, reducerState]);
+
+  useEffect(() => {
+    if (!createBiltyRequesting && createBiltySuccess) {
+      // console.log('otpData--------', JSON.stringify(otpData));
+      // navigation.navigate(AuthStackRoute.OTPInput);
+    } else if (!createBiltyRequesting && createBiltyError) {
+      Alert.alert('Something went wrong. Please try again!');
+    }
+  }, [
+    createBiltyRequesting,
+    createBiltySuccess,
+    createBiltyFailure,
+  ]);
 
   const renderLoadingAddressView = () => {
     return (
