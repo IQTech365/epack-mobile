@@ -8,6 +8,7 @@ import EmptyView from '../../../emptyView';
 import Spacer from '../../../../../common/Spacer';
 import EditIcon from '../../../../../images/icons/edit2.svg';
 import DleteIcon from '../../../../../images/icons/delete.svg';
+import Button from '../../../../../common/Button';
 
 
 
@@ -56,6 +57,30 @@ const AddAccountView = () => {
           </View>
           <Spacer height={2} />
 
+        </View>
+        <View>
+          <View style={{ flexDirection: 'row', }}>
+            <Button
+              text="Quotation"
+              onPress={() => {
+                console.log('submitted data');
+              }}
+              disabled={false}
+              style={styles.previewButtonStyle}
+              textStyle={styles.buttonTextStyle}
+            />
+            <View style={{ left: '70%' }}>
+              <Button
+                text="Invoice"
+                onPress={() => {
+                  console.log('submitted data');
+                }}
+                disabled={false}
+                style={styles.previewButtonStyle}
+                textStyle={styles.buttonTextStyle}
+              />
+            </View>
+          </View>
         </View>
       </View>
 
