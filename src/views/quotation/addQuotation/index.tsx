@@ -2126,6 +2126,83 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                 </View>
               )}
               <Spacer height={4} />
+              <View style={styles.labelContainer}>
+                <Label text="Other Charges" style={styles.label} />
+              </View>
+              <View style={styles.textContainer2}>
+                  <Label text="Job Type" style={styles.label} />
+                  <DropdownComponent
+                    data={liftStatusOptions}
+                    onSelect={handleDeliveryLiftStatus}
+                  />
+                </View>
+              <View style={styles.mainWrapper}>
+                  {(isBothLoadType || isPartLoad) && (
+                    <View
+                      style={[styles.textContainer, getFreightInputsStyle()]}>
+                      <Label text="Part Load (Rate/Item)" style={styles.label} />
+                      <Input
+                        onChangeText={(text: string) => {
+                          handleUnPackingCharges(text, 'part');
+                        }}
+                        containerStyle={styles.inputContainer}
+                        inputStyle={styles.input}
+                        selectionColor={COLOR_BLACK}
+                        inputType="numeric"
+                      />
+                    </View>
+                  )}
+                  {(isBothLoadType || isFullLoad) && (
+                    <View
+                      style={[styles.textContainer, getFreightInputsStyle()]}>
+                      <Label text="Full Load (Rate/Item)" style={styles.label} />
+                      <Input
+                        onChangeText={(text: string) => {
+                          handleUnPackingCharges(text, 'full');
+                        }}
+                        containerStyle={styles.inputContainer}
+                        inputStyle={styles.input}
+                        selectionColor={COLOR_BLACK}
+                        inputType="numeric"
+                      />
+                    </View>
+                  )}
+                  
+                </View>
+                <View style={styles.mainWrapper}>
+                  {(isBothLoadType || isPartLoad) && (
+                    <View
+                      style={[styles.textContainer, getFreightInputsStyle()]}>
+                      <Label text="Part Load Amount" style={styles.label} />
+                      <Input
+                        onChangeText={(text: string) => {
+                          handleUnPackingCharges(text, 'part');
+                        }}
+                        containerStyle={styles.inputContainer}
+                        inputStyle={styles.input}
+                        selectionColor={COLOR_BLACK}
+                        inputType="numeric"
+                      />
+                    </View>
+                  )}
+                  {(isBothLoadType || isFullLoad) && (
+                    <View
+                      style={[styles.textContainer, getFreightInputsStyle()]}>
+                      <Label text="Full Load Amount" style={styles.label} />
+                      <Input
+                        onChangeText={(text: string) => {
+                          handleUnPackingCharges(text, 'full');
+                        }}
+                        containerStyle={styles.inputContainer}
+                        inputStyle={styles.input}
+                        selectionColor={COLOR_BLACK}
+                        inputType="numeric"
+                      />
+                    </View>
+                  )}
+                  
+                </View>
+              <Spacer height={4} />
               <View style={styles.textContainer2}>
                 <Label text="Advance Amount" style={styles.label} />
                 <Input

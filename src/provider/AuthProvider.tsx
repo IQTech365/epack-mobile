@@ -24,7 +24,7 @@ export const AuthProvider: React.FC<{children: ReactElement}> = ({children}) => 
         if(loginStatus && loginStatus === 'login') {
             setLoggedIn(true);
         } else {
-            setLoggedIn(true);
+            setLoggedIn(false);
         }
         setLoading(false);
     }

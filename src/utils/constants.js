@@ -53,6 +53,18 @@ const SettingStackRoute = {
   TemplateSetting: 'TemplateSetting',
 };
 
+const MyProfileStackRoute = {
+  ProfileRoot: 'ProfileRoot',
+  BasicDetails: 'BasicDetails',
+  Address: 'Address',
+  RegistrationDetails: 'RegistrationDetails',
+  AccountDetails: 'AccountDetails',
+  UPIDetails: 'UPIDetails',
+  PackerSignature: 'PackerSignature',
+  TermsAndCondition: 'TermsAndCondition',
+
+};
+
 export {
   TabRoute,
   AuthStackRoute,
@@ -61,5 +73,6 @@ export {
   OrderStackRoute,
   EnquiryStackRoute,
   ClientStackRoute,
-  SettingStackRoute
+  SettingStackRoute,
+  MyProfileStackRoute
 };

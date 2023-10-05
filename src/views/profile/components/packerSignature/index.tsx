@@ -5,6 +5,7 @@ import Spacer from '../../../../common/Spacer';
 import EnquiryDetailListItem from '../../../enquiry/enquiryDetails/components/EnquiryDetailListItem';
 import styles from './style';
 import EditIcon from '../../../../images/icons/edit.svg';
+import Header from '../../../../common/Header';
 
 interface IPackerSignatureViewProps {}
 
@@ -13,6 +14,7 @@ const PackerSignatureView: React.FC<IPackerSignatureViewProps> = ({}) => {
   return (
     <AvoidSoftInputViewHOC>
       <View style={styles.container}>
+      <Header label="Packer Signature" canGoBack={true} />
         <Spacer height={4} />
         <View style={styles.labelContainer}>
           <Text style={styles.labelText}>Packer's Details</Text>

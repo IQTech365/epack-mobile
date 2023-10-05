@@ -33,7 +33,7 @@ export enum CARCONDITION_FORM_ACTION {
   BATTERY_NO = 'BATTERY_NO',
   TYRE_NO = 'TYRE_NO',
   ANY_OTHER_ACCESSORIES = 'ANY_OTHER_ACCESSORIES',
-  remarks = 'remarks',
+  REMARKS = 'REMARKS',
   SCARATCHES = 'SCARATCHES',
   DENT = 'DENT',
   ANY_OTHER_OBSERVATION = 'ANY_OTHER_OBSERVATION',
@@ -200,7 +200,7 @@ export const carConditionReducer = (
       return {...state, tyreNumber: payload};
     case CARCONDITION_FORM_ACTION.ANY_OTHER_ACCESSORIES:
       return {...state, anyOtherAccessorie: payload};
-    case CARCONDITION_FORM_ACTION.remarks:
+    case CARCONDITION_FORM_ACTION.REMARKS:
       return {...state, remarks: payload};
     case CARCONDITION_FORM_ACTION.SCARATCHES:
       return {...state, scaratches: payload};

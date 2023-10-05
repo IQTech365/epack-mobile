@@ -175,7 +175,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({ }) => {
   };
   const handleRemark = (text: string) => {
     dispatch({
-      type: CARCONDITION_FORM_ACTION.REMARK,
+      type: CARCONDITION_FORM_ACTION.REMARKS,
       payload: text,
     });
   };
@@ -200,10 +200,10 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({ }) => {
 
 
   const handleCreateCarCondition = useCallback(() => {
-    const payload: ICreateCarConditionRequest = reducerState;
-    console.log(payload, 'payload carconditon req');
+    // const payload: ICreateCarConditionRequest = reducerState;
+    // console.log(payload, 'payload carconditon req');
 
-    dispatch2(createCarConditionRequest(payload));
+    // dispatch2(createCarConditionRequest(payload));
   }, [dispatch2, reducerState]);
 
   useEffect(() => {

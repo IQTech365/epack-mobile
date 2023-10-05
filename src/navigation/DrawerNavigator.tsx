@@ -35,6 +35,7 @@ import HelpCenterView from '../views/helpCenter';
 import NewsRoomView from '../views/newsRoom';
 import SettingsView from '../views/settings';
 import SettingStackNavigator from './SettingStackNavigator';
+import MyProfileStackNavigator from './MyProfileStackNavigator';
 const Drawer = createDrawerNavigator();
 
 const appUser: IAppUser = {
@@ -93,7 +94,7 @@ export const DrawerNavigator = () => {
       />
       <Drawer.Screen
         name="Profile"
-        component={ProfilePageView}
+        component={MyProfileStackNavigator}
         options={{
           title: 'My Profile',
           drawerIcon: () => <ProfileIcon width={24} height={24} />,

@@ -312,37 +312,37 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
   const handleNextClick = useCallback(() => {
     if (currentStep >= 1 && currentStep < 5) {
       const isValidForm = validateRegistrationForm();
-      // setCurrentStep(currentStep + 1);
-      if (isValidForm) {
-        const data: ICompanyRegistrationRequest = {
-          authId: otpData?.data.id as string,
-          companyName: state.companyName,
-          contactPerson: state.contactPerson,
-          email: state.email,
-          companyMobile: state.mobile,
-          companyAddress: state.address,
-          state: state.state,
-          city: state.city,
-          // state: 'Haryana',
-          // city: 'Grugaon',
-          pincode: state.pinCode,
-          ibaApprovalCode: state.ibaApprovalCode,
-          ibaValidDate: state.ibaApprovalValidTill,
-          companyWebite: 'www.abc.com',
-          CINNumber: state.document,
-          companyLogo: '',
-          punchLine: 'na',
-          companyProfile: '',
-          district: '',
-          postOffice: '',
-          govRegdDetails: {},
-          accountDetails: [],
-          packerSignature: '',
-          termsconditions: 'NA',
-        };
-        console.log('data----------', JSON.stringify(data), null, ' ');
-        dispatch(addCompanyRequest(data));
-      }
+      setCurrentStep(currentStep + 1);
+      // if (isValidForm) {
+      //   const data: ICompanyRegistrationRequest = {
+      //     authId: otpData?.data.id as string,
+      //     companyName: state.companyName,
+      //     contactPerson: state.contactPerson,
+      //     email: state.email,
+      //     companyMobile: state.mobile,
+      //     companyAddress: state.address,
+      //     state: state.state,
+      //     city: state.city,
+      //     // state: 'Haryana',
+      //     // city: 'Grugaon',
+      //     pincode: state.pinCode,
+      //     ibaApprovalCode: state.ibaApprovalCode,
+      //     ibaValidDate: state.ibaApprovalValidTill,
+      //     companyWebite: 'www.abc.com',
+      //     CINNumber: state.document,
+      //     companyLogo: '',
+      //     punchLine: 'na',
+      //     companyProfile: '',
+      //     district: '',
+      //     postOffice: '',
+      //     govRegdDetails: {},
+      //     accountDetails: [],
+      //     packerSignature: '',
+      //     termsconditions: 'NA',
+      //   };
+      //   console.log('data----------', JSON.stringify(data), null, ' ');
+      //   dispatch(addCompanyRequest(data));
+      // }
     }
   }, [state]);
 

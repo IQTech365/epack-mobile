@@ -31,16 +31,15 @@ interface IMoneyReceiptViewProps {
 }
 
 const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({ }) => {
-  const [reducerState, dispatch] = useReducer(
-    moneyReceiptReducer,
-    initialState,
-  );
+  const [reducerState, dispatch] = useReducer(moneyReceiptReducer, initialState,);
   const {
     createMoneyReceiptRequesting,
     createMoneyReceiptSuccess,
     createMoneyReceiptError,
     createMoneyReceiptFailure,
   } = useAppSelector(state => state.Order);
+  console.log('reducerState----', JSON.stringify(reducerState, null, ' '));
+  
   const dispatch2 = useAppDispatch();
   const handleReceiptDate = (date: Date) => {
     dispatch({
