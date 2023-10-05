@@ -24,7 +24,7 @@ import Alert, {STATUS_CODE} from '../../../common/Alert';
 import { Validator } from '../../../utils/validation';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import { uploadSignatureRequest } from '../../../redux/slices/CompanySlice';
-import { setAuthToken, setIsRegistrationComplete } from '../../../utils/storage';
+import { setAuthToken, setIsRegistrationComplete, setLoginStatus } from '../../../utils/storage';
 
 interface IOptions {
   mediaType: MediaType;
@@ -131,7 +131,7 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
         // setShowSignatureRequiredAlert(false);
         //TODO: Upload signature here...
         const formData = new FormData();
-        formData.append('logo', {companyLogo: signatureUri});
+        formData.append('companySignature', signatureUri);
         formData.append('id', verifiedData?.data.id);
         dispatch(uploadSignatureRequest(formData));
         // setCurrentStep(currentStep + 1);
@@ -148,6 +148,7 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
   useEffect(() => {
     if(!uploadSignatureRequesting && uploadSignatureSuccess) {
       setIsRegistrationComplete();
+      setLoginStatus();
       setAuthToken(verifiedData?.data.token as string);
     } else if(!uploadSignatureRequesting && uploadSignatureFailure) {
       console.log('Error in uploading signature. Try again!');

@@ -1,10 +1,10 @@
-export const GET_OTP = `/auth/auth/authenticate`;
-export const GET_OTP_OLD = `/userlogin/authenticate`;
-export const VERIFY_OTP = `/auth/auth/verifyotp`;
+export const GET_OTP = `/auth/authenticate`;
+export const VERIFY_OTP = `/auth/verifyotp`;
 export const PINCODE = (pincode) => `https://api.postalpincode.in/pincode/${pincode}`;
 
 // Company Registration Module
 export const ADD_COMPANY = `/company/add`;
+export const GET_COMPANIES = (company_id) => `/company/${company_id}`;
 export const EDIT_COMPANY = `/company/edit`;
 export const GET_COMPANY = (company_id) => `/company/${company_id}`;
 export const DELETE_COMPANY = (company_id) => `/company/${company_id}`;

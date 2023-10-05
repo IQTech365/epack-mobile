@@ -7,19 +7,20 @@ import ForgotPasswordPageView from "../views/forgotPassword";
 import IntroPageView from "../views/intro";
 import OTPPageView from "../views/otp";
 import RegistrationPageView from "../views/company";
+import { AuthStackParamList } from "./params/AuthStackParamList";
 
-const AuthStack = createNativeStackNavigator();
+const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 
 const AuthStackNavigator = () => {
 
     return (
-        <AuthStack.Navigator screenOptions={{headerShown: false}} initialRouteName={AuthStackRoute.RegisterCompany} >
-            <AuthStack.Screen name={AuthStackRoute.SignIn} component={SignInPageView} />
-            <AuthStack.Screen name={AuthStackRoute.SignUp} component={SignUpPageView} />
-            <AuthStack.Screen name={AuthStackRoute.OTPInput} component={OTPPageView} />
-            <AuthStack.Screen name={AuthStackRoute.ForgotPassword} component={ForgotPasswordPageView} />
-            <AuthStack.Screen name={AuthStackRoute.Intro} component={IntroPageView} />
-            <AuthStack.Screen name={AuthStackRoute.RegisterCompany} component={RegistrationPageView} />
+        <AuthStack.Navigator screenOptions={{headerShown: false}} initialRouteName="SignIn" >
+            <AuthStack.Screen name="SignIn" component={SignInPageView} />
+            <AuthStack.Screen name="SignUp" component={SignUpPageView} />
+            <AuthStack.Screen name="OTPInput" component={OTPPageView} />
+            <AuthStack.Screen name="ForgotPassword" component={ForgotPasswordPageView} />
+            <AuthStack.Screen name="Intro" component={IntroPageView} />
+            <AuthStack.Screen name="RegisterCompany" component={RegistrationPageView} initialParams={{registrationStep: 1}} />
         </AuthStack.Navigator>
     );
 }

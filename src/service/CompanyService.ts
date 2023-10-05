@@ -3,6 +3,7 @@ import {Api} from '../http/Api';
 import {
   ADD_COMPANY,
   EDIT_COMPANY,
+  GET_COMPANIES,
   UPLOAD_COMPANY_LOGO,
   UPLOAD_SIGNATURE,
 } from '../http/Endpoint';
@@ -10,11 +11,17 @@ import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
 import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
 import { ICompanyRegistrationRequest } from '../interface/companyRegistration/ICompanyRegistrationRequest';
 import { ICompanyRegistrationResponse } from '../interface/companyRegistration/ICompanyRegistrationResponse';
+import { IGetCompaniesResponse } from '../interface/companyRegistration/IGetCompaniesResponse';
 
 export const AddCompanyService = async (payload: ICompanyRegistrationRequest): Promise<ICompanyRegistrationResponse> => {
     console.log('AddCompanyService--payload--', JSON.stringify(payload));
     const api = Api.getInstance();
     return await api.post<ICompanyRegistrationRequest, AxiosResponse<ICompanyRegistrationResponse>>(payload, ADD_COMPANY);
+}
+
+export const GetCompaniesService = async (payload: string): Promise<IGetCompaniesResponse> => {
+    const api = Api.getInstance();
+    return await api.get<IGetCompaniesResponse>(GET_COMPANIES(payload));
 }
 
 // TODO: refactor code once in use

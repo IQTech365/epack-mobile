@@ -103,10 +103,10 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
   console.log('RegisterCompanyView-state--', JSON.stringify(state, null, ' '));
 
   const dispatch = useAppDispatch();
-  const {requesting, success, error, failure, companyInfo} = useAppSelector(
+  const {requesting, success, error, failure, addCompanyInfo} = useAppSelector(
     state => state.Company,
   );
-  console.log('RegisterCompanyView-companyInfo--', JSON.stringify(companyInfo, null, ' '));
+  console.log('RegisterCompanyView-companyInfo--', JSON.stringify(addCompanyInfo, null, ' '));
 
   const {otpData} = useAppSelector(state => state.OTP);
 

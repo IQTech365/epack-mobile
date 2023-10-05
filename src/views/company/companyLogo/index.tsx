@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import styles from './style';
 import LogoPlaceholder from '../../../images/logo_placeholder.png';
@@ -14,6 +14,10 @@ import GalleryIcon from '../../../images/icons/gallery.svg';
 import Spacer from '../../../common/Spacer';
 import {useCompanyRegistrationContextHook} from '../../../provider/CompanyRegistrationContextProvider';
 import Button from '../../../common/Button';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { resetUploadCompanyLogoRequest, uploadCompanyLogoRequest } from '../../../redux/slices/CompanySlice';
+import Spinner from '../../../common/Spinner';
+import Toast from 'react-native-toast-message';
 
 interface IOptions {
   mediaType: MediaType;
@@ -43,6 +47,24 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
   const {state, setCompanyLogo: setCompanyLogo2} =
     useCompanyRegistrationContextHook();
   const [companyLogo, setCompanyLogo] = useState<string>(state.companyLogo);
+  const { verifiedData } = useAppSelector(state => state.OTP);
+  const {
+    uploadLogoRequesting,
+    uploadLogoSuccess,
+    uploadLogoFailure,
+    addCompanyInfo,
+  } = useAppSelector(state => state.Company);
+
+  const getCompanyId = () => {
+    let id;
+    const {data} = addCompanyInfo || {};
+    if(data && Object.keys(data).length > 0) {
+      id = data._id;
+    }
+    return id;
+  }
+  
+  const dispatch = useAppDispatch();
   const handleLaunchCamera = async () => {
     try {
       const result = await launchCamera(options);
@@ -70,17 +92,39 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
   };
 
   const handleNextClick = useCallback(() => {
-    if (currentStep >= 1 && currentStep < 5) {
-      // validateRegistrationForm();
+    if (currentStep >= 1 && currentStep < 3) {
       setCurrentStep(currentStep + 1);
     }
   }, [state]);
 
-  const handlePreviousClick = useCallback(() => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
-    }
+  const handleUploadClick = useCallback(() => {
+    const formData = new FormData();
+        formData.append('companyLogo', companyLogo);
+        formData.append('id', getCompanyId());
+        // formData.append('id', '6511695bad8a273529a2a59a');
+        dispatch(uploadCompanyLogoRequest(formData));
   }, [state]);
+
+  useEffect(() => {
+    if(!uploadLogoRequesting && uploadLogoSuccess) {
+      Toast.show({
+        type: 'success',
+        text1: 'Company Logo Upload',
+        text2: 'Company Logo has been added successfully'
+      });
+      dispatch(resetUploadCompanyLogoRequest());
+      setTimeout(() => {
+        setCurrentStep(currentStep + 1);
+      }, 3000);
+    } else if(!uploadLogoRequesting && uploadLogoFailure) {
+      Toast.show({
+        type: 'error',
+        text1: 'Company Logo Upload',
+        text2: 'Error in Uploading Company Logo. Please try again!'
+      });
+      dispatch(resetUploadCompanyLogoRequest());
+    }
+  }, [uploadLogoRequesting, uploadLogoSuccess, uploadLogoFailure]);
 
   return (
     <View style={styles.container}>
@@ -123,7 +167,7 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
             {currentStep > 1 ? (
               <Button
                 text="Upload"
-                onPress={handlePreviousClick}
+                onPress={handleUploadClick}
                 style={styles.buttonStyle}
                 textStyle={styles.buttonTextStyle}
               />
@@ -138,6 +182,7 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
             />
           </View>
         </View>
+        <Spinner show={uploadLogoRequesting} />
     </View>
   );
 };

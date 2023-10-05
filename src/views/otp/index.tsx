@@ -14,10 +14,11 @@ import {INTRO_BG_LINEARGRADIENT} from '../../utils/colors';
 import Label from '../../common/Label';
 import OTPInput from '../../common/OtpInput';
 import {IOtpGetRequest} from '../../interface/otp/IOtpGetRequest';
-import {getOtpRequest, verifyOtpRequest} from '../../redux/slices/OtpSlice';
+import {getOtpRequest, resetVerifyOtpRequest, verifyOtpRequest} from '../../redux/slices/OtpSlice';
 import Header from '../../common/Header';
 import { IOtpVerifyRequest } from '../../interface/otp/IOtpVerifyRequest';
-import { getIsRegistrationComplete, setAuthToken, setLoginStatus } from '../../utils/storage';
+import { getIsRegistrationComplete, setAuthToken, setIsRegistrationComplete, setLoginStatus } from '../../utils/storage';
+import { getCompaniesRequest } from '../../redux/slices/CompanySlice';
 
 const OTPPageView = (props: any) => {
   const {navigation} = props;
@@ -30,6 +31,8 @@ const OTPPageView = (props: any) => {
     verifiedData,
     otpData,
   } = useAppSelector(state => state.OTP);
+  const {getCompaniesRequesting, getCompaniesSuccess, getCompaniesFailure, companies} = useAppSelector(state => state.Company);
+
   const [otp1, setOtp1] = useState<string>('');
   const [otp2, setOtp2] = useState<string>('');
   const [otp3, setOtp3] = useState<string>('');
@@ -116,15 +119,35 @@ const OTPPageView = (props: any) => {
   useEffect(() => {
     if(!verifyOtpRequesting && verifyOtpSuccess) {
       console.log('verifiedData------', JSON.stringify(verifiedData));
-      // const {data, status, error, message} = verifiedData || {};
-      // if(data?.token) {
-      //   setAuthToken(data.token);
-      // }
-      checkRegistration();
+      const {data} = verifiedData || {};
+      if(data?.id) {
+        setAuthToken(data.token);
+        dispatch(getCompaniesRequest(data?.id));
+        dispatch(resetVerifyOtpRequest());
+      }
     } else if(!verifyOtpRequesting && verifyOtpFailure) {
+      dispatch(resetVerifyOtpRequest());
       Alert.alert('Otp verification failed');
     }
   }, [verifyOtpRequesting, verifyOtpSuccess, verifyOtpFailure]);
+
+  useEffect(() => {
+    if(!getCompaniesRequesting && getCompaniesSuccess) {
+      const {data} = companies || {};
+      if(data && Array.isArray(data) && data.length > 0) {
+        const firstCompany = data[0];
+        if(firstCompany.companySignature) {
+          setIsRegistrationComplete();
+          setLoginStatus();
+        } else {
+          navigation.navigate(AuthStackRoute.RegisterCompany, {registrationStep: 3});
+        }
+        // checkRegistration();
+      }
+    } else if(!getCompaniesRequesting && getCompaniesFailure) {
+      Alert.alert('Error in Getting companies details.');
+    }
+  }, [getCompaniesRequesting, getCompaniesSuccess, getCompaniesFailure]);
 
   return (
     <AvoidSoftInputViewHOC>
@@ -178,7 +201,7 @@ const OTPPageView = (props: any) => {
           disabled={disabled}
         />
         <Spacer height={50} />
-        <Spinner show={verifyOtpRequesting} />
+        <Spinner show={verifyOtpRequesting || getCompaniesRequesting} />
       </LinearGradient>
     </AvoidSoftInputViewHOC>
   );

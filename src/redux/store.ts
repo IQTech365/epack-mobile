@@ -16,17 +16,19 @@ const sagaMiddleware = createSagaMiddleware();
 const middleware = [sagaMiddleware];
 
 export const store = configureStore({
-    reducer: {
-        OTP: OtpSlice,
-        Signup: SignupSlice,
-        Company: CompanySlice,
-        Enquiry: EnquirySlice,
-        Order: OrderSlice,
-        Quotation: QuotationSlice,
-    },
-    middleware: (getDefaultMiddleware) => {
-        return getDefaultMiddleware().concat(middleware);
-    }
+  reducer: {
+    OTP: OtpSlice,
+    Signup: SignupSlice,
+    Company: CompanySlice,
+    Enquiry: EnquirySlice,
+    Order: OrderSlice,
+    Quotation: QuotationSlice,
+  },
+  middleware: getDefaultMiddleware => {
+    return getDefaultMiddleware({
+      serializableCheck: false,
+    }).concat(middleware);
+  },
 });
 
 export type RootState = ReturnType<typeof store.getState>;

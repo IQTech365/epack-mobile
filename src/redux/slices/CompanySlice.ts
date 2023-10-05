@@ -1,14 +1,21 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {ICompanyRegistrationResponse} from '../../interface/companyRegistration/ICompanyRegistrationResponse';
 import {ICompanyRegistrationRequest} from '../../interface/companyRegistration/ICompanyRegistrationRequest';
+import { IGetCompaniesResponse } from '../../interface/companyRegistration/IGetCompaniesResponse';
 
 interface ICompanyState {
   // Add Company
-  companyInfo: ICompanyRegistrationResponse | null;
+  addCompanyInfo: ICompanyRegistrationResponse | null;
   requesting: boolean;
   success: boolean;
   failure: boolean;
   error: any;
+  // Get Companies
+  companies: IGetCompaniesResponse | null;
+  getCompaniesRequesting: boolean;
+  getCompaniesSuccess: boolean;
+  getCompaniesFailure: boolean;
+  getCompaniesError: any;
   // Edit Company
   editCompanyInfo: ICompanyRegistrationResponse | null;
   editCompanyRequesting: boolean;
@@ -37,11 +44,17 @@ interface ICompanyState {
 
 const initialState: ICompanyState = {
   // Add Company
-  companyInfo: null,
+  addCompanyInfo: null,
   requesting: false,
   success: false,
   failure: false,
   error: null,
+  // Get Companies
+  companies: null,
+  getCompaniesRequesting: false,
+  getCompaniesSuccess: false,
+  getCompaniesFailure: false,
+  getCompaniesError: null,
   // Edit Company
   editCompanyInfo: null,
   editCompanyRequesting: false,
@@ -86,12 +99,33 @@ export const CompanySlice = createSlice({
     ) => {
       state.requesting = false;
       state.success = true;
-      state.companyInfo = action.payload;
+      state.addCompanyInfo = action.payload;
     },
     addCompanyFailure: (state, action: PayloadAction<any>) => {
       state.requesting = false;
       state.success = false;
       state.failure = true;
+      state.error = action.payload;
+    },
+    // Get Companies
+    getCompaniesRequest: (
+      state,
+      action: PayloadAction<string>,
+    ) => {
+      state.getCompaniesRequesting = true;
+    },
+    getCompaniesSuccess: (
+      state,
+      action: PayloadAction<IGetCompaniesResponse>,
+    ) => {
+      state.getCompaniesRequesting = false;
+      state.getCompaniesSuccess = true;
+      state.companies = action.payload;
+    },
+    getCompaniesFailure: (state, action: PayloadAction<any>) => {
+      state.getCompaniesRequesting = false;
+      state.getCompaniesSuccess = false;
+      state.getCompaniesFailure = true;
       state.error = action.payload;
     },
     // Edit Company
@@ -157,6 +191,12 @@ export const CompanySlice = createSlice({
       state.uploadLogoFailure = true;
       state.uploadLogoError = action.payload;
     },
+    resetUploadCompanyLogoRequest: (state) => {
+      state.uploadLogoRequesting = false;
+      state.uploadLogoSuccess = false;
+      state.uploadLogoFailure = false;
+      state.uploadLogoError = null;
+    },
     // Upload Signature
     uploadSignatureRequest: (
       state,
@@ -178,6 +218,12 @@ export const CompanySlice = createSlice({
       state.uploadSignatureFailure = true;
       state.uploadSignatureError = action.payload;
     },
+    resetUploadSignatureRequest: (state) => {
+      state.uploadSignatureRequesting = false;
+      state.uploadSignatureSuccess = false;
+      state.uploadSignatureFailure = false;
+      state.uploadSignatureError = null;
+    },
   },
 });
 
@@ -188,6 +234,10 @@ export const {
   addCompanyRequest,
   addCompanySuccess,
   addCompanyFailure,
+  // Get Companies
+  getCompaniesRequest,
+  getCompaniesSuccess,
+  getCompaniesFailure,
   // Edit Company
   editCompanyRequest,
   editCompanySuccess,
@@ -200,9 +250,11 @@ export const {
   uploadCompanyLogoRequest,
   uploadCompanyLogoSuccess,
   uploadCompanyLogoFailure,
+  resetUploadCompanyLogoRequest,
   // Upload Signature
   uploadSignatureRequest,
   uploadSignatureSuccess,
   uploadSignatureFailure,
+  resetUploadSignatureRequest,
 
 } = CompanySlice.actions;

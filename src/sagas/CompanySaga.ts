@@ -6,12 +6,16 @@ import {
   addCompanyFailure,
   addCompanyRequest,
   addCompanySuccess,
+  getCompaniesFailure,
+  getCompaniesRequest,
+  getCompaniesSuccess,
   uploadCompanyLogoFailure,
   uploadCompanyLogoRequest,
   uploadCompanyLogoSuccess,
   uploadSignatureRequest,
 } from '../redux/slices/CompanySlice';
 import { ICompanyRegistrationRequest } from '../interface/companyRegistration/ICompanyRegistrationRequest';
+import { IGetCompaniesResponse } from '../interface/companyRegistration/IGetCompaniesResponse';
 
 export function* addCompanySaga(action: PayloadAction<ICompanyRegistrationRequest>) {
     console.log('addCompanySaga--action--', JSON.stringify(action));
@@ -25,6 +29,17 @@ export function* addCompanySaga(action: PayloadAction<ICompanyRegistrationReques
     }
 }
 
+export function* getCompaniesSaga(action: PayloadAction<string>) {
+    try {
+        const response: IGetCompaniesResponse = yield call(CompanyService.GetCompaniesService, action.payload);
+        console.log('getCompaniesSaga-response----', JSON.stringify(response));
+        yield put(getCompaniesSuccess(response));
+    } catch (error) {
+        console.log('getCompaniesSaga-error----', error);
+        yield put(getCompaniesFailure(error));
+    }
+}
+
 export function* uploadCompanyLogoSaga(action: PayloadAction<any>) {
     try {
         //@ts-ignore
@@ -32,7 +47,7 @@ export function* uploadCompanyLogoSaga(action: PayloadAction<any>) {
         console.log('uploadCompanyLogoSaga-response----', JSON.stringify(response));
         yield put(uploadCompanyLogoSuccess(response));
     } catch (error) {
-        console.log('uploadCompanyLogoSaga-error----', JSON.stringify(error));
+        console.log('uploadCompanyLogoSaga-error----', error);
         yield put(uploadCompanyLogoFailure(error));
     }
 }
@@ -51,6 +66,7 @@ export function* uploadSignatureSaga(action: PayloadAction<any>) {
 
 export function* watcherCompanySaga() {
     yield takeLatest(addCompanyRequest.type, addCompanySaga);
+    yield takeLatest(getCompaniesRequest.type, getCompaniesSaga);
     yield takeLatest(uploadCompanyLogoRequest.type, uploadCompanyLogoSaga);
     yield takeLatest(uploadSignatureRequest.type, uploadSignatureSaga);
 }
