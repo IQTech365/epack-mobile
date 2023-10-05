@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import {COLOR_GRAY} from '../../../../../utils/colors';
+import {COLOR_GRAY, COLOR_WHITE} from '../../../../../utils/colors';
 const {width} = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
@@ -37,10 +37,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: 8,
   },
-  iconStyle:{ 
-    flexDirection: 'row', 
+  iconStyle: {
+    flexDirection: 'row',
     justifyContent: 'space-between',
- },
+  },
   upiBorderStyle: {
     width: '6%',
     height: '55%',
@@ -51,10 +51,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: 8,
   },
-  headStyle:{ 
+  headStyle: {
     justifyContent: 'space-evenly',
-     flexDirection: 'row', 
-    }
+    flexDirection: 'row',
+  },
+  previewButtonStyle: {
+    backgroundColor: COLOR_WHITE,
+    borderColor: COLOR_GRAY,
+    borderWidth: 1,
+    borderRadius: 20,
+    width: width * 0.23,
+  },
+  buttonTextStyle: {
+    fontSize: 8.5,
+    textAlign: 'center',
+    fontWeight: '500',
+  },
 });
 
 export default styles;

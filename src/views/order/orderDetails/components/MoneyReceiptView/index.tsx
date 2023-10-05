@@ -19,12 +19,13 @@ import {
   initialState,
   moneyReceiptReducer,
 } from './moneyReceiptReducer';
-import { formatDate } from '../../../../../utils/formatter';
+import { formatDate, formatDate3 } from '../../../../../utils/formatter';
 import Button from '../../../../../common/Button';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import { ICreateMoneyReceiptRequest } from '../../../../../interface/order/ICreateMoneyReceiptRequest';
 import { createMoneyReceiptRequest } from '../../../../../redux/slices/OrderSlice';
 import Spinner from '../../../../../common/Spinner';
+import Toast from 'react-native-toast-message';
 
 interface IMoneyReceiptViewProps {
   //
@@ -41,6 +42,8 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({ }) => {
     createMoneyReceiptError,
     createMoneyReceiptFailure,
   } = useAppSelector(state => state.Order);
+  console.log(reducerState, 'hjatt');
+
   const dispatch2 = useAppDispatch();
   const handleReceiptDate = (date: Date) => {
     dispatch({
@@ -114,7 +117,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({ }) => {
   const handleArivalDate = (date: Date) => {
     dispatch({
       type: MONEYRECEIPT_FORM_ACTION.DATE_OF_ARRIVAL,
-      payload: formatDate(date),
+      payload: formatDate3(date),
     });
   };
   const handleTemplate = (item: TDropdownItem) => {
@@ -125,16 +128,44 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({ }) => {
   };
 
   const handleCreate = useCallback(() => {
-    // const payload: ICreateMoneyReceiptRequest = reducerState;
-    // console.log(payload, 'payload create money');
-    // dispatch2(createMoneyReceiptRequest(payload));
+    const payload: ICreateMoneyReceiptRequest = {
+      companyId: '6511695bad8a273529a2a59a',
+      orderId: '649db2c88f79210c6bcfed39',
+      receiptNumber: reducerState.receiptNumber,
+      receiptDate: reducerState.receiptDate,
+      arivalDate: reducerState.arivalDate,
+      templateId: '12121124232323',
+      receiptAgainst: reducerState.receiptAgainst,
+      billNumber: reducerState.billQuotationNo,
+      quotationNumber: reducerState.billQuotationNo,
+      consignmentNumber: '',
+      numbersOfArticles: reducerState.numbersOfArticles,
+      paymentMode: reducerState.paymentMode,
+      paymentType: reducerState.paymentType,
+      paymentAmount: reducerState.paymentAmount,
+      referenceNumber: reducerState.referenceNumber,
+      status: 'NEW',
+      addedBy: '12121131131121',
+    };
+    console.log(payload, 'payload create money');
+    dispatch2(createMoneyReceiptRequest(payload));
   }, []);
 
   useEffect(() => {
     if (!createMoneyReceiptRequesting && createMoneyReceiptSuccess) {
       //pdf  stuff here
+      Toast.show({
+        type: 'success',
+        text1: 'Money Receipt',
+        text2: 'Money Receipt has been added successfully'
+      });
     } else if (!createMoneyReceiptRequesting && createMoneyReceiptError) {
-      Alert.alert('Something went wrong. Please try again!');
+      Toast.show({
+        type: 'error',
+        text1: 'Money Receipt',
+        text2: 'Error in adding Money Receipt. Please try again!'
+      });
+      // Alert.alert('Something went wrong. Please try again!');
     }
   }, [
     createMoneyReceiptRequesting,
