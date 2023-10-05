@@ -200,8 +200,34 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({ }) => {
 
 
   const handleCreateCarCondition = useCallback(() => {
-    // const payload: ICreateCarConditionRequest = reducerState;
-    // console.log(payload, 'payload carconditon req');
+    const payload: ICreateCarConditionRequest = {
+      companyId: '649db2c88f79210c6bcfed39',
+      orderId: '649db2c88f79210c6bcfed39',
+      templateId: '32423erer',
+      carConditionNumber: reducerState.carConditionNumber,
+      dateOfCarCondition: reducerState.dateOfCarCondition,
+      vehicleType: 'CAR',
+      manufacturer: reducerState.manufacturer,
+      model: reducerState.model,
+      yearOfManufacturing: reducerState.yearOfManufacturing,
+      color: reducerState.color,
+      vehicleRegistrationNumber: reducerState.vehicleRegistrationNumber,
+      vehicleCoveredDistanceInKM: reducerState.vehicleCoveredDistanceInKM,
+      vehicleValue: reducerState.vehicleValue,
+      insurancePolicyNumber: reducerState.insurancePolicyNumber,
+      insuranceCompany: reducerState.insuranceCompany,
+      chasisNumber: reducerState.chasisNumber,
+      engineNumber: reducerState.engineNumber,
+      batteryNumber: reducerState.batteryNumber,
+      tyreNumber: reducerState.tyreNumber,
+      anyOtherAccessorie: reducerState.anyOtherAccessorie,
+      scratches: reducerState.scaratches,
+      dent: reducerState.dent,
+      visibleObservation: reducerState.visibleObservation,
+      remarks: reducerState.remarks,
+      addedBy: '12121131131121'
+    }
+    console.log(payload, 'payload carconditon req');
 
     // dispatch2(createCarConditionRequest(payload));
   }, [dispatch2, reducerState]);

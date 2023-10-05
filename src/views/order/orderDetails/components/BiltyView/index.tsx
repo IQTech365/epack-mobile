@@ -1,5 +1,5 @@
-import React, { useCallback, useReducer, useState } from 'react';
-import { View } from 'react-native';
+import React, { useCallback, useEffect, useReducer, useState } from 'react';
+import { Alert, View } from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
 import DatePickerComponent from '../../../../../common/DatePickerComponent';
@@ -545,11 +545,171 @@ const BiltyView: React.FC<IBiltyViewProps> = ({ }) => {
   };
 
   const handleCreateBilty = useCallback(() => {
-    const payload: ICreateBiltyRequest = reducerState;
-    console.log(payload, 'payload carconditon req');
+    const payload: ICreateBiltyRequest = {
+      companyId: "131113",
+      orderId: "1123213",
+      templateId: "fds32131",
+      biltyNumber: reducerState.biltyLrCnNo,
+      biltyDate: reducerState.dateofBiltyLrCnNo,
+
+      consigner: {
+        name: reducerState.consigneeName,
+        mobile: reducerState.consignerMobileNo,
+        gstin: reducerState.consignerGst,
+        street: reducerState.consignerCity,
+        state: reducerState.consignerState,
+        landmark: reducerState.consignerCity,
+        city: reducerState.consignerCity,
+        district: reducerState.consignerCity,
+        postOffice: reducerState.consignerCity,
+        postalCode: reducerState.consignerPincode,
+        country: "india"
+      },
+      consignee: {
+        name: reducerState.consigneeName,
+        mobile: reducerState.consigneeMobileNo,
+        gstin: reducerState.consigneeGst,
+        street: reducerState.consigneeCity,
+        state: reducerState.consigneeState,
+        landmark: reducerState.consigneeCity,
+        city: reducerState.consigneeCity,
+        district: reducerState.consigneeCity,
+        postOffice: reducerState.consigneeCity,
+        postalCode: reducerState.consigneePincode,
+        country: "india"
+      },
+
+      loadingAddress: {
+        address: "NA",
+        state: "Haryana",
+        landmark: "Railway colony",
+        city: "Haillymandi",
+        district: "Gurgaon",
+        postOffice: "Haillymandi",
+        postalCode: "122504",
+        country: "india"
+      },
+      unloadingAddress: {
+        address: "NA",
+        state: "Uttar Pradesh",
+        landmark: "",
+        city: "Rampur",
+        district: "Rampur",
+        postOffice: "Civil Line Rampur",
+        postalCode: "244901",
+        country: "india"
+      },
+
+      vehicle: {
+        invoiceNumber: reducerState.invoiceNo,
+        vehicleType: reducerState.vehicleType,
+        vehicleNumber: reducerState.vehicleNo,
+        shiftingFrom: reducerState.fromLocation,
+        shiftingTo: reducerState.toLocation,
+        sealNumber: reducerState.sealNo,
+        inDate: reducerState.inDate,
+        outDate: reducerState.outDate,
+        transitDays: "",
+        expectedDateOfDelivery: ""
+      },
+      driver: {
+        name: reducerState.driverName,
+        mobile: reducerState.driverMobileNo,
+        license: reducerState.driverLicenceNo
+      },
+      eWayBill: {
+        number: reducerState.eWayBillNo,
+        generationDate: reducerState.generatedOn,
+        expiryDate: reducerState.expiryDate
+      },
+      materialsType: "",
+      addMaterialsStatus: "",
+      materials: [{
+        name: reducerState.materialName,
+        noOfArticles: reducerState.noOfArticles,
+        packingType: reducerState.packingType,
+        HSNCode: reducerState.hsnCode,
+        billNumber: reducerState.billInvoiceNo,
+        actualWeight: reducerState.actualWeight,
+        applicableWeight: reducerState.applicableWeight,
+        unit: reducerState.unitOne,
+        valueOfGoods: reducerState.valueOfGoods
+      }],
+      riskType: reducerState.riskType,
+      liabilityOfTax: "",
+      insuranceStatus: "",
+      insurance: {
+        companyName: reducerState.insuranceAmount,
+        policyNumber: reducerState.policyNumber,
+        date: reducerState.insuranceDate,
+        amount: reducerState.insuranceAmount
+      },
+      demurrage: {
+        charge: reducerState.demurrageCharge,
+        rate: reducerState.rate,
+        chargeAfterApplicable: reducerState.chargeapplicableAfter
+      },
+
+      freightDetails: {
+        // "actualWeight": "",
+        // "applicableWeight": "",
+        // "units": "",
+        // "rate": "",
+        freightCharges: reducerState.freightCharges,
+        billingStatus: "TO_PAY",
+        //"isFixedFreight": "",
+        totalAmount: reducerState.pickupChargesAmount,
+        advanceAmount: reducerState.advanceAmount,
+        balanceAmount: reducerState.balanceAmount
+      },
+      pickupCharges: {
+        status: "NORequired",
+        charge: reducerState.pickupCharges
+      },
+      packingCharges: {
+        status: "",
+        charge: reducerState.packingCharges
+      },
+      unPackingCharges: {
+        status: "",
+        charge: reducerState.unPackingCharges
+      },
+      unLoadingCharges: {
+        status: "",
+        charge: reducerState.unLoadingCharges
+      },
+      doorDeliveryCharges: {
+        status: "",
+        charge: reducerState.doorDeliveryCharges
+      },
+      packingMaterialCharges: {
+        status: "",
+        charge: reducerState.packingCharges
+      },
+      loadingCharges: {
+        status: "REQUIRED",
+        charge: reducerState.loadingCharges
+      },
+      remarks: reducerState.remark,
+      addedBy: "12121212"
+    };
+    console.log(payload, 'payload Bility req');
 
     dispatch2(createBiltyRequest(payload));
   }, [dispatch2, reducerState]);
+
+  useEffect(() => {
+    if (!createBiltyRequesting && createBiltySuccess) {
+      // console.log('otpData--------', JSON.stringify(otpData));
+      // navigation.navigate(AuthStackRoute.OTPInput);
+    } else if (!createBiltyRequesting && createBiltyError) {
+      Alert.alert('Something went wrong. Please try again!');
+    }
+  }, [
+    createBiltyRequesting,
+    createBiltySuccess,
+    createBiltyFailure,
+  ]);
 
   const renderLoadingAddressView = () => {
     return (
