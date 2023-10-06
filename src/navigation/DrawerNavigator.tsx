@@ -11,7 +11,6 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
 } from '@react-navigation/drawer';
-import ProfilePageView from '../views/profile';
 import TabNavigator from './TabNavigator';
 import {
   COLOR_BLUE,
@@ -33,9 +32,12 @@ import LogoutIcon from '../images/icons/logout.svg';
 import SubscriptionView from '../views/subscription';
 import HelpCenterView from '../views/helpCenter';
 import NewsRoomView from '../views/newsRoom';
-import SettingsView from '../views/settings';
 import SettingStackNavigator from './SettingStackNavigator';
 import MyProfileStackNavigator from './MyProfileStackNavigator';
+import { logout } from '../redux/slices/OtpSlice';
+import { useAppDispatch } from '../redux/hooks';
+import { useAuthContext } from '../provider/AuthProvider';
+
 const Drawer = createDrawerNavigator();
 
 const appUser: IAppUser = {
@@ -46,6 +48,14 @@ const appUser: IAppUser = {
 };
 
 const DrawerContent = (props: any) => {
+  const dispatch = useAppDispatch();
+  const authContext = useAuthContext();
+  const {setLoggedIn} = authContext;
+
+  const handleLogout = () => {
+    setLoggedIn(false);
+    dispatch(logout());
+  }
   return (
     <View style={styles.container2}>
       <DrawerContentScrollView
@@ -71,7 +81,7 @@ const DrawerContent = (props: any) => {
       </DrawerContentScrollView>
       <View style={styles.bottomContainer}>
         <LogoutIcon width={24} height={24} />
-        <TouchableOpacity activeOpacity={0.6}>
+        <TouchableOpacity activeOpacity={0.6} onPress={handleLogout}>
           <Text style={styles.logoutText}>Logout</Text>
         </TouchableOpacity>
       </View>

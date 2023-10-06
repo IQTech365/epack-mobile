@@ -16,6 +16,14 @@ export const getLoginStatus = async () => {
   }
 };
 
+export const removeLoginStatus = async () => {
+  try {
+    return await AsyncStorage.removeItem('login-key');
+  } catch (e) {
+    console.log('AsyncStorage Error in removing login-key', e);
+  }
+};
+
 export const getAuthToken = async () => {
   try {
     return await AsyncStorage.getItem('authToken');

@@ -53,8 +53,27 @@ const AddEnquiryView: React.FC<{}> = ({}) => {
     addEnquiryFailure,
     addEnquiryInfo,
   } = useAppSelector(state => state.Enquiry);
+  const {otpData} = useAppSelector(state => state.OTP);
+  const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
 
   console.log('AddEnquiry-addEnquiryInfo--', JSON.stringify(addEnquiryInfo));
+
+  const getCompanyId = () => {
+    let id;
+    const {data} = addCompanyInfo || {};
+    const {data: companiesData} = companies || {};
+    if (data && Object.keys(data).length > 0) {
+      id = data._id;
+    } else if (
+      companiesData &&
+      Array.isArray(companiesData) &&
+      companiesData.length > 0
+    ) {
+      const firstCompany = companiesData[0];
+      id = firstCompany._id;
+    }
+    return id;
+  };
   
 
   const setPincodeError = () => {
@@ -347,8 +366,10 @@ const AddEnquiryView: React.FC<{}> = ({}) => {
 
   const handleSubmit = useCallback(() => {
     const payload: IAddEnquiryRequest = {
-      companyId: '6511695bad8a273529a2a59a',
-      authId: '650efb2d7e3968c4c217a34f',
+      companyId: getCompanyId(),
+      authId: otpData?.data.id as string,
+      // companyId: '6511695bad8a273529a2a59a',
+      // authId: '650efb2d7e3968c4c217a34f',
       enquiryManager: '',
       shiftingType: state.shiftingType.toUpperCase(),
       partyCompanyName: '',

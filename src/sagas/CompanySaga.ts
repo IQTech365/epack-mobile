@@ -12,7 +12,9 @@ import {
   uploadCompanyLogoFailure,
   uploadCompanyLogoRequest,
   uploadCompanyLogoSuccess,
+  uploadSignatureFailure,
   uploadSignatureRequest,
+  uploadSignatureSuccess,
 } from '../redux/slices/CompanySlice';
 import { ICompanyRegistrationRequest } from '../interface/companyRegistration/ICompanyRegistrationRequest';
 import { IGetCompaniesResponse } from '../interface/companyRegistration/IGetCompaniesResponse';
@@ -53,14 +55,15 @@ export function* uploadCompanyLogoSaga(action: PayloadAction<any>) {
 }
 
 export function* uploadSignatureSaga(action: PayloadAction<any>) {
+    console.log('uploadSignatureSaga-action----', JSON.stringify(action));
     try {
         //@ts-ignore
         const response: any = yield call(CompanyService.UploadSignatureService, action.payload);
         console.log('uploadSignatureSaga-response----', JSON.stringify(response));
-        yield put(uploadCompanyLogoSuccess(response));
+        yield put(uploadSignatureSuccess(response));
     } catch (error) {
         console.log('uploadSignatureSaga-error----', JSON.stringify(error));
-        yield put(uploadCompanyLogoFailure(error));
+        yield put(uploadSignatureFailure(error));
     }
 }
 

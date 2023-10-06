@@ -47,7 +47,8 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
   const {state, setCompanyLogo: setCompanyLogo2} =
     useCompanyRegistrationContextHook();
   const [companyLogo, setCompanyLogo] = useState<string>(state.companyLogo);
-  const { verifiedData } = useAppSelector(state => state.OTP);
+  const [imageFile, setImageFile] = useState<any>(null);
+  
   const {
     uploadLogoRequesting,
     uploadLogoSuccess,
@@ -72,6 +73,7 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
         const {assets} = result || {};
         if (assets && Array.isArray(assets) && assets.length > 0) {
           const imageObj = assets[0];
+          setImageFile(imageObj);
           setCompanyLogo(imageObj.uri as string);
           setCompanyLogo2(imageObj.uri as string);
         }
@@ -86,6 +88,15 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
     try {
       const result = await launchImageLibrary(options);
       console.log('Gallery-result----', JSON.stringify(result));
+      if (result && result.hasOwnProperty('assets')) {
+        const {assets} = result || {};
+        if (assets && Array.isArray(assets) && assets.length > 0) {
+          const imageObj = assets[0];
+          setImageFile(imageObj);
+          setCompanyLogo(imageObj.uri as string);
+          setCompanyLogo2(imageObj.uri as string);
+        }
+      }
     } catch (error) {
       console.log('Error in opening gallery--', error);
     }
@@ -99,7 +110,11 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
 
   const handleUploadClick = useCallback(() => {
     const formData = new FormData();
-        formData.append('companyLogo', companyLogo);
+        formData.append('companyLogo', {
+          uri: imageFile?.uri,
+          type: imageFile?.type,
+          name: imageFile?.fileName,
+        });
         formData.append('id', getCompanyId());
         // formData.append('id', '6511695bad8a273529a2a59a');
         dispatch(uploadCompanyLogoRequest(formData));

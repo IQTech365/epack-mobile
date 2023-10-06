@@ -21,10 +21,20 @@ import {
 import {useCompanyRegistrationContextHook} from '../../../provider/CompanyRegistrationContextProvider';
 import Button from '../../../common/Button';
 import Alert, {STATUS_CODE} from '../../../common/Alert';
-import { Validator } from '../../../utils/validation';
-import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
-import { uploadSignatureRequest } from '../../../redux/slices/CompanySlice';
-import { setAuthToken, setIsRegistrationComplete, setLoginStatus } from '../../../utils/storage';
+import {Validator} from '../../../utils/validation';
+import {useAppDispatch, useAppSelector} from '../../../redux/hooks';
+import {
+  resetUploadSignatureRequest,
+  uploadSignatureRequest,
+} from '../../../redux/slices/CompanySlice';
+import {
+  setAuthToken,
+  setIsRegistrationComplete,
+  setLoginStatus,
+} from '../../../utils/storage';
+import Spinner from '../../../common/Spinner';
+import Toast from 'react-native-toast-message';
+import { useAuthContext } from '../../../provider/AuthProvider';
 
 interface IOptions {
   mediaType: MediaType;
@@ -53,17 +63,42 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
 }) => {
   const {state, setOwnerSignature} = useCompanyRegistrationContextHook();
   const [signatureUri, setSignatureUri] = useState<any>(state.ownerSignature);
+  const [imageFile, setImageFile] = useState<any>(null);
   const [isBase64Image, setIsBase64Image] = useState<boolean>(false);
-  const [showSignatureRequiredAlert, setShowSignatureRequiredAlert] = useState<boolean>(false);
+  const [showSignatureRequiredAlert, setShowSignatureRequiredAlert] =
+    useState<boolean>(false);
   const signatureRef = useRef();
   const dispatch = useAppDispatch();
-  const { verifiedData } = useAppSelector(state => state.OTP);
+  const {verifiedData} = useAppSelector(state => state.OTP);
   const {
     uploadSignatureRequesting,
     uploadSignatureSuccess,
     uploadSignatureFailure,
     uploadSignatureError,
   } = useAppSelector(state => state.Company);
+
+  const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
+  // const {companies} = useAppSelector(state => state.Company);
+
+  const authContext = useAuthContext();
+  const {setLoggedIn} = authContext;
+
+  const getCompanyId = () => {
+    let id;
+    const {data} = addCompanyInfo || {};
+    const {data: companiesData} = companies || {};
+    if (data && Object.keys(data).length > 0) {
+      id = data._id;
+    } else if (
+      companiesData &&
+      Array.isArray(companiesData) &&
+      companiesData.length > 0
+    ) {
+      const firstCompany = companiesData[0];
+      id = firstCompany._id;
+    }
+    return id;
+  };
 
   const _onSaveEvent = (result: any) => {
     console.log(result);
@@ -97,6 +132,7 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
         const {assets} = result || {};
         if (assets && Array.isArray(assets) && assets.length > 0) {
           const imageObj = assets[0];
+          setImageFile(imageObj);
           setSignatureUri(imageObj.uri as string);
           setOwnerSignature(imageObj.uri as string);
         }
@@ -112,6 +148,15 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
     try {
       const result = await launchImageLibrary(options);
       console.log('Gallery-result----', JSON.stringify(result));
+      if (result && result.hasOwnProperty('assets')) {
+        const {assets} = result || {};
+        if (assets && Array.isArray(assets) && assets.length > 0) {
+          const imageObj = assets[0];
+          setImageFile(imageObj);
+          setSignatureUri(imageObj.uri as string);
+          setOwnerSignature(imageObj.uri as string);
+        }
+      }
     } catch (error) {
       console.log('Error in opening gallery--', error);
     }
@@ -123,37 +168,60 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
     }
   }, [state]);
 
+  const completeRegistrationAndLoggedIn = async () => {
+    await setIsRegistrationComplete();
+    await setLoginStatus();
+    await setAuthToken(verifiedData?.data?.token as string);
+    setLoggedIn(true);
+  }
+
   const handleUploadClick = useCallback(() => {
-    if (currentStep >= 1 && currentStep < 5) {
-      if(Validator.isEmpty(state.ownerSignature)) {
-        setShowSignatureRequiredAlert(true);
-      } else {
-        // setShowSignatureRequiredAlert(false);
-        //TODO: Upload signature here...
-        const formData = new FormData();
-        formData.append('companySignature', signatureUri);
-        formData.append('id', verifiedData?.data.id);
-        dispatch(uploadSignatureRequest(formData));
-        // setCurrentStep(currentStep + 1);
-      }
+    if (Validator.isEmpty(state.ownerSignature)) {
+      setShowSignatureRequiredAlert(true);
+    } else {
+      const formData = new FormData();
+      formData.append('companySignature', {
+        uri: imageFile?.uri,
+        type: imageFile?.type,
+        name: imageFile?.fileName,
+      });
+      formData.append('id', getCompanyId());
+      // formData.append('id', '6511695bad8a273529a2a59a');
+      dispatch(uploadSignatureRequest(formData));
     }
   }, [state]);
 
   const handleAlertPress = () => {
     setShowSignatureRequiredAlert(false);
-  }
+  };
 
-  const signature = isBase64Image ? {uri: `data:image/png;base64,${signatureUri}`} : {uri: signatureUri};
+  const signature = isBase64Image
+    ? {uri: `data:image/png;base64,${signatureUri}`}
+    : {uri: signatureUri};
 
   useEffect(() => {
-    if(!uploadSignatureRequesting && uploadSignatureSuccess) {
-      setIsRegistrationComplete();
-      setLoginStatus();
-      setAuthToken(verifiedData?.data.token as string);
-    } else if(!uploadSignatureRequesting && uploadSignatureFailure) {
+    if (!uploadSignatureRequesting && uploadSignatureSuccess) {
+      Toast.show({
+        type: 'success',
+        text1: 'Signature Upload',
+        text2: 'Signature has been added successfully',
+      });
+      dispatch(resetUploadSignatureRequest());
+      completeRegistrationAndLoggedIn();
+    } else if (!uploadSignatureRequesting && uploadSignatureFailure) {
       console.log('Error in uploading signature. Try again!');
+      Toast.show({
+        type: 'error',
+        text1: 'Signature Upload',
+        text2: 'Error in Uploading Signature. Please try again!',
+      });
+      dispatch(resetUploadSignatureRequest());
     }
-  }, [uploadSignatureRequesting, uploadSignatureSuccess, uploadSignatureFailure]);
+  }, [
+    uploadSignatureRequesting,
+    uploadSignatureSuccess,
+    uploadSignatureFailure,
+  ]);
 
   return (
     <>
@@ -246,12 +314,15 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
           </View>
         </View>
       </View>
-      {showSignatureRequiredAlert ? <Alert
-        variant={STATUS_CODE.ERROR}
-        message="Please provide your signature"
-        onPress={handleAlertPress}
-        visible={showSignatureRequiredAlert}
-      /> : null}
+      {showSignatureRequiredAlert ? (
+        <Alert
+          variant={STATUS_CODE.ERROR}
+          message="Please provide your signature"
+          onPress={handleAlertPress}
+          visible={showSignatureRequiredAlert}
+        />
+      ) : null}
+      <Spinner show={uploadSignatureRequesting} />
     </>
   );
 };

@@ -78,6 +78,9 @@ export const OtpSlice = createSlice({
       state.verifyOtpFailure = false;
       state.verifyOtpError = null;
     },
+    logout: (state, action: PayloadAction) => {
+      //READ_ME: keeping it empty to purge the state on logout
+  }
   },
 });
 
@@ -91,4 +94,5 @@ export const {
   verifyOtpSuccess,
   verifyOtpFailure,
   resetVerifyOtpRequest,
+  logout,
 } = OtpSlice.actions;

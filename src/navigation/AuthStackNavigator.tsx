@@ -1,6 +1,5 @@
 import React from "react";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { AuthStackRoute } from "../utils/constants";
 import SignInPageView from "../views/signin";
 import SignUpPageView from "../views/signup";
 import ForgotPasswordPageView from "../views/forgotPassword";

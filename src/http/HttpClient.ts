@@ -31,16 +31,10 @@ export abstract class HttpClient {
       //@ts-ignore
       config.headers['token'] = authToken;
     }
-    //@ts-ignore
-    config.transformRequest = [(data, headers) => {
-      if(data?._parts && Array.isArray(data?._parts) && data?._parts.length > 0) {
-        const firstDataSet = data?._parts[0][0];
-        if(firstDataSet == 'companyLogo' || firstDataSet == 'companySignature') {
-          headers['Content-Type'] = "multipart/form-data";
-        }
-      }
-      return data;
-    }]
+    if(config.data instanceof FormData) {
+      //@ts-ignore
+      config.headers['Content-Type'] = 'multipart/form-data';
+    }
     return config;
   } 
 

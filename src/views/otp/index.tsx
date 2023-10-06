@@ -13,16 +13,18 @@ import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {INTRO_BG_LINEARGRADIENT} from '../../utils/colors';
 import Label from '../../common/Label';
 import OTPInput from '../../common/OtpInput';
-import {IOtpGetRequest} from '../../interface/otp/IOtpGetRequest';
-import {getOtpRequest, resetVerifyOtpRequest, verifyOtpRequest} from '../../redux/slices/OtpSlice';
+import {resetVerifyOtpRequest, verifyOtpRequest} from '../../redux/slices/OtpSlice';
 import Header from '../../common/Header';
 import { IOtpVerifyRequest } from '../../interface/otp/IOtpVerifyRequest';
 import { getIsRegistrationComplete, setAuthToken, setIsRegistrationComplete, setLoginStatus } from '../../utils/storage';
 import { getCompaniesRequest } from '../../redux/slices/CompanySlice';
+import { useAuthContext } from '../../provider/AuthProvider';
 
 const OTPPageView = (props: any) => {
   const {navigation} = props;
   const dispatch = useAppDispatch();
+  const authContext = useAuthContext();
+  const {setLoggedIn} = authContext;
   const {
     verifyOtpRequesting,
     verifyOtpSuccess,
@@ -101,19 +103,12 @@ const OTPPageView = (props: any) => {
     dispatch(verifyOtpRequest(payload));
   }, [otp1, otp2, otp3, otp4, otp5, otp6]);
 
-  const onSignUpPress = useCallback(() => {
-    navigation.navigate(AuthStackRoute.SignUp);
-  }, []);
-
   const disabled = !otp1 || !otp2 || !otp3 || !otp4 || !otp5 || !otp6;
 
-  const checkRegistration = async () => {
-    const registrationComplete = await getIsRegistrationComplete();
-    if(registrationComplete == 'complete') {
-      setLoginStatus();
-    } else {
-      navigation.navigate(AuthStackRoute.RegisterCompany);
-    }
+  const completeRegistrationAndLoggedIn = async () => {
+    await setIsRegistrationComplete();
+    await setLoginStatus();
+    setLoggedIn(true);
   }
 
   useEffect(() => {
@@ -134,15 +129,17 @@ const OTPPageView = (props: any) => {
   useEffect(() => {
     if(!getCompaniesRequesting && getCompaniesSuccess) {
       const {data} = companies || {};
+      console.log('data-data----', JSON.stringify(data));
+      
       if(data && Array.isArray(data) && data.length > 0) {
         const firstCompany = data[0];
         if(firstCompany.companySignature) {
-          setIsRegistrationComplete();
-          setLoginStatus();
+          completeRegistrationAndLoggedIn();
         } else {
           navigation.navigate(AuthStackRoute.RegisterCompany, {registrationStep: 3});
         }
-        // checkRegistration();
+      } else {
+        navigation.navigate(AuthStackRoute.RegisterCompany, {registrationStep: 1});
       }
     } else if(!getCompaniesRequesting && getCompaniesFailure) {
       Alert.alert('Error in Getting companies details.');
