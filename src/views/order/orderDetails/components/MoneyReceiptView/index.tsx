@@ -39,7 +39,6 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({ }) => {
     createMoneyReceiptError,
     createMoneyReceiptFailure,
   } = useAppSelector(state => state.Order);
-  console.log(reducerState, 'hjatt');
 
   const dispatch2 = useAppDispatch();
   const handleReceiptDate = (date: Date) => {
