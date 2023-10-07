@@ -26,7 +26,7 @@ import {
   TDropAddressInfo,
 } from './enquiryReducer';
 import {useAppDispatch, useAppSelector} from '../../../redux/hooks';
-import {addEnquiryRequest, resetAddEnquiryRequest} from '../../../redux/slices/EnquirySlice';
+import {addEnquiryRequest, getEnquiriesRequest, resetAddEnquiryRequest} from '../../../redux/slices/EnquirySlice';
 import {IAddEnquiryRequest} from '../../../interface/enquiry/IAddEnquiryRequest';
 import usePincodeHook, {
   PINCODE_REQUEST_KEY,
@@ -35,8 +35,13 @@ import {getCities, getStates} from '../../../utils/formatter';
 import shiftingLuggageOptions from '../../../data/shiftingLuggage.json';
 import Spinner from '../../../common/Spinner';
 import Toast from 'react-native-toast-message';
+import {NavigationProp} from '@react-navigation/native';
 
-const AddEnquiryView: React.FC<{}> = ({}) => {
+interface IAddEnquiryViewProps {
+  navigation: NavigationProp<any, any>;
+}
+
+const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
   const [state, dispatch] = useReducer(enquiryReducer, initialState);
   const [pincodeRequestKey, setPincodeRequestKey] =
     useState<PINCODE_REQUEST_KEY>(
@@ -354,6 +359,8 @@ const AddEnquiryView: React.FC<{}> = ({}) => {
         text2: 'Enquiry has been added successfully'
       });
       dispatch2(resetAddEnquiryRequest());
+      dispatch2(getEnquiriesRequest(getCompanyId()));
+      navigation.goBack();
     } else if(!addEnquiryRequesting && addEnquiryFailure) {
       Toast.show({
         type: 'error',
@@ -422,6 +429,8 @@ const AddEnquiryView: React.FC<{}> = ({}) => {
       },
       status: 'NEW',
     };
+    console.log('AddEnquiry-payload--', JSON.stringify(payload));
+    
     dispatch2(addEnquiryRequest(payload));
   }, [state]);
 

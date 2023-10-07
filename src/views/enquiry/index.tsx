@@ -52,7 +52,6 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
     phoneNumber: '9898989898',
     enquiryId: '',
   };
-  console.log('Enquiries--', JSON.stringify(enquiries));
   const {data} = enquiries || {};
 
   let transformedData: IEnquiryItem[] = [tempItem];

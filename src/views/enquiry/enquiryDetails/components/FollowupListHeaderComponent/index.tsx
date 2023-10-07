@@ -27,9 +27,7 @@ interface IFollowupListHeaderComponentProps {
   enquiryId: string;
 }
 
-const FollowupListHeaderComponent: React.FC<
-  IFollowupListHeaderComponentProps
-> = ({taskName, assigneeRole, enquiryId}) => {
+const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> = ({taskName, assigneeRole, enquiryId}) => {
   const [comment, setComment] = useState<string>('');
   const [date, setDate] = useState<string>('');
 
