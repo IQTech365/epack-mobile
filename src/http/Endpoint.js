@@ -23,7 +23,8 @@ export const GET_SURVEY_COMMENTS = (enquiry_id) => `/survey/${enquiry_id}`;
 export const ADD_FOLLOWUP = `/followup/add`;
 export const GET_FOLLOWUP_COMMENTS = (enquiry_id) => `/followup/${enquiry_id}`;
 export const ADD_QUOTATION = `/quotation/add`;
-export const GET_QUOTATION_LIST = ``;
+//README:- id = `company_id` or `enquiry_id`
+export const GET_QUOTATION_LIST = (id) => `/quotation/${id}`;
 export const GET_QUOTATION = () => ``;
 
 // Order Module

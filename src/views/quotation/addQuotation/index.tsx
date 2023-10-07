@@ -3,7 +3,6 @@ import React, {
   useState,
   useCallback,
   useEffect,
-  Reducer,
 } from 'react';
 import { Text, View } from 'react-native';
 import { Switch } from 'react-native-switch';
@@ -20,7 +19,6 @@ import styles from './style';
 import { TDropdownItem } from '../../../type/TDropdownItem';
 import shiftingTypes from '../../../data/shiftingType.json';
 import shiftingLuggages from '../../../data/shiftingLuggage.json';
-import templates from '../../../data/template.json';
 import {
   initialState,
   quotationReducer,
@@ -36,7 +34,7 @@ import {
   TGstInQuotation,
   TBillingBy,
 } from './quotationReducer';
-import { formatDate, formatDate3, getCities, getStates } from '../../../utils/formatter';
+import { formatDate, getCities, getStates } from '../../../utils/formatter';
 import BouncyCheckboxGroup, {
   ICheckboxButton,
 } from 'react-native-bouncy-checkbox-group';
@@ -45,7 +43,6 @@ import surchargeOptions from '../../../data/surchargeOptions.json';
 import gstPercentOptions from '../../../data/gstPercentOptions.json';
 import gstTypeOptions from '../../../data/gstTypeOptions.json';
 import insurancePercentOptions from '../../../data/insurancePercentOptions.json';
-import otherChargeOptions from '../../../data/otherChargeOptions.json';
 import loaryTypeOptions from '../../../data/loryTypeOptions.json';
 import surchargePercentOptions from '../../../data/surchargePercentOptions.json';
 import insuranceTypeOptions from '../../../data/insuranceTypeOptions.json';
@@ -63,7 +60,6 @@ import Spinner from '../../../common/Spinner';
 import { getStatusValue } from '../utils/utils';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import { IAddQuotationRequest } from '../../../interface/quotation/IAddQuotationRequest';
-import { State } from 'react-native-gesture-handler';
 import { addQuotationRequest, resetaddQuotationRequest } from '../../../redux/slices/QuotationSlice';
 import Toast from 'react-native-toast-message';
 

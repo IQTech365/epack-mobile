@@ -12,6 +12,31 @@ interface IDetailsViewProps {
 }
 
 const DetailsView: React.FC<IDetailsViewProps> = ({item}) => {
+
+  const showIndividualContactDetails = () => {
+    return (
+      <>
+        <EnquiryDetailListItem label='Contact Person' value={item?.partyName} />
+        <EnquiryDetailListItem label='Mobile' value={item?.mobile} isLast={true} />
+      </>
+    );
+  }
+
+  const showCompanyContactDetails = () => {
+    return (
+      <>
+        <EnquiryDetailListItem label='Company Name' value={item?.billingDetails?.companyName} />
+        <EnquiryDetailListItem label='Company Address' value={item?.billingDetails?.companyAddress} />
+        <EnquiryDetailListItem label='Company GST' value={item?.billingDetails?.companyGST} />
+        <EnquiryDetailListItem label='Approval Authority' value={item?.billingDetails?.approvalAuthority} />
+        <EnquiryDetailListItem label='Authority Person' value={item?.billingDetails?.authorityPersonName} />
+        <EnquiryDetailListItem label='Mobile Number' value={item?.billingDetails?.authorityPersonMobile} />
+        <EnquiryDetailListItem label='Employee Name' value={item?.billingDetails?.employeeName} />
+        <EnquiryDetailListItem label='Employee Desig.' value={item?.billingDetails?.employeeDesignation} />
+        <EnquiryDetailListItem label='Employee Mobile' value={item?.billingDetails?.employeeMobile} isLast={true} />
+      </>
+    );
+  }
   return (
     <AvoidSoftInputViewHOC>
       <View style={styles.container}>
@@ -31,8 +56,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item}) => {
         <CollapsibleView title="CONTACT DETAILS" collapsed={true}>
           <View>
             <View style={styles.elementContainer}>
-            <EnquiryDetailListItem label='Contact Person' value={item?.partyName} />
-            <EnquiryDetailListItem label='Mobile' value={item?.mobile} isLast={true} />
+            {item?.billingBy == 'by Company' ? showCompanyContactDetails() : showIndividualContactDetails()}
             </View>
           </View>
         </CollapsibleView>

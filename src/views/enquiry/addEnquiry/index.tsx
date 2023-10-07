@@ -435,7 +435,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
   }, [state]);
 
   const showBillingByIndividualView = () => {
-    if (state.billingBy?.billing_by == 'Billing by Company') return null;
+    if (state.billingBy?.billing_by == 'by Company') return null;
     return (
       <>
         <Spacer height={4} />
@@ -463,7 +463,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
   };
 
   const showBillingByCompanyView = () => {
-    if (state.billingBy?.billing_by == 'Billing By Individual') return null;
+    if (state.billingBy?.billing_by == 'by Individual') return null;
     return (
       <>
         <Spacer height={4} />

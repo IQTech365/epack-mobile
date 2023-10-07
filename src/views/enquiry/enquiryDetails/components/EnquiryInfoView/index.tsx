@@ -29,10 +29,10 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item}) => {
           <View style={styles.leftContainer}>
             <View style={styles.infoContainer}>
               <View style={[styles.itemContainer]}>
-                <Text style={styles.nameText}>{item?.partyName}</Text>
+                <Text style={styles.nameText}>{item?.partyName || item?.billingDetails?.authorityPersonName}</Text>
               </View>
               <View style={[styles.itemContainer]}>
-                <Text style={styles.normalText}>{item?.mobile}</Text>
+                <Text style={styles.normalText}>{item?.mobile || item?.billingDetails?.authorityPersonMobile}</Text>
               </View>
             </View>
             <View style={styles.infoContainer}>
