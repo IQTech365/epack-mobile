@@ -1,14 +1,14 @@
 import {NavigationProp} from '@react-navigation/native';
-import React, {useEffect} from 'react';
-import {View, Text, FlatList} from 'react-native';
+import React, {useCallback, useEffect} from 'react';
+import {View, Text, FlatList, RefreshControl} from 'react-native';
 import AddNew from '../../common/AddNew';
 import Header from '../../common/Header';
 import Spacer from '../../common/Spacer';
 import Spinner from '../../common/Spinner';
+import { IGetEnquiriesData } from '../../interface/enquiry/IGetEnquiriesResponse';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {getEnquiriesRequest} from '../../redux/slices/EnquirySlice';
-import { COLOR_WHITE } from '../../utils/colors';
-import {EnquiryStackRoute, QuotationStackRoute} from '../../utils/constants';
+import {EnquiryStackRoute} from '../../utils/constants';
 import EnquiryListItem, {
   IEnquiryItem,
 } from './enquiryList/components/EnquiryListItem';
@@ -23,6 +23,26 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
   const {enquiries, getEnquiriesRequesting} = useAppSelector(
     state => state.Enquiry,
   );
+  const {otpData} = useAppSelector(state => state.OTP);
+  const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
+
+  const getCompanyId = () => {
+    let id;
+    const {data} = addCompanyInfo || {};
+    const {data: companiesData} = companies || {};
+    if (data && Object.keys(data).length > 0) {
+      id = data._id;
+    } else if (
+      companiesData &&
+      Array.isArray(companiesData) &&
+      companiesData.length > 0
+    ) {
+      const firstCompany = companiesData[0];
+      id = firstCompany._id;
+    }
+    return id;
+  };
+
   const tempItem: IEnquiryItem = {
     clientName: 'Ms. Vanshika',
     pickupAddress: 'Delhi, Munirka',
@@ -37,6 +57,7 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
 
   let transformedData: IEnquiryItem[] = [tempItem];
   if (data) {
+    //@ts-ignore
     transformedData = data.map(enq => {
       return {
         clientName: enq.partyName,
@@ -50,18 +71,25 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
     });
   }
 
-  
+  const getEnquiryDataByIndex = (index: number) => {
+    if(data) return data[index];
+    return [];
+  }
 
   const handleAddNew = () => {
     navigation.navigate(EnquiryStackRoute.AddEnquiry);
   };
 
-  const handleEnquiryDetailsClick = (id: string) => {
-    navigation.navigate(EnquiryStackRoute.EnquiryDetails, {enquiryId: id});
+  const handleEnquiryDetailsClick = (id: string, item: IGetEnquiriesData) => {
+    navigation.navigate(EnquiryStackRoute.EnquiryDetails, {enquiryId: id, item: item});
   };
 
+  const handleOnRefresh = useCallback(() => {
+    dispatch(getEnquiriesRequest(getCompanyId()));
+  }, []);
+
   useEffect(() => {
-    dispatch(getEnquiriesRequest('6511695bad8a273529a2a59a'));
+    dispatch(getEnquiriesRequest(getCompanyId()));
   }, []);
 
   return (
@@ -82,15 +110,21 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
         <Spinner show={getEnquiriesRequesting} />
       ) : (
         <FlatList
-        showsVerticalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
           data={transformedData}
+          refreshControl={
+            <RefreshControl
+              refreshing={getEnquiriesRequesting}
+              onRefresh={handleOnRefresh}
+            />
+          }
           renderItem={({item, index}) => (
             <View style={{padding: 10}}>
               <EnquiryListItem
-              item={item}
-              index={index}
-              onPress={() => handleEnquiryDetailsClick(item.enquiryId)}
-            />
+                item={item}
+                index={index}
+                onPress={() => handleEnquiryDetailsClick(item.enquiryId, getEnquiryDataByIndex(index))}
+              />
             </View>
           )}
           ListEmptyComponent={() => <Text>No Enquiries available</Text>}

@@ -78,7 +78,6 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
   } = useAppSelector(state => state.Company);
 
   const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
-  // const {companies} = useAppSelector(state => state.Company);
 
   const authContext = useAuthContext();
   const {setLoggedIn} = authContext;

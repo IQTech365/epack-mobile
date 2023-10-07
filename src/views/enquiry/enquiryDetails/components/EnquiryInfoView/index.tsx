@@ -5,10 +5,21 @@ import HeaderGridBackgroundImage from '../../../../../images/header-grid.png';
 import PhoneIcon from '../../../../../images/icons/phone.svg';
 import WhatsappIcon from '../../../../../images/icons/whatsapp.svg';
 import Spacer from '../../../../../common/Spacer';
+import { IGetEnquiriesData } from '../../../../../interface/enquiry/IGetEnquiriesResponse';
+import { formatDate } from '../../../../../utils/formatter';
 
-interface IEnquiryInfoViewProps {}
+interface IEnquiryInfoViewProps {
+  item: IGetEnquiriesData | undefined;
+}
 
-const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({}) => {
+const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item}) => {
+
+  const getEnquiryDate = () => {
+    if(item && item.createdAt) {
+      return formatDate(new Date(item.createdAt));
+    }
+    return 'NA'
+  }
   return (
     <View style={styles.backgroundContainer}>
       <ImageBackground
@@ -18,10 +29,10 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({}) => {
           <View style={styles.leftContainer}>
             <View style={styles.infoContainer}>
               <View style={[styles.itemContainer]}>
-                <Text style={styles.nameText}>Ms. Vanshika Vats</Text>
+                <Text style={styles.nameText}>{item?.partyName}</Text>
               </View>
               <View style={[styles.itemContainer]}>
-                <Text style={styles.normalText}>9876546789</Text>
+                <Text style={styles.normalText}>{item?.mobile}</Text>
               </View>
             </View>
             <View style={styles.infoContainer}>
@@ -33,7 +44,7 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({}) => {
                   <Text style={styles.hyphenText}>-</Text>
                 </View>
                 <View style={styles.valueContainer}>
-                  <Text style={styles.valueText}>Delhi</Text>
+                  <Text style={styles.valueText}>{item?.pickupAddress.state}</Text>
                 </View>
               </View>
               <View style={styles.itemContainer}>
@@ -44,7 +55,7 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({}) => {
                   <Text style={styles.hyphenText}>-</Text>
                 </View>
                 <View style={styles.valueContainer}>
-                  <Text style={styles.valueText}>20 Nov. 2022</Text>
+                  <Text style={styles.valueText}>{getEnquiryDate()}</Text>
                 </View>
               </View>
             </View>
@@ -57,7 +68,7 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({}) => {
                   <Text style={styles.hyphenText}>-</Text>
                 </View>
                 <View style={styles.valueContainer}>
-                  <Text style={styles.valueText}>Gurgaon</Text>
+                  <Text style={styles.valueText}>{item?.dropAddress.state}</Text>
                 </View>
               </View>
               <View style={styles.itemContainer}>
@@ -68,7 +79,7 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({}) => {
                   <Text style={styles.hyphenText}>-</Text>
                 </View>
                 <View style={styles.valueContainer}>
-                  <Text style={styles.valueText}>New</Text>
+                  <Text style={styles.valueText}>{item?.status}</Text>
                 </View>
               </View>
             </View>

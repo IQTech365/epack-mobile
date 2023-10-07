@@ -7,18 +7,20 @@ import styles from './style';
 import tabOptions from '../../../data/enquiresDetailsTabs.json';
 import Tab from '../../../common/Tab';
 import AddQuotationView from '../../quotation/addQuotation';
-import FollowupListHeaderComponent from './components/FollowupListHeaderComponent';
 import FollowupView from './components/FollowupView';
 import SurveyView from './components/FollowupView';
 import DetailsView from './components/DetailsView';
 import PackingMaterialsView from './components/PackingMaterialsView';
 import { EnquiryStackParamList } from '../../../navigation/params/EnquiryStackParamList';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import { IGetEnquiriesData } from '../../../interface/enquiry/IGetEnquiriesResponse';
 
 type Props = NativeStackScreenProps<EnquiryStackParamList, 'EnquiryDetails'>;
 
+
 const EnquiryDetailsView: React.FC<Props> = ({route, navigation}) => {
   const enquiryId: string | undefined = route.params?.enquiryId;
+  const item: IGetEnquiriesData | undefined = route.params?.item;
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
 
   const handleTabChange = (index: number) => {
@@ -28,7 +30,7 @@ const EnquiryDetailsView: React.FC<Props> = ({route, navigation}) => {
   const showTabItem = () => {
     switch (activeTabIndex) {
       case 0:
-        return <DetailsView />
+        return <DetailsView item={item}/>
       case 1:
         return <FollowupView taskName='FOLLOW UP' assigneeRole='Enequiry' enquiryId={enquiryId as string} />
       case 2:
@@ -45,7 +47,7 @@ const EnquiryDetailsView: React.FC<Props> = ({route, navigation}) => {
   return (
     <View style={styles.container}>
       <Header label="ENQUIRY DETAILS" canGoBack={true} />
-      <EnquiryInfoView />
+      <EnquiryInfoView item={item}/>
       <Spacer height={10} />
       <View style={styles.tabsContainer}>
         <FlatList
