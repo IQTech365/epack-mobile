@@ -26,14 +26,15 @@ const FollowupListItem: React.FC<IFollowupListItemProps> = ({comment, date, enqu
             <Text style={styles.contentLabelText}>
               Enquiry Manager - <Text style={styles.nameText}>Ramesh</Text>
             </Text>
-            <Spacer width={4} />
+          </View>
+          <View style={styles.contentContainer}>
             <ClockIcon width={22} height={22} />
             <Spacer width={4} />
             <Text style={styles.contentLabelText}>{formatDate3(date)}</Text>
           </View>
           <View style={styles.contentContainer}>
             <Text style={styles.contentLabelText}>
-              {comment}
+              Comment: {comment}
             </Text>
           </View>
         </View>

@@ -12,6 +12,8 @@ import {IAddFollowupRequest} from '../../../../../interface/enquiry/IAddFollowup
 import {
   addFollowupRequest,
   addSurveyRequest,
+  getFollowupsRequest,
+  getSurveyListRequest,
   resetAddFollowupRequest,
   resetAddSurveyRequest,
 } from '../../../../../redux/slices/EnquirySlice';
@@ -63,8 +65,13 @@ const FollowupListHeaderComponent: React.FC<
             ? 'Followup has been added successfully'
             : 'Survey has been added successfully',
       });
-      dispatch(resetAddFollowupRequest());
-      dispatch(resetAddSurveyRequest());
+      if(taskName == 'FOLLOW UP') {
+        dispatch(resetAddFollowupRequest());
+        dispatch(getFollowupsRequest(enquiryId));
+      } else if(taskName == 'SURVEY') {
+        dispatch(resetAddSurveyRequest());
+        dispatch(getSurveyListRequest(enquiryId));
+      }
     } else if ((!addFollowupRequesting && addFollowupFailure) || (!addSurveyRequesting && addSurveySuccess)) {
       Toast.show({
         type: 'error',
@@ -74,16 +81,19 @@ const FollowupListHeaderComponent: React.FC<
             ? 'Error in adding followup. Try again!'
             : 'Error in adding survey. Try again!',
       });
-      dispatch(resetAddFollowupRequest());
-      dispatch(resetAddSurveyRequest());
+      if(taskName == 'FOLLOW UP') {
+        dispatch(resetAddFollowupRequest());
+      } else if(taskName == 'SURVEY') {
+        dispatch(resetAddSurveyRequest());
+      }
     }
   }, [addFollowupRequesting, addFollowupSuccess, addFollowupFailure, addSurveyRequesting, addSurveySuccess, addSurveyFailure]);
 
   const handleSave = () => {
     if (taskName == 'FOLLOW UP') {
       const data: IAddFollowupRequest = {
-        // authId: id,
-        authId: '650efb2d7e3968c4c217a34f', //TODO: remove this line once auth module fixed
+        authId: id,
+        // authId: '650efb2d7e3968c4c217a34f',
         enquiryId: enquiryId,
         comment: comment,
         followUpDate: date,
@@ -91,8 +101,8 @@ const FollowupListHeaderComponent: React.FC<
       dispatch(addFollowupRequest(data));
     } else if (taskName == 'SURVEY') {
       const data: IAddSurveyRequest = {
-        // addedBy: id,
-        addedBy: '650efb2d7e3968c4c217a34f', //TODO: remove this line once auth module fixed
+        addedBy: id,
+        // addedBy: '650efb2d7e3968c4c217a34f',
         enquiryId: enquiryId,
         comment: comment,
         surveyDate: date,
@@ -140,7 +150,7 @@ const FollowupListHeaderComponent: React.FC<
       <Button
         text="SAVE"
         onPress={handleSave}
-        // disabled={true}
+        disabled={!comment}
         style={styles.previewButtonStyle}
         textStyle={styles.textStyle}
       />
