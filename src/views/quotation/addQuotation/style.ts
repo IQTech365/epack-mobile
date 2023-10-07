@@ -105,10 +105,28 @@ const styles = StyleSheet.create({
     otherChargeItemWrapper: {
         width: width * 0.9,
         alignSelf: 'center',
-        flexDirection: 'row',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         padding: 10,
-        justifyContent: 'space-between',
+        borderWidth: 1,
+        borderColor: COLOR_GRAY2,
+        borderRadius: 5,
+        marginBottom: 5,
+    },
+    otherChargeLabelText: {
+        color: COLOR_BLACK,
+        fontSize: 12,
+        fontWeight: '500',
+    },
+    otherChargeValueText: {
+        color: COLOR_BLACK,
+        fontSize: 12,
+        fontWeight: '400',
+    },
+    otherChargesWrapper: {
+        width: width * 0.9,
+        alignSelf: 'center',
+        paddingHorizontal: 5,
+        marginBottom: 5,
     },
 });
 
