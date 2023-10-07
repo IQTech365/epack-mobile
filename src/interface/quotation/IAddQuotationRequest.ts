@@ -1,4 +1,5 @@
 export interface IAddQuotationRequest {
+  companyId: string;
   authId: string;
   shiftingType: string;
   shiftingLuggage: string;
