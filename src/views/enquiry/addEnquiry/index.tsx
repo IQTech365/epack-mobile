@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useReducer, useState} from 'react';
+import React, {useCallback, useEffect, useReducer, useRef, useState} from 'react';
 import {View, Text} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../common/Spacer';
@@ -60,6 +60,11 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
   } = useAppSelector(state => state.Enquiry);
   const {otpData} = useAppSelector(state => state.OTP);
   const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
+
+  const pickupCityDropdownRef = useRef(null);
+  const pickupStateDropwdownRef = useRef(null);
+  const dropStateDropdownRef = useRef(null);
+  const dropCityDropdownRef = useRef(null);
 
   console.log('AddEnquiry-addEnquiryInfo--', JSON.stringify(addEnquiryInfo));
 
@@ -350,6 +355,24 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
       }
     }
   }, [result]);
+
+  useEffect(() => {
+    if(pickupStates && pickupCities && pickupCityDropdownRef && pickupStateDropwdownRef && pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_QUOTATION_PICKUP_ADDRESS) {
+      //@ts-ignore
+      pickupStateDropwdownRef?.current?.setDefaultValue(pickupStates[0]);
+      //@ts-ignore
+      pickupCityDropdownRef?.current?.setDefaultValue(pickupCities[0]);
+    }
+  }, [pickupStates, pickupCities]);
+
+  useEffect(() => {
+    if(deliveryStates && deliveryCities && dropStateDropdownRef && dropCityDropdownRef && pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_QUOTATION_DELIVERY_ADDRESS) {
+      //@ts-ignore
+      dropStateDropdownRef?.current?.setDefaultValue(deliveryStates[0]);
+      //@ts-ignore
+      dropCityDropdownRef?.current?.setDefaultValue(deliveryCities[0]);
+    }
+  }, [deliveryStates, deliveryCities]);
 
   useEffect(() => {
     if(!addEnquiryRequesting && addEnquirySuccess) {
@@ -747,6 +770,8 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
               <DropdownComponent
                 data={pickupStates}
                 onSelect={handlePickupState}
+                //@ts-ignore
+                ref={pickupStateDropwdownRef}
               />
             </View>
             <View style={styles.elementContainer}>
@@ -754,6 +779,8 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
               <DropdownComponent
                 data={pickupCities}
                 onSelect={handlePickupCity}
+                //@ts-ignore
+                ref={pickupCityDropdownRef}
               />
             </View>
             <Spacer height={4} />
@@ -803,6 +830,8 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
               <DropdownComponent
                 data={deliveryStates}
                 onSelect={handleDeliveryState}
+                //@ts-ignore
+                ref={dropStateDropdownRef}
               />
             </View>
             <View style={styles.elementContainer}>
@@ -810,6 +839,8 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
               <DropdownComponent
                 data={deliveryCities}
                 onSelect={handleDeliveryCity}
+                //@ts-ignore
+                ref={dropCityDropdownRef}
               />
             </View>
             <Spacer height={4} />

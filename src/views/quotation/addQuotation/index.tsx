@@ -29,7 +29,12 @@ import {
   TGstInQuotation,
   TBillingBy,
 } from './quotationReducer';
-import {formatDate, getCities, getStates} from '../../../utils/formatter';
+import {
+  formatDate,
+  formatDate4,
+  getCities,
+  getStates,
+} from '../../../utils/formatter';
 import BouncyCheckboxGroup, {
   ICheckboxButton,
 } from 'react-native-bouncy-checkbox-group';
@@ -54,13 +59,15 @@ import usePincodeHook, {
 import Spinner from '../../../common/Spinner';
 import {getStatusValue} from '../utils/utils';
 import {useAppDispatch, useAppSelector} from '../../../redux/hooks';
-import {IAddQuotationRequest} from '../../../interface/quotation/IAddQuotationRequest';
+import {IAddQuotationRequest, ITransitInsurance} from '../../../interface/quotation/IAddQuotationRequest';
 import {
   addQuotationRequest,
   resetaddQuotationRequest,
 } from '../../../redux/slices/QuotationSlice';
 import Toast from 'react-native-toast-message';
-import { useRef } from 'react';
+import {useRef} from 'react';
+import {NavigationProp} from '@react-navigation/native';
+import moment from 'moment';
 
 const freightChargeOptions: Array<ICheckboxButton> = [
   {
@@ -343,10 +350,12 @@ const discountTypeOptions: Array<ICheckboxButton> = [
 
 interface IAddQuotationProps {
   showHeader?: boolean;
+  navigation: NavigationProp<any, any>;
 }
 
 const AddQuotationView: React.FC<IAddQuotationProps> = ({
   showHeader = true,
+  navigation,
 }) => {
   const [switchState, setSwitchState] = useState<boolean>(false);
   const [state, dispatch] = useReducer(quotationReducer, initialState);
@@ -460,7 +469,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
   const handleMovingDate = (date: Date) => {
     dispatch({
       type: QUOTATION_FORM_ACTION.DATE_OF_MOVING,
-      payload: formatDate(date),
+      payload: formatDate4(date),
     });
   };
 
@@ -1324,6 +1333,17 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
     );
   };
 
+  useEffect(() => {
+    dispatch({
+      type: QUOTATION_FORM_ACTION.DATE_OF_QUOTATION,
+      payload: formatDate(new Date()),
+    });
+    dispatch({
+      type: QUOTATION_FORM_ACTION.DATE_OF_QUOTATION,
+      payload: formatDate(new Date()),
+    });
+  }, []);
+
   /** Effects */
   useEffect(() => {
     if (result && result.Status != 'Error') {
@@ -1332,7 +1352,6 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
       ) {
         setPickupStates(getStates(result));
         setPickupCities(getCities(result));
-       
       } else if (
         pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_QUOTATION_DELIVERY_ADDRESS
       ) {
@@ -1343,7 +1362,13 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
   }, [result]);
 
   useEffect(() => {
-    if(pickupStates && pickupCities && pickupCityDropdownRef && pickupStateDropwdownRef && pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_QUOTATION_PICKUP_ADDRESS) {
+    if (
+      pickupStates &&
+      pickupCities &&
+      pickupCityDropdownRef &&
+      pickupStateDropwdownRef &&
+      pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_QUOTATION_PICKUP_ADDRESS
+    ) {
       //@ts-ignore
       pickupStateDropwdownRef?.current?.setDefaultValue(pickupStates[0]);
       //@ts-ignore
@@ -1352,7 +1377,13 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
   }, [pickupStates, pickupCities]);
 
   useEffect(() => {
-    if(deliveryStates && deliveryCities && dropStateDropdownRef && dropCityDropdownRef && pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_QUOTATION_DELIVERY_ADDRESS) {
+    if (
+      deliveryStates &&
+      deliveryCities &&
+      dropStateDropdownRef &&
+      dropCityDropdownRef &&
+      pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_QUOTATION_DELIVERY_ADDRESS
+    ) {
       //@ts-ignore
       dropStateDropdownRef?.current?.setDefaultValue(deliveryStates[0]);
       //@ts-ignore
@@ -1368,6 +1399,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
         text2: 'Quotation has been added successfully',
       });
       dispatch2(resetaddQuotationRequest());
+      navigation.goBack();
     } else if (!addQuotationRequesting && addQuotationFailure) {
       Toast.show({
         type: 'error',
@@ -1378,9 +1410,28 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
     }
   }, [addQuotationRequesting, addQuotationSuccess, addQuotationFailure]);
 
-  const handleSubmit = useCallback(() => {
-    console.log(state, 'state data..');
+  const defaultInsuranceValues: ITransitInsurance =  {
+    isRequired: state?.insuranceDetails?.status as string,
+    transitType: state?.insuranceDetails?.insurance_type as string || 'Optional',
+    charges: [
+      {
+        luggageType: state?.insuranceDetails?.shifting_luggage as string || 'Household',
+        insurancePerc: state?.insuranceDetails?.insurance_charge_percent as string || '0.5%',
+        gst: state?.insuranceDetails?.insurance_gst_percent as string || '0%',
+        value: state?.insuranceDetails?.insurance_goods_value as string,
+      },
+    ],
+  }
 
+  const defaultStorageChargeValues = {
+    isRequired: state?.storageCharges?.status as string,
+    storageChargesType: state?.storageCharges?.storage_duration_type as string || 'Per Day Charges',
+    fromDate: state?.storageCharges?.storage_from_date as string,
+    toDate: state?.storageCharges?.storage_to_date as string,
+    amount: state?.storageCharges?.storage_amount as string,
+  }
+
+  const handleSubmit = useCallback(() => {
     const payload: IAddQuotationRequest = {
       companyId: getCompanyId(),
       // companyId: "65115b33ad8a273529a2a597",
@@ -1399,7 +1450,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
       partyName: state?.partyName,
       email: '',
       mobile: state?.mobileNumber,
-      shiftingDate: '',
+      shiftingDate: state.dateOfMoving,
       pickupAddress: {
         shiftingFrom: state?.pickupCity as string,
         state: state?.pickupState as string,
@@ -1460,27 +1511,28 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
       surchargeCharges: state?.surcharge?.surcharge_percent as string,
       discountType: state?.discountInQuotation?.discount_type as string,
       discountAmount: state?.discountInQuotation?.discount_value as string,
-      transitInsurance: {
-        isRequired: state?.insuranceDetails?.status as string,
-        transitType: state?.insuranceDetails?.insurance_type as string,
-        charges: [
-          {
-            luggageType: state?.insuranceDetails?.shifting_luggage as string,
-            insurancePerc: state?.insuranceDetails
-              ?.insurance_charge_percent as string,
-            gst: state?.insuranceDetails?.insurance_gst_percent as string,
-            value: state?.insuranceDetails?.insurance_goods_value as string,
-          },
-        ],
-      },
-      storageCharges: {
-        isRequired: state?.storageCharges?.status as string,
-        storageChargesType: state?.storageCharges
-          ?.storage_duration_type as string,
-        fromDate: state?.storageCharges?.storage_from_date as string,
-        toDate: state?.storageCharges?.storage_to_date as string,
-        amount: state?.storageCharges?.storage_amount as string,
-      },
+      // transitInsurance: {
+      //   isRequired: state?.insuranceDetails?.status as string,
+      //   transitType: state?.insuranceDetails?.insurance_type as string,
+      //   charges: [
+      //     {
+      //       luggageType: state?.insuranceDetails?.shifting_luggage as string,
+      //       insurancePerc: state?.insuranceDetails?.insurance_charge_percent as string,
+      //       gst: state?.insuranceDetails?.insurance_gst_percent as string,
+      //       value: state?.insuranceDetails?.insurance_goods_value as string,
+      //     },
+      //   ],
+      // },
+      transitInsurance:  isInsuranceRequired ? defaultInsuranceValues : null,
+      // storageCharges: {
+      //   isRequired: state?.storageCharges?.status as string,
+      //   storageChargesType: state?.storageCharges
+      //     ?.storage_duration_type as string,
+      //   fromDate: state?.storageCharges?.storage_from_date as string,
+      //   toDate: state?.storageCharges?.storage_to_date as string,
+      //   amount: state?.storageCharges?.storage_amount as string,
+      // },
+      storageCharges: isStorageRequired ? defaultStorageChargeValues : null,
       otherCharges: state.otherCharges as [TOtherCharges],
       quotationAmount: '1233',
       advanceAmount: state.advanceAmount as string,
@@ -1504,6 +1556,10 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
       },
       otherDetails: state?.otherDetails?.any_needs_or_concern as string,
     };
+    console.log(
+      'add-quotation-payload----',
+      JSON.stringify(payload, null, ' '),
+    );
     dispatch2(addQuotationRequest(payload));
   }, [state]);
 
@@ -1589,17 +1645,17 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
           <Spacer height={4} />
           <CollapsibleView title="PICKUP ADDRESS" collapsed={true}>
             <View>
-              <View style={styles.textContainer2}>
-                <Label text="PIN Code" style={styles.label} />
-                <Input
-                  onChangeText={handlePickupPinCode}
-                  containerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
-                  selectionColor={COLOR_BLACK}
-                  error={state.errors.pickupAddress}
-                />
-              </View>
               <View style={styles.mainWrapper}>
+                <View style={styles.textContainer}>
+                  <Label text="PIN Code" style={styles.label} />
+                  <Input
+                    onChangeText={handlePickupPinCode}
+                    containerStyle={styles.inputContainer}
+                    inputStyle={styles.input}
+                    selectionColor={COLOR_BLACK}
+                    error={state.errors.pickupAddress}
+                  />
+                </View>
                 <View style={styles.textContainer}>
                   <Label text="State" style={styles.label} />
                   <DropdownComponent
@@ -1609,15 +1665,15 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                     ref={pickupStateDropwdownRef}
                   />
                 </View>
-                <View style={styles.textContainer}>
-                  <Label text="City" style={styles.label} />
-                  <DropdownComponent
-                    data={pickupCities}
-                    onSelect={handlePickupCity}
-                    //@ts-ignore
-                    ref={pickupCityDropdownRef}
-                  />
-                </View>
+              </View>
+              <View style={styles.textContainer2}>
+                <Label text="City" style={styles.label} />
+                <DropdownComponent
+                  data={pickupCities}
+                  onSelect={handlePickupCity}
+                  //@ts-ignore
+                  ref={pickupCityDropdownRef}
+                />
               </View>
               <Spacer height={4} />
               <View style={styles.textContainer2}>
@@ -1653,16 +1709,16 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
           <Spacer height={4} />
           <CollapsibleView title="DELIVERY ADDRESS" collapsed={true}>
             <View>
-              <View style={styles.textContainer2}>
-                <Label text="PIN Code" style={styles.label} />
-                <Input
-                  onChangeText={handleDeliveryPinCode}
-                  containerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
-                  selectionColor={COLOR_BLACK}
-                />
-              </View>
               <View style={styles.mainWrapper}>
+                <View style={styles.textContainer}>
+                  <Label text="PIN Code" style={styles.label} />
+                  <Input
+                    onChangeText={handleDeliveryPinCode}
+                    containerStyle={styles.inputContainer}
+                    inputStyle={styles.input}
+                    selectionColor={COLOR_BLACK}
+                  />
+                </View>
                 <View style={styles.textContainer}>
                   <Label text="State" style={styles.label} />
                   <DropdownComponent
@@ -1672,15 +1728,15 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                     ref={dropStateDropdownRef}
                   />
                 </View>
-                <View style={styles.textContainer}>
-                  <Label text="City" style={styles.label} />
-                  <DropdownComponent
-                    data={deliveryCities}
-                    onSelect={handleDeliveryCity}
-                    //@ts-ignore
-                    ref={dropCityDropdownRef}
-                  />
-                </View>
+              </View>
+              <View style={styles.textContainer2}>
+                <Label text="City" style={styles.label} />
+                <DropdownComponent
+                  data={deliveryCities}
+                  onSelect={handleDeliveryCity}
+                  //@ts-ignore
+                  ref={dropCityDropdownRef}
+                />
               </View>
               <Spacer height={4} />
               <View style={styles.textContainer2}>
@@ -2125,7 +2181,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                 <Label text="Other Charges" style={styles.label} />
               </View>
               <View style={styles.textContainer2}>
-                <Label text="Job Type" style={styles.label} />
+                <Label text="Particulars/Items" style={styles.label} />
                 <Input
                   onChangeText={(text: string) => {
                     setJobType(text);

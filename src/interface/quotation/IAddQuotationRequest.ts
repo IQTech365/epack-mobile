@@ -1,5 +1,25 @@
 import { TOtherCharge } from "../../views/quotation/addQuotation/quotationReducer";
 
+export interface ITransitInsurance {
+  isRequired: string;
+  transitType: string;
+  charges: [
+    {
+      luggageType: string;
+      insurancePerc: string;
+      gst: string;
+      value: string;
+    },
+  ];
+}
+
+export interface IStorageCharges {
+  isRequired: string;
+  storageChargesType: string;
+  fromDate: string;
+  toDate: string;
+  amount: string;
+}
 export interface IAddQuotationRequest {
   companyId: string;
   authId: string;
@@ -68,25 +88,8 @@ export interface IAddQuotationRequest {
   surchargeCharges: string;
   discountType: string;
   discountAmount: string;
-  transitInsurance: {
-    isRequired: string;
-    transitType: string;
-    charges: [
-      {
-        luggageType: string;
-        insurancePerc: string;
-        gst: string;
-        value: string;
-      },
-    ];
-  };
-  storageCharges: {
-    isRequired: string;
-    storageChargesType: string;
-    fromDate: string;
-    toDate: string;
-    amount: string;
-  };
+  transitInsurance: ITransitInsurance | null;
+  storageCharges: IStorageCharges | null;
   otherCharges: [
     {
       jobType: string;

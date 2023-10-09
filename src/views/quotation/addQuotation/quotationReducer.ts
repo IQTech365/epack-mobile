@@ -276,7 +276,7 @@ export const initialState: IQuotationFormState = {
   dateOfMoving: '',
   billingBy: {billing_by: 'by Individual', billing_info: null},
   serialNumber: '',
-  shiftingLuggage: '',
+  shiftingLuggage: 'Household',
   template: '',
   vehcileType: '',
   manufacturer: '',

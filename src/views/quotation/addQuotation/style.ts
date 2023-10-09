@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
     label: {
         color: COLOR_BLACK,
         fontSize: 14,
+        fontWeight: '500',
     },
     outerCircleStyle: {
         width: '100%',
