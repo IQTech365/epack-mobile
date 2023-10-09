@@ -346,7 +346,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
         pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_ENQUIRY_DELIVERY_ADDRESS
       ) {
         setDeliveryStates(getStates(result));
-        setDeliveryCities(getStates(result));
+        setDeliveryCities(getCities(result));
       }
     }
   }, [result]);
