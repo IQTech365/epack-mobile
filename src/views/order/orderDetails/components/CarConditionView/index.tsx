@@ -18,13 +18,14 @@ import {
   initialState,
   carConditionReducer,
   CARCONDITION_FORM_ACTION,
-} from './carConditionReducer'
+} from './carConditionReducer';
 import { formatDate } from '../../../../../utils/formatter';
 import Button from '../../../../../common/Button';
 import { ICreateCarConditionRequest } from '../../../../../interface/order/ICreateCarConditionRequest';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import { createCarConditionRequest } from '../../../../../redux/slices/OrderSlice';
 import Spinner from '../../../../../common/Spinner';
+import Toast from 'react-native-toast-message';
 
 interface ICarConditionViewProps {
   //
@@ -32,7 +33,10 @@ interface ICarConditionViewProps {
 
 const CarConditionView: React.FC<ICarConditionViewProps> = ({ }) => {
   const [switchState, setSwitchState] = useState<boolean>(false);
-  const [reducerState, dispatch] = useReducer(carConditionReducer, initialState);
+  const [reducerState, dispatch] = useReducer(
+    carConditionReducer,
+    initialState,
+  );
   const {
     createCarConditionRequesting,
     createCarConditionSuccess,
@@ -40,39 +44,32 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({ }) => {
     createCarConditionFailure,
   } = useAppSelector(state => state.Order);
   const dispatch2 = useAppDispatch();
+  const { addCompanyInfo, companies } = useAppSelector(state => state.Company);
+
+  const getCompanyId = () => {
+    let id;
+    const { data } = addCompanyInfo || {};
+    const { data: companiesData } = companies || {};
+    if (data && Object.keys(data).length > 0) {
+      id = data._id;
+    } else if (
+      companiesData &&
+      Array.isArray(companiesData) &&
+      companiesData.length > 0
+    ) {
+      const firstCompany = companiesData[0];
+      id = firstCompany._id;
+    }
+    return id;
+  };
   const switchWrapperStyle = switchState
     ? styles.switchMainWrapper
     : styles.switchMainWrapper2;
-  const handleReceiptDate = (date: Date) => {
-    // dispatch({
-    //   type: QUOTATION_FORM_ACTION.DATE_OF_QUOTATION,
-    //   payload: formatDate(date),
-    // });
-  };
-  const handleTemplate = (item: TDropdownItem) => {
-    // dispatch({
-    //   type: QUOTATION_FORM_ACTION.SHIFTING_LUGGAGE,
-    //   payload: item.label,
-    // });
-  };
-  const handleReceiptNoInputTextChange = (text: string) => {
-    // dispatch({
-    //   type: QUOTATION_FORM_ACTION.COMPANY_NAME,
-    //   payload: text,
-    // });
-  };
+
   const handleCarConditionNo = (text: string) => {
     dispatch({
       type: CARCONDITION_FORM_ACTION.CARCONDITION_NO,
       payload: text,
-    });
-  };
-
-
-  const handleChooseTemplate = (item: TDropdownItem) => {
-    dispatch({
-      type: CARCONDITION_FORM_ACTION.CHOOSE_TEMPLATE,
-      payload: item.label,
     });
   };
 
@@ -198,11 +195,10 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({ }) => {
     });
   };
 
-
-  const handleCreateCarCondition = useCallback(() => {
+  const handleCreateCarCondition = () => {
     const payload: ICreateCarConditionRequest = {
-      companyId: '649db2c88f79210c6bcfed39',
-      orderId: '649db2c88f79210c6bcfed39',
+      companyId: getCompanyId(),
+      orderId: '652164b2f774ba023df4e323',
       templateId: '32423erer',
       carConditionNumber: reducerState.carConditionNumber,
       dateOfCarCondition: reducerState.dateOfCarCondition,
@@ -225,19 +221,27 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({ }) => {
       dent: reducerState.dent,
       visibleObservation: reducerState.visibleObservation,
       remarks: reducerState.remarks,
-      addedBy: '12121131131121'
-    }
+      addedBy: '12121131131121',
+    };
     console.log(payload, 'payload carconditon req');
 
-    // dispatch2(createCarConditionRequest(payload));
-  }, [dispatch2, reducerState]);
+    dispatch2(createCarConditionRequest(payload));
+  };
 
   useEffect(() => {
     if (!createCarConditionRequesting && createCarConditionSuccess) {
-      // console.log('otpData--------', JSON.stringify(otpData));
-      // navigation.navigate(AuthStackRoute.OTPInput);
+      Toast.show({
+        type: 'success',
+        text1: 'Car condition',
+        text2: 'Car Condition has been added successfully',
+      });
     } else if (!createCarConditionRequesting && createCarConditionError) {
-      Alert.alert('Something went wrong. Please try again!');
+      // Alert.alert('Something went wrong. Please try again!');
+      Toast.show({
+        type: 'error',
+        text1: 'Car condition',
+        text2: 'Error in adding Car Condition. Please try again!',
+      });
     }
   }, [
     createCarConditionRequesting,
@@ -255,7 +259,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({ }) => {
               <View style={styles.itemContainer}>
                 <Label text="Car Condition No." style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handleCarConditionNo}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -346,7 +350,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({ }) => {
               <View style={styles.itemContainer}>
                 <Label text="Insurance Policy No." style={styles.label} />
                 <Input
-                  onChangeText={handleReceiptNoInputTextChange}
+                  onChangeText={handlePolicyNo}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}

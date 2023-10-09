@@ -1,3 +1,5 @@
+import { TOtherCharge } from "../../views/quotation/addQuotation/quotationReducer";
+
 export interface IAddQuotationRequest {
   companyId: string;
   authId: string;
@@ -88,7 +90,9 @@ export interface IAddQuotationRequest {
   otherCharges: [
     {
       jobType: string;
-      amount: string;
+      qty: string;
+      partLoad: TOtherCharge | null;
+      fullLoad: TOtherCharge | null;
     },
   ];
   quotationAmount: string;

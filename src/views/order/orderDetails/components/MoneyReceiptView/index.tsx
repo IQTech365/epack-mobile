@@ -32,13 +32,34 @@ interface IMoneyReceiptViewProps {
 }
 
 const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({ }) => {
-  const [reducerState, dispatch] = useReducer(moneyReceiptReducer, initialState,);
+  const [reducerState, dispatch] = useReducer(
+    moneyReceiptReducer,
+    initialState,
+  );
   const {
     createMoneyReceiptRequesting,
     createMoneyReceiptSuccess,
     createMoneyReceiptError,
     createMoneyReceiptFailure,
   } = useAppSelector(state => state.Order);
+  const { addCompanyInfo, companies } = useAppSelector(state => state.Company);
+
+  const getCompanyId = () => {
+    let id;
+    const { data } = addCompanyInfo || {};
+    const { data: companiesData } = companies || {};
+    if (data && Object.keys(data).length > 0) {
+      id = data._id;
+    } else if (
+      companiesData &&
+      Array.isArray(companiesData) &&
+      companiesData.length > 0
+    ) {
+      const firstCompany = companiesData[0];
+      id = firstCompany._id;
+    }
+    return id;
+  };
 
   const dispatch2 = useAppDispatch();
   const handleReceiptDate = (date: Date) => {
@@ -123,9 +144,9 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({ }) => {
     // });
   };
 
-  const handleCreate = useCallback(() => {
+  const handleCreate = () => {
     const payload: ICreateMoneyReceiptRequest = {
-      companyId: '6511695bad8a273529a2a59a',
+      companyId: getCompanyId(),
       orderId: '649db2c88f79210c6bcfed39',
       receiptNumber: reducerState.receiptNumber,
       receiptDate: reducerState.receiptDate,
@@ -145,7 +166,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({ }) => {
     };
     console.log(payload, 'payload create money');
     dispatch2(createMoneyReceiptRequest(payload));
-  }, []);
+  };
 
   useEffect(() => {
     if (!createMoneyReceiptRequesting && createMoneyReceiptSuccess) {
@@ -153,13 +174,13 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({ }) => {
       Toast.show({
         type: 'success',
         text1: 'Money Receipt',
-        text2: 'Money Receipt has been added successfully'
+        text2: 'Money Receipt has been added successfully',
       });
     } else if (!createMoneyReceiptRequesting && createMoneyReceiptError) {
       Toast.show({
         type: 'error',
         text1: 'Money Receipt',
-        text2: 'Error in adding Money Receipt. Please try again!'
+        text2: 'Error in adding Money Receipt. Please try again!',
       });
       // Alert.alert('Something went wrong. Please try again!');
     }

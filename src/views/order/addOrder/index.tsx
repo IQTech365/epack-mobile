@@ -1,15 +1,15 @@
-import React, {useCallback, useEffect, useReducer, useState} from 'react';
-import {View} from 'react-native';
+import React, { useCallback, useEffect, useReducer, useState } from 'react';
+import { View } from 'react-native';
 import AvoidSoftInputViewHOC from '../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../common/Spacer';
 import styles from './style';
 import shiftingTypeOptions from '../../../data/shiftingType.json';
-import {TDropdownItem} from '../../../type/TDropdownItem';
+import { TDropdownItem } from '../../../type/TDropdownItem';
 import Label from '../../../common/Label';
 import DropdownComponent from '../../../common/DropdownComponent';
 import Header from '../../../common/Header';
 import Input from '../../../common/Input';
-import {COLOR_BLACK, COLOR_BLUE} from '../../../utils/colors';
+import { COLOR_BLACK, COLOR_BLUE } from '../../../utils/colors';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import CollapsibleView from '../../../common/CollapsibleView';
 import Button from '../../../common/Button';
@@ -24,20 +24,20 @@ import {
 } from './addOrderReducer';
 import approvalAuthorityOptions from '../../../data/ApprovalAuthorityOptions.json';
 import billingByOptions from '../../../data/billingByOptions.json';
-import {formatDate, getCities, getStates} from '../../../utils/formatter';
+import { formatDate, getCities, getStates } from '../../../utils/formatter';
 import shiftingLuggageOptions from '../../../data/shiftingLuggage.json';
 import usePincodeHook, {
   PINCODE_REQUEST_KEY,
 } from '../../../hooks/usePincodeHook';
 import Spinner from '../../../common/Spinner';
-import {IAddOrderRequest} from '../../../interface/order/IAddOrderRequest';
-import {addOrderRequest} from '../../../redux/slices/OrderSlice';
-import {useAppDispatch, useAppSelector} from '../../../redux/hooks';
+import { IAddOrderRequest } from '../../../interface/order/IAddOrderRequest';
+import { addOrderRequest } from '../../../redux/slices/OrderSlice';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 
-const AddOrderView: React.FC<{}> = ({}) => {
+const AddOrderView: React.FC<{}> = ({ }) => {
   const [state, dispatch] = useReducer(addOrderReducer, initialState);
   const dispatch2 = useAppDispatch();
-  const {addOrderRequesting, addOrderSuccess, addOrderFailure, addOrderError} =
+  const { addOrderRequesting, addOrderSuccess, addOrderFailure, addOrderError } =
     useAppSelector(state => state.Order);
   const [pincodeRequestKey, setPincodeRequestKey] =
     useState<PINCODE_REQUEST_KEY>(PINCODE_REQUEST_KEY.ADD_ORDER_PICKUP_ADDRESS);
@@ -45,6 +45,25 @@ const AddOrderView: React.FC<{}> = ({}) => {
   const [pickupCities, setPickupCities] = useState<TDropdownItem[]>([]);
   const [deliveryStates, setDeliveryStates] = useState<TDropdownItem[]>([]);
   const [deliveryCities, setDeliveryCities] = useState<TDropdownItem[]>([]);
+  const { addCompanyInfo, companies } = useAppSelector(state => state.Company);
+  const { otpData } = useAppSelector(state => state.OTP);
+
+  const getCompanyId = () => {
+    let id;
+    const { data } = addCompanyInfo || {};
+    const { data: companiesData } = companies || {};
+    if (data && Object.keys(data).length > 0) {
+      id = data._id;
+    } else if (
+      companiesData &&
+      Array.isArray(companiesData) &&
+      companiesData.length > 0
+    ) {
+      const firstCompany = companiesData[0];
+      id = firstCompany._id;
+    }
+    return id;
+  };
   console.log('AddOrderView--state----', state);
 
   const setPincodeError = () => {
@@ -54,7 +73,7 @@ const AddOrderView: React.FC<{}> = ({}) => {
   const resetPincodeError = () => {
     // setPincodeError2('');
   };
-  const {result, fetching, setPincode} = usePincodeHook(
+  const { result, fetching, setPincode } = usePincodeHook(
     setPincodeError,
     resetPincodeError,
   );
@@ -67,7 +86,7 @@ const AddOrderView: React.FC<{}> = ({}) => {
   };
 
   const handleBillingBy = (item: TDropdownItem) => {
-    const {billingBy} = state;
+    const { billingBy } = state;
     const tempObj = {
       ...billingBy,
       billing_by: item.label,
@@ -211,7 +230,7 @@ const AddOrderView: React.FC<{}> = ({}) => {
   };
 
   const handleShiftingLuggage = (isChecked: boolean, value: string) => {
-    const {shiftingLuggage} = state;
+    const { shiftingLuggage } = state;
     let temp = [...shiftingLuggage];
     const itemIndex = temp.findIndex(itm => itm == value);
     if (itemIndex == -1 && isChecked) {
@@ -227,8 +246,8 @@ const AddOrderView: React.FC<{}> = ({}) => {
 
   const handleAddOrder = () => {
     const data: IAddOrderRequest = {
-      companyId: '',
-      authId: '',
+      companyId: getCompanyId(),
+      authId: otpData?.data.id as string,
       enquiryManager: '',
       shiftingType: state.shiftingType,
       partyCompanyName: '',
@@ -339,10 +358,10 @@ const AddOrderView: React.FC<{}> = ({}) => {
           <Label text="Company Name" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const {billingBy} = state;
+              const { billingBy } = state;
               const tempObj = {
                 ...billingBy,
-                billing_info: {...billingBy?.billing_info, company_name: text},
+                billing_info: { ...billingBy?.billing_info, company_name: text },
               };
               dispatch({
                 type: ADDORDER_FORM_ACTION.BILLING_BY,
@@ -360,7 +379,7 @@ const AddOrderView: React.FC<{}> = ({}) => {
           <DropdownComponent
             data={approvalAuthorityOptions}
             onSelect={(item: TDropdownItem) => {
-              const {billingBy} = state;
+              const { billingBy } = state;
               const tempObj = {
                 ...billingBy,
                 billing_info: {
@@ -380,7 +399,7 @@ const AddOrderView: React.FC<{}> = ({}) => {
           <Label text="Authority Person Name" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const {billingBy} = state;
+              const { billingBy } = state;
               const tempObj = {
                 ...billingBy,
                 billing_info: {
@@ -403,7 +422,7 @@ const AddOrderView: React.FC<{}> = ({}) => {
           <Label text="Authority Mobile Number" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const {billingBy} = state;
+              const { billingBy } = state;
               const tempObj = {
                 ...billingBy,
                 billing_info: {
@@ -426,10 +445,10 @@ const AddOrderView: React.FC<{}> = ({}) => {
           <Label text="Company GST" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const {billingBy} = state;
+              const { billingBy } = state;
               const tempObj = {
                 ...billingBy,
-                billing_info: {...billingBy?.billing_info, company_gst: text},
+                billing_info: { ...billingBy?.billing_info, company_gst: text },
               };
               dispatch({
                 type: ADDORDER_FORM_ACTION.BILLING_BY,
@@ -446,10 +465,10 @@ const AddOrderView: React.FC<{}> = ({}) => {
           <Label text="Employee Name" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const {billingBy} = state;
+              const { billingBy } = state;
               const tempObj = {
                 ...billingBy,
-                billing_info: {...billingBy?.billing_info, employee_name: text},
+                billing_info: { ...billingBy?.billing_info, employee_name: text },
               };
               dispatch({
                 type: ADDORDER_FORM_ACTION.BILLING_BY,
@@ -466,7 +485,7 @@ const AddOrderView: React.FC<{}> = ({}) => {
           <Label text="Employee Designation" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const {billingBy} = state;
+              const { billingBy } = state;
               const tempObj = {
                 ...billingBy,
                 billing_info: {
@@ -489,7 +508,7 @@ const AddOrderView: React.FC<{}> = ({}) => {
           <Label text="Employee Mobile Number" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const {billingBy} = state;
+              const { billingBy } = state;
               const tempObj = {
                 ...billingBy,
                 billing_info: {
@@ -512,7 +531,7 @@ const AddOrderView: React.FC<{}> = ({}) => {
           <Label text="Company Address" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const {billingBy} = state;
+              const { billingBy } = state;
               const tempObj = {
                 ...billingBy,
                 billing_info: {
@@ -615,8 +634,8 @@ const AddOrderView: React.FC<{}> = ({}) => {
                       fontFamily: 'JosefinSans-Regular',
                       textDecorationLine: 'none',
                     }}
-                    style={{marginRight: 15, marginBottom: 10}}
-                    textContainerStyle={{paddingLeft: 0}}
+                    style={{ marginRight: 15, marginBottom: 10 }}
+                    textContainerStyle={{ paddingLeft: 0 }}
                     onPress={(isChecked: boolean) => {
                       handleShiftingLuggage(isChecked, item.label);
                     }}
@@ -742,7 +761,7 @@ const AddOrderView: React.FC<{}> = ({}) => {
         <Button
           text="SUBMIT"
           onPress={handleAddOrder}
-          disabled={true}
+          disabled={false}
           style={styles.previewButtonStyle}
           textStyle={styles.textStyle}
         />
