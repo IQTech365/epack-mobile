@@ -9,6 +9,7 @@ import { IGetEnquiriesData } from '../../interface/enquiry/IGetEnquiriesResponse
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {getEnquiriesRequest} from '../../redux/slices/EnquirySlice';
 import {EnquiryStackRoute} from '../../utils/constants';
+import { formatDate } from '../../utils/formatter';
 import EnquiryListItem, {
   IEnquiryItem,
 } from './enquiryList/components/EnquiryListItem';
@@ -66,6 +67,7 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
         shiftingLuggage: enq.shiftingLuggage.join(','),
         phoneNumber: enq.mobile,
         enquiryId: enq._id,
+        enquiryDate: formatDate(enq.createdAt),
       } as IEnquiryItem;
     });
   }

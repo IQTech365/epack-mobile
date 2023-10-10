@@ -6,7 +6,7 @@ import Input from '../../../../../common/Input';
 import Spacer from '../../../../../common/Spacer';
 import {COLOR_BLACK} from '../../../../../utils/colors';
 import styles from './style';
-import {formatDate} from '../../../../../utils/formatter';
+import {formatDate, formatDate2} from '../../../../../utils/formatter';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import {IAddFollowupRequest} from '../../../../../interface/enquiry/IAddFollowupRequest';
 import {
@@ -25,9 +25,10 @@ interface IFollowupListHeaderComponentProps {
   taskName: string;
   assigneeRole: string;
   enquiryId: string;
+  nextFollowupOrSurveyDate?: string;
 }
 
-const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> = ({taskName, assigneeRole, enquiryId}) => {
+const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> = ({taskName, assigneeRole, enquiryId, nextFollowupOrSurveyDate}) => {
   const [comment, setComment] = useState<string>('');
   const [date, setDate] = useState<string>('');
 
@@ -46,7 +47,7 @@ const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> =
   const {id} = data || {};
 
   const handleFollowupDate = (date: Date) => {
-    setDate(formatDate(date));
+    setDate(formatDate2(date));
   };
 
   const handleCommentInputTextChange = (text: string) => {
@@ -124,7 +125,7 @@ const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> =
       <Spacer height={8} />
       <View style={styles.contentContainer}>
         <Text style={styles.contentLabelText}>
-          Next Followup - {date} <Text style={styles.nameText}>AM</Text>
+          Next {taskName.charAt(0)}{taskName.substring(1, taskName.length).toLowerCase()} - {nextFollowupOrSurveyDate}
         </Text>
       </View>
       <Spacer height={12} />
@@ -132,6 +133,7 @@ const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> =
         <DatePickerComponent
           onDateSelect={handleFollowupDate}
           style={styles.datePicker}
+          showTime={true}
         />
       </View>
       <Spacer height={12} />
@@ -148,7 +150,6 @@ const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> =
       <Button
         text="SAVE"
         onPress={handleSave}
-        disabled={!comment}
         style={styles.previewButtonStyle}
         textStyle={styles.textStyle}
       />

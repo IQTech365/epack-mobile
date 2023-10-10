@@ -800,6 +800,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
                 <DropdownComponent
                   data={floorOptions}
                   onSelect={handlePickupCurrentFloor}
+                  defaultValue={floorOptions[3]}
                 />
               </View>
               <View style={styles.textContainer}>
@@ -860,6 +861,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
                 <DropdownComponent
                   data={floorOptions}
                   onSelect={handleDeliveryCurrentFloor}
+                  defaultValue={floorOptions[3]}
                 />
               </View>
               <View style={styles.textContainer}>

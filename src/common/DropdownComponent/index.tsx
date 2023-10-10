@@ -11,7 +11,6 @@ interface IDropdownProps {
   showSearchInput?: boolean;
   disable?: boolean;
   error?: string;
-  refresh?: boolean;
 }
 
 const DropdownComponent: React.FC<IDropdownProps> = forwardRef(

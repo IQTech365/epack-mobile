@@ -3,6 +3,7 @@ import {View, Text, FlatList} from 'react-native';
 import Spinner from '../../../../../common/Spinner';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import {getFollowupsRequest, getSurveyListRequest} from '../../../../../redux/slices/EnquirySlice';
+import { formatDate, formatDate3 } from '../../../../../utils/formatter';
 import FollowupListHeaderComponent from '../FollowupListHeaderComponent';
 import FollowupListItem from '../FollowupListItem';
 import styles from './style';
@@ -31,16 +32,40 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
     }
   }, [taskName]);
 
+  const getDataSet = () => {
+    let listData = [];
+    if(taskName == 'FOLLOW UP' && data && Array.isArray(data) && data.length > 0) {
+      listData = data;
+    } else if(taskName == 'SURVEY' && surveyData && Array.isArray(surveyData) && surveyData.length > 0) {
+      listData = surveyData;
+    }
+    return [...listData].reverse();
+  }
+
   const listData = taskName == 'FOLLOW UP' ? data : surveyData;
+
+  const getNextFollowupOrSurveyDate = () => {
+    let date = 'NA';
+    if(getDataSet().length > 0) {
+      const firstItem = getDataSet()[0];
+      if(taskName == 'FOLLOW UP') {
+        date = formatDate3(firstItem.followUpDate)
+      } else if(taskName == 'FOLLOW UP') {
+        date = formatDate3(firstItem.surveyDate)
+      }
+    }
+    return date;
+  }
 
   return (
     <View style={styles.container}>
       {getFollowupsRequesting ? (
         <Spinner show={getFollowupsRequesting || getSurveyListRequesting} />
       ) : (
-        <FlatList
+        <View style={styles.listWrapper}>
+          <FlatList
           //@ts-ignore
-          data={listData}
+          data={getDataSet()}
           renderItem={({item, index}) => (
             <FollowupListItem
               comment={item?.comment}
@@ -58,9 +83,11 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
               taskName={taskName}
               assigneeRole={assigneeRole}
               enquiryId={enquiryId}
+              nextFollowupOrSurveyDate={getNextFollowupOrSurveyDate()}
             />
           }
         />
+        </View>
       )}
     </View>
   );
