@@ -33,7 +33,7 @@ export interface ICreateBiltyRequest {
   };
 
   loadingAddress: {
-    address: string;
+    // address: string;
     state: string;
     landmark: string;
     city: string;
@@ -42,16 +42,16 @@ export interface ICreateBiltyRequest {
     postalCode: string;
     country: string;
   };
-  unloadingAddress: {
-    address: string;
-    state: string;
-    landmark: string;
-    city: string;
-    district: string;
-    postOffice: string;
-    postalCode: string;
-    country: string;
-  };
+  // unloadingAddress: {
+  //   address: string;
+  //   state: string;
+  //   landmark: string;
+  //   city: string;
+  //   district: string;
+  //   postOffice: string;
+  //   postalCode: string;
+  //   country: string;
+  // };
 
   vehicle: {
     invoiceNumber: string;
@@ -62,8 +62,8 @@ export interface ICreateBiltyRequest {
     sealNumber: string;
     inDate: string;
     outDate: string;
-    transitDays: string;
-    expectedDateOfDelivery: string;
+    // transitDays: string;
+    // expectedDateOfDelivery: string;
   };
   driver: {
     name: string;
@@ -75,24 +75,24 @@ export interface ICreateBiltyRequest {
     generationDate: string;
     expiryDate: string;
   };
-  materialsType: string;
-  addMaterialsStatus: string;
+  // materialsType: string;
+  // addMaterialsStatus: string;
   materials: [
     {
       name: string;
       noOfArticles: string;
       packingType: string;
-      HSNCode: string;
+      // HSNCode: string;
       billNumber: string;
-      actualWeight: string;
-      applicableWeight: string;
+      // actualWeight: string;
+      // applicableWeight: string;
       unit: string;
       valueOfGoods: string;
     },
   ];
   riskType: string;
-  liabilityOfTax: string;
-  insuranceStatus: string;
+  // liabilityOfTax: string;
+  // insuranceStatus: string;
   insurance: {
     companyName: string;
     policyNumber: string;
@@ -102,7 +102,7 @@ export interface ICreateBiltyRequest {
   demurrage: {
     charge: string;
     rate: string;
-    chargeAfterApplicable: string;
+    // chargeAfterApplicable: string;
   };
 
   freightDetails: {
@@ -121,14 +121,14 @@ export interface ICreateBiltyRequest {
     status: string;
     charge: string;
   };
-  packingCharges: {
-    status: string;
-    charge: string;
-  };
-  unPackingCharges: {
-    status: string;
-    charge: string;
-  };
+  // packingCharges: {
+  //   status: string;
+  //   charge: string;
+  // };
+  // unPackingCharges: {
+  //   status: string;
+  //   charge: string;
+  // };
   unLoadingCharges: {
     status: string;
     charge: string;

@@ -247,7 +247,7 @@ export const biltyReducer = (
     case BILTY_FORM_ACTION.CHOOSE_DESIGN:
       return {...state, chooseDesign: payload};
     case BILTY_FORM_ACTION.DATE_OF_BILTY:
-      return {...state, dateOfBilty: payload};
+      return {...state, dateofBiltyLrCnNo: payload};
     case BILTY_FORM_ACTION.CONSIGNER_NAME:
       return {...state, consignerName: payload};
     case BILTY_FORM_ACTION.CONSIGNER_GST:
