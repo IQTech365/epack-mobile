@@ -316,7 +316,7 @@ const AddOrderView: React.FC<{}> = ({ }) => {
         pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_QUOTATION_DELIVERY_ADDRESS
       ) {
         setDeliveryStates(getStates(result));
-        setDeliveryCities(getStates(result));
+        setDeliveryCities(getCities(result));
       }
     }
   }, [result]);
