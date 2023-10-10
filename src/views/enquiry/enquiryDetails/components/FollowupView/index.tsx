@@ -52,7 +52,7 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
       
       if(taskName == 'FOLLOW UP') {
         date = formatDate3(firstItem.followUpDate)
-      } else if(taskName == 'FOLLOW UP') {
+      } else if(taskName == 'SURVEY') {
         date = formatDate3(firstItem.surveyDate)
       }
     }

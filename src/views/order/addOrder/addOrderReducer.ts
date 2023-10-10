@@ -83,7 +83,7 @@ interface IAddOrderFormAction {
 }
 
 const defaultBillingBy: TBillingBy = {
-  billing_by: 'Billing By Individual',
+  billing_by: 'by Individual',
   billing_info: null,
 };
 

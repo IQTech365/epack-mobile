@@ -322,7 +322,7 @@ const AddOrderView: React.FC<{}> = ({ }) => {
   }, [result]);
 
   const showBillingByIndividualView = () => {
-    if (state.billingBy?.billing_by == 'Billing by Company') return null;
+    if (state.billingBy?.billing_by == 'by Company') return null;
     return (
       <>
         <Spacer height={4} />
@@ -350,7 +350,7 @@ const AddOrderView: React.FC<{}> = ({ }) => {
   };
 
   const showBillingByCompanyView = () => {
-    if (state.billingBy?.billing_by == 'Billing By Individual') return null;
+    if (state.billingBy?.billing_by == 'by Individual') return null;
     return (
       <>
         <Spacer height={4} />
