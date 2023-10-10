@@ -42,12 +42,14 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
     return [...listData].reverse();
   }
 
-  const listData = taskName == 'FOLLOW UP' ? data : surveyData;
+  console.log('getDataSet---', JSON.stringify(getDataSet()));
 
   const getNextFollowupOrSurveyDate = () => {
     let date = 'NA';
     if(getDataSet().length > 0) {
       const firstItem = getDataSet()[0];
+      console.log('firstItem---', JSON.stringify(firstItem));
+      
       if(taskName == 'FOLLOW UP') {
         date = formatDate3(firstItem.followUpDate)
       } else if(taskName == 'FOLLOW UP') {

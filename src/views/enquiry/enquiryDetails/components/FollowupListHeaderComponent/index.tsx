@@ -30,7 +30,7 @@ interface IFollowupListHeaderComponentProps {
 
 const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> = ({taskName, assigneeRole, enquiryId, nextFollowupOrSurveyDate}) => {
   const [comment, setComment] = useState<string>('');
-  const [date, setDate] = useState<string>('');
+  const [date, setDate] = useState<Date>(new Date());
 
   const dispatch = useAppDispatch();
   const {
@@ -47,7 +47,7 @@ const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> =
   const {id} = data || {};
 
   const handleFollowupDate = (date: Date) => {
-    setDate(formatDate2(date));
+    setDate(date);
   };
 
   const handleCommentInputTextChange = (text: string) => {
@@ -95,7 +95,7 @@ const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> =
         // authId: '650efb2d7e3968c4c217a34f',
         enquiryId: enquiryId,
         comment: comment,
-        followUpDate: date,
+        followUpDate: date.toString(),
       };
       dispatch(addFollowupRequest(data));
     } else if (taskName == 'SURVEY') {
@@ -104,7 +104,7 @@ const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> =
         // addedBy: '650efb2d7e3968c4c217a34f',
         enquiryId: enquiryId,
         comment: comment,
-        surveyDate: date,
+        surveyDate: date.toString(),
       };
       dispatch(addSurveyRequest(data));
     }
