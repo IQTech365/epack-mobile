@@ -12,13 +12,13 @@ import SurveyView from './components/FollowupView';
 import DetailsView from './components/DetailsView';
 import PackingMaterialsView from './components/PackingMaterialsView';
 import { EnquiryStackParamList } from '../../../navigation/params/EnquiryStackParamList';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { IGetEnquiriesData } from '../../../interface/enquiry/IGetEnquiriesResponse';
 
 type Props = NativeStackScreenProps<EnquiryStackParamList, 'EnquiryDetails'>;
 
 
-const EnquiryDetailsView: React.FC<Props> = ({route, navigation}) => {
+const EnquiryDetailsView: React.FC<Props> = ({ route, navigation }) => {
   const enquiryId: string | undefined = route.params?.enquiryId;
   const item: IGetEnquiriesData | undefined = route.params?.item;
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
@@ -30,13 +30,13 @@ const EnquiryDetailsView: React.FC<Props> = ({route, navigation}) => {
   const showTabItem = () => {
     switch (activeTabIndex) {
       case 0:
-        return <DetailsView item={item}/>
+        return <DetailsView item={item} />
       case 1:
         return <FollowupView taskName='FOLLOW UP' assigneeRole='Enequiry' enquiryId={enquiryId as string} />
       case 2:
         return <SurveyView taskName='SURVEY' assigneeRole='Survey' enquiryId={enquiryId as string} />
       case 3:
-        return <AddQuotationView showHeader={false} />
+        return <AddQuotationView showHeader={false} item={item} />
       case 4:
         return <PackingMaterialsView />
       default:
@@ -47,7 +47,7 @@ const EnquiryDetailsView: React.FC<Props> = ({route, navigation}) => {
   return (
     <View style={styles.container}>
       <Header label="ENQUIRY DETAILS" canGoBack={true} />
-      <EnquiryInfoView item={item}/>
+      <EnquiryInfoView item={item} />
       <Spacer height={10} />
       <View style={styles.tabsContainer}>
         <FlatList
