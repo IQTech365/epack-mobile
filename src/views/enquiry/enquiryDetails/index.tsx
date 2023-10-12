@@ -14,6 +14,8 @@ import PackingMaterialsView from './components/PackingMaterialsView';
 import { EnquiryStackParamList } from '../../../navigation/params/EnquiryStackParamList';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import { IGetEnquiriesData } from '../../../interface/enquiry/IGetEnquiriesResponse';
+import { useAppSelector } from '../../../redux/hooks';
+import Spinner from '../../../common/Spinner';
 
 type Props = NativeStackScreenProps<EnquiryStackParamList, 'EnquiryDetails'>;
 
@@ -22,6 +24,7 @@ const EnquiryDetailsView: React.FC<Props> = ({route, navigation}) => {
   const enquiryId: string | undefined = route.params?.enquiryId;
   const item: IGetEnquiriesData | undefined = route.params?.item;
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
+  const {updateEnquiryStatusRequesting} = useAppSelector(state => state.Enquiry);
 
   const handleTabChange = (index: number) => {
     setActiveTabIndex(index);
@@ -48,7 +51,7 @@ const EnquiryDetailsView: React.FC<Props> = ({route, navigation}) => {
   return (
     <View style={styles.container}>
       <Header label="ENQUIRY DETAILS" canGoBack={true} />
-      <EnquiryInfoView item={item}/>
+      <EnquiryInfoView item={item} enquiryId={enquiryId}/>
       <Spacer height={10} />
       <View style={styles.tabsContainer}>
         <FlatList
@@ -68,6 +71,7 @@ const EnquiryDetailsView: React.FC<Props> = ({route, navigation}) => {
       </View>
       <Spacer height={10} />
       {showTabItem()}
+      <Spinner show={updateEnquiryStatusRequesting} />
     </View>
   );
 };

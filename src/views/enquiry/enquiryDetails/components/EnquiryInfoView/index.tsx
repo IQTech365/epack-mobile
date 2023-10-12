@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {View, Text, ImageBackground, TouchableOpacity} from 'react-native';
 import styles from './style';
 import HeaderGridBackgroundImage from '../../../../../images/header-grid.png';
@@ -15,15 +15,22 @@ import {
 } from 'react-native-popup-menu';
 import {COLOR_GRAY, COLOR_GRAY2, COLOR_WHITE} from '../../../../../utils/colors';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
-
+import { IUpdateEnquiryStatus } from '../../../../../interface/enquiry/IUpdateEnquiryStatusRequest';
+import { resetUpdateEnquiryStatusRequest, updateEnquiryStatusRequest } from '../../../../../redux/slices/EnquirySlice';
+import Toast from 'react-native-toast-message';
 interface IEnquiryInfoViewProps {
   item: IGetEnquiriesData | undefined;
+  enquiryId: string | undefined;
 }
 
-const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item}) => {
+const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId}) => {
   const dispatch = useAppDispatch();
-  const {} = useAppSelector(state => state.Enquiry);
-  
+  const {
+    updateEnquiryStatusRequesting,
+    updateEnquiryStatusSuccess,
+    updateEnquiryStatusFailure,
+  } = useAppSelector(state => state.Enquiry);
+
   const [enquiryStatus, setEnquiryStatus] = useState<string>(item?.status as string);
   const getEnquiryDate = () => {
     if (item && item.createdAt) {
@@ -34,7 +41,31 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item}) => {
 
   const handleEnquiryStatusChange = (value: string) => {
     setEnquiryStatus(value);
+    const payload: IUpdateEnquiryStatus = {
+      enquiryId: enquiryId as string,
+      status: value,
+    }
+    dispatch(updateEnquiryStatusRequest(payload));
   }
+
+  useEffect(() => {
+    if(!updateEnquiryStatusRequesting && updateEnquiryStatusSuccess) {
+      Toast.show({
+        type: 'success',
+        text1: 'Enquiry Status',
+        text2: `Enquiry status has been updated to ${enquiryStatus}`,
+      });
+      dispatch(resetUpdateEnquiryStatusRequest());
+    } else if(!updateEnquiryStatusRequesting && updateEnquiryStatusFailure) {
+      Toast.show({
+        type: 'error',
+        text1: 'Enquiry Status',
+        text2: 'Error in updating enquriy status. Please try again!',
+      });
+      setEnquiryStatus(item?.status as string);
+      dispatch(resetUpdateEnquiryStatusRequest());
+    }
+  }, [updateEnquiryStatusRequesting, updateEnquiryStatusSuccess, updateEnquiryStatusFailure]);
   return (
     <View style={styles.backgroundContainer}>
       <ImageBackground

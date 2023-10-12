@@ -3,7 +3,7 @@ import {PayloadAction} from '@reduxjs/toolkit';
 import * as EnquiryService from '../service/EnquiryService';
 import { IAddEnquiryRequest } from '../interface/enquiry/IAddEnquiryRequest';
 import { IAddEnquiryResponse } from '../interface/enquiry/IAddEnquiryResponse';
-import { addEnquiryFailure, addEnquiryRequest, addEnquirySuccess, addFollowupFailure, addFollowupRequest, addFollowupSuccess, addSurveyFailure, addSurveyRequest, addSurveySuccess, getEnquiriesFailure, getEnquiriesRequest, getEnquiriesSuccess, getFollowupsFailure, getFollowupsRequest, getFollowupsSuccess, getSurveyListFailure, getSurveyListRequest, getSurveyListSuccess } from '../redux/slices/EnquirySlice';
+import { addEnquiryFailure, addEnquiryRequest, addEnquirySuccess, addFollowupFailure, addFollowupRequest, addFollowupSuccess, addSurveyFailure, addSurveyRequest, addSurveySuccess, getEnquiriesFailure, getEnquiriesRequest, getEnquiriesSuccess, getFollowupsFailure, getFollowupsRequest, getFollowupsSuccess, getSurveyListFailure, getSurveyListRequest, getSurveyListSuccess, updateEnquiryStatusFailure, updateEnquiryStatusRequest, updateEnquiryStatusSuccess } from '../redux/slices/EnquirySlice';
 import { IGetEnquiriesResponse } from '../interface/enquiry/IGetEnquiriesResponse';
 import { IAddFollowupRequest } from '../interface/enquiry/IAddFollowupRequest';
 import { IAddFollowupResponse } from '../interface/enquiry/IAddFollowupResponse';
@@ -11,6 +11,8 @@ import { IGetFollowupsResponse } from '../interface/enquiry/IGetFollowupsRespons
 import { IAddSurveyRequest } from '../interface/enquiry/IAddSurveyRequest';
 import { IAddSurveyResponse } from '../interface/enquiry/IAddSurveyResponse';
 import { IGetSurveyListResponse } from '../interface/enquiry/IGetSurveyListResponse';
+import { IUpdateEnquiryStatus } from '../interface/enquiry/IUpdateEnquiryStatusRequest';
+import { IUpdateEnquiryStatusResponse } from '../interface/enquiry/IUpdateEnquiryStatusResponse';
 
 export function* addEnquirySaga(action: PayloadAction<IAddEnquiryRequest>) {
     try {
@@ -78,6 +80,17 @@ export function* getSurveyListSaga(action: PayloadAction<string>) {
     }
 }
 
+export function* updateEnquiryStatusSaga(action: PayloadAction<IUpdateEnquiryStatus>) {
+    try {
+        const response: IUpdateEnquiryStatusResponse = yield call(EnquiryService.UpdateEnquiryStatusService, action.payload);
+        console.log('updateEnquiryStatusSaga-response----', JSON.stringify(response));
+        yield put(updateEnquiryStatusSuccess(response));
+    } catch (error) {
+        console.log('updateEnquiryStatusSaga-error----', JSON.stringify(error));
+        yield put(updateEnquiryStatusFailure(error));
+    }
+}
+
 export function* watcherEnquirySaga() {
     yield takeLatest(addEnquiryRequest.type, addEnquirySaga);
     yield takeLatest(getEnquiriesRequest.type, getEnquiriesSaga);
@@ -85,4 +98,6 @@ export function* watcherEnquirySaga() {
     yield takeLatest(getFollowupsRequest.type, getFollowupsSaga);
     yield takeLatest(addSurveyRequest.type, addSurveySaga);
     yield takeLatest(getSurveyListRequest.type, getSurveyListSaga);
+    yield takeLatest(updateEnquiryStatusRequest.type, updateEnquiryStatusSaga);
+
 }
