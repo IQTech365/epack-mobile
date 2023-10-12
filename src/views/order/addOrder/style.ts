@@ -2,6 +2,7 @@ import {StyleSheet, Dimensions} from 'react-native';
 import {
   COLOR_BLACK,
   COLOR_BLUE,
+  COLOR_GRAY,
   COLOR_GRAY2,
   COLOR_WHITE,
 } from '../../../utils/colors';
@@ -44,8 +45,9 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: '100%',
-    borderColor: COLOR_GRAY2,
+    borderColor: COLOR_GRAY,
     paddingLeft: 4,
+    borderWidth: 0.5,
   },
   input: {
     color: COLOR_BLACK,

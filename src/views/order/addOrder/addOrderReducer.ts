@@ -90,7 +90,7 @@ const defaultBillingBy: TBillingBy = {
 /** INITIAL STATE */
 
 export const initialState: IAddOrderFormState = {
-  shiftingType: '',
+  shiftingType: 'Local',
   dateOfMoving: '',
   billingBy: defaultBillingBy,
   partyName: '',
@@ -106,14 +106,14 @@ export const initialState: IAddOrderFormState = {
   pickupLocality: '',
   pickupAddress: '',
   pickupCurrentFloor: '',
-  pickupLiftStatus: '',
+  pickupLiftStatus: 'Yes',
   deliveryPincode: '',
   deliveryCity: '',
   deliveryState: '',
   deliveryLocality: '',
   deliveryAddress: '',
   deliveryCurrentFloor: '',
-  deliveryLiftStatus: '',
+  deliveryLiftStatus: 'Yes',
 };
 
 /** AddOrder Reducer */

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {View, Text, ImageBackground, TouchableOpacity} from 'react-native';
+import {View, Text, ImageBackground, TouchableOpacity, Linking} from 'react-native';
 import styles from './style';
 import HeaderGridBackgroundImage from '../../../../../images/header-grid.png';
 import PhoneIcon from '../../../../../images/icons/phone.svg';
@@ -13,7 +13,7 @@ import {
   MenuOption,
   MenuTrigger,
 } from 'react-native-popup-menu';
-import {COLOR_GRAY, COLOR_GRAY2, COLOR_WHITE} from '../../../../../utils/colors';
+import {COLOR_GRAY2, COLOR_WHITE} from '../../../../../utils/colors';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import { IUpdateEnquiryStatus } from '../../../../../interface/enquiry/IUpdateEnquiryStatusRequest';
 import { resetUpdateEnquiryStatusRequest, updateEnquiryStatusRequest } from '../../../../../redux/slices/EnquirySlice';
@@ -46,6 +46,14 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId}) => 
       status: value,
     }
     dispatch(updateEnquiryStatusRequest(payload));
+  }
+
+  const handlePhoneCall = () => {
+    Linking.openURL(`tel:${item?.mobile}`);
+  }
+
+  const handleWhatsappCall = () => {
+    Linking.openURL(`whatsapp://send?phone=+91${item?.mobile}`);
   }
 
   useEffect(() => {
@@ -183,11 +191,11 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId}) => 
             </View>
           </View>
           <View style={styles.iconItemContainer}>
-            <TouchableOpacity activeOpacity={0.6}>
+            <TouchableOpacity activeOpacity={0.6} onPress={handleWhatsappCall}>
               <WhatsappIcon width={24} height={24} />
             </TouchableOpacity>
             <Spacer height={20} />
-            <TouchableOpacity activeOpacity={0.6}>
+            <TouchableOpacity activeOpacity={0.6} onPress={handlePhoneCall}>
               <PhoneIcon width={24} height={24} />
             </TouchableOpacity>
           </View>

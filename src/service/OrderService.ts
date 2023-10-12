@@ -1,6 +1,6 @@
 import {AxiosResponse} from 'axios';
 import {Api} from '../http/Api';
-import {ADD_ENQUIRY, CREATE_BILTY, CREATE_CAR_CONDITION, CREATE_MONEY_RECEIPT, EDIT_COMPANY} from '../http/Endpoint';
+import {ADD_ENQUIRY, CREATE_BILTY, CREATE_CAR_CONDITION, CREATE_MONEY_RECEIPT, EDIT_COMPANY, GET_ORDER_LIST} from '../http/Endpoint';
 import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
 import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
 import { IOrderDetailsResponse } from '../interface/order/IOrderDetailsResponse';
@@ -14,6 +14,7 @@ import { ICreateMoneyReceiptRequest } from '../interface/order/ICreateMoneyRecei
 import { ICreateMoneyReceiptResponse } from '../interface/order/ICreateMoneyReceiptResponse';
 import { ICreateInvoiceRequest } from '../interface/order/ICreateInvoiceRequest';
 import { ICreateInvoiceResponse } from '../interface/order/ICreateInvoiceResponse';
+import { IGetOrdersResponse } from '../interface/order/IGetOrdersResponse';
 
 export const GetOrderDetailsService = async (payload: string): Promise<IOrderDetailsResponse> => {
     console.log('GetOrderDetailsService--payload--', JSON.stringify(payload));
@@ -55,6 +56,12 @@ export const CreateInvoiceService = async (payload: ICreateInvoiceRequest): Prom
 export const EditEnquiryService = async (payload: IOtpVerifyRequest): Promise<IOtpVerifyResponse> => {
     const api = Api.getInstance();
     return await api.update<IOtpVerifyRequest, AxiosResponse<IOtpVerifyResponse>>(payload, EDIT_COMPANY);
+}
+
+export const GetOrdersService = async (payload: string): Promise<IGetOrdersResponse> => {
+    console.log('GetOrdersService--payload--', JSON.stringify(payload));
+    const api = Api.getInstance();
+    return await api.get<IGetOrdersResponse>(GET_ORDER_LIST(payload));
 }
 
 // TODO: refactor code once in use

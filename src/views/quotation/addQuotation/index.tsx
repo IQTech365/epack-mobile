@@ -330,7 +330,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
   const handleQuotationDate = (date: Date) => {
     dispatch({
       type: QUOTATION_FORM_ACTION.DATE_OF_QUOTATION,
-      payload: formatDate(date),
+      payload: formatDate4(date),
     });
   };
 

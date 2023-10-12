@@ -14,6 +14,9 @@ import {
   createMoneyReceiptFailure,
   createMoneyReceiptRequest,
   createMoneyReceiptSuccess,
+  getOrdersFailure,
+  getOrdersRequest,
+  getOrdersSuccess,
 } from '../redux/slices/OrderSlice';
 import {IAddOrderRequest} from '../interface/order/IAddOrderRequest';
 import {IAddOrderResponse} from '../interface/order/IAddOrderResponse';
@@ -22,6 +25,7 @@ import {ICreateMoneyReceiptResponse} from '../interface/order/ICreateMoneyReceip
 import { ICreateCarConditionRequest } from '../interface/order/ICreateCarConditionRequest';
 import { ICreateBiltyRequest } from '../interface/order/ICreateBiltyRequest';
 import { ICreateBiltyResponse } from '../interface/order/ICreateBiltyResponse';
+import { IGetOrdersResponse } from '../interface/order/IGetOrdersResponse';
 
 export function* addOrderSaga(action: PayloadAction<IAddOrderRequest>) {
   console.log('addOrderSaga--action--', JSON.stringify(action));
@@ -35,6 +39,17 @@ export function* addOrderSaga(action: PayloadAction<IAddOrderRequest>) {
   } catch (error) {
     console.log('addOrderSaga-error----', error);
     yield put(addOrderFailure(error));
+  }
+}
+
+export function* getOrderListSaga(action: PayloadAction<string>) {
+  try {
+      const response: IGetOrdersResponse = yield call(OrderService.GetOrdersService, action.payload);
+      console.log('getOrderListSaga-response----', JSON.stringify(response));
+      yield put(getOrdersSuccess(response));
+  } catch (error) {
+      console.log('getOrderListSaga-error----', JSON.stringify(error));
+      yield put(getOrdersFailure(error));
   }
 }
 
@@ -98,6 +113,7 @@ export function* createCarConditionSaga(
 
 export function* watcherOrderSaga() {
   yield takeLatest(addOrderRequest.type, addOrderSaga);
+  yield takeLatest(getOrdersRequest.type, getOrderListSaga);
   yield takeLatest(createMoneyReceiptRequest.type, createMoneyReceiptSaga);
   yield takeLatest(createCarConditionRequest.type, createCarConditionSaga);
   yield takeLatest(createBiltyRequest.type, createBiltySaga);
