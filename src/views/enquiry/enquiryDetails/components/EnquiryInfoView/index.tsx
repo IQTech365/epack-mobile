@@ -1,24 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {View, Text, ImageBackground, TouchableOpacity} from 'react-native';
 import styles from './style';
 import HeaderGridBackgroundImage from '../../../../../images/header-grid.png';
 import PhoneIcon from '../../../../../images/icons/phone.svg';
 import WhatsappIcon from '../../../../../images/icons/whatsapp.svg';
 import Spacer from '../../../../../common/Spacer';
-import { IGetEnquiriesData } from '../../../../../interface/enquiry/IGetEnquiriesResponse';
-import { formatDate } from '../../../../../utils/formatter';
+import {IGetEnquiriesData} from '../../../../../interface/enquiry/IGetEnquiriesResponse';
+import {formatDate} from '../../../../../utils/formatter';
+import {
+  Menu,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+} from 'react-native-popup-menu';
+import {COLOR_GRAY, COLOR_GRAY2, COLOR_WHITE} from '../../../../../utils/colors';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 
 interface IEnquiryInfoViewProps {
   item: IGetEnquiriesData | undefined;
 }
 
 const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item}) => {
-
+  const dispatch = useAppDispatch();
+  const {} = useAppSelector(state => state.Enquiry);
+  
+  const [enquiryStatus, setEnquiryStatus] = useState<string>(item?.status as string);
   const getEnquiryDate = () => {
-    if(item && item.createdAt) {
+    if (item && item.createdAt) {
       return formatDate(new Date(item.createdAt));
     }
-    return 'NA'
+    return 'NA';
+  };
+
+  const handleEnquiryStatusChange = (value: string) => {
+    setEnquiryStatus(value);
   }
   return (
     <View style={styles.backgroundContainer}>
@@ -29,10 +44,14 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item}) => {
           <View style={styles.leftContainer}>
             <View style={styles.infoContainer}>
               <View style={[styles.itemContainer]}>
-                <Text style={styles.nameText}>{item?.partyName || item?.billingDetails?.authorityPersonName}</Text>
+                <Text style={styles.nameText}>
+                  {item?.partyName || item?.billingDetails?.authorityPersonName}
+                </Text>
               </View>
               <View style={[styles.itemContainer]}>
-                <Text style={styles.normalText}>{item?.mobile || item?.billingDetails?.authorityPersonMobile}</Text>
+                <Text style={styles.normalText}>
+                  {item?.mobile || item?.billingDetails?.authorityPersonMobile}
+                </Text>
               </View>
             </View>
             <View style={styles.infoContainer}>
@@ -44,7 +63,9 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item}) => {
                   <Text style={styles.hyphenText}>-</Text>
                 </View>
                 <View style={styles.valueContainer}>
-                  <Text style={styles.valueText}>{item?.pickupAddress.state}</Text>
+                  <Text style={styles.valueText}>
+                    {item?.pickupAddress.state}
+                  </Text>
                 </View>
               </View>
               <View style={styles.itemContainer}>
@@ -68,7 +89,9 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item}) => {
                   <Text style={styles.hyphenText}>-</Text>
                 </View>
                 <View style={styles.valueContainer}>
-                  <Text style={styles.valueText}>{item?.dropAddress.state}</Text>
+                  <Text style={styles.valueText}>
+                    {item?.dropAddress.state}
+                  </Text>
                 </View>
               </View>
               <View style={styles.itemContainer}>
@@ -79,7 +102,51 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item}) => {
                   <Text style={styles.hyphenText}>-</Text>
                 </View>
                 <View style={styles.valueContainer}>
-                  <Text style={styles.valueText}>{item?.status}</Text>
+                  <Menu>
+                    <MenuTrigger customStyles={{
+                      triggerText: {color: COLOR_WHITE}
+                    }} text={enquiryStatus} />
+                    <MenuOptions
+                      customStyles={{
+                        optionsContainer: {borderRadius: 5},
+                        optionsWrapper: {
+                          borderColor: COLOR_GRAY2,
+                          borderWidth: 0.5,
+                          borderRadius: 5,
+                        },
+                        optionWrapper: {
+                          marginHorizontal: 5,
+                          borderBottomWidth: 0.5,
+                          justifyContent: 'center',
+                        },
+                        optionText: {
+                          paddingVertical: 8,
+                        }
+                      }}>
+                      <MenuOption onSelect={() => {
+                        handleEnquiryStatusChange('Approved');
+                      }} text="Approved" />
+                      <MenuOption onSelect={() => {
+                        handleEnquiryStatusChange('Pending');
+                      }} text="Pending" />
+                      <MenuOption onSelect={() => {
+                        handleEnquiryStatusChange('Under Process');
+                      }} text="Under Process" />
+                      <MenuOption
+                        customStyles={{
+                          optionWrapper: {borderBottomWidth: 0, marginHorizontal: 5,},
+                          optionText: {
+                            paddingVertical: 8,
+                          }
+                        }}
+                        onSelect={() => {
+                          handleEnquiryStatusChange('Canceled');
+                        }}
+                        text="Canceled"
+                        />
+                    </MenuOptions>
+                  </Menu>
+                  {/* <Text style={styles.valueText}>{item?.status}</Text> */}
                 </View>
               </View>
             </View>

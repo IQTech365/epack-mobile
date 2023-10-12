@@ -114,13 +114,24 @@ const styles = StyleSheet.create({
     },
     otherChargeItemWrapper: {
         width: width * 0.9,
+        flexDirection: 'row',
         alignSelf: 'center',
-        alignItems: 'flex-start',
         padding: 10,
         borderWidth: 1,
         borderColor: COLOR_GRAY2,
         borderRadius: 5,
         marginBottom: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    otherChargeItemContainer: {
+        width: '90%',
+    },
+    otherChargeDeleteIconContainer: {
+        width: '10%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        // backgroundColor: 'green'
     },
     otherChargeLabelText: {
         color: COLOR_BLACK,

@@ -1,5 +1,5 @@
 import React, {useReducer, useState, useCallback, useEffect} from 'react';
-import {Text, View} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 import {Switch} from 'react-native-switch';
 import AvoidSoftInputViewHOC from '../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../common/CollapsibleView';
@@ -57,7 +57,10 @@ import usePincodeHook, {
 } from '../../../hooks/usePincodeHook';
 import Spinner from '../../../common/Spinner';
 import {useAppDispatch, useAppSelector} from '../../../redux/hooks';
-import {IAddQuotationRequest, ITransitInsurance} from '../../../interface/quotation/IAddQuotationRequest';
+import {
+  IAddQuotationRequest,
+  ITransitInsurance,
+} from '../../../interface/quotation/IAddQuotationRequest';
 import {
   addQuotationRequest,
   resetaddQuotationRequest,
@@ -66,8 +69,15 @@ import Toast from 'react-native-toast-message';
 import {useRef} from 'react';
 import {NavigationProp} from '@react-navigation/native';
 import EpackDropdown from '../../../common/DropdownComponent2';
+import DeleteIcon from '../../../images/icons/delete.svg';
 
-const chargeOptions = ["Included", "Additional", "Not Required", "Loading by Party", "Unloading by Party"];
+const chargeOptions = [
+  'Included',
+  'Additional',
+  'Not Required',
+  'Loading by Party',
+  'Unloading by Party',
+];
 
 const GSTOptions: Array<ICheckboxButton> = [
   {
@@ -220,10 +230,13 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
     useState<boolean>(false);
   const [discountType, setDiscountType] = useState<string>('');
   const [packingCharges, setPackingCharges] = useState<string>('Additional');
-  const [packingMaterialCharges, setPackingMaterialCharges] = useState<string>('Additional');
-  const [unpackingCharges, setUnpackingCharges] = useState<string>('Additional');
+  const [packingMaterialCharges, setPackingMaterialCharges] =
+    useState<string>('Additional');
+  const [unpackingCharges, setUnpackingCharges] =
+    useState<string>('Additional');
   const [loadingCharges, setLoadingCharges] = useState<string>('Additional');
-  const [unloadingCharges, setUnloadingCharges] = useState<string>('Additional');
+  const [unloadingCharges, setUnloadingCharges] =
+    useState<string>('Additional');
   const [gstInQuotation, setGstInQuotation] = useState<string>('');
   const [pincodeRequestKey, setPincodeRequestKey] =
     useState<PINCODE_REQUEST_KEY>(
@@ -246,6 +259,8 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
   const dropStateDropdownRef = useRef(null);
   const dropCityDropdownRef = useRef(null);
   const surchargePercentDropdownRef = useRef(null);
+
+  const calcPartloadAmount = Number.parseInt(partLoadRatePerItem) * Number.parseInt(partLoadAmount);
 
   const dispatch2 = useAppDispatch();
 
@@ -645,7 +660,9 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
       if (item.value == '1') {
         setIsSurchargeApplicable(false);
         //@ts-ignore
-        surchargePercentDropdownRef?.current?.setDefaultValue(surchargePercentOptions[0]);
+        surchargePercentDropdownRef?.current?.setDefaultValue(
+          surchargePercentOptions[0],
+        );
       } else {
         setIsSurchargeApplicable(true);
       }
@@ -789,6 +806,16 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
     setFullLoadAmount('');
   };
 
+  const handleDeleteOtherChargeItemClick = (index: number) => {
+    const {otherCharges} = state;
+    const tempArr: TOtherCharges[] = otherCharges || [];
+    tempArr.splice(index, 1);
+    dispatch({
+      type: QUOTATION_FORM_ACTION.OTHER_CHARGES,
+      payload: tempArr as [TOtherCharges],
+    });
+  };
+
   const renderOtherItemList = () => {
     const {otherCharges} = state;
     if (otherCharges && otherCharges?.length > 0) {
@@ -796,52 +823,62 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
         return (
           <>
             <View key={index} style={styles.otherChargeItemWrapper}>
-              <Text style={styles.otherChargeLabelText}>
-                Job Type:{' '}
-                <Text
-                  style={
-                    styles.otherChargeValueText
-                  }>{`${otherItem.jobType}`}</Text>
-              </Text>
-              <Text style={styles.otherChargeLabelText}>
-                Quantity:{' '}
-                <Text
-                  style={
-                    styles.otherChargeValueText
-                  }>{`${otherItem.qty}`}</Text>
-              </Text>
-              <Text style={styles.otherChargeLabelText}>
-                Part Load Rate/Item:
-                <Text
-                  style={
-                    styles.otherChargeValueText
-                  }>{`${otherItem.partLoad?.ratePerItem}/-`}</Text>
-              </Text>
-              <Text style={styles.otherChargeLabelText}>
-                Part Load Amount:{' '}
-                <Text
-                  style={
-                    styles.otherChargeValueText
-                  }>{`${otherItem.partLoad?.amount}/-`}</Text>
-              </Text>
-              {otherItem.fullLoad?.ratePerItem && otherItem.fullLoad?.amount ? (
-                <>
-                  <Text style={styles.otherChargeLabelText}>
-                    Full Load Rate/Item:
-                    <Text
-                      style={
-                        styles.otherChargeValueText
-                      }>{`${otherItem.fullLoad?.ratePerItem}/-`}</Text>
-                  </Text>
-                  <Text style={styles.otherChargeLabelText}>
-                    Full Load Amount:{' '}
-                    <Text
-                      style={
-                        styles.otherChargeValueText
-                      }>{`${otherItem.fullLoad?.amount}/-`}</Text>
-                  </Text>
-                </>
-              ) : null}
+              <View style={styles.otherChargeItemContainer}>
+                <Text style={styles.otherChargeLabelText}>
+                  Job Type:{' '}
+                  <Text
+                    style={
+                      styles.otherChargeValueText
+                    }>{`${otherItem.jobType}`}</Text>
+                </Text>
+                <Text style={styles.otherChargeLabelText}>
+                  Quantity:{' '}
+                  <Text
+                    style={
+                      styles.otherChargeValueText
+                    }>{`${otherItem.qty}`}</Text>
+                </Text>
+                <Text style={styles.otherChargeLabelText}>
+                  Part Load Rate/Item:
+                  <Text
+                    style={
+                      styles.otherChargeValueText
+                    }>{`${otherItem.partLoad?.ratePerItem}/-`}</Text>
+                </Text>
+                <Text style={styles.otherChargeLabelText}>
+                  Part Load Amount:{' '}
+                  <Text
+                    style={
+                      styles.otherChargeValueText
+                    }>{`${otherItem.partLoad?.amount}/-`}</Text>
+                </Text>
+                {otherItem.fullLoad?.ratePerItem &&
+                otherItem.fullLoad?.amount ? (
+                  <>
+                    <Text style={styles.otherChargeLabelText}>
+                      Full Load Rate/Item:
+                      <Text
+                        style={
+                          styles.otherChargeValueText
+                        }>{`${otherItem.fullLoad?.ratePerItem}/-`}</Text>
+                    </Text>
+                    <Text style={styles.otherChargeLabelText}>
+                      Full Load Amount:{' '}
+                      <Text
+                        style={
+                          styles.otherChargeValueText
+                        }>{`${otherItem.fullLoad?.amount}/-`}</Text>
+                    </Text>
+                  </>
+                ) : null}
+              </View>
+              <View style={styles.otherChargeDeleteIconContainer}>
+                <TouchableOpacity
+                  activeOpacity={0.4}
+                  onPress={() => handleDeleteOtherChargeItemClick(index)}>
+                  <DeleteIcon width={25} height={25} />
+                </TouchableOpacity>
+              </View>
             </View>
           </>
         );
@@ -1265,26 +1302,32 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
     }
   }, [addQuotationRequesting, addQuotationSuccess, addQuotationFailure]);
 
-  const defaultInsuranceValues: ITransitInsurance =  {
+  const defaultInsuranceValues: ITransitInsurance = {
     isRequired: state?.insuranceDetails?.status as string,
-    transitType: state?.insuranceDetails?.insurance_type as string || 'Optional',
+    transitType:
+      (state?.insuranceDetails?.insurance_type as string) || 'Optional',
     charges: [
       {
-        luggageType: state?.insuranceDetails?.shifting_luggage as string || 'Household',
-        insurancePerc: state?.insuranceDetails?.insurance_charge_percent as string || '0.5%',
-        gst: state?.insuranceDetails?.insurance_gst_percent as string || '0%',
+        luggageType:
+          (state?.insuranceDetails?.shifting_luggage as string) || 'Household',
+        insurancePerc:
+          (state?.insuranceDetails?.insurance_charge_percent as string) ||
+          '0.5%',
+        gst: (state?.insuranceDetails?.insurance_gst_percent as string) || '0%',
         value: state?.insuranceDetails?.insurance_goods_value as string,
       },
     ],
-  }
+  };
 
   const defaultStorageChargeValues = {
     isRequired: state?.storageCharges?.status as string,
-    storageChargesType: state?.storageCharges?.storage_duration_type as string || 'Per Day Charges',
+    storageChargesType:
+      (state?.storageCharges?.storage_duration_type as string) ||
+      'Per Day Charges',
     fromDate: state?.storageCharges?.storage_from_date as string,
     toDate: state?.storageCharges?.storage_to_date as string,
     amount: state?.storageCharges?.storage_amount as string,
-  }
+  };
 
   const handleSubmit = useCallback(() => {
     const payload: IAddQuotationRequest = {
@@ -1364,27 +1407,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
       surchargeCharges: state?.surcharge?.surcharge_percent as string,
       discountType: state?.discountInQuotation?.discount_type as string,
       discountAmount: state?.discountInQuotation?.discount_value as string,
-      // transitInsurance: {
-      //   isRequired: state?.insuranceDetails?.status as string,
-      //   transitType: state?.insuranceDetails?.insurance_type as string,
-      //   charges: [
-      //     {
-      //       luggageType: state?.insuranceDetails?.shifting_luggage as string,
-      //       insurancePerc: state?.insuranceDetails?.insurance_charge_percent as string,
-      //       gst: state?.insuranceDetails?.insurance_gst_percent as string,
-      //       value: state?.insuranceDetails?.insurance_goods_value as string,
-      //     },
-      //   ],
-      // },
-      transitInsurance:  isInsuranceRequired ? defaultInsuranceValues : null,
-      // storageCharges: {
-      //   isRequired: state?.storageCharges?.status as string,
-      //   storageChargesType: state?.storageCharges
-      //     ?.storage_duration_type as string,
-      //   fromDate: state?.storageCharges?.storage_from_date as string,
-      //   toDate: state?.storageCharges?.storage_to_date as string,
-      //   amount: state?.storageCharges?.storage_amount as string,
-      // },
+      transitInsurance: isInsuranceRequired ? defaultInsuranceValues : null,
       storageCharges: isStorageRequired ? defaultStorageChargeValues : null,
       otherCharges: state.otherCharges as [TOtherCharges],
       quotationAmount: '1233',
@@ -1729,38 +1752,40 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
               </View>
               <View style={styles.checkboxContainer}>
                 {chargeOptions.slice(0, 3).map((option, index) => {
-                  return <BouncyCheckbox
-                  key={`${index}`}
-                  size={20}
-                  fillColor={COLOR_BLUE}
-                  unfillColor="#FFFFFF"
-                  text={option}
-                  iconStyle={{borderColor: 'red'}}
-                  innerIconStyle={{borderWidth: 1}}
-                  onPress={(isChecked: boolean) => {
-                    setPackingCharges(option);
-                    const {packingCharges: statePackageCharges} = state;
-                      const tempObj = {
-                        ...statePackageCharges,
-                        status: option,
-                        part_load_charge: '0',
-                        full_load_charge: '0',
-                      };
-                      dispatch({
-                        type: QUOTATION_FORM_ACTION.PACKING_CHARGES,
-                        payload: tempObj as TCharge,
-                      });
-                  }}
-                  textStyle={{
-                    fontFamily: 'JosefinSans-Regular',
-                    textDecorationLine: 'none',
-                    fontSize: 14,
-                  }}
-                  style={{paddingRight: 8}}
-                  textContainerStyle={{marginLeft: 4, marginRight: 4}}
-                  isChecked={option == packingCharges}
-                  disableBuiltInState={true}
-                />
+                  return (
+                    <BouncyCheckbox
+                      key={`${index}`}
+                      size={20}
+                      fillColor={COLOR_BLUE}
+                      unfillColor="#FFFFFF"
+                      text={option}
+                      iconStyle={{borderColor: 'red'}}
+                      innerIconStyle={{borderWidth: 1}}
+                      onPress={(isChecked: boolean) => {
+                        setPackingCharges(option);
+                        const {packingCharges: statePackageCharges} = state;
+                        const tempObj = {
+                          ...statePackageCharges,
+                          status: option,
+                          part_load_charge: '0',
+                          full_load_charge: '0',
+                        };
+                        dispatch({
+                          type: QUOTATION_FORM_ACTION.PACKING_CHARGES,
+                          payload: tempObj as TCharge,
+                        });
+                      }}
+                      textStyle={{
+                        fontFamily: 'JosefinSans-Regular',
+                        textDecorationLine: 'none',
+                        fontSize: 14,
+                      }}
+                      style={{paddingRight: 8}}
+                      textContainerStyle={{marginLeft: 4, marginRight: 4}}
+                      isChecked={option == packingCharges}
+                      disableBuiltInState={true}
+                    />
+                  );
                 })}
               </View>
               <Spacer height={4} />
@@ -1803,38 +1828,42 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
               </View>
               <View style={styles.checkboxContainer}>
                 {chargeOptions.slice(0, 3).map((option, index) => {
-                  return <BouncyCheckbox
-                  key={`${index}`}
-                  size={20}
-                  fillColor={COLOR_BLUE}
-                  unfillColor="#FFFFFF"
-                  text={option}
-                  iconStyle={{borderColor: 'red'}}
-                  innerIconStyle={{borderWidth: 1}}
-                  onPress={(isChecked: boolean) => {
-                    setPackingMaterialCharges(option);
-                    const {packingMaterialCharges: statePackageMaterialCharges} = state;
-                      const tempObj = {
-                        ...statePackageMaterialCharges,
-                        status: option,
-                        part_load_charge: '0',
-                        full_load_charge: '0',
-                      };
-                      dispatch({
-                        type: QUOTATION_FORM_ACTION.PACKING_MATERIAL_CHARGES,
-                        payload: tempObj as TCharge,
-                      });
-                  }}
-                  textStyle={{
-                    fontFamily: 'JosefinSans-Regular',
-                    textDecorationLine: 'none',
-                    fontSize: 14,
-                  }}
-                  style={{paddingRight: 8}}
-                  textContainerStyle={{marginLeft: 4, marginRight: 4}}
-                  isChecked={option == packingMaterialCharges}
-                  disableBuiltInState={true}
-                />
+                  return (
+                    <BouncyCheckbox
+                      key={`${index}`}
+                      size={20}
+                      fillColor={COLOR_BLUE}
+                      unfillColor="#FFFFFF"
+                      text={option}
+                      iconStyle={{borderColor: 'red'}}
+                      innerIconStyle={{borderWidth: 1}}
+                      onPress={(isChecked: boolean) => {
+                        setPackingMaterialCharges(option);
+                        const {
+                          packingMaterialCharges: statePackageMaterialCharges,
+                        } = state;
+                        const tempObj = {
+                          ...statePackageMaterialCharges,
+                          status: option,
+                          part_load_charge: '0',
+                          full_load_charge: '0',
+                        };
+                        dispatch({
+                          type: QUOTATION_FORM_ACTION.PACKING_MATERIAL_CHARGES,
+                          payload: tempObj as TCharge,
+                        });
+                      }}
+                      textStyle={{
+                        fontFamily: 'JosefinSans-Regular',
+                        textDecorationLine: 'none',
+                        fontSize: 14,
+                      }}
+                      style={{paddingRight: 8}}
+                      textContainerStyle={{marginLeft: 4, marginRight: 4}}
+                      isChecked={option == packingMaterialCharges}
+                      disableBuiltInState={true}
+                    />
+                  );
                 })}
               </View>
               <Spacer height={4} />
@@ -1876,37 +1905,39 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                 <Label text="Loading Charges" style={styles.label} />
               </View>
               <View style={styles.checkboxContainer}>
-                {chargeOptions.slice(0,4).map((option, index) => {
-                  return <BouncyCheckbox
-                  key={`${index}`}
-                  size={20}
-                  fillColor={COLOR_BLUE}
-                  unfillColor="#FFFFFF"
-                  text={option}
-                  iconStyle={{borderColor: 'red'}}
-                  innerIconStyle={{borderWidth: 1}}
-                  onPress={(isChecked: boolean) => {
-                    setLoadingCharges(option);
-                    const {loadingCharges: mLoadingCharges} = state;
-                    const tempObj = {
-                      ...mLoadingCharges,
-                      status: option,
-                    };
-                    dispatch({
-                      type: QUOTATION_FORM_ACTION.LOADING_CHARGES,
-                      payload: tempObj as TCharge,
-                    });
-                  }}
-                  textStyle={{
-                    fontFamily: 'JosefinSans-Regular',
-                    textDecorationLine: 'none',
-                    fontSize: 14,
-                  }}
-                  style={{paddingRight: 8, paddingVertical: 10}}
-                  textContainerStyle={{marginLeft: 4, marginRight: 4}}
-                  isChecked={option == loadingCharges}
-                  disableBuiltInState={true}
-                />
+                {chargeOptions.slice(0, 4).map((option, index) => {
+                  return (
+                    <BouncyCheckbox
+                      key={`${index}`}
+                      size={20}
+                      fillColor={COLOR_BLUE}
+                      unfillColor="#FFFFFF"
+                      text={option}
+                      iconStyle={{borderColor: 'red'}}
+                      innerIconStyle={{borderWidth: 1}}
+                      onPress={(isChecked: boolean) => {
+                        setLoadingCharges(option);
+                        const {loadingCharges: mLoadingCharges} = state;
+                        const tempObj = {
+                          ...mLoadingCharges,
+                          status: option,
+                        };
+                        dispatch({
+                          type: QUOTATION_FORM_ACTION.LOADING_CHARGES,
+                          payload: tempObj as TCharge,
+                        });
+                      }}
+                      textStyle={{
+                        fontFamily: 'JosefinSans-Regular',
+                        textDecorationLine: 'none',
+                        fontSize: 14,
+                      }}
+                      style={{paddingRight: 8, paddingVertical: 10}}
+                      textContainerStyle={{marginLeft: 4, marginRight: 4}}
+                      isChecked={option == loadingCharges}
+                      disableBuiltInState={true}
+                    />
+                  );
                 })}
               </View>
               <Spacer height={4} />
@@ -1958,38 +1989,42 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                 <Label text="Unloading Charges" style={styles.label} />
               </View>
               <View style={styles.checkboxContainer}>
-                {chargeOptions.filter(e => e !== 'Loading by Party').map((option, index) => {
-                  return <BouncyCheckbox
-                  key={`${index}`}
-                  size={20}
-                  fillColor={COLOR_BLUE}
-                  unfillColor="#FFFFFF"
-                  text={option}
-                  iconStyle={{borderColor: 'red'}}
-                  innerIconStyle={{borderWidth: 1}}
-                  onPress={(isChecked: boolean) => {
-                    setUnloadingCharges(option);
-                    const {unLoadingCharges} = state;
-                    const tempObj = {
-                      ...unLoadingCharges,
-                      status: option,
-                    };
-                    dispatch({
-                      type: QUOTATION_FORM_ACTION.UNLOADING_CHARGES,
-                      payload: tempObj as TCharge,
-                    });
-                  }}
-                  textStyle={{
-                    fontFamily: 'JosefinSans-Regular',
-                    textDecorationLine: 'none',
-                    fontSize: 14,
-                  }}
-                  style={{paddingRight: 8, paddingVertical: 10}}
-                  textContainerStyle={{marginLeft: 4, marginRight: 4}}
-                  isChecked={option == unloadingCharges}
-                  disableBuiltInState={true}
-                />
-                })}
+                {chargeOptions
+                  .filter(e => e !== 'Loading by Party')
+                  .map((option, index) => {
+                    return (
+                      <BouncyCheckbox
+                        key={`${index}`}
+                        size={20}
+                        fillColor={COLOR_BLUE}
+                        unfillColor="#FFFFFF"
+                        text={option}
+                        iconStyle={{borderColor: 'red'}}
+                        innerIconStyle={{borderWidth: 1}}
+                        onPress={(isChecked: boolean) => {
+                          setUnloadingCharges(option);
+                          const {unLoadingCharges} = state;
+                          const tempObj = {
+                            ...unLoadingCharges,
+                            status: option,
+                          };
+                          dispatch({
+                            type: QUOTATION_FORM_ACTION.UNLOADING_CHARGES,
+                            payload: tempObj as TCharge,
+                          });
+                        }}
+                        textStyle={{
+                          fontFamily: 'JosefinSans-Regular',
+                          textDecorationLine: 'none',
+                          fontSize: 14,
+                        }}
+                        style={{paddingRight: 8, paddingVertical: 10}}
+                        textContainerStyle={{marginLeft: 4, marginRight: 4}}
+                        isChecked={option == unloadingCharges}
+                        disableBuiltInState={true}
+                      />
+                    );
+                  })}
               </View>
               <Spacer height={4} />
               {unloadingCharges !== 'Unloading by Party' && (
@@ -2040,37 +2075,39 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
                 <Label text="Unpacking Charges" style={styles.label} />
               </View>
               <View style={styles.checkboxContainer}>
-                {chargeOptions.slice(0,3).map((option, index) => {
-                  return <BouncyCheckbox
-                  key={`${index}`}
-                  size={20}
-                  fillColor={COLOR_BLUE}
-                  unfillColor="#FFFFFF"
-                  text={option}
-                  iconStyle={{borderColor: 'red'}}
-                  innerIconStyle={{borderWidth: 1}}
-                  onPress={(isChecked: boolean) => {
-                    setUnpackingCharges(option);
-                    const {unPackingCharges: mUnpackingCharges} = state;
-                    const tempObj = {
-                      ...mUnpackingCharges,
-                      status: option,
-                    };
-                    dispatch({
-                      type: QUOTATION_FORM_ACTION.UNPACKING_CHARGES,
-                      payload: tempObj as TCharge,
-                    });
-                  }}
-                  textStyle={{
-                    fontFamily: 'JosefinSans-Regular',
-                    textDecorationLine: 'none',
-                    fontSize: 14,
-                  }}
-                  style={{paddingRight: 8, paddingVertical: 10}}
-                  textContainerStyle={{marginLeft: 4, marginRight: 4}}
-                  isChecked={option == unpackingCharges}
-                  disableBuiltInState={true}
-                />
+                {chargeOptions.slice(0, 3).map((option, index) => {
+                  return (
+                    <BouncyCheckbox
+                      key={`${index}`}
+                      size={20}
+                      fillColor={COLOR_BLUE}
+                      unfillColor="#FFFFFF"
+                      text={option}
+                      iconStyle={{borderColor: 'red'}}
+                      innerIconStyle={{borderWidth: 1}}
+                      onPress={(isChecked: boolean) => {
+                        setUnpackingCharges(option);
+                        const {unPackingCharges: mUnpackingCharges} = state;
+                        const tempObj = {
+                          ...mUnpackingCharges,
+                          status: option,
+                        };
+                        dispatch({
+                          type: QUOTATION_FORM_ACTION.UNPACKING_CHARGES,
+                          payload: tempObj as TCharge,
+                        });
+                      }}
+                      textStyle={{
+                        fontFamily: 'JosefinSans-Regular',
+                        textDecorationLine: 'none',
+                        fontSize: 14,
+                      }}
+                      style={{paddingRight: 8, paddingVertical: 10}}
+                      textContainerStyle={{marginLeft: 4, marginRight: 4}}
+                      isChecked={option == unpackingCharges}
+                      disableBuiltInState={true}
+                    />
+                  );
                 })}
               </View>
               <Spacer height={4} />

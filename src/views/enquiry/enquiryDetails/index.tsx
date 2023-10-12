@@ -36,6 +36,7 @@ const EnquiryDetailsView: React.FC<Props> = ({route, navigation}) => {
       case 2:
         return <SurveyView taskName='SURVEY' assigneeRole='Survey' enquiryId={enquiryId as string} />
       case 3:
+        //@ts-ignore
         return <AddQuotationView showHeader={false} />
       case 4:
         return <PackingMaterialsView />
