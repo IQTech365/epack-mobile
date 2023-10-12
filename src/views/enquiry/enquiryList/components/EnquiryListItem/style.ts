@@ -44,10 +44,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   nameContainer: {
-    width: '40%',
+    width: '60%',
     paddingVertical: 6,
     paddingHorizontal: 4,
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'center',
     backgroundColor: COLOR_GRAY2,
     borderLeftColor: COLOR_ORANGE,
@@ -79,7 +79,13 @@ const styles = StyleSheet.create({
       padding: 6,
   },
   rowItemContainer: {
-    width: '50%',
+    width: '40%',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center'
+  },
+  rowItemContainer2: {
+    width: '60%',
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center'

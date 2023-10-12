@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useReducer, useState } from 'react';
+import React, { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import { View } from 'react-native';
 import AvoidSoftInputViewHOC from '../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../common/Spacer';
@@ -47,6 +47,11 @@ const AddOrderView: React.FC<{}> = ({ }) => {
   const [deliveryCities, setDeliveryCities] = useState<TDropdownItem[]>([]);
   const { addCompanyInfo, companies } = useAppSelector(state => state.Company);
   const { otpData } = useAppSelector(state => state.OTP);
+
+  const pickupCityDropdownRef = useRef(null);
+  const pickupStateDropwdownRef = useRef(null);
+  const dropStateDropdownRef = useRef(null);
+  const dropCityDropdownRef = useRef(null);
 
   const getCompanyId = () => {
     let id;
@@ -308,18 +313,48 @@ const AddOrderView: React.FC<{}> = ({ }) => {
   useEffect(() => {
     if (result && result.Status != 'Error') {
       if (
-        pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_QUOTATION_PICKUP_ADDRESS
+        pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_ORDER_PICKUP_ADDRESS
       ) {
         setPickupStates(getStates(result));
         setPickupCities(getCities(result));
       } else if (
-        pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_QUOTATION_DELIVERY_ADDRESS
+        pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_ORDER_DELIVERY_ADDRESS
       ) {
         setDeliveryStates(getStates(result));
         setDeliveryCities(getCities(result));
       }
     }
   }, [result]);
+
+  useEffect(() => {
+    if (
+      pickupStates &&
+      pickupCities &&
+      pickupCityDropdownRef &&
+      pickupStateDropwdownRef &&
+      pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_ORDER_PICKUP_ADDRESS
+    ) {
+      //@ts-ignore
+      pickupStateDropwdownRef?.current?.setDefaultValue(pickupStates[0]);
+      //@ts-ignore
+      pickupCityDropdownRef?.current?.setDefaultValue(pickupCities[0]);
+    }
+  }, [pickupStates, pickupCities]);
+
+  useEffect(() => {
+    if (
+      deliveryStates &&
+      deliveryCities &&
+      dropStateDropdownRef &&
+      dropCityDropdownRef &&
+      pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_ORDER_DELIVERY_ADDRESS
+    ) {
+      //@ts-ignore
+      dropStateDropdownRef?.current?.setDefaultValue(deliveryStates[0]);
+      //@ts-ignore
+      dropCityDropdownRef?.current?.setDefaultValue(deliveryCities[0]);
+    }
+  }, [deliveryStates, deliveryCities]);
 
   const showBillingByIndividualView = () => {
     if (state.billingBy?.billing_by == 'by Company') return null;
@@ -648,7 +683,8 @@ const AddOrderView: React.FC<{}> = ({ }) => {
         <Spacer height={4} />
         <CollapsibleView title="PICKUP ADDRESS" collapsed={true}>
           <View>
-            <View style={styles.elementContainer}>
+          <View style={styles.twoColumnWrapper}>
+          <View style={styles.textContainer}>
               <Label text="Pin code" style={styles.label} />
               <Input
                 onChangeText={handlePickupPinCode}
@@ -657,19 +693,24 @@ const AddOrderView: React.FC<{}> = ({ }) => {
                 selectionColor={COLOR_BLACK}
               />
             </View>
-            <Spacer height={4} />
-            <View style={styles.elementContainer}>
+            <View style={styles.textContainer}>
               <Label text="State" style={styles.label} />
               <DropdownComponent
                 data={pickupStates}
                 onSelect={handlePickupState}
+                //@ts-ignore
+                ref={pickupStateDropwdownRef}
               />
             </View>
+          </View>
+            
             <View style={styles.elementContainer}>
               <Label text="City" style={styles.label} />
               <DropdownComponent
                 data={pickupCities}
                 onSelect={handlePickupCity}
+                //@ts-ignore
+                ref={pickupCityDropdownRef}
               />
             </View>
             <Spacer height={4} />
@@ -689,6 +730,7 @@ const AddOrderView: React.FC<{}> = ({ }) => {
                 <DropdownComponent
                   data={floorOptions}
                   onSelect={handlePickupCurrentFloor}
+                  defaultValue={floorOptions[3]}
                 />
               </View>
               <View style={styles.textContainer}>
@@ -704,7 +746,8 @@ const AddOrderView: React.FC<{}> = ({ }) => {
         <Spacer height={4} />
         <CollapsibleView title="DELIVERY ADDRESS" collapsed={true}>
           <View>
-            <View style={styles.elementContainer}>
+          <View style={styles.twoColumnWrapper}>
+          <View style={styles.textContainer}>
               <Label text="Pin code" style={styles.label} />
               <Input
                 onChangeText={handleDeliveryPinCode}
@@ -713,19 +756,23 @@ const AddOrderView: React.FC<{}> = ({ }) => {
                 selectionColor={COLOR_BLACK}
               />
             </View>
-            <Spacer height={4} />
-            <View style={styles.elementContainer}>
+            <View style={styles.textContainer}>
               <Label text="State" style={styles.label} />
               <DropdownComponent
                 data={deliveryStates}
                 onSelect={handleDeliveryState}
+                //@ts-ignore
+                ref={dropStateDropdownRef}
               />
             </View>
+          </View>
             <View style={styles.elementContainer}>
               <Label text="City" style={styles.label} />
               <DropdownComponent
                 data={deliveryCities}
                 onSelect={handleDeliveryCity}
+                //@ts-ignore
+                ref={dropCityDropdownRef}
               />
             </View>
             <Spacer height={4} />
@@ -745,6 +792,7 @@ const AddOrderView: React.FC<{}> = ({ }) => {
                 <DropdownComponent
                   data={floorOptions}
                   onSelect={handleDeliveryCurrentFloor}
+                  defaultValue={floorOptions[3]}
                 />
               </View>
               <View style={styles.textContainer}>

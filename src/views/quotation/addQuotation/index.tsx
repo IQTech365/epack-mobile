@@ -1,5 +1,5 @@
 import React, { useReducer, useState, useCallback, useEffect } from 'react';
-import { Text, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { Switch } from 'react-native-switch';
 import AvoidSoftInputViewHOC from '../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../common/CollapsibleView';
@@ -70,6 +70,7 @@ import { useRef } from 'react';
 import { NavigationProp } from '@react-navigation/native';
 import EpackDropdown from '../../../common/DropdownComponent2';
 import { IGetEnquiriesData } from '../../../interface/enquiry/IGetEnquiriesResponse';
+import DeleteIcon from '../../../images/icons/delete.svg';
 
 const chargeOptions = [
   'Included',
@@ -262,6 +263,8 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
   const dropCityDropdownRef = useRef(null);
   const surchargePercentDropdownRef = useRef(null);
 
+  const calcPartloadAmount = Number.parseInt(partLoadRatePerItem) * Number.parseInt(partLoadAmount);
+
   const dispatch2 = useAppDispatch();
 
   const {
@@ -391,7 +394,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
   const handleQuotationDate = (date: Date) => {
     dispatch({
       type: QUOTATION_FORM_ACTION.DATE_OF_QUOTATION,
-      payload: formatDate(date),
+      payload: formatDate4(date),
     });
   };
 
@@ -867,6 +870,16 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
     setFullLoadAmount('');
   };
 
+  const handleDeleteOtherChargeItemClick = (index: number) => {
+    const { otherCharges } = state;
+    const tempArr: TOtherCharges[] = otherCharges || [];
+    tempArr.splice(index, 1);
+    dispatch({
+      type: QUOTATION_FORM_ACTION.OTHER_CHARGES,
+      payload: tempArr as [TOtherCharges],
+    });
+  };
+
   const renderOtherItemList = () => {
     const { otherCharges } = state;
     if (otherCharges && otherCharges?.length > 0) {
@@ -874,52 +887,62 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
         return (
           <>
             <View key={index} style={styles.otherChargeItemWrapper}>
-              <Text style={styles.otherChargeLabelText}>
-                Job Type:{' '}
-                <Text
-                  style={
-                    styles.otherChargeValueText
-                  }>{`${otherItem.jobType}`}</Text>
-              </Text>
-              <Text style={styles.otherChargeLabelText}>
-                Quantity:{' '}
-                <Text
-                  style={
-                    styles.otherChargeValueText
-                  }>{`${otherItem.qty}`}</Text>
-              </Text>
-              <Text style={styles.otherChargeLabelText}>
-                Part Load Rate/Item:
-                <Text
-                  style={
-                    styles.otherChargeValueText
-                  }>{`${otherItem.partLoad?.ratePerItem}/-`}</Text>
-              </Text>
-              <Text style={styles.otherChargeLabelText}>
-                Part Load Amount:{' '}
-                <Text
-                  style={
-                    styles.otherChargeValueText
-                  }>{`${otherItem.partLoad?.amount}/-`}</Text>
-              </Text>
-              {otherItem.fullLoad?.ratePerItem && otherItem.fullLoad?.amount ? (
-                <>
-                  <Text style={styles.otherChargeLabelText}>
-                    Full Load Rate/Item:
-                    <Text
-                      style={
-                        styles.otherChargeValueText
-                      }>{`${otherItem.fullLoad?.ratePerItem}/-`}</Text>
-                  </Text>
-                  <Text style={styles.otherChargeLabelText}>
-                    Full Load Amount:{' '}
-                    <Text
-                      style={
-                        styles.otherChargeValueText
-                      }>{`${otherItem.fullLoad?.amount}/-`}</Text>
-                  </Text>
-                </>
-              ) : null}
+              <View style={styles.otherChargeItemContainer}>
+                <Text style={styles.otherChargeLabelText}>
+                  Job Type:{' '}
+                  <Text
+                    style={
+                      styles.otherChargeValueText
+                    }>{`${otherItem.jobType}`}</Text>
+                </Text>
+                <Text style={styles.otherChargeLabelText}>
+                  Quantity:{' '}
+                  <Text
+                    style={
+                      styles.otherChargeValueText
+                    }>{`${otherItem.qty}`}</Text>
+                </Text>
+                <Text style={styles.otherChargeLabelText}>
+                  Part Load Rate/Item:
+                  <Text
+                    style={
+                      styles.otherChargeValueText
+                    }>{`${otherItem.partLoad?.ratePerItem}/-`}</Text>
+                </Text>
+                <Text style={styles.otherChargeLabelText}>
+                  Part Load Amount:{' '}
+                  <Text
+                    style={
+                      styles.otherChargeValueText
+                    }>{`${otherItem.partLoad?.amount}/-`}</Text>
+                </Text>
+                {otherItem.fullLoad?.ratePerItem &&
+                  otherItem.fullLoad?.amount ? (
+                  <>
+                    <Text style={styles.otherChargeLabelText}>
+                      Full Load Rate/Item:
+                      <Text
+                        style={
+                          styles.otherChargeValueText
+                        }>{`${otherItem.fullLoad?.ratePerItem}/-`}</Text>
+                    </Text>
+                    <Text style={styles.otherChargeLabelText}>
+                      Full Load Amount:{' '}
+                      <Text
+                        style={
+                          styles.otherChargeValueText
+                        }>{`${otherItem.fullLoad?.amount}/-`}</Text>
+                    </Text>
+                  </>
+                ) : null}
+              </View>
+              <View style={styles.otherChargeDeleteIconContainer}>
+                <TouchableOpacity
+                  activeOpacity={0.4}
+                  onPress={() => handleDeleteOtherChargeItemClick(index)}>
+                  <DeleteIcon width={25} height={25} />
+                </TouchableOpacity>
+              </View>
             </View>
           </>
         );
@@ -1465,27 +1488,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
       surchargeCharges: state?.surcharge?.surcharge_percent as string,
       discountType: state?.discountInQuotation?.discount_type as string,
       discountAmount: state?.discountInQuotation?.discount_value as string,
-      // transitInsurance: {
-      //   isRequired: state?.insuranceDetails?.status as string,
-      //   transitType: state?.insuranceDetails?.insurance_type as string,
-      //   charges: [
-      //     {
-      //       luggageType: state?.insuranceDetails?.shifting_luggage as string,
-      //       insurancePerc: state?.insuranceDetails?.insurance_charge_percent as string,
-      //       gst: state?.insuranceDetails?.insurance_gst_percent as string,
-      //       value: state?.insuranceDetails?.insurance_goods_value as string,
-      //     },
-      //   ],
-      // },
       transitInsurance: isInsuranceRequired ? defaultInsuranceValues : null,
-      // storageCharges: {
-      //   isRequired: state?.storageCharges?.status as string,
-      //   storageChargesType: state?.storageCharges
-      //     ?.storage_duration_type as string,
-      //   fromDate: state?.storageCharges?.storage_from_date as string,
-      //   toDate: state?.storageCharges?.storage_to_date as string,
-      //   amount: state?.storageCharges?.storage_amount as string,
-      // },
       storageCharges: isStorageRequired ? defaultStorageChargeValues : null,
       otherCharges: state.otherCharges as [TOtherCharges],
       quotationAmount: '1233',

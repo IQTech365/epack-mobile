@@ -10,6 +10,7 @@ import {ICreateMoneyReceiptResponse} from '../../interface/order/ICreateMoneyRec
 import {ICreateMoneyReceiptRequest} from '../../interface/order/ICreateMoneyReceiptRequest';
 import {IAddOrderResponse} from '../../interface/order/IAddOrderResponse';
 import {IAddOrderRequest} from '../../interface/order/IAddOrderRequest';
+import { IGetOrdersResponse } from '../../interface/order/IGetOrdersResponse';
 
 interface IOrderState {
   // Add Order
@@ -18,6 +19,12 @@ interface IOrderState {
   addOrderSuccess: boolean;
   addOrderFailure: boolean;
   addOrderError: any;
+  // Get Order List
+  orders: IGetOrdersResponse | null;
+  getOrdersRequesting: boolean;
+  getOrdersSuccess: boolean;
+  getOrdersFailure: boolean;
+  getOrdersError: any;
   // Get Order Details
   orderDetailsInfo: IOrderDetailsResponse | null;
   getOrderDetailsRequesting: boolean;
@@ -57,6 +64,12 @@ const initialState: IOrderState = {
   addOrderSuccess: false,
   addOrderFailure: false,
   addOrderError: null,
+  // Get Order List
+  orders: null,
+  getOrdersRequesting: false,
+  getOrdersSuccess: false,
+  getOrdersFailure: false,
+  getOrdersError: null,
   // Get Order Details
   orderDetailsInfo: null,
   getOrderDetailsRequesting: false,
@@ -107,6 +120,21 @@ export const OrderSlice = createSlice({
       state.addOrderSuccess = false;
       state.addOrderFailure = true;
       state.addOrderError = action.payload;
+    },
+    // Get Order List
+    getOrdersRequest: (state, action: PayloadAction<string>) => {
+      state.getOrdersRequesting = true;
+    },
+    getOrdersSuccess: (state, action: PayloadAction<IGetOrdersResponse>) => {
+      state.getOrdersRequesting = false;
+      state.getOrdersSuccess = true;
+      state.orders = action.payload;
+    },
+    getOrdersFailure: (state, action: PayloadAction<any>) => {
+      state.getOrdersRequesting = false;
+      state.getOrdersSuccess = false;
+      state.getOrdersFailure = true;
+      state.getOrdersError = action.payload;
     },
     // Get Order Details
     getOrderDetailsRequest: (state, action: PayloadAction<string>) => {
@@ -217,6 +245,10 @@ export const {
   addOrderRequest,
   addOrderSuccess,
   addOrderFailure,
+  // Get Order List
+  getOrdersRequest,
+  getOrdersSuccess,
+  getOrdersFailure,
   // Get Order Details
   getOrderDetailsRequest,
   getOrderDetailsSuccess,

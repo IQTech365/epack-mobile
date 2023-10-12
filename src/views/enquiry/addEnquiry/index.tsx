@@ -1,4 +1,10 @@
-import React, {useCallback, useEffect, useReducer, useRef, useState} from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from 'react';
 import {View, Text} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../common/Spacer';
@@ -26,7 +32,11 @@ import {
   TDropAddressInfo,
 } from './enquiryReducer';
 import {useAppDispatch, useAppSelector} from '../../../redux/hooks';
-import {addEnquiryRequest, getEnquiriesRequest, resetAddEnquiryRequest} from '../../../redux/slices/EnquirySlice';
+import {
+  addEnquiryRequest,
+  getEnquiriesRequest,
+  resetAddEnquiryRequest,
+} from '../../../redux/slices/EnquirySlice';
 import {IAddEnquiryRequest} from '../../../interface/enquiry/IAddEnquiryRequest';
 import usePincodeHook, {
   PINCODE_REQUEST_KEY,
@@ -84,7 +94,6 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
     }
     return id;
   };
-  
 
   const setPincodeError = () => {
     dispatch({
@@ -141,20 +150,23 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
     [state.mobile],
   );
 
-  const handleShiftingLugInputTextChange = useCallback((isChecked: boolean, value: string) => {
-    const {shiftingLuggage} = state;
-    let tempObj = [...shiftingLuggage];
-    const itemIndex = tempObj.findIndex(e => e == value);
-    if(itemIndex == -1 && isChecked) {
-      tempObj.push(value);
-    } else if(itemIndex != -1 && !isChecked) {
-      tempObj = tempObj.filter(e => e != value);
-    }
-    dispatch({
-      type: ENQUIRY_FORM_ACTION.SHIFTING_LUGGAGE,
-      payload: tempObj as [string],
-    });
-  }, [state.shiftingLuggage]);
+  const handleShiftingLugInputTextChange = useCallback(
+    (isChecked: boolean, value: string) => {
+      const {shiftingLuggage} = state;
+      let tempObj = [...shiftingLuggage];
+      const itemIndex = tempObj.findIndex(e => e == value);
+      if (itemIndex == -1 && isChecked) {
+        tempObj.push(value);
+      } else if (itemIndex != -1 && !isChecked) {
+        tempObj = tempObj.filter(e => e != value);
+      }
+      dispatch({
+        type: ENQUIRY_FORM_ACTION.SHIFTING_LUGGAGE,
+        payload: tempObj as [string],
+      });
+    },
+    [state.shiftingLuggage],
+  );
 
   const handlePickupPinCode = useCallback(
     (text: string) => {
@@ -357,7 +369,13 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
   }, [result]);
 
   useEffect(() => {
-    if(pickupStates && pickupCities && pickupCityDropdownRef && pickupStateDropwdownRef && pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_QUOTATION_PICKUP_ADDRESS) {
+    if (
+      pickupStates &&
+      pickupCities &&
+      pickupCityDropdownRef &&
+      pickupStateDropwdownRef &&
+      pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_ENQUIRY_PICKUP_ADDRESS
+    ) {
       //@ts-ignore
       pickupStateDropwdownRef?.current?.setDefaultValue(pickupStates[0]);
       //@ts-ignore
@@ -366,7 +384,13 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
   }, [pickupStates, pickupCities]);
 
   useEffect(() => {
-    if(deliveryStates && deliveryCities && dropStateDropdownRef && dropCityDropdownRef && pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_QUOTATION_DELIVERY_ADDRESS) {
+    if (
+      deliveryStates &&
+      deliveryCities &&
+      dropStateDropdownRef &&
+      dropCityDropdownRef &&
+      pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_ENQUIRY_DELIVERY_ADDRESS
+    ) {
       //@ts-ignore
       dropStateDropdownRef?.current?.setDefaultValue(deliveryStates[0]);
       //@ts-ignore
@@ -375,20 +399,20 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
   }, [deliveryStates, deliveryCities]);
 
   useEffect(() => {
-    if(!addEnquiryRequesting && addEnquirySuccess) {
+    if (!addEnquiryRequesting && addEnquirySuccess) {
       Toast.show({
         type: 'success',
         text1: 'Enquriy',
-        text2: 'Enquiry has been added successfully'
+        text2: 'Enquiry has been added successfully',
       });
       dispatch2(resetAddEnquiryRequest());
       dispatch2(getEnquiriesRequest(getCompanyId()));
       navigation.goBack();
-    } else if(!addEnquiryRequesting && addEnquiryFailure) {
+    } else if (!addEnquiryRequesting && addEnquiryFailure) {
       Toast.show({
         type: 'error',
         text1: 'Enquriy',
-        text2: 'Error in adding enquiry. Please try again!'
+        text2: 'Error in adding enquiry. Please try again!',
       });
       dispatch2(resetAddEnquiryRequest());
     }
@@ -420,7 +444,8 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
         pincode: state.pickupAddress?.pincode as string,
         landmark: state.pickupAddress?.landmark as string,
         floor: state.pickupAddress?.floor as string,
-        isLiftAvailable: state.pickupAddress?.isLiftAvailable.toLocaleUpperCase() as string,
+        isLiftAvailable:
+          state.pickupAddress?.isLiftAvailable.toLocaleUpperCase() as string,
       },
       dropAddress: {
         shiftingTo: state.dropAddress?.city as string,
@@ -430,7 +455,8 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
         pincode: state.dropAddress?.pincode as string,
         landmark: state.dropAddress?.landmark as string,
         floor: state.dropAddress?.floor as string,
-        isLiftAvailable: state.dropAddress?.isLiftAvailable.toLocaleUpperCase() as string,
+        isLiftAvailable:
+          state.dropAddress?.isLiftAvailable.toLocaleUpperCase() as string,
       },
       billingBy: state.billingBy?.billing_by as string,
       billingDetails: {
@@ -453,7 +479,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
       status: 'NEW',
     };
     console.log('AddEnquiry-payload--', JSON.stringify(payload));
-    
+
     dispatch2(addEnquiryRequest(payload));
   }, [state]);
 
@@ -755,25 +781,27 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
         <Spacer height={4} />
         <CollapsibleView title="PICKUP ADDRESS" collapsed={true}>
           <View>
-            <View style={styles.elementContainer}>
-              <Label text="Pin code" style={styles.label} />
-              <Input
-                onChangeText={handlePickupPinCode}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-              />
+            <View style={styles.twoColumnWrapper}>
+              <View style={styles.textContainer}>
+                <Label text="Pin code" style={styles.label} />
+                <Input
+                  onChangeText={handlePickupPinCode}
+                  containerStyle={styles.inputContainer}
+                  inputStyle={styles.input}
+                  selectionColor={COLOR_BLACK}
+                />
+              </View>
+              <View style={styles.textContainer}>
+                <Label text="State" style={styles.label} />
+                <DropdownComponent
+                  data={pickupStates}
+                  onSelect={handlePickupState}
+                  //@ts-ignore
+                  ref={pickupStateDropwdownRef}
+                />
+              </View>
             </View>
-            <Spacer height={4} />
-            <View style={styles.elementContainer}>
-              <Label text="State" style={styles.label} />
-              <DropdownComponent
-                data={pickupStates}
-                onSelect={handlePickupState}
-                //@ts-ignore
-                ref={pickupStateDropwdownRef}
-              />
-            </View>
+
             <View style={styles.elementContainer}>
               <Label text="City" style={styles.label} />
               <DropdownComponent
@@ -816,24 +844,25 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
         <Spacer height={4} />
         <CollapsibleView title="DELIVERY ADDRESS" collapsed={true}>
           <View>
-            <View style={styles.elementContainer}>
-              <Label text="Pin code" style={styles.label} />
-              <Input
-                onChangeText={handleDeliveryPinCode}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-              />
-            </View>
-            <Spacer height={4} />
-            <View style={styles.elementContainer}>
-              <Label text="State" style={styles.label} />
-              <DropdownComponent
-                data={deliveryStates}
-                onSelect={handleDeliveryState}
-                //@ts-ignore
-                ref={dropStateDropdownRef}
-              />
+            <View style={styles.twoColumnWrapper}>
+              <View style={styles.textContainer}>
+                <Label text="Pin code" style={styles.label} />
+                <Input
+                  onChangeText={handleDeliveryPinCode}
+                  containerStyle={styles.inputContainer}
+                  inputStyle={styles.input}
+                  selectionColor={COLOR_BLACK}
+                />
+              </View>
+              <View style={styles.textContainer}>
+                <Label text="State" style={styles.label} />
+                <DropdownComponent
+                  data={deliveryStates}
+                  onSelect={handleDeliveryState}
+                  //@ts-ignore
+                  ref={dropStateDropdownRef}
+                />
+              </View>
             </View>
             <View style={styles.elementContainer}>
               <Label text="City" style={styles.label} />

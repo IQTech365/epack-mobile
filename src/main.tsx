@@ -10,6 +10,7 @@ import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import Toast from 'react-native-toast-message';
 import {PersistGate} from 'redux-persist/integration/react';
+import {MenuProvider} from 'react-native-popup-menu';
 
 const Main = () => {
   const authContext = useAuthContext();
@@ -23,12 +24,14 @@ const Main = () => {
     <GestureHandlerRootView style={{flex: 1}}>
       <NavigationContainer>
         <BottomSheetModalProvider>
-          <Provider store={store}>
-            <PersistGate loading={null} persistor={persistor}>
-              {loggedIn ? <DrawerNavigator /> : <AuthStackNavigator />}
-              <Toast />
-            </PersistGate>
-          </Provider>
+          <MenuProvider>
+            <Provider store={store}>
+              <PersistGate loading={null} persistor={persistor}>
+                {loggedIn ? <DrawerNavigator /> : <AuthStackNavigator />}
+                <Toast />
+              </PersistGate>
+            </Provider>
+          </MenuProvider>
         </BottomSheetModalProvider>
       </NavigationContainer>
     </GestureHandlerRootView>
