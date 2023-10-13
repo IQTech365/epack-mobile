@@ -296,7 +296,7 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
         isLiftAvailable: state.deliveryLiftStatus.toUpperCase() || 'YES',
       },
       billingBy: state.billingBy?.billing_by as string,
-      billingDetails: {
+      billingDetails: state.billingBy?.billing_by == 'by Company' ? {
         companyName: state.billingBy?.billing_info?.company_name as string,
         approvalAuthority: state.billingBy?.billing_info
           ?.approval_authority as string || 'HR Manager',
@@ -312,7 +312,7 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
           ?.employee_designation as string,
         employeeMobile: state.billingBy?.billing_info
           ?.employee_mobile_number as string,
-      },
+      } : {},
       status: 'New',
     };
     console.log('AddOrder-payload----', JSON.stringify(data));

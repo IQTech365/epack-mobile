@@ -7,13 +7,13 @@ import tabOptions from '../../../data/orderDetailsTabs.json';
 import Tab from '../../../common/Tab';
 import OrderInfoView from './components/OrderInfoView';
 import DetailsView from './components/DetailsView';
-import MoneyReceiptFormView from './components/MoneyReceiptFormView';
-import CarConditionFormView from './components/CarConditionFormView';
-import BiltyFormView from './components/BiltyFormView';
-import InvoiceFormView from './components/InvoiceFormView';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import { OrderStackParamList } from '../../../navigation/params/OrderStackParamList';
 import { IGetOrdersData } from '../../../interface/order/IGetOrdersResponse';
+import BiltyView from './components/BiltyView';
+import MoneyReceiptView from './components/MoneyReceiptView';
+import CarConditionView from './components/CarConditionView';
+import InvoiceView from './components/InvoiceView';
 
 type Props = NativeStackScreenProps<OrderStackParamList, 'OrderDetails'>;
 
@@ -32,13 +32,13 @@ const OrderDetailsView: React.FC<Props> = ({route, navigation}) => {
       case 0:
         return <DetailsView item={item}/>
       case 1:
-        return <MoneyReceiptFormView orderId={orderId} />
+        return <MoneyReceiptView orderId={orderId as string} />
       case 2:
-        return <CarConditionFormView orderId={orderId} />
+        return <CarConditionView orderId={orderId as string} />
       case 3:
-        return <BiltyFormView orderId={orderId} />
+        return <BiltyView orderId={orderId as string} />
       case 4:
-        return <InvoiceFormView orderId={orderId} />
+        return <InvoiceView orderId={orderId as string} />
       default:
         return null;
     }

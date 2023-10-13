@@ -1,5 +1,11 @@
 import React, {useCallback, useState} from 'react';
-import {View, Text, FlatList, TouchableOpacity, RefreshControl} from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  RefreshControl,
+} from 'react-native';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import AddQuotationView from '../../../../quotation/addQuotation';
 import QuotationListItem, {
@@ -11,19 +17,16 @@ import ListViewIcon2 from '../../../../../images/icons/list_view_icon2.svg';
 import CreateIcon from '../../../../../images/icons/create_icon.svg';
 import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
 import Spacer from '../../../../../common/Spacer';
-import { getQuotationsRequest } from '../../../../../redux/slices/QuotationSlice';
+import {getQuotationsRequest} from '../../../../../redux/slices/QuotationSlice';
 
 interface IQuotationViewProps {
-    enquiryId: string;
+  enquiryId: string;
 }
 
 const QuotationView: React.FC<IQuotationViewProps> = ({enquiryId}) => {
-  const {
-    quotations,
-    getQuotationsRequesting,
-    getQuotationsSuccess,
-    getQuotationsFailure,
-  } = useAppSelector(state => state.Quotation);
+  const {quotations, getQuotationsRequesting} = useAppSelector(
+    state => state.Quotation,
+  );
   const dispatch = useAppDispatch();
 
   const [showQuotationList, setShowQuotationList] = useState<boolean>(false);
@@ -49,7 +52,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({enquiryId}) => {
   const handleShowQuotationList = () => {
     setShowQuotationList(true);
     setCreateNewQuotation(false);
-  }
+  };
 
   const handleOnRefresh = useCallback(() => {
     dispatch(getQuotationsRequest(enquiryId));
@@ -74,7 +77,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({enquiryId}) => {
     if (showQuotationList) {
       return (
         <FlatList
-        contentContainerStyle={{alignItems: 'center', paddingVertical: 10}}
+          contentContainerStyle={{alignItems: 'center', paddingVertical: 10}}
           data={[tempItem]}
           refreshControl={
             <RefreshControl
@@ -96,11 +99,21 @@ const QuotationView: React.FC<IQuotationViewProps> = ({enquiryId}) => {
     <>
       <View style={styles.container}>
         <TouchableOpacity onPress={handleShowQuotationList} activeOpacity={0.4}>
-          {showQuotationList ? <ListViewIcon2 width={30} height={30} /> : <ListViewIcon width={30} height={30} />}
+          {showQuotationList ? (
+            <ListViewIcon2 width={30} height={30} />
+          ) : (
+            <ListViewIcon width={30} height={30} />
+          )}
         </TouchableOpacity>
         <Spacer width={10} />
-        <TouchableOpacity onPress={handleCreateNewQuotation} activeOpacity={0.4}>
-          {createNewQuotation ? <CreateIcon2 width={30} height={30} /> : <CreateIcon width={30} height={30} />}
+        <TouchableOpacity
+          onPress={handleCreateNewQuotation}
+          activeOpacity={0.4}>
+          {createNewQuotation ? (
+            <CreateIcon2 width={30} height={30} />
+          ) : (
+            <CreateIcon width={30} height={30} />
+          )}
         </TouchableOpacity>
         <Spacer width={10} />
       </View>

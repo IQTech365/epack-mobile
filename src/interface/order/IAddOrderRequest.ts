@@ -53,6 +53,6 @@ export interface IAddOrderRequest {
   pickupAddress: PickupAddress;
   dropAddress: DropAddress;
   billingBy: string;
-  billingDetails: BillingDetails | null;
+  billingDetails: BillingDetails | {};
   status: string;
 }
