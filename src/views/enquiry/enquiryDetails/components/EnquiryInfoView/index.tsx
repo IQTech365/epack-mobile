@@ -18,6 +18,8 @@ import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import { IUpdateEnquiryStatus } from '../../../../../interface/enquiry/IUpdateEnquiryStatusRequest';
 import { resetUpdateEnquiryStatusRequest, updateEnquiryStatusRequest } from '../../../../../redux/slices/EnquirySlice';
 import Toast from 'react-native-toast-message';
+import enquiryStatusOptions from '../../../../../data/enquiryStatusOptions.json';
+
 interface IEnquiryInfoViewProps {
   item: IGetEnquiriesData | undefined;
   enquiryId: string | undefined;
@@ -162,27 +164,18 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId}) => 
                           paddingVertical: 8,
                         }
                       }}>
-                      <MenuOption onSelect={() => {
-                        handleEnquiryStatusChange('Approved');
-                      }} text="Approved" />
-                      <MenuOption onSelect={() => {
-                        handleEnquiryStatusChange('Pending');
-                      }} text="Pending" />
-                      <MenuOption onSelect={() => {
-                        handleEnquiryStatusChange('Under Process');
-                      }} text="Under Process" />
-                      <MenuOption
-                        customStyles={{
-                          optionWrapper: {borderBottomWidth: 0, marginHorizontal: 5,},
-                          optionText: {
-                            paddingVertical: 8,
-                          }
-                        }}
-                        onSelect={() => {
-                          handleEnquiryStatusChange('Canceled');
-                        }}
-                        text="Canceled"
-                        />
+                        {enquiryStatusOptions.map((option, index) => {
+                          const isLastIndex = index == enquiryStatusOptions.length -1;
+                          const lastItemStyle = isLastIndex ? {
+                            optionWrapper: {borderBottomWidth: 0, marginHorizontal: 5,},
+                            optionText: {
+                              paddingVertical: 8,
+                            }
+                          } : undefined;
+                          return <MenuOption customStyles={lastItemStyle} key={`${index}`} onSelect={() => {
+                            handleEnquiryStatusChange(option);
+                          }} text={option} />
+                        })}
                     </MenuOptions>
                   </Menu>
                   {/* <Text style={styles.valueText}>{item?.status}</Text> */}
