@@ -27,11 +27,11 @@ import { createCarConditionRequest } from '../../../../../redux/slices/OrderSlic
 import Spinner from '../../../../../common/Spinner';
 import Toast from 'react-native-toast-message';
 
-interface ICarConditionViewProps {
-  //
+interface ICarConditionFormViewProps {
+  orderId: string | undefined;
 }
 
-const CarConditionView: React.FC<ICarConditionViewProps> = ({ }) => {
+const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({ orderId }) => {
   const [switchState, setSwitchState] = useState<boolean>(false);
   const [reducerState, dispatch] = useReducer(
     carConditionReducer,
@@ -494,4 +494,4 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({ }) => {
   );
 };
 
-export default CarConditionView;
+export default CarConditionFormView;

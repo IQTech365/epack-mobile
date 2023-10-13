@@ -24,17 +24,23 @@ import {
 } from './addOrderReducer';
 import approvalAuthorityOptions from '../../../data/ApprovalAuthorityOptions.json';
 import billingByOptions from '../../../data/billingByOptions.json';
-import { formatDate, getCities, getStates } from '../../../utils/formatter';
+import { formatDate4, getCities, getStates } from '../../../utils/formatter';
 import shiftingLuggageOptions from '../../../data/shiftingLuggage.json';
 import usePincodeHook, {
   PINCODE_REQUEST_KEY,
 } from '../../../hooks/usePincodeHook';
 import Spinner from '../../../common/Spinner';
 import { IAddOrderRequest } from '../../../interface/order/IAddOrderRequest';
-import { addOrderRequest } from '../../../redux/slices/OrderSlice';
+import { addOrderRequest, getOrdersRequest, resetAddOrderRequest } from '../../../redux/slices/OrderSlice';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import Toast from 'react-native-toast-message';
+import {NavigationProp} from '@react-navigation/native';
 
-const AddOrderView: React.FC<{}> = ({ }) => {
+interface IAddOrderViewProps {
+  navigation: NavigationProp<any, any>;
+}
+
+const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
   const [state, dispatch] = useReducer(addOrderReducer, initialState);
   const dispatch2 = useAppDispatch();
   const { addOrderRequesting, addOrderSuccess, addOrderFailure, addOrderError } =
@@ -69,7 +75,7 @@ const AddOrderView: React.FC<{}> = ({ }) => {
     }
     return id;
   };
-  console.log('AddOrderView--state----', state);
+  // console.log('AddOrderView--state----', state);
 
   const setPincodeError = () => {
     // setPincodeError2('Invalid Pincode');
@@ -123,7 +129,7 @@ const AddOrderView: React.FC<{}> = ({ }) => {
   const handleDateOfMoving = (date: Date) => {
     dispatch({
       type: ADDORDER_FORM_ACTION.DATE_OF_MOVING,
-      payload: formatDate(date),
+      payload: formatDate4(date),
     });
   };
   const handleOrderAmount = (text: string) => {
@@ -254,44 +260,46 @@ const AddOrderView: React.FC<{}> = ({ }) => {
       companyId: getCompanyId(),
       authId: otpData?.data.id as string,
       enquiryManager: '',
-      shiftingType: state.shiftingType,
+      shiftingType: state.shiftingType.toUpperCase() || 'LOCAL',
       partyCompanyName: '',
       partyName: state.partyName,
       email: '',
       mobile: state.mobile,
       phone: state.mobile,
+      orderAmount: state.orderAmount,
+      tokenAmount: state.tokenAmount,
       shiftingLuggage: state.shiftingLuggage as [string],
       enquirySource: '',
       gstNumber: '',
       alternateNumbers: '',
-      shiftingDate: state.dateOfMoving,
+      shiftingDate: state.dateOfMoving || formatDate4(new Date()),
       pickupAddress: {
-        shiftingFrom: '',
-        state: state.pickupState,
-        city: state.pickupCity,
+        shiftingFrom: state.pickupCity || pickupCities[0].label,
+        state: state.pickupState || pickupStates[0].label,
+        city: state.pickupCity || pickupCities[0].label,
         address: state.pickupAddress,
         pincode: state.pickupPincode,
         locality: '',
         landmark: '',
-        floor: state.pickupCurrentFloor,
-        isLiftAvailable: state.pickupLiftStatus,
+        floor: state.pickupCurrentFloor || 'Ground Floor',
+        isLiftAvailable: state.pickupLiftStatus.toUpperCase() || 'YES',
       },
       dropAddress: {
-        shiftingTo: '',
-        state: state.deliveryState,
-        city: state.deliveryCity,
+        shiftingTo: state.deliveryCity || deliveryCities[0].label,
+        state: state.deliveryState || deliveryStates[0].label,
+        city: state.deliveryCity || deliveryCities[0].label,
         address: state.deliveryAddress,
         pincode: state.deliveryPincode,
         locality: '',
         landmark: '',
-        floor: state.deliveryCurrentFloor,
-        isLiftAvailable: state.deliveryLiftStatus,
+        floor: state.deliveryCurrentFloor || 'Ground Floor',
+        isLiftAvailable: state.deliveryLiftStatus.toUpperCase() || 'YES',
       },
       billingBy: state.billingBy?.billing_by as string,
       billingDetails: {
         companyName: state.billingBy?.billing_info?.company_name as string,
         approvalAuthority: state.billingBy?.billing_info
-          ?.approval_authority as string,
+          ?.approval_authority as string || 'HR Manager',
         authorityPersonName: state.billingBy?.billing_info
           ?.authority_person_name as string,
         authorityPersonMobile: state.billingBy?.billing_info
@@ -307,6 +315,8 @@ const AddOrderView: React.FC<{}> = ({ }) => {
       },
       status: 'New',
     };
+    console.log('AddOrder-payload----', JSON.stringify(data));
+    
     dispatch2(addOrderRequest(data));
   };
 
@@ -355,6 +365,26 @@ const AddOrderView: React.FC<{}> = ({ }) => {
       dropCityDropdownRef?.current?.setDefaultValue(deliveryCities[0]);
     }
   }, [deliveryStates, deliveryCities]);
+
+  useEffect(() => {
+    if (!addOrderRequesting && addOrderSuccess) {
+      Toast.show({
+        type: 'success',
+        text1: 'Order',
+        text2: 'Order has been added successfully',
+      });
+      dispatch2(resetAddOrderRequest());
+      dispatch2(getOrdersRequest(getCompanyId()));
+      navigation?.goBack();
+    } else if (!addOrderRequesting && addOrderFailure) {
+      Toast.show({
+        type: 'error',
+        text1: 'Order',
+        text2: 'Error in adding order. Please try again!',
+      });
+      dispatch2(resetAddOrderRequest());
+    }
+  }, [addOrderRequesting, addOrderSuccess, addOrderFailure]);
 
   const showBillingByIndividualView = () => {
     if (state.billingBy?.billing_by == 'by Company') return null;

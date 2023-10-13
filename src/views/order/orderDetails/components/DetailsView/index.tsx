@@ -3,12 +3,15 @@ import {View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
 import Spacer from '../../../../../common/Spacer';
+import { IGetOrdersData } from '../../../../../interface/order/IGetOrdersResponse';
 import EnquiryDetailListItem from '../OrderDetailListItem';
 import styles from './style';
 
-interface IDetailsViewProps {}
+interface IDetailsViewProps {
+  item: IGetOrdersData | undefined;
+}
 
-const DetailsView: React.FC<IDetailsViewProps> = ({}) => {
+const DetailsView: React.FC<IDetailsViewProps> = ({item}) => {
   return (
     <AvoidSoftInputViewHOC>
       <View style={styles.container}>

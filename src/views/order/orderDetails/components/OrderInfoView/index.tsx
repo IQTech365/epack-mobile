@@ -18,10 +18,10 @@ import { resetUpdateEnquiryStatusRequest, updateEnquiryStatusRequest } from '../
 import { IUpdateEnquiryStatus } from '../../../../../interface/enquiry/IUpdateEnquiryStatusRequest';
 import Toast from 'react-native-toast-message';
 interface IOrderInfoViewProps {
-  enquiryId: string;
+  orderId: string;
 }
 
-const OrderInfoView: React.FC<IOrderInfoViewProps> = ({enquiryId}) => {
+const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId}) => {
   const dispatch = useAppDispatch();
   const [orderStatus, setOrderStatus] = useState<string>('New');
   const {
@@ -33,7 +33,7 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({enquiryId}) => {
   const handleOrderStatusChange = (value: string) => {
     setOrderStatus(value);
     const payload: IUpdateEnquiryStatus = {
-      enquiryId: enquiryId as string,
+      enquiryId: orderId as string,
       status: value,
     }
     dispatch(updateEnquiryStatusRequest(payload));

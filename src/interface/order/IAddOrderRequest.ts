@@ -43,6 +43,8 @@ export interface IAddOrderRequest {
   email: string;
   mobile: string;
   phone: string;
+  orderAmount: string;
+  tokenAmount: string;
   shiftingLuggage: [string];
   enquirySource: string;
   gstNumber: string;

@@ -23,6 +23,7 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
     useAppSelector(state => state.Order);
   console.log('AddOrderView--state----', orders);
   const tempItem: IOrderItem = {
+    orderId: '23423423423',
     clientName: 'Ms. Vanshika',
     pickupAddress: 'Delhi, Munirka',
     deliveryAddress: 'Gurgaon, Sector 48',
@@ -52,8 +53,8 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
     navigation.navigate(OrderStackRoute.AddOrder);
   };
 
-  const handleEnquiryDetailsClick = () => {
-    navigation.navigate(OrderStackRoute.OrderDetails);
+  const handleOrderDetailsClick = (item: IOrderItem) => {
+    navigation.navigate(OrderStackRoute.OrderDetails, {orderId: item.orderId, item: item});
   };
 
   const handleOnRefresh = useCallback(() => {
@@ -83,7 +84,7 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
           <OrderListItem
             item={item}
             index={1}
-            onPress={handleEnquiryDetailsClick}
+            onPress={() => handleOrderDetailsClick(item)}
           />
         )}
       />

@@ -27,11 +27,11 @@ import { createMoneyReceiptRequest } from '../../../../../redux/slices/OrderSlic
 import Spinner from '../../../../../common/Spinner';
 import Toast from 'react-native-toast-message';
 
-interface IMoneyReceiptViewProps {
-  //
+interface IMoneyReceiptFormViewProps {
+  orderId: string | undefined;
 }
 
-const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({ }) => {
+const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({ orderId }) => {
   const [reducerState, dispatch] = useReducer(
     moneyReceiptReducer,
     initialState,
@@ -320,4 +320,4 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({ }) => {
     </AvoidSoftInputViewHOC>
   );
 };
-export default MoneyReceiptView;
+export default MoneyReceiptFormView;

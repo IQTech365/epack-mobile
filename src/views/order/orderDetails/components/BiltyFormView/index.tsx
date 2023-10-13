@@ -1,5 +1,5 @@
-import React, { useReducer, useState } from 'react';
-import { View } from 'react-native';
+import React, { useCallback, useEffect, useReducer, useState } from 'react';
+import { Alert, View } from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
 import DatePickerComponent from '../../../../../common/DatePickerComponent';
@@ -16,12 +16,20 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import BouncyCheckboxGroup, {
   ICheckboxButton,
 } from 'react-native-bouncy-checkbox-group';
+import vehicleTypeOptions from '../../../../../data/vehicleTypeOptions.json';
 import {
-  INVOICE_FORM_ACTION,
   initialState,
-  invoiceReducer,
-} from './InvoiceReducer';
+  biltyReducer,
+  BILTY_FORM_ACTION
+}
+  from './biltyReducer';
 import { formatDate } from '../../../../../utils/formatter';
+import { ICreateBiltyRequest } from '../../../../../interface/order/ICreateBiltyRequest';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
+import Button from '../../../../../common/Button';
+import { createBiltyRequest } from '../../../../../redux/slices/OrderSlice';
+import Spinner from '../../../../../common/Spinner';
+
 
 const riskTypeOptions: Array<ICheckboxButton> = [
   {
@@ -72,13 +80,34 @@ const payTypeOptions: Array<ICheckboxButton> = [
   },
 ];
 
-interface IInvoiceViewProps {
-  //
+const insuranceOptions: Array<ICheckboxButton> = [
+  {
+    id: '1',
+    text: 'Insured',
+    fillColor: COLOR_BLUE,
+    iconStyle: { borderColor: 'red', borderRadius: 0, width: 15, height: 15 },
+    innerIconStyle: { borderWidth: 1, borderRadius: 0, width: 15, height: 15 },
+    textStyle: { fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none' },
+    style: { paddingRight: 16 },
+  },
+  {
+    id: '2',
+    text: 'Not Insured',
+    fillColor: COLOR_BLUE,
+    iconStyle: { borderColor: 'red', borderRadius: 0, width: 15, height: 15 },
+    innerIconStyle: { borderWidth: 1, borderRadius: 0, width: 15, height: 15 },
+    textStyle: { fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none' },
+  },
+];
+
+interface IBiltyFormViewProps {
+  orderId: string | undefined;
 }
 
-const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
+const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
+  const state = { pickupPincode: '', deliveryPincode: '' };
+  const [reducerState, dispatch] = useReducer(biltyReducer, initialState);
   const [switchState, setSwitchState] = useState<boolean>(false);
-  const [state, dispatch] = useReducer(invoiceReducer, initialState);
   const [
     loadingAddressSameAsConsignerAddress,
     setIsLoadingAddressSameAsConsignerAddress,
@@ -88,387 +117,599 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
     setIsDeliveryAddressSameAsConsigneeAddress,
   ] = useState<boolean>(true);
   const [fixedFreight, setFixedFreight] = useState<boolean>(false);
+  const {
+    createBiltyRequesting,
+    createBiltySuccess,
+    createBiltyError,
+    createBiltyFailure,
+  } = useAppSelector(state => state.Order);
+  const dispatch2 = useAppDispatch();
 
   const switchWrapperStyle = switchState
     ? styles.switchMainWrapper
     : styles.switchMainWrapper2;
 
-  const handleInvoiceNoInputTextChange = (text: string) => {
-    console.log(text, 'invoice..data');
-    dispatch({
-      type: INVOICE_FORM_ACTION.INVOICE_NO,
-      payload: text,
-    });
-  };
-
-  const handleReceiptDate = (date: Date) => {
-    dispatch({
-      type: INVOICE_FORM_ACTION.DATE_INVOICE,
-      payload: formatDate(date),
-    });
-  };
-
-  const handleTrukNoInputTextChange = (text: string) => {
-    dispatch({
-      type: INVOICE_FORM_ACTION.TRUK_NO,
-      payload: text,
-    });
-  };
-
-  const handleConsignmnetNoInputTextChange = (text: string) => {
-    dispatch({
-      type: INVOICE_FORM_ACTION.CONSIGNMNET_NO,
-      payload: text,
-    });
-  };
-  const handleShiftingLuggagesTextChange = (item: TDropdownItem) => {
-    dispatch({
-      type: INVOICE_FORM_ACTION.SHIFTING_LUGGAGE,
-      payload: item.label,
-    });
-  };
-
-  const handleBillingConsignerNameInputTextChange = (text: string) => {
-    dispatch({
-      type: INVOICE_FORM_ACTION.BILLING_CONSIGNER_NAME,
-      payload: text,
-    });
-  };
-
-  const handleConsignerGSTInputTextChange = (text: string) => {
-    dispatch({
-      type: INVOICE_FORM_ACTION.BILLING_CONSIGNER_GST,
-      payload: text,
-    });
-  };
-
-  const handleConsignerMobileNoInputTextChange = (text: string) => {
-    dispatch({
-      type: INVOICE_FORM_ACTION.BILLING_CONSIGNER_MOBILE_NO,
-      payload: text,
-    });
-  };
-
-  const handleBillingAddressInputTextChange = (text: string) => {
-    dispatch({
-      type: INVOICE_FORM_ACTION.BILLING_ADDRESS,
-      payload: text,
-    });
-  };
-  const handleBillingLandmarkInputTextChange = (text: string) => {
-    dispatch({
-      type: INVOICE_FORM_ACTION.BILLING_LANDNMARK,
-      payload: text,
-    });
-  };
-
-  const handleBillingPincodeInputTextChange = (text: string) => {
-    dispatch({
-      type: INVOICE_FORM_ACTION.BILLING_PINCODE,
-      payload: text,
-    });
-  };
-
-  const handleBillingStateTextInputChange = (item: TDropdownItem) => {
-    dispatch({
-      type: INVOICE_FORM_ACTION.BILLING_STATE,
-      payload: item.label,
-    });
-  };
-
-  const handleBillingCityTextInputChange = (item: TDropdownItem) => {
-    dispatch({
-      type: INVOICE_FORM_ACTION.BILLING_CITY,
-      payload: item.label,
-    });
-  };
-
   const handleTemplate = (item: TDropdownItem) => {
     dispatch({
-      type: INVOICE_FORM_ACTION.CHOOSE_TEMPLETE,
+      type: BILTY_FORM_ACTION.CHOOSE_DESIGN,
       payload: item.label,
     });
   };
-
-  const handleBillingLoadingAddressTextInputChange = (item: boolean) => {
+  const handleDateofBiltyLrCn = (date: Date) => {
     dispatch({
-      type: INVOICE_FORM_ACTION.BILLING_LOADING_ADDRESS,
-      payload: item,
-    });
-  };
-
-  const handleVehicleInvoiceNoInputTextChange = (text: String) => {
-    dispatch({
-      type: INVOICE_FORM_ACTION.VEHICLE_INVOICE_NO,
-      payload: text,
-    });
-  };
-
-  const handleVehicleTypeTemplate = (item: TDropdownItem) => {
-    dispatch({
-      type: INVOICE_FORM_ACTION.VEHICLE_TYPE,
-      payload: item.label,
-    });
-  };
-
-  const handleVehicleNoInputTextChange = (text: String) => {
-    dispatch({
-      type: INVOICE_FORM_ACTION.VEHICLE_NO,
-      payload: text,
-    });
-  };
-
-  const handleVehicleFromLocationInputTextChange = (text: String) => {
-    dispatch({
-      type: INVOICE_FORM_ACTION.VEHICLE_FROM_LOCATION,
-      payload: text,
-    });
-  };
-
-  const handleVehicleToLocationInputTextChange = (text: String) => {
-    dispatch({
-      type: INVOICE_FORM_ACTION.VEHICLE_TO_LOCATION,
-      payload: text,
-    });
-  };
-
-  const handleVehicleDriverNameInputTextChange = (text: String) => {
-    dispatch({
-      type: INVOICE_FORM_ACTION.VEHICLE_TO_LOCATION,
-      payload: text,
-    });
-  };
-
-  const handleVehicleDriverMobileNoInputTextChange = (text: String) => {
-    dispatch({
-      type: INVOICE_FORM_ACTION.VEHICLE_MOBILE_NO,
-      payload: text,
-    });
-  };
-
-  const handleVehicleDriverLicenceNoInputTextChange = (text: String) => {
-    dispatch({
-      type: INVOICE_FORM_ACTION.VEHICLE_DRIVER_LICENCE_NO,
-      payload: text,
-    });
-  };
-  const handleVehicleSealNoInputTextChange = (text: String) => {
-    dispatch({
-      type: INVOICE_FORM_ACTION.VEHICLE_SEAL_NO,
-      payload: text,
-    });
-  };
-  const handleVehicleInDate = (date: Date) => {
-    dispatch({
-      type: INVOICE_FORM_ACTION.VEHICLE_IN_DATE,
+      type: BILTY_FORM_ACTION.DATE_OF_BILTY,
       payload: formatDate(date),
     });
   };
-
-  const handleVehicleOutDateDate = (date: Date) => {
+  const handleConsignerName = (text: string) => {
     dispatch({
-      type: INVOICE_FORM_ACTION.VEHICLE_OUT_DATE,
+      type: BILTY_FORM_ACTION.CONSIGNER_NAME,
+      payload: text,
+    });
+  };
+  const handleConsignerGst = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.CONSIGNER_GST,
+      payload: text,
+    });
+  };
+  const handleConsignerMobileNo = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.CONSIGNER_MOBILE_NO,
+      payload: text,
+    });
+  };
+  const handleConsignerAddress = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.CONSIGNER_ADDRESS,
+      payload: text,
+    });
+  };
+  const handleConsignerPinCode = useCallback(
+    (text: string) => {
+      dispatch({
+        type: BILTY_FORM_ACTION.CONSIGNER_PINCODE,
+        payload: text,
+      });
+    },
+    [state.pickupPincode],
+  );
+  const handleConsignerState = (item: TDropdownItem) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.CONSIGNER_STATE,
+      payload: item.label,
+    });
+  };
+  const handleConsignerCity = (item: TDropdownItem) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.CONSIGNER_CITY,
+      payload: item.label,
+    });
+  };
+  const handleConsigneeName = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.CONSIGNEE_NAME,
+      payload: text,
+    });
+  };
+  const handleConsigneeGst = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.CONSIGNEE_GST,
+      payload: text,
+    });
+  };
+  const handleConsigneeMobileNo = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.CONSIGNEE_MOBILE_NO,
+      payload: text,
+    });
+  };
+  const handleConsigneeAddress = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.CONSIGNEE_ADDRESS,
+      payload: text,
+    });
+  };
+  const handleConsigneePinCode = useCallback(
+    (text: string) => {
+      dispatch({
+        type: BILTY_FORM_ACTION.CONSIGNEE_PINCODE,
+        payload: text,
+      });
+    },
+    [state.deliveryPincode],
+  );
+  const handleConsigneeState = (item: TDropdownItem) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.CONSIGNEE_STATE,
+      payload: item.label,
+    });
+  };
+  const handleConsigneeCity = (item: TDropdownItem) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.CONSIGNEE_CITY,
+      payload: item.label,
+    });
+  };
+  const handleInvoiceNo = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.INVOICE_NO,
+      payload: text,
+    });
+  };
+  const handleVehicleType = (item: TDropdownItem) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.VEHICLE_TYPE,
+      payload: item.label,
+    });
+  };
+  const handleVehicleNo = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.VEHICLE_NO,
+      payload: text,
+    });
+  };
+  const handleFromLocation = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.FROM_LOCATION,
+      payload: text,
+    });
+  };
+  const handleToLocation = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.TO_LOCATION,
+      payload: text,
+    });
+  };
+  const handleDriverName = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.DRIVER_NAME,
+      payload: text,
+    });
+  };
+  const handleDriverMobileNo = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.DRIVER_MOBILE_NO,
+      payload: text,
+    });
+  };
+  const handleDriverLicenceNo = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.DRIVER_LICENCE_NO,
+      payload: text,
+    });
+  };
+  const handleSealNo = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.SEAL_NO,
+      payload: text,
+    });
+  };
+  const handleInDate = (date: Date) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.IN_DATE,
       payload: formatDate(date),
     });
   };
-
-  const handleMaterialNameInputTextChange = (text: String) => {
+  const handleOutDate = (date: Date) => {
     dispatch({
-      type: INVOICE_FORM_ACTION.MATERIAL_NAME,
+      type: BILTY_FORM_ACTION.OUT_DATE,
+      payload: formatDate(date),
+    });
+  };
+  const handleEwayBillNo = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.E_WAY_BILL_NO,
       payload: text,
     });
   };
-
-  const handleMaterialNoArticleInputTextChange = (text: String) => {
+  const handleGeneratedOn = (date: Date) => {
     dispatch({
-      type: INVOICE_FORM_ACTION.MATERIAL_NO_ARTICLES,
+      type: BILTY_FORM_ACTION.GENERATED_ON,
+      payload: formatDate(date),
+    });
+  };
+  const handleExpiryDate = (date: Date) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.EXPIRY_DATE,
+      payload: formatDate(date),
+    });
+  };
+  const handleMatrialName = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.MATERIAL_NAME,
       payload: text,
     });
   };
-
-  const handleMaterialPackingTypeTemplate = (item: TDropdownItem) => {
+  const handleNumberOfArticles = (text: string) => {
     dispatch({
-      type: INVOICE_FORM_ACTION.MATERIAL_PACKING_TYPE,
+      type: BILTY_FORM_ACTION.NO_OF_ARTICLES,
+      payload: text,
+    });
+  };
+  const handlePackingType = (item: TDropdownItem) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.PACKING_TYPE,
       payload: item.label,
     });
   };
-
-  const handleMaterialHSNCodeInputTextChange = (text: string) => {
+  const handleHsnCode = (text: string) => {
     dispatch({
-      type: INVOICE_FORM_ACTION.MATERIAL_HSN_CODE,
+      type: BILTY_FORM_ACTION.HSN_CODE,
       payload: text,
     });
   };
-
-  const handleMaterialBillInvoiceNoInputTextChange = (text: string) => {
+  const handleBillInnvoiceNo = (text: string) => {
     dispatch({
-      type: INVOICE_FORM_ACTION.MATERIAL_BILL_INVOICE_NO,
+      type: BILTY_FORM_ACTION.BILL_INVOICE_NO,
       payload: text,
     });
   };
-
-  const handleMaterialNetWeightInputTextChange = (text: string) => {
+  const handleNetWeight = (text: string) => {
     dispatch({
-      type: INVOICE_FORM_ACTION.MATERIAL_NET_WEIGHT,
+      type: BILTY_FORM_ACTION.NET_WEIGHT,
       payload: text,
     });
   };
-
-  const handleMaterialUnitTemplate = (item: TDropdownItem) => {
+  const handleUnitOne = (item: TDropdownItem) => {
     dispatch({
-      type: INVOICE_FORM_ACTION.MATERIAL_UNITS,
+      type: BILTY_FORM_ACTION.UNITONE,
       payload: item.label,
     });
   };
-
-  const handleMaterialValueGoodsInputTextChange = (text: string) => {
+  const handleValueOfGoods = (text: string) => {
     dispatch({
-      type: INVOICE_FORM_ACTION.MATERIAL_VALUE_GOODS,
+      type: BILTY_FORM_ACTION.VALUE_OF_GOODS,
       payload: text,
     });
   };
-  const handleMaterialRiskTypeTemplate = (text: object) => {
+  const handleFreightCharges = (text: string) => {
     dispatch({
-      type: INVOICE_FORM_ACTION.MATERIAL_RISK_TYPE,
+      type: BILTY_FORM_ACTION.FREIGHT_CHARGES,
       payload: text,
     });
   };
-
-  const handleFreightDetailsTemplate = (text: object) => {
+  const handlePicupCharges = (item: TDropdownItem) => {
     dispatch({
-      type: INVOICE_FORM_ACTION.FREIGHT_DETAIL,
-      payload: text,
-    });
-  };
-
-  const handleFixedFreightTemplate = (text: boolean) => {
-    dispatch({
-      type: INVOICE_FORM_ACTION.FIXED_FREIGHT,
-      payload: text,
-    });
-  };
-
-  const handleFreightChargesInputTextChange = (text: String) => {
-    dispatch({
-      type: INVOICE_FORM_ACTION.FREIGHT_ChARGES,
-      payload: text,
-    });
-  };
-
-  const handlePickupChargesInputTextChange = (item: TDropdownItem) => {
-    dispatch({
-      type: INVOICE_FORM_ACTION.PICKUP_CHARGES,
+      type: BILTY_FORM_ACTION.PICKUP_CHARGES,
       payload: item.label,
     });
   };
-
-  const handlePickupAmoutInputTextChange = (text: string) => {
+  const handlePicupChargesAmount = (text: string) => {
     dispatch({
-      type: INVOICE_FORM_ACTION.PICKUP_CHARGES,
+      type: BILTY_FORM_ACTION.PICKUP_CHARGES_AMOUNT,
       payload: text,
     });
   };
-
-  const handleDoorDeliveryChargesTemplate = (item: TDropdownItem) => {
+  const handleDoorDeliveryCharges = (item: TDropdownItem) => {
     dispatch({
-      type: INVOICE_FORM_ACTION.DOOR_DELIVERY_CHARGES,
+      type: BILTY_FORM_ACTION.DOOR_DELIVERY_CHARGES,
       payload: item.label,
     });
   };
-
-  const handleDoorDeliveryAmountInputTextChange = (text: string) => {
+  const handleDoorDeliveryChargesAmount = (text: string) => {
     dispatch({
-      type: INVOICE_FORM_ACTION.DOOR_DELIVERY_AMOUNT,
+      type: BILTY_FORM_ACTION.DOOR_DELIVERY_CHARGES_AMOUNT,
       payload: text,
     });
   };
-
-  const handlePackingChargesTemplate = (item: TDropdownItem) => {
+  const handleDoorPackingCharges = (item: TDropdownItem) => {
     dispatch({
-      type: INVOICE_FORM_ACTION.PACKING_CHARGES,
+      type: BILTY_FORM_ACTION.PACKING_CHARGES,
       payload: item.label,
     });
   };
-  const handlePackingAmountInputTextChange = (text: string) => {
+  const handlePackingChargesAmount = (text: string) => {
     dispatch({
-      type: INVOICE_FORM_ACTION.PACKING_AMOUNT,
+      type: BILTY_FORM_ACTION.PACKING_CHARGES_AMOUNT,
       payload: text,
     });
   };
-
-  const handlePackingMaterialChargesTemplate = (item: TDropdownItem) => {
+  const handlePackingMaterialCharges = (item: TDropdownItem) => {
     dispatch({
-      type: INVOICE_FORM_ACTION.PACKING_MATERIAL_CHARGES,
+      type: BILTY_FORM_ACTION.PACKING_MATERIAL_CHARGES,
       payload: item.label,
     });
   };
-
-  const handlePackingMaterialAmountInputTextChange = (text: string) => {
+  const handlePackingMaterialChargesAmount = (text: string) => {
     dispatch({
-      type: INVOICE_FORM_ACTION.PACKING_MATERAIL_AMOUNT,
+      type: BILTY_FORM_ACTION.PACKING_MATERIAL_CHARGES_AMOUNT,
       payload: text,
     });
   };
-  const handleUnpackingChargesTemplate = (item: TDropdownItem) => {
+  const handleUnPackingCharges = (item: TDropdownItem) => {
     dispatch({
-      type: INVOICE_FORM_ACTION.UNPACKING_CHARGES,
+      type: BILTY_FORM_ACTION.UNPACKING_CHARGES,
       payload: item.label,
     });
   };
-
-  const handleUnpackingAmountInputTextChange = (text: string) => {
+  const handleUnpackingChargesAmount = (text: string) => {
     dispatch({
-      type: INVOICE_FORM_ACTION.UNPACKING_AMOUNT,
+      type: BILTY_FORM_ACTION.UNPACKING_CHARGES_AMOUNT,
       payload: text,
     });
   };
-
-  const handleLoadingChargesTemplate = (item: TDropdownItem) => {
+  const handleLoadingCharges = (item: TDropdownItem) => {
     dispatch({
-      type: INVOICE_FORM_ACTION.LOADING_CHARGES,
+      type: BILTY_FORM_ACTION.LOADING_CHARGES,
       payload: item.label,
     });
   };
-
-  const handleLoadingAmountInputTextChange = (text: string) => {
+  const handleLoadingChargesAmount = (text: string) => {
     dispatch({
-      type: INVOICE_FORM_ACTION.LOADING_AMOUNT,
+      type: BILTY_FORM_ACTION.LOADING_CHARGES_AMOUNT,
       payload: text,
     });
   };
-
-  const handleUnloadingChargesTemplate = (item: TDropdownItem) => {
+  const handleUnloadingCharges = (item: TDropdownItem) => {
     dispatch({
-      type: INVOICE_FORM_ACTION.UNLOADING_CHARGES,
+      type: BILTY_FORM_ACTION.UNLOADING_CHARGES,
       payload: item.label,
     });
   };
-  const handleUnloadingAmountInputTextChange = (text: string) => {
+  const handleUnloadingChargesAmount = (text: string) => {
     dispatch({
-      type: INVOICE_FORM_ACTION.UNLOADING_AMOUNT,
+      type: BILTY_FORM_ACTION.UNLOADING_CHARGES_AMOUNT,
       payload: text,
     });
   };
-  const handleAdvanceAmountInputTextChange = (text: string) => {
+  const handleAdvanceAmount = (text: string) => {
     dispatch({
-      type: INVOICE_FORM_ACTION.ADVANCE_AMOUNT,
+      type: BILTY_FORM_ACTION.ADVANCE_AMOUNT,
       payload: text,
     });
+  };
+  const handleBalancceAmount = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.BALANCE_AMOUNT,
+      payload: text,
+    });
+  };
+  const handleInsuranceCompany = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.INSURANCE_COMPANY,
+      payload: text,
+    });
+  };
+  const handlePolicyNo = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.POLICY_NO,
+      payload: text,
+    });
+  };
+  const handleInsuranceDate = (date: Date) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.INSURANCE_DATE,
+      payload: formatDate(date),
+    });
+  };
+  const handleInsuranceAmount = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.INSURANCE_AMOUNT,
+      payload: text,
+    });
+  };
+  const handleDemurrageCharge = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.DEMURRAGE_CHARGES,
+      payload: text,
+    });
+  };
+  const handleDemurrageChargeDate = (item: TDropdownItem) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.CHARGE_DATE,
+      payload: item.label,
+    });
+  };
+  const handleDemurrageChargeApplicableAfter = (item: TDropdownItem) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.CHARGE_APPLICABLE_AFTER,
+      payload: item.label,
+    });
+  };
+  const handleRemark = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.REMARK,
+      payload: text,
+    });
+  };
+  const handleActualWeight = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.ACTUAL_WEIGHT,
+      payload: text,
+    });
+  };
+  const handleApplicableWeight = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.APPLICABLE_WEIGHT,
+      payload: text,
+    });
+  };
+  const handleUnitTwo = (item: TDropdownItem) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.UNITTWO,
+      payload: item.label,
+    });
+  };
+  const handleRate = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.RATE,
+      payload: text,
+    });
+  };
+  const handleReceiptDate = (date: Date) => {
+    // dispatch({
+    //   type: MONEYRECEIPT_FORM_ACTION.RECEIPT_DATE,
+    //   payload: formatDate(date),
+    // });
   };
 
-  const handleBalanceAmountInputTextChange = (text: string) => {
-    dispatch({
-      type: INVOICE_FORM_ACTION.BLANCE_AMOUNT,
-      payload: text,
-    });
-  };
+  const handleCreateBilty = useCallback(() => {
+    const payload: ICreateBiltyRequest = {
+      companyId: "131113",
+      orderId: "1123213",
+      templateId: "fds32131",
+      biltyNumber: reducerState.biltyLrCnNo,
+      biltyDate: reducerState.dateofBiltyLrCnNo,
 
-  const handleRemarkInputTextChange = (text: string) => {
-    dispatch({
-      type: INVOICE_FORM_ACTION.REMARK,
-      payload: text,
-    });
-  };
+      consigner: {
+        name: reducerState.consigneeName,
+        mobile: reducerState.consignerMobileNo,
+        gstin: reducerState.consignerGst,
+        street: reducerState.consignerCity,
+        state: reducerState.consignerState,
+        landmark: reducerState.consignerCity,
+        city: reducerState.consignerCity,
+        district: reducerState.consignerCity,
+        postOffice: reducerState.consignerCity,
+        postalCode: reducerState.consignerPincode,
+        country: "india"
+      },
+      consignee: {
+        name: reducerState.consigneeName,
+        mobile: reducerState.consigneeMobileNo,
+        gstin: reducerState.consigneeGst,
+        street: reducerState.consigneeCity,
+        state: reducerState.consigneeState,
+        landmark: reducerState.consigneeCity,
+        city: reducerState.consigneeCity,
+        district: reducerState.consigneeCity,
+        postOffice: reducerState.consigneeCity,
+        postalCode: reducerState.consigneePincode,
+        country: "india"
+      },
+
+      loadingAddress: {
+        address: "NA",
+        state: "Haryana",
+        landmark: "Railway colony",
+        city: "Haillymandi",
+        district: "Gurgaon",
+        postOffice: "Haillymandi",
+        postalCode: "122504",
+        country: "india"
+      },
+      unloadingAddress: {
+        address: "NA",
+        state: "Uttar Pradesh",
+        landmark: "",
+        city: "Rampur",
+        district: "Rampur",
+        postOffice: "Civil Line Rampur",
+        postalCode: "244901",
+        country: "india"
+      },
+
+      vehicle: {
+        invoiceNumber: reducerState.invoiceNo,
+        vehicleType: reducerState.vehicleType,
+        vehicleNumber: reducerState.vehicleNo,
+        shiftingFrom: reducerState.fromLocation,
+        shiftingTo: reducerState.toLocation,
+        sealNumber: reducerState.sealNo,
+        inDate: reducerState.inDate,
+        outDate: reducerState.outDate,
+        transitDays: "",
+        expectedDateOfDelivery: ""
+      },
+      driver: {
+        name: reducerState.driverName,
+        mobile: reducerState.driverMobileNo,
+        license: reducerState.driverLicenceNo
+      },
+      eWayBill: {
+        number: reducerState.eWayBillNo,
+        generationDate: reducerState.generatedOn,
+        expiryDate: reducerState.expiryDate
+      },
+      materialsType: "",
+      addMaterialsStatus: "",
+      materials: [{
+        name: reducerState.materialName,
+        noOfArticles: reducerState.noOfArticles,
+        packingType: reducerState.packingType,
+        HSNCode: reducerState.hsnCode,
+        billNumber: reducerState.billInvoiceNo,
+        actualWeight: reducerState.actualWeight,
+        applicableWeight: reducerState.applicableWeight,
+        unit: reducerState.unitOne,
+        valueOfGoods: reducerState.valueOfGoods
+      }],
+      riskType: reducerState.riskType,
+      liabilityOfTax: "",
+      insuranceStatus: "",
+      insurance: {
+        companyName: reducerState.insuranceAmount,
+        policyNumber: reducerState.policyNumber,
+        date: reducerState.insuranceDate,
+        amount: reducerState.insuranceAmount
+      },
+      demurrage: {
+        charge: reducerState.demurrageCharge,
+        rate: reducerState.rate,
+        chargeAfterApplicable: reducerState.chargeapplicableAfter
+      },
+
+      freightDetails: {
+        // "actualWeight": "",
+        // "applicableWeight": "",
+        // "units": "",
+        // "rate": "",
+        freightCharges: reducerState.freightCharges,
+        billingStatus: "TO_PAY",
+        //"isFixedFreight": "",
+        totalAmount: reducerState.pickupChargesAmount,
+        advanceAmount: reducerState.advanceAmount,
+        balanceAmount: reducerState.balanceAmount
+      },
+      pickupCharges: {
+        status: "NORequired",
+        charge: reducerState.pickupCharges
+      },
+      packingCharges: {
+        status: "",
+        charge: reducerState.packingCharges
+      },
+      unPackingCharges: {
+        status: "",
+        charge: reducerState.unPackingCharges
+      },
+      unLoadingCharges: {
+        status: "",
+        charge: reducerState.unLoadingCharges
+      },
+      doorDeliveryCharges: {
+        status: "",
+        charge: reducerState.doorDeliveryCharges
+      },
+      packingMaterialCharges: {
+        status: "",
+        charge: reducerState.packingCharges
+      },
+      loadingCharges: {
+        status: "REQUIRED",
+        charge: reducerState.loadingCharges
+      },
+      remarks: reducerState.remark,
+      addedBy: "12121212"
+    };
+    console.log(payload, 'payload Bility req');
+
+    dispatch2(createBiltyRequest(payload));
+  }, [dispatch2, reducerState]);
+
+  useEffect(() => {
+    if (!createBiltyRequesting && createBiltySuccess) {
+      // console.log('otpData--------', JSON.stringify(otpData));
+      // navigation.navigate(AuthStackRoute.OTPInput);
+    } else if (!createBiltyRequesting && createBiltyError) {
+      Alert.alert('Something went wrong. Please try again!');
+    }
+  }, [
+    createBiltyRequesting,
+    createBiltySuccess,
+    createBiltyFailure,
+  ]);
 
   const renderLoadingAddressView = () => {
     return (
@@ -476,7 +717,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
         <Spacer height={4} />
         <View style={styles.elementContainer2}>
           <Label text="Address" style={styles.label} />
-          <Input
+          {/* <Input
             onChangeText={handleReceiptNoInputTextChange}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
@@ -484,25 +725,14 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
           />
         </View>
         <Spacer height={4} />
-        <View style={styles.elementContainer}>
-          <View style={styles.itemContainer}>
-            <Label text="Landmark" style={styles.label} />
-            <Input
-              onChangeText={handleReceiptNoInputTextChange}
-              containerStyle={styles.inputContainer}
-              inputStyle={styles.input}
-              selectionColor={COLOR_BLACK}
-            />
-          </View>
-          <View style={styles.itemContainer}>
+        <View style={styles.elementContainer2}>
             <Label text="Pincode" style={styles.label} />
             <Input
               onChangeText={handleReceiptNoInputTextChange}
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
-            />
-          </View>
+            /> */}
         </View>
         <Spacer height={4} />
         <View style={styles.elementContainer}>
@@ -533,7 +763,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
           <View style={styles.itemContainer}>
             <Label text="Actual Weight" style={styles.label} />
             <Input
-              onChangeText={handleActualWeightInputTextChange}
+              onChangeText={handleActualWeight}
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
@@ -542,7 +772,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
           <View style={styles.itemContainer}>
             <Label text="Applicable Weight" style={styles.label} />
             <Input
-              onChangeText={handleApplicableWeightInputTextChange}
+              onChangeText={handleApplicableWeight}
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
@@ -555,13 +785,13 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
             <Label text="Units" style={styles.label} />
             <DropdownComponent
               data={shiftingLuggages}
-              onSelect={handleUnitsTemplate}
+              onSelect={handleUnitTwo}
             />
           </View>
           <View style={styles.itemContainer}>
             <Label text="Rate" style={styles.label} />
             <Input
-              onChangeText={handleRateInputTextChange}
+              onChangeText={handleRate}
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
@@ -572,36 +802,6 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
     );
   };
 
-  const handleActualWeightInputTextChange = (text: string) => {
-    dispatch({
-      type: INVOICE_FORM_ACTION.ACTUAL_WEIGHT,
-      payload: text,
-    });
-  };
-  const handleApplicableWeightInputTextChange = (text: string) => {
-    dispatch({
-      type: INVOICE_FORM_ACTION.APPLICATION_WEIGHT,
-      payload: text,
-    });
-  };
-  const handleUnitsTemplate = (item: TDropdownItem) => {
-    dispatch({
-      type: INVOICE_FORM_ACTION.UINTS,
-      payload: item.label,
-    });
-  };
-  const handleRateInputTextChange = (text: string) => {
-    dispatch({
-      type: INVOICE_FORM_ACTION.RATE,
-      payload: text,
-    });
-  };
-
-
-  function handleReceiptNoInputTextChange(text: string): void {
-    throw new Error('Function not implemented.');
-  }
-
   return (
     <AvoidSoftInputViewHOC>
       <View style={styles.container}>
@@ -609,7 +809,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
         <CollapsibleView title="BASIC DETAILS" collapsed={false}>
           <View>
             <View style={styles.labelContainer}>
-              <Label text="Invoice No." style={styles.label} />
+              <Label text="Bilty / LR / CN No." style={styles.label} />
             </View>
             <View style={[styles.elementContainer, styles.switchMainWrapper3]}>
               <View style={[styles.itemContainer, { alignItems: 'center' }]}>
@@ -628,7 +828,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
               </View>
               <View style={[styles.itemContainer, switchWrapperStyle]}>
                 <Input
-                  onChangeText={handleInvoiceNoInputTextChange}
+                  onChangeText={() => { }}
                   containerStyle={styles.switchInputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -638,55 +838,27 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
             </View>
             <View style={styles.elementContainer}>
               <View style={styles.itemContainer}>
-                <Label text="Choose Template" style={styles.label} />
+                <Label text="Choose Designs" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
                   onSelect={handleTemplate}
                 />
               </View>
               <View style={styles.itemContainer}>
-                <Label text="Date of Invoice" style={styles.label} />
+                <Label text="Date of Bilty/LR/CN No." style={styles.label} />
                 <DatePickerComponent onDateSelect={handleReceiptDate} />
               </View>
             </View>
             <Spacer height={4} />
-            <View style={styles.elementContainer}>
-              <View style={styles.itemContainer}>
-                <Label text="Truck No." style={styles.label} />
-                <Input
-                  onChangeText={handleTrukNoInputTextChange}
-                  containerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
-                  selectionColor={COLOR_BLACK}
-                />
-              </View>
-              <View style={styles.itemContainer}>
-                <Label text="Consignmnet No." style={styles.label} />
-                <Input
-                  onChangeText={handleConsignmnetNoInputTextChange}
-                  containerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
-                  selectionColor={COLOR_BLACK}
-                />
-              </View>
-            </View>
-            <Spacer height={4} />
-            <View style={styles.elementContainer2}>
-              <Label text="Shifting Luggage" style={styles.label} />
-              <DropdownComponent
-                data={shiftingLuggages}
-                onSelect={handleShiftingLuggagesTextChange}
-              />
-            </View>
           </View>
         </CollapsibleView>
         <Spacer height={4} />
-        <CollapsibleView title="BILLING ADDRESS" collapsed={true}>
+        <CollapsibleView title="CONSIGNER DETAILS" collapsed={true}>
           <View>
             <View style={styles.elementContainer2}>
               <Label text="Consigner Name" style={styles.label} />
               <Input
-                onChangeText={handleBillingConsignerNameInputTextChange}
+                onChangeText={handleConsignerName}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -697,7 +869,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
               <View style={styles.itemContainer}>
                 <Label text="Consigner GST" style={styles.label} />
                 <Input
-                  onChangeText={handleConsignerGSTInputTextChange}
+                  onChangeText={handleConsignerGst}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -706,7 +878,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
               <View style={styles.itemContainer}>
                 <Label text="Consigner Mobile No." style={styles.label} />
                 <Input
-                  onChangeText={handleConsignerMobileNoInputTextChange}
+                  onChangeText={handleConsignerMobileNo}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -717,7 +889,17 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
             <View style={styles.elementContainer2}>
               <Label text="Address" style={styles.label} />
               <Input
-                onChangeText={handleBillingAddressInputTextChange}
+                onChangeText={handleConsignerAddress}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                selectionColor={COLOR_BLACK}
+              />
+            </View>
+            <Spacer height={4} />
+            <View style={styles.elementContainer2}>
+              <Label text="Pincode" style={styles.label} />
+              <Input
+                onChangeText={handleConsignerPinCode}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -726,38 +908,17 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
             <Spacer height={4} />
             <View style={styles.elementContainer}>
               <View style={styles.itemContainer}>
-                <Label text="Landmark" style={styles.label} />
-                <Input
-                  onChangeText={handleBillingLandmarkInputTextChange}
-                  containerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
-                  selectionColor={COLOR_BLACK}
-                />
-              </View>
-              <View style={styles.itemContainer}>
-                <Label text="Pincode" style={styles.label} />
-                <Input
-                  onChangeText={handleBillingPincodeInputTextChange}
-                  containerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
-                  selectionColor={COLOR_BLACK}
-                />
-              </View>
-            </View>
-            <Spacer height={4} />
-            <View style={styles.elementContainer}>
-              <View style={styles.itemContainer}>
                 <Label text="State" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
-                  onSelect={handleBillingStateTextInputChange}
+                  onSelect={handleConsignerState}
                 />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="City" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
-                  onSelect={handleBillingCityTextInputChange}
+                  onSelect={handleConsignerCity}
                 />
               </View>
             </View>
@@ -790,7 +951,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
                 style={{ marginRight: 15 }}
                 textContainerStyle={{ paddingLeft: 0 }}
                 onPress={(isChecked: boolean) => {
-                  handleBillingLoadingAddressTextInputChange(isChecked);
+                  setIsLoadingAddressSameAsConsignerAddress(isChecked);
                 }}
                 isChecked={loadingAddressSameAsConsignerAddress}
               />
@@ -801,12 +962,121 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
           </View>
         </CollapsibleView>
         <Spacer height={4} />
+        <CollapsibleView title="CONSIGNEE DETAILS" collapsed={true}>
+          <View>
+            <View style={styles.elementContainer2}>
+              <Label text="Consignee Name" style={styles.label} />
+              <Input
+                onChangeText={handleConsigneeName}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                selectionColor={COLOR_BLACK}
+              />
+            </View>
+            <Spacer height={4} />
+            <View style={styles.elementContainer}>
+              <View style={styles.itemContainer}>
+                <Label text="Consignee GST" style={styles.label} />
+                <Input
+                  onChangeText={handleConsigneeGst}
+                  containerStyle={styles.inputContainer}
+                  inputStyle={styles.input}
+                  selectionColor={COLOR_BLACK}
+                />
+              </View>
+              <View style={styles.itemContainer}>
+                <Label text="Consignee Mobile No." style={styles.label} />
+                <Input
+                  onChangeText={handleConsigneeMobileNo}
+                  containerStyle={styles.inputContainer}
+                  inputStyle={styles.input}
+                  selectionColor={COLOR_BLACK}
+                />
+              </View>
+            </View>
+            <Spacer height={4} />
+            <View style={styles.elementContainer2}>
+              <Label text="Address" style={styles.label} />
+              <Input
+                onChangeText={handleConsigneeAddress}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                selectionColor={COLOR_BLACK}
+              />
+            </View>
+            <Spacer height={4} />
+            <View style={styles.elementContainer2}>
+              <Label text="Pincode" style={styles.label} />
+              <Input
+                onChangeText={handleConsigneePinCode}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                selectionColor={COLOR_BLACK}
+              />
+            </View>
+            <Spacer height={4} />
+            <View style={styles.elementContainer}>
+              <View style={styles.itemContainer}>
+                <Label text="State" style={styles.label} />
+                <DropdownComponent
+                  data={shiftingLuggages}
+                  onSelect={handleConsigneeState}
+                />
+              </View>
+              <View style={styles.itemContainer}>
+                <Label text="City" style={styles.label} />
+                <DropdownComponent
+                  data={shiftingLuggages}
+                  onSelect={handleConsigneeCity}
+                />
+              </View>
+            </View>
+            <Spacer height={4} />
+            <View style={styles.labelContainer}>
+              <Label text="Delivery Address" style={styles.label2} />
+            </View>
+            <View style={styles.elementContainer}>
+              <BouncyCheckbox
+                size={25}
+                fillColor={COLOR_BLUE}
+                unfillColor="#FFFFFF"
+                text="Same as Consignee Address"
+                iconStyle={{
+                  borderColor: 'red',
+                  borderRadius: 0,
+                  width: 18,
+                  height: 18,
+                }}
+                innerIconStyle={{
+                  borderWidth: 1,
+                  borderRadius: 0,
+                  width: 18,
+                  height: 18,
+                }}
+                textStyle={{
+                  fontFamily: 'JosefinSans-Regular',
+                  textDecorationLine: 'none',
+                }}
+                style={{ marginRight: 15 }}
+                textContainerStyle={{ paddingLeft: 0 }}
+                onPress={(isChecked: boolean) => {
+                  setIsDeliveryAddressSameAsConsigneeAddress(isChecked);
+                }}
+                isChecked={deliveryAddressSameAsConsigneeAddress}
+              />
+            </View>
+            {!deliveryAddressSameAsConsigneeAddress
+              ? renderLoadingAddressView()
+              : null}
+          </View>
+        </CollapsibleView>
+        <Spacer height={4} />
         <CollapsibleView title="VEHICLE DETAILS" collapsed={true}>
           <View>
             <View style={styles.elementContainer2}>
               <Label text="Invoice No." style={styles.label} />
               <Input
-                onChangeText={handleVehicleInvoiceNoInputTextChange}
+                onChangeText={handleInvoiceNo}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -817,14 +1087,14 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
               <View style={styles.itemContainer}>
                 <Label text="Vehicle Type" style={styles.label} />
                 <DropdownComponent
-                  data={shiftingLuggages}
-                  onSelect={handleVehicleTypeTemplate}
+                  data={vehicleTypeOptions}
+                  onSelect={handleVehicleType}
                 />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Vehicle No." style={styles.label} />
                 <Input
-                  onChangeText={handleVehicleNoInputTextChange}
+                  onChangeText={handleVehicleNo}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -836,7 +1106,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
               <View style={styles.itemContainer}>
                 <Label text="From Location" style={styles.label} />
                 <Input
-                  onChangeText={handleVehicleFromLocationInputTextChange}
+                  onChangeText={handleFromLocation}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -845,7 +1115,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
               <View style={styles.itemContainer}>
                 <Label text="To Location" style={styles.label} />
                 <Input
-                  onChangeText={handleVehicleToLocationInputTextChange}
+                  onChangeText={handleToLocation}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -856,7 +1126,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
             <View style={styles.elementContainer2}>
               <Label text="Driver Name" style={styles.label} />
               <Input
-                onChangeText={handleVehicleDriverNameInputTextChange}
+                onChangeText={handleDriverName}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -867,7 +1137,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
               <View style={styles.itemContainer}>
                 <Label text="Driver Mobile No." style={styles.label} />
                 <Input
-                  onChangeText={handleVehicleDriverMobileNoInputTextChange}
+                  onChangeText={handleDriverMobileNo}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -876,7 +1146,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
               <View style={styles.itemContainer}>
                 <Label text="Driver Licence No." style={styles.label} />
                 <Input
-                  onChangeText={handleVehicleDriverLicenceNoInputTextChange}
+                  onChangeText={handleDriverLicenceNo}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -887,7 +1157,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
             <View style={styles.elementContainer2}>
               <Label text="Seal No." style={styles.label} />
               <Input
-                onChangeText={handleVehicleSealNoInputTextChange}
+                onChangeText={handleSealNo}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -897,11 +1167,36 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
             <View style={styles.elementContainer}>
               <View style={styles.itemContainer}>
                 <Label text="In Date" style={styles.label} />
-                <DatePickerComponent onDateSelect={handleVehicleInDate} />
+                <DatePickerComponent onDateSelect={handleInDate} />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Out Date" style={styles.label} />
-                <DatePickerComponent onDateSelect={handleVehicleOutDateDate} />
+                <DatePickerComponent onDateSelect={handleOutDate} />
+              </View>
+            </View>
+          </View>
+        </CollapsibleView>
+        <Spacer height={4} />
+        <CollapsibleView title="E-Way BILL DETAILS" collapsed={true}>
+          <View>
+            <View style={styles.elementContainer2}>
+              <Label text="E-Way Bill No." style={styles.label} />
+              <Input
+                onChangeText={handleEwayBillNo}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                selectionColor={COLOR_BLACK}
+              />
+            </View>
+            <Spacer height={4} />
+            <View style={styles.elementContainer}>
+              <View style={styles.itemContainer}>
+                <Label text="Generated On" style={styles.label} />
+                <DatePickerComponent onDateSelect={handleGeneratedOn} />
+              </View>
+              <View style={styles.itemContainer}>
+                <Label text="Expiry Date" style={styles.label} />
+                <DatePickerComponent onDateSelect={handleExpiryDate} />
               </View>
             </View>
           </View>
@@ -912,7 +1207,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
             <View style={styles.elementContainer2}>
               <Label text="Material Name" style={styles.label} />
               <Input
-                onChangeText={handleMaterialNameInputTextChange}
+                onChangeText={handleMatrialName}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -923,7 +1218,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
               <View style={styles.itemContainer}>
                 <Label text="No. of Articles" style={styles.label} />
                 <Input
-                  onChangeText={handleMaterialNoArticleInputTextChange}
+                  onChangeText={handleNumberOfArticles}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -933,7 +1228,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
                 <Label text="Packing Type" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
-                  onSelect={handleMaterialPackingTypeTemplate}
+                  onSelect={handlePackingType}
                 />
               </View>
             </View>
@@ -942,7 +1237,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
               <View style={styles.itemContainer}>
                 <Label text="HSN Code" style={styles.label} />
                 <Input
-                  onChangeText={handleMaterialHSNCodeInputTextChange}
+                  onChangeText={handleHsnCode}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -951,7 +1246,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
               <View style={styles.itemContainer}>
                 <Label text="Bill/Invoice No." style={styles.label} />
                 <Input
-                  onChangeText={handleMaterialBillInvoiceNoInputTextChange}
+                  onChangeText={handleBillInnvoiceNo}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -963,7 +1258,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
               <View style={styles.itemContainer}>
                 <Label text="Net Weight" style={styles.label} />
                 <Input
-                  onChangeText={handleMaterialNetWeightInputTextChange}
+                  onChangeText={handleNetWeight}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -973,7 +1268,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
                 <Label text="Units" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
-                  onSelect={handleMaterialUnitTemplate}
+                  onSelect={handleUnitOne}
                 />
               </View>
             </View>
@@ -981,7 +1276,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
             <View style={styles.elementContainer2}>
               <Label text="Value of Goods" style={styles.label} />
               <Input
-                onChangeText={handleMaterialValueGoodsInputTextChange}
+                onChangeText={handleValueOfGoods}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -996,7 +1291,6 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
                 data={riskTypeOptions}
                 onChange={(selectedItem: ICheckboxButton) => {
                   console.log('SelectedItem: ', JSON.stringify(selectedItem));
-                  handleMaterialRiskTypeTemplate(selectedItem);
                 }}
               />
             </View>
@@ -1010,7 +1304,6 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
                 data={payTypeOptions}
                 onChange={(selectedItem: ICheckboxButton) => {
                   console.log('SelectedItem: ', JSON.stringify(selectedItem));
-                  handleFreightDetailsTemplate(selectedItem);
                 }}
               />
             </View>
@@ -1041,7 +1334,6 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
                 textContainerStyle={{ paddingLeft: 0 }}
                 onPress={(isChecked: boolean) => {
                   setFixedFreight(isChecked);
-                  handleFixedFreightTemplate(isChecked);
                 }}
                 isChecked={fixedFreight}
               />
@@ -1050,7 +1342,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
             <View style={styles.elementContainer2}>
               <Label text="Freight Charges" style={styles.label} />
               <Input
-                onChangeText={handleFreightChargesInputTextChange}
+                onChangeText={handleFreightCharges}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -1062,13 +1354,13 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
                 <Label text="Pickup Charges" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
-                  onSelect={handlePickupChargesInputTextChange}
+                  onSelect={handlePicupCharges}
                 />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Amount" style={styles.label} />
                 <Input
-                  onChangeText={handlePickupAmoutInputTextChange}
+                  onChangeText={handlePicupChargesAmount}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -1081,13 +1373,13 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
                 <Label text="Door Delivery Charges" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
-                  onSelect={handleDoorDeliveryChargesTemplate}
+                  onSelect={handleDoorDeliveryCharges}
                 />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Amount" style={styles.label} />
                 <Input
-                  onChangeText={handleDoorDeliveryAmountInputTextChange}
+                  onChangeText={handleDoorDeliveryChargesAmount}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -1100,13 +1392,13 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
                 <Label text="Packing Charges" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
-                  onSelect={handlePackingChargesTemplate}
+                  onSelect={handleDoorPackingCharges}
                 />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Amount" style={styles.label} />
                 <Input
-                  onChangeText={handlePackingAmountInputTextChange}
+                  onChangeText={handlePackingChargesAmount}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -1119,13 +1411,13 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
                 <Label text="Packing Material Charges" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
-                  onSelect={handlePackingMaterialChargesTemplate}
+                  onSelect={handlePackingMaterialCharges}
                 />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Amount" style={styles.label} />
                 <Input
-                  onChangeText={handlePackingMaterialAmountInputTextChange}
+                  onChangeText={handlePackingMaterialChargesAmount}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -1138,13 +1430,13 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
                 <Label text="Unpacking Charges" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
-                  onSelect={handleUnpackingChargesTemplate}
+                  onSelect={handleUnPackingCharges}
                 />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Amount" style={styles.label} />
                 <Input
-                  onChangeText={handleUnpackingAmountInputTextChange}
+                  onChangeText={handleUnpackingChargesAmount}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -1157,13 +1449,13 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
                 <Label text="Loading Charges" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
-                  onSelect={handleLoadingChargesTemplate}
+                  onSelect={handleLoadingCharges}
                 />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Amount" style={styles.label} />
                 <Input
-                  onChangeText={handleLoadingAmountInputTextChange}
+                  onChangeText={handleLoadingChargesAmount}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -1176,13 +1468,13 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
                 <Label text="Unloading Charges" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
-                  onSelect={handleUnloadingChargesTemplate}
+                  onSelect={handleUnloadingCharges}
                 />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Amount" style={styles.label} />
                 <Input
-                  onChangeText={handleUnloadingAmountInputTextChange}
+                  onChangeText={handleUnloadingChargesAmount}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -1198,7 +1490,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
               <View style={styles.itemContainer}>
                 <Label text="Advance Amount" style={styles.label} />
                 <Input
-                  onChangeText={handleAdvanceAmountInputTextChange}
+                  onChangeText={handleAdvanceAmount}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -1207,10 +1499,90 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
               <View style={styles.itemContainer}>
                 <Label text="Balance Amount" style={styles.label} />
                 <Input
-                  onChangeText={handleBalanceAmountInputTextChange}
+                  onChangeText={handleBalancceAmount}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
+                />
+              </View>
+            </View>
+          </View>
+        </CollapsibleView>
+        <Spacer height={4} />
+        <CollapsibleView title="INSURANCE DETAILS" collapsed={true}>
+          <View>
+            <View style={styles.elementContainer}>
+              <BouncyCheckboxGroup
+                data={insuranceOptions}
+                onChange={(selectedItem: ICheckboxButton) => {
+                  console.log('SelectedItem: ', JSON.stringify(selectedItem));
+                }}
+              />
+            </View>
+            <Spacer height={4} />
+            <View style={styles.elementContainer2}>
+              <Label text="Insurance Company" style={styles.label} />
+              <Input
+                onChangeText={handleInsuranceCompany}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                selectionColor={COLOR_BLACK}
+              />
+            </View>
+            <Spacer height={4} />
+            <View style={styles.elementContainer2}>
+              <Label text="Policy Number" style={styles.label} />
+              <Input
+                onChangeText={handlePolicyNo}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                selectionColor={COLOR_BLACK}
+              />
+            </View>
+            <Spacer height={4} />
+            <View style={styles.elementContainer}>
+              <View style={styles.itemContainer}>
+                <Label text="Insurance Date" style={styles.label} />
+                <DatePickerComponent onDateSelect={handleInsuranceDate} />
+              </View>
+              <View style={styles.itemContainer}>
+                <Label text="Insurance Amount" style={styles.label} />
+                <Input
+                  onChangeText={handleInsuranceAmount}
+                  containerStyle={styles.inputContainer}
+                  inputStyle={styles.input}
+                  selectionColor={COLOR_BLACK}
+                />
+              </View>
+            </View>
+          </View>
+        </CollapsibleView>
+        <Spacer height={4} />
+        <CollapsibleView title="DEMURRAGE DETAILS" collapsed={true}>
+          <View>
+            <View style={styles.elementContainer2}>
+              <Label text="Demurrage Charge" style={styles.label} />
+              <Input
+                onChangeText={handleDemurrageCharge}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                selectionColor={COLOR_BLACK}
+              />
+            </View>
+            <Spacer height={4} />
+            <View style={styles.elementContainer}>
+              <View style={styles.itemContainer}>
+                <Label text="Charge Date" style={styles.label} />
+                <DropdownComponent
+                  data={shiftingLuggages}
+                  onSelect={handleDemurrageChargeDate}
+                />
+              </View>
+              <View style={styles.itemContainer}>
+                <Label text="Charge Applicable After" style={styles.label} />
+                <DropdownComponent
+                  data={shiftingLuggages}
+                  onSelect={handleDemurrageChargeApplicableAfter}
                 />
               </View>
             </View>
@@ -1222,7 +1594,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
             <View style={styles.elementContainer2}>
               <Label text="Remark" style={styles.label} />
               <Input
-                onChangeText={handleRemarkInputTextChange}
+                onChangeText={handleRemark}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -1231,9 +1603,18 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ }) => {
           </View>
         </CollapsibleView>
         <Spacer height={8} />
+        <Button
+          text="CREATE"
+          onPress={handleCreateBilty}
+          disabled={false}
+          style={styles.previewButtonStyle}
+          textStyle={styles.textStyle}
+        />
+        <Spacer height={8} />
+        <Spinner show={createBiltyRequesting} />
       </View>
     </AvoidSoftInputViewHOC>
   );
 };
 
-export default InvoiceView;
+export default BiltyFormView;

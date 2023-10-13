@@ -121,6 +121,12 @@ export const OrderSlice = createSlice({
       state.addOrderFailure = true;
       state.addOrderError = action.payload;
     },
+    resetAddOrderRequest: (state) => {
+      state.addOrderRequesting = false;
+      state.addOrderSuccess = false;
+      state.addOrderFailure = false;
+      state.addOrderError = null;
+    },
     // Get Order List
     getOrdersRequest: (state, action: PayloadAction<string>) => {
       state.getOrdersRequesting = true;
@@ -245,6 +251,7 @@ export const {
   addOrderRequest,
   addOrderSuccess,
   addOrderFailure,
+  resetAddOrderRequest,
   // Get Order List
   getOrdersRequest,
   getOrdersSuccess,

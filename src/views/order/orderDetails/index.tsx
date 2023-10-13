@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, FlatList} from 'react-native';
+import {View, FlatList} from 'react-native';
 import Header from '../../../common/Header';
 import Spacer from '../../../common/Spacer';
 import styles from './style';
@@ -7,12 +7,20 @@ import tabOptions from '../../../data/orderDetailsTabs.json';
 import Tab from '../../../common/Tab';
 import OrderInfoView from './components/OrderInfoView';
 import DetailsView from './components/DetailsView';
-import MoneyReceiptView from './components/MoneyReceiptView';
-import CarConditionView from './components/CarConditionView';
-import BiltyView from './components/BiltyView';
-import InvoiceView from './components/InvoiceView';
+import MoneyReceiptFormView from './components/MoneyReceiptFormView';
+import CarConditionFormView from './components/CarConditionFormView';
+import BiltyFormView from './components/BiltyFormView';
+import InvoiceFormView from './components/InvoiceFormView';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import { OrderStackParamList } from '../../../navigation/params/OrderStackParamList';
+import { IGetOrdersData } from '../../../interface/order/IGetOrdersResponse';
 
-const OrderDetailsView: React.FC<{}> = ({}) => {
+type Props = NativeStackScreenProps<OrderStackParamList, 'OrderDetails'>;
+
+const OrderDetailsView: React.FC<Props> = ({route, navigation}) => {
+  const orderId: string | undefined = route.params?.orderId;
+  const item: IGetOrdersData | undefined = route.params?.item;
+
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
 
   const handleTabChange = (index: number) => {
@@ -22,15 +30,15 @@ const OrderDetailsView: React.FC<{}> = ({}) => {
   const showTabItem = () => {
     switch (activeTabIndex) {
       case 0:
-        return <DetailsView />
+        return <DetailsView item={item}/>
       case 1:
-        return <MoneyReceiptView />
+        return <MoneyReceiptFormView orderId={orderId} />
       case 2:
-        return <CarConditionView />
+        return <CarConditionFormView orderId={orderId} />
       case 3:
-        return <BiltyView />
+        return <BiltyFormView orderId={orderId} />
       case 4:
-        return <InvoiceView />
+        return <InvoiceFormView orderId={orderId} />
       default:
         return null;
     }
@@ -38,7 +46,7 @@ const OrderDetailsView: React.FC<{}> = ({}) => {
   return (
     <View style={styles.container}>
       <Header label="ORDER DETAILS" canGoBack={true} />
-      <OrderInfoView />
+      <OrderInfoView orderId={orderId as string} />
       <Spacer height={10} />
       <View style={styles.tabsContainer}>
         <FlatList
