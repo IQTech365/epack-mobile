@@ -204,13 +204,7 @@ const AddLorryView: React.FC<{}> = ({ }) => {
                     </View>
                     <View style={styles.textContainer}>
                         <Label text="Manufacturing Year" style={styles.label} />
-                        <Input
-                            onChangeText={handlePincodeInputTextChange}
-                            containerStyle={styles.inputContainer}
-                            inputStyle={styles.input}
-                            selectionColor={COLOR_BLACK}
-                            placeholder='HR 55 hY 2259'
-                        />
+                        <DatePickerComponent onDateSelect={handleAddLorryDate} />
                     </View>
                 </View>
                 <Spacer height={4} />
