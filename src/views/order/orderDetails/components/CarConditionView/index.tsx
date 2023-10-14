@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   FlatList,
@@ -14,6 +14,8 @@ import ListViewIcon2 from '../../../../../images/icons/list_view_icon2.svg';
 import CreateIcon from '../../../../../images/icons/create_icon.svg';
 import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
 import CarConditionFormView from '../CarConditionFormView';
+import { getCarConditionListRequest } from '../../../../../redux/slices/OrderSlice';
+import Spinner from '../../../../../common/Spinner';
 
 interface ICarConditionViewProps {
   orderId: string;
@@ -21,7 +23,7 @@ interface ICarConditionViewProps {
 
 const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId}) => {
   const dispatch = useAppDispatch();
-  const {} = useAppSelector(state => state.Order);
+  const {carConditionList, getCarConditionListRequesting} = useAppSelector(state => state.Order);
 
   const [showCarConditionList, setShowCarConditionList] = useState<boolean>(false);
   const [createNewCarCondition, setCreateNewCarCondition] = useState<boolean>(true);
@@ -36,6 +38,10 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId}) => {
     setCreateNewCarCondition(false);
   };
 
+  useEffect(() => {
+    dispatch(getCarConditionListRequest(orderId));
+  }, []);
+
   const showEmptyView = () => {
     return (
       <View style={styles.emptyContainer}>
@@ -45,7 +51,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId}) => {
   };
 
   const handleOnRefresh = useCallback(() => {
-    // dispatch(getQuotationsRequest(enquiryId));
+    dispatch(getCarConditionListRequest(orderId));
   }, []);
 
   const showForm = () => {
@@ -62,7 +68,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId}) => {
           contentContainerStyle={{alignItems: 'center', paddingVertical: 10}}
           data={[]}
           refreshControl={
-            <RefreshControl refreshing={false} onRefresh={handleOnRefresh} />
+            <RefreshControl refreshing={getCarConditionListRequesting} onRefresh={handleOnRefresh} />
           }
           //   renderItem={({item, index}) => (
           //     <QuotationListItem item={item} index={1} onPress={() => {}} />
@@ -97,6 +103,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId}) => {
       </View>
       {showForm()}
       {showList()}
+      <Spinner show={getCarConditionListRequesting} />
     </>
   );
 };

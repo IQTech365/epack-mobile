@@ -198,7 +198,7 @@ const OTPPageView = (props: any) => {
           disabled={disabled}
         />
         <Spacer height={50} />
-        <Spinner show={verifyOtpRequesting || getCompaniesRequesting} />
+        <Spinner variant='white' show={verifyOtpRequesting || getCompaniesRequesting} />
       </LinearGradient>
     </AvoidSoftInputViewHOC>
   );

@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   FlatList,
@@ -14,6 +14,8 @@ import ListViewIcon2 from '../../../../../images/icons/list_view_icon2.svg';
 import CreateIcon from '../../../../../images/icons/create_icon.svg';
 import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
 import MoneyReceiptFormView from '../MoneyReceiptFormView';
+import { getMoneyReceiptListRequest } from '../../../../../redux/slices/OrderSlice';
+import Spinner from '../../../../../common/Spinner';
 
 interface IMoneyReceiptViewProps {
   orderId: string;
@@ -21,7 +23,8 @@ interface IMoneyReceiptViewProps {
 
 const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({orderId}) => {
   const dispatch = useAppDispatch();
-  const {} = useAppSelector(state => state.Order);
+  const {getMoneyReceiptListRequesting, moneyReceiptList} = useAppSelector(state => state.Order);
+  console.log('MoneyReceiptList--', JSON.stringify(moneyReceiptList));
 
   const [showMoneyReceiptList, setShowMoneyReceiptList] = useState<boolean>(false);
   const [createNewBiltyMoneyReceipt, setCreateNewMoneyReceipt] = useState<boolean>(true);
@@ -36,6 +39,10 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({orderId}) => {
     setCreateNewMoneyReceipt(false);
   };
 
+  useEffect(() => {
+    dispatch(getMoneyReceiptListRequest(orderId));
+  }, []);
+
   const showEmptyView = () => {
     return (
       <View style={styles.emptyContainer}>
@@ -45,7 +52,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({orderId}) => {
   };
 
   const handleOnRefresh = useCallback(() => {
-    // dispatch(getQuotationsRequest(enquiryId));
+    dispatch(getMoneyReceiptListRequest(orderId));
   }, []);
 
   const showForm = () => {
@@ -62,7 +69,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({orderId}) => {
           contentContainerStyle={{alignItems: 'center', paddingVertical: 10}}
           data={[]}
           refreshControl={
-            <RefreshControl refreshing={false} onRefresh={handleOnRefresh} />
+            <RefreshControl refreshing={getMoneyReceiptListRequesting} onRefresh={handleOnRefresh} />
           }
           //   renderItem={({item, index}) => (
           //     <QuotationListItem item={item} index={1} onPress={() => {}} />
@@ -97,6 +104,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({orderId}) => {
       </View>
       {showForm()}
       {showList()}
+      <Spinner show={getMoneyReceiptListRequesting} />
     </>
   );
 };

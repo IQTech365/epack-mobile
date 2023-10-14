@@ -34,3 +34,7 @@ export const CREATE_CAR_CONDITION = `/car-condition/add`;
 export const CREATE_MONEY_RECEIPT = `/money-receipt/add`;
 export const CREATE_BILTY = `/bilty/add`;
 export const CREATE_INVOICE = ``;
+export const GET_CAR_CONDITION_LIST = (order_id) => `/car-condition/${order_id}`;
+export const GET_MONEY_RECEIPT_LIST = (order_id) => `/money-receipt/${order_id}`;
+export const GET_BILTY_LIST = (order_id) => `/bilty${order_id}`;
+export const GET_INVOICE_LIST = (order_id) => `/invoice/${order_id}`;

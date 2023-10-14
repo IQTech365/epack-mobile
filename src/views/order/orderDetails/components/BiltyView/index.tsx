@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   FlatList,
@@ -14,6 +14,8 @@ import ListViewIcon from '../../../../../images/icons/list_view_icon.svg';
 import ListViewIcon2 from '../../../../../images/icons/list_view_icon2.svg';
 import CreateIcon from '../../../../../images/icons/create_icon.svg';
 import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
+import { getBiltyListRequest } from '../../../../../redux/slices/OrderSlice';
+import Spinner from '../../../../../common/Spinner';
 
 interface IBiltyViewProps {
   orderId: string;
@@ -21,7 +23,7 @@ interface IBiltyViewProps {
 
 const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
   const dispatch = useAppDispatch();
-  const {} = useAppSelector(state => state.Order);
+  const {biltyList, getBiltyListRequesting} = useAppSelector(state => state.Order);
 
   const [showBiltyList, setShowBiltyList] = useState<boolean>(false);
   const [createNewBilty, setCreateNewBilty] = useState<boolean>(true);
@@ -36,6 +38,10 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
     setCreateNewBilty(false);
   };
 
+  useEffect(() => {
+    dispatch(getBiltyListRequest(orderId));
+  }, []);
+
   const showEmptyView = () => {
     return (
       <View style={styles.emptyContainer}>
@@ -45,7 +51,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
   };
 
   const handleOnRefresh = useCallback(() => {
-    // dispatch(getQuotationsRequest(enquiryId));
+    dispatch(getBiltyListRequest(orderId));
   }, []);
 
   const showForm = () => {
@@ -62,7 +68,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
           contentContainerStyle={{alignItems: 'center', paddingVertical: 10}}
           data={[]}
           refreshControl={
-            <RefreshControl refreshing={false} onRefresh={handleOnRefresh} />
+            <RefreshControl refreshing={getBiltyListRequesting} onRefresh={handleOnRefresh} />
           }
           //   renderItem={({item, index}) => (
           //     <QuotationListItem item={item} index={1} onPress={() => {}} />
@@ -97,6 +103,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
       </View>
       {showForm()}
       {showList()}
+      <Spinner show={getBiltyListRequesting} />
     </>
   );
 };
