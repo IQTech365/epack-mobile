@@ -361,7 +361,7 @@ export const SettingSlice = createSlice({
         addFooterContentRequest: (state, action: PayloadAction<IAddFooterContentRequest>) => {
             state.addFooterContentRequesting = true;
         },
-        addFooterContentSuccess: (state, action: PayloadAction<IAddPaymentMethodResponse>) => {
+        addFooterContentSuccess: (state, action: PayloadAction<IAddFooterContentResponse>) => {
             state.addFooterContentRequesting = false;
             state.addFooterContentSuccess = true;
             state.addFooterContentInfo = action.payload;
@@ -427,7 +427,7 @@ export const SettingSlice = createSlice({
         getFooterContentsRequest: (state, action: PayloadAction<string>) => {
             state.getFooterContentsRequesting = true;
         },
-        getFooterContentsSuccess: (state, action: PayloadAction<IGetPaymentMethodsResponse>) => {
+        getFooterContentsSuccess: (state, action: PayloadAction<IGetFooterContentsResponse>) => {
             state.getFooterContentsRequesting = false;
             state.getFooterContentsSuccess = true;
             state.footerContents = action.payload;

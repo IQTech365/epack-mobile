@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, FlatList, TouchableOpacity, Text} from 'react-native';
 import styles from './style';
 import Spacer from '../../../../../common/Spacer';
@@ -7,10 +7,39 @@ import ListViewIcon from '../../../../../images/icons/list_view_icon.svg';
 import ListViewIcon2 from '../../../../../images/icons/list_view_icon2.svg';
 import CreateIcon from '../../../../../images/icons/create_icon.svg';
 import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
+import { getFooterContentsRequest } from '../../../../../redux/slices/SettingSlice';
+import Spinner from '../../../../../common/Spinner';
 
 const AddFooterContentView = () => {
   const [showContentList, setShowContentList] = useState<boolean>(false);
   const [showAddContent, setShowAddContent] = useState<boolean>(true);
+  const dispatch = useAppDispatch();
+  const {
+    footerContents,
+    getFooterContentsRequesting,
+    getFooterContentsSuccess,
+    getFooterContentsFailure,
+  } = useAppSelector(state => state.Setting);
+  const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
+  console.log('FooterContents-', JSON.stringify(footerContents));
+
+  const getCompanyId = () => {
+    let id;
+    const {data} = addCompanyInfo || {};
+    const {data: companiesData} = companies || {};
+    if (data && Object.keys(data).length > 0) {
+      id = data._id;
+    } else if (
+      companiesData &&
+      Array.isArray(companiesData) &&
+      companiesData.length > 0
+    ) {
+      const firstCompany = companiesData[0];
+      id = firstCompany._id;
+    }
+    return id;
+  };
 
   const handleCreateNewContent = () => {
     setShowContentList(false);
@@ -50,6 +79,10 @@ const AddFooterContentView = () => {
     return null;
   };
 
+  useEffect(() => {
+    dispatch(getFooterContentsRequest(getCompanyId()))
+  }, []);
+
   return (
     <View style={{flex: 1, alignItems: 'center'}}>
       <View style={styles.container2}>
@@ -72,6 +105,7 @@ const AddFooterContentView = () => {
       </View>
       {showForm()}
       {showList()}
+      <Spinner show={getFooterContentsRequesting} />
     </View>
   );
 };
