@@ -34,7 +34,7 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({}) => {
 
   return (
     <AvoidSoftInputViewHOC>
-      <View>
+      <View style={styles.wrapper}>
         <View style={styles.textContainer2}>
           <Label text="Choose Content Type" style={styles.label} />
           <DropdownComponent
@@ -131,6 +131,7 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({}) => {
           style={styles.previewButtonStyle}
           textStyle={styles.textStyle}
         />
+        <Spacer height={12} />
       </View>
     </AvoidSoftInputViewHOC>
   );

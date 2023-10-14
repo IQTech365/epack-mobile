@@ -11,13 +11,6 @@ const styles = StyleSheet.create({
         marginBottom: 8,
         backgroundColor: COLOR_GRAY2,
     },
-    button: {
-        borderWidth: 1,
-        borderRadius: 25,
-        borderColor: COLOR_BLUE,
-        paddingHorizontal: 20,
-        paddingVertical: 6,
-    },
     emptyContainer: {
         flex: 1,
         alignItems: 'center',

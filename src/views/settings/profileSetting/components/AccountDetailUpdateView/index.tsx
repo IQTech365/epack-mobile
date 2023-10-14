@@ -6,7 +6,7 @@ import Spacer from '../../../../../common/Spacer';
 import Label from '../../../../../common/Label';
 import DropdownComponent from '../../../../../common/DropdownComponent';
 import Input from '../../../../../common/Input';
-import {COLOR_BLACK, COLOR_BLUE} from '../../../../../utils/colors';
+import {COLOR_BLACK, COLOR_BLUE, COLOR_GRAY2} from '../../../../../utils/colors';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import styles from './style';
 import Button from '../../../../../common/Button';
@@ -107,7 +107,7 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
   return (
     <AvoidSoftInputViewHOC>
       <View
-        style={{flex: 1, alignItems: 'center', justifyContent: 'flex-start'}}>
+        style={styles.wrapper}>
         <View style={styles.textContainer2}>
           <Label text="Choose Account Type" style={styles.label} />
           <DropdownComponent

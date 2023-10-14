@@ -92,7 +92,7 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
 
   return (
     <AvoidSoftInputViewHOC>
-      <View>
+      <View style={styles.wrapper}>
         <View style={styles.textContainer2}>
           <Label text="Choose Document Type" style={styles.label} />
           <DropdownComponent
@@ -179,6 +179,7 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
           style={styles.previewButtonStyle}
           textStyle={styles.textStyle}
         />
+        <Spacer height={12} />
       </View>
     </AvoidSoftInputViewHOC>
   );
