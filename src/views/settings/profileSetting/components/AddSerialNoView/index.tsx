@@ -16,6 +16,7 @@ import { TDropdownItem } from '../../../../../type/TDropdownItem';
 import Input from '../../../../../common/Input';
 import { COLOR_BLACK } from '../../../../../utils/colors';
 import Button from '../../../../../common/Button';
+import AddSerialNoUpdateView from '../AddSerialNoUpdateView';
 
 const AddSerialNoView = () => {
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -41,61 +42,15 @@ const AddSerialNoView = () => {
   const showTabItem = () => {
     switch (activeTabIndex) {
       case 0:
-        return (
-          <View>
-          <View style={styles.textContainer2}>
-          <Label text="Choose Entity" style={styles.label} />
-          <DropdownComponent
-            data={accountTypeOptions}
-            onSelect={handleAccountType}
-          />
-           <Label text="Choose Branch" style={styles.label} />
-          <DropdownComponent
-            data={accountTypeOptions}
-            onSelect={handleAccountType}
-          />
-        </View>
-        <View style={styles.mainWrapper}>
-        <View style={styles.textContainer}>
-          <Label text="Prefixe" style={styles.label} />
-          <Input
-            onChangeText={() => {}}
-            containerStyle={styles.inputContainer}
-            inputStyle={styles.input}
-            selectionColor={COLOR_BLACK}
-            placeholder='#RD'
-          />
-        </View>
-        <View style={styles.textContainer}>
-          <Label text="Suffix (intial value)" style={styles.label} />
-          <Input
-            onChangeText={() => {}}
-            containerStyle={styles.inputContainer}
-            inputStyle={styles.input}
-            selectionColor={COLOR_BLACK}
-          />
-        </View>
-      </View>
-      <Spacer height={8} />
-        <Button
-          text="SAVE"
-          onPress={() => {
-            console.log('submitted data');
-          }}
-          disabled={false}
-          style={styles.previewButtonStyle}
-          textStyle={styles.textStyle}
-        />
-      </View>
-        )
+       return <AddSerialNoUpdateView/>
       case 1:
-        // return <FollowupView taskName='FOLLOW UP' assigneeRole='Enequiry' enquiryId={enquiryId as string} />
+        return <AddSerialNoUpdateView/>
       case 2:
-        // return <SurveyView taskName='SURVEY' assigneeRole='Survey' enquiryId={enquiryId as string} />
+        return <AddSerialNoUpdateView/>
       case 3:
-        // return <QuotationView enquiryId={enquiryId as string} />
+        return <AddSerialNoUpdateView/>
       case 4:
-        // return <PackingMaterialsView />
+        return <AddSerialNoUpdateView/>
       default:
         return null;
     }
@@ -128,7 +83,7 @@ const AddSerialNoView = () => {
       <FlatList
         data={[]}
         contentContainerStyle={{
-          flex: 1,
+          // flex: 1,
           alignItems: 'center',
           justifyContent: 'center',
         }}
