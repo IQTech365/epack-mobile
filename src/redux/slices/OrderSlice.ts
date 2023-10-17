@@ -14,6 +14,7 @@ import { IGetOrdersResponse } from '../../interface/order/IGetOrdersResponse';
 import { IGetMoneyReceiptsResponse } from '../../interface/order/IGetMoneyReceiptsResponse';
 import { IGetCarConditionListResponse } from '../../interface/order/IGetCarConditionListResponse';
 import { IGetBiltyListResponse } from '../../interface/order/IGetBiltyListResponse';
+import { IGetOrdersRequest } from '../../interface/order/IGetOrdersRequest';
 
 interface IOrderState {
   // Add Order
@@ -167,7 +168,7 @@ export const OrderSlice = createSlice({
       state.addOrderError = null;
     },
     // Get Order List
-    getOrdersRequest: (state, action: PayloadAction<string>) => {
+    getOrdersRequest: (state, action: PayloadAction<Partial<IGetOrdersRequest>>) => {
       state.getOrdersRequesting = true;
     },
     getOrdersSuccess: (state, action: PayloadAction<IGetOrdersResponse>) => {

@@ -43,19 +43,10 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
     }
     return id;
   };
-
-  const tempItem: IEnquiryItem = {
-    clientName: 'Ms. Vanshika',
-    pickupAddress: 'Delhi, Munirka',
-    deliveryAddress: 'Gurgaon, Sector 48',
-    shiftingType: 'Domestic',
-    shiftingLuggage: 'Home, car',
-    phoneNumber: '9898989898',
-    enquiryId: '',
-  };
+  
   const {data} = enquiries || {};
 
-  let transformedData: IEnquiryItem[] = [tempItem];
+  let transformedData: IEnquiryItem[] = [];
   if (data) {
     //@ts-ignore
     transformedData = data.map(enq => {

@@ -11,6 +11,8 @@ export const AddQuotationService = async (payload: IAddQuotationRequest,): Promi
 };
 
 export const GetQuotationsService = async (payload: string): Promise<IGetQuotationsResponse> => {
+  console.log('GetQuotationsService-payload--', payload);
+  
   const api = Api.getInstance();
   return await api.get<IGetQuotationsResponse>(GET_QUOTATION_LIST(payload));
 }

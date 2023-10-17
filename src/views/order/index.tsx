@@ -4,9 +4,12 @@ import {View, Text, FlatList, RefreshControl} from 'react-native';
 import AddNew from '../../common/AddNew';
 import Header from '../../common/Header';
 import Spacer from '../../common/Spacer';
+import { IGetOrdersRequest } from '../../interface/order/IGetOrdersRequest';
+import { IGetOrdersData } from '../../interface/order/IGetOrdersResponse';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {getOrdersRequest} from '../../redux/slices/OrderSlice';
 import {OrderStackRoute} from '../../utils/constants';
+import { formatDate } from '../../utils/formatter';
 import OrderListItem, {
   IOrderItem,
 } from './orderDetails/components/OrderListItem';
@@ -19,18 +22,11 @@ interface IOrderPageViewProps {
 const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
   const dispatch = useAppDispatch();
   const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
+  const {verifiedData} = useAppSelector(state => state.OTP);
   const {orders, getOrdersRequesting, getOrdersSuccess, getOrdersFailure} =
     useAppSelector(state => state.Order);
   console.log('AddOrderView--state----', orders);
-  const tempItem: IOrderItem = {
-    orderId: '23423423423',
-    clientName: 'Ms. Vanshika',
-    pickupAddress: 'Delhi, Munirka',
-    deliveryAddress: 'Gurgaon, Sector 48',
-    shiftingType: 'Domestic',
-    shiftingLuggage: 'Home, car',
-    phoneNumber: '9898989898',
-  };
+  const {data: ordersArr} = orders || {};
 
   const getCompanyId = () => {
     let id;
@@ -49,31 +45,100 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
     return id;
   };
 
+  const getAuthId = () => {
+    const {data} = verifiedData || {};
+    return data?.id;
+  }
+
+  const getClientName = (item: IGetOrdersData) => {
+    let clientName = '';
+    if(item.billingBy == 'by Individual') {
+      clientName = item.partyName;
+    } else if(item.billingBy == 'by Company') {
+      //@ts-ignore
+      clientName = item.billingDetails?.authorityPersonName
+    }
+    return clientName;
+  }
+
+  const getPhoneNumber = (item: IGetOrdersData) => {
+    let phoneNumber = '';
+    if(item.billingBy == 'by Individual') {
+      phoneNumber = item.mobile;
+    } else if(item.billingBy == 'by Company') {
+      //@ts-ignore
+      clientName = item.billingDetails?.authorityPersonMobile
+    }
+    return phoneNumber;
+  }
+
+  const getAddress = (type: string, item: IGetOrdersData) => {
+    let address = '';
+    if(type == 'pick') {
+      address = `${item.pickupAddress.address}, ${item.pickupAddress.city}, ${item.pickupAddress.state}, ${item.pickupAddress.pincode}`;
+    } else if(type == 'drop') {
+      address = `${item.dropAddress.address}, ${item.dropAddress.city}, ${item.dropAddress.state}, ${item.dropAddress.pincode}`;
+    }
+    return address;
+  }
+
+
+  const getTransformedData = () => {
+    let dataSet: IOrderItem[] = [];
+    if(ordersArr && Array.isArray(ordersArr) && ordersArr.length > 0) {
+      dataSet = ordersArr.map(el => {
+        const item:IOrderItem = {
+          orderId: el._id,
+          clientName: getClientName(el),
+          shiftingType: el?.shiftingType,
+          shiftingLuggage: el?.shiftingLuggage.join(','),
+          phoneNumber: getPhoneNumber(el),
+          pickupAddress: getAddress('pick', el),
+          deliveryAddress: getAddress('drop', el),
+          orderData: formatDate(el.createdAt),
+        }
+        return item;
+      })
+    }
+    return dataSet;
+  }
+
   const handleAddNew = () => {
     navigation.navigate(OrderStackRoute.AddOrder);
   };
 
-  const handleOrderDetailsClick = (item: IOrderItem) => {
-    navigation.navigate(OrderStackRoute.OrderDetails, {orderId: item.orderId, item: item});
+  const handleOrderDetailsClick = (item: IOrderItem, index: number) => {
+    navigation.navigate(OrderStackRoute.OrderDetails, {orderId: item.orderId, item: getOrderDataByIndex(index)});
   };
 
+  const getOrderDataByIndex = (index: number) => {
+    if(ordersArr) return ordersArr[index];
+    return null;
+  }
+
   const handleOnRefresh = useCallback(() => {
-    dispatch(getOrdersRequest(getCompanyId()));
+    const payload: Partial<IGetOrdersRequest> = {
+      companyId: getCompanyId(),
+    }
+    dispatch(getOrdersRequest(payload));
   }, []);
 
   useEffect(() => {
-    dispatch(getOrdersRequest(getCompanyId()));
+    const payload: Partial<IGetOrdersRequest> = {
+      companyId: getCompanyId(),
+    }
+    dispatch(getOrdersRequest(payload));
   }, []);
 
   return (
     <View style={styles.container}>
       <Header label="Order Management" canGoBack={true} showDrawerIcon={true} />
       <Spacer height={4} />
-      <AddNew countLabel="Total Orders" count="1200" onPress={handleAddNew} />
+      <AddNew countLabel="Total Orders" count={`${getTransformedData().length}`} onPress={handleAddNew} />
       <Spacer height={12} />
       <FlatList
         contentContainerStyle={styles.listContent}
-        data={[tempItem]}
+        data={getTransformedData()}
         refreshControl={
           <RefreshControl
             refreshing={getOrdersRequesting}
@@ -83,10 +148,11 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
         renderItem={({item, index}) => (
           <OrderListItem
             item={item}
-            index={1}
-            onPress={() => handleOrderDetailsClick(item)}
+            index={index}
+            onPress={() => handleOrderDetailsClick(item, index)}
           />
         )}
+        ListEmptyComponent={() => <Text>No Orders available</Text>}
       />
     </View>
   );

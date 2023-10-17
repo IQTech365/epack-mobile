@@ -16,6 +16,7 @@ export interface IOrderItem {
   shiftingType: string;
   shiftingLuggage: string;
   phoneNumber: string;
+  orderData: string;
 }
 
 interface IOrderListItemProps {
@@ -29,6 +30,13 @@ interface IOrderListItemProps {
 
 const OrderListItem: React.FC<IOrderListItemProps> = ({item, index, onPress}) => {
   return (
+    <View style={styles.wrapper}>
+    <View style={styles.badgeWrapper}>
+        <View style={styles.bageContainer}>
+          <Text style={styles.badgeText}>{index + 1}</Text>
+        </View>
+        <Text style={styles.orderDateText}>{item.orderData}</Text>
+      </View>
     <Shadow style={styles.cardWrapper} distance={4}>
       <TouchableOpacity style={styles.container} activeOpacity={0.6} onPress={onPress}>
         <View style={styles.dateAndQuotationNumberContainer}>
@@ -88,6 +96,7 @@ const OrderListItem: React.FC<IOrderListItemProps> = ({item, index, onPress}) =>
         <Spacer height={6} />
       </TouchableOpacity>
     </Shadow>
+    </View>
   );
 };
 

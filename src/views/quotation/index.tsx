@@ -25,6 +25,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
     getQuotationsFailure,
   } = useAppSelector(state => state.Quotation);
   const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
+  const {verifiedData} = useAppSelector(state => state.OTP);
 
   console.log('quotations----', JSON.stringify(quotations));
 
@@ -56,16 +57,23 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
     return id;
   };
 
+  const getAuthId = () => {
+    const {data} = verifiedData || {};
+    return data?.id;
+  }
+
   const handleAddNew = () => {
     navigation.navigate(QuotationStackRoute.AddQuotation);
   };
 
   const handleOnRefresh = useCallback(() => {
-    dispatch(getQuotationsRequest(getCompanyId()));
+    const urlParams = `${getAuthId()}/${getCompanyId()}`;
+    dispatch(getQuotationsRequest(urlParams));
   }, []);
 
   useEffect(() => {
-    dispatch(getQuotationsRequest(getCompanyId()));
+    const urlParams = `${getAuthId()}/${getCompanyId()}`;
+    dispatch(getQuotationsRequest(urlParams));
   }, []);
 
   return (

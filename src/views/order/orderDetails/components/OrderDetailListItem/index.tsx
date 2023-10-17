@@ -3,18 +3,20 @@ import {View, Text} from 'react-native';
 import styles from './style';
 
 interface IOrderDetailListItemProps {
-    //
+    label?: string;
+    value?: string;
+    isLast?: boolean;
 }
 
-const OrderDetailListItem:React.FC<IOrderDetailListItemProps> = ({}) => {
-
+const OrderDetailListItem:React.FC<IOrderDetailListItemProps> = ({label, value, isLast = false}) => {
+    const lastItemStyle = isLast ? styles.lastItemBorderStyle : {};
     return (
         <View style={styles.container}>
-            <View style={styles.labelContainer}>
-                <Text>Enquiry Source</Text>
+            <View style={[styles.labelContainer, lastItemStyle]}>
+                <Text>{label}</Text>
             </View>
-            <View style={styles.valueContainer}>
-                <Text>Website</Text>
+            <View style={[styles.valueContainer, lastItemStyle]}>
+                <Text>{value}</Text>
             </View>
         </View>
     );

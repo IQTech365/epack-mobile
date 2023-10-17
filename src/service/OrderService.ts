@@ -1,6 +1,18 @@
 import {AxiosResponse} from 'axios';
 import {Api} from '../http/Api';
-import {ADD_ENQUIRY, CREATE_BILTY, CREATE_CAR_CONDITION, CREATE_MONEY_RECEIPT, EDIT_COMPANY, GET_BILTY_LIST, GET_CAR_CONDITION_LIST, GET_INVOICE_LIST, GET_MONEY_RECEIPT_LIST, GET_ORDER_DETAILS, GET_ORDER_LIST} from '../http/Endpoint';
+import {
+  ADD_ENQUIRY,
+  CREATE_BILTY,
+  CREATE_CAR_CONDITION,
+  CREATE_MONEY_RECEIPT,
+  EDIT_COMPANY,
+  GET_BILTY_LIST,
+  GET_CAR_CONDITION_LIST,
+  GET_INVOICE_LIST,
+  GET_MONEY_RECEIPT_LIST,
+  GET_ORDER_DETAILS,
+  GET_ORDER_LIST
+} from '../http/Endpoint';
 import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
 import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
 import { IOrderDetailsResponse } from '../interface/order/IOrderDetailsResponse';
@@ -18,6 +30,7 @@ import { IGetOrdersResponse } from '../interface/order/IGetOrdersResponse';
 import { IGetMoneyReceiptsResponse } from '../interface/order/IGetMoneyReceiptsResponse';
 import { IGetBiltyListResponse } from '../interface/order/IGetBiltyListResponse';
 import { IGetCarConditionListResponse } from '../interface/order/IGetCarConditionListResponse';
+import { IGetOrdersRequest } from '../interface/order/IGetOrdersRequest';
 
 export const GetOrderDetailsService = async (payload: string): Promise<IOrderDetailsResponse> => {
     console.log('GetOrderDetailsService--payload--', JSON.stringify(payload));
@@ -86,10 +99,11 @@ export const EditEnquiryService = async (payload: IOtpVerifyRequest): Promise<IO
     return await api.update<IOtpVerifyRequest, AxiosResponse<IOtpVerifyResponse>>(payload, EDIT_COMPANY);
 }
 
-export const GetOrdersService = async (payload: string): Promise<IGetOrdersResponse> => {
+export const GetOrdersService = async (payload: Partial<IGetOrdersRequest>): Promise<IGetOrdersResponse> => {
     console.log('GetOrdersService--payload--', JSON.stringify(payload));
     const api = Api.getInstance();
-    return await api.get<IGetOrdersResponse>(GET_ORDER_LIST(payload));
+    // return await api.get<IGetOrdersResponse>(GET_ORDER_LIST(payload));
+    return await api.post<Partial<IGetOrdersRequest>, AxiosResponse<IGetOrdersResponse>>(payload, GET_ORDER_LIST);
 }
 
 // TODO: refactor code once in use

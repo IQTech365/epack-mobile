@@ -1,11 +1,39 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import {COLOR_BLUE, COLOR_GRAY, COLOR_GRAY2, COLOR_ORANGE, COLOR_WHITE} from '../../../../../utils/colors';
+import {COLOR_BLACK, COLOR_BLUE, COLOR_GRAY, COLOR_GRAY2, COLOR_ORANGE, COLOR_WHITE} from '../../../../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
+  wrapper: {
+    marginVertical: 8,
+  },
   cardWrapper: {
     borderRadius: 8,
     alignItems: 'center',
+    // marginVertical: 10,
+  },
+  badgeWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  bageContainer: {
+    width: 30,
+    height: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: COLOR_BLUE,
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
+  },
+  badgeText: {
+    color: COLOR_WHITE,
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  orderDateText: {
+    color: COLOR_BLACK,
+    fontSize: 14,
+    fontWeight: '500',
+    marginLeft: 8
   },
   container: {
     width: width * 0.92,
@@ -31,8 +59,8 @@ const styles = StyleSheet.create({
     // borderTopLeftRadius: 8,
     // borderEndColor: COLOR_GRAY2,
     // borderTopStartRadius: 8,
-    borderLeftWidth: 10,
-    borderLeftColor: COLOR_ORANGE,
+    // borderLeftWidth: 10,
+    // borderLeftColor: COLOR_ORANGE,
   },
   contactOptionsContainer: {
     width: '30%',

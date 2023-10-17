@@ -19,7 +19,7 @@ type Props = NativeStackScreenProps<OrderStackParamList, 'OrderDetails'>;
 
 const OrderDetailsView: React.FC<Props> = ({route, navigation}) => {
   const orderId: string | undefined = route.params?.orderId;
-  const item: IGetOrdersData | undefined = route.params?.item;
+  const item: IGetOrdersData | null = route.params?.item;
 
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
 
@@ -46,7 +46,7 @@ const OrderDetailsView: React.FC<Props> = ({route, navigation}) => {
   return (
     <View style={styles.container}>
       <Header label="ORDER DETAILS" canGoBack={true} />
-      <OrderInfoView orderId={orderId as string} />
+      <OrderInfoView orderId={orderId as string} item={item} />
       <Spacer height={10} />
       <View style={styles.tabsContainer}>
         <FlatList

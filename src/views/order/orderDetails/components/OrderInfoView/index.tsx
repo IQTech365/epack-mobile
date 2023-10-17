@@ -17,11 +17,14 @@ import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import { resetUpdateEnquiryStatusRequest, updateEnquiryStatusRequest } from '../../../../../redux/slices/EnquirySlice';
 import { IUpdateEnquiryStatus } from '../../../../../interface/enquiry/IUpdateEnquiryStatusRequest';
 import Toast from 'react-native-toast-message';
+import { IGetOrdersData } from '../../../../../interface/order/IGetOrdersResponse';
+import { formatDate } from '../../../../../utils/formatter';
 interface IOrderInfoViewProps {
   orderId: string;
+  item: IGetOrdersData | null;
 }
 
-const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId}) => {
+const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item}) => {
   const dispatch = useAppDispatch();
   const [orderStatus, setOrderStatus] = useState<string>('New');
   const {
@@ -66,6 +69,13 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId}) => {
     }
   }, [updateEnquiryStatusRequesting, updateEnquiryStatusSuccess, updateEnquiryStatusFailure]);
 
+  const getOrderDate = () => {
+    if (item && item.createdAt) {
+      return formatDate(new Date(item.createdAt));
+    }
+    return 'NA';
+  };
+
   return (
     <View style={styles.backgroundContainer}>
       <ImageBackground
@@ -75,10 +85,10 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId}) => {
           <View style={styles.leftContainer}>
             <View style={styles.infoContainer}>
               <View style={[styles.itemContainer]}>
-                <Text style={styles.nameText}>Ms. Vanshika Vats</Text>
+                <Text style={styles.nameText}>{item?.partyName || item?.billingDetails?.authorityPersonName}</Text>
               </View>
               <View style={[styles.itemContainer]}>
-                <Text style={styles.normalText}>9876546789</Text>
+                <Text style={styles.normalText}>{item?.mobile || item?.billingDetails?.authorityPersonMobile}</Text>
               </View>
             </View>
             <View style={styles.infoContainer}>
@@ -90,7 +100,7 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId}) => {
                   <Text style={styles.hyphenText}>-</Text>
                 </View>
                 <View style={styles.valueContainer}>
-                  <Text style={styles.valueText}>Delhi</Text>
+                  <Text style={styles.valueText}>{item?.pickupAddress.state}</Text>
                 </View>
               </View>
               <View style={styles.itemContainer}>
@@ -101,7 +111,7 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId}) => {
                   <Text style={styles.hyphenText}>-</Text>
                 </View>
                 <View style={styles.valueContainer}>
-                  <Text style={styles.valueText}>20 Nov. 2022</Text>
+                  <Text style={styles.valueText}>{getOrderDate()}</Text>
                 </View>
               </View>
             </View>
@@ -114,7 +124,7 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId}) => {
                   <Text style={styles.hyphenText}>-</Text>
                 </View>
                 <View style={styles.valueContainer}>
-                  <Text style={styles.valueText}>Gurgaon</Text>
+                  <Text style={styles.valueText}>{item?.dropAddress.state}</Text>
                 </View>
               </View>
               <View style={styles.itemContainer}>

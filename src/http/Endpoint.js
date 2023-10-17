@@ -28,7 +28,7 @@ export const GET_QUOTATION_LIST = (id) => `/quotation/${id}`;
 export const GET_QUOTATION = () => ``;
 
 // Order Module
-export const GET_ORDER_LIST = (company_id) => `/order/${company_id}`;
+export const GET_ORDER_LIST = `/enquiry/orderlist`;
 export const GET_ORDER_DETAILS = (order_id) => ``;
 export const CREATE_CAR_CONDITION = `/car-condition/add`;
 export const CREATE_MONEY_RECEIPT = `/money-receipt/add`;
