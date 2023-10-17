@@ -10,6 +10,10 @@ import {ICreateMoneyReceiptResponse} from '../../interface/order/ICreateMoneyRec
 import {ICreateMoneyReceiptRequest} from '../../interface/order/ICreateMoneyReceiptRequest';
 import {IAddOrderResponse} from '../../interface/order/IAddOrderResponse';
 import {IAddOrderRequest} from '../../interface/order/IAddOrderRequest';
+import { IGetOrdersResponse } from '../../interface/order/IGetOrdersResponse';
+import { IGetMoneyReceiptsResponse } from '../../interface/order/IGetMoneyReceiptsResponse';
+import { IGetCarConditionListResponse } from '../../interface/order/IGetCarConditionListResponse';
+import { IGetBiltyListResponse } from '../../interface/order/IGetBiltyListResponse';
 
 interface IOrderState {
   // Add Order
@@ -18,6 +22,12 @@ interface IOrderState {
   addOrderSuccess: boolean;
   addOrderFailure: boolean;
   addOrderError: any;
+  // Get Order List
+  orders: IGetOrdersResponse | null;
+  getOrdersRequesting: boolean;
+  getOrdersSuccess: boolean;
+  getOrdersFailure: boolean;
+  getOrdersError: any;
   // Get Order Details
   orderDetailsInfo: IOrderDetailsResponse | null;
   getOrderDetailsRequesting: boolean;
@@ -30,18 +40,36 @@ interface IOrderState {
   createMoneyReceiptSuccess: boolean;
   createMoneyReceiptFailure: boolean;
   createMoneyReceiptError: any;
+  // Get Money Receipt List
+  moneyReceiptList: IGetMoneyReceiptsResponse | null;
+  getMoneyReceiptListRequesting: boolean;
+  getMoneyReceiptListSuccess: boolean;
+  getMoneyReceiptListFailure: boolean;
+  getMoneyReceiptListError: any;
   // Create Car Condition
   createCarConditionInfo: ICreateCarConditionResponse | null;
   createCarConditionRequesting: boolean;
   createCarConditionSuccess: boolean;
   createCarConditionFailure: boolean;
   createCarConditionError: any;
+  // Get Car Condition List
+  carConditionList: IGetCarConditionListResponse | null;
+  getCarConditionListRequesting: boolean;
+  getCarConditionListSuccess: boolean;
+  getCarConditionListFailure: boolean;
+  getCarConditionListError: any;
   // Create Bilty
   createBiltyInfo: ICreateBiltyResponse | null;
   createBiltyRequesting: boolean;
   createBiltySuccess: boolean;
   createBiltyFailure: boolean;
   createBiltyError: any;
+  // Get Bilty List
+  biltyList: IGetBiltyListResponse | null;
+  getBiltyListRequesting: boolean;
+  getBiltyListSuccess: boolean;
+  getBiltyListFailure: boolean;
+  getBiltyListError: any;
   // Create Invoice
   createInvoiceInfo: ICreateInvoiceResponse | null;
   createInvoiceRequesting: boolean;
@@ -57,6 +85,12 @@ const initialState: IOrderState = {
   addOrderSuccess: false,
   addOrderFailure: false,
   addOrderError: null,
+  // Get Order List
+  orders: null,
+  getOrdersRequesting: false,
+  getOrdersSuccess: false,
+  getOrdersFailure: false,
+  getOrdersError: null,
   // Get Order Details
   orderDetailsInfo: null,
   getOrderDetailsRequesting: false,
@@ -69,18 +103,36 @@ const initialState: IOrderState = {
   createMoneyReceiptSuccess: false,
   createMoneyReceiptFailure: false,
   createMoneyReceiptError: null,
+  // Get Money Receipt List
+  moneyReceiptList: null,
+  getMoneyReceiptListRequesting: false,
+  getMoneyReceiptListSuccess: false,
+  getMoneyReceiptListFailure: false,
+  getMoneyReceiptListError: null,
   // Create Car Condition
   createCarConditionInfo: null,
   createCarConditionRequesting: false,
   createCarConditionSuccess: false,
   createCarConditionFailure: false,
   createCarConditionError: null,
+  // Get Car Condition List
+  carConditionList: null,
+  getCarConditionListRequesting: false,
+  getCarConditionListSuccess: false,
+  getCarConditionListFailure: false,
+  getCarConditionListError: null,
   // Create Bilty
   createBiltyInfo: null,
   createBiltyRequesting: false,
   createBiltySuccess: false,
   createBiltyFailure: false,
   createBiltyError: null,
+  // Get Bilty List
+  biltyList: null,
+  getBiltyListRequesting: false,
+  getBiltyListSuccess: false,
+  getBiltyListFailure: false,
+  getBiltyListError: null,
   // Create Invoice
   createInvoiceInfo: null,
   createInvoiceRequesting: false,
@@ -107,6 +159,27 @@ export const OrderSlice = createSlice({
       state.addOrderSuccess = false;
       state.addOrderFailure = true;
       state.addOrderError = action.payload;
+    },
+    resetAddOrderRequest: (state) => {
+      state.addOrderRequesting = false;
+      state.addOrderSuccess = false;
+      state.addOrderFailure = false;
+      state.addOrderError = null;
+    },
+    // Get Order List
+    getOrdersRequest: (state, action: PayloadAction<string>) => {
+      state.getOrdersRequesting = true;
+    },
+    getOrdersSuccess: (state, action: PayloadAction<IGetOrdersResponse>) => {
+      state.getOrdersRequesting = false;
+      state.getOrdersSuccess = true;
+      state.orders = action.payload;
+    },
+    getOrdersFailure: (state, action: PayloadAction<any>) => {
+      state.getOrdersRequesting = false;
+      state.getOrdersSuccess = false;
+      state.getOrdersFailure = true;
+      state.getOrdersError = action.payload;
     },
     // Get Order Details
     getOrderDetailsRequest: (state, action: PayloadAction<string>) => {
@@ -147,6 +220,27 @@ export const OrderSlice = createSlice({
       state.createMoneyReceiptFailure = true;
       state.createMoneyReceiptError = action.payload;
     },
+    resetCreateMoneyReceiptRequest: (state) => {
+      state.createMoneyReceiptRequesting = false;
+      state.createMoneyReceiptSuccess = false;
+      state.createMoneyReceiptFailure = false;
+      state.createMoneyReceiptError = null;
+    },
+    // Get Money Receipt List
+    getMoneyReceiptListRequest: (state, action: PayloadAction<string>) => {
+      state.getMoneyReceiptListRequesting = true;
+    },
+    getMoneyReceiptListSuccess: (state, action: PayloadAction<IGetMoneyReceiptsResponse>) => {
+      state.getMoneyReceiptListRequesting = false;
+      state.getMoneyReceiptListSuccess = true;
+      state.moneyReceiptList = action.payload;
+    },
+    getMoneyReceiptListFailure: (state, action: PayloadAction<any>) => {
+      state.getMoneyReceiptListRequesting = false;
+      state.getMoneyReceiptListSuccess = false;
+      state.getMoneyReceiptListFailure = true;
+      state.getMoneyReceiptListError = action.payload;
+    },
     // Create Car Condition
     createCarConditionRequest: (
       state,
@@ -168,6 +262,27 @@ export const OrderSlice = createSlice({
       state.createCarConditionFailure = true;
       state.createCarConditionError = action.payload;
     },
+    resetCreateCarConditionRequest: (state) => {
+      state.createCarConditionRequesting = false;
+      state.createCarConditionSuccess = false;
+      state.createCarConditionFailure = false;
+      state.createCarConditionError = null;
+    },
+    // Get Car Condition List
+    getCarConditionListRequest: (state, action: PayloadAction<string>) => {
+      state.getCarConditionListRequesting = true;
+    },
+    getCarConditionListSuccess: (state, action: PayloadAction<IGetCarConditionListResponse>) => {
+      state.getCarConditionListRequesting = false;
+      state.getCarConditionListSuccess = true;
+      state.carConditionList = action.payload;
+    },
+    getCarConditionListFailure: (state, action: PayloadAction<any>) => {
+      state.getCarConditionListRequesting = false;
+      state.getCarConditionListSuccess = false;
+      state.getCarConditionListFailure = true;
+      state.getCarConditionListError = action.payload;
+    },
     // Create Bilty
     createBiltyRequest: (state, action: PayloadAction<ICreateBiltyRequest>) => {
       state.createBiltyRequesting = true;
@@ -185,6 +300,27 @@ export const OrderSlice = createSlice({
       state.createBiltySuccess = false;
       state.createBiltyFailure = true;
       state.createBiltyError = action.payload;
+    },
+    resetCreateBiltyRequest: (state) => {
+      state.createBiltyRequesting = false;
+      state.createBiltySuccess = false;
+      state.createBiltyFailure = false;
+      state.createBiltyError = null;
+    },
+    // Get Bilty List
+    getBiltyListRequest: (state, action: PayloadAction<string>) => {
+      state.getBiltyListRequesting = true;
+    },
+    getBiltyListSuccess: (state, action: PayloadAction<IGetBiltyListResponse>) => {
+      state.getBiltyListRequesting = false;
+      state.getBiltyListSuccess = true;
+      state.biltyList = action.payload;
+    },
+    getBiltyListFailure: (state, action: PayloadAction<any>) => {
+      state.getBiltyListRequesting = false;
+      state.getBiltyListSuccess = false;
+      state.getBiltyListFailure = true;
+      state.getBiltyListError = action.payload;
     },
     // Create Invoice
     createInvoiceRequest: (
@@ -207,6 +343,12 @@ export const OrderSlice = createSlice({
       state.createInvoiceFailure = true;
       state.createInvoiceError = action.payload;
     },
+    resetCreateInvoiceRequest: (state, action: PayloadAction<any>) => {
+      state.createInvoiceRequesting = false;
+      state.createInvoiceSuccess = false;
+      state.createInvoiceFailure = false;
+      state.createInvoiceError = null;
+    },
   },
 });
 
@@ -217,6 +359,11 @@ export const {
   addOrderRequest,
   addOrderSuccess,
   addOrderFailure,
+  resetAddOrderRequest,
+  // Get Order List
+  getOrdersRequest,
+  getOrdersSuccess,
+  getOrdersFailure,
   // Get Order Details
   getOrderDetailsRequest,
   getOrderDetailsSuccess,
@@ -225,14 +372,29 @@ export const {
   createMoneyReceiptRequest,
   createMoneyReceiptSuccess,
   createMoneyReceiptFailure,
+  resetCreateMoneyReceiptRequest,
+  // Get Money Receipt List
+  getMoneyReceiptListRequest,
+  getMoneyReceiptListSuccess,
+  getMoneyReceiptListFailure,
   // Create Car Condition
   createCarConditionRequest,
   createCarConditionSuccess,
   createCarConditionFailure,
+  resetCreateCarConditionRequest,
+  // Get Car Condition List
+  getCarConditionListRequest,
+  getCarConditionListSuccess,
+  getCarConditionListFailure,
   // Create Bilty
   createBiltyRequest,
   createBiltySuccess,
   createBiltyFailure,
+  resetCreateBiltyRequest,
+  // Get Bilty List
+  getBiltyListRequest,
+  getBiltyListSuccess,
+  getBiltyListFailure,
   // Create Invoice
   createInvoiceRequest,
   createInvoiceSuccess,

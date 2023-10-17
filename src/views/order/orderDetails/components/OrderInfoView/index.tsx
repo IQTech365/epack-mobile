@@ -1,14 +1,71 @@
-import React from 'react';
-import {View, Text, ImageBackground, TouchableOpacity} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {View, Text, ImageBackground, TouchableOpacity, Linking} from 'react-native';
 import styles from './style';
 import HeaderGridBackgroundImage from '../../../../../images/header-grid.png';
 import PhoneIcon from '../../../../../images/icons/phone.svg';
 import WhatsappIcon from '../../../../../images/icons/whatsapp.svg';
 import Spacer from '../../../../../common/Spacer';
+import {
+  Menu,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+} from 'react-native-popup-menu';
+import { COLOR_GRAY2, COLOR_WHITE } from '../../../../../utils/colors';
+import orderStatusOptions from '../../../../../data/orderStatusOptions.json';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
+import { resetUpdateEnquiryStatusRequest, updateEnquiryStatusRequest } from '../../../../../redux/slices/EnquirySlice';
+import { IUpdateEnquiryStatus } from '../../../../../interface/enquiry/IUpdateEnquiryStatusRequest';
+import Toast from 'react-native-toast-message';
+interface IOrderInfoViewProps {
+  orderId: string;
+}
 
-interface IOrderInfoViewProps {}
+const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId}) => {
+  const dispatch = useAppDispatch();
+  const [orderStatus, setOrderStatus] = useState<string>('New');
+  const {
+    updateEnquiryStatusRequesting,
+    updateEnquiryStatusSuccess,
+    updateEnquiryStatusFailure,
+  } = useAppSelector(state => state.Enquiry);
 
-const OrderInfoView: React.FC<IOrderInfoViewProps> = ({}) => {
+  const handleOrderStatusChange = (value: string) => {
+    setOrderStatus(value);
+    const payload: IUpdateEnquiryStatus = {
+      enquiryId: orderId as string,
+      status: value,
+    }
+    dispatch(updateEnquiryStatusRequest(payload));
+  }
+
+  const handlePhoneCall = () => {
+    // Linking.openURL(`tel:${item?.mobile}`);
+  }
+
+  const handleWhatsappCall = () => {
+    // Linking.openURL(`whatsapp://send?phone=+91${item?.mobile}`);
+  }
+
+  useEffect(() => {
+    if(!updateEnquiryStatusRequesting && updateEnquiryStatusSuccess) {
+      Toast.show({
+        type: 'success',
+        text1: 'Order Status',
+        text2: `Order status has been updated to ${orderStatus}`,
+      });
+      dispatch(resetUpdateEnquiryStatusRequest());
+    } else if(!updateEnquiryStatusRequesting && updateEnquiryStatusFailure) {
+      Toast.show({
+        type: 'error',
+        text1: 'Enquiry Status',
+        text2: 'Error in updating enquriy status. Please try again!',
+      });
+      setOrderStatus('' as string);
+      dispatch(resetUpdateEnquiryStatusRequest());
+    }
+  }, [updateEnquiryStatusRequesting, updateEnquiryStatusSuccess, updateEnquiryStatusFailure]);
+
   return (
     <View style={styles.backgroundContainer}>
       <ImageBackground
@@ -68,17 +125,51 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({}) => {
                   <Text style={styles.hyphenText}>-</Text>
                 </View>
                 <View style={styles.valueContainer}>
-                  <Text style={styles.valueText}>New</Text>
+                <Menu>
+                    <MenuTrigger customStyles={{
+                      triggerText: {color: COLOR_WHITE}
+                    }} text={orderStatus} />
+                    <MenuOptions
+                      customStyles={{
+                        optionsContainer: {borderRadius: 5},
+                        optionsWrapper: {
+                          borderColor: COLOR_GRAY2,
+                          borderWidth: 0.5,
+                          borderRadius: 5,
+                        },
+                        optionWrapper: {
+                          marginHorizontal: 5,
+                          borderBottomWidth: 0.5,
+                          justifyContent: 'center',
+                        },
+                        optionText: {
+                          paddingVertical: 8,
+                        }
+                      }}>
+                        {orderStatusOptions.map((option, index) => {
+                          const isLastIndex = index == orderStatusOptions.length -1;
+                          const lastItemStyle = isLastIndex ? {
+                            optionWrapper: {borderBottomWidth: 0, marginHorizontal: 5,},
+                            optionText: {
+                              paddingVertical: 8,
+                            }
+                          } : undefined;
+                          return <MenuOption customStyles={lastItemStyle} onSelect={() => {
+                            handleOrderStatusChange(option);
+                          }} text={option} />
+                        })}
+                    </MenuOptions>
+                  </Menu>
                 </View>
               </View>
             </View>
           </View>
           <View style={styles.iconItemContainer}>
-            <TouchableOpacity activeOpacity={0.6}>
+            <TouchableOpacity activeOpacity={0.6} onPress={handleWhatsappCall}>
               <WhatsappIcon width={24} height={24} />
             </TouchableOpacity>
             <Spacer height={20} />
-            <TouchableOpacity activeOpacity={0.6}>
+            <TouchableOpacity activeOpacity={0.6} onPress={handlePhoneCall}>
               <PhoneIcon width={24} height={24} />
             </TouchableOpacity>
           </View>

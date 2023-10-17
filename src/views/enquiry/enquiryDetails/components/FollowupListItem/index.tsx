@@ -4,10 +4,15 @@ import Spacer from '../../../../../common/Spacer';
 import styles from './style';
 import ClockIcon from '../../../../../images/icons/clock.svg';
 import UserIcon from '../../../../../images/icons/user.svg';
+import { formatDate3 } from '../../../../../utils/formatter';
 
-interface IFollowupListItemProps {}
+interface IFollowupListItemProps {
+  comment: string;
+  date: Date;
+  enquiryManager: string;
+}
 
-const FollowupListItem: React.FC<IFollowupListItemProps> = ({}) => {
+const FollowupListItem: React.FC<IFollowupListItemProps> = ({comment, date, enquiryManager}) => {
   return (
     <>
       <View style={styles.container}>
@@ -21,14 +26,15 @@ const FollowupListItem: React.FC<IFollowupListItemProps> = ({}) => {
             <Text style={styles.contentLabelText}>
               Enquiry Manager - <Text style={styles.nameText}>Ramesh</Text>
             </Text>
-            <Spacer width={4} />
+          </View>
+          <View style={styles.contentContainer}>
             <ClockIcon width={22} height={22} />
             <Spacer width={4} />
-            <Text style={styles.contentLabelText}>20th Nov</Text>
+            <Text style={styles.contentLabelText}>{formatDate3(date)}</Text>
           </View>
           <View style={styles.contentContainer}>
             <Text style={styles.contentLabelText}>
-              Need to talk on 20th Nov in the morning around 10:00 am
+              Comment: {comment}
             </Text>
           </View>
         </View>

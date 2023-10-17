@@ -1,12 +1,12 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import { COLOR_GRAY2 } from '../../utils/colors';
+import { COLOR_GRAY, COLOR_GRAY2 } from '../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     container: {
         width: width * 0.44,
-        borderWidth: 1,
-        borderColor: COLOR_GRAY2,
+        borderWidth: 0.5,
+        borderColor: COLOR_GRAY,
         paddingVertical: 12,
         borderRadius: 5,
         paddingHorizontal: 8,

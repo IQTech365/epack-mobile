@@ -8,6 +8,15 @@ import {
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
+  wrapper: {
+    width: width * 0.95,
+    alignSelf: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: COLOR_GRAY2,
+    borderRadius: 5,
+    marginBottom: 10,
+  },
   container: {
     width: width,
     backgroundColor: COLOR_WHITE,
@@ -21,7 +30,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
   },
 
   textContainer: {
@@ -38,8 +47,9 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: '100%',
-    borderColor: COLOR_GRAY2,
+    borderColor: COLOR_BLACK,
     paddingLeft: 4,
+    borderWidth: 0.5,
   },
   input: {
     color: COLOR_BLACK,
@@ -85,7 +95,7 @@ const styles = StyleSheet.create({
     height: 250,
     borderWidth: 1,
     borderColor: COLOR_GRAY2,
-  }
+  },
 });
 
 export default styles;

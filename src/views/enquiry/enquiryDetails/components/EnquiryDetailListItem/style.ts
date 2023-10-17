@@ -4,32 +4,27 @@ const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     container: {
-        // width: width,
         flexDirection: 'row',
-        // backgroundColor: 'red',
-        // paddingVertical: 10
     },
     labelContainer: {
         width: '40%',
-        height: 44,
-        alignSelf: 'flex-end',
+        paddingVertical: 10,
         borderBottomWidth: 1,
         borderBottomColor: COLOR_GRAY2,
-        justifyContent: 'center'
-        // paddingVertical: 12,
-
+        justifyContent: 'center',
     },
     valueContainer: {
         width: '60%',
-        height: 44,
         alignSelf: 'flex-start',
         borderBottomWidth: 1,
         borderBottomColor: COLOR_GRAY2,
         backgroundColor: COLOR_GRAY3,
         justifyContent: 'center',
-        paddingLeft: 12
-        // paddingVertical: 12,
-
+        paddingLeft: 12,
+        paddingVertical: 10,
+    },
+    lastItemBorderStyle: {
+        borderBottomWidth: 0,
     }
 });
 

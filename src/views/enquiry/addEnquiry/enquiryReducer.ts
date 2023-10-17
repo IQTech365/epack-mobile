@@ -65,7 +65,7 @@ export type TShifingLuggage = {
 };
 
 const defaultBillingBy: TBillingBy = {
-  billing_by: 'Billing By Individual',
+  billing_by: 'by Individual',
   billing_info: null,
 };
 
@@ -77,8 +77,8 @@ const defaultPickupAddress: TPickupAddressInfo = {
   pincode: '',
   locality: '',
   landmark: '',
-  floor: '',
-  isLiftAvailable: '',
+  floor: 'Ground Floor',
+  isLiftAvailable: 'Yes',
 };
 
 const defaultDropAddress: TDropAddressInfo = {
@@ -89,8 +89,8 @@ const defaultDropAddress: TDropAddressInfo = {
   pincode: '',
   locality: '',
   landmark: '',
-  floor: '',
-  isLiftAvailable: '',
+  floor: 'Ground Floor',
+  isLiftAvailable: 'Yes',
 };
 
 /** ENQUIRY FORM STATE */

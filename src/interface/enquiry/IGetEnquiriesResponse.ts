@@ -1,9 +1,12 @@
-export interface IGetEnquiryData {
+import {IAddEnquiryRequest} from './IAddEnquiryRequest';
 
+export interface IGetEnquiriesData extends IAddEnquiryRequest {
+  _id: string;
+  createdAt: string;
 }
 
 export interface IGetEnquiriesResponse {
-    data: IGetEnquiryData;
-    status: number;
-    error: boolean;
+  data: [IGetEnquiriesData];
+  status: number;
+  error: boolean;
 }

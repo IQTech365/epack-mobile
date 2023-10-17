@@ -151,9 +151,17 @@ export type TOtherChargeItem = {
   value: string,
 }
 
+export type TOtherCharge = {
+  ratePerItem: string;
+  amount: string;
+}
+
 // ** Other charges
 export type TOtherCharges = {
-  other_items?: TOtherChargeItem[]
+  jobType: string;
+  qty: string;
+  partLoad: TOtherCharge | null;
+  fullLoad: TOtherCharge | null;
 }
 
 // ** Other Details
@@ -209,7 +217,7 @@ export interface IQuotationFormState {
   gstInQuotation: TGstInQuotation | null;
   insuranceDetails: TInsuranceDetails | null;
   storageCharges: TStorageCharge | null;
-  otherCharges: TOtherCharges | null;
+  otherCharges: [TOtherCharges] | null;
   otherDetails: TOtherDetails | null;
   //Errors
   errors: {
@@ -253,7 +261,7 @@ export interface IQuotationFormState {
   };
 }
 
-type TPayload = string | TCharge | boolean | TSurcharge | TGstInQuotation | TDiscountInQuotation | TInsuranceDetails | TStorageCharge | TOtherCharges | TOtherDetails | TBillingBy;
+type TPayload = string | TCharge | boolean | TSurcharge | TGstInQuotation | TDiscountInQuotation | TInsuranceDetails | TStorageCharge | [TOtherCharges] | TOtherDetails | TBillingBy;
 
 /** ACTION INTERFACE */
 export interface IQuotationAction {
@@ -266,9 +274,9 @@ export const initialState: IQuotationFormState = {
   shiftingType: 'LOCAL',
   dateOfQuotation: '',
   dateOfMoving: '',
-  billingBy: {billing_by: 'Billing By Individual', billing_info: null},
+  billingBy: {billing_by: 'by Individual', billing_info: null},
   serialNumber: '',
-  shiftingLuggage: '',
+  shiftingLuggage: 'Household',
   template: '',
   vehcileType: '',
   manufacturer: '',
@@ -281,15 +289,15 @@ export const initialState: IQuotationFormState = {
   pickupState: '',
   pickupLocality: '',
   pickupAddress: '',
-  pickupCurrentFloor: '',
-  pickupLiftStatus: '',
+  pickupCurrentFloor: 'Ground Floor',
+  pickupLiftStatus: 'Yes',
   deliveryPincode: '',
   deliveryCity: '',
   deliveryState: '',
   deliveryLocality: '',
   deliveryAddress: '',
-  deliveryCurrentFloor: '',
-  deliveryLiftStatus: '',
+  deliveryCurrentFloor: 'Ground Floor',
+  deliveryLiftStatus: 'Yes',
   partLoad: true,
   fullLoad: false,
   lorryType: '',
@@ -443,7 +451,7 @@ export const quotationReducer: Reducer<
     case QUOTATION_FORM_ACTION.STORAGE_CHARGES:
       return {...state, storageCharges: payload as TStorageCharge};
     case QUOTATION_FORM_ACTION.OTHER_CHARGES:
-      return {...state, otherCharges: payload as TOtherCharges};
+      return {...state, otherCharges: payload as [TOtherCharges]};
     case QUOTATION_FORM_ACTION.OTHER_DETAILS:
       return {...state, otherDetails: payload as TOtherDetails};
     //Errors

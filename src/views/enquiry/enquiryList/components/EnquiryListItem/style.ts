@@ -1,14 +1,39 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import {COLOR_BLUE, COLOR_GRAY, COLOR_GRAY2, COLOR_ORANGE, COLOR_WHITE} from '../../../../../utils/colors';
+import {COLOR_BLACK, COLOR_BLUE, COLOR_GRAY, COLOR_GRAY2, COLOR_ORANGE, COLOR_WHITE} from '../../../../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   cardWrapper: {
     borderRadius: 8,
     alignItems: 'center',
+    alignSelf: 'center',
+  },
+  badgeWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  bageContainer: {
+    width: 30,
+    height: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: COLOR_BLUE,
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
+  },
+  badgeText: {
+    color: COLOR_WHITE,
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  enquiryDateText: {
+    color: COLOR_BLACK,
+    fontSize: 14,
+    fontWeight: '500',
+    marginLeft: 8
   },
   container: {
-    width: width * 0.95,
+    width: width * 0.90,
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',
@@ -19,19 +44,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   nameContainer: {
-    width: '40%',
-    // height: 44,
+    width: '60%',
     paddingVertical: 6,
     paddingHorizontal: 4,
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'center',
     backgroundColor: COLOR_GRAY2,
-    // borderEndWidth: 15,
-    // borderBottomRightRadius: 22,
-    // borderTopLeftRadius: 8,
-    // borderEndColor: COLOR_GRAY2,
-    // borderTopStartRadius: 8,
-    borderLeftWidth: 10,
     borderLeftColor: COLOR_ORANGE,
   },
   contactOptionsContainer: {
@@ -41,7 +59,6 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 4,
     alignItems: 'center',
-    // backgroundColor: COLOR_GRAY2,
     borderRadius: 8,
   },
   iconContainer: {
@@ -62,7 +79,13 @@ const styles = StyleSheet.create({
       padding: 6,
   },
   rowItemContainer: {
-    width: '50%',
+    width: '40%',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center'
+  },
+  rowItemContainer2: {
+    width: '60%',
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center'

@@ -14,6 +14,18 @@ import {
   createMoneyReceiptFailure,
   createMoneyReceiptRequest,
   createMoneyReceiptSuccess,
+  getBiltyListFailure,
+  getBiltyListRequest,
+  getBiltyListSuccess,
+  getCarConditionListFailure,
+  getCarConditionListRequest,
+  getCarConditionListSuccess,
+  getMoneyReceiptListFailure,
+  getMoneyReceiptListRequest,
+  getMoneyReceiptListSuccess,
+  getOrdersFailure,
+  getOrdersRequest,
+  getOrdersSuccess,
 } from '../redux/slices/OrderSlice';
 import {IAddOrderRequest} from '../interface/order/IAddOrderRequest';
 import {IAddOrderResponse} from '../interface/order/IAddOrderResponse';
@@ -22,6 +34,10 @@ import {ICreateMoneyReceiptResponse} from '../interface/order/ICreateMoneyReceip
 import { ICreateCarConditionRequest } from '../interface/order/ICreateCarConditionRequest';
 import { ICreateBiltyRequest } from '../interface/order/ICreateBiltyRequest';
 import { ICreateBiltyResponse } from '../interface/order/ICreateBiltyResponse';
+import { IGetOrdersResponse } from '../interface/order/IGetOrdersResponse';
+import { IGetMoneyReceiptsResponse } from '../interface/order/IGetMoneyReceiptsResponse';
+import { IGetCarConditionListResponse } from '../interface/order/IGetCarConditionListResponse';
+import { IGetBiltyListResponse } from '../interface/order/IGetBiltyListResponse';
 
 export function* addOrderSaga(action: PayloadAction<IAddOrderRequest>) {
   console.log('addOrderSaga--action--', JSON.stringify(action));
@@ -35,6 +51,17 @@ export function* addOrderSaga(action: PayloadAction<IAddOrderRequest>) {
   } catch (error) {
     console.log('addOrderSaga-error----', error);
     yield put(addOrderFailure(error));
+  }
+}
+
+export function* getOrderListSaga(action: PayloadAction<string>) {
+  try {
+      const response: IGetOrdersResponse = yield call(OrderService.GetOrdersService, action.payload);
+      console.log('getOrderListSaga-response----', JSON.stringify(response));
+      yield put(getOrdersSuccess(response));
+  } catch (error) {
+      console.log('getOrderListSaga-error----', JSON.stringify(error));
+      yield put(getOrdersFailure(error));
   }
 }
 
@@ -57,6 +84,17 @@ export function* createMoneyReceiptSaga(
   }
 }
 
+export function* getMoneyReceiptListSaga(action: PayloadAction<string>) {
+  try {
+      const response: IGetMoneyReceiptsResponse = yield call(OrderService.GetMoneyReceiptListService, action.payload);
+      console.log('getMoneyReceiptListSaga-response----', JSON.stringify(response));
+      yield put(getMoneyReceiptListSuccess(response));
+  } catch (error) {
+      console.log('getMoneyReceiptListSaga-error----', JSON.stringify(error));
+      yield put(getMoneyReceiptListFailure(error));
+  }
+}
+
 export function* createCarConditionSaga(
     action: PayloadAction<ICreateCarConditionRequest>,
   ) {
@@ -73,6 +111,17 @@ export function* createCarConditionSaga(
     } catch (error) {
       console.log('createCarConditionSaga-error----', JSON.stringify(error));
       yield put(createCarConditionFailure(error));
+    }
+  }
+
+  export function* getCarConditionListSaga(action: PayloadAction<string>) {
+    try {
+        const response: IGetCarConditionListResponse = yield call(OrderService.GetCarConditionListService, action.payload);
+        console.log('getCarConditionListSaga-response----', JSON.stringify(response));
+        yield put(getCarConditionListSuccess(response));
+    } catch (error) {
+        console.log('getCarConditionListSaga-error----', JSON.stringify(error));
+        yield put(getCarConditionListFailure(error));
     }
   }
 
@@ -94,11 +143,26 @@ export function* createCarConditionSaga(
       yield put(createBiltyFailure(error));
     }
   }
+
+  export function* getBiltyListSaga(action: PayloadAction<string>) {
+    try {
+        const response: IGetBiltyListResponse = yield call(OrderService.GetBiltyListService, action.payload);
+        console.log('getBiltyListSaga-response----', JSON.stringify(response));
+        yield put(getBiltyListSuccess(response));
+    } catch (error) {
+        console.log('getBiltyListSaga-error----', JSON.stringify(error));
+        yield put(getBiltyListFailure(error));
+    }
+  }
   
 
 export function* watcherOrderSaga() {
   yield takeLatest(addOrderRequest.type, addOrderSaga);
+  yield takeLatest(getOrdersRequest.type, getOrderListSaga);
   yield takeLatest(createMoneyReceiptRequest.type, createMoneyReceiptSaga);
+  yield takeLatest(getMoneyReceiptListRequest.type, getMoneyReceiptListSaga);
   yield takeLatest(createCarConditionRequest.type, createCarConditionSaga);
+  yield takeLatest(getCarConditionListRequest.type, getCarConditionListSaga);
   yield takeLatest(createBiltyRequest.type, createBiltySaga);
+  yield takeLatest(getBiltyListRequest.type, getBiltyListSaga);
 }

@@ -16,9 +16,9 @@ const styles = StyleSheet.create({
   labelContainer: {
     width: width * 0.9,
     paddingVertical: 9,
-    paddingHorizontal: 12,
+    // paddingHorizontal: 5,
     borderRadius: 5,
-    borderWidth: 1,
+    // borderWidth: 1,
     borderColor: COLOR_GRAY,
     alignItems: 'flex-start',
     justifyContent: 'center',

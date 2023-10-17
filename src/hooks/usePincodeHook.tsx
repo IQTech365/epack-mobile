@@ -15,8 +15,6 @@ const usePincodeHook = (setError: () => void, resetError: () => void) => {
   const [result, setResult] = useState<any>(null);
   const [fetching, setFetching] = useState<boolean>(false);
   const [pincode, setPincode] = useState<string>('');
-  const [states, setStates] = useState<string[]>([]);
-  const [cities, setCities] = useState<string[]>([]);
 
   const resetPincodeHookState = () => {
     setResult(null);
@@ -53,7 +51,7 @@ const usePincodeHook = (setError: () => void, resetError: () => void) => {
     }
   }, [pincode]);
 
-  return {result, fetching, setPincode, states, cities, resetPincodeHookState};
+  return {result, fetching, setPincode, resetPincodeHookState};
 };
 
 export default usePincodeHook;

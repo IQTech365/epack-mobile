@@ -1,13 +1,14 @@
 /* eslint-disable prettier/prettier */
-import React, {useState} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../../../common/Spacer';
 import Label from '../../../../../common/Label';
 import DropdownComponent from '../../../../../common/DropdownComponent';
 import Input from '../../../../../common/Input';
-import {COLOR_BLACK, COLOR_BLUE} from '../../../../../utils/colors';
+import {COLOR_BLACK, COLOR_BLUE, COLOR_GRAY2} from '../../../../../utils/colors';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import Toast from 'react-native-toast-message';
 import styles from './style';
 import Button from '../../../../../common/Button';
 import accountTypeOptions from '../../../../../data/accountType.json';
@@ -15,11 +16,23 @@ import bankNameOptions from '../../../../../data/bankNameOptions.json';
 import UPIOptions from '../../../../../data/UPIOptions.json';
 import applicableForOptions from '../../../../../data/applicableForOptions.json';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
+import { IAddPaymentMethodRequest } from '../../../../../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodRequest';
+import { addPaymentMethodRequest, resetAddPaymentMethodRequest } from '../../../../../redux/slices/SettingSlice';
+import Spinner from '../../../../../common/Spinner';
 interface IAccountDetailsProps {}
 
 const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
   const [accountType, setAccountType] = useState<string>('Bank Account');
   const [selectedUPI, setSelectedUPI] = useState<string>('Paytm');
+  const [accountHolder, setAccountHolder] = useState<string>('');
+  const [accountNumber, setAccountNumber] = useState<string>('');
+  const [ifscCode, setIfscCode] = useState<string>('');
+  const [upiId, setSetupiId] = useState<string>('');
+  const dispatch = useAppDispatch();
+  const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
+  const {addPaymentMethodRequesting, addPaymentMethodSuccess, addPaymentMethodFailure} = useAppSelector(state => state.Setting);
+  
 
   const handleAccountType = (item: TDropdownItem) => {
     setAccountType(item.label);
@@ -28,6 +41,77 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
   const handleSelectedAccountOption = (item: TDropdownItem) => {
       setSelectedUPI(item.label);
   }
+
+  const handleChangeAccountHolder = (text: string)=>{
+    setAccountHolder(text);
+  }
+
+  const handleChangeAccountNumber = (text: string)=>{
+    setAccountNumber(text);
+  }
+
+  const handleChangeIFSCCode = (text: string)=>{
+    setIfscCode(text);
+  }
+
+  
+  const handleChangeUPIid = (text: string)=>{
+    setSetupiId(text);
+  }
+
+  const getCompanyId = () => {
+    let id;
+    const {data} = addCompanyInfo || {};
+    const {data: companiesData} = companies || {};
+    if (data && Object.keys(data).length > 0) {
+      id = data._id;
+    } else if (
+      companiesData &&
+      Array.isArray(companiesData) &&
+      companiesData.length > 0
+    ) {
+      const firstCompany = companiesData[0];
+      id = firstCompany._id;
+    }
+    return id;
+  };
+
+  
+  const handleSave = useCallback(() => {
+    const payload: IAddPaymentMethodRequest = {
+      companyId: getCompanyId(),
+      accountType: accountType,
+      bankId: selectedUPI,
+      accountHolderName: accountHolder,
+      accountNumber: accountNumber,
+      ifscCode:ifscCode,
+      upiType:selectedUPI,
+      upiId:upiId,
+      createdBy:'6520f87a084716556863ef64'
+    }
+    console.log('payment method-payload--', JSON.stringify(payload));
+    dispatch(addPaymentMethodRequest(payload));
+  },[dispatch])
+
+  useEffect(() => {
+    if (!addPaymentMethodRequesting && addPaymentMethodSuccess) {
+      Toast.show({
+        type: 'success',
+        text1: 'Account Detail',
+        text2: 'Account Detail has been added successfully',
+      });
+      dispatch(resetAddPaymentMethodRequest());
+      // dispatch(getEnquiriesRequest(getCompanyId()));
+      // navigation.goBack();
+    } else if (!addPaymentMethodRequesting && addPaymentMethodFailure) {
+      Toast.show({
+        type: 'error',
+        text1: 'Account Detail',
+        text2: 'Error in adding Account Detail. Please try again!',
+      });
+      dispatch(resetAddPaymentMethodRequest());
+    }
+  }, [addPaymentMethodRequesting, addPaymentMethodSuccess, addPaymentMethodFailure]);
 
   const accountOptions =
     accountType == 'Bank Account' ? bankNameOptions : UPIOptions;
@@ -42,7 +126,7 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
           <View style={styles.textContainer}>
             <Label text="Account Holder Name" style={styles.label} />
             <Input
-              onChangeText={() => {}}
+              onChangeText={handleChangeAccountHolder}
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
@@ -51,7 +135,7 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
           <View style={styles.textContainer}>
             <Label text="Enter Account Number" style={styles.label} />
             <Input
-              onChangeText={() => {}}
+              onChangeText={handleChangeAccountNumber}
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
@@ -62,7 +146,7 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
         <View style={styles.textContainer2}>
           <Label text="Enter IFSC Code" style={styles.label} />
           <Input
-            onChangeText={() => {}}
+            onChangeText={handleChangeIFSCCode}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
@@ -94,7 +178,7 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
         <View style={styles.textContainer2}>
           <Label text="Enter UPI ID" style={styles.label} />
           <Input
-            onChangeText={() => {}}
+            onChangeText={handleChangeUPIid}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
@@ -107,7 +191,7 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
   return (
     <AvoidSoftInputViewHOC>
       <View
-        style={{flex: 1, alignItems: 'center', justifyContent: 'flex-start'}}>
+        style={styles.wrapper}>
         <View style={styles.textContainer2}>
           <Label text="Choose Account Type" style={styles.label} />
           <DropdownComponent
@@ -129,7 +213,7 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
         <View style={styles.applicableWrapper}>
           {applicableForOptions.map((item, index) => {
             return (
-              <View style={styles.checkboxItem}>
+              <View style={styles.checkboxItem}  key={`${index}`}>
                 <BouncyCheckbox
                   size={25}
                   fillColor={COLOR_BLUE}
@@ -166,16 +250,15 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
         <Spacer height={8} />
         <Button
           text="SAVE"
-          onPress={() => {
-            console.log('submitted data');
-          }}
+          onPress={handleSave}
           disabled={false}
           style={styles.previewButtonStyle}
           textStyle={styles.textStyle}
         />
         <Spacer height={8} />
+        <Spinner show={addPaymentMethodRequesting} />
       </View>
-    </AvoidSoftInputViewHOC>
+        </AvoidSoftInputViewHOC>
   );
 };
 

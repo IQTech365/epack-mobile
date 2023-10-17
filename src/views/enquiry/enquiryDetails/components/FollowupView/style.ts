@@ -13,6 +13,14 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
+  listWrapper: {
+    width: width * 0.96,
+    alignSelf: 'center',
+    borderWidth: 1,
+    borderColor: COLOR_GRAY2,
+    borderRadius: 5,
+    paddingVertical: 5,
+  },
   labelContainer: {
     width: width * 0.9,
     paddingVertical: 9,
@@ -68,6 +76,12 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR_BLUE,
     borderRadius: 5,
   },
+  emptyView: {
+    width: width * 0.9,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
 });
 
 export default styles;

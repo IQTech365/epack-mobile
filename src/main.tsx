@@ -1,15 +1,16 @@
 import React from 'react';
-import {} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import Spinner from './common/Spinner';
 import {useAuthContext} from './provider/AuthProvider';
 import AuthStackNavigator from './navigation/AuthStackNavigator';
 import {Provider} from 'react-redux';
-import {store} from './redux/store';
+import {store, persistor} from './redux/store';
 import {DrawerNavigator} from './navigation/DrawerNavigator';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
-import {PortalProvider} from '@gorhom/portal';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import Toast from 'react-native-toast-message';
+import {PersistGate} from 'redux-persist/integration/react';
+import {MenuProvider} from 'react-native-popup-menu';
 
 const Main = () => {
   const authContext = useAuthContext();
@@ -22,13 +23,16 @@ const Main = () => {
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <NavigationContainer>
-        {/* <PortalProvider> */}
-          <BottomSheetModalProvider>
+        <BottomSheetModalProvider>
+          <MenuProvider>
             <Provider store={store}>
-              {loggedIn ? <DrawerNavigator /> : <AuthStackNavigator />}
+              <PersistGate loading={null} persistor={persistor}>
+                {loggedIn ? <DrawerNavigator /> : <AuthStackNavigator />}
+                <Toast />
+              </PersistGate>
             </Provider>
-          </BottomSheetModalProvider>
-        {/* </PortalProvider> */}
+          </MenuProvider>
+        </BottomSheetModalProvider>
       </NavigationContainer>
     </GestureHandlerRootView>
   );

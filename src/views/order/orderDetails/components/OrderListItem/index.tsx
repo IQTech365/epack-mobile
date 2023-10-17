@@ -9,6 +9,7 @@ import MoreIcon from '../../../../../images/icons/dots-vertical.svg';
 import Spacer from '../../../../../common/Spacer';
 
 export interface IOrderItem {
+  orderId: string;
   clientName: string;
   pickupAddress: string;
   deliveryAddress: string;

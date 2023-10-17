@@ -8,6 +8,15 @@ import {
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
+  wrapper: {
+    width: width * 0.95,
+    alignSelf: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: COLOR_GRAY2,
+    borderRadius: 5,
+    marginBottom: 10,
+  },
   container: {
     width: width,
     backgroundColor: COLOR_WHITE,
@@ -21,7 +30,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
   },
 
   switchMainWrapper: {

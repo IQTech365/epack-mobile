@@ -8,13 +8,13 @@ import RegisterCompanyView from './registerCompany';
 import SignatureViewPage from './signature';
 import CompanyLogoPageView from './companyLogo';
 import {CompanyRegistrationContextProvider} from '../../provider/CompanyRegistrationContextProvider';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import { AuthStackParamList } from '../../navigation/params/AuthStackParamList';
+type Props = NativeStackScreenProps<AuthStackParamList, 'RegisterCompany'>;
 
-interface IRegistrationPageViewProps {
-  navigation: NavigationProp<any, any>;
-}
-
-const RegistrationPageView: React.FC<IRegistrationPageViewProps> = ({navigation}) => {
-  const [currentStep, setCurrentStep] = useState<number>(1);
+const RegistrationPageView: React.FC<Props> = ({route, navigation}) => {
+  const registrationStep: number = route.params.registrationStep;
+  const [currentStep, setCurrentStep] = useState<number>(registrationStep);
 
   const handleCurrentStep = (step: number) => {
     setCurrentStep(step);

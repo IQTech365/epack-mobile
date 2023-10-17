@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {View, TouchableOpacity, Text, ViewStyle} from 'react-native';
 import DatePicker from 'react-native-date-picker';
-import {formatDate} from '../../utils/formatter';
+import {formatDate, formatDate3} from '../../utils/formatter';
 import CalendarIcon from '../../images/icons/calendar.svg';
 import styles from './style';
 
@@ -9,17 +9,26 @@ interface IDatePickerProps {
   onDateSelect: (date: Date) => void;
   style?: ViewStyle;
   error?: string;
+  showTime?: boolean;
 }
 
 const DatePickerComponent: React.FC<IDatePickerProps> = ({
   onDateSelect,
   style,
   error,
+  showTime = false,
 }) => {
   const [date, setDate] = useState<Date>(new Date());
   const [open, setOpen] = useState<boolean>(false);
 
   const errorBorderStyle = error ? styles.errorBorderColor : null;
+
+  const getDateAndTime = () => {
+    if(showTime) {
+      return formatDate3(date);
+    }
+    return formatDate(date);
+  }
 
   return (
     <>
@@ -27,7 +36,7 @@ const DatePickerComponent: React.FC<IDatePickerProps> = ({
         <TouchableOpacity
           onPress={() => setOpen(true)}
           style={styles.contentContainer}>
-          <Text>{formatDate(date)}</Text>
+          <Text>{getDateAndTime()}</Text>
           <CalendarIcon width={18} height={18} />
         </TouchableOpacity>
         <DatePicker
@@ -39,6 +48,7 @@ const DatePickerComponent: React.FC<IDatePickerProps> = ({
             setDate(date);
             onDateSelect && onDateSelect(date);
           }}
+          minimumDate={new Date()}
           onCancel={() => {
             setOpen(false);
           }}

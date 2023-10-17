@@ -7,6 +7,17 @@ export const formatDate = (date: Date): string => {
   return moment(date).format('DD-MM-YYYY');
 };
 
+export const formatDate2 = (date: Date): string => {
+  return moment(date).format('YYYY-MM-DD');
+};
+
+export const formatDate3 = (date: Date): string => {
+  return moment(date).format('MMM D, h:mm a');
+};
+
+export const formatDate4 = (date: Date): string => {
+  return moment(date).format('MM-DD-YYYY');
+};
 
 export const getStates = (arr: any): TDropdownItem[] => {
   let states: TDropdownItem[] = [{label: '', value: ''}];

@@ -5,6 +5,7 @@ import Spacer from '../../../../common/Spacer';
 import EnquiryDetailListItem from '../../../enquiry/enquiryDetails/components/EnquiryDetailListItem';
 import styles from './style';
 import EditIcon from '../../../../images/icons/edit.svg';
+import Header from '../../../../common/Header';
 
 interface ITermsAndConditionViewProps {}
 
@@ -13,6 +14,7 @@ const TermsAndConditionView: React.FC<ITermsAndConditionViewProps> = ({}) => {
   return (
     <AvoidSoftInputViewHOC>
       <View style={styles.container}>
+      <Header label="Terms & Conditions" canGoBack={true} />
         <Spacer height={4} />
         <View style={styles.labelContainer}>
           <Text style={styles.labelText}>Terms & Conditions</Text>

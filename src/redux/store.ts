@@ -1,5 +1,8 @@
-import {configureStore} from '@reduxjs/toolkit';
+import {configureStore, AnyAction, Reducer} from '@reduxjs/toolkit';
 import createSagaMiddleware from '@redux-saga/core';
+import {persistReducer, persistStore} from 'redux-persist';
+import {combineReducers} from 'redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 //Root Saga
 import {rootSaga} from '../sagas';
@@ -10,22 +13,51 @@ import SignupSlice from './slices/SignupSlice';
 import CompanySlice from './slices/CompanySlice';
 import EnquirySlice from './slices/EnquirySlice';
 import OrderSlice from './slices/OrderSlice';
+import QuotationSlice from './slices/QuotationSlice';
+import SettingSlice from './slices/SettingSlice';
+import { removeIsRegistrationComplete, removeLoginStatus, removeToken } from '../utils/storage';
+
+const persistConfig = {
+  key: 'root',
+  storage: AsyncStorage,
+};
 
 const sagaMiddleware = createSagaMiddleware();
 const middleware = [sagaMiddleware];
 
-export const store = configureStore({
-    reducer: {
-        OTP: OtpSlice,
-        Signup: SignupSlice,
-        Company: CompanySlice,
-        Enquiry: EnquirySlice,
-        Order: OrderSlice,
-    },
-    middleware: (getDefaultMiddleware) => {
-        return getDefaultMiddleware().concat(middleware);
-    }
+const appReducer = combineReducers({
+  OTP: OtpSlice,
+  Signup: SignupSlice,
+  Company: CompanySlice,
+  Enquiry: EnquirySlice,
+  Order: OrderSlice,
+  Quotation: QuotationSlice,
+  Setting: SettingSlice,
 });
+
+const rootReducer: Reducer = (state: RootState, action: AnyAction) => {
+  if (action.type === 'OtpSlice/logout') {
+    AsyncStorage.removeItem('persist:root');
+    removeLoginStatus();
+    removeToken();
+    removeIsRegistrationComplete();
+    state = {} as RootState;
+  }
+  return appReducer(state, action);
+};
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+export const store = configureStore({
+  reducer: persistedReducer,
+  middleware: getDefaultMiddleware => {
+    return getDefaultMiddleware({
+      serializableCheck: false,
+    }).concat(middleware);
+  },
+});
+
+export const persistor = persistStore(store);
 
 export type RootState = ReturnType<typeof store.getState>;
 

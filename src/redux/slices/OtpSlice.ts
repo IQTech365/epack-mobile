@@ -72,12 +72,15 @@ export const OtpSlice = createSlice({
       state.verifyOtpFailure = true;
       state.verifyOtpError = action.payload;
     },
-    restVerifyOtpRequest: (state, action) => {
+    resetVerifyOtpRequest: (state) => {
       state.verifyOtpRequesting = false;
       state.verifyOtpSuccess = false;
       state.verifyOtpFailure = false;
       state.verifyOtpError = null;
     },
+    logout: (state, action: PayloadAction) => {
+      //READ_ME: keeping it empty to purge the state on logout
+  }
   },
 });
 
@@ -90,5 +93,6 @@ export const {
   verifyOtpRequest,
   verifyOtpSuccess,
   verifyOtpFailure,
-  restVerifyOtpRequest,
+  resetVerifyOtpRequest,
+  logout,
 } = OtpSlice.actions;

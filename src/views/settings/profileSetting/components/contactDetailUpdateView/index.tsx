@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React, {useState} from 'react';
-import {Text, View} from 'react-native';
+import {View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../../../common/Spacer';
 import Label from '../../../../../common/Label';
@@ -67,7 +67,7 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
 
   return (
     <AvoidSoftInputViewHOC>
-      <View>
+      <View style={styles.wrapper}>
         <Spacer height={4} />
 
         <View style={styles.textContainer2}>
@@ -131,6 +131,7 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
           style={styles.previewButtonStyle}
           textStyle={styles.textStyle}
         />
+        <Spacer height={12} />
       </View>
     </AvoidSoftInputViewHOC>
   );

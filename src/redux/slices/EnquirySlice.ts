@@ -8,6 +8,9 @@ import { IGetFollowupsResponse } from '../../interface/enquiry/IGetFollowupsResp
 import { IAddFollowupRequest } from '../../interface/enquiry/IAddFollowupRequest';
 import { IAddSurveyResponse } from '../../interface/enquiry/IAddSurveyResponse';
 import { IAddSurveyRequest } from '../../interface/enquiry/IAddSurveyRequest';
+import { IGetSurveyListResponse } from '../../interface/enquiry/IGetSurveyListResponse';
+import { IUpdateEnquiryStatusResponse } from '../../interface/enquiry/IUpdateEnquiryStatusResponse';
+import { TUpdateEnquiryStatusRequest } from '../../interface/enquiry/IUpdateEnquiryStatusRequest';
 
 interface IEnquiryState {
   // Get Enquiries
@@ -52,6 +55,18 @@ interface IEnquiryState {
   addSurveySuccess: boolean;
   addSurveyFailure: boolean;
   addSurveyError: any;
+  // Get Survey List
+  surveyList: IGetSurveyListResponse | null;
+  getSurveyListRequesting: boolean;
+  getSurveyListSuccess: boolean;
+  getSurveyListFailure: boolean;
+  getSurveyListError: any;
+  // Update Enquiry Status
+  updateEnquiryStatusInfo: IUpdateEnquiryStatusResponse | null,
+  updateEnquiryStatusRequesting: boolean,
+  updateEnquiryStatusSuccess: boolean,
+  updateEnquiryStatusFailure: boolean,
+  updateEnquiryStatusError: any,
 }
 
 const initialState: IEnquiryState = {
@@ -97,6 +112,18 @@ const initialState: IEnquiryState = {
   addSurveySuccess: false,
   addSurveyFailure: false,
   addSurveyError: null,
+  // Get Survey List
+  surveyList: null,
+  getSurveyListRequesting: false,
+  getSurveyListSuccess: false,
+  getSurveyListFailure: false,
+  getSurveyListError: null,
+  // Update Enquiry Status
+  updateEnquiryStatusInfo: null,
+  updateEnquiryStatusRequesting: false,
+  updateEnquiryStatusSuccess: false,
+  updateEnquiryStatusFailure: false,
+  updateEnquiryStatusError: null,
 };
 
 export const EnquirySlice = createSlice({
@@ -132,6 +159,13 @@ export const EnquirySlice = createSlice({
       state.addEnquirySuccess = false;
       state.addEnquiryFailure = true;
       state.addEnquiryError = action.payload;
+    },
+    resetAddEnquiryRequest: (state, action: PayloadAction) => {
+      state.addEnquiryRequesting = false;
+      state.addEnquirySuccess = false;
+      state.addEnquiryFailure = false;
+      state.addEnquiryInfo = null;
+      state.addEnquiryError = null;
     },
     // Edit Enquiry
     editEnquiryRequest: (
@@ -196,6 +230,13 @@ export const EnquirySlice = createSlice({
       state.addFollowupFailure = true;
       state.addFollowupError = action.payload;
     },
+    resetAddFollowupRequest: (state, action: PayloadAction) => {
+      state.addFollowupRequesting = false;
+      state.addFollowupSuccess = false;
+      state.addFollowupFailure = false;
+      state.addFollowupError = null;
+      state.addEnquiryInfo = null;
+    },
     // Get Followups
     getFollowupsRequest: (state, action: PayloadAction<string>) => {
       state.getFollowupsRequesting = true;
@@ -232,6 +273,62 @@ export const EnquirySlice = createSlice({
       state.addSurveyFailure = true;
       state.addSurveyError = action.payload;
     },
+    resetAddSurveyRequest: (state, action: PayloadAction) => {
+      state.addSurveyRequesting = false;
+      state.addSurveySuccess = false;
+      state.addSurveyFailure = false;
+      state.addSurveyError = null;
+      state.addSurveyInfo = null;
+    },
+    // Get Survey List
+    getSurveyListRequest: (
+      state,
+      action: PayloadAction<string>,
+    ) => {
+      state.getSurveyListRequesting = true;
+    },
+    getSurveyListSuccess: (
+      state,
+      action: PayloadAction<IGetSurveyListResponse>,
+    ) => {
+      state.getSurveyListRequesting = false;
+      state.getSurveyListSuccess = true;
+      state.surveyList = action.payload;
+    },
+    getSurveyListFailure: (state, action: PayloadAction<any>) => {
+      state.getSurveyListRequesting = false;
+      state.getSurveyListSuccess = false;
+      state.getSurveyListFailure = true;
+      state.getSurveyListError = action.payload;
+    },
+    // Update Enquiry Status
+    updateEnquiryStatusRequest: (
+      state,
+      action: PayloadAction<TUpdateEnquiryStatusRequest>,
+    ) => {
+      state.updateEnquiryStatusRequesting = true;
+    },
+    updateEnquiryStatusSuccess: (
+      state,
+      action: PayloadAction<IUpdateEnquiryStatusResponse>,
+    ) => {
+      state.updateEnquiryStatusRequesting = false;
+      state.updateEnquiryStatusSuccess = true;
+      state.updateEnquiryStatusInfo = action.payload;
+    },
+    updateEnquiryStatusFailure: (state, action: PayloadAction<any>) => {
+      state.updateEnquiryStatusRequesting = false;
+      state.updateEnquiryStatusSuccess = false;
+      state.updateEnquiryStatusFailure = true;
+      state.updateEnquiryStatusError = action.payload;
+    },
+    resetUpdateEnquiryStatusRequest: (state) => {
+      state.updateEnquiryStatusRequesting = false;
+      state.updateEnquiryStatusSuccess = false;
+      state.updateEnquiryStatusFailure = false;
+      state.updateEnquiryStatusError = null;
+      state.updateEnquiryStatusInfo = null;
+    }
   },
 });
 
@@ -246,6 +343,7 @@ export const {
   addEnquiryRequest,
   addEnquirySuccess,
   addEnquiryFailure,
+  resetAddEnquiryRequest,
   // Edit Enquiry
   editEnquiryRequest,
   editEnquirySuccess,
@@ -258,6 +356,7 @@ export const {
   addFollowupRequest,
   addFollowupSuccess,
   addFollowupFailure,
+  resetAddFollowupRequest,
   // Get Followups
   getFollowupsRequest,
   getFollowupsSuccess,
@@ -266,4 +365,14 @@ export const {
   addSurveyRequest,
   addSurveySuccess,
   addSurveyFailure,
+  resetAddSurveyRequest,
+  // Get Survey List
+  getSurveyListRequest,
+  getSurveyListSuccess,
+  getSurveyListFailure,
+  // Update Enquiry Status
+  updateEnquiryStatusRequest,
+  updateEnquiryStatusSuccess,
+  updateEnquiryStatusFailure,
+  resetUpdateEnquiryStatusRequest,
 } = EnquirySlice.actions;
