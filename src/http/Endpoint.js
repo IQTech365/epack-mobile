@@ -40,10 +40,10 @@ export const GET_BILTY_LIST = (order_id) => `/bilty${order_id}`;
 export const GET_INVOICE_LIST = (order_id) => `/invoice/${order_id}`;
 
 // Setting
-export const ADD_PAYMENT_METHOD = (company_id) => ``;
+export const ADD_PAYMENT_METHOD = `/account-management/account/addAccount`;
 export const DELETE_PAYMENT_METHOD = (company_id) => ``;
 export const UPDATE_PAYMENT_METHOD = (company_id) => ``;
-export const GET_PAYMENT_METHODS = (company_id) => ``;
+export const GET_PAYMENT_METHODS = (company_id) => `/account-management/account/${company_id}`;
 
 export const ADD_FOOTER_CONTENT = `/content-management/footer-setting/addFooter`;
 export const DELETE_FOOTER_CONTENT = (company_id) => `/content-management/footer-setting/addFooter`;

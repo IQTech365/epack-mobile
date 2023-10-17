@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import {
   View,
   Text,
@@ -15,12 +15,33 @@ import ListViewIcon from '../../../../../images/icons/list_view_icon.svg';
 import ListViewIcon2 from '../../../../../images/icons/list_view_icon2.svg';
 import CreateIcon from '../../../../../images/icons/create_icon.svg';
 import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
+import { getPaymentMethodsRequest } from '../../../../../redux/slices/SettingSlice';
 
 const AddAccountView = () => {
   const [showPaymentMethodList, setShowPaymentMethodList] =
     useState<boolean>(false);
   const [showAddPaymentMehod, setShowAddPaymentMethod] =
     useState<boolean>(true);
+    const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
+    const dispatch = useAppDispatch();
+
+    const getCompanyId = () => {
+      let id;
+      const {data} = addCompanyInfo || {};
+      const {data: companiesData} = companies || {};
+      if (data && Object.keys(data).length > 0) {
+        id = data._id;
+      } else if (
+        companiesData &&
+        Array.isArray(companiesData) &&
+        companiesData.length > 0
+      ) {
+        const firstCompany = companiesData[0];
+        id = firstCompany._id;
+      }
+      return id;
+    };
 
   const rederItemBankAccount = (index: number) => {
     return (
@@ -115,6 +136,10 @@ const AddAccountView = () => {
       </View>
     );
   };
+
+  useEffect(() => {
+    dispatch(getPaymentMethodsRequest(getCompanyId()))
+  }, []);
 
   const showEmptyView = () => {
     return (

@@ -9,8 +9,11 @@ import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
 import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
 import { IAddFooterContentRequest } from '../interface/setting/packerProfile/footerContent/IAddFooterContentRequest';
 import { IAddFooterContentResponse } from '../interface/setting/packerProfile/footerContent/IAddFooterContentResponse';
-import { addFooterContentFailure, addFooterContentRequest, addFooterContentSuccess, getFooterContentsFailure, getFooterContentsRequest, getFooterContentsSuccess } from '../redux/slices/SettingSlice';
+import { addFooterContentFailure, addFooterContentRequest, addFooterContentSuccess, addPaymentMethodFailure, addPaymentMethodRequest, addPaymentMethodSuccess, getFooterContentsFailure, getFooterContentsRequest, getFooterContentsSuccess, getPaymentMethodsFailure, getPaymentMethodsRequest, getPaymentMethodsSuccess } from '../redux/slices/SettingSlice';
 import { IGetFooterContentsResponse } from '../interface/setting/packerProfile/footerContent/IGetFooterContentsResponse';
+import { IAddPaymentMethodRequest } from '../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodRequest';
+import { IAddPaymentMethodResponse } from '../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodResponse';
+import { IGetPaymentMethodsResponse } from '../interface/setting/packerProfile/paymentMethod/IGetPaymentMethodsResponse';
 
 export function* addFooterContentSaga(action: PayloadAction<IAddFooterContentRequest>) {
     console.log('addFooterContentSaga--action--', JSON.stringify(action));
@@ -48,8 +51,35 @@ export function* verifyOtpSaga(action: PayloadAction<IOtpVerifyRequest>) {
     }
 }
 
+//payemntMethod
+export function* addPaymentMethodSaga(action: PayloadAction<IAddPaymentMethodRequest>) {
+    console.log('addPaymentmethodSaga--action--', JSON.stringify(action));
+    try {
+        const response: IAddPaymentMethodResponse = yield call(SettingService.AddPaymentMethodService, action.payload);
+        console.log('addPaymentmethodSaga-response----', JSON.stringify(response));
+        yield put(addPaymentMethodSuccess(response));
+    } catch (error) {
+        console.log('addPaymentmethodSaga-error----', error);
+        yield put(addPaymentMethodFailure(JSON.stringify(error)));
+    }
+}
+
+export function* getPaymentMethodSaga(action: PayloadAction<IAddPaymentMethodRequest>) {
+    console.log('getPaymentMethodSaga--action--', JSON.stringify(action));
+    try {
+        const response: IGetPaymentMethodsResponse = yield call(SettingService.GetPaymentMethodService, action.payload);
+        console.log('getPaymentMethodSaga-response----', JSON.stringify(response));
+        yield put(getPaymentMethodsSuccess(response));
+    } catch (error) {
+        console.log('getPaymentMethodSaga-error----', error);
+        yield put(getPaymentMethodsFailure(JSON.stringify(error)));
+    }
+}
+
 export function* watcherSettingSaga() {
     yield takeLatest(addFooterContentRequest.type, addFooterContentSaga);
     yield takeLatest(getFooterContentsRequest.type, getFooterContentsSaga);
+    yield takeLatest(addPaymentMethodRequest.type, addPaymentMethodSaga);
+    yield takeLatest(getPaymentMethodsRequest.type, getPaymentMethodSaga);
     // yield takeLatest(verifyOtpRequest.type, verifyOtpSaga);
 }
