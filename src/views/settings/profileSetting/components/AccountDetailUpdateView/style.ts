@@ -8,6 +8,14 @@ import {
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
+  wrapper: {
+    width: width * 0.95,
+    alignSelf: 'center',
+    alignItems: 'center', 
+    borderWidth: 1, 
+    borderColor: COLOR_GRAY2,
+    borderRadius: 5,
+  },
   container: {
     width: width,
     backgroundColor: COLOR_WHITE,
@@ -48,8 +56,9 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: '100%',
-    borderColor: COLOR_GRAY2,
+    borderColor: COLOR_BLACK,
     paddingLeft: 4,
+    borderWidth: 0.5,
   },
   switchInputContainer: {
     width: '100%',

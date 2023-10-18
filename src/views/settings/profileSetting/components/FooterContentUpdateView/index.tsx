@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Text,
   View,
@@ -20,6 +20,12 @@ import footerContentOptions from '../../../../../data/footerContentOptions.json'
 import applicableForOptions from '../../../../../data/applicableForOptions.json';
 import Button from '../../../../../common/Button';
 import {actions, RichEditor, RichToolbar} from 'react-native-pell-rich-editor';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
+import { TDropdownItem } from '../../../../../type/TDropdownItem';
+import { IAddFooterContentRequest } from '../../../../../interface/setting/packerProfile/footerContent/IAddFooterContentRequest';
+import { addFooterContentRequest, resetFooterContentRequest } from '../../../../../redux/slices/SettingSlice';
+import Toast from 'react-native-toast-message';
+import Spinner from '../../../../../common/Spinner';
 
 interface IContentUpdateProps {}
 
@@ -27,14 +33,89 @@ interface IContentUpdateProps {}
 const handleHead = ({tintColor}) => <Text style={{color: tintColor}}>H1</Text>;
 
 const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({}) => {
+  const [accountType, setAccountType] = useState<string>('');
+  const [title, setTitle] = useState<string>('');
+  const [content, setContent] = useState<string>('');
+  const [modules, setModules] = useState<string[]>(['']);
+  const dispatch = useAppDispatch();
+  const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
+  const {addFooterContentRequesting, addFooterContentSuccess, addFooterContentFailure} = useAppSelector(state => state.Setting);
   const richText = React.useRef();
-  const handleAccountType = () => {
-    console.log('account type');
+
+  const getCompanyId = () => {
+    let id;
+    const {data} = addCompanyInfo || {};
+    const {data: companiesData} = companies || {};
+    if (data && Object.keys(data).length > 0) {
+      id = data._id;
+    } else if (
+      companiesData &&
+      Array.isArray(companiesData) &&
+      companiesData.length > 0
+    ) {
+      const firstCompany = companiesData[0];
+      id = firstCompany._id;
+    }
+    return id;
   };
+
+  const handleAccountType = (item: TDropdownItem) => {
+    setAccountType(item.label);
+  };
+
+  const handleTitleTextInputChange = (text: string) => {
+    setTitle(text);
+  }
+
+  const handleModulesApplyFor = (moduleName: string, isChecked: boolean) => {
+    const tempArr = [...modules];
+    if(isChecked) {
+      const itemIndex = tempArr.findIndex(e => e == moduleName);
+      if(itemIndex == -1) {
+        tempArr.push(moduleName);
+        setModules(tempArr);
+      }
+    } else {
+      const filterArr = tempArr.filter(e => e !== moduleName);
+      setModules(filterArr);
+    }
+  }
+
+  const handleSave = () => {
+    const payload: IAddFooterContentRequest = {
+      companyId: getCompanyId(),
+      modulesView: modules,
+      accountType: accountType,
+      title: title,
+      content: content,
+    }
+    console.log('FooterContent-payload--', JSON.stringify(payload));
+    dispatch(addFooterContentRequest(payload));
+  }
+
+  useEffect(() => {
+    if (!addFooterContentRequesting && addFooterContentSuccess) {
+      Toast.show({
+        type: 'success',
+        text1: 'Footer Content',
+        text2: 'Footer content has been added successfully',
+      });
+      dispatch(resetFooterContentRequest());
+      // dispatch(getEnquiriesRequest(getCompanyId()));
+      // navigation.goBack();
+    } else if (!addFooterContentRequesting && addFooterContentFailure) {
+      Toast.show({
+        type: 'error',
+        text1: 'Enquriy',
+        text2: 'Error in adding Footer Content. Please try again!',
+      });
+      dispatch(resetFooterContentRequest());
+    }
+  }, [addFooterContentRequesting, addFooterContentSuccess, addFooterContentFailure]);
 
   return (
     <AvoidSoftInputViewHOC>
-      <View>
+      <View style={styles.wrapper}>
         <View style={styles.textContainer2}>
           <Label text="Choose Content Type" style={styles.label} />
           <DropdownComponent
@@ -45,7 +126,7 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({}) => {
         <View style={styles.textContainer2}>
           <Label text="Add Title" style={styles.label} />
           <Input
-            onChangeText={() => {}}
+            onChangeText={handleTitleTextInputChange}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
@@ -75,6 +156,7 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({}) => {
               ref={richText}
               onChange={descriptionText => {
                 console.log('descriptionText:', descriptionText);
+                setContent(descriptionText);
               }}
             />
           </KeyboardAvoidingView>
@@ -87,7 +169,7 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({}) => {
         <View style={styles.applicableWrapper}>
           {applicableForOptions.map((item, index) => {
             return (
-              <View style={styles.checkboxItem}>
+              <View style={styles.checkboxItem} key={`${index}`}>
                 <BouncyCheckbox
                   size={25}
                   fillColor={COLOR_BLUE}
@@ -112,8 +194,7 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({}) => {
                   style={{marginRight: 15}}
                   textContainerStyle={{paddingLeft: 0}}
                   onPress={(isChecked: boolean) => {
-                    //   setFixedFreight(isChecked);
-                    //   handleFixedFreightTemplate(isChecked);
+                    handleModulesApplyFor(item.template, isChecked);
                   }}
                   isChecked={false}
                 />
@@ -124,13 +205,13 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({}) => {
         <Spacer height={12} />
         <Button
           text="SAVE"
-          onPress={() => {
-            console.log('submitted data');
-          }}
+          onPress={handleSave}
           disabled={false}
           style={styles.previewButtonStyle}
           textStyle={styles.textStyle}
         />
+        <Spacer height={12} />
+        <Spinner show={addFooterContentRequesting} />
       </View>
     </AvoidSoftInputViewHOC>
   );

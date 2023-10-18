@@ -1,43 +1,77 @@
-import React, {useRef} from 'react';
-import {View, FlatList} from 'react-native';
+import React, {useState} from 'react';
+import {View, FlatList, Text, TouchableOpacity} from 'react-native';
 import styles from './style';
-import BottomSheet from '@gorhom/bottom-sheet';
-import FormModal from '../../../formModal';
-import Header from '../../../../../common/Header';
-import SerialNoSettingPageView from '../../../../company/serialNoSettings';
 import Spacer from '../../../../../common/Spacer';
-import EmptyView from '../../../emptyView';
 import DocumentUpdateView from '../DocumentUpdateView';
+import ListViewIcon from '../../../../../images/icons/list_view_icon.svg';
+import ListViewIcon2 from '../../../../../images/icons/list_view_icon2.svg';
+import CreateIcon from '../../../../../images/icons/create_icon.svg';
+import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
 
 const AddDocumentView = () => {
-  const bottomSheetRef = useRef<BottomSheet>(null);
+  const [showDocumentList, setShowDocumentList] = useState<boolean>(false);
+  const [showAddDocument, setShowAddDocument] = useState<boolean>(true);
 
-  const presentModal = () => {
-    bottomSheetRef.current?.snapToIndex(0);
+  const handleCreateNewDocument = () => {
+    setShowDocumentList(false);
+    setShowAddDocument(true);
   };
 
-  const dismissModal = () => {
-    bottomSheetRef.current?.close();
+  const handleShowDocument = () => {
+    setShowDocumentList(true);
+    setShowAddDocument(false);
+  };
+
+  const showEmptyView = () => {
+    return (
+      <View style={styles.emptyContainer2}>
+        <Text>No content Found!</Text>
+      </View>
+    );
+  };
+
+  const showForm = () => {
+    if (showAddDocument) {
+      return <DocumentUpdateView />;
+    }
+    return null;
+  };
+
+  const showList = () => {
+    if (showDocumentList) {
+      return (
+        <FlatList
+          data={[]}
+          renderItem={({item, index}) => <Text>Hello</Text>}
+          ListEmptyComponent={showEmptyView()}
+        />
+      );
+    }
+    return null;
   };
 
   return (
-    <View style={{flex: 1, alignItems: 'center',
-    justifyContent: 'center',}}>
-      <FlatList
-        data={[]}
-        contentContainerStyle={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-        renderItem={({item, index}) => null}
-        ListEmptyComponent={
-          <EmptyView message="You have not added any document yet!" onPress={presentModal} />
-        }
-      />
-      <FormModal ref={bottomSheetRef} onClose={dismissModal}>
-        <DocumentUpdateView />
-      </FormModal>
+    <View style={{flex: 1, alignItems: 'center'}}>
+      <View style={styles.container2}>
+        <TouchableOpacity onPress={handleShowDocument} activeOpacity={0.4}>
+          {showDocumentList ? (
+            <ListViewIcon2 width={30} height={30} />
+          ) : (
+            <ListViewIcon width={30} height={30} />
+          )}
+        </TouchableOpacity>
+        <Spacer width={10} />
+        <TouchableOpacity onPress={handleCreateNewDocument} activeOpacity={0.4}>
+          {showAddDocument ? (
+            <CreateIcon2 width={30} height={30} />
+          ) : (
+            <CreateIcon width={30} height={30} />
+          )}
+        </TouchableOpacity>
+        <Spacer width={10} />
+      </View>
+      {showForm()}
+      {showList()}
     </View>
   );
 };

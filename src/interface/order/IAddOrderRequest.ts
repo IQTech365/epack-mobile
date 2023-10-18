@@ -43,6 +43,8 @@ export interface IAddOrderRequest {
   email: string;
   mobile: string;
   phone: string;
+  orderAmount: string;
+  tokenAmount: string;
   shiftingLuggage: [string];
   enquirySource: string;
   gstNumber: string;
@@ -51,6 +53,6 @@ export interface IAddOrderRequest {
   pickupAddress: PickupAddress;
   dropAddress: DropAddress;
   billingBy: string;
-  billingDetails: BillingDetails | null;
+  billingDetails: BillingDetails | {};
   status: string;
 }

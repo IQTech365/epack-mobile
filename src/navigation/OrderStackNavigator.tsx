@@ -4,16 +4,17 @@ import { OrderStackRoute } from "../utils/constants";
 import OrderPageView from "../views/order";
 import AddOrderView from "../views/order/addOrder";
 import OrderDetailsView from "../views/order/orderDetails";
+import { OrderStackParamList } from "./params/OrderStackParamList";
 
-const OrderStack = createNativeStackNavigator();
+const OrderStack = createNativeStackNavigator<OrderStackParamList>();
 
 const OrderStackNavigator = () => {
 
     return (
         <OrderStack.Navigator screenOptions={{headerShown: false}} >
-            <OrderStack.Screen name={OrderStackRoute.OrderRoot} component={OrderPageView} />
-            <OrderStack.Screen name={OrderStackRoute.AddOrder} component={AddOrderView} />
-            <OrderStack.Screen name={OrderStackRoute.OrderDetails} component={OrderDetailsView} />
+            <OrderStack.Screen name="OrderRoot" component={OrderPageView} />
+            <OrderStack.Screen name="AddOrder" component={AddOrderView} />
+            <OrderStack.Screen name="OrderDetails" component={OrderDetailsView} />
         </OrderStack.Navigator>
     );
 }

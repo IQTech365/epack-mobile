@@ -6,7 +6,6 @@ import EnquiryInfoView from './components/EnquiryInfoView';
 import styles from './style';
 import tabOptions from '../../../data/enquiresDetailsTabs.json';
 import Tab from '../../../common/Tab';
-import AddQuotationView from '../../quotation/addQuotation';
 import FollowupView from './components/FollowupView';
 import SurveyView from './components/FollowupView';
 import DetailsView from './components/DetailsView';
@@ -16,6 +15,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { IGetEnquiriesData } from '../../../interface/enquiry/IGetEnquiriesResponse';
 import { useAppSelector } from '../../../redux/hooks';
 import Spinner from '../../../common/Spinner';
+import QuotationView from './components/QuotationsView';
 
 type Props = NativeStackScreenProps<EnquiryStackParamList, 'EnquiryDetails'>;
 
@@ -39,7 +39,7 @@ const EnquiryDetailsView: React.FC<Props> = ({ route, navigation }) => {
       case 2:
         return <SurveyView taskName='SURVEY' assigneeRole='Survey' enquiryId={enquiryId as string} />
       case 3:
-        return <AddQuotationView showHeader={false} item={item} />
+        return <QuotationView enquiryId={enquiryId as string} item={item}/>
       case 4:
         return <PackingMaterialsView />
       default:

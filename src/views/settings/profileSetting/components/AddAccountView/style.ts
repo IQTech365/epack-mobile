@@ -1,5 +1,9 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import {COLOR_GRAY, COLOR_WHITE} from '../../../../../utils/colors';
+import {
+  COLOR_GRAY,
+  COLOR_GRAY2,
+  COLOR_WHITE,
+} from '../../../../../utils/colors';
 const {width} = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
@@ -66,6 +70,24 @@ const styles = StyleSheet.create({
     fontSize: 8.5,
     textAlign: 'center',
     fontWeight: '500',
+  },
+  container2: {
+    width: width * 0.95,
+    paddingVertical: 5,
+    flexDirection: 'row',
+    alignSelf: 'center',
+    justifyContent: 'flex-end',
+    marginBottom: 8,
+    backgroundColor: COLOR_GRAY2,
+  },
+  emptyContainer2: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  text: {
+    color: COLOR_GRAY,
+    fontSize: 14,
   },
 });
 

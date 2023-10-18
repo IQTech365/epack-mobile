@@ -71,6 +71,10 @@ import { NavigationProp } from '@react-navigation/native';
 import EpackDropdown from '../../../common/DropdownComponent2';
 import { IGetEnquiriesData } from '../../../interface/enquiry/IGetEnquiriesResponse';
 import DeleteIcon from '../../../images/icons/delete.svg';
+import {QuotationStackRoute} from '../../../utils/constants';
+import {
+  IQuotationItem,
+} from '../quotationList/components/QuotationListItem';
 
 const chargeOptions = [
   'Included',
@@ -214,8 +218,9 @@ const discountTypeOptions: Array<ICheckboxButton> = [
 
 interface IAddQuotationProps {
   showHeader?: boolean;
-  navigation: NavigationProp<any, any>;
+  navigation?: NavigationProp<any, any>;
   item: IGetEnquiriesData | undefined;
+ 
 }
 
 const AddQuotationView: React.FC<IAddQuotationProps> = ({
@@ -263,7 +268,8 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
   const dropCityDropdownRef = useRef(null);
   const surchargePercentDropdownRef = useRef(null);
 
-  const calcPartloadAmount = Number.parseInt(partLoadRatePerItem) * Number.parseInt(partLoadAmount);
+  const calcPartloadAmount =
+    Number.parseInt(partLoadRatePerItem) * Number.parseInt(partLoadAmount);
 
   const dispatch2 = useAppDispatch();
 
@@ -1372,7 +1378,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
         text2: 'Quotation has been added successfully',
       });
       dispatch2(resetaddQuotationRequest());
-      navigation.goBack();
+      navigation?.goBack();
     } else if (!addQuotationRequesting && addQuotationFailure) {
       Toast.show({
         type: 'error',
