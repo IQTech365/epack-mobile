@@ -18,12 +18,14 @@ import CreateIcon from '../../../../../images/icons/create_icon.svg';
 import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
 import Spacer from '../../../../../common/Spacer';
 import {getQuotationsRequest} from '../../../../../redux/slices/QuotationSlice';
+import { IGetEnquiriesData } from '../../../../../interface/enquiry/IGetEnquiriesResponse';
 
 interface IQuotationViewProps {
   enquiryId: string;
+  item: IGetEnquiriesData | undefined;
 }
 
-const QuotationView: React.FC<IQuotationViewProps> = ({enquiryId}) => {
+const QuotationView: React.FC<IQuotationViewProps> = ({enquiryId, item}) => {
   const {quotations, getQuotationsRequesting} = useAppSelector(
     state => state.Quotation,
   );
@@ -68,7 +70,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({enquiryId}) => {
 
   const showForm = () => {
     if (createNewQuotation) {
-      return <AddQuotationView showHeader={false} />;
+      return <AddQuotationView showHeader={false} item={item} />;
     }
     return null;
   };
