@@ -16,6 +16,7 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import BouncyCheckboxGroup, {
   ICheckboxButton,
 } from 'react-native-bouncy-checkbox-group';
+import Toast from 'react-native-toast-message';
 import vehicleTypeOptions from '../../../../../data/vehicleTypeOptions.json';
 import {
   initialState,
@@ -23,7 +24,7 @@ import {
   BILTY_FORM_ACTION
 }
   from './biltyReducer';
-import { formatDate } from '../../../../../utils/formatter';
+import { formatDate, formatDate2, formatDate3 } from '../../../../../utils/formatter';
 import { ICreateBiltyRequest } from '../../../../../interface/order/ICreateBiltyRequest';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import Button from '../../../../../common/Button';
@@ -122,7 +123,9 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
     createBiltySuccess,
     createBiltyError,
     createBiltyFailure,
+    orders
   } = useAppSelector(state => state.Order);
+  const { addCompanyInfo, companies } = useAppSelector(state => state.Company);
   const dispatch2 = useAppDispatch();
 
   const switchWrapperStyle = switchState
@@ -133,6 +136,41 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
     dispatch({
       type: BILTY_FORM_ACTION.CHOOSE_DESIGN,
       payload: item.label,
+    });
+  };
+
+  const handleLoadingState = (item: TDropdownItem) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.LOADING_STATE,
+      payload: item.label,
+    });
+  };
+  
+  const handleLoadingCity = (item: TDropdownItem) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.LOADING_CITY,
+      payload: item.label,
+    });
+  };
+
+  const handleUnLoadingState = (item: TDropdownItem) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.LOADING_STATE,
+      payload: item.label,
+    });
+  };
+  
+  const handleUnLoadingCity = (item: TDropdownItem) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.LOADING_CITY,
+      payload: item.label,
+    });
+  };
+
+  const handleBiltyLrCnNo = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.BILTY_LR_CN_NO,
+      payload: text,
     });
   };
   const handleDateofBiltyLrCn = (date: Date) => {
@@ -288,13 +326,13 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
   const handleInDate = (date: Date) => {
     dispatch({
       type: BILTY_FORM_ACTION.IN_DATE,
-      payload: formatDate(date),
+      payload: formatDate2(date),
     });
   };
   const handleOutDate = (date: Date) => {
     dispatch({
       type: BILTY_FORM_ACTION.OUT_DATE,
-      payload: formatDate(date),
+      payload: formatDate2(date),
     });
   };
   const handleEwayBillNo = (text: string) => {
@@ -306,13 +344,13 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
   const handleGeneratedOn = (date: Date) => {
     dispatch({
       type: BILTY_FORM_ACTION.GENERATED_ON,
-      payload: formatDate(date),
+      payload: formatDate2(date),
     });
   };
   const handleExpiryDate = (date: Date) => {
     dispatch({
       type: BILTY_FORM_ACTION.EXPIRY_DATE,
-      payload: formatDate(date),
+      payload: formatDate2(date),
     });
   };
   const handleMatrialName = (text: string) => {
@@ -480,7 +518,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
   const handleInsuranceDate = (date: Date) => {
     dispatch({
       type: BILTY_FORM_ACTION.INSURANCE_DATE,
-      payload: formatDate(date),
+      payload: formatDate2(date),
     });
   };
   const handleInsuranceAmount = (text: string) => {
@@ -538,20 +576,36 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
     });
   };
   const handleReceiptDate = (date: Date) => {
-    // dispatch({
-    //   type: MONEYRECEIPT_FORM_ACTION.RECEIPT_DATE,
-    //   payload: formatDate(date),
-    // });
+    dispatch({
+      type: BILTY_FORM_ACTION.DATE_OF_BILTY,
+      payload: formatDate3(date),
+    });
+  };
+
+  const getCompanyId = () => {
+    let id;
+    const { data } = addCompanyInfo || {};
+    const { data: companiesData } = companies || {};
+    if (data && Object.keys(data).length > 0) {
+      id = data._id;
+    } else if (
+      companiesData &&
+      Array.isArray(companiesData) &&
+      companiesData.length > 0
+    ) {
+      const firstCompany = companiesData[0];
+      id = firstCompany._id;
+    }
+    return id;
   };
 
   const handleCreateBilty = useCallback(() => {
     const payload: ICreateBiltyRequest = {
-      companyId: "131113",
-      orderId: "1123213",
+      companyId: getCompanyId(),
+      enquiryId: orders.data[0]._id,
       templateId: "fds32131",
       biltyNumber: reducerState.biltyLrCnNo,
       biltyDate: reducerState.dateofBiltyLrCnNo,
-
       consigner: {
         name: reducerState.consigneeName,
         mobile: reducerState.consignerMobileNo,
@@ -580,23 +634,23 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
       },
 
       loadingAddress: {
-        address: "NA",
-        state: "Haryana",
-        landmark: "Railway colony",
-        city: "Haillymandi",
-        district: "Gurgaon",
-        postOffice: "Haillymandi",
-        postalCode: "122504",
+        address: loadingAddressSameAsConsignerAddress?reducerState.consignerCity:reducerState.loadingCity,
+        state: loadingAddressSameAsConsignerAddress?reducerState.consignerState:reducerState.loadingState,
+        landmark:loadingAddressSameAsConsignerAddress?reducerState.consignerCity:reducerState.loadingCity,
+        city:loadingAddressSameAsConsignerAddress?reducerState.consignerCity:reducerState.loadingCity,
+        district: loadingAddressSameAsConsignerAddress?reducerState.consignerCity:reducerState.loadingCity,
+        postOffice: loadingAddressSameAsConsignerAddress?reducerState.consignerCity:reducerState.loadingCity,
+        postalCode: reducerState.consignerPincode,
         country: "india"
       },
       unloadingAddress: {
-        address: "NA",
-        state: "Uttar Pradesh",
-        landmark: "",
-        city: "Rampur",
-        district: "Rampur",
-        postOffice: "Civil Line Rampur",
-        postalCode: "244901",
+        address: deliveryAddressSameAsConsigneeAddress?reducerState.consigneeCity:reducerState.unloadingCity,
+        state: deliveryAddressSameAsConsigneeAddress?reducerState.consigneeState:reducerState.unloadingState,
+        landmark:deliveryAddressSameAsConsigneeAddress?reducerState.consigneeCity:reducerState.unloadingCity,
+        city:deliveryAddressSameAsConsigneeAddress?reducerState.consigneeCity:reducerState.unloadingCity,
+        district: deliveryAddressSameAsConsigneeAddress?reducerState.consigneeCity:reducerState.unloadingCity,
+        postOffice: deliveryAddressSameAsConsigneeAddress?reducerState.consigneeCity:reducerState.unloadingCity,
+        postalCode: reducerState.consigneePincode,
         country: "india"
       },
 
@@ -663,35 +717,35 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
         balanceAmount: reducerState.balanceAmount
       },
       pickupCharges: {
-        status: "NORequired",
-        charge: reducerState.pickupCharges
+        status: reducerState.pickupCharges,
+        charge: reducerState.pickupChargesAmount
       },
       packingCharges: {
-        status: "",
-        charge: reducerState.packingCharges
+        status: reducerState.packingCharges,
+        charge: reducerState.packingChargesAmount
       },
       unPackingCharges: {
-        status: "",
-        charge: reducerState.unPackingCharges
+        status: reducerState.unPackingCharges,
+        charge: reducerState.unPackingChargesAmount
       },
       unLoadingCharges: {
-        status: "",
-        charge: reducerState.unLoadingCharges
+        status: reducerState.unLoadingCharges,
+        charge: reducerState.unLoadingChargesAmount
       },
       doorDeliveryCharges: {
-        status: "",
-        charge: reducerState.doorDeliveryCharges
+        status: reducerState.doorDeliveryCharges,
+        charge: reducerState.doorDeliveryChargesAmount
       },
       packingMaterialCharges: {
-        status: "",
-        charge: reducerState.packingCharges
+        status: reducerState.packingCharges,
+        charge: reducerState.packingChargesAmount
       },
       loadingCharges: {
-        status: "REQUIRED",
-        charge: reducerState.loadingCharges
+        status: reducerState.loadingCharges,
+        charge: reducerState.loadingChargesAmount
       },
       remarks: reducerState.remark,
-      addedBy: "12121212"
+      addedBy: getCompanyId()
     };
     console.log(payload, 'payload Bility req');
 
@@ -700,10 +754,18 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
 
   useEffect(() => {
     if (!createBiltyRequesting && createBiltySuccess) {
-      // console.log('otpData--------', JSON.stringify(otpData));
-      // navigation.navigate(AuthStackRoute.OTPInput);
+      Toast.show({
+        type: 'success',
+        text1: 'create Bilty',
+        text2: 'create Bilty has been added successfully',
+      });
     } else if (!createBiltyRequesting && createBiltyError) {
-      Alert.alert('Something went wrong. Please try again!');
+      // Alert.alert('Something went wrong. Please try again!');
+      Toast.show({
+        type: 'error',
+        text1: 'create Bilty',
+        text2: 'Error in creating Bilty. Please try again!',
+      });
     }
   }, [
     createBiltyRequesting,
@@ -740,20 +802,65 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
             <Label text="State" style={styles.label} />
             <DropdownComponent
               data={shiftingLuggages}
-              onSelect={handleTemplate}
+              onSelect={handleLoadingState}
             />
           </View>
           <View style={styles.itemContainer}>
             <Label text="City" style={styles.label} />
             <DropdownComponent
               data={shiftingLuggages}
-              onSelect={handleTemplate}
+              onSelect={handleLoadingCity}
             />
           </View>
         </View>
       </>
     );
   };
+
+  const renderUnLoadingAddressView = () => {
+    return (
+      <>
+        <Spacer height={4} />
+        <View style={styles.elementContainer2}>
+          <Label text="Address" style={styles.label} />
+          {/* <Input
+            onChangeText={handleReceiptNoInputTextChange}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+          />
+        </View>
+        <Spacer height={4} />
+        <View style={styles.elementContainer2}>
+            <Label text="Pincode" style={styles.label} />
+            <Input
+              onChangeText={handleReceiptNoInputTextChange}
+              containerStyle={styles.inputContainer}
+              inputStyle={styles.input}
+              selectionColor={COLOR_BLACK}
+            /> */}
+        </View>
+        <Spacer height={4} />
+        <View style={styles.elementContainer}>
+          <View style={styles.itemContainer}>
+            <Label text="State" style={styles.label} />
+            <DropdownComponent
+              data={shiftingLuggages}
+              onSelect={handleUnLoadingState}
+            />
+          </View>
+          <View style={styles.itemContainer}>
+            <Label text="City" style={styles.label} />
+            <DropdownComponent
+              data={shiftingLuggages}
+              onSelect={handleUnLoadingCity}
+            />
+          </View>
+        </View>
+      </>
+    );
+  };
+
 
   const renderNonFixedFreightView = () => {
     return (
@@ -828,7 +935,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
               </View>
               <View style={[styles.itemContainer, switchWrapperStyle]}>
                 <Input
-                  onChangeText={() => { }}
+                  onChangeText={handleBiltyLrCnNo}
                   containerStyle={styles.switchInputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -1066,7 +1173,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
               />
             </View>
             {!deliveryAddressSameAsConsigneeAddress
-              ? renderLoadingAddressView()
+              ? renderUnLoadingAddressView()
               : null}
           </View>
         </CollapsibleView>
@@ -1291,6 +1398,10 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
                 data={riskTypeOptions}
                 onChange={(selectedItem: ICheckboxButton) => {
                   console.log('SelectedItem: ', JSON.stringify(selectedItem));
+                  dispatch({
+                    type: BILTY_FORM_ACTION.RISK_TYPE,
+                    payload: selectedItem.text as string,
+                  });
                 }}
               />
             </View>

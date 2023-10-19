@@ -1,6 +1,6 @@
 export interface ICreateBiltyRequest {
   companyId: string;
-  orderId: string;
+  enquiryId: string;
   templateId: string;
   biltyNumber: string;
   biltyDate: string;

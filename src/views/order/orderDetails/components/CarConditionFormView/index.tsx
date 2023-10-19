@@ -19,7 +19,7 @@ import {
   carConditionReducer,
   CARCONDITION_FORM_ACTION,
 } from './carConditionReducer';
-import { formatDate } from '../../../../../utils/formatter';
+import { formatDate, formatDate3 } from '../../../../../utils/formatter';
 import Button from '../../../../../common/Button';
 import { ICreateCarConditionRequest } from '../../../../../interface/order/ICreateCarConditionRequest';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
@@ -42,6 +42,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({ orderId })
     createCarConditionSuccess,
     createCarConditionError,
     createCarConditionFailure,
+    orders
   } = useAppSelector(state => state.Order);
   const dispatch2 = useAppDispatch();
   const { addCompanyInfo, companies } = useAppSelector(state => state.Company);
@@ -76,7 +77,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({ orderId })
   const handleCarConditionDate = (date: Date) => {
     dispatch({
       type: CARCONDITION_FORM_ACTION.DATE_OF_CARCONDITION,
-      payload: formatDate(date),
+      payload: formatDate3(date),
     });
   };
   const handleCnBiltyLrNO = (text: string) => {
@@ -198,7 +199,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({ orderId })
   const handleCreateCarCondition = () => {
     const payload: ICreateCarConditionRequest = {
       companyId: getCompanyId(),
-      orderId: '652164b2f774ba023df4e323',
+      orderId: orders.data[0]._id,
       templateId: '32423erer',
       carConditionNumber: reducerState.carConditionNumber,
       dateOfCarCondition: reducerState.dateOfCarCondition,
