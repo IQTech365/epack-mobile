@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useReducer, useState } from 'react';
+import React, { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import { Alert, View } from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
@@ -24,12 +24,13 @@ import {
   BILTY_FORM_ACTION
 }
   from './biltyReducer';
-import { formatDate, formatDate2, formatDate3 } from '../../../../../utils/formatter';
+import { formatDate, formatDate2, formatDate3, getCities, getStates } from '../../../../../utils/formatter';
 import { ICreateBiltyRequest } from '../../../../../interface/order/ICreateBiltyRequest';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import Button from '../../../../../common/Button';
-import { createBiltyRequest } from '../../../../../redux/slices/OrderSlice';
+import { createBiltyRequest, resetCreateBiltyRequest } from '../../../../../redux/slices/OrderSlice';
 import Spinner from '../../../../../common/Spinner';
+import usePincodeHook, { PINCODE_REQUEST_KEY } from '../../../../../hooks/usePincodeHook';
 
 
 const riskTypeOptions: Array<ICheckboxButton> = [
@@ -106,7 +107,6 @@ interface IBiltyFormViewProps {
 }
 
 const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
-  const state = { pickupPincode: '', deliveryPincode: '' };
   const [reducerState, dispatch] = useReducer(biltyReducer, initialState);
   const [switchState, setSwitchState] = useState<boolean>(false);
   const [
@@ -118,15 +118,41 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
     setIsDeliveryAddressSameAsConsigneeAddress,
   ] = useState<boolean>(true);
   const [fixedFreight, setFixedFreight] = useState<boolean>(false);
+  const [pincodeRequestKey, setPincodeRequestKey] =
+    useState<PINCODE_REQUEST_KEY>(PINCODE_REQUEST_KEY.BILTY_CONSIGNER_ADDRESS);
   const {
     createBiltyRequesting,
     createBiltySuccess,
     createBiltyError,
     createBiltyFailure,
-    orders
   } = useAppSelector(state => state.Order);
   const { addCompanyInfo, companies } = useAppSelector(state => state.Company);
   const dispatch2 = useAppDispatch();
+  const [consignerStates, setConsignerStates] = useState<TDropdownItem[]>([]);
+  const [consignerCities, setConsignerCities] = useState<TDropdownItem[]>([]);
+
+  const [loadingStates, setLoadingStates] = useState<TDropdownItem[]>([]);
+  const [loadingCities, setLoadingCities] = useState<TDropdownItem[]>([]);
+
+  const [consigneeStates, setConsigneeStates] = useState<TDropdownItem[]>([]);
+  const [consigneeCities, setConsigneeCities] = useState<TDropdownItem[]>([]);
+
+  const [unloadingStates, setUnloadingStates] = useState<TDropdownItem[]>([]);
+  const [unloadingCities, setUnloadingCities] = useState<TDropdownItem[]>([]);
+
+  const consignerCityDropdownRef = useRef(null);
+  const consignerStateDropwdownRef = useRef(null);
+  const loadingCityDropdownRef = useRef(null);
+  const loadingStateDropwdownRef = useRef(null);
+  const consigneeCityDropdownRef = useRef(null);
+  const consigneeStateDropdownRef = useRef(null);
+  const unloadingCityDropdownRef = useRef(null);
+  const unloadingStateDropwdownRef = useRef(null);
+
+  const { result, fetching, setPincode } = usePincodeHook(
+    () => {},
+    () => {},
+  );
 
   const switchWrapperStyle = switchState
     ? styles.switchMainWrapper
@@ -138,6 +164,22 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
       payload: item.label,
     });
   };
+
+  const handleLoaddAddress = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.LOADING_ADDRESS,
+      payload: text,
+    });
+  }
+
+  const handleLoadingAddressPincode = useCallback((text: string) => {
+    setPincodeRequestKey(PINCODE_REQUEST_KEY.BILTY_LOADING_ADDRESS);
+    setPincode(text);
+    dispatch({
+      type: BILTY_FORM_ACTION.LOADING_ADDRESS_PINCODE,
+      payload: text,
+    });
+  }, [reducerState.loadingAddressPincode]);
 
   const handleLoadingState = (item: TDropdownItem) => {
     dispatch({
@@ -152,6 +194,22 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
       payload: item.label,
     });
   };
+
+  const handleUnloaddAddress = (text: string) => {
+    dispatch({
+      type: BILTY_FORM_ACTION.UNLOADING_ADDRESS,
+      payload: text,
+    });
+  }
+
+  const handleUnloadingAddressPincode = useCallback((text: string) => {
+    setPincodeRequestKey(PINCODE_REQUEST_KEY.BILTY_UNLOADING_ADDRESS);
+    setPincode(text);
+    dispatch({
+      type: BILTY_FORM_ACTION.UNLOADING_ADDRESS_PINCODE,
+      payload: text,
+    });
+  }, [reducerState.unloadingAddressPincode]);
 
   const handleUnLoadingState = (item: TDropdownItem) => {
     dispatch({
@@ -205,12 +263,14 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
   };
   const handleConsignerPinCode = useCallback(
     (text: string) => {
+      setPincodeRequestKey(PINCODE_REQUEST_KEY.BILTY_CONSIGNER_ADDRESS);
+      setPincode(text);
       dispatch({
         type: BILTY_FORM_ACTION.CONSIGNER_PINCODE,
         payload: text,
       });
     },
-    [state.pickupPincode],
+    [reducerState.consignerPincode],
   );
   const handleConsignerState = (item: TDropdownItem) => {
     dispatch({
@@ -250,12 +310,14 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
   };
   const handleConsigneePinCode = useCallback(
     (text: string) => {
+      setPincodeRequestKey(PINCODE_REQUEST_KEY.BILTY_CONSIGNEE_ADDRESS);
+      setPincode(text);
       dispatch({
         type: BILTY_FORM_ACTION.CONSIGNEE_PINCODE,
         payload: text,
       });
     },
-    [state.deliveryPincode],
+    [reducerState.consigneePincode],
   );
   const handleConsigneeState = (item: TDropdownItem) => {
     dispatch({
@@ -602,7 +664,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
   const handleCreateBilty = useCallback(() => {
     const payload: ICreateBiltyRequest = {
       companyId: getCompanyId(),
-      enquiryId: orders.data[0]._id,
+      enquiryId: orderId as string,
       templateId: "fds32131",
       biltyNumber: reducerState.biltyLrCnNo,
       biltyDate: reducerState.dateofBiltyLrCnNo,
@@ -611,47 +673,47 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
         mobile: reducerState.consignerMobileNo,
         gstin: reducerState.consignerGst,
         street: reducerState.consignerCity,
-        state: reducerState.consignerState,
+        state: reducerState.consignerState || consignerStates[0].label,
         landmark: reducerState.consignerCity,
-        city: reducerState.consignerCity,
+        city: reducerState.consignerCity || consignerCities[0].label,
         district: reducerState.consignerCity,
         postOffice: reducerState.consignerCity,
         postalCode: reducerState.consignerPincode,
-        country: "india"
+        country: "India"
       },
       consignee: {
         name: reducerState.consigneeName,
         mobile: reducerState.consigneeMobileNo,
         gstin: reducerState.consigneeGst,
         street: reducerState.consigneeCity,
-        state: reducerState.consigneeState,
+        state: reducerState.consigneeState || consigneeStates[0].label,
         landmark: reducerState.consigneeCity,
-        city: reducerState.consigneeCity,
+        city: reducerState.consigneeCity || consigneeCities[0].label,
         district: reducerState.consigneeCity,
         postOffice: reducerState.consigneeCity,
         postalCode: reducerState.consigneePincode,
-        country: "india"
+        country: "India"
       },
 
       loadingAddress: {
-        address: loadingAddressSameAsConsignerAddress?reducerState.consignerCity:reducerState.loadingCity,
-        state: loadingAddressSameAsConsignerAddress?reducerState.consignerState:reducerState.loadingState,
-        landmark:loadingAddressSameAsConsignerAddress?reducerState.consignerCity:reducerState.loadingCity,
-        city:loadingAddressSameAsConsignerAddress?reducerState.consignerCity:reducerState.loadingCity,
-        district: loadingAddressSameAsConsignerAddress?reducerState.consignerCity:reducerState.loadingCity,
-        postOffice: loadingAddressSameAsConsignerAddress?reducerState.consignerCity:reducerState.loadingCity,
-        postalCode: reducerState.consignerPincode,
-        country: "india"
+        address: loadingAddressSameAsConsignerAddress ? reducerState.consignerCity : reducerState.loadingAddress,
+        state: loadingAddressSameAsConsignerAddress ? reducerState.consignerState : reducerState.loadingState || loadingStates[0].label,
+        landmark:loadingAddressSameAsConsignerAddress ? reducerState.consignerCity : reducerState.loadingCity,
+        city:loadingAddressSameAsConsignerAddress ? reducerState.consignerCity : reducerState.loadingCity || loadingCities[0].label,
+        district: loadingAddressSameAsConsignerAddress ? reducerState.consignerCity : reducerState.loadingCity,
+        postOffice: loadingAddressSameAsConsignerAddress ? reducerState.consignerCity : reducerState.loadingCity,
+        postalCode: loadingAddressSameAsConsignerAddress ? reducerState.consignerPincode : reducerState.loadingAddressPincode,
+        country: "India"
       },
       unloadingAddress: {
-        address: deliveryAddressSameAsConsigneeAddress?reducerState.consigneeCity:reducerState.unloadingCity,
-        state: deliveryAddressSameAsConsigneeAddress?reducerState.consigneeState:reducerState.unloadingState,
-        landmark:deliveryAddressSameAsConsigneeAddress?reducerState.consigneeCity:reducerState.unloadingCity,
-        city:deliveryAddressSameAsConsigneeAddress?reducerState.consigneeCity:reducerState.unloadingCity,
-        district: deliveryAddressSameAsConsigneeAddress?reducerState.consigneeCity:reducerState.unloadingCity,
-        postOffice: deliveryAddressSameAsConsigneeAddress?reducerState.consigneeCity:reducerState.unloadingCity,
-        postalCode: reducerState.consigneePincode,
-        country: "india"
+        address: deliveryAddressSameAsConsigneeAddress ?reducerState.consigneeCity : reducerState.unloadingAddress,
+        state: deliveryAddressSameAsConsigneeAddress ? reducerState.consigneeState : reducerState.unloadingState || unloadingStates[0].label,
+        landmark:deliveryAddressSameAsConsigneeAddress ? reducerState.consigneeCity : reducerState.unloadingCity,
+        city:deliveryAddressSameAsConsigneeAddress ? reducerState.consigneeCity : reducerState.unloadingCity || unloadingCities[0].label,
+        district: deliveryAddressSameAsConsigneeAddress ? reducerState.consigneeCity : reducerState.unloadingCity,
+        postOffice: deliveryAddressSameAsConsigneeAddress ? reducerState.consigneeCity : reducerState.unloadingCity,
+        postalCode: deliveryAddressSameAsConsigneeAddress ? reducerState.consigneePincode : reducerState.unloadingAddressPincode,
+        country: "India"
       },
 
       vehicle: {
@@ -756,16 +818,17 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
     if (!createBiltyRequesting && createBiltySuccess) {
       Toast.show({
         type: 'success',
-        text1: 'create Bilty',
-        text2: 'create Bilty has been added successfully',
+        text1: 'Create Bilty',
+        text2: 'Bilty has been created successfully',
       });
+      dispatch2(resetCreateBiltyRequest());
     } else if (!createBiltyRequesting && createBiltyError) {
-      // Alert.alert('Something went wrong. Please try again!');
       Toast.show({
         type: 'error',
-        text1: 'create Bilty',
+        text1: 'Create Bilty',
         text2: 'Error in creating Bilty. Please try again!',
       });
+      dispatch2(resetCreateBiltyRequest());
     }
   }, [
     createBiltyRequesting,
@@ -773,14 +836,100 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
     createBiltyFailure,
   ]);
 
+  useEffect(() => {
+    if (result && result.Status != 'Error') {
+      if (
+        pincodeRequestKey === PINCODE_REQUEST_KEY.BILTY_CONSIGNER_ADDRESS
+      ) {
+        setConsignerStates(getStates(result));
+        setConsignerCities(getCities(result));
+      } else if (
+        pincodeRequestKey === PINCODE_REQUEST_KEY.BILTY_LOADING_ADDRESS
+      ) {
+        setLoadingStates(getStates(result));
+        setLoadingCities(getCities(result));
+      }else if (
+        pincodeRequestKey === PINCODE_REQUEST_KEY.BILTY_CONSIGNEE_ADDRESS
+      ) {
+        setConsigneeStates(getStates(result));
+        setConsigneeCities(getCities(result));
+      }else if (
+        pincodeRequestKey === PINCODE_REQUEST_KEY.BILTY_UNLOADING_ADDRESS
+      ) {
+        setUnloadingStates(getStates(result));
+        setUnloadingCities(getCities(result));
+      }
+    }
+  }, [result]);
+
+  useEffect(() => {
+    if (
+      consignerStates &&
+      consignerCities &&
+      consignerStateDropwdownRef &&
+      consignerCityDropdownRef &&
+      pincodeRequestKey === PINCODE_REQUEST_KEY.BILTY_CONSIGNER_ADDRESS
+    ) {
+      //@ts-ignore
+      consignerStateDropwdownRef?.current?.setDefaultValue(consignerStates[0]);
+      //@ts-ignore
+      consignerCityDropdownRef?.current?.setDefaultValue(consignerCities[0]);
+    }
+  }, [consignerStates, consignerCities]);
+
+  useEffect(() => {
+    if (
+      loadingStates &&
+      loadingCities &&
+      loadingStateDropwdownRef &&
+      loadingCityDropdownRef &&
+      pincodeRequestKey === PINCODE_REQUEST_KEY.BILTY_LOADING_ADDRESS
+    ) {
+      //@ts-ignore
+      loadingStateDropwdownRef?.current?.setDefaultValue(loadingStates[0]);
+      //@ts-ignore
+      loadingCityDropdownRef?.current?.setDefaultValue(loadingCities[0]);
+    }
+  }, [loadingStates, loadingCities]);
+
+  useEffect(() => {
+    if (
+      consigneeStates &&
+      consigneeCities &&
+      consigneeStateDropdownRef &&
+      consigneeCityDropdownRef &&
+      pincodeRequestKey === PINCODE_REQUEST_KEY.BILTY_CONSIGNEE_ADDRESS
+    ) {
+      //@ts-ignore
+      consigneeStateDropdownRef?.current?.setDefaultValue(consigneeStates[0]);
+      //@ts-ignore
+      consigneeCityDropdownRef?.current?.setDefaultValue(consigneeCities[0]);
+    }
+  }, [consigneeStates, consigneeCities]);
+
+  useEffect(() => {
+    if (
+      unloadingStates &&
+      unloadingCities &&
+      unloadingStateDropwdownRef &&
+      unloadingCityDropdownRef &&
+      pincodeRequestKey === PINCODE_REQUEST_KEY.BILTY_UNLOADING_ADDRESS
+    ) {
+      //@ts-ignore
+      unloadingStateDropwdownRef?.current?.setDefaultValue(unloadingStates[0]);
+      //@ts-ignore
+      unloadingCityDropdownRef?.current?.setDefaultValue(unloadingCities[0]);
+    }
+  }, [unloadingStates, unloadingCities]);
+
   const renderLoadingAddressView = () => {
     return (
       <>
         <Spacer height={4} />
         <View style={styles.elementContainer2}>
           <Label text="Address" style={styles.label} />
-          {/* <Input
-            onChangeText={handleReceiptNoInputTextChange}
+          <Input
+            onChangeText={handleLoaddAddress}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
@@ -790,26 +939,30 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
         <View style={styles.elementContainer2}>
             <Label text="Pincode" style={styles.label} />
             <Input
-              onChangeText={handleReceiptNoInputTextChange}
+              onChangeText={handleLoadingAddressPincode}
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
-            /> */}
+            />
         </View>
         <Spacer height={4} />
         <View style={styles.elementContainer}>
           <View style={styles.itemContainer}>
             <Label text="State" style={styles.label} />
             <DropdownComponent
-              data={shiftingLuggages}
+              data={loadingStates}
               onSelect={handleLoadingState}
+              //@ts-ignore
+              ref={loadingStateDropwdownRef}
             />
           </View>
           <View style={styles.itemContainer}>
             <Label text="City" style={styles.label} />
             <DropdownComponent
-              data={shiftingLuggages}
+              data={loadingCities}
               onSelect={handleLoadingCity}
+              //@ts-ignore
+              ref={loadingCityDropdownRef}
             />
           </View>
         </View>
@@ -823,8 +976,8 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
         <Spacer height={4} />
         <View style={styles.elementContainer2}>
           <Label text="Address" style={styles.label} />
-          {/* <Input
-            onChangeText={handleReceiptNoInputTextChange}
+          <Input
+            onChangeText={handleUnloaddAddress}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
@@ -834,26 +987,30 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
         <View style={styles.elementContainer2}>
             <Label text="Pincode" style={styles.label} />
             <Input
-              onChangeText={handleReceiptNoInputTextChange}
+              onChangeText={handleUnloadingAddressPincode}
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
-            /> */}
+            />
         </View>
         <Spacer height={4} />
         <View style={styles.elementContainer}>
           <View style={styles.itemContainer}>
             <Label text="State" style={styles.label} />
             <DropdownComponent
-              data={shiftingLuggages}
+              data={unloadingStates}
               onSelect={handleUnLoadingState}
+              //@ts-ignore
+              ref={unloadingStateDropwdownRef}
             />
           </View>
           <View style={styles.itemContainer}>
             <Label text="City" style={styles.label} />
             <DropdownComponent
-              data={shiftingLuggages}
+              data={unloadingCities}
               onSelect={handleUnLoadingCity}
+              //@ts-ignore
+              ref={unloadingCityDropdownRef}
             />
           </View>
         </View>
@@ -1017,15 +1174,19 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
               <View style={styles.itemContainer}>
                 <Label text="State" style={styles.label} />
                 <DropdownComponent
-                  data={shiftingLuggages}
+                  data={consignerStates}
                   onSelect={handleConsignerState}
+                  //@ts-ignore
+                  ref={consignerStateDropwdownRef}
                 />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="City" style={styles.label} />
                 <DropdownComponent
-                  data={shiftingLuggages}
+                  data={consignerCities}
                   onSelect={handleConsignerCity}
+                  //@ts-ignore
+                  ref={consignerCityDropdownRef}
                 />
               </View>
             </View>
@@ -1126,15 +1287,19 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
               <View style={styles.itemContainer}>
                 <Label text="State" style={styles.label} />
                 <DropdownComponent
-                  data={shiftingLuggages}
+                  data={consigneeStates}
                   onSelect={handleConsigneeState}
+                  //@ts-ignore
+                  ref={consigneeStateDropdownRef}
                 />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="City" style={styles.label} />
                 <DropdownComponent
-                  data={shiftingLuggages}
+                  data={consigneeCities}
                   onSelect={handleConsigneeCity}
+                  //@ts-ignore
+                  ref={consigneeCityDropdownRef}
                 />
               </View>
             </View>
@@ -1722,7 +1887,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
           textStyle={styles.textStyle}
         />
         <Spacer height={8} />
-        <Spinner show={createBiltyRequesting} />
+        <Spinner show={createBiltyRequesting || fetching} />
       </View>
     </AvoidSoftInputViewHOC>
   );

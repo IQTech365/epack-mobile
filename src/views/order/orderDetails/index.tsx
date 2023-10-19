@@ -18,8 +18,8 @@ import InvoiceView from './components/InvoiceView';
 type Props = NativeStackScreenProps<OrderStackParamList, 'OrderDetails'>;
 
 const OrderDetailsView: React.FC<Props> = ({route, navigation}) => {
-  const orderId: string | undefined = route.params?.orderId;
-  const item: IGetOrdersData | null = route.params?.item;
+  const orderId: string = route.params?.orderId as string;
+  const item: IGetOrdersData = route.params?.item as IGetOrdersData;
 
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
 

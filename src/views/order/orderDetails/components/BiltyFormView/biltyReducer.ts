@@ -11,8 +11,12 @@ export enum BILTY_FORM_ACTION {
   CONSIGNER_PINCODE = 'CONSIGNER_PINCODE',
   CONSIGNER_STATE = 'CONSIGNER_STATE',
   CONSIGNER_CITY = 'CONSIGNER_CITY',
+  LOADING_ADDRESS = '',
+  LOADING_ADDRESS_PINCODE = '',
   LOADING_STATE = 'LOADING_STATE',
   LOADING_CITY = 'LOADING_CITY',
+  UNLOADING_ADDRESS = '',
+  UNLOADING_ADDRESS_PINCODE = '',
   UNLOADING_STATE = 'UNLOADING_STATE',
   UNLOADING_CITY = 'UNLOADING_CITY',
   CONSIGNEE_NAME = 'CONSIGNEE_NAME',
@@ -92,8 +96,12 @@ interface IBiltyFormState {
   consignerPincode: string;
   consignerState: string;
   consignerCity: string;
+  loadingAddress: string;
+  loadingAddressPincode: string;
   loadingState: string;
   loadingCity: string;
+  unloadingAddress: string;
+  unloadingAddressPincode: string;
   unloadingState: string;
   unloadingCity: string;
   consigneeName: string;
@@ -180,8 +188,12 @@ export const initialState: IBiltyFormState = {
   consignerPincode: '',
   consignerState: '',
   consignerCity: '',
+  loadingAddress: '',
+  loadingAddressPincode: '',
   loadingState: '',
   loadingCity: '',
+  unloadingAddress: '',
+  unloadingAddressPincode: '',
   unloadingState: '',
   unloadingCity: '',
   consigneeName: '',
@@ -276,6 +288,10 @@ export const biltyReducer = (
       return { ...state, consignerState: payload };
     case BILTY_FORM_ACTION.CONSIGNER_CITY:
       return { ...state, consignerCity: payload };
+    case BILTY_FORM_ACTION.LOADING_ADDRESS:
+      return { ...state, loadingAddress: payload };
+    case BILTY_FORM_ACTION.LOADING_ADDRESS_PINCODE:
+      return { ...state, loadingAddressPincode: payload };
     case BILTY_FORM_ACTION.LOADING_STATE:
       return { ...state, loadingState: payload };
     case BILTY_FORM_ACTION.LOADING_CITY:
@@ -294,6 +310,10 @@ export const biltyReducer = (
       return { ...state, consigneeState: payload };
     case BILTY_FORM_ACTION.CONSIGNEE_CITY:
       return { ...state, consigneeCity: payload };
+    case BILTY_FORM_ACTION.UNLOADING_ADDRESS:
+        return { ...state, unloadingAddress: payload };
+    case BILTY_FORM_ACTION.UNLOADING_ADDRESS_PINCODE:
+        return { ...state, unloadingAddressPincode: payload };
     case BILTY_FORM_ACTION.UNLOADING_STATE:
       return { ...state, unloadingState: payload };
     case BILTY_FORM_ACTION.UNLOADING_CITY:
