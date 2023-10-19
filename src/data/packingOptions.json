@@ -1,0 +1,15 @@
+[
+    {
+      "label": "Not Required",
+      "value": "1"
+    },
+    {
+      "label": "Included in Freight",
+      "value": "2"
+    },
+    {
+      "label": "Additional from Freight",
+      "value": "3"
+    }
+  ]
+  

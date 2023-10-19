@@ -1,5 +1,11 @@
-import React, { useCallback, useEffect, useReducer, useRef, useState } from 'react';
-import { Alert, View } from 'react-native';
+import React, {
+  useCallback,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from 'react';
+import {Alert, Text, TouchableOpacity, View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
 import DatePickerComponent from '../../../../../common/DatePickerComponent';
@@ -7,49 +13,58 @@ import DropdownComponent from '../../../../../common/DropdownComponent';
 import Input from '../../../../../common/Input';
 import Label from '../../../../../common/Label';
 import Spacer from '../../../../../common/Spacer';
-import { TDropdownItem } from '../../../../../type/TDropdownItem';
-import { COLOR_BLACK, COLOR_BLUE } from '../../../../../utils/colors';
+import {TDropdownItem} from '../../../../../type/TDropdownItem';
+import {COLOR_BLACK, COLOR_BLUE} from '../../../../../utils/colors';
 import styles from './style';
 import shiftingLuggages from '../../../../../data/shiftingLuggage.json';
-import { Switch } from 'react-native-switch';
+import {Switch} from 'react-native-switch';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import BouncyCheckboxGroup, {
   ICheckboxButton,
 } from 'react-native-bouncy-checkbox-group';
 import Toast from 'react-native-toast-message';
 import vehicleTypeOptions from '../../../../../data/vehicleTypeOptions.json';
+import {initialState, biltyReducer, BILTY_FORM_ACTION} from './biltyReducer';
 import {
-  initialState,
-  biltyReducer,
-  BILTY_FORM_ACTION
-}
-  from './biltyReducer';
-import { formatDate, formatDate2, formatDate3, getCities, getStates } from '../../../../../utils/formatter';
-import { ICreateBiltyRequest } from '../../../../../interface/order/ICreateBiltyRequest';
-import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
+  formatDate,
+  formatDate2,
+  formatDate3,
+  getCities,
+  getStates,
+} from '../../../../../utils/formatter';
+import {ICreateBiltyRequest} from '../../../../../interface/order/ICreateBiltyRequest';
+import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import Button from '../../../../../common/Button';
-import { createBiltyRequest, resetCreateBiltyRequest } from '../../../../../redux/slices/OrderSlice';
+import {
+  createBiltyRequest,
+  resetCreateBiltyRequest,
+} from '../../../../../redux/slices/OrderSlice';
 import Spinner from '../../../../../common/Spinner';
-import usePincodeHook, { PINCODE_REQUEST_KEY } from '../../../../../hooks/usePincodeHook';
-
+import usePincodeHook, {
+  PINCODE_REQUEST_KEY,
+} from '../../../../../hooks/usePincodeHook';
+import packingMaterilOptions from '../../../../../data/packingMaterialOptions.json';
+import packingMaterilUnitOptions from '../../../../../data/packingMaterialUnitOptions.json';
+import packingOptions from '../../../../../data/packingOptions.json';
+import DeleteIcon from '../../../../../images/icons/delete.svg';
 
 const riskTypeOptions: Array<ICheckboxButton> = [
   {
     id: '1',
     text: 'Owners Risk',
     fillColor: COLOR_BLUE,
-    iconStyle: { borderColor: 'red', borderRadius: 0, width: 15, height: 15 },
-    innerIconStyle: { borderWidth: 1, borderRadius: 0, width: 15, height: 15 },
-    textStyle: { fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none' },
-    style: { paddingRight: 16 },
+    iconStyle: {borderColor: 'red', borderRadius: 0, width: 15, height: 15},
+    innerIconStyle: {borderWidth: 1, borderRadius: 0, width: 15, height: 15},
+    textStyle: {fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none'},
+    style: {paddingRight: 16},
   },
   {
     id: '2',
     text: 'Carrier Risk',
     fillColor: COLOR_BLUE,
-    iconStyle: { borderColor: 'red', borderRadius: 0, width: 15, height: 15 },
-    innerIconStyle: { borderWidth: 1, borderRadius: 0, width: 15, height: 15 },
-    textStyle: { fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none' },
+    iconStyle: {borderColor: 'red', borderRadius: 0, width: 15, height: 15},
+    innerIconStyle: {borderWidth: 1, borderRadius: 0, width: 15, height: 15},
+    textStyle: {fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none'},
   },
 ];
 
@@ -58,27 +73,27 @@ const payTypeOptions: Array<ICheckboxButton> = [
     id: '1',
     text: 'To Be Billed',
     fillColor: COLOR_BLUE,
-    iconStyle: { borderColor: 'red', borderRadius: 0, width: 15, height: 15 },
-    innerIconStyle: { borderWidth: 1, borderRadius: 0, width: 15, height: 15 },
-    textStyle: { fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none' },
-    style: { paddingRight: 16 },
+    iconStyle: {borderColor: 'red', borderRadius: 0, width: 15, height: 15},
+    innerIconStyle: {borderWidth: 1, borderRadius: 0, width: 15, height: 15},
+    textStyle: {fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none'},
+    style: {paddingRight: 16},
   },
   {
     id: '2',
     text: 'To Pay',
     fillColor: COLOR_BLUE,
-    iconStyle: { borderColor: 'red', borderRadius: 0, width: 15, height: 15 },
-    innerIconStyle: { borderWidth: 1, borderRadius: 0, width: 15, height: 15 },
-    textStyle: { fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none' },
-    style: { paddingRight: 16 },
+    iconStyle: {borderColor: 'red', borderRadius: 0, width: 15, height: 15},
+    innerIconStyle: {borderWidth: 1, borderRadius: 0, width: 15, height: 15},
+    textStyle: {fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none'},
+    style: {paddingRight: 16},
   },
   {
     id: '3',
     text: 'Paid',
     fillColor: COLOR_BLUE,
-    iconStyle: { borderColor: 'red', borderRadius: 0, width: 15, height: 15 },
-    innerIconStyle: { borderWidth: 1, borderRadius: 0, width: 15, height: 15 },
-    textStyle: { fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none' },
+    iconStyle: {borderColor: 'red', borderRadius: 0, width: 15, height: 15},
+    innerIconStyle: {borderWidth: 1, borderRadius: 0, width: 15, height: 15},
+    textStyle: {fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none'},
   },
 ];
 
@@ -87,18 +102,56 @@ const insuranceOptions: Array<ICheckboxButton> = [
     id: '1',
     text: 'Insured',
     fillColor: COLOR_BLUE,
-    iconStyle: { borderColor: 'red', borderRadius: 0, width: 15, height: 15 },
-    innerIconStyle: { borderWidth: 1, borderRadius: 0, width: 15, height: 15 },
-    textStyle: { fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none' },
-    style: { paddingRight: 16 },
+    iconStyle: {borderColor: 'red', borderRadius: 0, width: 15, height: 15},
+    innerIconStyle: {borderWidth: 1, borderRadius: 0, width: 15, height: 15},
+    textStyle: {fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none'},
+    style: {paddingRight: 10},
   },
   {
     id: '2',
     text: 'Not Insured',
     fillColor: COLOR_BLUE,
-    iconStyle: { borderColor: 'red', borderRadius: 0, width: 15, height: 15 },
-    innerIconStyle: { borderWidth: 1, borderRadius: 0, width: 15, height: 15 },
-    textStyle: { fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none' },
+    iconStyle: {borderColor: 'red', borderRadius: 0, width: 15, height: 15},
+    innerIconStyle: {borderWidth: 1, borderRadius: 0, width: 15, height: 15},
+    textStyle: {fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none'},
+  },
+];
+
+const typeOfMovingOptions: Array<ICheckboxButton> = [
+  {
+    id: '1',
+    text: 'Household',
+    fillColor: COLOR_BLUE,
+    iconStyle: {borderColor: 'red', borderRadius: 0, width: 15, height: 15},
+    innerIconStyle: {borderWidth: 1, borderRadius: 0, width: 15, height: 15},
+    textStyle: {fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none'},
+    style: {paddingRight: 10, marginBottom: 10},
+  },
+  {
+    id: '2',
+    text: 'Vehicle',
+    fillColor: COLOR_BLUE,
+    iconStyle: {borderColor: 'red', borderRadius: 0, width: 15, height: 15},
+    innerIconStyle: {borderWidth: 1, borderRadius: 0, width: 15, height: 15},
+    textStyle: {fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none'},
+    style: {paddingRight: 10, marginBottom: 10},
+  },
+  {
+    id: '3',
+    text: 'Commercial',
+    fillColor: COLOR_BLUE,
+    iconStyle: {borderColor: 'red', borderRadius: 0, width: 15, height: 15},
+    innerIconStyle: {borderWidth: 1, borderRadius: 0, width: 15, height: 15},
+    textStyle: {fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none'},
+    style: {paddingRight: 10, marginBottom: 10},
+  },
+  {
+    id: '4',
+    text: '3PL',
+    fillColor: COLOR_BLUE,
+    iconStyle: {borderColor: 'red', borderRadius: 0, width: 15, height: 15},
+    innerIconStyle: {borderWidth: 1, borderRadius: 0, width: 15, height: 15},
+    textStyle: {fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none'},
   },
 ];
 
@@ -106,7 +159,19 @@ interface IBiltyFormViewProps {
   orderId: string | undefined;
 }
 
-const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
+interface IMaterial {
+  name: string;
+  noOfArticles: string;
+  packingType: string;
+  HSNCode: string;
+  billNumber: string;
+  actualWeight: string;
+  applicableWeight: string;
+  unit: string;
+  valueOfGoods: string;
+}
+
+const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
   const [reducerState, dispatch] = useReducer(biltyReducer, initialState);
   const [switchState, setSwitchState] = useState<boolean>(false);
   const [
@@ -126,7 +191,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
     createBiltyError,
     createBiltyFailure,
   } = useAppSelector(state => state.Order);
-  const { addCompanyInfo, companies } = useAppSelector(state => state.Company);
+  const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
   const dispatch2 = useAppDispatch();
   const [consignerStates, setConsignerStates] = useState<TDropdownItem[]>([]);
   const [consignerCities, setConsignerCities] = useState<TDropdownItem[]>([]);
@@ -140,6 +205,8 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
   const [unloadingStates, setUnloadingStates] = useState<TDropdownItem[]>([]);
   const [unloadingCities, setUnloadingCities] = useState<TDropdownItem[]>([]);
 
+  const [materials, setMaterials] = useState<IMaterial[]>([]);
+
   const consignerCityDropdownRef = useRef(null);
   const consignerStateDropwdownRef = useRef(null);
   const loadingCityDropdownRef = useRef(null);
@@ -149,7 +216,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
   const unloadingCityDropdownRef = useRef(null);
   const unloadingStateDropwdownRef = useRef(null);
 
-  const { result, fetching, setPincode } = usePincodeHook(
+  const {result, fetching, setPincode} = usePincodeHook(
     () => {},
     () => {},
   );
@@ -170,16 +237,19 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
       type: BILTY_FORM_ACTION.LOADING_ADDRESS,
       payload: text,
     });
-  }
+  };
 
-  const handleLoadingAddressPincode = useCallback((text: string) => {
-    setPincodeRequestKey(PINCODE_REQUEST_KEY.BILTY_LOADING_ADDRESS);
-    setPincode(text);
-    dispatch({
-      type: BILTY_FORM_ACTION.LOADING_ADDRESS_PINCODE,
-      payload: text,
-    });
-  }, [reducerState.loadingAddressPincode]);
+  const handleLoadingAddressPincode = useCallback(
+    (text: string) => {
+      setPincodeRequestKey(PINCODE_REQUEST_KEY.BILTY_LOADING_ADDRESS);
+      setPincode(text);
+      dispatch({
+        type: BILTY_FORM_ACTION.LOADING_ADDRESS_PINCODE,
+        payload: text,
+      });
+    },
+    [reducerState.loadingAddressPincode],
+  );
 
   const handleLoadingState = (item: TDropdownItem) => {
     dispatch({
@@ -187,7 +257,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
       payload: item.label,
     });
   };
-  
+
   const handleLoadingCity = (item: TDropdownItem) => {
     dispatch({
       type: BILTY_FORM_ACTION.LOADING_CITY,
@@ -200,16 +270,19 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
       type: BILTY_FORM_ACTION.UNLOADING_ADDRESS,
       payload: text,
     });
-  }
+  };
 
-  const handleUnloadingAddressPincode = useCallback((text: string) => {
-    setPincodeRequestKey(PINCODE_REQUEST_KEY.BILTY_UNLOADING_ADDRESS);
-    setPincode(text);
-    dispatch({
-      type: BILTY_FORM_ACTION.UNLOADING_ADDRESS_PINCODE,
-      payload: text,
-    });
-  }, [reducerState.unloadingAddressPincode]);
+  const handleUnloadingAddressPincode = useCallback(
+    (text: string) => {
+      setPincodeRequestKey(PINCODE_REQUEST_KEY.BILTY_UNLOADING_ADDRESS);
+      setPincode(text);
+      dispatch({
+        type: BILTY_FORM_ACTION.UNLOADING_ADDRESS_PINCODE,
+        payload: text,
+      });
+    },
+    [reducerState.unloadingAddressPincode],
+  );
 
   const handleUnLoadingState = (item: TDropdownItem) => {
     dispatch({
@@ -217,7 +290,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
       payload: item.label,
     });
   };
-  
+
   const handleUnLoadingCity = (item: TDropdownItem) => {
     dispatch({
       type: BILTY_FORM_ACTION.LOADING_CITY,
@@ -646,8 +719,8 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
 
   const getCompanyId = () => {
     let id;
-    const { data } = addCompanyInfo || {};
-    const { data: companiesData } = companies || {};
+    const {data} = addCompanyInfo || {};
+    const {data: companiesData} = companies || {};
     if (data && Object.keys(data).length > 0) {
       id = data._id;
     } else if (
@@ -661,11 +734,76 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
     return id;
   };
 
+  const showMaterialList = () => {
+    if (materials.length > 0) {
+      return materials.map((item, index) => {
+        return (
+          <>
+          <Spacer height={12} />
+          <View style={styles.materialItemContainer}>
+            <View style={[styles.materialItem, {justifyContent: 'space-between'}]}>
+              <View style={{flexDirection: 'row'}}>
+              <Text style={styles.materialLabelText}>SNO# - </Text>
+              <Text style={styles.materialValueText}>{index + 1}</Text>
+              </View>
+              <TouchableOpacity
+                  activeOpacity={0.4}
+                  onPress={() => handleDeleteMaterialItem(index)}>
+                  <DeleteIcon width={25} height={25} />
+                </TouchableOpacity>
+            </View>
+            <View style={styles.materialItem}>
+              <Text style={styles.materialLabelText}>Material Name - </Text>
+              <Text style={styles.materialValueText}>{item.name}</Text>
+            </View>
+            <View style={styles.materialItem}>
+              <Text style={styles.materialLabelText}>Number of Articles - </Text>
+              <Text style={styles.materialValueText}>{item.noOfArticles}</Text>
+            </View>
+            <View style={styles.materialItem}>
+              <Text style={styles.materialLabelText}>Packing Type - </Text>
+              <Text style={styles.materialValueText}>{item.packingType}</Text>
+            </View>
+            <View style={styles.materialItem}>
+              <Text style={styles.materialLabelText}>HSN Code - </Text>
+              <Text style={styles.materialValueText}>{item.HSNCode}</Text>
+            </View>
+            <View style={styles.materialItem}>
+              <Text style={styles.materialLabelText}>Bill/Invoice Number - </Text>
+              <Text style={styles.materialValueText}>{item.billNumber}</Text>
+            </View>
+            <View style={styles.materialItem}>
+              <Text style={styles.materialLabelText}>Net Weight - </Text>
+              <Text style={styles.materialValueText}>{item.actualWeight}</Text>
+            </View>
+            <View style={styles.materialItem}>
+              <Text style={styles.materialLabelText}>Unit - </Text>
+              <Text style={styles.materialValueText}>{item.unit}</Text>
+            </View>
+            <View style={styles.materialItem}>
+              <Text style={styles.materialLabelText}>Value Of Goods - </Text>
+              <Text style={styles.materialValueText}>{item.valueOfGoods}</Text>
+            </View>
+          </View>
+          <Spacer height={12} />
+          </>
+        );
+      });
+    }
+    return null;
+  };
+
+  const handleDeleteMaterialItem = (index: number) => {
+    const clone = [...materials];
+    const filter = clone.filter((_, i) => i !== index);
+    setMaterials(filter);
+  }
+
   const handleCreateBilty = useCallback(() => {
     const payload: ICreateBiltyRequest = {
       companyId: getCompanyId(),
       enquiryId: orderId as string,
-      templateId: "fds32131",
+      templateId: 'fds32131',
       biltyNumber: reducerState.biltyLrCnNo,
       biltyDate: reducerState.dateofBiltyLrCnNo,
       consigner: {
@@ -679,7 +817,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
         district: reducerState.consignerCity,
         postOffice: reducerState.consignerCity,
         postalCode: reducerState.consignerPincode,
-        country: "India"
+        country: 'India',
       },
       consignee: {
         name: reducerState.consigneeName,
@@ -692,28 +830,56 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
         district: reducerState.consigneeCity,
         postOffice: reducerState.consigneeCity,
         postalCode: reducerState.consigneePincode,
-        country: "India"
+        country: 'India',
       },
 
       loadingAddress: {
-        address: loadingAddressSameAsConsignerAddress ? reducerState.consignerCity : reducerState.loadingAddress,
-        state: loadingAddressSameAsConsignerAddress ? reducerState.consignerState : reducerState.loadingState || loadingStates[0].label,
-        landmark:loadingAddressSameAsConsignerAddress ? reducerState.consignerCity : reducerState.loadingCity,
-        city:loadingAddressSameAsConsignerAddress ? reducerState.consignerCity : reducerState.loadingCity || loadingCities[0].label,
-        district: loadingAddressSameAsConsignerAddress ? reducerState.consignerCity : reducerState.loadingCity,
-        postOffice: loadingAddressSameAsConsignerAddress ? reducerState.consignerCity : reducerState.loadingCity,
-        postalCode: loadingAddressSameAsConsignerAddress ? reducerState.consignerPincode : reducerState.loadingAddressPincode,
-        country: "India"
+        address: loadingAddressSameAsConsignerAddress
+          ? reducerState.consignerCity
+          : reducerState.loadingAddress,
+        state: loadingAddressSameAsConsignerAddress
+          ? reducerState.consignerState
+          : reducerState.loadingState || loadingStates[0].label,
+        landmark: loadingAddressSameAsConsignerAddress
+          ? reducerState.consignerCity
+          : reducerState.loadingCity,
+        city: loadingAddressSameAsConsignerAddress
+          ? reducerState.consignerCity
+          : reducerState.loadingCity || loadingCities[0].label,
+        district: loadingAddressSameAsConsignerAddress
+          ? reducerState.consignerCity
+          : reducerState.loadingCity,
+        postOffice: loadingAddressSameAsConsignerAddress
+          ? reducerState.consignerCity
+          : reducerState.loadingCity,
+        postalCode: loadingAddressSameAsConsignerAddress
+          ? reducerState.consignerPincode
+          : reducerState.loadingAddressPincode,
+        country: 'India',
       },
       unloadingAddress: {
-        address: deliveryAddressSameAsConsigneeAddress ?reducerState.consigneeCity : reducerState.unloadingAddress,
-        state: deliveryAddressSameAsConsigneeAddress ? reducerState.consigneeState : reducerState.unloadingState || unloadingStates[0].label,
-        landmark:deliveryAddressSameAsConsigneeAddress ? reducerState.consigneeCity : reducerState.unloadingCity,
-        city:deliveryAddressSameAsConsigneeAddress ? reducerState.consigneeCity : reducerState.unloadingCity || unloadingCities[0].label,
-        district: deliveryAddressSameAsConsigneeAddress ? reducerState.consigneeCity : reducerState.unloadingCity,
-        postOffice: deliveryAddressSameAsConsigneeAddress ? reducerState.consigneeCity : reducerState.unloadingCity,
-        postalCode: deliveryAddressSameAsConsigneeAddress ? reducerState.consigneePincode : reducerState.unloadingAddressPincode,
-        country: "India"
+        address: deliveryAddressSameAsConsigneeAddress
+          ? reducerState.consigneeCity
+          : reducerState.unloadingAddress,
+        state: deliveryAddressSameAsConsigneeAddress
+          ? reducerState.consigneeState
+          : reducerState.unloadingState || unloadingStates[0].label,
+        landmark: deliveryAddressSameAsConsigneeAddress
+          ? reducerState.consigneeCity
+          : reducerState.unloadingCity,
+        city: deliveryAddressSameAsConsigneeAddress
+          ? reducerState.consigneeCity
+          : reducerState.unloadingCity || unloadingCities[0].label,
+        district: deliveryAddressSameAsConsigneeAddress
+          ? reducerState.consigneeCity
+          : reducerState.unloadingCity,
+        postOffice: deliveryAddressSameAsConsigneeAddress
+          ? reducerState.consigneeCity
+          : reducerState.unloadingCity,
+        postalCode: deliveryAddressSameAsConsigneeAddress
+          ? reducerState.consigneePincode
+          : reducerState.unloadingAddressPincode,
+        country: 'India',
       },
 
       vehicle: {
@@ -725,45 +891,47 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
         sealNumber: reducerState.sealNo,
         inDate: reducerState.inDate,
         outDate: reducerState.outDate,
-        transitDays: "",
-        expectedDateOfDelivery: ""
+        transitDays: '',
+        expectedDateOfDelivery: '',
       },
       driver: {
         name: reducerState.driverName,
         mobile: reducerState.driverMobileNo,
-        license: reducerState.driverLicenceNo
+        license: reducerState.driverLicenceNo,
       },
       eWayBill: {
         number: reducerState.eWayBillNo,
         generationDate: reducerState.generatedOn,
-        expiryDate: reducerState.expiryDate
+        expiryDate: reducerState.expiryDate,
       },
-      materialsType: "",
-      addMaterialsStatus: "",
-      materials: [{
-        name: reducerState.materialName,
-        noOfArticles: reducerState.noOfArticles,
-        packingType: reducerState.packingType,
-        HSNCode: reducerState.hsnCode,
-        billNumber: reducerState.billInvoiceNo,
-        actualWeight: reducerState.actualWeight,
-        applicableWeight: reducerState.applicableWeight,
-        unit: reducerState.unitOne,
-        valueOfGoods: reducerState.valueOfGoods
-      }],
+      materialsType: reducerState.materialsType,
+      addMaterialsStatus: reducerState.addMaterialsStatus,
+      materials: [
+        {
+          name: reducerState.materialName,
+          noOfArticles: reducerState.noOfArticles,
+          packingType: reducerState.packingType,
+          HSNCode: reducerState.hsnCode,
+          billNumber: reducerState.billInvoiceNo,
+          actualWeight: reducerState.actualWeight,
+          applicableWeight: reducerState.applicableWeight,
+          unit: reducerState.unitOne,
+          valueOfGoods: reducerState.valueOfGoods,
+        },
+      ],
       riskType: reducerState.riskType,
-      liabilityOfTax: "",
-      insuranceStatus: "",
+      liabilityOfTax: '',
+      insuranceStatus: '',
       insurance: {
         companyName: reducerState.insuranceAmount,
         policyNumber: reducerState.policyNumber,
         date: reducerState.insuranceDate,
-        amount: reducerState.insuranceAmount
+        amount: reducerState.insuranceAmount,
       },
       demurrage: {
         charge: reducerState.demurrageCharge,
         rate: reducerState.rate,
-        chargeAfterApplicable: reducerState.chargeapplicableAfter
+        chargeAfterApplicable: reducerState.chargeapplicableAfter,
       },
 
       freightDetails: {
@@ -772,42 +940,42 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
         // "units": "",
         // "rate": "",
         freightCharges: reducerState.freightCharges,
-        billingStatus: "TO_PAY",
+        billingStatus: 'TO_PAY',
         //"isFixedFreight": "",
         totalAmount: reducerState.pickupChargesAmount,
         advanceAmount: reducerState.advanceAmount,
-        balanceAmount: reducerState.balanceAmount
+        balanceAmount: reducerState.balanceAmount,
       },
       pickupCharges: {
         status: reducerState.pickupCharges,
-        charge: reducerState.pickupChargesAmount
+        charge: reducerState.pickupChargesAmount,
       },
       packingCharges: {
         status: reducerState.packingCharges,
-        charge: reducerState.packingChargesAmount
+        charge: reducerState.packingChargesAmount,
       },
       unPackingCharges: {
         status: reducerState.unPackingCharges,
-        charge: reducerState.unPackingChargesAmount
+        charge: reducerState.unPackingChargesAmount,
       },
       unLoadingCharges: {
         status: reducerState.unLoadingCharges,
-        charge: reducerState.unLoadingChargesAmount
+        charge: reducerState.unLoadingChargesAmount,
       },
       doorDeliveryCharges: {
         status: reducerState.doorDeliveryCharges,
-        charge: reducerState.doorDeliveryChargesAmount
+        charge: reducerState.doorDeliveryChargesAmount,
       },
       packingMaterialCharges: {
         status: reducerState.packingCharges,
-        charge: reducerState.packingChargesAmount
+        charge: reducerState.packingChargesAmount,
       },
       loadingCharges: {
         status: reducerState.loadingCharges,
-        charge: reducerState.loadingChargesAmount
+        charge: reducerState.loadingChargesAmount,
       },
       remarks: reducerState.remark,
-      addedBy: getCompanyId()
+      addedBy: getCompanyId(),
     };
     console.log(payload, 'payload Bility req');
 
@@ -830,17 +998,11 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
       });
       dispatch2(resetCreateBiltyRequest());
     }
-  }, [
-    createBiltyRequesting,
-    createBiltySuccess,
-    createBiltyFailure,
-  ]);
+  }, [createBiltyRequesting, createBiltySuccess, createBiltyFailure]);
 
   useEffect(() => {
     if (result && result.Status != 'Error') {
-      if (
-        pincodeRequestKey === PINCODE_REQUEST_KEY.BILTY_CONSIGNER_ADDRESS
-      ) {
+      if (pincodeRequestKey === PINCODE_REQUEST_KEY.BILTY_CONSIGNER_ADDRESS) {
         setConsignerStates(getStates(result));
         setConsignerCities(getCities(result));
       } else if (
@@ -848,12 +1010,12 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
       ) {
         setLoadingStates(getStates(result));
         setLoadingCities(getCities(result));
-      }else if (
+      } else if (
         pincodeRequestKey === PINCODE_REQUEST_KEY.BILTY_CONSIGNEE_ADDRESS
       ) {
         setConsigneeStates(getStates(result));
         setConsigneeCities(getCities(result));
-      }else if (
+      } else if (
         pincodeRequestKey === PINCODE_REQUEST_KEY.BILTY_UNLOADING_ADDRESS
       ) {
         setUnloadingStates(getStates(result));
@@ -937,13 +1099,13 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
         </View>
         <Spacer height={4} />
         <View style={styles.elementContainer2}>
-            <Label text="Pincode" style={styles.label} />
-            <Input
-              onChangeText={handleLoadingAddressPincode}
-              containerStyle={styles.inputContainer}
-              inputStyle={styles.input}
-              selectionColor={COLOR_BLACK}
-            />
+          <Label text="Pincode" style={styles.label} />
+          <Input
+            onChangeText={handleLoadingAddressPincode}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+          />
         </View>
         <Spacer height={4} />
         <View style={styles.elementContainer}>
@@ -985,13 +1147,13 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
         </View>
         <Spacer height={4} />
         <View style={styles.elementContainer2}>
-            <Label text="Pincode" style={styles.label} />
-            <Input
-              onChangeText={handleUnloadingAddressPincode}
-              containerStyle={styles.inputContainer}
-              inputStyle={styles.input}
-              selectionColor={COLOR_BLACK}
-            />
+          <Label text="Pincode" style={styles.label} />
+          <Input
+            onChangeText={handleUnloadingAddressPincode}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+          />
         </View>
         <Spacer height={4} />
         <View style={styles.elementContainer}>
@@ -1017,7 +1179,6 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
       </>
     );
   };
-
 
   const renderNonFixedFreightView = () => {
     return (
@@ -1048,7 +1209,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
           <View style={styles.itemContainer}>
             <Label text="Units" style={styles.label} />
             <DropdownComponent
-              data={shiftingLuggages}
+              data={packingMaterilUnitOptions}
               onSelect={handleUnitTwo}
             />
           </View>
@@ -1059,11 +1220,34 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
+              inputType='numeric'
             />
           </View>
         </View>
       </>
     );
+  };
+
+  const handleAddMaterial = () => {
+    const clone = [...materials];
+
+    const materil: IMaterial = {
+      name: reducerState.materialName,
+      noOfArticles: reducerState.noOfArticles,
+      packingType: reducerState.packingType,
+      HSNCode: reducerState.hsnCode,
+      billNumber: reducerState.billInvoiceNo,
+      actualWeight: reducerState.netWeight,
+      applicableWeight: reducerState.applicableWeight,
+      unit: reducerState.unitOne,
+      valueOfGoods: reducerState.valueOfGoods,
+    };
+    clone.push(materil);
+    setMaterials(clone);
+    dispatch({
+      type: BILTY_FORM_ACTION.RESET_ADD_MATERIAL_STATE,
+      payload: '',
+    });
   };
 
   return (
@@ -1076,7 +1260,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
               <Label text="Bilty / LR / CN No." style={styles.label} />
             </View>
             <View style={[styles.elementContainer, styles.switchMainWrapper3]}>
-              <View style={[styles.itemContainer, { alignItems: 'center' }]}>
+              <View style={[styles.itemContainer, {alignItems: 'center'}]}>
                 <Switch
                   containerStyle={styles.switchStyle}
                   value={switchState}
@@ -1216,8 +1400,8 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
                 }}
-                style={{ marginRight: 15 }}
-                textContainerStyle={{ paddingLeft: 0 }}
+                style={{marginRight: 15}}
+                textContainerStyle={{paddingLeft: 0}}
                 onPress={(isChecked: boolean) => {
                   setIsLoadingAddressSameAsConsignerAddress(isChecked);
                 }}
@@ -1329,8 +1513,8 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
                 }}
-                style={{ marginRight: 15 }}
-                textContainerStyle={{ paddingLeft: 0 }}
+                style={{marginRight: 15}}
+                textContainerStyle={{paddingLeft: 0}}
                 onPress={(isChecked: boolean) => {
                   setIsDeliveryAddressSameAsConsigneeAddress(isChecked);
                 }}
@@ -1476,6 +1660,62 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
         <Spacer height={4} />
         <CollapsibleView title="MATERIAL DETAILS" collapsed={true}>
           <View>
+            <Spacer height={4} />
+            <View style={styles.labelContainer}>
+              <Label text="Type of Moving" style={styles.label} />
+            </View>
+            <View style={styles.elementContainer2}>
+              <BouncyCheckboxGroup
+                data={typeOfMovingOptions}
+                onChange={(selectedItem: ICheckboxButton) => {
+                  dispatch({
+                    type: BILTY_FORM_ACTION.TYPE_OF_MOVING,
+                    payload: selectedItem.text as string,
+                  });
+                }}
+                style={{flexDirection: 'row', flexWrap: 'wrap'}}
+              />
+            </View>
+            {reducerState.materialsType == 'Household' ||
+            reducerState.materialsType == 'Vehicle' ? (
+              <>
+                <Spacer height={16} />
+                <View style={styles.elementContainer}>
+                  <BouncyCheckbox
+                    size={25}
+                    fillColor={COLOR_BLUE}
+                    unfillColor="#FFFFFF"
+                    text="Want to add Material Detail"
+                    iconStyle={{
+                      borderColor: 'red',
+                      borderRadius: 0,
+                      width: 18,
+                      height: 18,
+                    }}
+                    innerIconStyle={{
+                      borderWidth: 1,
+                      borderRadius: 0,
+                      width: 18,
+                      height: 18,
+                    }}
+                    textStyle={{
+                      fontFamily: 'JosefinSans-Regular',
+                      textDecorationLine: 'none',
+                    }}
+                    style={{marginRight: 15}}
+                    textContainerStyle={{paddingLeft: 0}}
+                    onPress={(isChecked: boolean) => {
+                      dispatch({
+                        type: BILTY_FORM_ACTION.ADD_MATERIAL_STATUS,
+                        payload: isChecked ? 'YES' : 'NO',
+                      });
+                    }}
+                    isChecked={reducerState.addMaterialsStatus == 'YES'}
+                  />
+                </View>
+              </>
+            ) : null}
+            <Spacer height={4} />
             <View style={styles.elementContainer2}>
               <Label text="Material Name" style={styles.label} />
               <Input
@@ -1499,7 +1739,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
               <View style={styles.itemContainer}>
                 <Label text="Packing Type" style={styles.label} />
                 <DropdownComponent
-                  data={shiftingLuggages}
+                  data={packingMaterilOptions}
                   onSelect={handlePackingType}
                 />
               </View>
@@ -1539,7 +1779,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
               <View style={styles.itemContainer}>
                 <Label text="Units" style={styles.label} />
                 <DropdownComponent
-                  data={shiftingLuggages}
+                  data={packingMaterilUnitOptions}
                   onSelect={handleUnitOne}
                 />
               </View>
@@ -1554,6 +1794,15 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
                 selectionColor={COLOR_BLACK}
               />
             </View>
+            <Spacer height={12} />
+            <Button
+              text="ADD"
+              onPress={handleAddMaterial}
+              disabled={false}
+              style={styles.previewButtonStyle}
+              textStyle={styles.textStyle}
+            />
+            {showMaterialList()}
             <Spacer height={4} />
             <View style={styles.labelContainer}>
               <Label text="Risk Type" style={styles.label2} />
@@ -1606,8 +1855,8 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
                   fontFamily: 'JosefinSans-Regular',
                   textDecorationLine: 'none',
                 }}
-                style={{ marginRight: 15 }}
-                textContainerStyle={{ paddingLeft: 0 }}
+                style={{marginRight: 15}}
+                textContainerStyle={{paddingLeft: 0}}
                 onPress={(isChecked: boolean) => {
                   setFixedFreight(isChecked);
                 }}
@@ -1629,7 +1878,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
               <View style={styles.itemContainer}>
                 <Label text="Pickup Charges" style={styles.label} />
                 <DropdownComponent
-                  data={shiftingLuggages}
+                  data={packingOptions}
                   onSelect={handlePicupCharges}
                 />
               </View>
@@ -1640,6 +1889,9 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
+                  inputType='numeric'
+                  value={reducerState.pickupChargesAmount}
+                  editable={reducerState.pickupCharges == 'Additional from Freight'}
                 />
               </View>
             </View>
@@ -1648,7 +1900,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
               <View style={styles.itemContainer}>
                 <Label text="Door Delivery Charges" style={styles.label} />
                 <DropdownComponent
-                  data={shiftingLuggages}
+                  data={packingOptions}
                   onSelect={handleDoorDeliveryCharges}
                 />
               </View>
@@ -1659,6 +1911,8 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
+                  inputType='numeric'
+                  editable={reducerState.doorDeliveryCharges == 'Additional from Freight'}
                 />
               </View>
             </View>
@@ -1667,7 +1921,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
               <View style={styles.itemContainer}>
                 <Label text="Packing Charges" style={styles.label} />
                 <DropdownComponent
-                  data={shiftingLuggages}
+                  data={packingOptions}
                   onSelect={handleDoorPackingCharges}
                 />
               </View>
@@ -1678,6 +1932,8 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
+                  inputType='numeric'
+                  editable={reducerState.packingCharges == 'Additional from Freight'}
                 />
               </View>
             </View>
@@ -1686,7 +1942,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
               <View style={styles.itemContainer}>
                 <Label text="Packing Material Charges" style={styles.label} />
                 <DropdownComponent
-                  data={shiftingLuggages}
+                  data={packingOptions}
                   onSelect={handlePackingMaterialCharges}
                 />
               </View>
@@ -1697,6 +1953,8 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
+                  inputType='numeric'
+                  editable={reducerState.packingMaterialCharges == 'Additional from Freight'}
                 />
               </View>
             </View>
@@ -1705,7 +1963,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
               <View style={styles.itemContainer}>
                 <Label text="Unpacking Charges" style={styles.label} />
                 <DropdownComponent
-                  data={shiftingLuggages}
+                  data={packingOptions}
                   onSelect={handleUnPackingCharges}
                 />
               </View>
@@ -1716,6 +1974,8 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
+                  inputType='numeric'
+                  editable={reducerState.unPackingCharges == 'Additional from Freight'}
                 />
               </View>
             </View>
@@ -1724,7 +1984,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
               <View style={styles.itemContainer}>
                 <Label text="Loading Charges" style={styles.label} />
                 <DropdownComponent
-                  data={shiftingLuggages}
+                  data={packingOptions}
                   onSelect={handleLoadingCharges}
                 />
               </View>
@@ -1735,6 +1995,8 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
+                  inputType='numeric'
+                  editable={reducerState.loadingCharges == 'Additional from Freight'}
                 />
               </View>
             </View>
@@ -1743,7 +2005,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
               <View style={styles.itemContainer}>
                 <Label text="Unloading Charges" style={styles.label} />
                 <DropdownComponent
-                  data={shiftingLuggages}
+                  data={packingOptions}
                   onSelect={handleUnloadingCharges}
                 />
               </View>
@@ -1754,6 +2016,8 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({ orderId }) => {
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
+                  inputType='numeric'
+                  editable={reducerState.unLoadingCharges == 'Additional from Freight'}
                 />
               </View>
             </View>

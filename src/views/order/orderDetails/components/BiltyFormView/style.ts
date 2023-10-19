@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         alignItems: 'center',
         flexDirection: 'row',
+        flexWrap: 'wrap',
         justifyContent: 'space-between',
     },
     elementContainer2: {
@@ -93,7 +94,28 @@ const styles = StyleSheet.create({
     previewButtonStyle: {
         backgroundColor: COLOR_BLUE,
         borderRadius: 5,
-      },
+    },
+    materialItemContainer: {
+        width: width * 0.9,
+        alignSelf: 'center',
+        borderRadius: 5,
+        borderWidth: 0.5,
+        borderColor: COLOR_GRAY2,
+        padding: 15
+    },
+    materialItem: {
+        flexDirection: 'row', 
+    },
+    materialLabelText: {
+        color: COLOR_BLACK,
+        fontSize: 16,
+        fontWeight: '500',
+    },
+    materialValueText: {
+        color: COLOR_BLACK,
+        fontSize: 14,
+        fontWeight: '400',
+    },
 });
 
 export default styles;

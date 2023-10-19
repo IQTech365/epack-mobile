@@ -1,6 +1,6 @@
 import React, {ReactElement} from 'react';
 import {View, TextInput, Text, ViewStyle, TextStyle} from 'react-native';
-import {COLOR_WHITE, OFF_WHITE} from '../../utils/colors';
+import {COLOR_GRAY3, COLOR_WHITE, OFF_WHITE} from '../../utils/colors';
 import styles from './styles';
 
 interface InputProps {
@@ -31,9 +31,10 @@ const Input: React.FC<InputProps> = ({
   value
 }) => {
   const errorStyle = error ? styles.errorContainer : null;
+  const disableStyle = !editable ? {backgroundColor: COLOR_GRAY3} : null;
   return (
     <>
-      <View style={[styles.container, containerStyle, errorStyle]}>
+      <View style={[styles.container, containerStyle, disableStyle, errorStyle]}>
         {icon && <View style={styles.iconContainer}>{icon}</View>}
         <View style={styles.inputContainer}>
           <TextInput

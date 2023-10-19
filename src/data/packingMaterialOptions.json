@@ -1,0 +1,72 @@
+[
+    {
+      "label": "Bubble Wrap",
+      "value": "1"
+    },
+    {
+      "label": "Corrugated Box",
+      "value": "2"
+    },
+    {
+      "label": "Steel & Tin cans",
+      "value": "3"
+    },
+    {
+      "label": "Paper Board",
+      "value": "4"
+    },
+    {
+      "label": "Stretch Wrap",
+      "value": "5"
+    },
+    {
+      "label": "Carton",
+      "value": "6"
+    },
+    {
+      "label": "Pallet",
+      "value": "6"
+    },
+    {
+      "label": "Plastic",
+      "value": "7"
+    },
+    {
+      "label": "Paper",
+      "value": "8"
+    },
+    {
+      "label": "Glass",
+      "value": "9"
+    },
+    {
+      "label": "Shrink Wrap",
+      "value": "10"
+    },
+    {
+      "label": "Corrugated Fiber Board",
+      "value": "11"
+    },
+    {
+      "label": "Box",
+      "value": "12"
+    },
+    {
+      "label": "Primary Packaging",
+      "value": "13"
+    },
+    {
+      "label": "Secondary Packaging",
+      "value": "14"
+    },
+    {
+      "label": "Tertiary Packaging",
+      "value": "15"
+    },
+    {
+      "label": "Aluminum",
+      "value": "16"
+    }
+  ]
+  
+  
