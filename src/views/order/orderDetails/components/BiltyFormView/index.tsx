@@ -547,6 +547,12 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
       type: BILTY_FORM_ACTION.PICKUP_CHARGES,
       payload: item.label,
     });
+    if (item.value !== '3') {
+      dispatch({
+        type: BILTY_FORM_ACTION.PICKUP_CHARGES_AMOUNT,
+        payload: '',
+      });
+    }
   };
   const handlePicupChargesAmount = (text: string) => {
     dispatch({
@@ -559,6 +565,12 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
       type: BILTY_FORM_ACTION.DOOR_DELIVERY_CHARGES,
       payload: item.label,
     });
+    if (item.value !== '3') {
+      dispatch({
+        type: BILTY_FORM_ACTION.DOOR_DELIVERY_CHARGES_AMOUNT,
+        payload: '',
+      });
+    }
   };
   const handleDoorDeliveryChargesAmount = (text: string) => {
     dispatch({
@@ -571,6 +583,12 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
       type: BILTY_FORM_ACTION.PACKING_CHARGES,
       payload: item.label,
     });
+    if (item.value !== '3') {
+      dispatch({
+        type: BILTY_FORM_ACTION.PACKING_CHARGES_AMOUNT,
+        payload: '',
+      });
+    }
   };
   const handlePackingChargesAmount = (text: string) => {
     dispatch({
@@ -583,6 +601,12 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
       type: BILTY_FORM_ACTION.PACKING_MATERIAL_CHARGES,
       payload: item.label,
     });
+    if (item.value !== '3') {
+      dispatch({
+        type: BILTY_FORM_ACTION.PACKING_MATERIAL_CHARGES_AMOUNT,
+        payload: '',
+      });
+    }
   };
   const handlePackingMaterialChargesAmount = (text: string) => {
     dispatch({
@@ -595,6 +619,12 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
       type: BILTY_FORM_ACTION.UNPACKING_CHARGES,
       payload: item.label,
     });
+    if (item.value !== '3') {
+      dispatch({
+        type: BILTY_FORM_ACTION.UNPACKING_CHARGES_AMOUNT,
+        payload: '',
+      });
+    }
   };
   const handleUnpackingChargesAmount = (text: string) => {
     dispatch({
@@ -607,6 +637,12 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
       type: BILTY_FORM_ACTION.LOADING_CHARGES,
       payload: item.label,
     });
+    if (item.value !== '3') {
+      dispatch({
+        type: BILTY_FORM_ACTION.LOADING_CHARGES_AMOUNT,
+        payload: '',
+      });
+    }
   };
   const handleLoadingChargesAmount = (text: string) => {
     dispatch({
@@ -619,6 +655,12 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
       type: BILTY_FORM_ACTION.UNLOADING_CHARGES,
       payload: item.label,
     });
+    if (item.value !== '3') {
+      dispatch({
+        type: BILTY_FORM_ACTION.UNLOADING_CHARGES_AMOUNT,
+        payload: '',
+      });
+    }
   };
   const handleUnloadingChargesAmount = (text: string) => {
     dispatch({
@@ -739,53 +781,67 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
       return materials.map((item, index) => {
         return (
           <>
-          <Spacer height={12} />
-          <View style={styles.materialItemContainer}>
-            <View style={[styles.materialItem, {justifyContent: 'space-between'}]}>
-              <View style={{flexDirection: 'row'}}>
-              <Text style={styles.materialLabelText}>SNO# - </Text>
-              <Text style={styles.materialValueText}>{index + 1}</Text>
-              </View>
-              <TouchableOpacity
+            <Spacer height={12} />
+            <View style={styles.materialItemContainer}>
+              <View
+                style={[
+                  styles.materialItem,
+                  {justifyContent: 'space-between'},
+                ]}>
+                <View style={{flexDirection: 'row'}}>
+                  <Text style={styles.materialLabelText}>SNO# - </Text>
+                  <Text style={styles.materialValueText}>{index + 1}</Text>
+                </View>
+                <TouchableOpacity
                   activeOpacity={0.4}
                   onPress={() => handleDeleteMaterialItem(index)}>
                   <DeleteIcon width={25} height={25} />
                 </TouchableOpacity>
+              </View>
+              <View style={styles.materialItem}>
+                <Text style={styles.materialLabelText}>Material Name - </Text>
+                <Text style={styles.materialValueText}>{item.name}</Text>
+              </View>
+              <View style={styles.materialItem}>
+                <Text style={styles.materialLabelText}>
+                  Number of Articles -{' '}
+                </Text>
+                <Text style={styles.materialValueText}>
+                  {item.noOfArticles}
+                </Text>
+              </View>
+              <View style={styles.materialItem}>
+                <Text style={styles.materialLabelText}>Packing Type - </Text>
+                <Text style={styles.materialValueText}>{item.packingType}</Text>
+              </View>
+              <View style={styles.materialItem}>
+                <Text style={styles.materialLabelText}>HSN Code - </Text>
+                <Text style={styles.materialValueText}>{item.HSNCode}</Text>
+              </View>
+              <View style={styles.materialItem}>
+                <Text style={styles.materialLabelText}>
+                  Bill/Invoice Number -{' '}
+                </Text>
+                <Text style={styles.materialValueText}>{item.billNumber}</Text>
+              </View>
+              <View style={styles.materialItem}>
+                <Text style={styles.materialLabelText}>Net Weight - </Text>
+                <Text style={styles.materialValueText}>
+                  {item.actualWeight}
+                </Text>
+              </View>
+              <View style={styles.materialItem}>
+                <Text style={styles.materialLabelText}>Unit - </Text>
+                <Text style={styles.materialValueText}>{item.unit}</Text>
+              </View>
+              <View style={styles.materialItem}>
+                <Text style={styles.materialLabelText}>Value Of Goods - </Text>
+                <Text style={styles.materialValueText}>
+                  {item.valueOfGoods}
+                </Text>
+              </View>
             </View>
-            <View style={styles.materialItem}>
-              <Text style={styles.materialLabelText}>Material Name - </Text>
-              <Text style={styles.materialValueText}>{item.name}</Text>
-            </View>
-            <View style={styles.materialItem}>
-              <Text style={styles.materialLabelText}>Number of Articles - </Text>
-              <Text style={styles.materialValueText}>{item.noOfArticles}</Text>
-            </View>
-            <View style={styles.materialItem}>
-              <Text style={styles.materialLabelText}>Packing Type - </Text>
-              <Text style={styles.materialValueText}>{item.packingType}</Text>
-            </View>
-            <View style={styles.materialItem}>
-              <Text style={styles.materialLabelText}>HSN Code - </Text>
-              <Text style={styles.materialValueText}>{item.HSNCode}</Text>
-            </View>
-            <View style={styles.materialItem}>
-              <Text style={styles.materialLabelText}>Bill/Invoice Number - </Text>
-              <Text style={styles.materialValueText}>{item.billNumber}</Text>
-            </View>
-            <View style={styles.materialItem}>
-              <Text style={styles.materialLabelText}>Net Weight - </Text>
-              <Text style={styles.materialValueText}>{item.actualWeight}</Text>
-            </View>
-            <View style={styles.materialItem}>
-              <Text style={styles.materialLabelText}>Unit - </Text>
-              <Text style={styles.materialValueText}>{item.unit}</Text>
-            </View>
-            <View style={styles.materialItem}>
-              <Text style={styles.materialLabelText}>Value Of Goods - </Text>
-              <Text style={styles.materialValueText}>{item.valueOfGoods}</Text>
-            </View>
-          </View>
-          <Spacer height={12} />
+            <Spacer height={12} />
           </>
         );
       });
@@ -797,7 +853,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
     const clone = [...materials];
     const filter = clone.filter((_, i) => i !== index);
     setMaterials(filter);
-  }
+  };
 
   const handleCreateBilty = useCallback(() => {
     const payload: ICreateBiltyRequest = {
@@ -1025,6 +1081,10 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
   }, [result]);
 
   useEffect(() => {
+    calculateBalanceAmount();
+  }, [reducerState.advanceAmount]);
+
+  useEffect(() => {
     if (
       consignerStates &&
       consignerCities &&
@@ -1220,7 +1280,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
-              inputType='numeric'
+              inputType="numeric"
             />
           </View>
         </View>
@@ -1249,6 +1309,58 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
       payload: '',
     });
   };
+
+  const calculateMaterialTotalAmount = () => {
+    const {
+      pickupChargesAmount,
+      packingChargesAmount,
+      doorDeliveryChargesAmount,
+      packingMaterialChargesAmount,
+      unPackingChargesAmount,
+      loadingChargesAmount,
+      unLoadingChargesAmount,
+    } = reducerState;
+    let totalAmount = 0;
+    if(pickupChargesAmount) {
+      totalAmount += parseInt(pickupChargesAmount);
+    }
+    if(packingChargesAmount) {
+      totalAmount += parseInt(packingChargesAmount);
+    }
+    if(doorDeliveryChargesAmount) {
+      totalAmount += parseInt(doorDeliveryChargesAmount);
+    }
+    if(packingMaterialChargesAmount) {
+      totalAmount += parseInt(packingMaterialChargesAmount);
+    }
+    if(unPackingChargesAmount) {
+      totalAmount += parseInt(unPackingChargesAmount);
+    }
+    if(loadingChargesAmount) {
+      totalAmount += parseInt(loadingChargesAmount);
+    }
+    if(unLoadingChargesAmount) {
+      totalAmount += parseInt(unLoadingChargesAmount);
+    }
+    return totalAmount;
+  };
+
+  const calculateBalanceAmount = () => {
+    const totalAmount = calculateMaterialTotalAmount();
+    const {advanceAmount} = reducerState;
+    if(advanceAmount) {
+      const balanceAmount = totalAmount - parseInt(advanceAmount);
+      dispatch({
+        type: BILTY_FORM_ACTION.BALANCE_AMOUNT,
+        payload: `${balanceAmount}`,
+      });
+    } else {
+      dispatch({
+        type: BILTY_FORM_ACTION.BALANCE_AMOUNT,
+        payload: `${calculateMaterialTotalAmount()}`,
+      });
+    }
+  }
 
   return (
     <AvoidSoftInputViewHOC>
@@ -1889,9 +2001,11 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
-                  inputType='numeric'
+                  inputType="numeric"
                   value={reducerState.pickupChargesAmount}
-                  editable={reducerState.pickupCharges == 'Additional from Freight'}
+                  editable={
+                    reducerState.pickupCharges == 'Additional from Freight'
+                  }
                 />
               </View>
             </View>
@@ -1911,8 +2025,12 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
-                  inputType='numeric'
-                  editable={reducerState.doorDeliveryCharges == 'Additional from Freight'}
+                  inputType="numeric"
+                  value={reducerState.doorDeliveryChargesAmount}
+                  editable={
+                    reducerState.doorDeliveryCharges ==
+                    'Additional from Freight'
+                  }
                 />
               </View>
             </View>
@@ -1932,8 +2050,11 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
-                  inputType='numeric'
-                  editable={reducerState.packingCharges == 'Additional from Freight'}
+                  inputType="numeric"
+                  value={reducerState.packingChargesAmount}
+                  editable={
+                    reducerState.packingCharges == 'Additional from Freight'
+                  }
                 />
               </View>
             </View>
@@ -1953,8 +2074,12 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
-                  inputType='numeric'
-                  editable={reducerState.packingMaterialCharges == 'Additional from Freight'}
+                  inputType="numeric"
+                  value={reducerState.packingMaterialChargesAmount}
+                  editable={
+                    reducerState.packingMaterialCharges ==
+                    'Additional from Freight'
+                  }
                 />
               </View>
             </View>
@@ -1974,8 +2099,11 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
-                  inputType='numeric'
-                  editable={reducerState.unPackingCharges == 'Additional from Freight'}
+                  inputType="numeric"
+                  value={reducerState.unPackingChargesAmount}
+                  editable={
+                    reducerState.unPackingCharges == 'Additional from Freight'
+                  }
                 />
               </View>
             </View>
@@ -1995,8 +2123,11 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
-                  inputType='numeric'
-                  editable={reducerState.loadingCharges == 'Additional from Freight'}
+                  inputType="numeric"
+                  value={reducerState.loadingChargesAmount}
+                  editable={
+                    reducerState.loadingCharges == 'Additional from Freight'
+                  }
                 />
               </View>
             </View>
@@ -2016,14 +2147,17 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
-                  inputType='numeric'
-                  editable={reducerState.unLoadingCharges == 'Additional from Freight'}
+                  inputType="numeric"
+                  value={reducerState.unLoadingChargesAmount}
+                  editable={
+                    reducerState.unLoadingCharges == 'Additional from Freight'
+                  }
                 />
               </View>
             </View>
             <Spacer height={4} />
             <View style={styles.labelContainer}>
-              <Label text="Total Amount = 0.00" style={styles.label2} />
+              <Label text={`Total Amount = ${calculateMaterialTotalAmount()}.00 /-`} style={styles.label2} />
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
@@ -2043,6 +2177,8 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
+                  value={reducerState.balanceAmount}
+                  editable={false}
                 />
               </View>
             </View>
