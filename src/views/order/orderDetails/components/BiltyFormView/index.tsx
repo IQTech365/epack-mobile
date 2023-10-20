@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {Alert, Text, TouchableOpacity, View} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
 import DatePickerComponent from '../../../../../common/DatePickerComponent';
@@ -29,6 +29,7 @@ import {
   formatDate,
   formatDate2,
   formatDate3,
+  formatDate4,
   getCities,
   getStates,
 } from '../../../../../utils/formatter';
@@ -39,7 +40,6 @@ import {
   createBiltyRequest,
   resetCreateBiltyRequest,
 } from '../../../../../redux/slices/OrderSlice';
-import Spinner from '../../../../../common/Spinner';
 import usePincodeHook, {
   PINCODE_REQUEST_KEY,
 } from '../../../../../hooks/usePincodeHook';
@@ -182,7 +182,6 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
     deliveryAddressSameAsConsigneeAddress,
     setIsDeliveryAddressSameAsConsigneeAddress,
   ] = useState<boolean>(true);
-  const [fixedFreight, setFixedFreight] = useState<boolean>(false);
   const [pincodeRequestKey, setPincodeRequestKey] =
     useState<PINCODE_REQUEST_KEY>(PINCODE_REQUEST_KEY.BILTY_CONSIGNER_ADDRESS);
   const {
@@ -216,7 +215,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
   const unloadingCityDropdownRef = useRef(null);
   const unloadingStateDropwdownRef = useRef(null);
 
-  const {result, fetching, setPincode} = usePincodeHook(
+  const {result, setPincode} = usePincodeHook(
     () => {},
     () => {},
   );
@@ -710,16 +709,16 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
       payload: text,
     });
   };
-  const handleDemurrageChargeDate = (item: TDropdownItem) => {
+  const handleDemurrageChargeRate = (text: string) => {
     dispatch({
       type: BILTY_FORM_ACTION.CHARGE_DATE,
-      payload: item.label,
+      payload: text,
     });
   };
-  const handleDemurrageChargeApplicableAfter = (item: TDropdownItem) => {
+  const handleDemurrageChargeApplicableAfter = (date: Date) => {
     dispatch({
       type: BILTY_FORM_ACTION.CHARGE_APPLICABLE_AFTER,
-      payload: item.label,
+      payload: formatDate4(date),
     });
   };
   const handleRemark = (text: string) => {
@@ -867,9 +866,15 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
         mobile: reducerState.consignerMobileNo,
         gstin: reducerState.consignerGst,
         street: reducerState.consignerCity,
-        state: reducerState.consignerState || consignerStates.length > 0?consignerStates[0].label:'',
+        state:
+          reducerState.consignerState || consignerStates.length > 0
+            ? consignerStates[0].label
+            : '',
         landmark: reducerState.consignerCity,
-        city: reducerState.consignerCity ||consignerCities.length > 0? consignerCities[0].label:'',
+        city:
+          reducerState.consignerCity || consignerCities.length > 0
+            ? consignerCities[0].label
+            : '',
         district: reducerState.consignerCity,
         postOffice: reducerState.consignerCity,
         postalCode: reducerState.consignerPincode,
@@ -880,9 +885,15 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
         mobile: reducerState.consigneeMobileNo,
         gstin: reducerState.consigneeGst,
         street: reducerState.consigneeCity,
-        state: reducerState.consigneeState || consigneeStates.length > 0?consigneeStates[0].label:'',
+        state:
+          reducerState.consigneeState || consigneeStates.length > 0
+            ? consigneeStates[0].label
+            : '',
         landmark: reducerState.consigneeCity,
-        city: reducerState.consigneeCity || consigneeCities.length > 0?consigneeCities[0].label:'',
+        city:
+          reducerState.consigneeCity || consigneeCities.length > 0
+            ? consigneeCities[0].label
+            : '',
         district: reducerState.consigneeCity,
         postOffice: reducerState.consigneeCity,
         postalCode: reducerState.consigneePincode,
@@ -991,13 +1002,8 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
       },
 
       freightDetails: {
-        // "actualWeight": "",
-        // "applicableWeight": "",
-        // "units": "",
-        // "rate": "",
         freightCharges: reducerState.freightCharges,
-        billingStatus: 'TO_PAY',
-        //"isFixedFreight": "",
+        billingStatus: reducerState.materialsType,
         totalAmount: reducerState.pickupChargesAmount,
         advanceAmount: reducerState.advanceAmount,
         balanceAmount: reducerState.balanceAmount,
@@ -1321,25 +1327,25 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
       unLoadingChargesAmount,
     } = reducerState;
     let totalAmount = 0;
-    if(pickupChargesAmount) {
+    if (pickupChargesAmount) {
       totalAmount += parseInt(pickupChargesAmount);
     }
-    if(packingChargesAmount) {
+    if (packingChargesAmount) {
       totalAmount += parseInt(packingChargesAmount);
     }
-    if(doorDeliveryChargesAmount) {
+    if (doorDeliveryChargesAmount) {
       totalAmount += parseInt(doorDeliveryChargesAmount);
     }
-    if(packingMaterialChargesAmount) {
+    if (packingMaterialChargesAmount) {
       totalAmount += parseInt(packingMaterialChargesAmount);
     }
-    if(unPackingChargesAmount) {
+    if (unPackingChargesAmount) {
       totalAmount += parseInt(unPackingChargesAmount);
     }
-    if(loadingChargesAmount) {
+    if (loadingChargesAmount) {
       totalAmount += parseInt(loadingChargesAmount);
     }
-    if(unLoadingChargesAmount) {
+    if (unLoadingChargesAmount) {
       totalAmount += parseInt(unLoadingChargesAmount);
     }
     return totalAmount;
@@ -1348,7 +1354,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
   const calculateBalanceAmount = () => {
     const totalAmount = calculateMaterialTotalAmount();
     const {advanceAmount} = reducerState;
-    if(advanceAmount) {
+    if (advanceAmount) {
       const balanceAmount = totalAmount - parseInt(advanceAmount);
       dispatch({
         type: BILTY_FORM_ACTION.BALANCE_AMOUNT,
@@ -1360,7 +1366,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
         payload: `${calculateMaterialTotalAmount()}`,
       });
     }
-  }
+  };
 
   return (
     <AvoidSoftInputViewHOC>
@@ -1880,14 +1886,28 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
             <Spacer height={4} />
             <View style={styles.elementContainer}>
               <View style={styles.itemContainer}>
-                <Label text="Net Weight" style={styles.label} />
+                <Label text="Actual Weight" style={styles.label} />
                 <Input
                   onChangeText={handleNetWeight}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
+                  inputType='numeric'
                 />
               </View>
+              <View style={styles.itemContainer}>
+                <Label text="Applicable Weight" style={styles.label} />
+                <Input
+                  onChangeText={handleApplicableWeight}
+                  containerStyle={styles.inputContainer}
+                  inputStyle={styles.input}
+                  selectionColor={COLOR_BLACK}
+                  inputType='numeric'
+                />
+              </View>
+            </View>
+            <Spacer height={4} />
+            <View style={styles.elementContainer}>
               <View style={styles.itemContainer}>
                 <Label text="Units" style={styles.label} />
                 <DropdownComponent
@@ -1895,16 +1915,16 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
                   onSelect={handleUnitOne}
                 />
               </View>
-            </View>
-            <Spacer height={4} />
-            <View style={styles.elementContainer2}>
-              <Label text="Value of Goods" style={styles.label} />
-              <Input
-                onChangeText={handleValueOfGoods}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-              />
+              <View style={styles.itemContainer}>
+                <Label text="Value of Goods" style={styles.label} />
+                <Input
+                  onChangeText={handleValueOfGoods}
+                  containerStyle={styles.inputContainer}
+                  inputStyle={styles.input}
+                  selectionColor={COLOR_BLACK}
+                  inputType='numeric'
+                />
+              </View>
             </View>
             <Spacer height={12} />
             <Button
@@ -1945,37 +1965,6 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
               />
             </View>
             <Spacer height={12} />
-            <View style={styles.elementContainer}>
-              <BouncyCheckbox
-                size={25}
-                fillColor={COLOR_BLUE}
-                unfillColor="#FFFFFF"
-                text="Fixed Freight"
-                iconStyle={{
-                  borderColor: 'red',
-                  borderRadius: 0,
-                  width: 18,
-                  height: 18,
-                }}
-                innerIconStyle={{
-                  borderWidth: 1,
-                  borderRadius: 0,
-                  width: 18,
-                  height: 18,
-                }}
-                textStyle={{
-                  fontFamily: 'JosefinSans-Regular',
-                  textDecorationLine: 'none',
-                }}
-                style={{marginRight: 15}}
-                textContainerStyle={{paddingLeft: 0}}
-                onPress={(isChecked: boolean) => {
-                  setFixedFreight(isChecked);
-                }}
-                isChecked={fixedFreight}
-              />
-            </View>
-            {!fixedFreight ? renderNonFixedFreightView() : null}
             <View style={styles.elementContainer2}>
               <Label text="Freight Charges" style={styles.label} />
               <Input
@@ -2157,7 +2146,10 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
             </View>
             <Spacer height={4} />
             <View style={styles.labelContainer}>
-              <Label text={`Total Amount = ${calculateMaterialTotalAmount()}.00 /-`} style={styles.label2} />
+              <Label
+                text={`Total Amount = ${calculateMaterialTotalAmount()}.00 /-`}
+                style={styles.label2}
+              />
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
@@ -2248,18 +2240,17 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
             <Spacer height={4} />
             <View style={styles.elementContainer}>
               <View style={styles.itemContainer}>
-                <Label text="Charge Date" style={styles.label} />
-                <DropdownComponent
-                  data={shiftingLuggages}
-                  onSelect={handleDemurrageChargeDate}
-                />
+                <Label text="Rate" style={styles.label} />
+                <Input
+                onChangeText={handleDemurrageChargeRate}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                selectionColor={COLOR_BLACK}
+              />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Charge Applicable After" style={styles.label} />
-                <DropdownComponent
-                  data={shiftingLuggages}
-                  onSelect={handleDemurrageChargeApplicableAfter}
-                />
+                <DatePickerComponent onDateSelect={handleDemurrageChargeApplicableAfter} />
               </View>
             </View>
           </View>
@@ -2287,7 +2278,6 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
           textStyle={styles.textStyle}
         />
         <Spacer height={8} />
-        <Spinner show={createBiltyRequesting || fetching} />
       </View>
     </AvoidSoftInputViewHOC>
   );

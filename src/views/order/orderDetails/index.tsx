@@ -8,12 +8,15 @@ import Tab from '../../../common/Tab';
 import OrderInfoView from './components/OrderInfoView';
 import DetailsView from './components/DetailsView';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import { OrderStackParamList } from '../../../navigation/params/OrderStackParamList';
-import { IGetOrdersData } from '../../../interface/order/IGetOrdersResponse';
+import {OrderStackParamList} from '../../../navigation/params/OrderStackParamList';
+import {IGetOrdersData} from '../../../interface/order/IGetOrdersResponse';
 import BiltyView from './components/BiltyView';
 import MoneyReceiptView from './components/MoneyReceiptView';
 import CarConditionView from './components/CarConditionView';
 import InvoiceView from './components/InvoiceView';
+import {useAppSelector} from '../../../redux/hooks';
+import usePincodeHook from '../../../hooks/usePincodeHook';
+import Spinner from '../../../common/Spinner';
 
 type Props = NativeStackScreenProps<OrderStackParamList, 'OrderDetails'>;
 
@@ -22,6 +25,11 @@ const OrderDetailsView: React.FC<Props> = ({route, navigation}) => {
   const item: IGetOrdersData = route.params?.item as IGetOrdersData;
 
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
+  const {createBiltyRequesting} = useAppSelector(state => state.Order);
+  const {fetching} = usePincodeHook(
+    () => {},
+    () => {},
+  );
 
   const handleTabChange = (index: number) => {
     setActiveTabIndex(index);
@@ -30,15 +38,15 @@ const OrderDetailsView: React.FC<Props> = ({route, navigation}) => {
   const showTabItem = () => {
     switch (activeTabIndex) {
       case 0:
-        return <DetailsView item={item}/>
+        return <DetailsView item={item} />;
       case 1:
-        return <MoneyReceiptView orderId={orderId as string} />
+        return <MoneyReceiptView orderId={orderId as string} />;
       case 2:
-        return <CarConditionView orderId={orderId as string} />
+        return <CarConditionView orderId={orderId as string} />;
       case 3:
-        return <BiltyView orderId={orderId as string} />
+        return <BiltyView orderId={orderId as string} />;
       case 4:
-        return <InvoiceView orderId={orderId as string} />
+        return <InvoiceView orderId={orderId as string} />;
       default:
         return null;
     }
@@ -66,6 +74,7 @@ const OrderDetailsView: React.FC<Props> = ({route, navigation}) => {
       </View>
       <Spacer height={10} />
       {showTabItem()}
+      <Spinner show={createBiltyRequesting || fetching} />
     </View>
   );
 };
