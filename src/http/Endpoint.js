@@ -59,7 +59,7 @@ export const ADD_SIGNATURE = (company_id) => ``;
 export const DELETE_SIGNATURE = (company_id) => ``;
 export const GET_SIGNATURES = (company_id) => ``;
 
-export const ADD_CONTACT_DETAIL = (company_id) => ``;
+export const ADD_CONTACT_DETAIL = `/content-management/contact/add`;
 export const DELETE_CONTACT_DETAIL = (company_id) => ``;
 export const UPDATE_CONTACT_DETAIL = (company_id) => ``;
 export const GET_CONTACTS = (company_id) => ``;

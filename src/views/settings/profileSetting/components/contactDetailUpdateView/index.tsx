@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../../../common/Spacer';
@@ -13,20 +13,56 @@ import contactDetail from '../../../../../data/contactDetail.json';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import applicableForOptions from '../../../../../data/applicableForOptions.json';
 import Button from '../../../../../common/Button';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
+import Toast from 'react-native-toast-message';
+import { addContactRequest, resetAddContactRequest } from '../../../../../redux/slices/SettingSlice';
+import { IAddContactDetailRequest } from '../../../../../interface/setting/packerProfile/contactDetail/IAddContactDetailRequest';
+import Spinner from '../../../../../common/Spinner';
 
 interface IContactDetailsProps {}
 
 const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
-  const [contactInfo, setContactInfo] = useState<string>('');
+  const [contactType, setContactType] = useState<string>('');
+  const [contactNumber, setContactNumber] = useState<string>('');
+  const [modules, setModules] = useState<string[]>([]);
+  const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
+  const {
+    addContactRequesting,
+    addContactSuccess,
+    addContactFailure,
+  } = useAppSelector(state => state.Setting);
+  const {otpData} = useAppSelector(state => state.OTP);
+  const dispatch = useAppDispatch();
+
+  const getCompanyId = () => {
+    let id;
+    const {data} = addCompanyInfo || {};
+    const {data: companiesData} = companies || {};
+    if (data && Object.keys(data).length > 0) {
+      id = data._id;
+    } else if (
+      companiesData &&
+      Array.isArray(companiesData) &&
+      companiesData.length > 0
+    ) {
+      const firstCompany = companiesData[0];
+      id = firstCompany._id;
+    }
+    return id;
+  };
+
+  const handleTextInputChange = (text: string) => {
+    setContactNumber(text);
+  }
 
   const handleSwitchContactDetail = () => {
-    switch (contactInfo) {
+    switch (contactType) {
       case 'EMAIL':
         return (
           <View style={styles.textContainer2}>
             <Label text="Email" style={styles.label} />
             <Input
-              onChangeText={() => {}}
+              onChangeText={handleTextInputChange}
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
@@ -38,7 +74,7 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
           <View style={styles.textContainer2}>
             <Label text="Landline" style={styles.label} />
             <Input
-              onChangeText={() => {}}
+              onChangeText={handleTextInputChange}
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
@@ -50,7 +86,7 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
           <View style={styles.textContainer2}>
             <Label text="Mobile" style={styles.label} />
             <Input
-              onChangeText={() => {}}
+              onChangeText={handleTextInputChange}
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
@@ -60,10 +96,57 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
     }
   };
 
+  const handleModulesApplyFor = (moduleName: string, isChecked: boolean) => {
+    const tempArr = [...modules];
+    if(isChecked) {
+      const itemIndex = tempArr.findIndex(e => e == moduleName);
+      if(itemIndex == -1) {
+        tempArr.push(moduleName);
+        setModules(tempArr);
+      }
+    } else {
+      const filterArr = tempArr.filter(e => e !== moduleName);
+      setModules(filterArr);
+    }
+  }
+
   const handleContactDetail = (item: TDropdownItem) => {
     console.log(item.label, 'lll');
-    setContactInfo(item.label);
+    setContactType(item.label);
   };
+
+  const handleSave = () => {
+    const payload: IAddContactDetailRequest = {
+      companyId: getCompanyId(),
+      modulesView: modules,
+      contactType: contactType || contactDetail[0].label,
+      contactNumber: contactNumber,
+      otherTitle: '',
+      createdBy: otpData?.data.id as string,
+    }
+    console.log('Contact-payload--', JSON.stringify(payload));
+    dispatch(addContactRequest(payload));
+  }
+
+  useEffect(() => {
+    if (!addContactRequesting && addContactSuccess) {
+      Toast.show({
+        type: 'success',
+        text1: 'Contact Detail',
+        text2: 'Contact detail has been added successfully',
+      });
+      dispatch(resetAddContactRequest());
+      // dispatch(getEnquiriesRequest(getCompanyId()));
+      // navigation.goBack();
+    } else if (!addContactRequesting && addContactFailure) {
+      Toast.show({
+        type: 'error',
+        text1: 'Contact Detail',
+        text2: 'Error in adding Contact Detail. Please try again!',
+      });
+      dispatch(resetAddContactRequest());
+    }
+  }, [addContactRequesting, addContactSuccess, addContactFailure]);
 
   return (
     <AvoidSoftInputViewHOC>
@@ -112,8 +195,7 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
                   style={{marginRight: 15}}
                   textContainerStyle={{paddingLeft: 0}}
                   onPress={(isChecked: boolean) => {
-                    //   setFixedFreight(isChecked);
-                    //   handleFixedFreightTemplate(isChecked);
+                    handleModulesApplyFor(item.template, isChecked);
                   }}
                   isChecked={false}
                 />
@@ -124,14 +206,13 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
         <Spacer height={20} />
         <Button
           text="SAVE"
-          onPress={() => {
-            console.log('submitted data');
-          }}
+          onPress={handleSave}
           disabled={false}
           style={styles.previewButtonStyle}
           textStyle={styles.textStyle}
         />
         <Spacer height={12} />
+        <Spinner show={addContactRequesting} />
       </View>
     </AvoidSoftInputViewHOC>
   );

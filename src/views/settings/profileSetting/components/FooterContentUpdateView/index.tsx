@@ -106,7 +106,7 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({}) => {
     } else if (!addFooterContentRequesting && addFooterContentFailure) {
       Toast.show({
         type: 'error',
-        text1: 'Enquriy',
+        text1: 'Footer Content',
         text2: 'Error in adding Footer Content. Please try again!',
       });
       dispatch(resetFooterContentRequest());

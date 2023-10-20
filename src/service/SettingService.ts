@@ -1,8 +1,11 @@
 import {AxiosResponse} from 'axios';
 import {Api} from '../http/Api';
-import {ADD_FOOTER_CONTENT, ADD_PAYMENT_METHOD, GET_FOOTER_CONTENTS, GET_OTP, GET_PAYMENT_METHODS, VERIFY_OTP} from '../http/Endpoint';
+import {ADD_CONTACT_DETAIL, ADD_FOOTER_CONTENT, ADD_PAYMENT_METHOD, GET_CONTACTS, GET_FOOTER_CONTENTS, GET_OTP, GET_PAYMENT_METHODS, VERIFY_OTP} from '../http/Endpoint';
 import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
 import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
+import { IAddContactDetailRequest } from '../interface/setting/packerProfile/contactDetail/IAddContactDetailRequest';
+import { IAddContactDetailResponse } from '../interface/setting/packerProfile/contactDetail/IAddContactDetailResponse';
+import { IGetContactDetailsResponse } from '../interface/setting/packerProfile/contactDetail/IGetContactDetailsResponse';
 import { IAddFooterContentRequest } from '../interface/setting/packerProfile/footerContent/IAddFooterContentRequest';
 import { IAddFooterContentResponse } from '../interface/setting/packerProfile/footerContent/IAddFooterContentResponse';
 import { IGetFooterContentsResponse } from '../interface/setting/packerProfile/footerContent/IGetFooterContentsResponse';
@@ -31,7 +34,13 @@ export const GetFooterContentsService = async (payload: string): Promise<IGetFoo
     return await api.get<IGetFooterContentsResponse>(GET_FOOTER_CONTENTS(payload));
 }
 
-export const VerifyOtpService = async (payload: IOtpVerifyRequest): Promise<IOtpVerifyResponse> => {
+// PAYMENT
+export const AddContactDetailService = async (payload: IAddContactDetailRequest): Promise<IAddContactDetailResponse> => {
     const api = Api.getInstance();
-    return await api.post<IOtpVerifyRequest, AxiosResponse<IOtpVerifyResponse>>(payload, VERIFY_OTP);
+    return await api.post<IAddContactDetailRequest, AxiosResponse<IAddContactDetailResponse>>(payload, ADD_CONTACT_DETAIL);
+}
+
+export const GetContactDetailsService = async (payload: string): Promise<IGetContactDetailsResponse> => {
+    const api = Api.getInstance();
+    return await api.get<IGetContactDetailsResponse>(GET_CONTACTS(payload));
 }

@@ -9,11 +9,14 @@ import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
 import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
 import { IAddFooterContentRequest } from '../interface/setting/packerProfile/footerContent/IAddFooterContentRequest';
 import { IAddFooterContentResponse } from '../interface/setting/packerProfile/footerContent/IAddFooterContentResponse';
-import { addFooterContentFailure, addFooterContentRequest, addFooterContentSuccess, addPaymentMethodFailure, addPaymentMethodRequest, addPaymentMethodSuccess, getFooterContentsFailure, getFooterContentsRequest, getFooterContentsSuccess, getPaymentMethodsFailure, getPaymentMethodsRequest, getPaymentMethodsSuccess } from '../redux/slices/SettingSlice';
+import { addContactFailure, addContactRequest, addContactSuccess, addFooterContentFailure, addFooterContentRequest, addFooterContentSuccess, addPaymentMethodFailure, addPaymentMethodRequest, addPaymentMethodSuccess, getContactsFailure, getContactsRequest, getContactsSuccess, getFooterContentsFailure, getFooterContentsRequest, getFooterContentsSuccess, getPaymentMethodsFailure, getPaymentMethodsRequest, getPaymentMethodsSuccess } from '../redux/slices/SettingSlice';
 import { IGetFooterContentsResponse } from '../interface/setting/packerProfile/footerContent/IGetFooterContentsResponse';
 import { IAddPaymentMethodRequest } from '../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodRequest';
 import { IAddPaymentMethodResponse } from '../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodResponse';
 import { IGetPaymentMethodsResponse } from '../interface/setting/packerProfile/paymentMethod/IGetPaymentMethodsResponse';
+import { IAddContactDetailRequest } from '../interface/setting/packerProfile/contactDetail/IAddContactDetailRequest';
+import { IAddContactDetailResponse } from '../interface/setting/packerProfile/contactDetail/IAddContactDetailResponse';
+import { IGetContactDetailsResponse } from '../interface/setting/packerProfile/contactDetail/IGetContactDetailsResponse';
 
 export function* addFooterContentSaga(action: PayloadAction<IAddFooterContentRequest>) {
     console.log('addFooterContentSaga--action--', JSON.stringify(action));
@@ -39,17 +42,17 @@ export function* getFooterContentsSaga(action: PayloadAction<string>) {
     }
 }
 
-export function* verifyOtpSaga(action: PayloadAction<IOtpVerifyRequest>) {
-    console.log('verifyOtpSaga--action--', JSON.stringify(action));
-    try {
-        const response: IOtpVerifyResponse = yield call(SettingService.VerifyOtpService, action.payload);
-        console.log('verifyOtpSaga-response----', JSON.stringify(response));
-        yield put(verifyOtpSuccess(response));
-    } catch (error) {
-        console.log('verifyOtpSaga-error----', JSON.stringify(error));
-        yield put(verifyOtpFailure(error));
-    }
-}
+// export function* verifyOtpSaga(action: PayloadAction<IOtpVerifyRequest>) {
+//     console.log('verifyOtpSaga--action--', JSON.stringify(action));
+//     try {
+//         const response: IOtpVerifyResponse = yield call(SettingService.VerifyOtpService, action.payload);
+//         console.log('verifyOtpSaga-response----', JSON.stringify(response));
+//         yield put(verifyOtpSuccess(response));
+//     } catch (error) {
+//         console.log('verifyOtpSaga-error----', JSON.stringify(error));
+//         yield put(verifyOtpFailure(error));
+//     }
+// }
 
 //payemntMethod
 export function* addPaymentMethodSaga(action: PayloadAction<IAddPaymentMethodRequest>) {
@@ -76,10 +79,36 @@ export function* getPaymentMethodSaga(action: PayloadAction<IAddPaymentMethodReq
     }
 }
 
+//contact detail
+export function* addContactDetailSaga(action: PayloadAction<IAddContactDetailRequest>) {
+    console.log('addContactDetailSaga--action--', JSON.stringify(action));
+    try {
+        const response: IAddContactDetailResponse = yield call(SettingService.AddContactDetailService, action.payload);
+        console.log('addContactDetailSaga-response----', JSON.stringify(response));
+        yield put(addContactSuccess(response));
+    } catch (error) {
+        console.log('addContactDetailSaga-error----', error);
+        yield put(addContactFailure(JSON.stringify(error)));
+    }
+}
+
+export function* getContactDetailsSaga(action: PayloadAction<string>) {
+    console.log('getContactDetailsSaga--action--', JSON.stringify(action));
+    try {
+        const response: IGetContactDetailsResponse = yield call(SettingService.GetContactDetailsService, action.payload);
+        console.log('getContactDetailsSaga-response----', JSON.stringify(response));
+        yield put(getContactsSuccess(response));
+    } catch (error) {
+        console.log('getContactDetailsSaga-error----', error);
+        yield put(getContactsFailure(JSON.stringify(error)));
+    }
+}
+
 export function* watcherSettingSaga() {
     yield takeLatest(addFooterContentRequest.type, addFooterContentSaga);
     yield takeLatest(getFooterContentsRequest.type, getFooterContentsSaga);
     yield takeLatest(addPaymentMethodRequest.type, addPaymentMethodSaga);
     yield takeLatest(getPaymentMethodsRequest.type, getPaymentMethodSaga);
-    // yield takeLatest(verifyOtpRequest.type, verifyOtpSaga);
+    yield takeLatest(addContactRequest.type, addContactDetailSaga);
+    yield takeLatest(getContactsRequest.type, getContactDetailsSaga);
 }
