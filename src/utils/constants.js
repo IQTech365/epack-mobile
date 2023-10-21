@@ -62,6 +62,8 @@ const MyProfileStackRoute = {
   UPIDetails: 'UPIDetails',
   PackerSignature: 'PackerSignature',
   TermsAndCondition: 'TermsAndCondition',
+  AddBranch: 'AddBranch',
+  AddFranchise: 'AddFranchise',
 
 };
 
@@ -74,5 +76,5 @@ export {
   EnquiryStackRoute,
   ClientStackRoute,
   SettingStackRoute,
-  MyProfileStackRoute
+  MyProfileStackRoute,
 };

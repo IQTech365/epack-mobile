@@ -15,6 +15,8 @@ import AccountDetailsView from '../views/profile/components/accountDetails';
 import UPIDetailsView from '../views/profile/components/upiDetails';
 import PackerSignatureView from '../views/profile/components/packerSignature';
 import TermsAndConditionView from '../views/profile/components/termsAndConditions';
+import AddBranchView from '../views/profile/components/addBranchDetail';
+import AddFranchiseView from '../views/profile/components/addFranchiseDetail';
 
 const SettingStack = createNativeStackNavigator();
 
@@ -52,6 +54,14 @@ const MyProfileStackNavigator = () => {
             <SettingStack.Screen
                 name={MyProfileStackRoute.TermsAndCondition}
                 component={TermsAndConditionView}
+            />
+             <SettingStack.Screen
+                name={MyProfileStackRoute.AddBranch}
+                component={AddBranchView}
+            />
+             <SettingStack.Screen
+                name={MyProfileStackRoute.AddFranchise}
+                component={AddFranchiseView}
             />
         </SettingStack.Navigator>
     );
