@@ -8,7 +8,7 @@ import CreateIcon from '../../../../../images/icons/create_icon.svg';
 import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
 import Spacer from '../../../../../common/Spacer';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
-import { getContactsRequest } from '../../../../../redux/slices/SettingSlice';
+import { getContactsRequest } from '../../../../../redux/slices/ProfileSettingSlice';
 import Spinner from '../../../../../common/Spinner';
 import ContactListItem, { IContactListItem } from './components/ContactDetailListItem';
 import { IGetContactDetailsData } from '../../../../../interface/setting/packerProfile/contactDetail/IGetContactDetailsResponse';
@@ -129,7 +129,6 @@ const AddContactView = () => {
       </View>
       {showForm()}
       {showList()}
-      {/* <Spinner show={getContactsRequesting} /> */}
     </View>
   );
 };

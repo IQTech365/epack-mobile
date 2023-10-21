@@ -1,11 +1,14 @@
 import {AxiosResponse} from 'axios';
 import {Api} from '../http/Api';
-import {ADD_CONTACT_DETAIL, ADD_FOOTER_CONTENT, ADD_PAYMENT_METHOD, GET_CONTACTS, GET_FOOTER_CONTENTS, GET_OTP, GET_PAYMENT_METHODS, VERIFY_OTP} from '../http/Endpoint';
+import {ADD_CONTACT_DETAIL, ADD_DOCUMENT, ADD_FOOTER_CONTENT, ADD_PAYMENT_METHOD, GET_CONTACTS, GET_DOCUMENTS, GET_FOOTER_CONTENTS, GET_OTP, GET_PAYMENT_METHODS, VERIFY_OTP} from '../http/Endpoint';
 import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
 import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
 import { IAddContactDetailRequest } from '../interface/setting/packerProfile/contactDetail/IAddContactDetailRequest';
 import { IAddContactDetailResponse } from '../interface/setting/packerProfile/contactDetail/IAddContactDetailResponse';
 import { IGetContactDetailsResponse } from '../interface/setting/packerProfile/contactDetail/IGetContactDetailsResponse';
+import { IAddDocumentRequest } from '../interface/setting/packerProfile/document/IAddDocumentRequest';
+import { IAddDocumentResponse } from '../interface/setting/packerProfile/document/IAddDocumentResponse';
+import { IGetDocumentsResponse } from '../interface/setting/packerProfile/document/IGetDocumentsResponse';
 import { IAddFooterContentRequest } from '../interface/setting/packerProfile/footerContent/IAddFooterContentRequest';
 import { IAddFooterContentResponse } from '../interface/setting/packerProfile/footerContent/IAddFooterContentResponse';
 import { IGetFooterContentsResponse } from '../interface/setting/packerProfile/footerContent/IGetFooterContentsResponse';
@@ -43,4 +46,15 @@ export const AddContactDetailService = async (payload: IAddContactDetailRequest)
 export const GetContactDetailsService = async (payload: string): Promise<IGetContactDetailsResponse> => {
     const api = Api.getInstance();
     return await api.get<IGetContactDetailsResponse>(GET_CONTACTS(payload));
+}
+
+// COMPANY DOCUMENT
+export const AddCompanyDocumentService = async (payload: IAddDocumentRequest): Promise<IAddDocumentResponse> => {
+    const api = Api.getInstance();
+    return await api.post<IAddDocumentRequest, AxiosResponse<IAddDocumentResponse>>(payload, ADD_DOCUMENT);
+}
+
+export const GetCompanyDocumentsService = async (payload: string): Promise<IGetDocumentsResponse> => {
+    const api = Api.getInstance();
+    return await api.get<IGetDocumentsResponse>(GET_DOCUMENTS(payload));
 }

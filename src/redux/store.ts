@@ -14,8 +14,9 @@ import CompanySlice from './slices/CompanySlice';
 import EnquirySlice from './slices/EnquirySlice';
 import OrderSlice from './slices/OrderSlice';
 import QuotationSlice from './slices/QuotationSlice';
-import SettingSlice from './slices/SettingSlice';
+import ProfileSettingSlice from './slices/ProfileSettingSlice';
 import { removeIsRegistrationComplete, removeLoginStatus, removeToken } from '../utils/storage';
+import SNSettingSlice from './slices/SerialNoSettingSlice';
 
 const persistConfig = {
   key: 'root',
@@ -32,7 +33,8 @@ const appReducer = combineReducers({
   Enquiry: EnquirySlice,
   Order: OrderSlice,
   Quotation: QuotationSlice,
-  Setting: SettingSlice,
+  Setting: ProfileSettingSlice,
+  SNSetting: SNSettingSlice,
 });
 
 const rootReducer: Reducer = (state: RootState, action: AnyAction) => {

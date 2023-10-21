@@ -15,7 +15,7 @@ import applicableForOptions from '../../../../../data/applicableForOptions.json'
 import Button from '../../../../../common/Button';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import Toast from 'react-native-toast-message';
-import { addContactRequest, getContactsRequest, resetAddContactRequest } from '../../../../../redux/slices/SettingSlice';
+import { addContactRequest, getContactsRequest, resetAddContactRequest } from '../../../../../redux/slices/ProfileSettingSlice';
 import { IAddContactDetailRequest } from '../../../../../interface/setting/packerProfile/contactDetail/IAddContactDetailRequest';
 import Spinner from '../../../../../common/Spinner';
 

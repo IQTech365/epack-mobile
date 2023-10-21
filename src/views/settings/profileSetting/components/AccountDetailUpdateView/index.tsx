@@ -18,7 +18,7 @@ import applicableForOptions from '../../../../../data/applicableForOptions.json'
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import { IAddPaymentMethodRequest } from '../../../../../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodRequest';
-import { addPaymentMethodRequest, resetAddPaymentMethodRequest } from '../../../../../redux/slices/SettingSlice';
+import { addPaymentMethodRequest, resetAddPaymentMethodRequest } from '../../../../../redux/slices/ProfileSettingSlice';
 import Spinner from '../../../../../common/Spinner';
 interface IAccountDetailsProps {}
 

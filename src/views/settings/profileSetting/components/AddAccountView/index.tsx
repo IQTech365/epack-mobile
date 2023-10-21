@@ -16,7 +16,7 @@ import ListViewIcon2 from '../../../../../images/icons/list_view_icon2.svg';
 import CreateIcon from '../../../../../images/icons/create_icon.svg';
 import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
-import { getPaymentMethodsRequest } from '../../../../../redux/slices/SettingSlice';
+import { getPaymentMethodsRequest } from '../../../../../redux/slices/ProfileSettingSlice';
 
 const AddAccountView = () => {
   const [showPaymentMethodList, setShowPaymentMethodList] =

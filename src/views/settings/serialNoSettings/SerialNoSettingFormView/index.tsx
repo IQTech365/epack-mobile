@@ -1,17 +1,17 @@
 import React from 'react';
 import {View} from 'react-native';
 import styles from './style';
-import Spacer from '../../../../../common/Spacer';
-import Label from '../../../../../common/Label';
-import DropdownComponent from '../../../../../common/DropdownComponent';
-import chooseEntity from '../../../../../data/chooseEntity.json';
-import branchOptions from '../../../../../data/branchOptions.json';
-import { TDropdownItem } from '../../../../../type/TDropdownItem';
-import Input from '../../../../../common/Input';
-import { COLOR_BLACK } from '../../../../../utils/colors';
-import Button from '../../../../../common/Button';
+import Spacer from '../../../../common/Spacer';
+import Label from '../../../../common/Label';
+import DropdownComponent from '../../../../common/DropdownComponent';
+import chooseEntity from '../../../../data/chooseEntity.json';
+import branchOptions from '../../../../data/branchOptions.json';
+import { TDropdownItem } from '../../../../type/TDropdownItem';
+import Input from '../../../../common/Input';
+import { COLOR_BLACK } from '../../../../utils/colors';
+import Button from '../../../../common/Button';
 
-const AddSerialNoUpdateView = () => {
+const SerialNoSettingFormView = () => {
 
   const handleAccountType = (item: TDropdownItem) => {
     // setAccountType(item.label);
@@ -70,4 +70,4 @@ const AddSerialNoUpdateView = () => {
   );
 };
 
-export default AddSerialNoUpdateView;
+export default SerialNoSettingFormView;

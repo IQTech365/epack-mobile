@@ -16,12 +16,15 @@ import documentTypeOptions from '../../../../../data/documentTypeOptions.json';
 import isoTypeOptions from '../../../../../data/isoTypeOptions.json';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import DatePickerComponent from '../../../../../common/DatePickerComponent';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 
 interface IDocumentUpdateProps {}
 
 const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
   const [documentType, setDocumentType] = useState<string>('1');
   const [isoType, setISOType] = useState<string>('1');
+  const dispatch = useAppDispatch();
+  const {} = useAppSelector(state => state.Setting);
 
   const handleAccountType = () => {
     console.log('account type');

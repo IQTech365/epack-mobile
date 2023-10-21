@@ -23,7 +23,7 @@ import {actions, RichEditor, RichToolbar} from 'react-native-pell-rich-editor';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import { TDropdownItem } from '../../../../../type/TDropdownItem';
 import { IAddFooterContentRequest } from '../../../../../interface/setting/packerProfile/footerContent/IAddFooterContentRequest';
-import { addFooterContentRequest, resetFooterContentRequest } from '../../../../../redux/slices/SettingSlice';
+import { addFooterContentRequest, resetFooterContentRequest } from '../../../../../redux/slices/ProfileSettingSlice';
 import Toast from 'react-native-toast-message';
 import Spinner from '../../../../../common/Spinner';
 

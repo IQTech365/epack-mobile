@@ -9,7 +9,7 @@ import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
 import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
 import { IAddFooterContentRequest } from '../interface/setting/packerProfile/footerContent/IAddFooterContentRequest';
 import { IAddFooterContentResponse } from '../interface/setting/packerProfile/footerContent/IAddFooterContentResponse';
-import { addContactFailure, addContactRequest, addContactSuccess, addFooterContentFailure, addFooterContentRequest, addFooterContentSuccess, addPaymentMethodFailure, addPaymentMethodRequest, addPaymentMethodSuccess, getContactsFailure, getContactsRequest, getContactsSuccess, getFooterContentsFailure, getFooterContentsRequest, getFooterContentsSuccess, getPaymentMethodsFailure, getPaymentMethodsRequest, getPaymentMethodsSuccess } from '../redux/slices/SettingSlice';
+import { addContactFailure, addContactRequest, addContactSuccess, addDocumentFailure, addDocumentRequest, addDocumentSuccess, addFooterContentFailure, addFooterContentRequest, addFooterContentSuccess, addPaymentMethodFailure, addPaymentMethodRequest, addPaymentMethodSuccess, getContactsFailure, getContactsRequest, getContactsSuccess, getDocumentsFailure, getDocumentsRequest, getDocumentsSuccess, getFooterContentsFailure, getFooterContentsRequest, getFooterContentsSuccess, getPaymentMethodsFailure, getPaymentMethodsRequest, getPaymentMethodsSuccess } from '../redux/slices/ProfileSettingSlice';
 import { IGetFooterContentsResponse } from '../interface/setting/packerProfile/footerContent/IGetFooterContentsResponse';
 import { IAddPaymentMethodRequest } from '../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodRequest';
 import { IAddPaymentMethodResponse } from '../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodResponse';
@@ -17,6 +17,9 @@ import { IGetPaymentMethodsResponse } from '../interface/setting/packerProfile/p
 import { IAddContactDetailRequest } from '../interface/setting/packerProfile/contactDetail/IAddContactDetailRequest';
 import { IAddContactDetailResponse } from '../interface/setting/packerProfile/contactDetail/IAddContactDetailResponse';
 import { IGetContactDetailsResponse } from '../interface/setting/packerProfile/contactDetail/IGetContactDetailsResponse';
+import { IAddDocumentRequest } from '../interface/setting/packerProfile/document/IAddDocumentRequest';
+import { IAddDocumentResponse } from '../interface/setting/packerProfile/document/IAddDocumentResponse';
+import { IGetDocumentsResponse } from '../interface/setting/packerProfile/document/IGetDocumentsResponse';
 
 export function* addFooterContentSaga(action: PayloadAction<IAddFooterContentRequest>) {
     console.log('addFooterContentSaga--action--', JSON.stringify(action));
@@ -104,6 +107,30 @@ export function* getContactDetailsSaga(action: PayloadAction<string>) {
     }
 }
 
+export function* addCompanyDocumentSaga(action: PayloadAction<IAddDocumentRequest>) {
+    console.log('addCompanyDocumentSaga--action--', JSON.stringify(action));
+    try {
+        const response: IAddDocumentResponse = yield call(SettingService.AddCompanyDocumentService, action.payload);
+        console.log('addCompanyDocumentSaga-response----', JSON.stringify(response));
+        yield put(addDocumentSuccess(response));
+    } catch (error) {
+        console.log('addCompanyDocumentSaga-error----', error);
+        yield put(addDocumentFailure(JSON.stringify(error)));
+    }
+}
+
+export function* getCompanyDocumentsSaga(action: PayloadAction<string>) {
+    console.log('getCompanyDocumentsSaga--action--', JSON.stringify(action));
+    try {
+        const response: IGetDocumentsResponse = yield call(SettingService.GetCompanyDocumentsService, action.payload);
+        console.log('getCompanyDocumentsSaga-response----', JSON.stringify(response));
+        yield put(getDocumentsSuccess(response));
+    } catch (error) {
+        console.log('getCompanyDocumentsSaga-error----', error);
+        yield put(getDocumentsFailure(JSON.stringify(error)));
+    }
+}
+
 export function* watcherSettingSaga() {
     yield takeLatest(addFooterContentRequest.type, addFooterContentSaga);
     yield takeLatest(getFooterContentsRequest.type, getFooterContentsSaga);
@@ -111,4 +138,6 @@ export function* watcherSettingSaga() {
     yield takeLatest(getPaymentMethodsRequest.type, getPaymentMethodSaga);
     yield takeLatest(addContactRequest.type, addContactDetailSaga);
     yield takeLatest(getContactsRequest.type, getContactDetailsSaga);
+    yield takeLatest(addDocumentRequest.type, addCompanyDocumentSaga);
+    yield takeLatest(getDocumentsRequest.type, getCompanyDocumentsSaga);
 }
