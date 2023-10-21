@@ -9,6 +9,10 @@ const styles = StyleSheet.create({
     text: {
         color: COLOR_WHITE,
         fontSize: 14,
+    },
+    required: {
+        color: 'red',
+        fontSize: 12,
     }
 });
 

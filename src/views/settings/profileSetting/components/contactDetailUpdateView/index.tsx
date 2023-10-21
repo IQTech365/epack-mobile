@@ -15,15 +15,16 @@ import applicableForOptions from '../../../../../data/applicableForOptions.json'
 import Button from '../../../../../common/Button';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import Toast from 'react-native-toast-message';
-import { addContactRequest, resetAddContactRequest } from '../../../../../redux/slices/SettingSlice';
+import { addContactRequest, getContactsRequest, resetAddContactRequest } from '../../../../../redux/slices/SettingSlice';
 import { IAddContactDetailRequest } from '../../../../../interface/setting/packerProfile/contactDetail/IAddContactDetailRequest';
 import Spinner from '../../../../../common/Spinner';
 
 interface IContactDetailsProps {}
 
 const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
-  const [contactType, setContactType] = useState<string>('');
+  const [contactType, setContactType] = useState<string>('EMAIL');
   const [contactNumber, setContactNumber] = useState<string>('');
+  const [contactNumberError, setContactNumberError] = useState<string>('');
   const [modules, setModules] = useState<string[]>([]);
   const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
   const {
@@ -52,6 +53,9 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
   };
 
   const handleTextInputChange = (text: string) => {
+    if(contactNumberError) {
+      setContactNumberError('');
+    }
     setContactNumber(text);
   }
 
@@ -60,36 +64,39 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
       case 'EMAIL':
         return (
           <View style={styles.textContainer2}>
-            <Label text="Email" style={styles.label} />
+            <Label text="Email" style={styles.label} required={true} />
             <Input
               onChangeText={handleTextInputChange}
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
+              error={contactNumberError}
             />
           </View>
         );
       case 'LANDLINE':
         return (
           <View style={styles.textContainer2}>
-            <Label text="Landline" style={styles.label} />
+            <Label text="Landline" style={styles.label} required={true} />
             <Input
               onChangeText={handleTextInputChange}
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
+              error={contactNumberError}
             />
           </View>
         );
       case 'MOBILE':
         return (
           <View style={styles.textContainer2}>
-            <Label text="Mobile" style={styles.label} />
+            <Label text="Mobile" style={styles.label} required={true} />
             <Input
               onChangeText={handleTextInputChange}
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
+              error={contactNumberError}
             />
           </View>
         );
@@ -116,16 +123,28 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
   };
 
   const handleSave = () => {
-    const payload: IAddContactDetailRequest = {
-      companyId: getCompanyId(),
-      modulesView: modules,
-      contactType: contactType || contactDetail[0].label,
-      contactNumber: contactNumber,
-      otherTitle: '',
-      createdBy: otpData?.data.id as string,
+    if(contactNumber && modules.length > 0) {
+      setContactNumberError('');
+      const payload: IAddContactDetailRequest = {
+        companyId: getCompanyId(),
+        modulesView: modules,
+        contactType: contactType || contactDetail[0].label,
+        contactNumber: contactNumber,
+        otherTitle: '',
+        createdBy: otpData?.data.id as string,
+      }
+      console.log('Contact-payload--', JSON.stringify(payload));
+      dispatch(addContactRequest(payload));
+    } else if(contactNumber == '') {
+      setContactNumberError(`${contactType} field is required.`);
+    } else if(modules.length == 0) {
+      Toast.show({
+        type: 'error',
+        text1: 'Modules',
+        text2: `Please select atleast one module for which this ${contactNumber}`,
+      });
     }
-    console.log('Contact-payload--', JSON.stringify(payload));
-    dispatch(addContactRequest(payload));
+   
   }
 
   useEffect(() => {
@@ -135,9 +154,9 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
         text1: 'Contact Detail',
         text2: 'Contact detail has been added successfully',
       });
+      setContactNumber('');
       dispatch(resetAddContactRequest());
-      // dispatch(getEnquiriesRequest(getCompanyId()));
-      // navigation.goBack();
+      dispatch(getContactsRequest(getCompanyId()));
     } else if (!addContactRequesting && addContactFailure) {
       Toast.show({
         type: 'error',
@@ -162,7 +181,6 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
         </View>
         <Spacer height={12} />
         {handleSwitchContactDetail()}
-
         <Spacer height={12} />
         <View style={styles.textContainer2}>
           <Label text="Applicable For" style={styles.label} />

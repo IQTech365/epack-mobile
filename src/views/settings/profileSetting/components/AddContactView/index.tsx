@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, FlatList, Text, TouchableOpacity} from 'react-native';
 import styles from './style';
 import ContactDetailUpdateView from '../contactDetailUpdateView';
@@ -7,10 +7,52 @@ import ListViewIcon2 from '../../../../../images/icons/list_view_icon2.svg';
 import CreateIcon from '../../../../../images/icons/create_icon.svg';
 import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
 import Spacer from '../../../../../common/Spacer';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
+import { getContactsRequest } from '../../../../../redux/slices/SettingSlice';
+import Spinner from '../../../../../common/Spinner';
+import ContactListItem, { IContactListItem } from './components/ContactDetailListItem';
+import { IGetContactDetailsData } from '../../../../../interface/setting/packerProfile/contactDetail/IGetContactDetailsResponse';
 
 const AddContactView = () => {
   const [showContactList, setShowContactList] = useState<boolean>(false);
   const [showAddContact, setShowAddContact] = useState<boolean>(true);
+  const dispatch = useAppDispatch();
+  const {getContactsRequesting, contacts} = useAppSelector(state => state.Setting);
+  const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
+  console.log('Contacts----', JSON.stringify(contacts));
+  const {data: contactsData} = contacts || {};
+  
+  const getCompanyId = () => {
+    let id;
+    const {data} = addCompanyInfo || {};
+    const {data: companiesData} = companies || {};
+    if (data && Object.keys(data).length > 0) {
+      id = data._id;
+    } else if (
+      companiesData &&
+      Array.isArray(companiesData) &&
+      companiesData.length > 0
+    ) {
+      const firstCompany = companiesData[0];
+      id = firstCompany._id;
+    }
+    return id;
+  };
+
+  const getTransformedData = () => {
+    let _data: IContactListItem[] = [];
+    if(contactsData && Array.isArray(contactsData) && contactsData.length > 0) {
+      _data = contactsData.map((e: IGetContactDetailsData) => {
+        const item:IContactListItem = {
+          contactType: e.contactType,
+          contactNumber: e.contactNumber,
+          modules: e.modulesView,
+        }
+        return item;
+      });
+    }
+    return _data;
+  }
 
   const handleCreateNewContact = () => {
     setShowContactList(false);
@@ -41,14 +83,29 @@ const AddContactView = () => {
     if (showContactList) {
       return (
         <FlatList
-          data={[]}
-          renderItem={({item, index}) => <Text>Hello</Text>}
+          data={getTransformedData()}
+          renderItem={({item, index}) => <ContactListItem item={item} onDelete={() => {}} />}
           ListEmptyComponent={showEmptyView()}
         />
       );
     }
     return null;
   };
+
+  useEffect(() => {
+    dispatch(getContactsRequest(getCompanyId()));
+  }, []);
+
+  useEffect(() => {
+    if(!getContactsRequesting && contactsData && Array.isArray(contactsData) && contactsData.length > 0) {
+      setShowContactList(true);
+      setShowAddContact(false);
+    }
+  }, [contactsData]);
+
+  if(getContactsRequesting) {
+    return <Spinner show={getContactsRequesting} />
+  }
 
   return (
     <View style={styles.container}>
@@ -72,6 +129,7 @@ const AddContactView = () => {
       </View>
       {showForm()}
       {showList()}
+      {/* <Spinner show={getContactsRequesting} /> */}
     </View>
   );
 };
