@@ -1,11 +1,11 @@
-import {NavigationProp} from '@react-navigation/native';
-import React, {useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {View, Text, FlatList, TouchableOpacity} from 'react-native';
+import { NavigationProp } from '@react-navigation/native';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import Button from '../../common/Button';
 import Header from '../../common/Header';
 import Spacer from '../../common/Spacer';
-import {ClientStackRoute, MyProfileStackRoute} from '../../utils/constants';
+import { ClientStackRoute, MyProfileStackRoute } from '../../utils/constants';
 import styles from './style';
 import tabOptions from '../../data/profileDetailTabs.json';
 import Tab from '../../common/Tab';
@@ -22,8 +22,8 @@ interface IProfilePageViewProps {
   navigation: NavigationProp<any, any>;
 }
 
-const ProfilePageView: React.FC<IProfilePageViewProps> = ({navigation}) => {
-  const {t, i18n} = useTranslation();
+const ProfilePageView: React.FC<IProfilePageViewProps> = ({ navigation }) => {
+  const { t, i18n } = useTranslation();
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
   const handleLanguage = () => {
     // navigation.navigate(ClientStackRoute.Language);
@@ -70,6 +70,10 @@ const ProfilePageView: React.FC<IProfilePageViewProps> = ({navigation}) => {
         return navigation.navigate(MyProfileStackRoute.PackerSignature);
       case 6:
         return navigation.navigate(MyProfileStackRoute.TermsAndCondition);
+      case 7:
+        return navigation.navigate(MyProfileStackRoute.AddBranch);
+      case 8:
+        return navigation.navigate(MyProfileStackRoute.AddFranchise);
       default:
         return navigation.navigate(MyProfileStackRoute.ProfileRoot);
     }
@@ -94,7 +98,7 @@ const ProfilePageView: React.FC<IProfilePageViewProps> = ({navigation}) => {
       <View style={styles.tabsContainer}>
         <FlatList
           data={tabOptions}
-          renderItem={({item, index}) => renderListItem(item.label, index)}
+          renderItem={({ item, index }) => renderListItem(item.label, index)}
         />
       </View>
       <Spacer height={10} />
