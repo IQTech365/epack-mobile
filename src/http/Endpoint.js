@@ -63,3 +63,7 @@ export const ADD_CONTACT_DETAIL = `/content-management/contact/add`;
 export const DELETE_CONTACT_DETAIL = (company_id) => ``;
 export const UPDATE_CONTACT_DETAIL = (company_id) => ``;
 export const GET_CONTACTS = (company_id) => `/content-management/contact/${company_id}`;
+
+// My Profile
+export const ADD_BRANCH = `/branch/add`;
+export const GET_BRANCHS = (company_id) => `/branch/all/${company_id}`;
