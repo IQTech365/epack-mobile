@@ -44,11 +44,12 @@ export interface IAddOrderRequest {
   mobile: string;
   phone: string;
   orderAmount: string;
+  landline: string;
   tokenAmount: string;
   shiftingLuggage: [string];
   enquirySource: string;
   gstNumber: string;
-  alternateNumbers: string;
+  alternateNumbers: string[];
   shiftingDate: string;
   pickupAddress: PickupAddress;
   dropAddress: DropAddress;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {View, Text} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../../../common/AvoidSoftInputViewHOC';
 import Input from '../../../../../../../common/Input';
@@ -14,61 +14,118 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import DatePickerComponent from '../../../../../../../common/DatePickerComponent';
 import Button from '../../../../../../../common/Button';
 import { MODULE_NAME } from '../../enum/EModuleName';
+import { IGetEnquiriesData } from '../../../../../../../interface/enquiry/IGetEnquiriesResponse';
+import { IGetOrdersData } from '../../../../../../../interface/order/IGetOrdersResponse';
+import { formatDate4 } from '../../../../../../../utils/formatter';
 
 interface IShiftingFormProps {
-  moduleName: MODULE_NAME
+  moduleName: MODULE_NAME;
+  item: IGetOrdersData | IGetEnquiriesData;
 }
 
-const ShifingDetailForm: React.FC<IShiftingFormProps> = ({moduleName}) => {
+const ShifingDetailForm: React.FC<IShiftingFormProps> = ({moduleName, item}) => {
+  const shiftingTypeDropdownRef = useRef();
+  const itemObj = moduleName == MODULE_NAME.ORDER ? item as IGetOrdersData : item as IGetEnquiriesData;
+  console.log('item.shiftingLuggage---', JSON.stringify(itemObj.shiftingLuggage));
+
+  const [shiftingLuggages, setShiftingLuggages] = useState<string[]>([]);
+  const [shiftingType, setShiftingType] = useState<string>('');
+  const [dateOfMoving, setDateOfMoving] = useState<string>(itemObj.shiftingDate);
+  const [dateOfDelivery, setDateOfDelivery] = useState<string>('');
+  const [dateOfDelivered, setDateOfDelivered] = useState<string>('');
+  const [carriageVehicle, setCarriageVehicle] = useState<string>('');
+  
   const handleShiftingType = (item: TDropdownItem) => {
-    // dispatch({
-    //   type: ADDORDER_FORM_ACTION.SHIFTING_TYPE,
-    //   payload: item.label,
-    // });
+    setShiftingType(item.label);
   };
 
   const handleDateOfMoving = (date: Date) => {
-    // dispatch({
-    //   type: ADDORDER_FORM_ACTION.DATE_OF_MOVING,
-    //   payload: formatDate4(date),
-    // });
+    setDateOfMoving(formatDate4(date))
   };
 
-  const handleUpdate = () => {
+  const handleDateOfDelivery = (date: Date) => {
+    setDateOfDelivery(formatDate4(date))
+  };
 
+  const handleDateOfDelivered = (date: Date) => {
+    setDateOfDelivered(formatDate4(date))
+  };
+
+  const handleCarriageVehicleInputTextChange = (text: string) => {
+    setCarriageVehicle(text);
   }
+
+  const handleUpdate = () => {
+    console.log('shiftingLuggages--', shiftingLuggages);
+    console.log('carriageVehicle--', carriageVehicle);
+    console.log('shiftingType--', shiftingType);
+    console.log('dateOfMoving--', dateOfMoving);
+    console.log('dateOfDelivery--', dateOfDelivery);
+    console.log('dateOfDelivered--', dateOfDelivered);
+    if(moduleName == MODULE_NAME.ORDER) {
+      // TODO: call update order shifting detail api here
+    } else if(moduleName == MODULE_NAME.ENQUIRY) {
+      // TODO: call update enquiry shifting detail api here
+    }
+  }
+
+  
+
+  const handleShiftingLuggage = (isChecked: boolean, value: string) => {
+    let temp = [...shiftingLuggages];
+    const itemIndex = temp.findIndex(itm => itm == value);
+    if (itemIndex == -1 && isChecked) {
+      temp.push(value);
+    } else if (itemIndex != -1 && !isChecked) {
+      temp = temp.filter(itm => itm != value);
+    }
+    setShiftingLuggages(temp);
+  };
+
+  useEffect(() => {
+    if(itemObj) {
+      if(shiftingTypeDropdownRef) {
+        const dropdownItem: TDropdownItem = {
+          label: itemObj.shiftingType,
+          value: itemObj.shiftingType == 'DOMESTIC' ? '2' : '1',
+        }
+        //@ts-ignore
+        shiftingTypeDropdownRef?.current.setDefaultValue(dropdownItem);
+        setShiftingLuggages([...itemObj.shiftingLuggage])
+      }
+    }
+  }, []);
 
   return (
     <AvoidSoftInputViewHOC>
       <View style={styles.container}>
-      <Spacer height={4} />
+        <Spacer height={4} />
         <View style={styles.elementContainer}>
           <View style={styles.itemContainer}>
             <Label text="Shifting Type" style={styles.label} />
-            {/* <Input
-                  onChangeText={() => {}}
-                  containerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
-                  selectionColor={COLOR_BLACK}
-                /> */}
             <DropdownComponent
               data={shiftingTypeOptions}
               onSelect={handleShiftingType}
+              //@ts-ignore
+              ref={shiftingTypeDropdownRef}
             />
           </View>
           <View style={styles.itemContainer}>
             <Label text="Date of Moving" style={styles.label} />
-            <DatePickerComponent onDateSelect={handleDateOfMoving} />
+            <DatePickerComponent
+              onDateSelect={handleDateOfMoving}
+              defaultValue={new Date(itemObj.shiftingDate)}
+            />
           </View>
         </View>
         <View style={styles.elementContainer3}>
-            <Label text="Carriage Vehicle" style={styles.label} />
-            <Input
-              onChangeText={() => {}}
-              containerStyle={styles.inputContainer}
-              inputStyle={styles.input}
-              selectionColor={COLOR_BLACK}
-            />
+          <Label text="Carriage Vehicle" style={styles.label} />
+          <Input
+            onChangeText={handleCarriageVehicleInputTextChange}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+          />
         </View>
         <Spacer height={4} />
         <View style={styles.labelContainer}>
@@ -102,8 +159,9 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({moduleName}) => {
                 style={{marginRight: 15, marginBottom: 10}}
                 textContainerStyle={{paddingLeft: 0}}
                 onPress={(isChecked: boolean) => {
-                  //   handleShiftingLuggage(isChecked, item.label);
+                    handleShiftingLuggage(isChecked, item.label);
                 }}
+                isChecked={itemObj.shiftingLuggage.some(e => e == item.label)}
               />
             );
           })}
@@ -111,11 +169,11 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({moduleName}) => {
         <View style={styles.elementContainer}>
           <View style={styles.itemContainer}>
             <Label text="Date of Delivery" style={styles.label} />
-            <DatePickerComponent onDateSelect={handleDateOfMoving} />
+            <DatePickerComponent onDateSelect={handleDateOfDelivery} />
           </View>
           <View style={styles.itemContainer}>
             <Label text="Date of Delivered" style={styles.label} />
-            <DatePickerComponent onDateSelect={handleDateOfMoving} />
+            <DatePickerComponent onDateSelect={handleDateOfDelivered} />
           </View>
         </View>
         <Spacer height={20} />

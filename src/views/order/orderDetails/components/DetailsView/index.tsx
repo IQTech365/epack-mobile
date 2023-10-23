@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {Text, View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
 import ModalHOC from '../../../../../common/ModalHOC';
 import Spacer from '../../../../../common/Spacer';
-import { IGetOrdersData } from '../../../../../interface/order/IGetOrdersResponse';
+import {IGetOrdersData} from '../../../../../interface/order/IGetOrdersResponse';
 import OrderDetailListItem from '../OrderDetailListItem';
-import { MODULE_NAME } from './enum/EModuleName';
-import AddressForm, { ADDRESS_TYPE } from './Forms/AddressForm';
+import {MODULE_NAME} from './enum/EModuleName';
+import AddressForm, {ADDRESS_TYPE} from './Forms/AddressForm';
 import ContactDetailForm from './Forms/ContactDetailForm';
 import ShifingDetailForm from './Forms/ShifingDetailForm';
 import styles from './style';
@@ -17,7 +17,6 @@ interface IDetailsViewProps {
 }
 
 const DetailsView: React.FC<IDetailsViewProps> = ({item}) => {
-
   const [editShiftingDetail, setEditShifingDetail] = useState<boolean>(false);
   const [editContactDetail, setEditContactDetail] = useState<boolean>(false);
   const [editPickupAddress, setEditPickupAddress] = useState<boolean>(false);
@@ -25,127 +24,167 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item}) => {
 
   const handleEditShiftingDetail = () => {
     setEditShifingDetail(true);
-  }
+  };
 
   const handleEditContactDetail = () => {
     setEditContactDetail(true);
-  }
+  };
 
   const handleEditPickupAddress = () => {
     setEditPickupAddress(true);
-  }
+  };
 
   const handleEditDropAddress = () => {
     setEditDropAddress(true);
-  }
+  };
 
   const handleModalClose = () => {
     setEditShifingDetail(false);
     setEditContactDetail(false);
     setEditPickupAddress(false);
     setEditDropAddress(false);
-  }
+  };
 
   const getModalTitle = () => {
     let title: string = '';
-    if(editShiftingDetail) {
-      title = "Edit - Shifting Detail Info";
-    } else if(editContactDetail) {
-      title = "Edit - Contact Detail Info";
-    } else if(editPickupAddress) {
-      title = "Edit - Pickup Address";
-    } else if(editDropAddress) {
-      title = "Edit - Delivery Address";
+    if (editShiftingDetail) {
+      title = 'Edit - Shifting Detail Info';
+    } else if (editContactDetail) {
+      title = 'Edit - Contact Detail Info';
+    } else if (editPickupAddress) {
+      title = 'Edit - Pickup Address';
+    } else if (editDropAddress) {
+      title = 'Edit - Delivery Address';
     }
     return title;
-  }
+  };
 
   const getForm = () => {
-    if(editShiftingDetail) {
-      return <ShifingDetailForm moduleName={MODULE_NAME.ORDER} />
-    } else if(editContactDetail) {
-      return <ContactDetailForm moduleName={MODULE_NAME.ORDER} />
-    } else if(editPickupAddress) {
-      return <AddressForm addressType={ADDRESS_TYPE.PICKUP} moduleName={MODULE_NAME.ORDER} />
-    } else if(editDropAddress) {
-      return <AddressForm addressType={ADDRESS_TYPE.DROP} moduleName={MODULE_NAME.ORDER} />
+    if (editShiftingDetail) {
+      return (
+        <ShifingDetailForm
+          moduleName={MODULE_NAME.ORDER}
+          item={item as IGetOrdersData}
+        />
+      );
+    } else if (editContactDetail) {
+      return (
+        <ContactDetailForm
+          moduleName={MODULE_NAME.ORDER}
+          item={item as IGetOrdersData}
+        />
+      );
+    } else if (editPickupAddress) {
+      return (
+        <AddressForm
+          addressType={ADDRESS_TYPE.PICKUP}
+          moduleName={MODULE_NAME.ORDER}
+          item={item as IGetOrdersData}
+        />
+      );
+    } else if (editDropAddress) {
+      return (
+        <AddressForm
+          addressType={ADDRESS_TYPE.DROP}
+          moduleName={MODULE_NAME.ORDER}
+          item={item as IGetOrdersData}
+        />
+      );
     }
     return <></>;
-  }
+  };
 
   const showIndividualContactDetails = () => {
     return (
       <>
-        <OrderDetailListItem label='Contact Person' value={item?.partyName} />
-        <OrderDetailListItem label='Email' value={item?.mobile} />
-        <OrderDetailListItem label='Phone' value={item?.mobile} />
-        <OrderDetailListItem label='Order Amount' value={item?.partyName} />
-        <OrderDetailListItem label='Token Amount' value={item?.mobile} isLast={true} />
+        <OrderDetailListItem
+          label="Billing By"
+          value={item?.billingBy}
+          isLast={true}
+        />
+        <OrderDetailListItem label="Contact Person" value={item?.partyName} />
+        <OrderDetailListItem label="Email" value={item?.mobile} />
+        <OrderDetailListItem label="Phone" value={item?.mobile} />
+        <OrderDetailListItem label="Order Amount" value={item?.orderAmount} />
+        <OrderDetailListItem
+          label="Token Amount"
+          value={item?.tokenAmount}
+          isLast={true}
+        />
       </>
     );
-  }
+  };
 
   const showCompanyContactDetails = () => {
     return (
       <>
-        <OrderDetailListItem 
-          label='Company Name'
+        <OrderDetailListItem
+          label="Billing By"
+          value={item?.billingBy}
+          isLast={true}
+        />
+        <OrderDetailListItem
+          label="Company Name"
           //@ts-ignore
           value={item?.billingDetails?.companyName}
-         />
-        <OrderDetailListItem 
-          label='Company Address'
+        />
+        <OrderDetailListItem
+          label="Company Address"
           //@ts-ignore
           value={item?.billingDetails?.companyAddress}
-         />
-        <OrderDetailListItem 
-          label='Company GST'
-          //@ts-ignore 
+        />
+        <OrderDetailListItem
+          label="Company GST"
+          //@ts-ignore
           value={item?.billingDetails?.companyGST}
-         />
-        <OrderDetailListItem 
-          label='Approval Authority'
+        />
+        <OrderDetailListItem
+          label="Approval Authority"
           //@ts-ignore
           value={item?.billingDetails?.approvalAuthority}
-         />
-        <OrderDetailListItem 
-          label='Authority Person'
-          //@ts-ignore 
+        />
+        <OrderDetailListItem
+          label="Authority Person"
+          //@ts-ignore
           value={item?.billingDetails?.authorityPersonName}
-         />
-        <OrderDetailListItem 
-          label='Mobile Number'
+        />
+        <OrderDetailListItem
+          label="Mobile Number"
           //@ts-ignore
           value={item?.billingDetails?.authorityPersonMobile}
-         />
-        <OrderDetailListItem 
-          label='Employee Name'
+        />
+        <OrderDetailListItem
+          label="Employee Name"
           //@ts-ignore
           value={item?.billingDetails?.employeeName}
         />
-        <OrderDetailListItem 
-          label='Employee Desig.'
+        <OrderDetailListItem
+          label="Employee Desig."
           //@ts-ignore
           value={item?.billingDetails?.employeeDesignation}
         />
-        <OrderDetailListItem 
-          label='Employee Mobile'
+        <OrderDetailListItem
+          label="Employee Mobile"
           //@ts-ignore
           value={item?.billingDetails?.employeeMobile}
           isLast={true}
-         />
+        />
       </>
     );
-  }
+  };
 
   const getShiftingLuggages = (item: IGetOrdersData | null) => {
     //@ts-ignore
     const {shiftingLuggage} = item;
-    if(shiftingLuggage && Array.isArray(shiftingLuggage) && shiftingLuggage?.length > 0) {
-      return shiftingLuggage.join(", ");
+    if (
+      shiftingLuggage &&
+      Array.isArray(shiftingLuggage) &&
+      shiftingLuggage?.length > 0
+    ) {
+      return shiftingLuggage.join(', ');
     }
     return '';
-  }
+  };
 
   return (
     <AvoidSoftInputViewHOC>
@@ -185,10 +224,6 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item}) => {
               <OrderDetailListItem
                 label="Delivered Date"
                 value={getShiftingLuggages(item)}
-              />
-              <OrderDetailListItem
-                label="Billing By"
-                value={item?.billingBy}
                 isLast={true}
               />
             </View>

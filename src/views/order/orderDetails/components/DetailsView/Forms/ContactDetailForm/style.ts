@@ -78,9 +78,35 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLOR_BLUE,
     width: width * 0.44,
-    paddingVertical: 12,
+    paddingVertical: 11,
   },
   addMoreText: {
+    color: COLOR_BLACK,
+    fontSize: 16,
+  },
+  alternateContactsContainer: {
+    width: width * 0.9,
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    borderColor: COLOR_GRAY,
+    borderWidth: 0.5,
+    borderRadius: 5,
+    padding: 8,
+  },
+  numberContainer: {
+    width: '70%',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    
+  },
+  actionContainer: {
+    width: '30%',
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+  },
+  numberText: {
     color: COLOR_BLACK,
     fontSize: 16,
   }

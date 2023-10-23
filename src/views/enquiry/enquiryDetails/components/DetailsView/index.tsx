@@ -61,13 +61,13 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item}) => {
 
   const getForm = () => {
     if(editShiftingDetail) {
-      return <ShifingDetailForm  moduleName={MODULE_NAME.ENQUIRY}/>
+      return <ShifingDetailForm  moduleName={MODULE_NAME.ENQUIRY} item={item as IGetEnquiriesData} />
     } else if(editContactDetail) {
-      return <ContactDetailForm  moduleName={MODULE_NAME.ENQUIRY}/>
+      return <ContactDetailForm  moduleName={MODULE_NAME.ENQUIRY} item={item as IGetEnquiriesData}/>
     } else if(editPickupAddress) {
-      return <AddressForm addressType={ADDRESS_TYPE.PICKUP} moduleName={MODULE_NAME.ENQUIRY} />
+      return <AddressForm addressType={ADDRESS_TYPE.PICKUP} moduleName={MODULE_NAME.ENQUIRY} item={item as IGetEnquiriesData} />
     } else if(editDropAddress) {
-      return <AddressForm addressType={ADDRESS_TYPE.DROP} moduleName={MODULE_NAME.ENQUIRY} />
+      return <AddressForm addressType={ADDRESS_TYPE.DROP} moduleName={MODULE_NAME.ENQUIRY} item={item as IGetEnquiriesData} />
     }
     return <></>;
   }

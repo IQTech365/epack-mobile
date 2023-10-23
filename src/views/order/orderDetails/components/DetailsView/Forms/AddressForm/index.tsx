@@ -10,6 +10,8 @@ import {TDropdownItem} from '../../../../../../../type/TDropdownItem';
 import Spacer from '../../../../../../../common/Spacer';
 import Button from '../../../../../../../common/Button';
 import { MODULE_NAME } from '../../enum/EModuleName';
+import { IGetOrdersData } from '../../../../../../../interface/order/IGetOrdersResponse';
+import { IGetEnquiriesData } from '../../../../../../../interface/enquiry/IGetEnquiriesResponse';
 
 export enum ADDRESS_TYPE {
   PICKUP, DROP,
@@ -18,6 +20,7 @@ export enum ADDRESS_TYPE {
 interface IAddressFormProps {
   addressType: ADDRESS_TYPE;
   moduleName: MODULE_NAME;
+  item: IGetOrdersData | IGetEnquiriesData;
 }
 
 const AddressForm: React.FC<IAddressFormProps> = ({addressType, moduleName}) => {
