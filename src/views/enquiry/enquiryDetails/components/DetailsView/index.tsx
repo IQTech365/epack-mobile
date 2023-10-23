@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
+import ModalHOC from '../../../../../common/ModalHOC';
 import Spacer from '../../../../../common/Spacer';
 import { IGetEnquiriesData } from '../../../../../interface/enquiry/IGetEnquiriesResponse';
+import { MODULE_NAME } from '../../../../order/orderDetails/components/DetailsView/enum/EModuleName';
+import AddressForm, { ADDRESS_TYPE } from '../../../../order/orderDetails/components/DetailsView/Forms/AddressForm';
+import ContactDetailForm from '../../../../order/orderDetails/components/DetailsView/Forms/ContactDetailForm';
+import ShifingDetailForm from '../../../../order/orderDetails/components/DetailsView/Forms/ShifingDetailForm';
 import EnquiryDetailListItem from '../EnquiryDetailListItem';
 import styles from './style';
 
@@ -12,6 +17,60 @@ interface IDetailsViewProps {
 }
 
 const DetailsView: React.FC<IDetailsViewProps> = ({item}) => {
+  const [editShiftingDetail, setEditShifingDetail] = useState<boolean>(false);
+  const [editContactDetail, setEditContactDetail] = useState<boolean>(false);
+  const [editPickupAddress, setEditPickupAddress] = useState<boolean>(false);
+  const [editDropAddress, setEditDropAddress] = useState<boolean>(false);
+
+  const handleEditShiftingDetail = () => {
+    setEditShifingDetail(true);
+  }
+
+  const handleEditContactDetail = () => {
+    setEditContactDetail(true);
+  }
+
+  const handleEditPickupAddress = () => {
+    setEditPickupAddress(true);
+  }
+
+  const handleEditDropAddress = () => {
+    setEditDropAddress(true);
+  }
+
+  const handleModalClose = () => {
+    setEditShifingDetail(false);
+    setEditContactDetail(false);
+    setEditPickupAddress(false);
+    setEditDropAddress(false);
+  }
+
+  const getModalTitle = () => {
+    let title: string = '';
+    if(editShiftingDetail) {
+      title = "Edit - Shifting Detail Info";
+    } else if(editContactDetail) {
+      title = "Edit - Contact Detail Info";
+    } else if(editPickupAddress) {
+      title = "Edit - Pickup Address";
+    } else if(editDropAddress) {
+      title = "Edit - Delivery Address";
+    }
+    return title;
+  }
+
+  const getForm = () => {
+    if(editShiftingDetail) {
+      return <ShifingDetailForm  moduleName={MODULE_NAME.ENQUIRY}/>
+    } else if(editContactDetail) {
+      return <ContactDetailForm  moduleName={MODULE_NAME.ENQUIRY}/>
+    } else if(editPickupAddress) {
+      return <AddressForm addressType={ADDRESS_TYPE.PICKUP} moduleName={MODULE_NAME.ENQUIRY} />
+    } else if(editDropAddress) {
+      return <AddressForm addressType={ADDRESS_TYPE.DROP} moduleName={MODULE_NAME.ENQUIRY} />
+    }
+    return <></>;
+  }
 
   const showIndividualContactDetails = () => {
     return (
@@ -41,7 +100,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item}) => {
     <AvoidSoftInputViewHOC>
       <View style={styles.container}>
         <Spacer height={4} />
-        <CollapsibleView title="SHIFTING DETAILS" collapsed={false}>
+        <CollapsibleView title="SHIFTING DETAILS" collapsed={false} isEdit={true} onEditPress={handleEditShiftingDetail}>
           <View>
             <View style={styles.elementContainer}>
             <EnquiryDetailListItem label='Shifting Type' value={item?.shiftingType} />
@@ -53,7 +112,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item}) => {
           </View>
         </CollapsibleView>
         <Spacer height={8} />
-        <CollapsibleView title="CONTACT DETAILS" collapsed={true}>
+        <CollapsibleView title="CONTACT DETAILS" collapsed={true} isEdit={true} onEditPress={handleEditContactDetail}>
           <View>
             <View style={styles.elementContainer}>
             {item?.billingBy == 'by Company' ? showCompanyContactDetails() : showIndividualContactDetails()}
@@ -61,7 +120,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item}) => {
           </View>
         </CollapsibleView>
         <Spacer height={8} />
-        <CollapsibleView title="PICKUP ADDRESS" collapsed={true}>
+        <CollapsibleView title="PICKUP ADDRESS" collapsed={true} isEdit={true} onEditPress={handleEditPickupAddress}>
           <View>
             <View style={styles.elementContainer}>
             <EnquiryDetailListItem label='Shifting From' value={item?.pickupAddress.shiftingFrom} />
@@ -75,7 +134,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item}) => {
           </View>
         </CollapsibleView>
         <Spacer height={8} />
-        <CollapsibleView title="DELIVERY ADDRESS" collapsed={true}>
+        <CollapsibleView title="DELIVERY ADDRESS" collapsed={true} isEdit={true} onEditPress={handleEditDropAddress}>
           <View>
             <View style={styles.elementContainer}>
             <EnquiryDetailListItem label='Shifting To' value={item?.dropAddress.shiftingTo} />
@@ -89,6 +148,17 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item}) => {
           </View>
         </CollapsibleView>
         <Spacer height={8} />
+        <ModalHOC
+          visible={
+            editShiftingDetail ||
+            editContactDetail ||
+            editPickupAddress ||
+            editDropAddress
+          }
+          onClose={handleModalClose}
+          title={getModalTitle()}>
+          {getForm()}
+        </ModalHOC>
       </View>
     </AvoidSoftInputViewHOC>
   );

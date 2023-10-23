@@ -10,6 +10,7 @@ interface IContactDetailsStyle {
   headerText: TextStyle;
   downarrow: ImageStyle;
   uparrow: ImageStyle;
+  labelActionContainer: ViewStyle;
 }
 
 const style = StyleSheet.create<IContactDetailsStyle>({
@@ -21,6 +22,10 @@ const style = StyleSheet.create<IContactDetailsStyle>({
     borderColor: COLOR_GRAY2,
     alignSelf: 'center',
     paddingBottom: 15,
+  },
+  labelActionContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   header: {
     width: width * 0.96,
