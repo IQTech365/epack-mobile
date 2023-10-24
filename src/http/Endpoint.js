@@ -67,3 +67,6 @@ export const GET_CONTACTS = (company_id) => `/content-management/contact/${compa
 // My Profile
 export const ADD_BRANCH = `/branch/add`;
 export const GET_BRANCHS = (company_id) => `/branch/all/${company_id}`;
+
+export const ADD_FRANCHISE = `/franchise/addFranchise`;
+export const GET_FRANCHISE = (company_id) => `/franchise/all/${company_id}`;

@@ -12,6 +12,7 @@ import AddBranchUpdateView from '../addBranchUpdateView';
 import { getBranchsRequest } from '../../../../redux/slices/MyProfile';
 import Spinner from '../../../../common/Spinner';
 import AddBranchListItem from '../addBranchList';
+import AddFranchiseListItem from '../addFranchiseList';
 // import Spinner from '../../../../../common/Spinner';
 
 const AddBranchView = () => {
@@ -80,7 +81,7 @@ const AddBranchView = () => {
           }
           renderItem={({item, index}) => (
             <View style={{padding: 10}}>
-              <AddBranchListItem
+              <AddFranchiseListItem
                 item={item}
                 index={index}
                 
