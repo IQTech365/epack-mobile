@@ -14,6 +14,7 @@ import { IAddSurveyResponse } from '../interface/enquiry/IAddSurveyResponse';
 import { IGetSurveyListResponse } from '../interface/enquiry/IGetSurveyListResponse';
 import { IUpdateEnquiryStatus, TUpdateEnquiryStatusRequest } from '../interface/enquiry/IUpdateEnquiryStatusRequest';
 import { IUpdateEnquiryStatusResponse } from '../interface/enquiry/IUpdateEnquiryStatusResponse';
+import { IUpdateEnquiryRequest } from '../interface/enquiry/IupdateEnquiryRequest';
 
 export const AddEnquiryService = async (payload: IAddEnquiryRequest): Promise<IAddEnquiryResponse> => {
     const api = Api.getInstance();
@@ -51,12 +52,10 @@ export const GetSurveyListService = async (payload: string): Promise<IGetSurveyL
     return await api.get<IGetSurveyListResponse>(GET_SURVEY_COMMENTS(payload));
 }
 
-export const UpdateEnquiryStatusService = async (payload: IUpdateEnquiryStatus): Promise<IUpdateEnquiryStatusResponse> => {
+export const UpdateEnquiryStatusService = async (id:IUpdateEnquiryStatus, requestBody:IUpdateEnquiryRequest ): Promise<IUpdateEnquiryStatusResponse> => {
     const api = Api.getInstance();
-    const requestBody:TUpdateEnquiryStatusRequest = {
-        status: payload.status,
-    }
-    return await api.post<TUpdateEnquiryStatusRequest, AxiosResponse<IUpdateEnquiryStatusResponse>>(requestBody, EDIT_ENQUIRY(payload.enquiryId));
+  
+    return await api.update<IUpdateEnquiryRequest, AxiosResponse<IUpdateEnquiryStatusResponse>>(requestBody, EDIT_ENQUIRY(id.enquiryId));
 }
 
 // TODO: refactor code once in use

@@ -13,6 +13,7 @@ import { IAddSurveyResponse } from '../interface/enquiry/IAddSurveyResponse';
 import { IGetSurveyListResponse } from '../interface/enquiry/IGetSurveyListResponse';
 import { IUpdateEnquiryStatus } from '../interface/enquiry/IUpdateEnquiryStatusRequest';
 import { IUpdateEnquiryStatusResponse } from '../interface/enquiry/IUpdateEnquiryStatusResponse';
+import { IUpdateEnquiryRequest } from '../interface/enquiry/IupdateEnquiryRequest';
 
 export function* addEnquirySaga(action: PayloadAction<IAddEnquiryRequest>) {
     try {
@@ -80,9 +81,11 @@ export function* getSurveyListSaga(action: PayloadAction<string>) {
     }
 }
 
-export function* updateEnquiryStatusSaga(action: PayloadAction<IUpdateEnquiryStatus>) {
+export function* updateEnquiryStatusSaga(action: PayloadAction<{id:IUpdateEnquiryStatus, requestBody:IUpdateEnquiryRequest}>) {
+    const { id, requestBody } = action.payload;
+
     try {
-        const response: IUpdateEnquiryStatusResponse = yield call(EnquiryService.UpdateEnquiryStatusService, action.payload);
+        const response: IUpdateEnquiryStatusResponse = yield call(EnquiryService.UpdateEnquiryStatusService, id, requestBody);
         console.log('updateEnquiryStatusSaga-response----', JSON.stringify(response));
         yield put(updateEnquiryStatusSuccess(response));
     } catch (error) {

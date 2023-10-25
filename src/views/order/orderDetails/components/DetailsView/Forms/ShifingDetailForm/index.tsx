@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {View, Text} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../../../common/AvoidSoftInputViewHOC';
 import Input from '../../../../../../../common/Input';
@@ -17,6 +17,11 @@ import { MODULE_NAME } from '../../enum/EModuleName';
 import { IGetEnquiriesData } from '../../../../../../../interface/enquiry/IGetEnquiriesResponse';
 import { IGetOrdersData } from '../../../../../../../interface/order/IGetOrdersResponse';
 import { formatDate4 } from '../../../../../../../utils/formatter';
+import { useAppDispatch, useAppSelector } from '../../../../../../../redux/hooks';
+import { updateEnquiryStatusRequest } from '../../../../../../../redux/slices/EnquirySlice';
+import { IUpdateEnquiryRequest } from '../../../../../../../interface/enquiry/IupdateEnquiryRequest';
+import { IUpdateEnquiryStatus, TUpdateEnquiryStatusRequest } from '../../../../../../../interface/enquiry/IUpdateEnquiryStatusRequest';
+import Spinner from '../../../../../../../common/Spinner';
 
 interface IShiftingFormProps {
   moduleName: MODULE_NAME;
@@ -34,6 +39,9 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({moduleName, item}) => 
   const [dateOfDelivery, setDateOfDelivery] = useState<string>('');
   const [dateOfDelivered, setDateOfDelivered] = useState<string>('');
   const [carriageVehicle, setCarriageVehicle] = useState<string>('');
+  const {updateEnquiryStatusRequesting} = useAppSelector(state => state.Enquiry);
+
+  const dispatch = useAppDispatch();
   
   const handleShiftingType = (item: TDropdownItem) => {
     setShiftingType(item.label);
@@ -55,7 +63,7 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({moduleName, item}) => 
     setCarriageVehicle(text);
   }
 
-  const handleUpdate = () => {
+  const handleUpdate = useCallback(() => {
     console.log('shiftingLuggages--', shiftingLuggages);
     console.log('carriageVehicle--', carriageVehicle);
     console.log('shiftingType--', shiftingType);
@@ -64,10 +72,67 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({moduleName, item}) => 
     console.log('dateOfDelivered--', dateOfDelivered);
     if(moduleName == MODULE_NAME.ORDER) {
       // TODO: call update order shifting detail api here
+      const requestBody:IUpdateEnquiryRequest ={
+        shiftingType: shiftingType.toUpperCase(),
+        email: itemObj.email,
+        mobile: itemObj.mobile,
+        shiftingLuggage: shiftingLuggages,
+        shiftingDate: dateOfMoving,
+        pickupAddress: {
+          shiftingFrom: itemObj.pickupAddress?.shiftingFrom,
+          state: itemObj.pickupAddress?.state,
+          city: itemObj.pickupAddress?.city,
+          pincode: itemObj.pickupAddress?.pincode,
+          locality: itemObj.pickupAddress?.city,
+          isLiftAvailable: itemObj.pickupAddress?.isLiftAvailable
+        },
+        dropAddress: {
+          shiftingTo: itemObj.dropAddress?.shiftingTo,
+          state: itemObj.dropAddress?.state,
+          city: itemObj.dropAddress?.city,
+          pincode: itemObj.dropAddress?.pincode,
+          locality: itemObj.dropAddress?.city,
+          isLiftAvailable: itemObj.dropAddress?.isLiftAvailable
+        }
+      };
+      const id:IUpdateEnquiryStatus = {
+        enquiryId: itemObj._id,
+        status: 'true'
+      }
+      dispatch(updateEnquiryStatusRequest({id, requestBody}))
+      
     } else if(moduleName == MODULE_NAME.ENQUIRY) {
+      const requestBody:IUpdateEnquiryRequest ={
+        shiftingType: shiftingType.toUpperCase(),
+        email: itemObj.email,
+        mobile: itemObj.mobile,
+        shiftingLuggage: shiftingLuggages,
+        shiftingDate: dateOfMoving,
+        pickupAddress: {
+          shiftingFrom: itemObj.pickupAddress?.shiftingFrom,
+          state: itemObj.pickupAddress?.state,
+          city: itemObj.pickupAddress?.city,
+          pincode: itemObj.pickupAddress?.pincode,
+          locality: itemObj.pickupAddress?.city,
+          isLiftAvailable: itemObj.pickupAddress?.isLiftAvailable
+        },
+        dropAddress: {
+          shiftingTo: itemObj.dropAddress?.shiftingTo,
+          state: itemObj.dropAddress?.state,
+          city: itemObj.dropAddress?.city,
+          pincode: itemObj.dropAddress?.pincode,
+          locality: itemObj.dropAddress?.city,
+          isLiftAvailable: itemObj.dropAddress?.isLiftAvailable
+        }
+      };
+      const id:IUpdateEnquiryStatus = {
+        enquiryId: itemObj._id,
+        status: 'true'
+      }
+      dispatch(updateEnquiryStatusRequest({id, requestBody}))
       // TODO: call update enquiry shifting detail api here
     }
-  }
+  },[itemObj, shiftingType, shiftingLuggages, dateOfMoving])
 
   
 
@@ -185,6 +250,7 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({moduleName, item}) => 
           textStyle={styles.textStyle}
         />
       </View>
+      <Spinner show={updateEnquiryStatusRequesting} />
     </AvoidSoftInputViewHOC>
   );
 };
