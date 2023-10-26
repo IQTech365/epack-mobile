@@ -14,7 +14,11 @@ import {IGetEnquiriesData} from '../../../../../../../interface/enquiry/IGetEnqu
 import {IGetOrdersData} from '../../../../../../../interface/order/IGetOrdersResponse';
 import DeleteIcon from '../../../../../../../images/icons/delete.svg';
 import approvalAuthorityOptions from '../../../../../../../data/ApprovalAuthorityOptions.json';
-
+import { IUpdateCompanyContactDetailRequest, IUpdateIndividualContactDetailRequest } from '../../../../../../../interface/order/IUpdateContactDetails';
+import { useAppDispatch, useAppSelector } from '../../../../../../../redux/hooks';
+import { updateContactDetailsRequest } from '../../../../../../../redux/slices/EnquirySlice';
+import Toast from 'react-native-toast-message';
+import { resetUpdateContactRequest } from '../../../../../../../redux/slices/ProfileSettingSlice';
 interface IContactDetailFormProps {
   moduleName: MODULE_NAME;
   item: IGetOrdersData | IGetEnquiriesData;
@@ -53,6 +57,13 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
   const [employeeDesignation, setEmployeeDesignation] = useState<string>('');
   const [employeeMobileNumber, setEmployeeMobileNumber] = useState<string>('');
   const [companyAddress, setCompanyAddress] = useState<string>('');
+
+  const dispatch = useAppDispatch();
+  const {
+    updateContactDetailRequesting,
+    updateContactDetailSuccess,
+    updateContactDetailFailure,
+  } = useAppSelector(state => state.Enquiry);
 
   const approvalAuthDropdownRef = useRef(null);
 
@@ -220,9 +231,33 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
 
   const handleUpdate = () => {
     if(itemObj.billingBy == 'by Individual') {
-      //
+      const payload:IUpdateIndividualContactDetailRequest = {
+        email: email,
+        landline: landline,
+        mobile: mobile,
+        orderAmount: orderAmount,
+        tokenAmount: tokenAmount,
+        alternateNumbers: alternateNumbers,
+      }
+      dispatch(updateContactDetailsRequest({id: enquiryId, requestBody: payload}));
     } else if(itemObj.billingBy == 'by Company') {
-      //
+      const payload:IUpdateCompanyContactDetailRequest = {
+        companyName: companyName,
+        approvalAuthority:approvalAuthority,
+        authorityPersonName: authorityPersonName,
+        authorityMobileNumber: authorityMobileNumber,
+        companyGST: companyGST,
+        employeeName: employeeName,
+        employeeDesignation: employeeDesignation,
+        employeeMobileNumber: employeeMobileNumber,
+        companyAddress: companyAddress,
+        email: email,
+        landline: landline,
+        orderAmount: orderAmount,
+        tokenAmount: tokenAmount,
+        alternateNumbers: alternateNumbers,
+      }
+      dispatch(updateContactDetailsRequest({id: enquiryId, requestBody: payload}));
     }
   };
 
@@ -240,6 +275,24 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
       setAlternateNumbers([...itemObj?.alternateNumbers]);
     }
   }, []);
+
+  useEffect(() => {
+    if (!updateContactDetailRequesting && updateContactDetailSuccess) {
+      Toast.show({
+        type: 'success',
+        text1: 'Address Update',
+        text2: 'Address has been updated successfully',
+      });
+      dispatch(resetUpdateContactRequest());
+    } else if (!updateContactDetailRequesting && updateContactDetailFailure) {
+      Toast.show({
+        type: 'error',
+        text1: 'Address Update',
+        text2: 'Error in updating address. Please try again!',
+      });
+      dispatch(resetUpdateContactRequest());
+    }
+  }, [updateContactDetailRequesting, updateContactDetailSuccess, updateContactDetailFailure]);
 
   return (
     <AvoidSoftInputViewHOC>
