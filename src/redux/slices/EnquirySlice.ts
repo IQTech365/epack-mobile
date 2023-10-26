@@ -14,6 +14,7 @@ import { IUpdateEnquiryStatus } from '../../interface/enquiry/IUpdateEnquiryStat
 import { IUpdateEnquiryRequest } from '../../interface/enquiry/IupdateEnquiryRequest';
 import { IUpdateAddressResponse } from '../../interface/order/IUpdateAddressResponse';
 import { IDropAddress, IPickupAddress } from '../../interface/order/IUpdateAddressRequest';
+import { IUpdateCompanyContactDetailRequest, IUpdateContactDetailResponse, IUpdateIndividualContactDetailRequest } from '../../interface/order/IUpdateContactDetails';
 
 interface IEnquiryState {
   // Get Enquiries
@@ -76,6 +77,12 @@ interface IEnquiryState {
   updateAddressSuccess: boolean;
   updateAddressFailure: boolean;
   updateAddressError: any;
+  // Update Contact Details - states to update enquiry, order contact details
+  updateContactDetailInfo: IUpdateContactDetailResponse | null;
+  updateContactDetailRequesting: boolean;
+  updateContactDetailSuccess: boolean;
+  updateContactDetailFailure: boolean;
+  updateContactDetailError: any;
 }
 
 const initialState: IEnquiryState = {
@@ -139,6 +146,12 @@ const initialState: IEnquiryState = {
   updateAddressSuccess: false,
   updateAddressFailure: false,
   updateAddressError: null,
+  // Update Contact Details - states to update enquiry, order contact details
+  updateContactDetailInfo: null,
+  updateContactDetailRequesting: false,
+  updateContactDetailSuccess: false,
+  updateContactDetailFailure: false,
+  updateContactDetailError: null,
 };
 
 export const EnquirySlice = createSlice({
@@ -371,6 +384,34 @@ export const EnquirySlice = createSlice({
       state.updateAddressFailure = false;
       state.updateAddressError = null;
       state.updateAddressInfo = null;
+    },
+    // Update Contact Details
+    updateContactDetailsRequest: (
+      state,
+      action: PayloadAction<{id:string, requestBody: IUpdateIndividualContactDetailRequest | IUpdateCompanyContactDetailRequest}>,
+    ) => {
+      state.updateContactDetailRequesting = true;
+    },
+    updateContactDetailsSuccess: (
+      state,
+      action: PayloadAction<IUpdateContactDetailResponse>,
+    ) => {
+      state.updateContactDetailRequesting = false;
+      state.updateContactDetailSuccess = true;
+      state.updateContactDetailInfo = action.payload;
+    },
+    updateContactDetailsFailure: (state, action: PayloadAction<any>) => {
+      state.updateContactDetailRequesting = false;
+      state.updateContactDetailSuccess = false;
+      state.updateContactDetailFailure = true;
+      state.updateContactDetailError = action.payload;
+    },
+    resetUpdateContactDetailsRequest: (state) => {
+      state.updateContactDetailRequesting = false;
+      state.updateContactDetailSuccess = false;
+      state.updateContactDetailFailure = false;
+      state.updateContactDetailError = null;
+      state.updateContactDetailInfo = null;
     }
   },
 });
@@ -423,4 +464,9 @@ export const {
   updateAddressSuccess,
   updateAddressFailure,
   resetUpdateAddressRequest,
+  // Update Contact Details
+  updateContactDetailsRequest,
+  updateContactDetailsSuccess,
+  updateContactDetailsFailure,
+  resetUpdateContactDetailsRequest,
 } = EnquirySlice.actions;

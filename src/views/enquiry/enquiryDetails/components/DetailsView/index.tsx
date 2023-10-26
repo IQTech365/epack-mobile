@@ -76,6 +76,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
         <ContactDetailForm
           moduleName={MODULE_NAME.ENQUIRY}
           item={item as IGetEnquiriesData}
+          enquiryId={enquiryId}
         />
       );
     } else if (editPickupAddress) {

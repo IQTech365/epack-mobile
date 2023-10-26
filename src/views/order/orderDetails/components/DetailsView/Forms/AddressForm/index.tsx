@@ -149,8 +149,6 @@ const AddressForm: React.FC<IAddressFormProps> = ({
   useEffect(() => {
     if (states && cities && cityDropdownRef && stateDropwdownRef) {
       if (isInit) {
-        console.log('isInit----', isInit);
-        console.log('addressType----', addressType);
         setIsInit(false);
         let previousStateIndex = 0, previousCityIndex = 0, previousFloorIndex = 0, previousLiftStatusIndex = 0;
         if(addressType == ADDRESS_TYPE.PICKUP) {
@@ -158,10 +156,6 @@ const AddressForm: React.FC<IAddressFormProps> = ({
           previousCityIndex = states.findIndex(s => s.label == item.pickupAddress.city);
           previousFloorIndex = floorOptions.findIndex(s => s.label == item.pickupAddress.floor);
           previousLiftStatusIndex = liftStatusOptions.findIndex(s => s.label.toLowerCase() == item.pickupAddress.isLiftAvailable.toLowerCase());
-          console.log('previousStateIndex----', previousStateIndex);
-          console.log('previousCityIndex----', previousCityIndex);
-          console.log('previousFloorIndex----', previousFloorIndex);
-          console.log('previousLiftStatusIndex----', previousLiftStatusIndex);
           //@ts-ignore
           stateDropwdownRef?.current?.setDefaultValue(states[previousStateIndex]);
           //@ts-ignore
@@ -175,10 +169,6 @@ const AddressForm: React.FC<IAddressFormProps> = ({
           previousCityIndex = states.findIndex(s => s.label == item.dropAddress.city);
           previousFloorIndex = floorOptions.findIndex(s => s.label == item.dropAddress.floor);
           previousLiftStatusIndex = liftStatusOptions.findIndex(s => s.label.toLowerCase() == item.dropAddress.isLiftAvailable.toLowerCase());
-          console.log('previousStateIndex----', previousStateIndex);
-          console.log('previousCityIndex----', previousCityIndex);
-          console.log('previousFloorIndex----', previousFloorIndex);
-          console.log('previousLiftStatusIndex----', previousLiftStatusIndex);
           //@ts-ignore
         stateDropwdownRef?.current?.setDefaultValue(states[previousStateIndex]);
         //@ts-ignore
@@ -227,7 +217,6 @@ const AddressForm: React.FC<IAddressFormProps> = ({
           floor: floorNumber,
         },
       };
-      console.log('Update-DropAddress-payload--', JSON.stringify(payload));
       dispatch(updateAddressRequest({id: enquiryId, requestBody: payload}));
     }
   };
@@ -240,8 +229,6 @@ const AddressForm: React.FC<IAddressFormProps> = ({
         text2: 'Address has been updated successfully',
       });
       dispatch(resetUpdateAddressRequest());
-      // dispatch2(getOrdersRequest(getCompanyId()));
-      // navigation?.goBack();
     } else if (!updateAddressRequesting && updateAddressFailure) {
       Toast.show({
         type: 'error',

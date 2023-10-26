@@ -1,17 +1,13 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../../../common/AvoidSoftInputViewHOC';
 import Input from '../../../../../../../common/Input';
 import Label from '../../../../../../../common/Label';
-import {COLOR_BLACK, COLOR_BLUE} from '../../../../../../../utils/colors';
+import {COLOR_BLACK} from '../../../../../../../utils/colors';
 import styles from './style';
-import shiftingTypeOptions from '../../../../../../../data/shiftingType.json';
 import DropdownComponent from '../../../../../../../common/DropdownComponent';
 import {TDropdownItem} from '../../../../../../../type/TDropdownItem';
-import shiftingLuggageOptions from '../../../../../../../data/shiftingLuggage.json';
 import Spacer from '../../../../../../../common/Spacer';
-import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import DatePickerComponent from '../../../../../../../common/DatePickerComponent';
 import Button from '../../../../../../../common/Button';
 import {MODULE_NAME} from '../../enum/EModuleName';
 import {IGetEnquiriesData} from '../../../../../../../interface/enquiry/IGetEnquiriesResponse';
@@ -22,11 +18,13 @@ import approvalAuthorityOptions from '../../../../../../../data/ApprovalAuthorit
 interface IContactDetailFormProps {
   moduleName: MODULE_NAME;
   item: IGetOrdersData | IGetEnquiriesData;
+  enquiryId: string;
 }
 
 const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
   moduleName,
   item,
+  enquiryId,
 }) => {
   let itemObj =
     moduleName == MODULE_NAME.ORDER
@@ -55,6 +53,8 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
   const [employeeDesignation, setEmployeeDesignation] = useState<string>('');
   const [employeeMobileNumber, setEmployeeMobileNumber] = useState<string>('');
   const [companyAddress, setCompanyAddress] = useState<string>('');
+
+  const approvalAuthDropdownRef = useRef(null);
 
   console.log('alternateNumbers--', JSON.stringify(alternateNumbers));
 
@@ -219,10 +219,10 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
   };
 
   const handleUpdate = () => {
-    if(moduleName == MODULE_NAME.ORDER) {
-      // TODO: call order update api here
-    } else if(moduleName == MODULE_NAME.ENQUIRY) {
-      // TODO: call enquiry update api here
+    if(itemObj.billingBy == 'by Individual') {
+      //
+    } else if(itemObj.billingBy == 'by Company') {
+      //
     }
   };
 
@@ -284,6 +284,8 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
                 onSelect={(item: TDropdownItem) => {
                   handleApprovalAuthority(item.label);
                 }}
+                //@ts-ignore
+                ref={approvalAuthDropdownRef}
               />
             </View>
           </>
