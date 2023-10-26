@@ -1,9 +1,9 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {View, Text} from 'react-native';
+import {View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../../../common/AvoidSoftInputViewHOC';
 import Input from '../../../../../../../common/Input';
 import Label from '../../../../../../../common/Label';
-import {COLOR_BLACK, COLOR_BLUE} from '../../../../../../../utils/colors';
+import {COLOR_BLACK} from '../../../../../../../utils/colors';
 import styles from './style';
 import DropdownComponent from '../../../../../../../common/DropdownComponent';
 import {TDropdownItem} from '../../../../../../../type/TDropdownItem';
@@ -34,14 +34,16 @@ interface IAddressFormProps {
   addressType: ADDRESS_TYPE;
   moduleName: MODULE_NAME;
   item: IGetOrdersData | IGetEnquiriesData;
+  enquiryId: string;
 }
 
 const AddressForm: React.FC<IAddressFormProps> = ({
   addressType,
   moduleName,
-  item
+  item,
+  enquiryId
 }) => {
-  console.log('AddressForm--', JSON.stringify(item));
+  console.log('AddressForm-enquiryId-', enquiryId);
   
   const dispatch = useAppDispatch();
   const {updateAddressRequesting, updateAddressSuccess, updateAddressFailure} = useAppSelector(state => state.Enquiry);
@@ -104,7 +106,7 @@ const AddressForm: React.FC<IAddressFormProps> = ({
     setFloorNumber(item.label);
   };
   const handleLiftStatus = (item: TDropdownItem) => {
-    setLiftStatus(item.label);
+    setLiftStatus(item.label.toUpperCase());
   };
 
   const initFormValues = () => {
@@ -202,30 +204,31 @@ const AddressForm: React.FC<IAddressFormProps> = ({
           shiftingFrom: city,
           city: city,
           isLiftAvailable: liftStatus,
-          locality: locality,
-          landmark: landmark,
+          locality: locality || 'Not Available',
+          landmark: landmark || 'Not Available',
           pincode: pin,
           state: state,
           address: address,
           floor: floorNumber,
         },
       };
-      dispatch(updateAddressRequest({id: '', requestBody: payload}));
+      dispatch(updateAddressRequest({id: enquiryId, requestBody: payload}));
     } else if (addressType == ADDRESS_TYPE.DROP) {
       const payload: IDropAddress = {
         dropAddress: {
           shiftingTo: city,
           city: city,
           isLiftAvailable: liftStatus,
-          locality: locality,
-          landmark: landmark,
+          locality: locality || 'Not Available',
+          landmark: landmark || 'Not Available',
           pincode: pin,
           state: state,
           address: address,
           floor: floorNumber,
         },
       };
-      dispatch(updateAddressRequest({id: '', requestBody: payload}));
+      console.log('Update-DropAddress-payload--', JSON.stringify(payload));
+      dispatch(updateAddressRequest({id: enquiryId, requestBody: payload}));
     }
   };
 

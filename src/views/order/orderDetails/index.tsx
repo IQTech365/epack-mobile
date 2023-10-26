@@ -38,7 +38,7 @@ const OrderDetailsView: React.FC<Props> = ({route, navigation}) => {
   const showTabItem = () => {
     switch (activeTabIndex) {
       case 0:
-        return <DetailsView item={item} />;
+        return <DetailsView item={item} enquiryId={orderId} />;
       case 1:
         return <MoneyReceiptView orderId={orderId as string} />;
       case 2:

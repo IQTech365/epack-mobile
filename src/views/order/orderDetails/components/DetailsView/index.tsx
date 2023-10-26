@@ -1,22 +1,24 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Text, View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
 import ModalHOC from '../../../../../common/ModalHOC';
 import Spacer from '../../../../../common/Spacer';
 import {IGetOrdersData} from '../../../../../interface/order/IGetOrdersResponse';
+import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import OrderDetailListItem from '../OrderDetailListItem';
 import {MODULE_NAME} from './enum/EModuleName';
 import AddressForm, {ADDRESS_TYPE} from './Forms/AddressForm';
 import ContactDetailForm from './Forms/ContactDetailForm';
 import ShifingDetailForm from './Forms/ShifingDetailForm';
 import styles from './style';
-
+import Toast from 'react-native-toast-message';
 interface IDetailsViewProps {
   item: IGetOrdersData | null;
+  enquiryId: string;
 }
 
-const DetailsView: React.FC<IDetailsViewProps> = ({item}) => {
+const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
   const [editShiftingDetail, setEditShifingDetail] = useState<boolean>(false);
   const [editContactDetail, setEditContactDetail] = useState<boolean>(false);
   const [editPickupAddress, setEditPickupAddress] = useState<boolean>(false);
@@ -80,6 +82,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item}) => {
           addressType={ADDRESS_TYPE.PICKUP}
           moduleName={MODULE_NAME.ORDER}
           item={item as IGetOrdersData}
+          enquiryId={enquiryId}
         />
       );
     } else if (editDropAddress) {
@@ -88,6 +91,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item}) => {
           addressType={ADDRESS_TYPE.DROP}
           moduleName={MODULE_NAME.ORDER}
           item={item as IGetOrdersData}
+          enquiryId={enquiryId}
         />
       );
     }
@@ -268,6 +272,14 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item}) => {
                 value={item?.pickupAddress?.address}
               />
               <OrderDetailListItem
+                label="Landmark"
+                value={item?.pickupAddress?.landmark || 'Not Available'}
+              />
+              <OrderDetailListItem
+                label="Locality"
+                value={item?.pickupAddress?.locality || 'Not Available'}
+              />
+              <OrderDetailListItem
                 label="Pincode"
                 value={item?.pickupAddress?.pincode}
               />
@@ -308,6 +320,14 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item}) => {
                 value={item?.dropAddress?.address}
               />
               <OrderDetailListItem
+                label="Landmark"
+                value={item?.dropAddress?.landmark || 'Not Available'}
+              />
+              <OrderDetailListItem
+                label="Locality"
+                value={item?.dropAddress?.locality || 'Not Available'}
+              />
+              <OrderDetailListItem
                 label="Pincode"
                 value={item?.dropAddress?.pincode}
               />
@@ -333,7 +353,10 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item}) => {
           }
           onClose={handleModalClose}
           title={getModalTitle()}>
-          {getForm()}
+          <>
+            {getForm()}
+            <Toast />
+          </>
         </ModalHOC>
       </View>
     </AvoidSoftInputViewHOC>
