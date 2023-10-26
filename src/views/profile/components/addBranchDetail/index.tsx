@@ -1,22 +1,47 @@
-import React, {useEffect, useState} from 'react';
-import {View, FlatList, TouchableOpacity, Text} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {View, FlatList, TouchableOpacity, Text, RefreshControl} from 'react-native';
 import styles from './style';
 import ListViewIcon from '../../../../images/icons/list_view_icon.svg';
 import ListViewIcon2 from '../../../../images/icons/list_view_icon2.svg';
 import CreateIcon from '../../../../images/icons/create_icon.svg';
 import CreateIcon2 from '../../../../images/icons/create_icon2.svg';
-import { useAppDispatch } from '../../../../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
 import Spacer from '../../../../common/Spacer';
 import Header from '../../../../common/Header';
 import AddBranchUpdateView from '../addBranchUpdateView';
+import { getBranchsRequest } from '../../../../redux/slices/MyProfile';
+import Spinner from '../../../../common/Spinner';
+import AddBranchListItem from '../addBranchList';
+import AddFranchiseListItem from '../addFranchiseList';
 // import Spinner from '../../../../../common/Spinner';
 
 const AddBranchView = () => {
   const [showBranchList, setshowBranchList] = useState<boolean>(false);
   const [showAddBranch, setshowAddBranch] = useState<boolean>(true);
+  const { addCompanyInfo, companies } = useAppSelector(state => state.Company);
+  const {Branchs, getBranchsRequesting} = useAppSelector(
+    state => state.Myprofile,
+  );
+  console.log(Branchs, 'data123..');
+  
   const dispatch = useAppDispatch();
 
- 
+  const getCompanyId = () => {
+    let id;
+    const { data } = addCompanyInfo || {};
+    const { data: companiesData } = companies || {};
+    if (data && Object.keys(data).length > 0) {
+        id = data._id;
+    } else if (
+        companiesData &&
+        Array.isArray(companiesData) &&
+        companiesData.length > 0
+    ) {
+        const firstCompany = companiesData[0];
+        id = firstCompany._id;
+    }
+    return id;
+};
 
   const handleCreateNewContent = () => {
     setshowBranchList(false);
@@ -47,8 +72,22 @@ const AddBranchView = () => {
     if (showBranchList) {
       return (
         <FlatList
-          data={[]}
-          renderItem={({item, index}) => <Text>Hello</Text>}
+          data={Branchs.data}
+          refreshControl={
+            <RefreshControl
+              refreshing={getBranchsRequesting}
+              onRefresh={handleOnRefresh}
+            />
+          }
+          renderItem={({item, index}) => (
+            <View style={{padding: 10}}>
+              <AddFranchiseListItem
+                item={item}
+                index={index}
+                
+              />
+            </View>
+          )}
           ListEmptyComponent={showEmptyView()}
         />
       );
@@ -56,8 +95,12 @@ const AddBranchView = () => {
     return null;
   };
 
+  const handleOnRefresh = useCallback(() => {
+    dispatch(getBranchsRequest(getCompanyId()));
+  }, []);
+
   useEffect(() => {
-    // dispatch(getFooterContentsRequest(getCompanyId()))
+    dispatch(getBranchsRequest(getCompanyId()))
   }, []);
 
   return (
@@ -83,7 +126,7 @@ const AddBranchView = () => {
       </View>
       {showForm()}
       {showList()}
-      {/* <Spinner show={getFooterContentsRequesting} /> */}
+      <Spinner show={getBranchsRequesting} />
     </View>
   );
 };

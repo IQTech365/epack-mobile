@@ -1,5 +1,6 @@
-import React, { useCallback, useReducer, useState } from 'react';
+import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import { View, Text, TextInput } from 'react-native';
+import Toast from 'react-native-toast-message';
 import AvoidSoftInputViewHOC from '../../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../..//common/Spacer';
 import styles from './style';
@@ -15,13 +16,41 @@ import {
     initialState,
 } from './addBranchReducer';
 import EpackDropdown from '../../../../common/DropdownComponent2';
+import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
+import { IAddBranchRequest } from '../../../../interface/myProfile/IAddBranchRequest';
+import { addBranchRequest, restAddBranchRequest } from '../../../../redux/slices/MyProfile';
+import Spinner from '../../../../common/Spinner';
 
 const AddBranchUpdateView: React.FC<{}> = ({ }) => {
     const [state, dispatch] = useReducer(addBranchReducer, initialState);
-    console.log(state, 'output..');
+    const { addCompanyInfo, companies } = useAppSelector(state => state.Company);
+    const {
+        addBranchRequesting,
+        addBranchSuccess,
+        addBranchFailure,
+        addBranchInfo,
+      } = useAppSelector(state => state.Myprofile);
+    const dispatch2 = useAppDispatch();
+
+    const getCompanyId = () => {
+        let id;
+        const { data } = addCompanyInfo || {};
+        const { data: companiesData } = companies || {};
+        if (data && Object.keys(data).length > 0) {
+            id = data._id;
+        } else if (
+            companiesData &&
+            Array.isArray(companiesData) &&
+            companiesData.length > 0
+        ) {
+            const firstCompany = companiesData[0];
+            id = firstCompany._id;
+        }
+        return id;
+    };
+    
 
     const handleState = (text: string) => {
-        console.log(text, 'state data');
         dispatch({
             type: ADD_BRANCH_FORM_ACTION.STATE,
             payload: text,
@@ -81,8 +110,45 @@ const AddBranchUpdateView: React.FC<{}> = ({ }) => {
             payload: text,
         });
     };
+
+    const handleSave = useCallback(() => {
+        const payload: IAddBranchRequest = {
+            companyId: getCompanyId(),
+            branchName: state.branchName,
+            registeredMobile: state.registeredMobile,
+            pincode: state.pincode,
+            state: state.state,
+            city: state.city,
+            locality: state.locality,
+            landmark: state.landmark,
+            email: state.email,
+            address: state.address,
+            createdBy: "Dhruv"
+        }
+        console.log(payload, 'add branch..');
+        dispatch2(addBranchRequest(payload));
+
+    }, [state])
+
+    useEffect(() => {
+        if (!addBranchRequesting && addBranchSuccess) {
+          Toast.show({
+            type: 'success',
+            text1: 'Add Branch',
+            text2: 'Add Branch has been added successfully',
+          });
+          dispatch2(restAddBranchRequest());
+        } else if (!addBranchRequesting && addBranchFailure) {
+          Toast.show({
+            type: 'error',
+            text1: 'Add Branch',
+            text2: 'Error in adding Branch. Please try again!',
+          });
+          dispatch2(restAddBranchRequest());
+        }
+      }, [addBranchRequesting, addBranchSuccess, addBranchFailure]);
     return (
-        <AvoidSoftInputViewHOC>
+        <><AvoidSoftInputViewHOC>
             <View style={styles.container}>
                 <View>
                     <Spacer height={4} />
@@ -92,8 +158,7 @@ const AddBranchUpdateView: React.FC<{}> = ({ }) => {
                             onChangeText={handleBranchNameInputTextChange}
                             containerStyle={styles.inputContainer}
                             inputStyle={styles.input}
-                            selectionColor={COLOR_BLACK}
-                        />
+                            selectionColor={COLOR_BLACK} />
                     </View>
                     <Spacer height={4} />
                     <View style={styles.twoColumnWrapper}>
@@ -103,8 +168,7 @@ const AddBranchUpdateView: React.FC<{}> = ({ }) => {
                                 onChangeText={handleContactNumberInputTextChange}
                                 containerStyle={styles.inputContainer}
                                 inputStyle={styles.input}
-                                selectionColor={COLOR_BLACK}
-                            />
+                                selectionColor={COLOR_BLACK} />
                         </View>
                         <View style={styles.textContainer}>
                             <Label text="Pincode" style={styles.label} />
@@ -112,8 +176,7 @@ const AddBranchUpdateView: React.FC<{}> = ({ }) => {
                                 onChangeText={handlePincodeInputTextChange}
                                 containerStyle={styles.inputContainer}
                                 inputStyle={styles.input}
-                                selectionColor={COLOR_BLACK}
-                            />
+                                selectionColor={COLOR_BLACK} />
                         </View>
                     </View>
                     <Spacer height={4} />
@@ -123,16 +186,14 @@ const AddBranchUpdateView: React.FC<{}> = ({ }) => {
                             <EpackDropdown
                                 data={stateData}
                                 placeholder={'please select or enter'}
-                                hanldeData={handleState}
-                            />
+                                hanldeData={handleState} />
                         </View>
                         <View style={styles.textContainer}>
                             <Label text="City" style={styles.label} />
                             <EpackDropdown
                                 data={stateData}
                                 placeholder={'please select or enter'}
-                                hanldeData={handleCity}
-                            />
+                                hanldeData={handleCity} />
                         </View>
                     </View>
                 </View>
@@ -143,8 +204,7 @@ const AddBranchUpdateView: React.FC<{}> = ({ }) => {
                         <EpackDropdown
                             data={stateData}
                             placeholder={'please select or enter'}
-                            hanldeData={handleLocality}
-                        />
+                            hanldeData={handleLocality} />
                     </View>
                 </View>
                 <Spacer height={4} />
@@ -158,8 +218,7 @@ const AddBranchUpdateView: React.FC<{}> = ({ }) => {
                             placeholderTextColor="grey"
                             numberOfLines={10}
                             multiline={true}
-                            onChangeText={text => handleAddressTextChange(text)}
-                        />
+                            onChangeText={text => handleAddressTextChange(text)} />
                     </View>
                 </View>
                 <Spacer height={4} />
@@ -169,8 +228,7 @@ const AddBranchUpdateView: React.FC<{}> = ({ }) => {
                         onChangeText={handleLandmarkInputTextChange}
                         containerStyle={styles.inputContainer}
                         inputStyle={styles.input}
-                        selectionColor={COLOR_BLACK}
-                    />
+                        selectionColor={COLOR_BLACK} />
                 </View>
                 <Spacer height={4} />
                 <View style={styles.elementContainer}>
@@ -179,20 +237,20 @@ const AddBranchUpdateView: React.FC<{}> = ({ }) => {
                         onChangeText={handleEmailInputTextChange}
                         containerStyle={styles.inputContainer}
                         inputStyle={styles.input}
-                        selectionColor={COLOR_BLACK}
-                    />
+                        selectionColor={COLOR_BLACK} />
                 </View>
                 <Spacer height={12} />
                 <Button
                     text="SAVE"
-                    onPress={()=>{}}
+                    onPress={handleSave}
                     disabled={false}
                     style={styles.previewButtonStyle}
-                    textStyle={styles.textStyle}
-                />
+                    textStyle={styles.textStyle} />
                 <Spacer height={12} />
             </View>
         </AvoidSoftInputViewHOC>
+        <Spinner show={addBranchRequesting} />
+        </>
     );
 };
 

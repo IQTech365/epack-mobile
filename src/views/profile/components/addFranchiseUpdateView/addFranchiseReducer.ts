@@ -2,8 +2,7 @@ import { Reducer } from 'react';
 
 //** ALL ACTIONS */
 export enum ADD_FRANCHISE_FORM_ACTION {
-    COMPANY_ID = 'COMPANY_ID',
-    BRANCH_NAME = 'BRANCH_NAME',
+    FRANCHISE_NAME = 'FRANCHISE_NAME',
     FRANCHISE_OWNER = 'FRANCHISE_OWNER',
     REGISTERED_MOBILE = 'REGISTERED_MOBILE',
     PINCODE = 'PINCODE',
@@ -18,8 +17,7 @@ export enum ADD_FRANCHISE_FORM_ACTION {
 
 /** ADD FRANCHISE FORM STATE */
 export interface IAddFranchiseFormState {
-    companyId: string;
-    branchName: string;
+    franchiseName: string;
     franchiseOwner: string;
     registeredMobile: string;
     pincode: string;
@@ -40,8 +38,7 @@ export interface IAddFranchiseAction {
 
 /** INITIAL STATE */
 export const initialState: IAddFranchiseFormState = {
-    companyId: '',
-    branchName: '',
+    franchiseName: '',
     franchiseOwner: '',
     registeredMobile: '',
     pincode: '',
@@ -61,10 +58,8 @@ export const addFranchiseReducer: Reducer<
 > = (state: IAddFranchiseFormState, action: IAddFranchiseAction) => {
     const { type, payload } = action;
     switch (type) {
-        case ADD_FRANCHISE_FORM_ACTION.COMPANY_ID:
-            return { ...state, companyId: payload as string };
-        case ADD_FRANCHISE_FORM_ACTION.BRANCH_NAME:
-            return { ...state, branchName: payload as string };
+        case ADD_FRANCHISE_FORM_ACTION.FRANCHISE_NAME:
+            return { ...state, franchiseName: payload as string };
         case ADD_FRANCHISE_FORM_ACTION.FRANCHISE_OWNER:
             return { ...state, franchiseOwner: payload as string };
         case ADD_FRANCHISE_FORM_ACTION.REGISTERED_MOBILE:

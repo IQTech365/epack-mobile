@@ -2,7 +2,6 @@ import {Reducer} from 'react';
 
 //** ALL ACTIONS */
 export enum ADD_BRANCH_FORM_ACTION {
-  COMPANY_ID = 'COMPANY_ID',
   BRANCH_NAME = 'BRANCH_NAME',
   REGISTERED_MOBILE = 'REGISTERED_MOBILE',
   PINCODE = 'PINCODE',
@@ -17,7 +16,6 @@ export enum ADD_BRANCH_FORM_ACTION {
 
 /** ADD BRANCH FORM STATE */
 export interface IAddBranchFormState {
-  companyId: string;
   branchName: string;
   registeredMobile: string;
   pincode: string;
@@ -38,7 +36,6 @@ export interface IAddBranchAction {
 
 /** INITIAL STATE */
 export const initialState: IAddBranchFormState = {
-  companyId: '',
   branchName: '',
   registeredMobile: '',
   pincode: '',
@@ -58,8 +55,6 @@ export const addBranchReducer: Reducer<
 > = (state: IAddBranchFormState, action: IAddBranchAction) => {
   const {type, payload} = action;
   switch (type) {
-    case ADD_BRANCH_FORM_ACTION.COMPANY_ID:
-      return {...state, companyId: payload as string};
     case ADD_BRANCH_FORM_ACTION.BRANCH_NAME:
       return {...state, branchName: payload as string};
     case ADD_BRANCH_FORM_ACTION.REGISTERED_MOBILE:

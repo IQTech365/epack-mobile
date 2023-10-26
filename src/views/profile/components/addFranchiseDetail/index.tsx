@@ -1,21 +1,44 @@
-import React, {useEffect, useState} from 'react';
-import {View, FlatList, TouchableOpacity, Text} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {View, FlatList, TouchableOpacity, Text, RefreshControl} from 'react-native';
 import styles from './style';
 import ListViewIcon from '../../../../images/icons/list_view_icon.svg';
 import ListViewIcon2 from '../../../../images/icons/list_view_icon2.svg';
 import CreateIcon from '../../../../images/icons/create_icon.svg';
 import CreateIcon2 from '../../../../images/icons/create_icon2.svg';
-import { useAppDispatch } from '../../../../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
 import Spacer from '../../../../common/Spacer';
 import Header from '../../../../common/Header';
 import AddFranchiseUpdateView from '../addFranchiseUpdateView';
+import { getFranchiseRequest } from '../../../../redux/slices/MyProfile';
+import AddFranchiseListItem from '../addFranchiseList';
+import Spinner from '../../../../common/Spinner';
 // import Spinner from '../../../../../common/Spinner';
 
 const AddFranchiseView = () => {
   const [showFranchiseList, setshowFranchiseList] = useState<boolean>(false);
   const [showAddFranchise, setshowAddFranchise] = useState<boolean>(true);
+  const { addCompanyInfo, companies } = useAppSelector(state => state.Company);
+  const {Franchises, getFranchiseRequesting} = useAppSelector(
+    state => state.Myprofile,
+  );
   const dispatch = useAppDispatch();
 
+  const getCompanyId = () => {
+    let id;
+    const { data } = addCompanyInfo || {};
+    const { data: companiesData } = companies || {};
+    if (data && Object.keys(data).length > 0) {
+        id = data._id;
+    } else if (
+        companiesData &&
+        Array.isArray(companiesData) &&
+        companiesData.length > 0
+    ) {
+        const firstCompany = companiesData[0];
+        id = firstCompany._id;
+    }
+    return id;
+};
  
 
   const handleCreateNewContent = () => {
@@ -47,18 +70,36 @@ const AddFranchiseView = () => {
     if (showFranchiseList) {
       return (
         <FlatList
-          data={[]}
-          renderItem={({item, index}) => <Text>Hello</Text>}
+          data={Franchises.data}
+          refreshControl={
+            <RefreshControl
+              refreshing={getFranchiseRequesting}
+              onRefresh={handleOnRefresh}
+            />
+          }
+          renderItem={({item, index}) =>(
+            <View style={{padding: 10}}>
+              <AddFranchiseListItem
+                item={item}
+                index={index}
+                
+              />
+            </View>
+          )}
           ListEmptyComponent={showEmptyView()}
         />
       );
     }
     return null;
   };
+  const handleOnRefresh = useCallback(() => {
+    dispatch(getFranchiseRequest(getCompanyId()));
+  }, []);
 
   useEffect(() => {
-    // dispatch(getFooterContentsRequest(getCompanyId()))
+    dispatch(getFranchiseRequest(getCompanyId()))
   }, []);
+
 
   return (
     <View style={styles.container}>
@@ -83,7 +124,7 @@ const AddFranchiseView = () => {
       </View>
       {showForm()}
       {showList()}
-      {/* <Spinner show={getFooterContentsRequesting} /> */}
+      <Spinner show={getFranchiseRequesting} />
     </View>
   );
 };

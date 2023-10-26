@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import { View, Text, TextInput } from 'react-native';
+import Toast from 'react-native-toast-message';
 import AvoidSoftInputViewHOC from '../../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../../common/Spacer';
 import styles from './style';
@@ -18,6 +19,9 @@ import {
 import usePincodeHook, { PINCODE_REQUEST_KEY } from '../../../../hooks/usePincodeHook';
 import { getCities, getStates } from '../../../../utils/formatter';
 import Spinner from '../../../../common/Spinner';
+import { IAddFranchiseRequest } from '../../../../interface/myProfile/IAddFranchiseRequest';
+import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
+import { addFranchiseRequest, restAddFranchiseRequest } from '../../../../redux/slices/MyProfile';
 
 const AddFranchiseUpdateView: React.FC<{}> = ({ }) => {
     const [state, dispatch] = useReducer(addFranchiseReducer, initialState);
@@ -25,6 +29,32 @@ const AddFranchiseUpdateView: React.FC<{}> = ({ }) => {
     useState<PINCODE_REQUEST_KEY>(PINCODE_REQUEST_KEY.ADD_FRANCHISE_ADDRESS);
   const [States, setStates] = useState<TDropdownItem[]>([]);
   const [cities, setCities] = useState<TDropdownItem[]>([]);
+  const { addCompanyInfo, companies } = useAppSelector(state => state.Company);
+  const {
+    addFranchiseRequesting,
+    addFranchiseuccess,
+    addFranchiseFailure,
+    addFranchiseInfo,
+  } = useAppSelector(state => state.Myprofile);
+  const dispatch2 = useAppDispatch();
+
+  const getCompanyId = () => {
+    let id;
+    const { data } = addCompanyInfo || {};
+    const { data: companiesData } = companies || {};
+    if (data && Object.keys(data).length > 0) {
+        id = data._id;
+    } else if (
+        companiesData &&
+        Array.isArray(companiesData) &&
+        companiesData.length > 0
+    ) {
+        const firstCompany = companiesData[0];
+        id = firstCompany._id;
+    }
+    return id;
+};
+
 
   const CityDropdownRef = useRef(null);
   const StateDropwdownRef = useRef(null);
@@ -64,7 +94,7 @@ const AddFranchiseUpdateView: React.FC<{}> = ({ }) => {
     };
     const handleFranchiseNameInputTextChange = (text: string) => {
         dispatch({
-            type: ADD_FRANCHISE_FORM_ACTION.BRANCH_NAME,
+            type: ADD_FRANCHISE_FORM_ACTION.FRANCHISE_NAME,
             payload: text,
         });
     };
@@ -120,6 +150,26 @@ const AddFranchiseUpdateView: React.FC<{}> = ({ }) => {
         // setEntityType(item.value);
     };
 
+    const handleSubmit = useCallback(() => {
+        const payload: IAddFranchiseRequest = {
+            companyId: getCompanyId(),
+            franchiseName: state.franchiseName,
+            franchiseOwnerName: state.franchiseOwner,
+            registeredMobile: state.registeredMobile,
+            pincode: state.pincode,
+            state: state.state,
+            city: state.city,
+            locality: state.locality,
+            landmark: state.landmark,
+            email: state.email,
+            address: state.address,
+            createdBy: "Dhruv"
+        }
+        console.log(payload, 'add Franchise..');
+        dispatch2(addFranchiseRequest(payload));
+
+    }, [state])
+
     useEffect(() => {
         if (result && result.Status != 'Error') {
           if (
@@ -145,6 +195,24 @@ const AddFranchiseUpdateView: React.FC<{}> = ({ }) => {
           CityDropdownRef?.current?.setDefaultValue(cities[0]);
         }
       }, [States, cities]);
+
+      useEffect(() => {
+        if (!addFranchiseRequesting && addFranchiseuccess) {
+          Toast.show({
+            type: 'success',
+            text1: 'Add Franchise',
+            text2: 'Add Franchise has been added successfully',
+          });
+          dispatch2(restAddFranchiseRequest());
+        } else if (!addFranchiseRequesting && addFranchiseFailure) {
+          Toast.show({
+            type: 'error',
+            text1: 'Add Franchise',
+            text2: 'Error in adding Franchise. Please try again!',
+          });
+          dispatch2(restAddFranchiseRequest());
+        }
+      }, [addFranchiseRequesting, addFranchiseuccess, addFranchiseFailure]);
     return (
         <AvoidSoftInputViewHOC>
             <View style={styles.container}>
@@ -252,13 +320,13 @@ const AddFranchiseUpdateView: React.FC<{}> = ({ }) => {
                 <Spacer height={12} />
                 <Button
                     text="SAVE"
-                    onPress={()=>{}}
+                    onPress={handleSubmit}
                     disabled={false}
                     style={styles.previewButtonStyle}
                     textStyle={styles.textStyle}
                 />
                 <Spacer height={12} />
-                <Spinner show={fetching} />
+                <Spinner show={addFranchiseRequesting} />
             </View>
         </AvoidSoftInputViewHOC>
     );
