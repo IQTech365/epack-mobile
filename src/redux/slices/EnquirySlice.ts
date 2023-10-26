@@ -10,7 +10,8 @@ import { IAddSurveyResponse } from '../../interface/enquiry/IAddSurveyResponse';
 import { IAddSurveyRequest } from '../../interface/enquiry/IAddSurveyRequest';
 import { IGetSurveyListResponse } from '../../interface/enquiry/IGetSurveyListResponse';
 import { IUpdateEnquiryStatusResponse } from '../../interface/enquiry/IUpdateEnquiryStatusResponse';
-import { TUpdateEnquiryStatusRequest } from '../../interface/enquiry/IUpdateEnquiryStatusRequest';
+import { IUpdateEnquiryStatus } from '../../interface/enquiry/IUpdateEnquiryStatusRequest';
+import { IUpdateEnquiryRequest } from '../../interface/enquiry/IupdateEnquiryRequest';
 
 interface IEnquiryState {
   // Get Enquiries
@@ -304,7 +305,7 @@ export const EnquirySlice = createSlice({
     // Update Enquiry Status
     updateEnquiryStatusRequest: (
       state,
-      action: PayloadAction<TUpdateEnquiryStatusRequest>,
+      action: PayloadAction<{id:IUpdateEnquiryStatus, requestBody:IUpdateEnquiryRequest}>,
     ) => {
       state.updateEnquiryStatusRequesting = true;
     },
