@@ -249,8 +249,8 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({moduleName, item}) => 
           style={styles.previewButtonStyle}
           textStyle={styles.textStyle}
         />
+        <Spinner show={updateEnquiryStatusRequesting} />
       </View>
-      <Spinner show={updateEnquiryStatusRequesting} />
     </AvoidSoftInputViewHOC>
   );
 };

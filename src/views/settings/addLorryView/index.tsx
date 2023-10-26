@@ -117,7 +117,7 @@ const AddLorryView: React.FC<{}> = ({ }) => {
                     const imageObj = assets[0];
                     setImageFile(imageObj);
                     setCompanyLogo(imageObj.uri as string);
-                    setCompanyLogo2(imageObj.uri as string);
+                    // setCompanyLogo2(imageObj.uri as string);
                 }
             }
             console.log('Camera-result----', JSON.stringify(result));
@@ -136,7 +136,7 @@ const AddLorryView: React.FC<{}> = ({ }) => {
                     const imageObj = assets[0];
                     setImageFile(imageObj);
                     setCompanyLogo(imageObj.uri as string);
-                    setCompanyLogo2(imageObj.uri as string);
+                    // setCompanyLogo2(imageObj.uri as string);
                 }
             }
         } catch (error) {

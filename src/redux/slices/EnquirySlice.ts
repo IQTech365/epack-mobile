@@ -12,6 +12,8 @@ import { IGetSurveyListResponse } from '../../interface/enquiry/IGetSurveyListRe
 import { IUpdateEnquiryStatusResponse } from '../../interface/enquiry/IUpdateEnquiryStatusResponse';
 import { IUpdateEnquiryStatus } from '../../interface/enquiry/IUpdateEnquiryStatusRequest';
 import { IUpdateEnquiryRequest } from '../../interface/enquiry/IupdateEnquiryRequest';
+import { IUpdateAddressResponse } from '../../interface/order/IUpdateAddressResponse';
+import { IDropAddress, IPickupAddress } from '../../interface/order/IUpdateAddressRequest';
 
 interface IEnquiryState {
   // Get Enquiries
@@ -68,6 +70,12 @@ interface IEnquiryState {
   updateEnquiryStatusSuccess: boolean,
   updateEnquiryStatusFailure: boolean,
   updateEnquiryStatusError: any,
+  // Update Address - states to update enquiry, order pickup and drop address
+  updateAddressInfo: IUpdateAddressResponse | null;
+  updateAddressRequesting: boolean;
+  updateAddressSuccess: boolean;
+  updateAddressFailure: boolean;
+  updateAddressError: any;
 }
 
 const initialState: IEnquiryState = {
@@ -125,6 +133,12 @@ const initialState: IEnquiryState = {
   updateEnquiryStatusSuccess: false,
   updateEnquiryStatusFailure: false,
   updateEnquiryStatusError: null,
+  // Update Address - states to update enquiries & order's pickup and drop address
+  updateAddressInfo: null,
+  updateAddressRequesting: false,
+  updateAddressSuccess: false,
+  updateAddressFailure: false,
+  updateAddressError: null,
 };
 
 export const EnquirySlice = createSlice({
@@ -329,6 +343,34 @@ export const EnquirySlice = createSlice({
       state.updateEnquiryStatusFailure = false;
       state.updateEnquiryStatusError = null;
       state.updateEnquiryStatusInfo = null;
+    },
+    // Update Address
+    updateAddressRequest: (
+      state,
+      action: PayloadAction<{id:string, requestBody: IPickupAddress | IDropAddress}>,
+    ) => {
+      state.updateAddressRequesting = true;
+    },
+    updateAddressSuccess: (
+      state,
+      action: PayloadAction<IUpdateAddressResponse>,
+    ) => {
+      state.updateAddressRequesting = false;
+      state.updateAddressSuccess = true;
+      state.updateAddressInfo = action.payload;
+    },
+    updateAddressFailure: (state, action: PayloadAction<any>) => {
+      state.updateAddressRequesting = false;
+      state.updateAddressSuccess = false;
+      state.updateAddressFailure = true;
+      state.updateAddressError = action.payload;
+    },
+    resetUpdateAddressRequest: (state) => {
+      state.updateAddressRequesting = false;
+      state.updateAddressSuccess = false;
+      state.updateAddressFailure = false;
+      state.updateAddressError = null;
+      state.updateAddressInfo = null;
     }
   },
 });
@@ -376,4 +418,9 @@ export const {
   updateEnquiryStatusSuccess,
   updateEnquiryStatusFailure,
   resetUpdateEnquiryStatusRequest,
+  // Update Address
+  updateAddressRequest,
+  updateAddressSuccess,
+  updateAddressFailure,
+  resetUpdateAddressRequest,
 } = EnquirySlice.actions;
