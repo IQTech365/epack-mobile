@@ -20,6 +20,8 @@ import { IGetContactDetailsResponse } from '../interface/setting/packerProfile/c
 import { IAddDocumentRequest } from '../interface/setting/packerProfile/document/IAddDocumentRequest';
 import { IAddDocumentResponse } from '../interface/setting/packerProfile/document/IAddDocumentResponse';
 import { IGetDocumentsResponse } from '../interface/setting/packerProfile/document/IGetDocumentsResponse';
+import { IAddUserRoleRequest, IAddUserRoleResponse } from '../interface/setting/role/IUserRole';
+import { addUserRoleFailure, addUserRoleRequest, addUserRoleSuccess } from '../redux/slices/UserRoleManagementSlice';
 
 export function* addFooterContentSaga(action: PayloadAction<IAddFooterContentRequest>) {
     console.log('addFooterContentSaga--action--', JSON.stringify(action));
@@ -131,6 +133,17 @@ export function* getCompanyDocumentsSaga(action: PayloadAction<string>) {
     }
 }
 
+export function* addUserRoleSaga(action: PayloadAction<IAddUserRoleRequest>) {
+    try {
+        const response: IAddUserRoleResponse = yield call(SettingService.AddUserRoleService, action.payload);
+        console.log('addUserRoleSaga-response----', JSON.stringify(response));
+        yield put(addUserRoleSuccess(response));
+    } catch (error) {
+        console.log('addUserRoleSaga-error----', error);
+        yield put(addUserRoleFailure(JSON.stringify(error)));
+    }
+}
+
 export function* watcherSettingSaga() {
     yield takeLatest(addFooterContentRequest.type, addFooterContentSaga);
     yield takeLatest(getFooterContentsRequest.type, getFooterContentsSaga);
@@ -140,4 +153,5 @@ export function* watcherSettingSaga() {
     yield takeLatest(getContactsRequest.type, getContactDetailsSaga);
     yield takeLatest(addDocumentRequest.type, addCompanyDocumentSaga);
     yield takeLatest(getDocumentsRequest.type, getCompanyDocumentsSaga);
+    yield takeLatest(addUserRoleRequest.type, addUserRoleSaga);
 }

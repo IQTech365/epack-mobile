@@ -70,3 +70,6 @@ export const GET_BRANCHS = (company_id) => `/branch/all/${company_id}`;
 
 export const ADD_FRANCHISE = `/franchise/addFranchise`;
 export const GET_FRANCHISE = (company_id) => `/franchise/all/${company_id}`;
+
+// User Role
+export const ADD_USER_ROLE = `/role/add`;

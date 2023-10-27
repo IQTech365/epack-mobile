@@ -1,9 +1,8 @@
-import React, {useCallback, useReducer, useState} from 'react';
-import {View, Text} from 'react-native';
+import React, {useCallback, useState} from 'react';
+import {View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../common/Spacer';
 import styles from './style';
-import shiftingTypeOptions from '../../../data/shiftingType.json';
 import {TDropdownItem} from '../../../type/TDropdownItem';
 import Label from '../../../common/Label';
 import DropdownComponent from '../../../common/DropdownComponent';
@@ -12,257 +11,137 @@ import Input from '../../../common/Input';
 import {COLOR_BLACK, COLOR_BLUE} from '../../../utils/colors';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import CollapsibleView from '../../../common/CollapsibleView';
-import shiftingTypes from '../../../data/shiftingType.json';
-import billingByOptions from '../../../data/billingByOptions.json';
 import Button from '../../../common/Button';
-import liftStatusOptions from '../../../data/liftStatusOptions.json';
-import floorOptions from '../../../data/floorOptions.json';
-import approvalAuthorityOptions from '../../../data/ApprovalAuthorityOptions.json';
-import {
-  ENQUIRY_FORM_ACTION,
-  TBillingBy,
-  enquiryReducer,
-  initialState,
-} from './enquiryReducer';
-import {useAppDispatch} from '../../../redux/hooks';
-import {addEnquiryRequest} from '../../../redux/slices/EnquirySlice';
-import {IAddEnquiryRequest} from '../../../interface/enquiry/IAddEnquiryRequest';
+import {useAppDispatch, useAppSelector} from '../../../redux/hooks';
 import entityOptions from '../../../data/entityOptions.json';
 import branchOptions from '../../../data/branchOptions.json';
 import franchiseOptions from '../../../data/franchiseOptions.json';
 import roleOptions from '../../../data/roleOptions.json';
 import actionOptions from '../../../data/actionOptions.json';
+import {IAddUserRoleRequest} from '../../../interface/setting/role/IUserRole';
+import { addUserRoleRequest } from '../../../redux/slices/UserRoleManagementSlice';
 
 const RoleManagementView: React.FC<{}> = ({}) => {
-  const [state, dispatch] = useReducer(enquiryReducer, initialState);
-  const [entityType, setEntityType] = useState<string>('1');
-  const dispatched = useAppDispatch();
+  const [entityType, setEntityType] = useState<string>('0');
+  const [subEntityType, setSubEntityType] = useState<string>('0');
+  const [employeeName, setEmployeeName] = useState<string>('');
+  const [mobile, setMobile] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [roleType, setRoleType] = useState<string>('');
+  const [permissions, setPermissions] = useState<string[]>([]);
+  const { addCompanyInfo, companies } = useAppSelector(state => state.Company);
+  const { otpData } = useAppSelector(state => state.OTP);
+  // Errors
+  const [usernameError, setUsernameError] = useState<string>('');
+  const [passwordError, setPasswordError] = useState<string>('');
 
-  const handleEntityType = (item: TDropdownItem) => {
-    setEntityType(item.value);
+  const dispatch = useAppDispatch();
+
+  const getCompanyId = () => {
+    let id;
+    const { data } = addCompanyInfo || {};
+    const { data: companiesData } = companies || {};
+    if (data && Object.keys(data).length > 0) {
+      id = data._id;
+    } else if (
+      companiesData &&
+      Array.isArray(companiesData) &&
+      companiesData.length > 0
+    ) {
+      const firstCompany = companiesData[0];
+      id = firstCompany._id;
+    }
+    return id;
   };
 
-  const handleSubEntity = (item: TDropdownItem) => {
-    const {billingBy} = state;
-    const tempObj = {
-      ...billingBy,
-      billing_by: item.label,
-      billing_info: null,
+  const handleEntityType = useCallback(
+    (item: TDropdownItem) => {
+      setEntityType(item.label);
+    },
+    [entityType],
+  );
+
+  const handleSubEntity = useCallback(
+    (item: TDropdownItem) => {
+      setSubEntityType(item.value);
+    },
+    [subEntityType],
+  );
+
+  const handleEmployeeNameInputTextChange = useCallback(
+    (text: string) => {
+      setEmployeeName(text);
+    },
+    [employeeName],
+  );
+
+  const handleMobileNumInputTextChange = useCallback(
+    (text: string) => {
+      setMobile(text);
+    },
+    [mobile],
+  );
+
+  const handleEmailInputTextChange = useCallback(
+    (text: string) => {
+      setEmail(text);
+    },
+    [email],
+  );
+
+  const handleUsernameInputTextChange = useCallback(
+    (text: string) => {
+      setUsername(text);
+    },
+    [username],
+  );
+
+  const handlePasswordInputTextChange = useCallback(
+    (text: string) => {
+      setPassword(text);
+    },
+    [password],
+  );
+
+  const handleRoleType = useCallback(
+    (text: string) => {
+      setRoleType(text);
+    },
+    [roleType],
+  );
+
+  const handlePermissions = useCallback(
+    (isChecked: boolean, value: string) => {
+      let temp = [...permissions];
+      const itemIndex = temp.findIndex(itm => itm == value);
+      if (itemIndex == -1 && isChecked) {
+        temp.push(value);
+      } else if (itemIndex != -1 && !isChecked) {
+        temp = temp.filter(itm => itm != value);
+      }
+      setPermissions(temp);
+    },
+    [permissions],
+  );
+
+  const handleSubmit = () => {
+    const payload: IAddUserRoleRequest = {
+      companyId: getCompanyId(),
+      roleTypeId: roleType,
+      entityType: entityType,
+      entityId: subEntityType,
+      name: employeeName,
+      email: email,
+      mobile: mobile,
+      username: username,
+      password: password,
+      permissions: [],
+      createdBy: otpData?.data.id as string,
     };
-    dispatch({
-      type: ENQUIRY_FORM_ACTION.BILLING_BY,
-      payload: tempObj as TBillingBy,
-    });
+    dispatch(addUserRoleRequest(payload));
   };
-
-  const handlePartyNameInputTextChange = (text: string) => {
-    dispatch({
-      type: ENQUIRY_FORM_ACTION.PARTY_NAME,
-      payload: text,
-    });
-  };
-
-  const handleMobileNumInputTextChange = useCallback((text: string) => {
-    dispatch({
-      type: ENQUIRY_FORM_ACTION.MOBILE_NUMBER,
-      payload: text,
-    });
-  }, []);
-
-  const handleShiftingLugInputTextChange = useCallback(() => {
-    // setshiftLugData({...shiftLugData});
-    // dispatch({
-    //   type: ENQUIRY_FORM_ACTION.SHIFTING_LUGGAGE,
-    //   payload: shiftLugData,
-    // });
-  }, [state.shiftingLuggage]);
-
-  const handlePickupPinCode = useCallback(
-    (text: string) => {
-      const {pickupAddress} = state;
-      const tempObj = {
-        ...pickupAddress,
-        pincode: text,
-      };
-
-      // dispatch({
-      //   type: ENQUIRY_FORM_ACTION.PICKUP_ADDRESS,
-      //   payload: tempObj,
-      // });
-    },
-    [state],
-  );
-
-  const handlePickupCity = useCallback(
-    (item: TDropdownItem) => {
-      const {pickupAddress} = state;
-      const tempObj = {
-        ...pickupAddress,
-        city: item.label,
-      };
-      // dispatch({
-      //   type: ENQUIRY_FORM_ACTION.PICKUP_ADDRESS,
-      //   payload: tempObj,
-      // });
-    },
-    [state],
-  );
-
-  const handlePickupState = useCallback(
-    (item: TDropdownItem) => {
-      const {pickupAddress} = state;
-      const tempObj = {
-        ...pickupAddress,
-        state: item.label,
-      };
-      // dispatch({
-      //   type: ENQUIRY_FORM_ACTION.PICKUP_ADDRESS,
-      //   payload: tempObj,
-      // });
-    },
-    [state],
-  );
-
-  const handlePickupAddress = useCallback(
-    (text: string) => {
-      const {pickupAddress} = state;
-      const tempObj = {
-        ...pickupAddress,
-        address: text,
-      };
-      // dispatch({
-      //   type: ENQUIRY_FORM_ACTION.PICKUP_ADDRESS,
-      //   payload: tempObj,
-      // });
-    },
-    [state],
-  );
-
-  const handlePickupCurrentFloor = useCallback(
-    (item: TDropdownItem) => {
-      const {pickupAddress} = state;
-      const tempObj = {
-        ...pickupAddress,
-        floor: item.label,
-      };
-      // dispatch({
-      //   type: ENQUIRY_FORM_ACTION.PICKUP_ADDRESS,
-      //   payload: tempObj,
-      // });
-    },
-    [state],
-  );
-
-  const handlePickupCurrentLiftStatus = useCallback(
-    (item: TDropdownItem) => {
-      const {pickupAddress} = state;
-      const tempObj = {
-        ...pickupAddress,
-        isLiftAvailable: item.label,
-      };
-      // dispatch({
-      //   type: ENQUIRY_FORM_ACTION.PICKUP_ADDRESS,
-      //   payload: tempObj,
-      // });
-    },
-    [state],
-  );
-
-  const handleDeliveryPinCode = useCallback(
-    (text: string) => {
-      const {dropAddress} = state;
-      const tempObj = {
-        ...dropAddress,
-        pincode: text,
-      };
-      // dispatch({
-      //   type: ENQUIRY_FORM_ACTION.DROP_ADDRESS,
-      //   payload: tempObj,
-      // });
-    },
-    [state],
-  );
-
-  const handleDeliveryCity = useCallback(
-    (item: TDropdownItem) => {
-      const {dropAddress} = state;
-      const tempObj = {
-        ...dropAddress,
-        city: item.label,
-      };
-      // dispatch({
-      //   type: ENQUIRY_FORM_ACTION.DROP_ADDRESS,
-      //   payload: tempObj,
-      // });
-    },
-    [state],
-  );
-
-  const handleDeliveryState = useCallback(
-    (item: TDropdownItem) => {
-      const {dropAddress} = state;
-      const tempObj = {
-        ...dropAddress,
-        state: item.label,
-      };
-      // dispatch({
-      //   type: ENQUIRY_FORM_ACTION.DROP_ADDRESS,
-      //   payload: tempObj,
-      // });
-    },
-    [state],
-  );
-
-  const handleDeliveryAddress = useCallback(
-    (text: String) => {
-      const {dropAddress} = state;
-      const tempObj = {
-        ...dropAddress,
-        address: text,
-      };
-      // dispatch({
-      //   type: ENQUIRY_FORM_ACTION.DROP_ADDRESS,
-      //   payload: tempObj as string,
-      // });
-    },
-    [state],
-  );
-
-  const handleDeliveryCurrentFloor = useCallback(
-    (item: TDropdownItem) => {
-      const {dropAddress} = state;
-      const tempObj = {
-        ...dropAddress,
-        floor: item.label,
-      };
-      // dispatch({
-      //   type: ENQUIRY_FORM_ACTION.DROP_ADDRESS,
-      //   payload: tempObj,
-      // });
-    },
-    [state],
-  );
-
-  const handleDeliveryCCurrentLiftStatus = useCallback(
-    (item: TDropdownItem) => {
-      const {dropAddress} = state;
-      const tempObj = {
-        ...dropAddress,
-        isLiftAvailable: item.label,
-      };
-      // dispatch({
-      //   type: ENQUIRY_FORM_ACTION.DELIVERY_CURRENT_LIFT_STATUS,
-      //   payload: tempObj,
-      // });
-    },
-    [state],
-  );
-
-  const handleSubmit = useCallback(() => {
-    // const payload: IAddEnquiryRequest = state;
-    // console.log(payload, 'payload..');
-    // dispatched(addEnquiryRequest(payload));
-  }, [state]);
 
   const getSubEntityDropdownOptionsLabel = () => {
     let label = '';
@@ -317,7 +196,7 @@ const RoleManagementView: React.FC<{}> = ({}) => {
             <View style={styles.elementContainer}>
               <Label text="Employee Name" style={styles.label} />
               <Input
-                onChangeText={handlePartyNameInputTextChange}
+                onChangeText={handleEmployeeNameInputTextChange}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -337,7 +216,7 @@ const RoleManagementView: React.FC<{}> = ({}) => {
             <View style={styles.elementContainer}>
               <Label text="Email" style={styles.label} />
               <Input
-                onChangeText={handlePartyNameInputTextChange}
+                onChangeText={handleEmailInputTextChange}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -347,7 +226,7 @@ const RoleManagementView: React.FC<{}> = ({}) => {
             <View style={styles.elementContainer}>
               <Label text="Create Username" style={styles.label} />
               <Input
-                onChangeText={handleMobileNumInputTextChange}
+                onChangeText={handleUsernameInputTextChange}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -357,7 +236,7 @@ const RoleManagementView: React.FC<{}> = ({}) => {
             <View style={styles.elementContainer}>
               <Label text="Create Password" style={styles.label} />
               <Input
-                onChangeText={handlePartyNameInputTextChange}
+                onChangeText={handlePasswordInputTextChange}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -392,8 +271,7 @@ const RoleManagementView: React.FC<{}> = ({}) => {
                     style={{marginRight: 15, marginBottom: 10}}
                     textContainerStyle={{paddingLeft: 0}}
                     onPress={(isChecked: boolean) => {
-                      // shiftLugData.household = isChecked;
-                      handleShiftingLugInputTextChange();
+                      handleRoleType(role.role);
                     }}
                   />
                 );
@@ -436,8 +314,7 @@ const RoleManagementView: React.FC<{}> = ({}) => {
                     style={{marginRight: 15, marginBottom: 10}}
                     textContainerStyle={{paddingLeft: 0}}
                     onPress={(isChecked: boolean) => {
-                      // shiftLugData.household = isChecked;
-                      handleShiftingLugInputTextChange();
+                      handlePermissions(isChecked, item.action);
                     }}
                   />
                 );
@@ -472,8 +349,7 @@ const RoleManagementView: React.FC<{}> = ({}) => {
                     style={{marginRight: 15, marginBottom: 10}}
                     textContainerStyle={{paddingLeft: 0}}
                     onPress={(isChecked: boolean) => {
-                      // shiftLugData.household = isChecked;
-                      handleShiftingLugInputTextChange();
+                      handlePermissions(isChecked, item.action);
                     }}
                   />
                 );
@@ -509,8 +385,7 @@ const RoleManagementView: React.FC<{}> = ({}) => {
                       style={{marginRight: 15, marginBottom: 10}}
                       textContainerStyle={{paddingLeft: 0}}
                       onPress={(isChecked: boolean) => {
-                        // shiftLugData.household = isChecked;
-                        handleShiftingLugInputTextChange();
+                        handlePermissions(isChecked, item.action);
                       }}
                     />
                   );
@@ -544,8 +419,7 @@ const RoleManagementView: React.FC<{}> = ({}) => {
                     style={{marginRight: 15, marginBottom: 10}}
                     textContainerStyle={{paddingLeft: 0}}
                     onPress={(isChecked: boolean) => {
-                      // shiftLugData.household = isChecked;
-                      handleShiftingLugInputTextChange();
+                      handlePermissions(isChecked, item.action);
                     }}
                   />
                 );
@@ -560,72 +434,74 @@ const RoleManagementView: React.FC<{}> = ({}) => {
               <Label text="Order" style={styles.label} />
             </View>
             <View style={styles.elementContainer2}>
-              {actionOptions.slice(0, actionOptions.length - 1).map((item, index) => {
-                return (
-                  <BouncyCheckbox
-                    text={item.action}
-                    fillColor={COLOR_BLUE}
-                    iconStyle={{
-                      borderColor: 'red',
-                      borderRadius: 0,
-                      width: 16,
-                      height: 16,
-                    }}
-                    innerIconStyle={{
-                      borderWidth: 1,
-                      borderRadius: 0,
-                      width: 16,
-                      height: 16,
-                    }}
-                    textStyle={{
-                      fontFamily: 'JosefinSans-Regular',
-                      textDecorationLine: 'none',
-                    }}
-                    style={{marginRight: 15, marginBottom: 10}}
-                    textContainerStyle={{paddingLeft: 0}}
-                    onPress={(isChecked: boolean) => {
-                      // shiftLugData.household = isChecked;
-                      handleShiftingLugInputTextChange();
-                    }}
-                  />
-                );
-              })}
+              {actionOptions
+                .slice(0, actionOptions.length - 1)
+                .map((item, index) => {
+                  return (
+                    <BouncyCheckbox
+                      text={item.action}
+                      fillColor={COLOR_BLUE}
+                      iconStyle={{
+                        borderColor: 'red',
+                        borderRadius: 0,
+                        width: 16,
+                        height: 16,
+                      }}
+                      innerIconStyle={{
+                        borderWidth: 1,
+                        borderRadius: 0,
+                        width: 16,
+                        height: 16,
+                      }}
+                      textStyle={{
+                        fontFamily: 'JosefinSans-Regular',
+                        textDecorationLine: 'none',
+                      }}
+                      style={{marginRight: 15, marginBottom: 10}}
+                      textContainerStyle={{paddingLeft: 0}}
+                      onPress={(isChecked: boolean) => {
+                        handlePermissions(isChecked, item.action);
+                      }}
+                    />
+                  );
+                })}
             </View>
             <Spacer height={4} />
             <View style={styles.labelContainer}>
               <Label text="Money Receipt" style={styles.label} />
             </View>
             <View style={styles.elementContainer2}>
-              {actionOptions.slice(0, actionOptions.length - 1).map((item, index) => {
-                return (
-                  <BouncyCheckbox
-                    text={item.action}
-                    fillColor={COLOR_BLUE}
-                    iconStyle={{
-                      borderColor: 'red',
-                      borderRadius: 0,
-                      width: 16,
-                      height: 16,
-                    }}
-                    innerIconStyle={{
-                      borderWidth: 1,
-                      borderRadius: 0,
-                      width: 16,
-                      height: 16,
-                    }}
-                    textStyle={{
-                      fontFamily: 'JosefinSans-Regular',
-                      textDecorationLine: 'none',
-                    }}
-                    style={{marginRight: 15, marginBottom: 10}}
-                    textContainerStyle={{paddingLeft: 0}}
-                    onPress={(isChecked: boolean) => {
-                      // shiftLugData.household = isChecked;
-                      handleShiftingLugInputTextChange();
-                    }}
-                  />
-                );
-              })}
+              {actionOptions
+                .slice(0, actionOptions.length - 1)
+                .map((item, index) => {
+                  return (
+                    <BouncyCheckbox
+                      text={item.action}
+                      fillColor={COLOR_BLUE}
+                      iconStyle={{
+                        borderColor: 'red',
+                        borderRadius: 0,
+                        width: 16,
+                        height: 16,
+                      }}
+                      innerIconStyle={{
+                        borderWidth: 1,
+                        borderRadius: 0,
+                        width: 16,
+                        height: 16,
+                      }}
+                      textStyle={{
+                        fontFamily: 'JosefinSans-Regular',
+                        textDecorationLine: 'none',
+                      }}
+                      style={{marginRight: 15, marginBottom: 10}}
+                      textContainerStyle={{paddingLeft: 0}}
+                      onPress={(isChecked: boolean) => {
+                        handlePermissions(isChecked, item.action);
+                      }}
+                    />
+                  );
+                })}
             </View>
             <View style={styles.labelContainer}>
               <Label text="Car Condition" style={styles.label} />
@@ -657,8 +533,7 @@ const RoleManagementView: React.FC<{}> = ({}) => {
                       style={{marginRight: 15, marginBottom: 10}}
                       textContainerStyle={{paddingLeft: 0}}
                       onPress={(isChecked: boolean) => {
-                        // shiftLugData.household = isChecked;
-                        handleShiftingLugInputTextChange();
+                        handlePermissions(isChecked, item.action);
                       }}
                     />
                   );
@@ -668,181 +543,186 @@ const RoleManagementView: React.FC<{}> = ({}) => {
               <Label text="Bilty" style={styles.label} />
             </View>
             <View style={styles.elementContainer2}>
-              {actionOptions.slice(0, actionOptions.length - 1).map((item, index) => {
-                return (
-                  <BouncyCheckbox
-                    text={item.action}
-                    fillColor={COLOR_BLUE}
-                    iconStyle={{
-                      borderColor: 'red',
-                      borderRadius: 0,
-                      width: 16,
-                      height: 16,
-                    }}
-                    innerIconStyle={{
-                      borderWidth: 1,
-                      borderRadius: 0,
-                      width: 16,
-                      height: 16,
-                    }}
-                    textStyle={{
-                      fontFamily: 'JosefinSans-Regular',
-                      textDecorationLine: 'none',
-                    }}
-                    style={{marginRight: 15, marginBottom: 10}}
-                    textContainerStyle={{paddingLeft: 0}}
-                    onPress={(isChecked: boolean) => {
-                      // shiftLugData.household = isChecked;
-                      handleShiftingLugInputTextChange();
-                    }}
-                  />
-                );
-              })}
+              {actionOptions
+                .slice(0, actionOptions.length - 1)
+                .map((item, index) => {
+                  return (
+                    <BouncyCheckbox
+                      text={item.action}
+                      fillColor={COLOR_BLUE}
+                      iconStyle={{
+                        borderColor: 'red',
+                        borderRadius: 0,
+                        width: 16,
+                        height: 16,
+                      }}
+                      innerIconStyle={{
+                        borderWidth: 1,
+                        borderRadius: 0,
+                        width: 16,
+                        height: 16,
+                      }}
+                      textStyle={{
+                        fontFamily: 'JosefinSans-Regular',
+                        textDecorationLine: 'none',
+                      }}
+                      style={{marginRight: 15, marginBottom: 10}}
+                      textContainerStyle={{paddingLeft: 0}}
+                      onPress={(isChecked: boolean) => {
+                        handlePermissions(isChecked, item.action);
+                      }}
+                    />
+                  );
+                })}
             </View>
             <View style={styles.labelContainer}>
               <Label text="Invoice" style={styles.label} />
             </View>
             <View style={styles.elementContainer2}>
-              {actionOptions.slice(0, actionOptions.length - 1).map((item, index) => {
-                return (
-                  <BouncyCheckbox
-                    text={item.action}
-                    fillColor={COLOR_BLUE}
-                    iconStyle={{
-                      borderColor: 'red',
-                      borderRadius: 0,
-                      width: 16,
-                      height: 16,
-                    }}
-                    innerIconStyle={{
-                      borderWidth: 1,
-                      borderRadius: 0,
-                      width: 16,
-                      height: 16,
-                    }}
-                    textStyle={{
-                      fontFamily: 'JosefinSans-Regular',
-                      textDecorationLine: 'none',
-                    }}
-                    style={{marginRight: 15, marginBottom: 10}}
-                    textContainerStyle={{paddingLeft: 0}}
-                    onPress={(isChecked: boolean) => {
-                      // shiftLugData.household = isChecked;
-                      handleShiftingLugInputTextChange();
-                    }}
-                  />
-                );
-              })}
+              {actionOptions
+                .slice(0, actionOptions.length - 1)
+                .map((item, index) => {
+                  return (
+                    <BouncyCheckbox
+                      text={item.action}
+                      fillColor={COLOR_BLUE}
+                      iconStyle={{
+                        borderColor: 'red',
+                        borderRadius: 0,
+                        width: 16,
+                        height: 16,
+                      }}
+                      innerIconStyle={{
+                        borderWidth: 1,
+                        borderRadius: 0,
+                        width: 16,
+                        height: 16,
+                      }}
+                      textStyle={{
+                        fontFamily: 'JosefinSans-Regular',
+                        textDecorationLine: 'none',
+                      }}
+                      style={{marginRight: 15, marginBottom: 10}}
+                      textContainerStyle={{paddingLeft: 0}}
+                      onPress={(isChecked: boolean) => {
+                        handlePermissions(isChecked, item.action);
+                      }}
+                    />
+                  );
+                })}
             </View>
             <View style={styles.labelContainer}>
               <Label text="Order Status" style={styles.label} />
             </View>
             <View style={styles.elementContainer2}>
-              {actionOptions.slice(0, actionOptions.length - 1).map((item, index) => {
-                return (
-                  <BouncyCheckbox
-                    text={item.action}
-                    fillColor={COLOR_BLUE}
-                    iconStyle={{
-                      borderColor: 'red',
-                      borderRadius: 0,
-                      width: 16,
-                      height: 16,
-                    }}
-                    innerIconStyle={{
-                      borderWidth: 1,
-                      borderRadius: 0,
-                      width: 16,
-                      height: 16,
-                    }}
-                    textStyle={{
-                      fontFamily: 'JosefinSans-Regular',
-                      textDecorationLine: 'none',
-                    }}
-                    style={{marginRight: 15, marginBottom: 10}}
-                    textContainerStyle={{paddingLeft: 0}}
-                    onPress={(isChecked: boolean) => {
-                      // shiftLugData.household = isChecked;
-                      handleShiftingLugInputTextChange();
-                    }}
-                  />
-                );
-              })}
+              {actionOptions
+                .slice(0, actionOptions.length - 1)
+                .map((item, index) => {
+                  return (
+                    <BouncyCheckbox
+                      text={item.action}
+                      fillColor={COLOR_BLUE}
+                      iconStyle={{
+                        borderColor: 'red',
+                        borderRadius: 0,
+                        width: 16,
+                        height: 16,
+                      }}
+                      innerIconStyle={{
+                        borderWidth: 1,
+                        borderRadius: 0,
+                        width: 16,
+                        height: 16,
+                      }}
+                      textStyle={{
+                        fontFamily: 'JosefinSans-Regular',
+                        textDecorationLine: 'none',
+                      }}
+                      style={{marginRight: 15, marginBottom: 10}}
+                      textContainerStyle={{paddingLeft: 0}}
+                      onPress={(isChecked: boolean) => {
+                        handlePermissions(isChecked, item.action);
+                      }}
+                    />
+                  );
+                })}
             </View>
           </View>
         </CollapsibleView>
         <CollapsibleView title="CUSTOMER MANAGEMENT" collapsed={true}>
-        <View>
+          <View>
             <View style={styles.labelContainer}>
               <Label text="Contact Details" style={styles.label} />
             </View>
             <View style={styles.elementContainer2}>
-              {actionOptions.slice(0, actionOptions.length - 1).map((item, index) => {
-                return (
-                  <BouncyCheckbox
-                    text={item.action}
-                    fillColor={COLOR_BLUE}
-                    iconStyle={{
-                      borderColor: 'red',
-                      borderRadius: 0,
-                      width: 16,
-                      height: 16,
-                    }}
-                    innerIconStyle={{
-                      borderWidth: 1,
-                      borderRadius: 0,
-                      width: 16,
-                      height: 16,
-                    }}
-                    textStyle={{
-                      fontFamily: 'JosefinSans-Regular',
-                      textDecorationLine: 'none',
-                    }}
-                    style={{marginRight: 15, marginBottom: 10}}
-                    textContainerStyle={{paddingLeft: 0}}
-                    onPress={(isChecked: boolean) => {
-                      // shiftLugData.household = isChecked;
-                      handleShiftingLugInputTextChange();
-                    }}
-                  />
-                );
-              })}
+              {actionOptions
+                .slice(0, actionOptions.length - 1)
+                .map((item, index) => {
+                  return (
+                    <BouncyCheckbox
+                      text={item.action}
+                      fillColor={COLOR_BLUE}
+                      iconStyle={{
+                        borderColor: 'red',
+                        borderRadius: 0,
+                        width: 16,
+                        height: 16,
+                      }}
+                      innerIconStyle={{
+                        borderWidth: 1,
+                        borderRadius: 0,
+                        width: 16,
+                        height: 16,
+                      }}
+                      textStyle={{
+                        fontFamily: 'JosefinSans-Regular',
+                        textDecorationLine: 'none',
+                      }}
+                      style={{marginRight: 15, marginBottom: 10}}
+                      textContainerStyle={{paddingLeft: 0}}
+                      onPress={(isChecked: boolean) => {
+                        handlePermissions(isChecked, item.action);
+                      }}
+                    />
+                  );
+                })}
             </View>
             <Spacer height={4} />
             <View style={styles.labelContainer}>
               <Label text="Order Details" style={styles.label} />
             </View>
             <View style={styles.elementContainer2}>
-              {actionOptions.slice(0, actionOptions.length - 1).map((item, index) => {
-                return (
-                  <BouncyCheckbox
-                    text={item.action}
-                    fillColor={COLOR_BLUE}
-                    iconStyle={{
-                      borderColor: 'red',
-                      borderRadius: 0,
-                      width: 16,
-                      height: 16,
-                    }}
-                    innerIconStyle={{
-                      borderWidth: 1,
-                      borderRadius: 0,
-                      width: 16,
-                      height: 16,
-                    }}
-                    textStyle={{
-                      fontFamily: 'JosefinSans-Regular',
-                      textDecorationLine: 'none',
-                    }}
-                    style={{marginRight: 15, marginBottom: 10}}
-                    textContainerStyle={{paddingLeft: 0}}
-                    onPress={(isChecked: boolean) => {
-                      // shiftLugData.household = isChecked;
-                      handleShiftingLugInputTextChange();
-                    }}
-                  />
-                );
-              })}
+              {actionOptions
+                .slice(0, actionOptions.length - 1)
+                .map((item, index) => {
+                  return (
+                    <BouncyCheckbox
+                      text={item.action}
+                      fillColor={COLOR_BLUE}
+                      iconStyle={{
+                        borderColor: 'red',
+                        borderRadius: 0,
+                        width: 16,
+                        height: 16,
+                      }}
+                      innerIconStyle={{
+                        borderWidth: 1,
+                        borderRadius: 0,
+                        width: 16,
+                        height: 16,
+                      }}
+                      textStyle={{
+                        fontFamily: 'JosefinSans-Regular',
+                        textDecorationLine: 'none',
+                      }}
+                      style={{marginRight: 15, marginBottom: 10}}
+                      textContainerStyle={{paddingLeft: 0}}
+                      onPress={(isChecked: boolean) => {
+                        handlePermissions(isChecked, item.action);
+                      }}
+                    />
+                  );
+                })}
             </View>
             <View style={styles.labelContainer}>
               <Label text="Car Condition" style={styles.label} />
@@ -874,8 +754,7 @@ const RoleManagementView: React.FC<{}> = ({}) => {
                       style={{marginRight: 15, marginBottom: 10}}
                       textContainerStyle={{paddingLeft: 0}}
                       onPress={(isChecked: boolean) => {
-                        // shiftLugData.household = isChecked;
-                        handleShiftingLugInputTextChange();
+                        handlePermissions(isChecked, item.action);
                       }}
                     />
                   );
@@ -885,106 +764,109 @@ const RoleManagementView: React.FC<{}> = ({}) => {
               <Label text="Bilty" style={styles.label} />
             </View>
             <View style={styles.elementContainer2}>
-              {actionOptions.slice(0, actionOptions.length - 1).map((item, index) => {
-                return (
-                  <BouncyCheckbox
-                    text={item.action}
-                    fillColor={COLOR_BLUE}
-                    iconStyle={{
-                      borderColor: 'red',
-                      borderRadius: 0,
-                      width: 16,
-                      height: 16,
-                    }}
-                    innerIconStyle={{
-                      borderWidth: 1,
-                      borderRadius: 0,
-                      width: 16,
-                      height: 16,
-                    }}
-                    textStyle={{
-                      fontFamily: 'JosefinSans-Regular',
-                      textDecorationLine: 'none',
-                    }}
-                    style={{marginRight: 15, marginBottom: 10}}
-                    textContainerStyle={{paddingLeft: 0}}
-                    onPress={(isChecked: boolean) => {
-                      // shiftLugData.household = isChecked;
-                      handleShiftingLugInputTextChange();
-                    }}
-                  />
-                );
-              })}
+              {actionOptions
+                .slice(0, actionOptions.length - 1)
+                .map((item, index) => {
+                  return (
+                    <BouncyCheckbox
+                      text={item.action}
+                      fillColor={COLOR_BLUE}
+                      iconStyle={{
+                        borderColor: 'red',
+                        borderRadius: 0,
+                        width: 16,
+                        height: 16,
+                      }}
+                      innerIconStyle={{
+                        borderWidth: 1,
+                        borderRadius: 0,
+                        width: 16,
+                        height: 16,
+                      }}
+                      textStyle={{
+                        fontFamily: 'JosefinSans-Regular',
+                        textDecorationLine: 'none',
+                      }}
+                      style={{marginRight: 15, marginBottom: 10}}
+                      textContainerStyle={{paddingLeft: 0}}
+                      onPress={(isChecked: boolean) => {
+                        handlePermissions(isChecked, item.action);
+                      }}
+                    />
+                  );
+                })}
             </View>
             <View style={styles.labelContainer}>
               <Label text="Invoice" style={styles.label} />
             </View>
             <View style={styles.elementContainer2}>
-              {actionOptions.slice(0, actionOptions.length - 1).map((item, index) => {
-                return (
-                  <BouncyCheckbox
-                    text={item.action}
-                    fillColor={COLOR_BLUE}
-                    iconStyle={{
-                      borderColor: 'red',
-                      borderRadius: 0,
-                      width: 16,
-                      height: 16,
-                    }}
-                    innerIconStyle={{
-                      borderWidth: 1,
-                      borderRadius: 0,
-                      width: 16,
-                      height: 16,
-                    }}
-                    textStyle={{
-                      fontFamily: 'JosefinSans-Regular',
-                      textDecorationLine: 'none',
-                    }}
-                    style={{marginRight: 15, marginBottom: 10}}
-                    textContainerStyle={{paddingLeft: 0}}
-                    onPress={(isChecked: boolean) => {
-                      // shiftLugData.household = isChecked;
-                      handleShiftingLugInputTextChange();
-                    }}
-                  />
-                );
-              })}
+              {actionOptions
+                .slice(0, actionOptions.length - 1)
+                .map((item, index) => {
+                  return (
+                    <BouncyCheckbox
+                      text={item.action}
+                      fillColor={COLOR_BLUE}
+                      iconStyle={{
+                        borderColor: 'red',
+                        borderRadius: 0,
+                        width: 16,
+                        height: 16,
+                      }}
+                      innerIconStyle={{
+                        borderWidth: 1,
+                        borderRadius: 0,
+                        width: 16,
+                        height: 16,
+                      }}
+                      textStyle={{
+                        fontFamily: 'JosefinSans-Regular',
+                        textDecorationLine: 'none',
+                      }}
+                      style={{marginRight: 15, marginBottom: 10}}
+                      textContainerStyle={{paddingLeft: 0}}
+                      onPress={(isChecked: boolean) => {
+                        handlePermissions(isChecked, item.action);
+                      }}
+                    />
+                  );
+                })}
             </View>
             <View style={styles.labelContainer}>
               <Label text="Order Status" style={styles.label} />
             </View>
             <View style={styles.elementContainer2}>
-              {actionOptions.slice(0, actionOptions.length - 1).map((item, index) => {
-                return (
-                  <BouncyCheckbox
-                    text={item.action}
-                    fillColor={COLOR_BLUE}
-                    iconStyle={{
-                      borderColor: 'red',
-                      borderRadius: 0,
-                      width: 16,
-                      height: 16,
-                    }}
-                    innerIconStyle={{
-                      borderWidth: 1,
-                      borderRadius: 0,
-                      width: 16,
-                      height: 16,
-                    }}
-                    textStyle={{
-                      fontFamily: 'JosefinSans-Regular',
-                      textDecorationLine: 'none',
-                    }}
-                    style={{marginRight: 15, marginBottom: 10}}
-                    textContainerStyle={{paddingLeft: 0}}
-                    onPress={(isChecked: boolean) => {
-                      // shiftLugData.household = isChecked;
-                      handleShiftingLugInputTextChange();
-                    }}
-                  />
-                );
-              })}
+              {actionOptions
+                .slice(0, actionOptions.length - 1)
+                .map((item, index) => {
+                  return (
+                    <BouncyCheckbox
+                      text={item.action}
+                      fillColor={COLOR_BLUE}
+                      iconStyle={{
+                        borderColor: 'red',
+                        borderRadius: 0,
+                        width: 16,
+                        height: 16,
+                      }}
+                      innerIconStyle={{
+                        borderWidth: 1,
+                        borderRadius: 0,
+                        width: 16,
+                        height: 16,
+                      }}
+                      textStyle={{
+                        fontFamily: 'JosefinSans-Regular',
+                        textDecorationLine: 'none',
+                      }}
+                      style={{marginRight: 15, marginBottom: 10}}
+                      textContainerStyle={{paddingLeft: 0}}
+                      onPress={(isChecked: boolean) => {
+                        handlePermissions(isChecked, item.action);
+                      }}
+                    />
+                  );
+                })}
             </View>
           </View>
         </CollapsibleView>

@@ -87,13 +87,16 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({moduleName, item, enqu
   useEffect(() => {
     if(itemObj) {
       if(shiftingTypeDropdownRef) {
-        const dropdownItem: TDropdownItem = {
-          label: itemObj.shiftingType,
-          value: itemObj.shiftingType == 'DOMESTIC' ? '2' : '1',
-        }
+        const findPreviousShiftingTypeItemIndex = shiftingTypeOptions.findIndex(e => e.label.toLowerCase() == itemObj.shiftingType.toLowerCase());
         //@ts-ignore
-        shiftingTypeDropdownRef?.current.setDefaultValue(dropdownItem);
-        setShiftingLuggages([...itemObj.shiftingLuggage])
+        shiftingTypeDropdownRef?.current.setDefaultValue(shiftingTypeOptions[findPreviousShiftingTypeItemIndex]);
+        setShiftingLuggages([...itemObj.shiftingLuggage]);
+        setShiftingType(itemObj.shiftingType);
+        setDateOfMoving(itemObj.shiftingDate);
+        //@ts-ignore
+        setDateOfDelivery(itemObj.deliveryDate);
+        //@ts-ignore
+        setDateOfDelivered(itemObj.dateOfDelivered);
       }
     }
   }, []);

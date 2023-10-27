@@ -1,6 +1,6 @@
 import {AxiosResponse} from 'axios';
 import {Api} from '../http/Api';
-import {ADD_CONTACT_DETAIL, ADD_DOCUMENT, ADD_FOOTER_CONTENT, ADD_PAYMENT_METHOD, GET_CONTACTS, GET_DOCUMENTS, GET_FOOTER_CONTENTS, GET_OTP, GET_PAYMENT_METHODS, VERIFY_OTP} from '../http/Endpoint';
+import {ADD_CONTACT_DETAIL, ADD_DOCUMENT, ADD_FOOTER_CONTENT, ADD_PAYMENT_METHOD, ADD_USER_ROLE, GET_CONTACTS, GET_DOCUMENTS, GET_FOOTER_CONTENTS, GET_OTP, GET_PAYMENT_METHODS, VERIFY_OTP} from '../http/Endpoint';
 import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
 import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
 import { IAddContactDetailRequest } from '../interface/setting/packerProfile/contactDetail/IAddContactDetailRequest';
@@ -14,6 +14,7 @@ import { IAddFooterContentResponse } from '../interface/setting/packerProfile/fo
 import { IGetFooterContentsResponse } from '../interface/setting/packerProfile/footerContent/IGetFooterContentsResponse';
 import { IAddPaymentMethodRequest } from '../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodRequest';
 import { IAddPaymentMethodResponse } from '../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodResponse';
+import { IAddUserRoleRequest, IAddUserRoleResponse } from '../interface/setting/role/IUserRole';
 
 // PAYMENT
 export const AddPaymentMethodService = async (payload: IAddPaymentMethodRequest): Promise<IAddPaymentMethodResponse> => {
@@ -57,4 +58,10 @@ export const AddCompanyDocumentService = async (payload: IAddDocumentRequest): P
 export const GetCompanyDocumentsService = async (payload: string): Promise<IGetDocumentsResponse> => {
     const api = Api.getInstance();
     return await api.get<IGetDocumentsResponse>(GET_DOCUMENTS(payload));
+}
+
+// USER ROLE
+export const AddUserRoleService = async (payload: IAddUserRoleRequest): Promise<IAddUserRoleResponse> => {
+    const api = Api.getInstance();
+    return await api.post<IAddUserRoleRequest, AxiosResponse<IAddUserRoleResponse>>(payload, ADD_USER_ROLE);
 }

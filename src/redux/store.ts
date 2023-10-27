@@ -18,6 +18,7 @@ import ProfileSettingSlice from './slices/ProfileSettingSlice';
 import { removeIsRegistrationComplete, removeLoginStatus, removeToken } from '../utils/storage';
 import SNSettingSlice from './slices/SerialNoSettingSlice';
 import  MyProfileSlice  from './slices/MyProfile';
+import UserRoleManagementSlice from './slices/UserRoleManagementSlice';
 
 const persistConfig = {
   key: 'root',
@@ -36,7 +37,8 @@ const appReducer = combineReducers({
   Quotation: QuotationSlice,
   Setting: ProfileSettingSlice,
   SNSetting: SNSettingSlice,
-  Myprofile: MyProfileSlice
+  Myprofile: MyProfileSlice,
+  UserRole: UserRoleManagementSlice,
 });
 
 const rootReducer: Reducer = (state: RootState, action: AnyAction) => {
