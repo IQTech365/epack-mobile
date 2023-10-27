@@ -1,11 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {Text, View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
 import ModalHOC from '../../../../../common/ModalHOC';
 import Spacer from '../../../../../common/Spacer';
 import {IGetOrdersData} from '../../../../../interface/order/IGetOrdersResponse';
-import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import OrderDetailListItem from '../OrderDetailListItem';
 import {MODULE_NAME} from './enum/EModuleName';
 import AddressForm, {ADDRESS_TYPE} from './Forms/AddressForm';
@@ -67,6 +66,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
         <ShifingDetailForm
           moduleName={MODULE_NAME.ORDER}
           item={item as IGetOrdersData}
+          enquiryId={enquiryId}
         />
       );
     } else if (editContactDetail) {
@@ -102,14 +102,24 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
   const showIndividualContactDetails = () => {
     return (
       <>
-        <OrderDetailListItem
-          label="Billing By"
-          value={item?.billingBy}
-          isLast={true}
-        />
+        <OrderDetailListItem label="Billing By" value={item?.billingBy} />
         <OrderDetailListItem label="Contact Person" value={item?.partyName} />
-        <OrderDetailListItem label="Email" value={item?.mobile} />
-        <OrderDetailListItem label="Phone" value={item?.mobile} />
+        <OrderDetailListItem label="Mobile Number" value={item?.mobile} />
+        <OrderDetailListItem
+          label="Alternate Numbers"
+          //@ts-ignore
+          value={displayAlternateNumbers()}
+        />
+        <OrderDetailListItem
+          label="Landline Number"
+          //@ts-ignore
+          value={item?.landline || 'Not Available'}
+        />
+        <OrderDetailListItem
+          label="Email"
+          //@ts-ignore
+          value={item?.email || 'Not Available'}
+        />
         <OrderDetailListItem label="Order Amount" value={item?.orderAmount} />
         <OrderDetailListItem
           label="Token Amount"
@@ -118,6 +128,19 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
         />
       </>
     );
+  };
+
+  const displayAlternateNumbers = () => {
+    let altNumbers = 'Not Available';
+    const {alternateNumbers} = item || {};
+    if (
+      alternateNumbers &&
+      Array.isArray(alternateNumbers) &&
+      alternateNumbers.length > 0
+    ) {
+      altNumbers = alternateNumbers.join(', ');
+    }
+    return altNumbers;
   };
 
   const showCompanyContactDetails = () => {
@@ -169,9 +192,29 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
           value={item?.billingDetails?.employeeDesignation}
         />
         <OrderDetailListItem
+          label="Alternate Numbers"
+          //@ts-ignore
+          value={displayAlternateNumbers()}
+        />
+        <OrderDetailListItem
+          label="Landline Number"
+          //@ts-ignore
+          value={item?.landline}
+        />
+        <OrderDetailListItem
+          label="Email"
+          //@ts-ignore
+          value={item?.email || 'Not Available'}
+        />
+        <OrderDetailListItem
           label="Employee Mobile"
           //@ts-ignore
           value={item?.billingDetails?.employeeMobile}
+        />
+        <OrderDetailListItem label="Order Amount" value={item?.orderAmount} />
+        <OrderDetailListItem
+          label="Token Amount"
+          value={item?.tokenAmount}
           isLast={true}
         />
       </>
@@ -224,11 +267,11 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
               />
               <OrderDetailListItem
                 label="Delivery Date"
-                value={getShiftingLuggages(item)}
+                value={item?.deliveryDate || 'Not Available'}
               />
               <OrderDetailListItem
                 label="Delivered Date"
-                value={getShiftingLuggages(item)}
+                value={item?.deliveredDate || 'Not Available'}
                 isLast={true}
               />
             </View>

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {View, Text} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../../../common/AvoidSoftInputViewHOC';
 import Input from '../../../../../../../common/Input';
@@ -18,20 +18,19 @@ import { IGetEnquiriesData } from '../../../../../../../interface/enquiry/IGetEn
 import { IGetOrdersData } from '../../../../../../../interface/order/IGetOrdersResponse';
 import { formatDate4 } from '../../../../../../../utils/formatter';
 import { useAppDispatch, useAppSelector } from '../../../../../../../redux/hooks';
-import { updateEnquiryStatusRequest } from '../../../../../../../redux/slices/EnquirySlice';
-import { IUpdateEnquiryRequest } from '../../../../../../../interface/enquiry/IupdateEnquiryRequest';
-import { IUpdateEnquiryStatus } from '../../../../../../../interface/enquiry/IUpdateEnquiryStatusRequest';
+import { resetUpdateShiftingInfoRequest, updateShiftingInfoRequest } from '../../../../../../../redux/slices/EnquirySlice';
 import Spinner from '../../../../../../../common/Spinner';
-
+import { IUpdateShiftingInfoRequest } from '../../../../../../../interface/enquiry/IUpdateShiftingInfo';
+import Toast from 'react-native-toast-message';
 interface IShiftingFormProps {
   moduleName: MODULE_NAME;
   item: IGetOrdersData | IGetEnquiriesData;
+  enquiryId: string;
 }
 
-const ShifingDetailForm: React.FC<IShiftingFormProps> = ({moduleName, item}) => {
+const ShifingDetailForm: React.FC<IShiftingFormProps> = ({moduleName, item, enquiryId}) => {
   const shiftingTypeDropdownRef = useRef();
   const itemObj = moduleName == MODULE_NAME.ORDER ? item as IGetOrdersData : item as IGetEnquiriesData;
-  console.log('item.shiftingLuggage---', JSON.stringify(itemObj.shiftingLuggage));
 
   const [shiftingLuggages, setShiftingLuggages] = useState<string[]>([]);
   const [shiftingType, setShiftingType] = useState<string>('');
@@ -39,7 +38,7 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({moduleName, item}) => 
   const [dateOfDelivery, setDateOfDelivery] = useState<string>('');
   const [dateOfDelivered, setDateOfDelivered] = useState<string>('');
   const [carriageVehicle, setCarriageVehicle] = useState<string>('');
-  const {updateEnquiryStatusRequesting} = useAppSelector(state => state.Enquiry);
+  const {updateShiftingInfoRequesting, updateShiftingInfoSuccess, updateShiftingInfoFailure} = useAppSelector(state => state.Enquiry);
 
   const dispatch = useAppDispatch();
   
@@ -63,44 +62,16 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({moduleName, item}) => 
     setCarriageVehicle(text);
   }
 
-  const handleUpdate = useCallback(() => {
-    console.log('shiftingLuggages--', shiftingLuggages);
-    console.log('carriageVehicle--', carriageVehicle);
-    console.log('shiftingType--', shiftingType);
-    console.log('dateOfMoving--', dateOfMoving);
-    console.log('dateOfDelivery--', dateOfDelivery);
-    console.log('dateOfDelivered--', dateOfDelivered);
-    if(moduleName == MODULE_NAME.ORDER) {
-      const requestBody:IUpdateEnquiryRequest ={
-        shiftingType: shiftingType.toUpperCase(),
-        shiftingLuggage: shiftingLuggages,
-        shiftingDate: dateOfMoving,
-        deliveryDate: dateOfDelivery,
-        deliveredDate: dateOfDelivered,
-      };
-      const id:IUpdateEnquiryStatus = {
-        enquiryId: itemObj._id,
-        status: 'true'
-      }
-      dispatch(updateEnquiryStatusRequest({id, requestBody}))
-      
-    } else if(moduleName == MODULE_NAME.ENQUIRY) {
-      const requestBody:IUpdateEnquiryRequest ={
-        shiftingType: shiftingType.toUpperCase(),
-        shiftingLuggage: shiftingLuggages,
-        shiftingDate: dateOfMoving,
-        deliveryDate: dateOfDelivery,
-        deliveredDate: dateOfDelivered,
-      };
-      const id:IUpdateEnquiryStatus = {
-        enquiryId: itemObj._id,
-        status: 'true'
-      }
-      dispatch(updateEnquiryStatusRequest({id, requestBody}))
-    }
-  },[itemObj, shiftingType, shiftingLuggages, dateOfMoving])
-
-  
+  const handleUpdate = () => {
+    const payload:IUpdateShiftingInfoRequest ={
+      shiftingType: shiftingType.toUpperCase(),
+      shiftingLuggage: shiftingLuggages,
+      shiftingDate: dateOfMoving,
+      deliveryDate: dateOfDelivery,
+      deliveredDate: dateOfDelivered,
+    };
+    dispatch(updateShiftingInfoRequest({id: enquiryId, requestBody: payload}))
+  }
 
   const handleShiftingLuggage = (isChecked: boolean, value: string) => {
     let temp = [...shiftingLuggages];
@@ -126,6 +97,24 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({moduleName, item}) => 
       }
     }
   }, []);
+
+  useEffect(() => {
+    if (!updateShiftingInfoRequesting && updateShiftingInfoSuccess) {
+      Toast.show({
+        type: 'success',
+        text1: 'Shifting Info',
+        text2: 'Shifting Info has been updated successfully',
+      });
+      dispatch(resetUpdateShiftingInfoRequest());
+    } else if (!updateShiftingInfoRequesting && updateShiftingInfoFailure) {
+      Toast.show({
+        type: 'error',
+        text1: 'Shifting Info',
+        text2: 'Error in updating shifing info. Please try again!',
+      });
+      dispatch(resetUpdateShiftingInfoRequest());
+    }
+  }, [updateShiftingInfoRequesting, updateShiftingInfoSuccess, updateShiftingInfoFailure]);
 
   return (
     <AvoidSoftInputViewHOC>
@@ -215,7 +204,7 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({moduleName, item}) => 
           style={styles.previewButtonStyle}
           textStyle={styles.textStyle}
         />
-        <Spinner show={updateEnquiryStatusRequesting} />
+        <Spinner show={updateShiftingInfoRequesting} />
       </View>
     </AvoidSoftInputViewHOC>
   );

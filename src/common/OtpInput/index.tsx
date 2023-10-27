@@ -7,9 +7,10 @@ interface IOtpProps {
     value: string;
     onChangeText: (text: string) => void;
     autoFocus?: boolean;
+    inputType?: 'numeric' | 'default'
 }
 
-const OTPInput:React.FC<IOtpProps> = forwardRef(({value, onChangeText, autoFocus = false}, ref) => {
+const OTPInput:React.FC<IOtpProps> = forwardRef(({value, inputType, onChangeText, autoFocus = false}, ref) => {
     return (
         <View style={styles.container}>
             <TextInput 
@@ -21,6 +22,7 @@ const OTPInput:React.FC<IOtpProps> = forwardRef(({value, onChangeText, autoFocus
                 cursorColor={COLOR_WHITE}
                 maxLength={1}
                 autoFocus={autoFocus}
+                keyboardType={inputType}
             />
         </View>
        )

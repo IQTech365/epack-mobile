@@ -56,4 +56,6 @@ export interface IAddOrderRequest {
   billingBy: string;
   billingDetails: BillingDetails | {};
   status: string;
+  deliveryDate: string;
+  deliveredDate: string;
 }

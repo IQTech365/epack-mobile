@@ -1,9 +1,7 @@
-export interface IUpdateEnquiryStatusData {
-
-}
+import { IUpdateEnquiryStatusRequest } from "./IUpdateEnquiryStatusRequest";
 
 export interface IUpdateEnquiryStatusResponse {
-    data: IUpdateEnquiryStatusData;
+    data: IUpdateEnquiryStatusRequest;
     status: number;
     error: boolean;
 }

@@ -163,31 +163,37 @@ const OTPPageView = (props: any) => {
             ref={inputRef1}
             onChangeText={onChangeOtpText1}
             autoFocus={true}
+            inputType='numeric'
           />
           <OTPInput
             //@ts-ignore
             ref={inputRef2}
             onChangeText={onChangeOtpText2}
+            inputType='numeric'
           />
           <OTPInput
             //@ts-ignore
             ref={inputRef3}
             onChangeText={onChangeOtpText3}
+            inputType='numeric'
           />
           <OTPInput
             //@ts-ignore
             ref={inputRef4}
             onChangeText={onChangeOtpText4}
+            inputType='numeric'
           />
           <OTPInput
             //@ts-ignore
             ref={inputRef5}
             onChangeText={onChangeOtpText5}
+            inputType='numeric'
           />
           <OTPInput
             //@ts-ignore
             ref={inputRef6}
             onChangeText={onChangeOtpText6}
+            inputType='numeric'
           />
         </View>
         <Spacer />

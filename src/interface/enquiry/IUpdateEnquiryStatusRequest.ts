@@ -1,6 +1,3 @@
-export interface IUpdateEnquiryStatus {
-    enquiryId: string;
+export interface IUpdateEnquiryStatusRequest {
     status: string;
 }
-
-export type TUpdateEnquiryStatusRequest = Omit<IUpdateEnquiryStatus, 'enquiryId'>;

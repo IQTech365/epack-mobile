@@ -12,12 +12,12 @@ import { IGetFollowupsResponse } from '../interface/enquiry/IGetFollowupsRespons
 import { IAddSurveyRequest } from '../interface/enquiry/IAddSurveyRequest';
 import { IAddSurveyResponse } from '../interface/enquiry/IAddSurveyResponse';
 import { IGetSurveyListResponse } from '../interface/enquiry/IGetSurveyListResponse';
-import { IUpdateEnquiryStatus, TUpdateEnquiryStatusRequest } from '../interface/enquiry/IUpdateEnquiryStatusRequest';
+import { IUpdateEnquiryStatusRequest } from '../interface/enquiry/IUpdateEnquiryStatusRequest';
 import { IUpdateEnquiryStatusResponse } from '../interface/enquiry/IUpdateEnquiryStatusResponse';
-import { IUpdateEnquiryRequest } from '../interface/enquiry/IupdateEnquiryRequest';
 import { IDropAddress, IPickupAddress } from '../interface/order/IUpdateAddressRequest';
 import { IUpdateAddressResponse } from '../interface/order/IUpdateAddressResponse';
 import { IUpdateCompanyContactDetailRequest, IUpdateContactDetailResponse, IUpdateIndividualContactDetailRequest } from '../interface/order/IUpdateContactDetails';
+import { IUpdateShiftingInfoRequest, IUpdateShiftingInfoResponse } from '../interface/enquiry/IUpdateShiftingInfo';
 
 export const AddEnquiryService = async (payload: IAddEnquiryRequest): Promise<IAddEnquiryResponse> => {
     const api = Api.getInstance();
@@ -55,10 +55,9 @@ export const GetSurveyListService = async (payload: string): Promise<IGetSurveyL
     return await api.get<IGetSurveyListResponse>(GET_SURVEY_COMMENTS(payload));
 }
 
-export const UpdateEnquiryStatusService = async (id:IUpdateEnquiryStatus, requestBody:IUpdateEnquiryRequest ): Promise<IUpdateEnquiryStatusResponse> => {
+export const UpdateEnquiryStatusService = async (id:string, requestBody:IUpdateEnquiryStatusRequest ): Promise<IUpdateEnquiryStatusResponse> => {
     const api = Api.getInstance();
-  
-    return await api.update<IUpdateEnquiryRequest, AxiosResponse<IUpdateEnquiryStatusResponse>>(requestBody, EDIT_ENQUIRY(id.enquiryId));
+    return await api.update<IUpdateEnquiryStatusRequest, AxiosResponse<IUpdateEnquiryStatusResponse>>(requestBody, EDIT_ENQUIRY(id));
 }
 
 export const UpdateAddressService = async (id:string, requestBody: IPickupAddress | IDropAddress ): Promise<IUpdateAddressResponse> => {
@@ -71,10 +70,8 @@ export const UpdateContactDetailsService = async (id:string, requestBody: IUpdat
     return await api.update<IUpdateIndividualContactDetailRequest | IUpdateCompanyContactDetailRequest, AxiosResponse<IUpdateContactDetailResponse>>(requestBody, EDIT_ENQUIRY(id));
 }
 
-// TODO: refactor code once in use
-// export const DeleteCompanyService = async (payload: string): Promise<IOtpVerifyResponse> => {
-//     const api = Api.getInstance();
-//     return await api.delete<IOtpVerifyRequest, AxiosResponse<IOtpVerifyResponse>>(DELETE_COMPANY(payload));
-// }
+export const UpdateShiftingInfoService = async (id:string, requestBody: IUpdateShiftingInfoRequest): Promise<IUpdateShiftingInfoResponse> => {
+    const api = Api.getInstance();
+    return await api.update<IUpdateShiftingInfoRequest, AxiosResponse<IUpdateShiftingInfoResponse>>(requestBody, EDIT_ENQUIRY(id));
+}
 
-// ** Followup Service

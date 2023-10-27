@@ -15,7 +15,7 @@ import {
 } from 'react-native-popup-menu';
 import {COLOR_GRAY2, COLOR_WHITE} from '../../../../../utils/colors';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
-import { IUpdateEnquiryStatus } from '../../../../../interface/enquiry/IUpdateEnquiryStatusRequest';
+import { IUpdateEnquiryStatusRequest } from '../../../../../interface/enquiry/IUpdateEnquiryStatusRequest';
 import { resetUpdateEnquiryStatusRequest, updateEnquiryStatusRequest } from '../../../../../redux/slices/EnquirySlice';
 import Toast from 'react-native-toast-message';
 import enquiryStatusOptions from '../../../../../data/enquiryStatusOptions.json';
@@ -43,11 +43,10 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId}) => 
 
   const handleEnquiryStatusChange = (value: string) => {
     setEnquiryStatus(value);
-    const payload: IUpdateEnquiryStatus = {
-      enquiryId: enquiryId as string,
-      status: value,
+    const payload: IUpdateEnquiryStatusRequest = {
+      status: value.toUpperCase(),
     }
-    dispatch(updateEnquiryStatusRequest(payload));
+    dispatch(updateEnquiryStatusRequest({id: enquiryId as string, requestBody: payload}));
   }
 
   const handlePhoneCall = () => {

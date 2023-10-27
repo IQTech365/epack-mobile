@@ -1,5 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import {View, Text, ImageBackground, TouchableOpacity, Linking} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  ImageBackground,
+  TouchableOpacity,
+  Linking,
+} from 'react-native';
 import styles from './style';
 import HeaderGridBackgroundImage from '../../../../../images/header-grid.png';
 import PhoneIcon from '../../../../../images/icons/phone.svg';
@@ -11,14 +17,17 @@ import {
   MenuOption,
   MenuTrigger,
 } from 'react-native-popup-menu';
-import { COLOR_GRAY2, COLOR_WHITE } from '../../../../../utils/colors';
+import {COLOR_GRAY2, COLOR_WHITE} from '../../../../../utils/colors';
 import orderStatusOptions from '../../../../../data/orderStatusOptions.json';
-import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
-import { resetUpdateEnquiryStatusRequest, updateEnquiryStatusRequest } from '../../../../../redux/slices/EnquirySlice';
-import { IUpdateEnquiryStatus } from '../../../../../interface/enquiry/IUpdateEnquiryStatusRequest';
+import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
+import {
+  resetUpdateEnquiryStatusRequest,
+  updateEnquiryStatusRequest,
+} from '../../../../../redux/slices/EnquirySlice';
 import Toast from 'react-native-toast-message';
-import { IGetOrdersData } from '../../../../../interface/order/IGetOrdersResponse';
-import { formatDate } from '../../../../../utils/formatter';
+import {IGetOrdersData} from '../../../../../interface/order/IGetOrdersResponse';
+import {formatDate} from '../../../../../utils/formatter';
+import { IUpdateEnquiryStatusRequest } from '../../../../../interface/enquiry/IUpdateEnquiryStatusRequest';
 interface IOrderInfoViewProps {
   orderId: string;
   item: IGetOrdersData | null;
@@ -35,39 +44,42 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item}) => {
 
   const handleOrderStatusChange = (value: string) => {
     setOrderStatus(value);
-    const payload: IUpdateEnquiryStatus = {
-      enquiryId: orderId as string,
-      status: value,
-    }
-    dispatch(updateEnquiryStatusRequest(payload));
-  }
+    const payload: IUpdateEnquiryStatusRequest = {
+      status: value.toUpperCase(),
+    };
+    dispatch(updateEnquiryStatusRequest({id: orderId as string, requestBody: payload}));
+  };
 
   const handlePhoneCall = () => {
     // Linking.openURL(`tel:${item?.mobile}`);
-  }
+  };
 
   const handleWhatsappCall = () => {
     // Linking.openURL(`whatsapp://send?phone=+91${item?.mobile}`);
-  }
+  };
 
   useEffect(() => {
-    if(!updateEnquiryStatusRequesting && updateEnquiryStatusSuccess) {
+    if (!updateEnquiryStatusRequesting && updateEnquiryStatusSuccess) {
       Toast.show({
         type: 'success',
         text1: 'Order Status',
         text2: `Order status has been updated to ${orderStatus}`,
       });
       dispatch(resetUpdateEnquiryStatusRequest());
-    } else if(!updateEnquiryStatusRequesting && updateEnquiryStatusFailure) {
+    } else if (!updateEnquiryStatusRequesting && updateEnquiryStatusFailure) {
       Toast.show({
         type: 'error',
         text1: 'Enquiry Status',
-        text2: 'Error in updating enquriy status. Please try again!',
+        text2: 'Error in updating order status. Please try again!',
       });
       setOrderStatus('' as string);
       dispatch(resetUpdateEnquiryStatusRequest());
     }
-  }, [updateEnquiryStatusRequesting, updateEnquiryStatusSuccess, updateEnquiryStatusFailure]);
+  }, [
+    updateEnquiryStatusRequesting,
+    updateEnquiryStatusSuccess,
+    updateEnquiryStatusFailure,
+  ]);
 
   const getOrderDate = () => {
     if (item && item.createdAt) {
@@ -75,6 +87,28 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item}) => {
     }
     return 'NA';
   };
+
+  const getContactPersonName = () => {
+    let name = '';
+    if(item?.billingBy == 'by Individual') {
+      name = item.partyName;
+    } else {
+      // @ts-ignore
+      name = item?.billingDetails.authorityPersonName;
+    }
+    return name;
+  }
+
+  const getContactPersonNumber = () => {
+    let number = '';
+    if(item?.billingBy == 'by Individual') {
+      number = item.mobile;
+    } else {
+      // @ts-ignore
+      number = item?.billingDetails.authorityPersonMobile;
+    }
+    return number;
+  }
 
   return (
     <View style={styles.backgroundContainer}>
@@ -85,10 +119,14 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item}) => {
           <View style={styles.leftContainer}>
             <View style={styles.infoContainer}>
               <View style={[styles.itemContainer]}>
-                <Text style={styles.nameText}>{item?.partyName || item?.billingDetails?.authorityPersonName}</Text>
+                <Text style={styles.nameText}>
+                  {getContactPersonName()}
+                </Text>
               </View>
               <View style={[styles.itemContainer]}>
-                <Text style={styles.normalText}>{item?.mobile || item?.billingDetails?.authorityPersonMobile}</Text>
+                <Text style={styles.normalText}>
+                  {getContactPersonNumber()}
+                </Text>
               </View>
             </View>
             <View style={styles.infoContainer}>
@@ -100,7 +138,9 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item}) => {
                   <Text style={styles.hyphenText}>-</Text>
                 </View>
                 <View style={styles.valueContainer}>
-                  <Text style={styles.valueText}>{item?.pickupAddress.state}</Text>
+                  <Text style={styles.valueText}>
+                    {item?.pickupAddress.state}
+                  </Text>
                 </View>
               </View>
               <View style={styles.itemContainer}>
@@ -124,7 +164,9 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item}) => {
                   <Text style={styles.hyphenText}>-</Text>
                 </View>
                 <View style={styles.valueContainer}>
-                  <Text style={styles.valueText}>{item?.dropAddress.state}</Text>
+                  <Text style={styles.valueText}>
+                    {item?.dropAddress.state}
+                  </Text>
                 </View>
               </View>
               <View style={styles.itemContainer}>
@@ -135,10 +177,13 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item}) => {
                   <Text style={styles.hyphenText}>-</Text>
                 </View>
                 <View style={styles.valueContainer}>
-                <Menu>
-                    <MenuTrigger customStyles={{
-                      triggerText: {color: COLOR_WHITE}
-                    }} text={orderStatus} />
+                  <Menu>
+                    <MenuTrigger
+                      customStyles={{
+                        triggerText: {color: COLOR_WHITE},
+                      }}
+                      text={orderStatus}
+                    />
                     <MenuOptions
                       customStyles={{
                         optionsContainer: {borderRadius: 5},
@@ -154,20 +199,32 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item}) => {
                         },
                         optionText: {
                           paddingVertical: 8,
-                        }
+                        },
                       }}>
-                        {orderStatusOptions.map((option, index) => {
-                          const isLastIndex = index == orderStatusOptions.length -1;
-                          const lastItemStyle = isLastIndex ? {
-                            optionWrapper: {borderBottomWidth: 0, marginHorizontal: 5,},
-                            optionText: {
-                              paddingVertical: 8,
+                      {orderStatusOptions.map((option, index) => {
+                        const isLastIndex =
+                          index == orderStatusOptions.length - 1;
+                        const lastItemStyle = isLastIndex
+                          ? {
+                              optionWrapper: {
+                                borderBottomWidth: 0,
+                                marginHorizontal: 5,
+                              },
+                              optionText: {
+                                paddingVertical: 8,
+                              },
                             }
-                          } : undefined;
-                          return <MenuOption customStyles={lastItemStyle} onSelect={() => {
-                            handleOrderStatusChange(option);
-                          }} text={option} />
-                        })}
+                          : undefined;
+                        return (
+                          <MenuOption
+                            customStyles={lastItemStyle}
+                            onSelect={() => {
+                              handleOrderStatusChange(option);
+                            }}
+                            text={option}
+                          />
+                        );
+                      })}
                     </MenuOptions>
                   </Menu>
                 </View>

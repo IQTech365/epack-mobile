@@ -3,7 +3,7 @@ import {PayloadAction} from '@reduxjs/toolkit';
 import * as EnquiryService from '../service/EnquiryService';
 import { IAddEnquiryRequest } from '../interface/enquiry/IAddEnquiryRequest';
 import { IAddEnquiryResponse } from '../interface/enquiry/IAddEnquiryResponse';
-import { addEnquiryFailure, addEnquiryRequest, addEnquirySuccess, addFollowupFailure, addFollowupRequest, addFollowupSuccess, addSurveyFailure, addSurveyRequest, addSurveySuccess, getEnquiriesFailure, getEnquiriesRequest, getEnquiriesSuccess, getFollowupsFailure, getFollowupsRequest, getFollowupsSuccess, getSurveyListFailure, getSurveyListRequest, getSurveyListSuccess, updateAddressFailure, updateAddressRequest, updateAddressSuccess, updateContactDetailsFailure, updateContactDetailsRequest, updateContactDetailsSuccess, updateEnquiryStatusFailure, updateEnquiryStatusRequest, updateEnquiryStatusSuccess } from '../redux/slices/EnquirySlice';
+import { addEnquiryFailure, addEnquiryRequest, addEnquirySuccess, addFollowupFailure, addFollowupRequest, addFollowupSuccess, addSurveyFailure, addSurveyRequest, addSurveySuccess, getEnquiriesFailure, getEnquiriesRequest, getEnquiriesSuccess, getFollowupsFailure, getFollowupsRequest, getFollowupsSuccess, getSurveyListFailure, getSurveyListRequest, getSurveyListSuccess, updateAddressFailure, updateAddressRequest, updateAddressSuccess, updateContactDetailsFailure, updateContactDetailsRequest, updateContactDetailsSuccess, updateEnquiryStatusFailure, updateEnquiryStatusRequest, updateEnquiryStatusSuccess, updateShiftingInfoFailure, updateShiftingInfoRequest, updateShiftingInfoSuccess } from '../redux/slices/EnquirySlice';
 import { IGetEnquiriesResponse } from '../interface/enquiry/IGetEnquiriesResponse';
 import { IAddFollowupRequest } from '../interface/enquiry/IAddFollowupRequest';
 import { IAddFollowupResponse } from '../interface/enquiry/IAddFollowupResponse';
@@ -11,17 +11,17 @@ import { IGetFollowupsResponse } from '../interface/enquiry/IGetFollowupsRespons
 import { IAddSurveyRequest } from '../interface/enquiry/IAddSurveyRequest';
 import { IAddSurveyResponse } from '../interface/enquiry/IAddSurveyResponse';
 import { IGetSurveyListResponse } from '../interface/enquiry/IGetSurveyListResponse';
-import { IUpdateEnquiryStatus } from '../interface/enquiry/IUpdateEnquiryStatusRequest';
 import { IUpdateEnquiryStatusResponse } from '../interface/enquiry/IUpdateEnquiryStatusResponse';
 import { IUpdateEnquiryRequest } from '../interface/enquiry/IupdateEnquiryRequest';
 import { IDropAddress, IPickupAddress } from '../interface/order/IUpdateAddressRequest';
 import { IUpdateAddressResponse } from '../interface/order/IUpdateAddressResponse';
 import { IUpdateCompanyContactDetailRequest, IUpdateContactDetailResponse, IUpdateIndividualContactDetailRequest } from '../interface/order/IUpdateContactDetails';
+import { IUpdateShiftingInfoRequest, IUpdateShiftingInfoResponse } from '../interface/enquiry/IUpdateShiftingInfo';
+import { IUpdateEnquiryStatusRequest } from '../interface/enquiry/IUpdateEnquiryStatusRequest';
 
 export function* addEnquirySaga(action: PayloadAction<IAddEnquiryRequest>) {
     try {
         const response: IAddEnquiryResponse = yield call(EnquiryService.AddEnquiryService, action.payload);
-        // console.log('addEnquirySaga-response----', JSON.stringify(response));
         yield put(addEnquirySuccess(response));
     } catch (error) {
         console.log('addEnquirySaga-error----', error);
@@ -32,7 +32,7 @@ export function* addEnquirySaga(action: PayloadAction<IAddEnquiryRequest>) {
 export function* getEnquiriesSaga(action: PayloadAction<string>) {
     try {
         const response: IGetEnquiriesResponse = yield call(EnquiryService.GetEnquiriesService, action.payload);
-        // console.log('getEnquiriesSaga-response----', JSON.stringify(response));
+        console.log('getEnquiriesSaga-response----', JSON.stringify(response));
         yield put(getEnquiriesSuccess(response));
     } catch (error) {
         console.log('getEnquiriesSaga-error----', JSON.stringify(error));
@@ -84,7 +84,7 @@ export function* getSurveyListSaga(action: PayloadAction<string>) {
     }
 }
 
-export function* updateEnquiryStatusSaga(action: PayloadAction<{id:IUpdateEnquiryStatus, requestBody:IUpdateEnquiryRequest}>) {
+export function* updateEnquiryStatusSaga(action: PayloadAction<{id:string, requestBody:IUpdateEnquiryStatusRequest}>) {
     const { id, requestBody } = action.payload;
     try {
         const response: IUpdateEnquiryStatusResponse = yield call(EnquiryService.UpdateEnquiryStatusService, id, requestBody);
@@ -120,6 +120,18 @@ export function* updateContactDetailsSaga(action: PayloadAction<{id:string, requ
     }
 }
 
+export function* updateShiftingInfoSaga(action: PayloadAction<{id:string, requestBody:IUpdateShiftingInfoRequest}>) {
+    const { id, requestBody } = action.payload;
+    try {
+        const response: IUpdateShiftingInfoResponse = yield call(EnquiryService.UpdateShiftingInfoService, id, requestBody);
+        console.log('updateShiftingInfoSaga-response----', JSON.stringify(response));
+        yield put(updateShiftingInfoSuccess(response));
+    } catch (error) {
+        console.log('updateShiftingInfoSaga-error----', JSON.stringify(error));
+        yield put(updateShiftingInfoFailure(error));
+    }
+}
+
 export function* watcherEnquirySaga() {
     yield takeLatest(addEnquiryRequest.type, addEnquirySaga);
     yield takeLatest(getEnquiriesRequest.type, getEnquiriesSaga);
@@ -130,4 +142,5 @@ export function* watcherEnquirySaga() {
     yield takeLatest(updateEnquiryStatusRequest.type, updateEnquiryStatusSaga);
     yield takeLatest(updateAddressRequest.type, updateAddressSaga);
     yield takeLatest(updateContactDetailsRequest.type, updateContactDetailsSaga);
+    yield takeLatest(updateShiftingInfoRequest.type, updateShiftingInfoSaga);
 }

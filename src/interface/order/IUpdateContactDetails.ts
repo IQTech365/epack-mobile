@@ -8,15 +8,17 @@ export interface IUpdateIndividualContactDetailRequest {
 }
 
 export interface IUpdateCompanyContactDetailRequest {
-    companyName: string;
-    approvalAuthority: string;
-    authorityPersonName: string;
-    authorityMobileNumber: string;
-    companyGST: string;
-    employeeName: string;
-    employeeDesignation: string;
-    employeeMobileNumber: string;
-    companyAddress: string;
+    billingDetails: {
+        companyName: string;
+        approvalAuthority: string;
+        authorityPersonName: string;
+        authorityPersonMobile: string;
+        companyGST: string;
+        employeeName: string;
+        employeeDesignation: string;
+        employeeMobile: string;
+        companyAddress: string;
+    },
     email: string;
     landline: string;
     orderAmount: string;

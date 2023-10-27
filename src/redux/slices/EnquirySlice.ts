@@ -10,11 +10,12 @@ import { IAddSurveyResponse } from '../../interface/enquiry/IAddSurveyResponse';
 import { IAddSurveyRequest } from '../../interface/enquiry/IAddSurveyRequest';
 import { IGetSurveyListResponse } from '../../interface/enquiry/IGetSurveyListResponse';
 import { IUpdateEnquiryStatusResponse } from '../../interface/enquiry/IUpdateEnquiryStatusResponse';
-import { IUpdateEnquiryStatus } from '../../interface/enquiry/IUpdateEnquiryStatusRequest';
 import { IUpdateEnquiryRequest } from '../../interface/enquiry/IupdateEnquiryRequest';
 import { IUpdateAddressResponse } from '../../interface/order/IUpdateAddressResponse';
 import { IDropAddress, IPickupAddress } from '../../interface/order/IUpdateAddressRequest';
 import { IUpdateCompanyContactDetailRequest, IUpdateContactDetailResponse, IUpdateIndividualContactDetailRequest } from '../../interface/order/IUpdateContactDetails';
+import { IUpdateShiftingInfoRequest, IUpdateShiftingInfoResponse } from '../../interface/enquiry/IUpdateShiftingInfo';
+import { IUpdateEnquiryStatusRequest } from '../../interface/enquiry/IUpdateEnquiryStatusRequest';
 
 interface IEnquiryState {
   // Get Enquiries
@@ -83,6 +84,12 @@ interface IEnquiryState {
   updateContactDetailSuccess: boolean;
   updateContactDetailFailure: boolean;
   updateContactDetailError: any;
+  // Update Shifting Info for enqiry and order
+  updateShiftingInfo: IUpdateShiftingInfoResponse | null;
+  updateShiftingInfoRequesting: boolean;
+  updateShiftingInfoSuccess: boolean;
+  updateShiftingInfoFailure: boolean;
+  updateShiftingInfoError: any;
 }
 
 const initialState: IEnquiryState = {
@@ -152,6 +159,12 @@ const initialState: IEnquiryState = {
   updateContactDetailSuccess: false,
   updateContactDetailFailure: false,
   updateContactDetailError: null,
+  // Update Shifting Info for enqiry and order
+  updateShiftingInfo: null,
+  updateShiftingInfoRequesting: false,
+  updateShiftingInfoSuccess: false,
+  updateShiftingInfoFailure: false,
+  updateShiftingInfoError: null,
 };
 
 export const EnquirySlice = createSlice({
@@ -332,7 +345,7 @@ export const EnquirySlice = createSlice({
     // Update Enquiry Status
     updateEnquiryStatusRequest: (
       state,
-      action: PayloadAction<{id:IUpdateEnquiryStatus, requestBody:IUpdateEnquiryRequest}>,
+      action: PayloadAction<{id:string, requestBody:IUpdateEnquiryStatusRequest}>,
     ) => {
       state.updateEnquiryStatusRequesting = true;
     },
@@ -412,6 +425,34 @@ export const EnquirySlice = createSlice({
       state.updateContactDetailFailure = false;
       state.updateContactDetailError = null;
       state.updateContactDetailInfo = null;
+    },
+    // Update Shifting Info
+    updateShiftingInfoRequest: (
+      state,
+      action: PayloadAction<{id:string, requestBody: IUpdateShiftingInfoRequest}>,
+    ) => {
+      state.updateShiftingInfoRequesting = true;
+    },
+    updateShiftingInfoSuccess: (
+      state,
+      action: PayloadAction<IUpdateShiftingInfoResponse>,
+    ) => {
+      state.updateShiftingInfoRequesting = false;
+      state.updateShiftingInfoSuccess = true;
+      state.updateShiftingInfo = action.payload;
+    },
+    updateShiftingInfoFailure: (state, action: PayloadAction<any>) => {
+      state.updateShiftingInfoRequesting = false;
+      state.updateShiftingInfoSuccess = false;
+      state.updateShiftingInfoFailure = true;
+      state.updateShiftingInfoError = action.payload;
+    },
+    resetUpdateShiftingInfoRequest: (state) => {
+      state.updateShiftingInfoRequesting = false;
+      state.updateShiftingInfoSuccess = false;
+      state.updateShiftingInfoFailure = false;
+      state.updateShiftingInfoError = null;
+      state.updateShiftingInfo = null;
     }
   },
 });
@@ -469,4 +510,9 @@ export const {
   updateContactDetailsSuccess,
   updateContactDetailsFailure,
   resetUpdateContactDetailsRequest,
+  // Update shifting Info
+  updateShiftingInfoRequest,
+  updateShiftingInfoSuccess,
+  updateShiftingInfoFailure,
+  resetUpdateShiftingInfoRequest,
 } = EnquirySlice.actions;

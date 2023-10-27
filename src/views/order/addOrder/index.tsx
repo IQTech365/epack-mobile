@@ -273,6 +273,8 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
       gstNumber: '',
       alternateNumbers: [],
       landline: '',
+      deliveryDate: '',
+      deliveredDate: '',
       shiftingDate: state.dateOfMoving || formatDate4(new Date()),
       pickupAddress: {
         shiftingFrom: state.pickupCity || pickupCities[0].label,

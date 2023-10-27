@@ -16,9 +16,8 @@ import DeleteIcon from '../../../../../../../images/icons/delete.svg';
 import approvalAuthorityOptions from '../../../../../../../data/ApprovalAuthorityOptions.json';
 import { IUpdateCompanyContactDetailRequest, IUpdateIndividualContactDetailRequest } from '../../../../../../../interface/order/IUpdateContactDetails';
 import { useAppDispatch, useAppSelector } from '../../../../../../../redux/hooks';
-import { updateContactDetailsRequest } from '../../../../../../../redux/slices/EnquirySlice';
+import { resetUpdateContactDetailsRequest, updateContactDetailsRequest } from '../../../../../../../redux/slices/EnquirySlice';
 import Toast from 'react-native-toast-message';
-import { resetUpdateContactRequest } from '../../../../../../../redux/slices/ProfileSettingSlice';
 interface IContactDetailFormProps {
   moduleName: MODULE_NAME;
   item: IGetOrdersData | IGetEnquiriesData;
@@ -80,6 +79,27 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
     }
     return name;
   };
+
+  const initBillingInfoFormValues = () => {
+    //@ts-ignore
+    setCompanyName(itemObj.billingDetails.companyName);
+    //@ts-ignore
+    setApprovalAuthority(itemObj.billingDetails.approvalAuthority);
+    //@ts-ignore
+    setAuthorityPersonName(itemObj.billingDetails.authorityPersonName);
+    //@ts-ignore
+    setAuthorityMobileNumber(itemObj.billingDetails.authorityPersonMobile);
+    //@ts-ignore
+    setCompanyGST(itemObj.billingDetails.companyGST);
+    //@ts-ignore
+    setEmployeeName(itemObj.billingDetails.employeeName);
+    //@ts-ignore
+    setEmployeeDesignation(itemObj.billingDetails.employeeDesignation);
+    //@ts-ignore
+    setEmployeeMobileNumber(itemObj.billingDetails.employeeMobile);
+    //@ts-ignore
+    setCompanyAddress(itemObj.billingDetails.companyAddress);
+  }
 
   const handleContactPersonName = useCallback(
     (text: string) => {
@@ -229,6 +249,23 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
     return null;
   };
 
+  const initFormValues = () => {
+    setContactPersonName(getContactPersonName());
+    setEmail(itemObj.email);
+    //@ts-ignore
+    setLandline(itemObj?.landline);
+    setMobile(itemObj.mobile);
+    //@ts-ignore
+    setOrderAmount(itemObj?.orderAmount);
+    //@ts-ignore
+    setTokenAmount(itemObj?.tokenAmount);
+    setAlternateNumbers([...itemObj?.alternateNumbers]);
+    // Billing Info
+    if(itemObj.billingBy == 'by Company') {
+      initBillingInfoFormValues();
+    }
+  }
+
   const handleUpdate = () => {
     if(itemObj.billingBy == 'by Individual') {
       const payload:IUpdateIndividualContactDetailRequest = {
@@ -239,58 +276,52 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
         tokenAmount: tokenAmount,
         alternateNumbers: alternateNumbers,
       }
+      console.log('Update-Individual-Contact-Detail--', JSON.stringify(payload));
       dispatch(updateContactDetailsRequest({id: enquiryId, requestBody: payload}));
     } else if(itemObj.billingBy == 'by Company') {
       const payload:IUpdateCompanyContactDetailRequest = {
-        companyName: companyName,
-        approvalAuthority:approvalAuthority,
-        authorityPersonName: authorityPersonName,
-        authorityMobileNumber: authorityMobileNumber,
-        companyGST: companyGST,
-        employeeName: employeeName,
-        employeeDesignation: employeeDesignation,
-        employeeMobileNumber: employeeMobileNumber,
-        companyAddress: companyAddress,
+        billingDetails: {
+          companyName: companyName,
+          approvalAuthority:approvalAuthority,
+          authorityPersonName: authorityPersonName,
+          authorityPersonMobile: authorityMobileNumber,
+          companyGST: companyGST,
+          employeeName: employeeName,
+          employeeDesignation: employeeDesignation,
+          employeeMobile: employeeMobileNumber,
+          companyAddress: companyAddress,
+        },
         email: email,
         landline: landline,
         orderAmount: orderAmount,
         tokenAmount: tokenAmount,
         alternateNumbers: alternateNumbers,
       }
+      console.log('Update-Company-Contact-Detail--', JSON.stringify(payload));
+      
       dispatch(updateContactDetailsRequest({id: enquiryId, requestBody: payload}));
     }
   };
 
   useEffect(() => {
-    setContactPersonName(getContactPersonName());
-    setEmail(itemObj.email);
-    //@ts-ignore
-    setLandline(itemObj?.landline);
-    setMobile(itemObj.mobile);
-    if (moduleName == MODULE_NAME.ORDER) {
-      //@ts-ignore
-      setOrderAmount(itemObj?.orderAmount);
-      //@ts-ignore
-      setTokenAmount(itemObj?.tokenAmount);
-      setAlternateNumbers([...itemObj?.alternateNumbers]);
-    }
+    initFormValues();
   }, []);
 
   useEffect(() => {
     if (!updateContactDetailRequesting && updateContactDetailSuccess) {
       Toast.show({
         type: 'success',
-        text1: 'Address Update',
-        text2: 'Address has been updated successfully',
+        text1: 'Contact Details',
+        text2: 'Contact details has been updated successfully',
       });
-      dispatch(resetUpdateContactRequest());
+      dispatch(resetUpdateContactDetailsRequest());
     } else if (!updateContactDetailRequesting && updateContactDetailFailure) {
       Toast.show({
         type: 'error',
-        text1: 'Address Update',
-        text2: 'Error in updating address. Please try again!',
+        text1: 'Contact Details',
+        text2: 'Error in updating contact details. Please try again!',
       });
-      dispatch(resetUpdateContactRequest());
+      dispatch(resetUpdateContactDetailsRequest());
     }
   }, [updateContactDetailRequesting, updateContactDetailSuccess, updateContactDetailFailure]);
 
