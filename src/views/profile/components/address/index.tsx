@@ -9,12 +9,26 @@ import Header from '../../../../common/Header';
 import ModalHOC from '../../../../common/ModalHOC';
 import Toast from 'react-native-toast-message';
 import UpdateComanyAddressForm from './Form/UpdateComanyAddressForm';
+import { useAppSelector } from '../../../../redux/hooks';
+import { ICompanyInfoData } from '../../../../interface/companyRegistration/IGetCompaniesResponse';
 interface IAddressViewProps {
   showEditIcon?: boolean;
 }
 
 const AddressView: React.FC<IAddressViewProps> = ({showEditIcon = true}) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const {companies} = useAppSelector(state => state.Company);
+  const {data: companiesData} = companies || {};
+
+  const getFirstCompany = () => {
+    let company:ICompanyInfoData | null  = null;
+    if(companiesData && Array.isArray(companiesData) && companiesData.length > 0) {
+      company = companiesData[0];
+    }
+    return company;
+  }
+
+  const firstCompany = getFirstCompany();
 
   const handleModalOpen = () => {
     setOpenModal(true);
@@ -37,14 +51,13 @@ const AddressView: React.FC<IAddressViewProps> = ({showEditIcon = true}) => {
         </View>
         <Spacer height={8} />
         <View style={styles.elementContainer}>
-          <EnquiryDetailListItem label='Street' value='NA' />
-          <EnquiryDetailListItem label='Landmark' value='NA' />
-          <EnquiryDetailListItem label='State' value='NA' />
-          <EnquiryDetailListItem label='City' value='NA' />
-          <EnquiryDetailListItem label='District' value='NA' />
-          <EnquiryDetailListItem label='Pincode' value='NA' />
+          <EnquiryDetailListItem label='Pincode' value={firstCompany?.pincode} />
+          <EnquiryDetailListItem label='State' value={firstCompany?.state} />
+          <EnquiryDetailListItem label='City' value={firstCompany?.city} />
+          <EnquiryDetailListItem label='Locality' value={firstCompany?.companyAddress || "Not Available"} />
+          <EnquiryDetailListItem label='Landmark' value={firstCompany?.companyAddress || "Not Available"} />
+          <EnquiryDetailListItem label='Address' value={firstCompany?.companyAddress} />
           <EnquiryDetailListItem label='Country' value='India' />
-          <EnquiryDetailListItem label='Post Office' value='NA' />
         </View>
         <Spacer height={8} />
         <ModalHOC

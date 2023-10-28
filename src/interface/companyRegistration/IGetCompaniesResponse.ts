@@ -1,4 +1,4 @@
-interface ICompanyInfoData {
+export interface ICompanyInfoData {
   _id: string;
   authId: string;
   companyName: string;

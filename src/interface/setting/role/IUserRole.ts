@@ -12,13 +12,28 @@ export interface IAddUserRoleRequest {
   createdBy: string;
 }
 
-interface IUserRoleData extends IAddUserRoleRequest{
-    _id: string;
-    createdAt: string;
+interface IUserRoleData extends IAddUserRoleRequest {
+  _id: string;
+  createdAt: string;
 }
 
 export interface IAddUserRoleResponse {
-    data: IUserRoleData;
-    status: number;
-    error: boolean;
+  data: IUserRoleData;
+  status: number;
+  error: boolean;
+}
+
+// Role Types
+export interface IRoleTypeData {
+  isActive: boolean;
+  isDeleted: boolean;
+  _id: string;
+  roleType: string;
+  createdDate: string;
+}
+
+export interface IRoleTypeResponse {
+  data: IRoleTypeData[];
+  status: number;
+  error: boolean;
 }

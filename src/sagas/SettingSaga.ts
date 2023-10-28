@@ -20,8 +20,8 @@ import { IGetContactDetailsResponse } from '../interface/setting/packerProfile/c
 import { IAddDocumentRequest } from '../interface/setting/packerProfile/document/IAddDocumentRequest';
 import { IAddDocumentResponse } from '../interface/setting/packerProfile/document/IAddDocumentResponse';
 import { IGetDocumentsResponse } from '../interface/setting/packerProfile/document/IGetDocumentsResponse';
-import { IAddUserRoleRequest, IAddUserRoleResponse } from '../interface/setting/role/IUserRole';
-import { addUserRoleFailure, addUserRoleRequest, addUserRoleSuccess } from '../redux/slices/UserRoleManagementSlice';
+import { IAddUserRoleRequest, IAddUserRoleResponse, IRoleTypeResponse } from '../interface/setting/role/IUserRole';
+import { addUserRoleFailure, addUserRoleRequest, addUserRoleSuccess, getRoleTypesFailure, getRoleTypesRequest, getRoleTypesSuccess } from '../redux/slices/UserRoleManagementSlice';
 
 export function* addFooterContentSaga(action: PayloadAction<IAddFooterContentRequest>) {
     console.log('addFooterContentSaga--action--', JSON.stringify(action));
@@ -144,6 +144,17 @@ export function* addUserRoleSaga(action: PayloadAction<IAddUserRoleRequest>) {
     }
 }
 
+export function* getRoleTypesSaga(action: PayloadAction) {
+    try {
+        const response: IRoleTypeResponse = yield call(SettingService.GetRoleTypesService);
+        console.log('getRoleTypesSaga-response----', JSON.stringify(response));
+        yield put(getRoleTypesSuccess(response));
+    } catch (error) {
+        console.log('getRoleTypesSaga-error----', error);
+        yield put(getRoleTypesFailure(JSON.stringify(error)));
+    }
+}
+
 export function* watcherSettingSaga() {
     yield takeLatest(addFooterContentRequest.type, addFooterContentSaga);
     yield takeLatest(getFooterContentsRequest.type, getFooterContentsSaga);
@@ -154,4 +165,6 @@ export function* watcherSettingSaga() {
     yield takeLatest(addDocumentRequest.type, addCompanyDocumentSaga);
     yield takeLatest(getDocumentsRequest.type, getCompanyDocumentsSaga);
     yield takeLatest(addUserRoleRequest.type, addUserRoleSaga);
+    yield takeLatest(getRoleTypesRequest.type, getRoleTypesSaga);
+
 }

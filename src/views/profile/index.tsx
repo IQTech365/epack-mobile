@@ -63,12 +63,8 @@ const ProfilePageView: React.FC<IProfilePageViewProps> = ({ navigation }) => {
       case 2:
         return navigation.navigate(MyProfileStackRoute.RegistrationDetails);
       case 3:
-        return navigation.navigate(MyProfileStackRoute.AccountDetails);
-      case 4:
-        return navigation.navigate(MyProfileStackRoute.UPIDetails);
-      case 5:
         return navigation.navigate(MyProfileStackRoute.AddBranch);
-      case 6:
+      case 4:
         return navigation.navigate(MyProfileStackRoute.AddFranchise);
       default:
         return navigation.navigate(MyProfileStackRoute.ProfileRoot);

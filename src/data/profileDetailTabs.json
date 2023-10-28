@@ -3,16 +3,10 @@
         "label": "Basic Details" 
     },
     {
-        "label": "Address" 
+        "label": "Regd. Address" 
     },
     {
         "label": "Registration Details" 
-    },
-    {
-        "label": "Account Details" 
-    },
-    {
-        "label": "UPI Details" 
     },
     {
         "label": "Branch Management" 

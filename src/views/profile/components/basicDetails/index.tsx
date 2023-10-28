@@ -10,6 +10,7 @@ import {useAppSelector} from '../../../../redux/hooks';
 import ModalHOC from '../../../../common/ModalHOC';
 import UpdateBasicDetailsForm from './Form/UpdateBasicDetailsForm';
 import Toast from 'react-native-toast-message';
+import {ICompanyInfoData} from '../../../../interface/companyRegistration/IGetCompaniesResponse';
 
 interface IBasicDetailsViewProps {}
 
@@ -18,6 +19,16 @@ const BasicDetailsView: React.FC<IBasicDetailsViewProps> = ({}) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const {data: companiesData} = companies || {};
   console.log('companiesData----', JSON.stringify(companiesData));
+
+  const getFirstCompany = () => {
+    let company:ICompanyInfoData | null  = null;
+    if(companiesData && Array.isArray(companiesData) && companiesData.length > 0) {
+      company = companiesData[0];
+    }
+    return company;
+  }
+
+  const firstCompany = getFirstCompany();
 
   const handleModalOpen = () => {
     setOpenModal(true);
@@ -40,16 +51,12 @@ const BasicDetailsView: React.FC<IBasicDetailsViewProps> = ({}) => {
         </View>
         <Spacer height={8} />
         <View style={styles.elementContainer}>
-          <EnquiryDetailListItem label="Company Name" value="NA" />
-          <EnquiryDetailListItem label="Company Punch Line" value="NA" />
-          <EnquiryDetailListItem label="Manager Name" value="NA" />
-          <EnquiryDetailListItem label="Website" value="NA" />
-          <EnquiryDetailListItem label="Email" value="NA" />
-          <EnquiryDetailListItem label="Registered Mobile Number" value="NA" />
-          <EnquiryDetailListItem label="Landline Number" value="NA" />
-          <EnquiryDetailListItem label="Toll Free Number" value="NA" />
-          <EnquiryDetailListItem label="Alternate Number" value="NA" />
-          <EnquiryDetailListItem label="Company Profile" value="NA" />
+          <EnquiryDetailListItem label="Company Name" value={firstCompany?.companyName} />
+          <EnquiryDetailListItem label="Company Punch Line" value={firstCompany?.punchLine || 'Not Available'} />
+          <EnquiryDetailListItem label="Contact Person" value={firstCompany?.contactPerson} />
+          <EnquiryDetailListItem label="Website" value={firstCompany?.companyWebite || "Not Available"} />
+          <EnquiryDetailListItem label="Email" value={firstCompany?.email} />
+          <EnquiryDetailListItem label="Reg. Mobile Number" value={firstCompany?.companyMobile}  />
         </View>
         <Spacer height={8} />
         <ModalHOC
