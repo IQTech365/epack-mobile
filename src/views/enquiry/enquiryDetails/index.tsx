@@ -11,20 +11,21 @@ import SurveyView from './components/FollowupView';
 import DetailsView from './components/DetailsView';
 import PackingMaterialsView from './components/PackingMaterialsView';
 import { EnquiryStackParamList } from '../../../navigation/params/EnquiryStackParamList';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { IGetEnquiriesData } from '../../../interface/enquiry/IGetEnquiriesResponse';
 import { useAppSelector } from '../../../redux/hooks';
 import Spinner from '../../../common/Spinner';
 import QuotationView from './components/QuotationsView';
+import SurveyListView from './components/SurveyListView';
 
 type Props = NativeStackScreenProps<EnquiryStackParamList, 'EnquiryDetails'>;
 
 
-const EnquiryDetailsView: React.FC<Props> = ({route, navigation}) => {
+const EnquiryDetailsView: React.FC<Props> = ({ route, navigation }) => {
   const enquiryId: string | undefined = route.params?.enquiryId;
   const item: IGetEnquiriesData | undefined = route.params?.item;
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
-  const {updateEnquiryStatusRequesting} = useAppSelector(state => state.Enquiry);
+  const { updateEnquiryStatusRequesting } = useAppSelector(state => state.Enquiry);
 
   const handleTabChange = (index: number) => {
     setActiveTabIndex(index);
@@ -33,14 +34,16 @@ const EnquiryDetailsView: React.FC<Props> = ({route, navigation}) => {
   const showTabItem = () => {
     switch (activeTabIndex) {
       case 0:
-        return <DetailsView item={item} enquiryId={enquiryId as string}/>
+        return <DetailsView item={item} enquiryId={enquiryId as string} />
       case 1:
         return <FollowupView taskName='FOLLOW UP' assigneeRole='Enequiry' enquiryId={enquiryId as string} />
       case 2:
         return <SurveyView taskName='SURVEY' assigneeRole='Survey' enquiryId={enquiryId as string} />
       case 3:
-        return <QuotationView enquiryId={enquiryId as string} />
+        return <SurveyListView />
       case 4:
+        return <QuotationView enquiryId={enquiryId as string} />
+      case 5:
         return <PackingMaterialsView />
       default:
         return null;
@@ -50,7 +53,7 @@ const EnquiryDetailsView: React.FC<Props> = ({route, navigation}) => {
   return (
     <View style={styles.container}>
       <Header label="ENQUIRY DETAILS" canGoBack={true} />
-      <EnquiryInfoView item={item} enquiryId={enquiryId}/>
+      <EnquiryInfoView item={item} enquiryId={enquiryId} />
       <Spacer height={10} />
       <View style={styles.tabsContainer}>
         <FlatList
