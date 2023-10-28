@@ -1,7 +1,7 @@
 import React, {ReactElement} from 'react';
 import {View, Modal, TouchableOpacity, Text} from 'react-native';
 import styles from './style';
-import CloseIcon from '../../images/icons/close_icon.svg';
+import CloseIcon from '../../images/icons/close_icon2.svg';
 
 interface IModalProps {
   children: ReactElement;

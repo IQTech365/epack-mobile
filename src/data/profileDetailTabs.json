@@ -15,15 +15,9 @@
         "label": "UPI Details" 
     },
     {
-        "label": "Packer's Signature" 
+        "label": "Branch Management" 
     },
     {
-        "label": "Terms & Conditions" 
-    },
-    {
-        "label": "Add Branch" 
-    },
-    {
-        "label": "Add Franchise" 
+        "label": "Franchise Management" 
     }
 ]
