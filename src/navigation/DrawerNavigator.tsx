@@ -37,6 +37,8 @@ import MyProfileStackNavigator from './MyProfileStackNavigator';
 import { logout } from '../redux/slices/OtpSlice';
 import { useAppDispatch } from '../redux/hooks';
 import { useAuthContext } from '../provider/AuthProvider';
+import SubscriptionPlanView from '../views/subscriptionPlan';
+import PaymentMethodView from '../views/paymentMethod';
 
 const Drawer = createDrawerNavigator();
 
@@ -112,7 +114,9 @@ export const DrawerNavigator = () => {
       />
       <Drawer.Screen
         name="Subscription"
-        component={SubscriptionView}
+        // component={SubscriptionView}
+        // component={SubscriptionPlanView}
+        component={PaymentMethodView}
         options={{
           title: 'Subscription',
           drawerIcon: () => <SubscriptionIcon width={24} height={24} />,
