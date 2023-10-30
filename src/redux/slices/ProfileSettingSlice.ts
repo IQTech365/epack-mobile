@@ -8,6 +8,8 @@ import { IGetDocumentsResponse } from '../../interface/setting/packerProfile/doc
 import { IAddFooterContentRequest } from '../../interface/setting/packerProfile/footerContent/IAddFooterContentRequest';
 import { IAddFooterContentResponse } from '../../interface/setting/packerProfile/footerContent/IAddFooterContentResponse';
 import { IGetFooterContentsResponse } from '../../interface/setting/packerProfile/footerContent/IGetFooterContentsResponse';
+import { IBankResponse } from '../../interface/setting/packerProfile/IBank';
+import { ISubmoduleResponse } from '../../interface/setting/packerProfile/ISubmodule';
 import { IAddPaymentMethodRequest } from '../../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodRequest';
 import { IAddPaymentMethodResponse } from '../../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodResponse';
 import { IGetPaymentMethodsResponse } from '../../interface/setting/packerProfile/paymentMethod/IGetPaymentMethodsResponse';
@@ -139,6 +141,18 @@ interface ISettingState {
     getContactsSuccess: boolean;
     getContactsFailure: boolean;
     getContactsError: any;
+    // Get Submodule
+    submodules: ISubmoduleResponse | null;
+    getSubmoduleRequesting: boolean;
+    getSubmoduleSuccess: boolean;
+    getSubmoduleFailure: boolean;
+    getSubmoduleError: any;
+    // Get Bank List
+    banks: IBankResponse | null;
+    getBanksRequesting: boolean;
+    getBanksSuccess: boolean;
+    getBanksFailure: boolean;
+    getBanksError: any;
 }
 
 const initialState: ISettingState = {
@@ -268,6 +282,18 @@ const initialState: ISettingState = {
     getContactsSuccess: false,
     getContactsFailure: false,
     getContactsError: null,
+    // Get Submodule
+    submodules: null,
+    getSubmoduleRequesting: false,
+    getSubmoduleSuccess: false,
+    getSubmoduleFailure: false,
+    getSubmoduleError: null,
+    // Get Bank List
+    banks: null,
+    getBanksRequesting: false,
+    getBanksSuccess: false,
+    getBanksFailure: false,
+    getBanksError: null,
 }
 
 export const SettingSlice = createSlice({
@@ -662,6 +688,38 @@ export const SettingSlice = createSlice({
             state.getContactsFailure = true;
             state.getContactsError = action.payload;
         },
+        // ***** Get Submodules *****
+        // ******************************
+        getSubmodulesRequest: (state) => {
+            state.getSubmoduleRequesting = true;
+        },
+        getSubmodulesSuccess: (state, action: PayloadAction<ISubmoduleResponse>) => {
+            state.getSubmoduleRequesting = false;
+            state.getSubmoduleSuccess = true;
+            state.submodules = action.payload;
+        },
+        getSubmodulesFailure: (state, action: PayloadAction<any>) => {
+            state.getSubmoduleRequesting = false;
+            state.getSubmoduleSuccess = false;
+            state.getSubmoduleFailure = true;
+            state.getSubmoduleError = action.payload;
+        },
+        // ***** Get Banks *****
+        // ******************************
+        getBanksRequest: (state) => {
+            state.getBanksRequesting = true;
+        },
+        getBanksSuccess: (state, action: PayloadAction<IBankResponse>) => {
+            state.getBanksRequesting = false;
+            state.getBanksSuccess = true;
+            state.banks = action.payload;
+        },
+        getBanksFailure: (state, action: PayloadAction<any>) => {
+            state.getBanksRequesting = false;
+            state.getBanksSuccess = false;
+            state.getBanksFailure = true;
+            state.getBanksError = action.payload;
+        },
     }
 });
 
@@ -762,5 +820,13 @@ export const {
     getContactsRequest,
     getContactsSuccess,
     getContactsFailure,
+    // Get Submodules
+    getSubmodulesRequest,
+    getSubmodulesSuccess,
+    getSubmodulesFailure,
+    // Get Banks
+    getBanksRequest,
+    getBanksSuccess,
+    getBanksFailure,
 
 } = SettingSlice.actions;

@@ -1,6 +1,6 @@
 import {AxiosResponse} from 'axios';
 import {Api} from '../http/Api';
-import {ADD_CONTACT_DETAIL, ADD_DOCUMENT, ADD_FOOTER_CONTENT, ADD_PAYMENT_METHOD, ADD_USER_ROLE, GET_CONTACTS, GET_DOCUMENTS, GET_FOOTER_CONTENTS, GET_OTP, GET_PAYMENT_METHODS, GET_ROLE_TYPES, VERIFY_OTP} from '../http/Endpoint';
+import {ADD_CONTACT_DETAIL, ADD_DOCUMENT, ADD_FOOTER_CONTENT, ADD_PAYMENT_METHOD, ADD_USER_ROLE, GET_BANKS, GET_CONTACTS, GET_DOCUMENTS, GET_FOOTER_CONTENTS, GET_OTP, GET_PAYMENT_METHODS, GET_ROLE_TYPES, GET_SUBMODULES, VERIFY_OTP} from '../http/Endpoint';
 import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
 import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
 import { IAddContactDetailRequest } from '../interface/setting/packerProfile/contactDetail/IAddContactDetailRequest';
@@ -12,6 +12,8 @@ import { IGetDocumentsResponse } from '../interface/setting/packerProfile/docume
 import { IAddFooterContentRequest } from '../interface/setting/packerProfile/footerContent/IAddFooterContentRequest';
 import { IAddFooterContentResponse } from '../interface/setting/packerProfile/footerContent/IAddFooterContentResponse';
 import { IGetFooterContentsResponse } from '../interface/setting/packerProfile/footerContent/IGetFooterContentsResponse';
+import { IBankResponse } from '../interface/setting/packerProfile/IBank';
+import { ISubmoduleResponse } from '../interface/setting/packerProfile/ISubmodule';
 import { IAddPaymentMethodRequest } from '../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodRequest';
 import { IAddPaymentMethodResponse } from '../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodResponse';
 import { IAddUserRoleRequest, IAddUserRoleResponse, IRoleTypeResponse } from '../interface/setting/role/IUserRole';
@@ -70,4 +72,16 @@ export const AddUserRoleService = async (payload: IAddUserRoleRequest): Promise<
 export const GetRoleTypesService = async (): Promise<IRoleTypeResponse> => {
     const api = Api.getInstance();
     return await api.get<IRoleTypeResponse>(GET_ROLE_TYPES);
+}
+
+// SUB MODULES
+export const GetSubmodulesService = async (): Promise<ISubmoduleResponse> => {
+    const api = Api.getInstance();
+    return await api.get<ISubmoduleResponse>(GET_SUBMODULES);
+}
+
+//  Banks
+export const GetBanksService = async (): Promise<IBankResponse> => {
+    const api = Api.getInstance();
+    return await api.get<IBankResponse>(GET_BANKS);
 }
