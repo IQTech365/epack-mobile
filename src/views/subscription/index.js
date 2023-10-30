@@ -11,24 +11,7 @@ const SubscriptionView = props => {
     <View style={{flex: 1}}>
       <Header canGoBack={true} label="Subscription" />
 
-      <Carousel
-        loop
-        width={width}
-        // autoPlay={true}
-        data={[...new Array(6).keys()]}
-        scrollAnimationDuration={1000}
-        panGestureHandlerProps={{
-            activeOffsetX: [-30, 30],
-        }}
-        onSnapToItem={index => console.log('current index:', index)}
-        renderItem={({index}) => {
-          return (
-            <ScrollView>
-              <SubscriptionPlanCard />
-            </ScrollView>
-          );
-        }}
-      />
+      <Text>Subscription detials goes here</Text>
     </View>
   );
 };
