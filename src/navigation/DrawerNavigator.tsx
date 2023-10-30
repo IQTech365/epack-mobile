@@ -37,6 +37,7 @@ import MyProfileStackNavigator from './MyProfileStackNavigator';
 import { logout } from '../redux/slices/OtpSlice';
 import { useAppDispatch } from '../redux/hooks';
 import { useAuthContext } from '../provider/AuthProvider';
+import VehicleMangementStacknavigator from './VehicleMangementStacknavigator';
 
 const Drawer = createDrawerNavigator();
 
@@ -128,6 +129,13 @@ export const DrawerNavigator = () => {
       <Drawer.Screen
         name="News Room"
         component={NewsRoomView}
+        options={{
+          drawerIcon: () => <NewsRoomIcon width={24} height={24} />,
+        }}
+      />
+       <Drawer.Screen
+        name="Vehicle Management"
+        component={VehicleMangementStacknavigator}
         options={{
           drawerIcon: () => <NewsRoomIcon width={24} height={24} />,
         }}

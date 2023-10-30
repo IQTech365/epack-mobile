@@ -1,86 +1,281 @@
-import React, { useCallback, useReducer, useState } from 'react';
+import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import AvoidSoftInputViewHOC from '../../../common/AvoidSoftInputViewHOC';
-import Spacer from '../../../common/Spacer';
+import Toast from 'react-native-toast-message';
+import AvoidSoftInputViewHOC from '../../../../common/AvoidSoftInputViewHOC';
+import Spacer from '../../../../common/Spacer';
 import styles from './style';
-import Label from '../../../common/Label';
-import Header from '../../../common/Header';
-import Input from '../../../common/Input';
-import { COLOR_BLACK, COLOR_BLUE } from '../../../utils/colors';
+import Label from '../../../../common/Label';
+import Input from '../../../../common/Input';
+import { COLOR_BLACK, COLOR_BLUE } from '../../../../utils/colors';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import Button from '../../../common/Button';
-import EpackDropdown from '../../../common/DropdownComponent2';
-import stateData from '../../../data/stateData.json';
-import CameraIcon from '../../../images/icons/arcticons_camera.svg';
+import Button from '../../../../common/Button';
+import EpackDropdown from '../../../../common/DropdownComponent2';
+import stateData from '../../../../data/stateData.json';
+import CameraIcon from '../../../../images/icons/arcticons_camera.svg';
+import { ADD_Driver_FORM_ACTION, TAddressInfo, addAddDriverReducer, initialState } from './addDriverReducer';
+import { IAddDriverRequest } from '../../../../interface/vehicle/IAddDriverRequest';
+import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
+import { addDriverRequest, restaddDriverRequest } from '../../../../redux/slices/VehicleSlice';
+import Spinner from '../../../../common/Spinner';
 
 const AddDriverView: React.FC<{}> = ({ }) => {
-    // const [state, dispatch] = useReducer(addBranchReducer, initialState);
+    const [state, dispatch] = useReducer(addAddDriverReducer, initialState);
+    const [checkAddress, setCheckAddress] = useState(false);
+    const {
+        uploadLogoRequesting,
+        uploadLogoSuccess,
+        uploadLogoFailure,
+        addCompanyInfo,
+        companies
+    } = useAppSelector(state => state.Company);
 
-    const handleState = (text: string) => {
-        // console.log(text, 'state data');
-        // dispatch({
-        //     type: ADD_BRANCH_FORM_ACTION.STATE,
-        //     payload: text,
-        // });
+    const {
+        addDriverRequesting,
+        addDriveruccess,
+        addDriverFailure,
+        addDriverError
+    } = useAppSelector(state => state.Vehicle);
+    const dispatch2 = useAppDispatch()
+
+    const getCompanyId = () => {
+        let id;
+        const { data } = addCompanyInfo || {};
+        const { data: companiesData } = companies || {};
+        if (data && Object.keys(data).length > 0) {
+            id = data._id;
+        } else if (
+            companiesData &&
+            Array.isArray(companiesData) &&
+            companiesData.length > 0
+        ) {
+            const firstCompany = companiesData[0];
+            id = firstCompany._id;
+        }
+        return id;
     };
 
-    const handleCity = (text: string) => {
-        // dispatch({
-        //     type: ADD_BRANCH_FORM_ACTION.CITY,
-        //     payload: text,
-        // });
+    const handleChodeEntity = (text: string) => {
+        console.log(text, 'choose entity.');
+        dispatch({
+            type: ADD_Driver_FORM_ACTION.CHOOSE_ENTITY,
+            payload: text,
+        });
     };
 
-    const handleLocality = (text: string) => {
-        // dispatch({
-        //     type: ADD_BRANCH_FORM_ACTION.LOCALITY,
-        //     payload: text,
-        // });
-    };
-    const handleBranchNameInputTextChange = (text: string) => {
-        // dispatch({
-        //     type: ADD_BRANCH_FORM_ACTION.BRANCH_NAME,
-        //     payload: text,
-        // });
+    const handleBranchName = (text: string) => {
+        dispatch({
+            type: ADD_Driver_FORM_ACTION.BRANCH_NAME,
+            payload: text,
+        });
     };
 
-    const handleContactNumberInputTextChange = (text: string) => {
-        // dispatch({
-        //     type: ADD_BRANCH_FORM_ACTION.REGISTERED_MOBILE,
-        //     payload: text,
-        // });
+    const handleDriverNameInputTextChange = (text: string) => {
+        dispatch({
+            type: ADD_Driver_FORM_ACTION.DRIVER_NAME,
+            payload: text,
+        });
+    };
+    const handleMobileInputTextChange = (text: string) => {
+        dispatch({
+            type: ADD_Driver_FORM_ACTION.MOBILE,
+            payload: text,
+        });
     };
 
-    const handlePincodeInputTextChange = (text: string) => {
-        // dispatch({
-        //     type: ADD_BRANCH_FORM_ACTION.PINCODE,
-        //     payload: text,
-        // });
+    const handleLicensenputTextChange = (text: string) => {
+        dispatch({
+            type: ADD_Driver_FORM_ACTION.LICENCE_NO,
+            payload: text,
+        });
     };
 
-    // const handleAddressTextChange = (text: string) => {
-    //     dispatch({
-    //         type: ADD_BRANCH_FORM_ACTION.ADDRESS,
-    //         payload: text,
-    //     });
-    // };
+    const handlePermanentPincodeInputTextChange = (text: string) => {
+        const {permanentAddress} = state;
+        const tempObj = {
+          ...permanentAddress,
+          pincode: text,
+        };
+        dispatch({
+            type: ADD_Driver_FORM_ACTION.PERMANENT_ADDRESS,
+            payload: tempObj as TAddressInfo,
+        });
+    };
 
-    // const handleLandmarkInputTextChange = (text: string) => {
-    //     dispatch({
-    //         type: ADD_BRANCH_FORM_ACTION.LANDMARK,
-    //         payload: text,
-    //     });
-    // };
-    // const handleEmailInputTextChange = (text: string) => {
-    //     dispatch({
-    //         type: ADD_BRANCH_FORM_ACTION.EMAIL,
-    //         payload: text,
-    //     });
-    // };
+    const handlePermanentState = (text: string) => {
+        const {permanentAddress} = state;
+        const tempObj = {
+          ...permanentAddress,
+          state: text,
+        };
+        dispatch({
+            type: ADD_Driver_FORM_ACTION.PERMANENT_ADDRESS,
+            payload: tempObj as TAddressInfo,
+        });
+    };
+    
+
+    const handlePermanentCity = (text: string) => {
+        const {permanentAddress} = state;
+        const tempObj = {
+          ...permanentAddress,
+          city: text,
+        };
+        dispatch({
+            type: ADD_Driver_FORM_ACTION.PERMANENT_ADDRESS,
+            payload: tempObj as TAddressInfo,
+        });
+    };
+    
+    const handlePermanentLocality = (text: string) => {
+        const {permanentAddress} = state;
+        const tempObj = {
+          ...permanentAddress,
+          locality: text,
+        };
+        dispatch({
+            type: ADD_Driver_FORM_ACTION.PERMANENT_ADDRESS,
+            payload: tempObj as TAddressInfo,
+        });
+    };
+
+    const handlePermanentAddressTextChange = (text: string) => {
+        const {permanentAddress} = state;
+        const tempObj = {
+          ...permanentAddress,
+          address: text,
+        };
+        dispatch({
+            type: ADD_Driver_FORM_ACTION.PERMANENT_ADDRESS,
+            payload: tempObj as TAddressInfo,
+        });
+    };
+    
+    const handleCurrentPincodeInputTextChange = (text: string) => {
+        const {currentAddress} = state;
+        const tempObj = {
+          ...currentAddress,
+          pincode: text,
+        };
+        dispatch({
+            type: ADD_Driver_FORM_ACTION.CURRENT_ADDRESS,
+            payload: tempObj as TAddressInfo,
+        });
+    };
+
+    const handleCurrentState = (text: string) => {
+        const {currentAddress} = state;
+        const tempObj = {
+          ...currentAddress,
+          state: text,
+        };
+        dispatch({
+            type: ADD_Driver_FORM_ACTION.CURRENT_ADDRESS,
+            payload: tempObj as TAddressInfo,
+        });
+    };
+    
+
+    const handleCurrentCity = (text: string) => {
+        const {currentAddress} = state;
+        const tempObj = {
+          ...currentAddress,
+          city: text,
+        };
+        dispatch({
+            type: ADD_Driver_FORM_ACTION.CURRENT_ADDRESS,
+            payload: tempObj as TAddressInfo,
+        });
+    };
+    
+    const handleCurrentLocality = (text: string) => {
+        const {currentAddress} = state;
+        const tempObj = {
+          ...currentAddress,
+          locality: text,
+        };
+        dispatch({
+            type: ADD_Driver_FORM_ACTION.CURRENT_ADDRESS,
+            payload: tempObj as TAddressInfo,
+        });
+    };
+
+    const handleCurrentAddressTextChange = (text: string) => {
+        const {currentAddress} = state;
+        const tempObj = {
+          ...currentAddress,
+          address: text,
+        };
+        dispatch({
+            type: ADD_Driver_FORM_ACTION.CURRENT_ADDRESS,
+            payload: tempObj as TAddressInfo,
+        });
+    };
+
+    const handlepermanentCheckInputTextChange = (text: boolean) => {
+        console.log(text, 'boolean..');
+        
+        setCheckAddress(text);
+    };
+
+    const handleSubmit = ()=>{
+        const payload: IAddDriverRequest = {
+            companyId: getCompanyId(),
+            entityType: state.chooseEntity,
+            entityId:state.chooseEntity,
+            driverName:state.driverName,
+            mobile: state.mobile,
+            licenceNo: state.licenceNo,
+            aadharNo: state.aadharNo,
+            permanentAddress: {
+                pincode:state.permanentAddress?.pincode,
+                address:state.permanentAddress?.address,
+                city:state.permanentAddress?.city,
+                state:state.permanentAddress?.state,
+                locality:state.permanentAddress?.locality,
+            },
+            currentAddress: checkAddress? {
+                pincode:state.permanentAddress?.pincode,
+                address:state.permanentAddress?.address,
+                city:state.permanentAddress?.city,
+                state:state.permanentAddress?.state,
+                locality:state.permanentAddress?.locality,
+            }:{
+                pincode:state.currentAddress?.pincode,
+                address:state.currentAddress?.address,
+                city:state.currentAddress?.city,
+                state:state.currentAddress?.state,
+                locality:state.currentAddress?.locality,
+            },
+            addedBy: ''
+        }
+        console.log(payload, 'add Driver..');
+        dispatch2(addDriverRequest(payload));
+
+    }
+
+    useEffect(() => {
+        if (!addDriverRequesting && addDriveruccess) {
+          Toast.show({
+            type: 'success',
+            text1: 'Add Driver',
+            text2: 'Add Driver has been added successfully',
+          });
+          dispatch2(restaddDriverRequest());
+        } else if (!addDriverRequesting && addDriverFailure) {
+          Toast.show({
+            type: 'error',
+            text1: 'Add Driver',
+            text2: 'Error in adding Driver. Please try again!',
+          });
+          dispatch2(restaddDriverRequest());
+        }
+      }, [addDriverRequesting, addDriveruccess, addDriverFailure]);
+
+    
     return (
+        <>
         <AvoidSoftInputViewHOC>
             <View style={styles.container}>
-                <Header label="Add Driver" canGoBack={true} />
                 <Spacer height={4} />
 
                 <View>
@@ -91,16 +286,14 @@ const AddDriverView: React.FC<{}> = ({ }) => {
                             <EpackDropdown
                                 data={stateData}
                                 placeholder={'please select or enter'}
-                                hanldeData={handleCity}
-                            />
+                                hanldeData={handleChodeEntity} />
                         </View>
                         <View style={styles.textContainer}>
                             <Label text="Branch Name" style={styles.label} />
                             <EpackDropdown
                                 data={stateData}
                                 placeholder={'please select or enter'}
-                                hanldeData={handleCity}
-                            />
+                                hanldeData={handleBranchName} />
                         </View>
                     </View>
                     <Spacer height={4} />
@@ -109,11 +302,10 @@ const AddDriverView: React.FC<{}> = ({ }) => {
                 <View style={styles.elementContainer}>
                     <Label text="Driver Name" style={styles.label} />
                     <Input
-                        // onChangeText={handleBranchNameInputTextChange}
+                        onChangeText={handleDriverNameInputTextChange}
                         containerStyle={styles.inputContainer}
                         inputStyle={styles.input}
-                        selectionColor={COLOR_BLACK}
-                    />
+                        selectionColor={COLOR_BLACK} />
                 </View>
                 <Spacer height={4} />
 
@@ -121,20 +313,18 @@ const AddDriverView: React.FC<{}> = ({ }) => {
                     <View style={styles.textContainer}>
                         <Label text="Driver Mobile No." style={styles.label} />
                         <Input
-                            onChangeText={handleContactNumberInputTextChange}
+                            onChangeText={handleMobileInputTextChange}
                             containerStyle={styles.inputContainer}
                             inputStyle={styles.input}
-                            selectionColor={COLOR_BLACK}
-                        />
+                            selectionColor={COLOR_BLACK} />
                     </View>
                     <View style={styles.textContainer}>
                         <Label text="Driver License No" style={styles.label} />
                         <Input
-                            onChangeText={handlePincodeInputTextChange}
+                            onChangeText={handleLicensenputTextChange}
                             containerStyle={styles.inputContainer}
                             inputStyle={styles.input}
-                            selectionColor={COLOR_BLACK}
-                        />
+                            selectionColor={COLOR_BLACK} />
                     </View>
                 </View>
 
@@ -166,11 +356,10 @@ const AddDriverView: React.FC<{}> = ({ }) => {
                             <Spacer height={6} />
                             <Button
                                 text="Bourse File"
-                                // onPress={handleSubmit}
+                                onPress={() => { } }
                                 disabled={false}
                                 style={styles.browserButtonStyle}
-                                textStyle={styles.browsertextStyle}
-                            />
+                                textStyle={styles.browsertextStyle} />
                         </View>
                         <View style={styles.uploadContainer}>
                             <Text style={styles.uploadContainerText}>Back</Text>
@@ -190,8 +379,7 @@ const AddDriverView: React.FC<{}> = ({ }) => {
                                 // onPress={handleSubmit}
                                 disabled={false}
                                 style={styles.browserButtonStyle}
-                                textStyle={styles.browsertextStyle}
-                            />
+                                textStyle={styles.browsertextStyle} />
                         </View>
                     </View>
                 </View>
@@ -199,27 +387,24 @@ const AddDriverView: React.FC<{}> = ({ }) => {
                 <View style={styles.elementContainer}>
                     <Label
                         text="Permanent Address"
-                        style={[styles.label, { fontWeight: '600' }]}
-                    />
+                        style={[styles.label, { fontWeight: '600' }]} />
                 </View>
                 <Spacer height={4} />
                 <View style={styles.twoColumnWrapper}>
                     <View style={styles.textContainer}>
                         <Label text="Pincode" style={styles.label} />
                         <Input
-                            onChangeText={handleContactNumberInputTextChange}
+                            onChangeText={handlePermanentPincodeInputTextChange}
                             containerStyle={styles.inputContainer}
                             inputStyle={styles.input}
-                            selectionColor={COLOR_BLACK}
-                        />
+                            selectionColor={COLOR_BLACK} />
                     </View>
                     <View style={styles.textContainer}>
                         <Label text="State" style={styles.label} />
                         <EpackDropdown
                             data={stateData}
                             placeholder={'please select or enter'}
-                            hanldeData={handleCity}
-                        />
+                            hanldeData={handlePermanentState} />
                     </View>
                 </View>
                 <Spacer height={4} />
@@ -229,16 +414,14 @@ const AddDriverView: React.FC<{}> = ({ }) => {
                         <EpackDropdown
                             data={stateData}
                             placeholder={'please select or enter'}
-                            hanldeData={handleCity}
-                        />
+                            hanldeData={handlePermanentCity} />
                     </View>
                     <View style={styles.textContainer}>
                         <Label text="Locality" style={styles.label} />
                         <EpackDropdown
                             data={stateData}
                             placeholder={'please select or enter'}
-                            hanldeData={handleCity}
-                        />
+                            hanldeData={handlePermanentLocality} />
                     </View>
                 </View>
                 <View style={styles.elementContainer}>
@@ -251,16 +434,14 @@ const AddDriverView: React.FC<{}> = ({ }) => {
                             placeholderTextColor="grey"
                             numberOfLines={10}
                             multiline={true}
-                            onChangeText={text => handleAddressTextChange(text)}
-                        />
+                            onChangeText={handlePermanentAddressTextChange} />
                     </View>
                 </View>
                 <Spacer height={4} />
                 <View style={styles.elementContainer}>
                     <Label
                         text="Current Address"
-                        style={[styles.label, { fontWeight: '600' }]}
-                    />
+                        style={[styles.label, { fontWeight: '600' }]} />
                     <BouncyCheckbox
                         text={'Same as permanent address'}
                         fillColor={COLOR_BLUE}
@@ -283,9 +464,8 @@ const AddDriverView: React.FC<{}> = ({ }) => {
                         style={{ marginRight: 15, marginBottom: 10 }}
                         textContainerStyle={{ paddingLeft: 0 }}
                         onPress={(isChecked: boolean) => {
-                            // handleShiftingLugInputTextChange(isChecked, item.label);
-                        }}
-                    />
+                            handlepermanentCheckInputTextChange(isChecked);
+                        } } />
                 </View>
 
                 <Spacer height={4} />
@@ -293,19 +473,17 @@ const AddDriverView: React.FC<{}> = ({ }) => {
                     <View style={styles.textContainer}>
                         <Label text="Pincode" style={styles.label} />
                         <Input
-                            onChangeText={handleContactNumberInputTextChange}
+                            onChangeText={handleCurrentPincodeInputTextChange}
                             containerStyle={styles.inputContainer}
                             inputStyle={styles.input}
-                            selectionColor={COLOR_BLACK}
-                        />
+                            selectionColor={COLOR_BLACK} />
                     </View>
                     <View style={styles.textContainer}>
                         <Label text="State" style={styles.label} />
                         <EpackDropdown
                             data={stateData}
                             placeholder={'please select or enter'}
-                            hanldeData={handleCity}
-                        />
+                            hanldeData={handleCurrentState} />
                     </View>
                 </View>
                 <Spacer height={4} />
@@ -315,16 +493,14 @@ const AddDriverView: React.FC<{}> = ({ }) => {
                         <EpackDropdown
                             data={stateData}
                             placeholder={'please select or enter'}
-                            hanldeData={handleCity}
-                        />
+                            hanldeData={handleCurrentCity} />
                     </View>
                     <View style={styles.textContainer}>
                         <Label text="Locality" style={styles.label} />
                         <EpackDropdown
                             data={stateData}
                             placeholder={'please select or enter'}
-                            hanldeData={handleCity}
-                        />
+                            hanldeData={handleCurrentLocality} />
                     </View>
                 </View>
                 <View style={styles.elementContainer}>
@@ -337,22 +513,22 @@ const AddDriverView: React.FC<{}> = ({ }) => {
                             placeholderTextColor="grey"
                             numberOfLines={10}
                             multiline={true}
-                            onChangeText={text => handleAddressTextChange(text)}
-                        />
+                            onChangeText={handleCurrentAddressTextChange} />
                     </View>
                 </View>
 
                 <Spacer height={12} />
                 <Button
                     text="SAVE"
-                    // onPress={handleSubmit}
+                    onPress={handleSubmit}
                     disabled={false}
                     style={styles.previewButtonStyle}
-                    textStyle={styles.textStyle}
-                />
+                    textStyle={styles.textStyle} />
                 <Spacer height={12} />
             </View>
         </AvoidSoftInputViewHOC>
+        <Spinner show={addDriverRequesting} />
+        </>
     );
 };
 
