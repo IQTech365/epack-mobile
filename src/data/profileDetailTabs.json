@@ -3,27 +3,15 @@
         "label": "Basic Details" 
     },
     {
-        "label": "Address" 
+        "label": "Regd. Address" 
     },
     {
         "label": "Registration Details" 
     },
     {
-        "label": "Account Details" 
+        "label": "Branch Management" 
     },
     {
-        "label": "UPI Details" 
-    },
-    {
-        "label": "Packer's Signature" 
-    },
-    {
-        "label": "Terms & Conditions" 
-    },
-    {
-        "label": "Add Branch" 
-    },
-    {
-        "label": "Add Franchise" 
+        "label": "Franchise Management" 
     }
 ]

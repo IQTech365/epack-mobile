@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, FlatList} from 'react-native';
 import Header from '../../../common/Header';
 import Spacer from '../../../common/Spacer';
@@ -11,9 +11,14 @@ import AddContactView from './components/AddContactView';
 import AddDocumentView from './components/AddDocumentView';
 import AddFooterContentView from './components/AddFooterContentView';
 import AddSignatureView from './components/AddSignatureView';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { getSubmodulesRequest } from '../../../redux/slices/ProfileSettingSlice';
+import Spinner from '../../../common/Spinner';
 
 const PackersProfileSetting = (props: any) => {
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
+  const dispatch = useAppDispatch();
+  const {getSubmoduleRequesting} = useAppSelector(state => state.Setting);
 
   const handleTabChange = (index: number) => {
     setActiveTabIndex(index);
@@ -35,6 +40,10 @@ const PackersProfileSetting = (props: any) => {
         return null;
     }
   };
+
+  useEffect(() => {
+    dispatch(getSubmodulesRequest());
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -58,6 +67,7 @@ const PackersProfileSetting = (props: any) => {
       </View>
       <Spacer height={10} />
       {showTabItem()}
+      <Spinner show={getSubmoduleRequesting} />
     </View>
   );
 };

@@ -18,9 +18,6 @@ const RegistrationDetailsView: React.FC<IRegistrationDetailsViewProps> = ({}) =>
         <Spacer height={4} />
         <View style={styles.labelContainer}>
           <Text style={styles.labelText}>Registration Details</Text>
-          <TouchableOpacity onPress={()=> {}} activeOpacity={0.6}>
-            <EditIcon width={20} height={20} />
-          </TouchableOpacity>
         </View>
         <Spacer height={8} />
         <View style={styles.elementContainer}>

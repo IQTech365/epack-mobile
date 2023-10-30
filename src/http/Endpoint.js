@@ -77,3 +77,10 @@ export const ADD_USER_ROLE = `/role/add`;
 //Vehicle
 export const  ADD_LORRY = `/vehicle-management/vehicle-lorry/add`;
 export const  ADD_DRIVER = `/vehicle-management/vehicle-driver/add`;
+
+export const GET_ROLE_TYPES = `/setting/role-type/getAll`;
+
+// Submodules
+export const GET_SUBMODULES = `/setting/app-setting/submodule`;
+
+export const GET_BANKS = `/bankname/getAll`;

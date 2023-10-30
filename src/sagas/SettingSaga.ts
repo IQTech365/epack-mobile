@@ -9,7 +9,7 @@ import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
 import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
 import { IAddFooterContentRequest } from '../interface/setting/packerProfile/footerContent/IAddFooterContentRequest';
 import { IAddFooterContentResponse } from '../interface/setting/packerProfile/footerContent/IAddFooterContentResponse';
-import { addContactFailure, addContactRequest, addContactSuccess, addDocumentFailure, addDocumentRequest, addDocumentSuccess, addFooterContentFailure, addFooterContentRequest, addFooterContentSuccess, addPaymentMethodFailure, addPaymentMethodRequest, addPaymentMethodSuccess, getContactsFailure, getContactsRequest, getContactsSuccess, getDocumentsFailure, getDocumentsRequest, getDocumentsSuccess, getFooterContentsFailure, getFooterContentsRequest, getFooterContentsSuccess, getPaymentMethodsFailure, getPaymentMethodsRequest, getPaymentMethodsSuccess } from '../redux/slices/ProfileSettingSlice';
+import { addContactFailure, addContactRequest, addContactSuccess, addDocumentFailure, addDocumentRequest, addDocumentSuccess, addFooterContentFailure, addFooterContentRequest, addFooterContentSuccess, addPaymentMethodFailure, addPaymentMethodRequest, addPaymentMethodSuccess, getContactsFailure, getContactsRequest, getContactsSuccess, getDocumentsFailure, getDocumentsRequest, getDocumentsSuccess, getFooterContentsFailure, getFooterContentsRequest, getFooterContentsSuccess, getPaymentMethodsFailure, getPaymentMethodsRequest, getPaymentMethodsSuccess, getSubmodulesFailure, getSubmodulesRequest, getSubmodulesSuccess } from '../redux/slices/ProfileSettingSlice';
 import { IGetFooterContentsResponse } from '../interface/setting/packerProfile/footerContent/IGetFooterContentsResponse';
 import { IAddPaymentMethodRequest } from '../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodRequest';
 import { IAddPaymentMethodResponse } from '../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodResponse';
@@ -20,8 +20,9 @@ import { IGetContactDetailsResponse } from '../interface/setting/packerProfile/c
 import { IAddDocumentRequest } from '../interface/setting/packerProfile/document/IAddDocumentRequest';
 import { IAddDocumentResponse } from '../interface/setting/packerProfile/document/IAddDocumentResponse';
 import { IGetDocumentsResponse } from '../interface/setting/packerProfile/document/IGetDocumentsResponse';
-import { IAddUserRoleRequest, IAddUserRoleResponse } from '../interface/setting/role/IUserRole';
-import { addUserRoleFailure, addUserRoleRequest, addUserRoleSuccess } from '../redux/slices/UserRoleManagementSlice';
+import { IAddUserRoleRequest, IAddUserRoleResponse, IRoleTypeResponse } from '../interface/setting/role/IUserRole';
+import { addUserRoleFailure, addUserRoleRequest, addUserRoleSuccess, getRoleTypesFailure, getRoleTypesRequest, getRoleTypesSuccess } from '../redux/slices/UserRoleManagementSlice';
+import { ISubmoduleResponse } from '../interface/setting/packerProfile/ISubmodule';
 
 export function* addFooterContentSaga(action: PayloadAction<IAddFooterContentRequest>) {
     console.log('addFooterContentSaga--action--', JSON.stringify(action));
@@ -144,6 +145,28 @@ export function* addUserRoleSaga(action: PayloadAction<IAddUserRoleRequest>) {
     }
 }
 
+export function* getRoleTypesSaga(action: PayloadAction) {
+    try {
+        const response: IRoleTypeResponse = yield call(SettingService.GetRoleTypesService);
+        console.log('getRoleTypesSaga-response----', JSON.stringify(response));
+        yield put(getRoleTypesSuccess(response));
+    } catch (error) {
+        console.log('getRoleTypesSaga-error----', error);
+        yield put(getRoleTypesFailure(JSON.stringify(error)));
+    }
+}
+
+export function* getSubmodulesSaga(action: PayloadAction) {
+    try {
+        const response: ISubmoduleResponse = yield call(SettingService.GetSubmodulesService);
+        console.log('getSubmodulesSaga-response----', JSON.stringify(response));
+        yield put(getSubmodulesSuccess(response));
+    } catch (error) {
+        console.log('getSubmodulesSaga-error----', error);
+        yield put(getSubmodulesFailure(JSON.stringify(error)));
+    }
+}
+
 export function* watcherSettingSaga() {
     yield takeLatest(addFooterContentRequest.type, addFooterContentSaga);
     yield takeLatest(getFooterContentsRequest.type, getFooterContentsSaga);
@@ -154,4 +177,6 @@ export function* watcherSettingSaga() {
     yield takeLatest(addDocumentRequest.type, addCompanyDocumentSaga);
     yield takeLatest(getDocumentsRequest.type, getCompanyDocumentsSaga);
     yield takeLatest(addUserRoleRequest.type, addUserRoleSaga);
+    yield takeLatest(getRoleTypesRequest.type, getRoleTypesSaga);
+    yield takeLatest(getSubmodulesRequest.type, getSubmodulesSaga);
 }

@@ -26,6 +26,9 @@ const SignInPageView = (props: any) => {
   );
   const [mobile, setMobile] = useState<string>('');
   const [isStaffLogin, setIsStaffLogin] = useState<boolean>(false);
+  const [topLabel, setTopLabel] = useState<string>('Enter mobile number');
+  const [inputLabel, setInputLabel] = useState<string>('Mobile Number');
+  const [inputKeyboardType, setInputKeyboardType] = useState<string>('numeric');
 
   const onChangeMobileText = (text: string) => {
     setMobile(text);
@@ -37,6 +40,18 @@ const SignInPageView = (props: any) => {
     };
     dispatch(getOtpRequest(payload));
   }, [mobile]);
+
+  useEffect(() => {
+    if(isStaffLogin){
+      setTopLabel('Enter Username and Password');
+      setInputLabel('Username');
+      setInputKeyboardType('default');
+    } else {
+      setTopLabel('Enter mobile number');
+      setInputLabel('Mobile Number');
+      setInputKeyboardType('default');
+    }
+  }, [isStaffLogin]);
 
   useEffect(() => {
     if (!requesting && success) {
@@ -56,11 +71,12 @@ const SignInPageView = (props: any) => {
         <Spacer height={30} />
         <Label text="Signin OR Register" style={{fontSize: 18}} />
         <Spacer height={20} />
-        <Label text="Enter mobile number" />
+        <Label text={topLabel} />
         <Input
           icon={<MobileIcon width={22} height={22} />}
-          placeholder="Mobile Number"
-          inputType="numeric"
+          placeholder={inputLabel}
+          //@ts-ignore
+          inputType={inputKeyboardType}
           onChangeText={onChangeMobileText}
           error={null}
           maxLength={10}
@@ -70,7 +86,7 @@ const SignInPageView = (props: any) => {
           <Input
             icon={<MobileIcon width={22} height={22} />}
             placeholder="Password"
-            inputType="numeric"
+            inputType="default"
             onChangeText={onChangeMobileText}
             error={null}
             maxLength={10}

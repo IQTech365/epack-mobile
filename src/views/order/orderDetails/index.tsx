@@ -17,6 +17,7 @@ import InvoiceView from './components/InvoiceView';
 import {useAppSelector} from '../../../redux/hooks';
 import usePincodeHook from '../../../hooks/usePincodeHook';
 import Spinner from '../../../common/Spinner';
+import PackingListView from './components/PackingListView';
 
 type Props = NativeStackScreenProps<OrderStackParamList, 'OrderDetails'>;
 
@@ -47,6 +48,8 @@ const OrderDetailsView: React.FC<Props> = ({route, navigation}) => {
         return <BiltyView orderId={orderId as string} />;
       case 4:
         return <InvoiceView orderId={orderId as string} />;
+        case 5:
+          return <PackingListView  />;
       default:
         return null;
     }

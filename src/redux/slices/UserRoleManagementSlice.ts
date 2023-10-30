@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import { ICheckUsernameAvailablilityRequest, ICheckUsernameAvailablilityResponse } from '../../interface/setting/role/ICheckUsername';
-import { IAddUserRoleRequest, IAddUserRoleResponse } from '../../interface/setting/role/IUserRole';
+import { IAddUserRoleRequest, IAddUserRoleResponse, IRoleTypeResponse } from '../../interface/setting/role/IUserRole';
 
 interface IUserRoleManagementState {
     // Add User Role
@@ -15,6 +15,12 @@ interface IUserRoleManagementState {
     checkUsernameAvailabilitySuccess: boolean;
     checkUsernameAvailabilityFailure: boolean;
     checkUsernameAvailabilityError: any;
+    // Get Role Types
+    roleTypes: IRoleTypeResponse | null;
+    getRoleTypesRequesting: boolean;
+    getRoleTypeSuccess: boolean;
+    getRoleTypeFailure: boolean;
+    getRoleTypeError: any;
 }
 
 const initialState: IUserRoleManagementState = {
@@ -29,6 +35,12 @@ const initialState: IUserRoleManagementState = {
     checkUsernameAvailabilitySuccess: false,
     checkUsernameAvailabilityFailure: false,
     checkUsernameAvailabilityError: null,
+    // Get Role Types
+    roleTypes: null,
+    getRoleTypesRequesting: false,
+    getRoleTypeSuccess: false,
+    getRoleTypeFailure: false,
+    getRoleTypeError: null,
    
 }
 
@@ -77,6 +89,22 @@ export const UserRoleManagementSlice = createSlice({
             state.checkUsernameAvailabilityFailure = false;
             state.checkUsernameAvailabilityError = null;
         },
+        // Get Role Types
+        // Check Username Availability
+        getRoleTypesRequest: (state,) => {
+            state.getRoleTypesRequesting = true;
+        },
+        getRoleTypesSuccess: (state, action: PayloadAction<IRoleTypeResponse>) => {
+            state.getRoleTypesRequesting = false;
+            state.getRoleTypeSuccess = true;
+            state.roleTypes = action.payload;
+        },
+        getRoleTypesFailure: (state, action: PayloadAction<any>) => {
+            state.getRoleTypesRequesting = false;
+            state.getRoleTypeSuccess = false;
+            state.getRoleTypeFailure = true;
+            state.getRoleTypeError = action.payload;
+        },
     }
 });
 
@@ -93,4 +121,8 @@ export const {
     checkUsernameAvailabilitySuccess,
     checkUsernameAvailabilityFailure,
     resetCheckUsernameAvailabilityRequest,
+    // Get Role Types
+    getRoleTypesRequest,
+    getRoleTypesSuccess,
+    getRoleTypesFailure,
 } = UserRoleManagementSlice.actions;

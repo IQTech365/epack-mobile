@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../common/Spacer';
@@ -18,8 +18,9 @@ import branchOptions from '../../../data/branchOptions.json';
 import franchiseOptions from '../../../data/franchiseOptions.json';
 import roleOptions from '../../../data/roleOptions.json';
 import actionOptions from '../../../data/actionOptions.json';
-import {IAddUserRoleRequest} from '../../../interface/setting/role/IUserRole';
-import { addUserRoleRequest } from '../../../redux/slices/UserRoleManagementSlice';
+import {IAddUserRoleRequest, IRoleTypeData} from '../../../interface/setting/role/IUserRole';
+import { addUserRoleRequest, getRoleTypesRequest } from '../../../redux/slices/UserRoleManagementSlice';
+import Spinner from '../../../common/Spinner';
 
 const RoleManagementView: React.FC<{}> = ({}) => {
   const [entityType, setEntityType] = useState<string>('0');
@@ -32,10 +33,16 @@ const RoleManagementView: React.FC<{}> = ({}) => {
   const [roleType, setRoleType] = useState<string>('');
   const [permissions, setPermissions] = useState<string[]>([]);
   const { addCompanyInfo, companies } = useAppSelector(state => state.Company);
+  const {getRoleTypesRequesting, roleTypes} = useAppSelector(state => state.UserRole);
   const { otpData } = useAppSelector(state => state.OTP);
   // Errors
   const [usernameError, setUsernameError] = useState<string>('');
   const [passwordError, setPasswordError] = useState<string>('');
+
+  console.log('RoleManagement--roleTypes--', JSON.stringify(roleTypes));
+
+  const {data:roleTypesData} = roleTypes || {};
+  
 
   const dispatch = useAppDispatch();
 
@@ -163,6 +170,10 @@ const RoleManagementView: React.FC<{}> = ({}) => {
     return options;
   };
 
+  useEffect(() => {
+    dispatch(getRoleTypesRequest());
+  }, []);
+
   return (
     <AvoidSoftInputViewHOC>
       <View style={styles.container}>
@@ -247,10 +258,11 @@ const RoleManagementView: React.FC<{}> = ({}) => {
               <Label text="Role Type" style={styles.label} />
             </View>
             <View style={styles.elementContainer2}>
-              {roleOptions.map((role, index) => {
+              {roleTypesData.map((role:IRoleTypeData, index: number) => {
                 return (
                   <BouncyCheckbox
-                    text={role.role}
+                    key={`${index}`}
+                    text={role.roleType}
                     fillColor={COLOR_BLUE}
                     iconStyle={{
                       borderColor: 'red',
@@ -271,7 +283,7 @@ const RoleManagementView: React.FC<{}> = ({}) => {
                     style={{marginRight: 15, marginBottom: 10}}
                     textContainerStyle={{paddingLeft: 0}}
                     onPress={(isChecked: boolean) => {
-                      handleRoleType(role.role);
+                      handleRoleType(role._id);
                     }}
                   />
                 );
@@ -879,6 +891,7 @@ const RoleManagementView: React.FC<{}> = ({}) => {
           textStyle={styles.textStyle}
         />
         <Spacer height={12} />
+        <Spinner show={getRoleTypesRequesting} />
       </View>
     </AvoidSoftInputViewHOC>
   );
