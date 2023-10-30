@@ -19,3 +19,7 @@ export const COLOR_PURPLE = '#F1D5FE';
 export const COLOR_PINK = '#FCC4DF';
 export const COLOR_YELLOW = '#F5E7CB';
 export const COLOR_ORANGE2 = '#FFD4D3';
+export const FREE_PLAN_LINEARGRADIENT = ['#D2D2D2', '#939496'];
+export const BASIC_PLAN_LINEARGRADIENT = ['#F2798D', '#FC895A'];
+export const PRO_PLAN_LINEARGRADIENT = ['#6738CF', '#D170F1'];
+export const UNLIMITED_PLAN_LINEARGRADIENT = ['#478E3C', '#AFE96A'];

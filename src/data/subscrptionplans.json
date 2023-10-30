@@ -1,0 +1,401 @@
+[
+  {
+    "plan_type": "Free",
+    "plan_price": "FOREVER",
+    "plan_duration": "YES, FOREVER",
+    "features": [
+      {
+        "feature_name": "Enquiry Management",
+        "feature_sublist": [
+          "Add Enquiry",
+          "Update Enquiry",
+          "Set Followups / Reminders",
+          "Set Survey / Reminders",
+          "Survey List",
+          "Add Packing Materials"
+        ],
+        "feature_subfeature": []
+      },
+      {
+        "feature_name": "Quotation Module",
+        "feature_sublist": [
+          "Basic Design",
+          "5 Quotation/Per Month",
+          "Create/Edit/Share/Download"
+        ],
+        "feature_subfeature": []
+      },
+      {
+        "feature_name": "Order Management System",
+        "feature_sublist": ["Add Order", "Update Order Details"],
+        "feature_subfeature": [
+          {
+            "subfeature_name": "Money Receipt",
+            "subfeature_sublist": [
+              "Basic Design",
+              "5 Money Receipt/Per Month",
+              "Create/Edit/Share/Download"
+            ]
+          },
+          {
+            "subfeature_name": "Car Condition Paper",
+            "subfeature_sublist": [
+              "Basic Design",
+              "5 Car Condition/Per Month",
+              "Create/Edit/Share/Download"
+            ]
+          },
+          {
+            "subfeature_name": "Bilty/LR/Consignment",
+            "subfeature_sublist": [
+              "Basic Design",
+              "5 Bilty/Per Month",
+              "Create/Edit/Share/Download"
+            ]
+          },
+          {
+            "subfeature_name": "Packing List",
+            "subfeature_sublist": [
+              "Basic Design",
+              "5 Packing List/Per Month",
+              "Create/Edit/Share/Download"
+            ]
+          },
+          {
+            "subfeature_name": "Invoice",
+            "subfeature_sublist": [
+              "Basic Design",
+              "5 Invoice/Per Month",
+              "Create/Edit/Share/Download"
+            ]
+          }
+        ]
+      },
+      {
+        "feature_name": "Customer Management System",
+        "feature_sublist": ["Customer Details", "Past Shiftings"],
+        "feature_subfeature": []
+      },
+      {
+        "feature_name": "Staff Management System",
+        "feature_sublist": [],
+        "feature_subfeature": []
+      },
+      {
+        "feature_name": "Branch Management System",
+        "feature_sublist": [],
+        "feature_subfeature": []
+      },
+      {
+        "feature_name": "Franchise Management System",
+        "feature_sublist": [],
+        "feature_subfeature": []
+      },
+      {
+        "feature_name": "Vehicle Management System",
+        "feature_sublist": [],
+        "feature_subfeature": []
+      }
+    ]
+  },
+  {
+    "plan_type": "Basic",
+    "plan_price": "Rs. 1500.00",
+    "plan_duration": "PER YEAR",
+    "features": [
+      {
+        "feature_name": "Enquiry Management",
+        "feature_sublist": [
+          "Add Enquiry",
+          "Update Enquiry",
+          "Set Followups / Reminders",
+          "Set Survey / Reminders",
+          "Survey List",
+          "Add Packing Materials",
+          "Assign Task"
+        ],
+        "feature_subfeature": []
+      },
+      {
+        "feature_name": "Quotation Module",
+        "feature_sublist": [
+          "Basic + Creative Design",
+          "Unlimited Quotation",
+          "Create/Edit/Share/Download"
+        ],
+        "feature_subfeature": []
+      },
+      {
+        "feature_name": "Order Management System",
+        "feature_sublist": ["Add Order", "Update Order Details"],
+        "feature_subfeature": [
+          {
+            "subfeature_name": "Money Receipt",
+            "subfeature_sublist": [
+              "Basic + Creative Design",
+              "Unlimited Money Receipt",
+              "Create/Edit/Share/Download"
+            ]
+          },
+          {
+            "subfeature_name": "Car Condition Paper",
+            "subfeature_sublist": [
+              "Basic + Creative Design",
+              "Unlimited Car Condition",
+              "Create/Edit/Share/Download"
+            ]
+          },
+          {
+            "subfeature_name": "Bilty/LR/Consignment",
+            "subfeature_sublist": [
+              "Basic + Creative Design",
+              "Unlimited Bilty",
+              "Create/Edit/Share/Download"
+            ]
+          },
+          {
+            "subfeature_name": "Packing List",
+            "subfeature_sublist": [
+              "Basic + Creative Design",
+              "Unlimited Packing List",
+              "Create/Edit/Share/Download"
+            ]
+          },
+          {
+            "subfeature_name": "Invoice",
+            "subfeature_sublist": [
+              "Basic + Creative Design",
+              "Unlimited Invoice",
+              "Create/Edit/Share/Download"
+            ]
+          }
+        ]
+      },
+      {
+        "feature_name": "Customer Management System",
+        "feature_sublist": ["Customer Details", "Past Shiftings"],
+        "feature_subfeature": []
+      },
+      {
+        "feature_name": "Staff Management System",
+        "feature_sublist": ["Head Office Staff Management"],
+        "feature_subfeature": []
+      },
+      {
+        "feature_name": "Branch Management System",
+        "feature_sublist": [],
+        "feature_subfeature": []
+      },
+      {
+        "feature_name": "Franchise Management System",
+        "feature_sublist": [],
+        "feature_subfeature": []
+      },
+      {
+        "feature_name": "Vehicle Management System",
+        "feature_sublist": [],
+        "feature_subfeature": []
+      }
+    ]
+  },
+  {
+    "plan_type": "Pro",
+    "plan_price": "Rs. 2000.00",
+    "plan_duration": "PER YEAR",
+    "features": [
+      {
+        "feature_name": "Enquiry Management",
+        "feature_sublist": [
+          "Add Enquiry",
+          "Update Enquiry",
+          "Set Followups / Reminders",
+          "Set Survey / Reminders",
+          "Survey List",
+          "Add Packing Materials",
+          "Assign Task"
+        ],
+        "feature_subfeature": []
+      },
+      {
+        "feature_name": "Quotation Module",
+        "feature_sublist": [
+          "Basic + Creative + Premium Design",
+          "Unlimited Quotation",
+          "Create/Edit/Share/Download"
+        ],
+        "feature_subfeature": []
+      },
+      {
+        "feature_name": "Order Management System",
+        "feature_sublist": ["Add Order", "Update Order Details"],
+        "feature_subfeature": [
+          {
+            "subfeature_name": "Money Receipt",
+            "subfeature_sublist": [
+              "Basic + Creative + Premium Design",
+              "Unlimited Money Receipt",
+              "Create/Edit/Share/Download"
+            ]
+          },
+          {
+            "subfeature_name": "Car Condition Paper",
+            "subfeature_sublist": [
+              "Basic + Creative + Premium Design",
+              "Unlimited Car Condition",
+              "Create/Edit/Share/Download"
+            ]
+          },
+          {
+            "subfeature_name": "Bilty/LR/Consignment",
+            "subfeature_sublist": [
+              "Basic + Creative + Premium Design",
+              "Unlimited Bilty",
+              "Create/Edit/Share/Download"
+            ]
+          },
+          {
+            "subfeature_name": "Packing List",
+            "subfeature_sublist": [
+              "Basic + Creative + Premium Design",
+              "Unlimited Packing List",
+              "Create/Edit/Share/Download"
+            ]
+          },
+          {
+            "subfeature_name": "Invoice",
+            "subfeature_sublist": [
+              "Basic + Creative + Premium Design",
+              "Unlimited Invoice",
+              "Create/Edit/Share/Download"
+            ]
+          }
+        ]
+      },
+      {
+        "feature_name": "Customer Management System",
+        "feature_sublist": ["Customer Details", "Past Shiftings"],
+        "feature_subfeature": []
+      },
+      {
+        "feature_name": "Staff Management System",
+        "feature_sublist": ["HO/Branch Staff"],
+        "feature_subfeature": []
+      },
+      {
+        "feature_name": "Branch Management System",
+        "feature_sublist": ["Add upto 5 Branch"],
+        "feature_subfeature": []
+      },
+      {
+        "feature_name": "Franchise Management System",
+        "feature_sublist": [],
+        "feature_subfeature": []
+      },
+      {
+        "feature_name": "Vehicle Management System",
+        "feature_sublist": ["Add Lorry", "Add Drivers", "Lorry Docs. Renewal Reminders"],
+        "feature_subfeature": []
+      }
+    ]
+  },
+  {
+    "plan_type": "Unlimited",
+    "plan_price": "Rs. 2500.00",
+    "plan_duration": "PER YEAR",
+    "features": [
+      {
+        "feature_name": "Enquiry Management",
+        "feature_sublist": [
+          "Add Enquiry",
+          "Update Enquiry",
+          "Set Followups / Reminders",
+          "Set Survey / Reminders",
+          "Survey List",
+          "Add Packing Materials",
+          "Assign Task"
+        ],
+        "feature_subfeature": []
+      },
+      {
+        "feature_name": "Quotation Module",
+        "feature_sublist": [
+          "Basic + Creative + Premium + Custom Design",
+          "Unlimited Quotation",
+          "Create/Edit/Share/Download"
+        ],
+        "feature_subfeature": []
+      },
+      {
+        "feature_name": "Order Management System",
+        "feature_sublist": ["Add Order", "Update Order Details"],
+        "feature_subfeature": [
+          {
+            "subfeature_name": "Money Receipt",
+            "subfeature_sublist": [
+              "Basic + Creative + Premium + Custom Design",
+              "Unlimited Money Receipt",
+              "Create/Edit/Share/Download"
+            ]
+          },
+          {
+            "subfeature_name": "Car Condition Paper",
+            "subfeature_sublist": [
+              "Basic + Creative + Premium + Custom Design",
+              "Unlimited Car Condition",
+              "Create/Edit/Share/Download"
+            ]
+          },
+          {
+            "subfeature_name": "Bilty/LR/Consignment",
+            "subfeature_sublist": [
+              "Basic + Creative + Premium + Custom Design",
+              "Unlimited Bilty",
+              "Create/Edit/Share/Download"
+            ]
+          },
+          {
+            "subfeature_name": "Packing List",
+            "subfeature_sublist": [
+              "Basic + Creative + Premium + Custom Design",
+              "Unlimited Packing List",
+              "Create/Edit/Share/Download"
+            ]
+          },
+          {
+            "subfeature_name": "Invoice",
+            "subfeature_sublist": [
+              "Basic + Creative + Premium + Custom Design",
+              "Unlimited Invoice",
+              "Create/Edit/Share/Download"
+            ]
+          }
+        ]
+      },
+      {
+        "feature_name": "Customer Management System",
+        "feature_sublist": ["Customer Details", "Past Shiftings"],
+        "feature_subfeature": []
+      },
+      {
+        "feature_name": "Staff Management System",
+        "feature_sublist": ["HO/Branch/Franchise Staff"],
+        "feature_subfeature": []
+      },
+      {
+        "feature_name": "Branch Management System",
+        "feature_sublist": ["Unlimited"],
+        "feature_subfeature": []
+      },
+      {
+        "feature_name": "Franchise Management System",
+        "feature_sublist": ["Unlimited"],
+        "feature_subfeature": []
+      },
+      {
+        "feature_name": "Vehicle Management System",
+        "feature_sublist": ["Add Lorry", "Add Drivers", "Lorry Docs. Renewal Reminders"],
+        "feature_subfeature": []
+      }
+    ]
+  }
+]
