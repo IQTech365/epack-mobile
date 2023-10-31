@@ -1,15 +1,18 @@
 import {StyleSheet, Dimensions} from 'react-native';
+import { COLOR_GRAY5 } from '../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
+    borderWidth: 0.5,
+    borderColor: COLOR_GRAY5,
     padding: 5,
+    borderRadius: 5,
+    height: 46,
   },
   dropdownIcon: {
     position: 'absolute',
-    top: 10,
+    top: 14,
     right: 10,
   },
   container: {

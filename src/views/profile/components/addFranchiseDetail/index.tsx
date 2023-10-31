@@ -70,7 +70,7 @@ const AddFranchiseView = () => {
     if (showFranchiseList) {
       return (
         <FlatList
-          data={Franchises.data}
+          data={Franchises}
           refreshControl={
             <RefreshControl
               refreshing={getFranchiseRequesting}

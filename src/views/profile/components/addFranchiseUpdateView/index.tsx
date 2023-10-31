@@ -17,19 +17,23 @@ import {
     initialState,
 } from './addFranchiseReducer';
 import usePincodeHook, { PINCODE_REQUEST_KEY } from '../../../../hooks/usePincodeHook';
-import { getCities, getStates } from '../../../../utils/formatter';
+import { getCities, getLocalities, getStates } from '../../../../utils/formatter';
 import Spinner from '../../../../common/Spinner';
 import { IAddFranchiseRequest } from '../../../../interface/myProfile/IAddFranchiseRequest';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
 import { addFranchiseRequest, restAddFranchiseRequest } from '../../../../redux/slices/MyProfile';
+import EpackDropdown from '../../../../common/DropdownComponent2';
 
 const AddFranchiseUpdateView: React.FC<{}> = ({ }) => {
     const [state, dispatch] = useReducer(addFranchiseReducer, initialState);
     const [pincodeRequestKey, setPincodeRequestKey] =
     useState<PINCODE_REQUEST_KEY>(PINCODE_REQUEST_KEY.ADD_FRANCHISE_ADDRESS);
-  const [States, setStates] = useState<TDropdownItem[]>([]);
-  const [cities, setCities] = useState<TDropdownItem[]>([]);
+  const [states, setStates] = useState<string[]>([]);
+  const [cities, setCities] = useState<string[]>([]);
+  const [localities, setLocalities] = useState<string[]>([]);
+
   const { addCompanyInfo, companies } = useAppSelector(state => state.Company);
+  const {otpData} = useAppSelector(state => state.OTP);
   const {
     addFranchiseRequesting,
     addFranchiseuccess,
@@ -72,24 +76,24 @@ const AddFranchiseUpdateView: React.FC<{}> = ({ }) => {
         resetPincodeError,
       );
 
-    const handleState = (item: TDropdownItem) => {
+    const handleState = (item: string) => {
         dispatch({
             type: ADD_FRANCHISE_FORM_ACTION.STATE,
-            payload: item.label,
+            payload: item,
         });
     };
 
-    const handleCity = (item: TDropdownItem) => {
+    const handleCity = (item: string) => {
         dispatch({
             type: ADD_FRANCHISE_FORM_ACTION.CITY,
-            payload: item.label,
+            payload: item,
         });
     };
 
-    const handleLocality = (item: TDropdownItem) => {
+    const handleLocality = (item: string) => {
         dispatch({
             type: ADD_FRANCHISE_FORM_ACTION.LOCALITY,
-            payload: item.label,
+            payload: item,
         });
     };
     const handleFranchiseNameInputTextChange = (text: string) => {
@@ -163,38 +167,23 @@ const AddFranchiseUpdateView: React.FC<{}> = ({ }) => {
             landmark: state.landmark,
             email: state.email,
             address: state.address,
-            createdBy: "Dhruv"
+            createdBy: otpData?.data.id as string,
         }
         console.log(payload, 'add Franchise..');
         dispatch2(addFranchiseRequest(payload));
 
-    }, [state])
+    }, [state]);
 
     useEffect(() => {
         if (result && result.Status != 'Error') {
-          if (
-            pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_FRANCHISE_ADDRESS
-          ) {
-            setStates(getStates(result));
-            setCities(getCities(result));
-          }
+         const _states = getStates(result).map(e => e.label);
+         const _cities = getCities(result).map(e => e.label);
+         const _localities = getLocalities(result);
+         setStates(_states);
+         setCities(_cities);
+         setLocalities(_localities);
         }
       }, [result]);
-    
-      useEffect(() => {
-        if (
-            States &&
-          cities &&
-          CityDropdownRef &&
-          StateDropwdownRef &&
-          pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_FRANCHISE_ADDRESS
-        ) {
-          //@ts-ignore
-          StateDropwdownRef?.current?.setDefaultValue(States[0]);
-          //@ts-ignore
-          CityDropdownRef?.current?.setDefaultValue(cities[0]);
-        }
-      }, [States, cities]);
 
       useEffect(() => {
         if (!addFranchiseRequesting && addFranchiseuccess) {
@@ -263,24 +252,27 @@ const AddFranchiseUpdateView: React.FC<{}> = ({ }) => {
                     <View style={styles.twoColumnWrapper}>
                         <View style={styles.textContainer}>
                             <Label text="State" style={styles.label} />
-                            <DropdownComponent data={States}
-                             onSelect={handleState} 
-                             //@ts-ignore
-                           ref={StateDropwdownRef}/>
+                           <EpackDropdown
+                                data={states}
+                                placeholder={'Select State'}
+                                hanldeData={handleState} />
                         </View>
                         <View style={styles.textContainer}>
                             <Label text="City" style={styles.label} />
-                            <DropdownComponent data={cities} 
-                            onSelect={handleCity}
-                              //@ts-ignore 
-                            ref={CityDropdownRef}/>
+                            <EpackDropdown
+                                data={cities}
+                                placeholder={'Select City'}
+                                hanldeData={handleCity} />
                         </View>
                     </View>
                 </View>
                 <Spacer height={4} />
                 <View style={styles.elementContainer}>
                     <Label text="Lacality" style={styles.label} />
-                    <DropdownComponent data={entityOptions} onSelect={handleLocality} />
+                    <EpackDropdown
+                            data={localities}
+                            placeholder={'Select Locality'}
+                            hanldeData={handleLocality} />
                 </View>
                 <Spacer height={4} />
                 <View style={styles.elementContainer}>
@@ -326,7 +318,7 @@ const AddFranchiseUpdateView: React.FC<{}> = ({ }) => {
                     textStyle={styles.textStyle}
                 />
                 <Spacer height={12} />
-                <Spinner show={addFranchiseRequesting} />
+                <Spinner show={addFranchiseRequesting || fetching} />
             </View>
         </AvoidSoftInputViewHOC>
     );

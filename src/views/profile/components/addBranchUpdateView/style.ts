@@ -83,12 +83,14 @@ const styles = StyleSheet.create({
   textAreaContainer: {
     borderColor: COLOR_GRAY2,
     borderWidth: 1,
+    borderRadius: 5,
     // padding: 5,
   },
   textArea: {
     height: 150,
     width:width*0.88,
     justifyContent: "flex-start",
+    textAlignVertical: 'top',
   }
 });
 

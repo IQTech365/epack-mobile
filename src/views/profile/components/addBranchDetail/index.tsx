@@ -22,10 +22,7 @@ const AddBranchView = () => {
   const {Branchs, getBranchsRequesting} = useAppSelector(
     state => state.Myprofile,
   );
-  console.log(Branchs, 'data123..');
-  
   const dispatch = useAppDispatch();
-
   const getCompanyId = () => {
     let id;
     const { data } = addCompanyInfo || {};
@@ -81,7 +78,7 @@ const AddBranchView = () => {
           }
           renderItem={({item, index}) => (
             <View style={{padding: 10}}>
-              <AddFranchiseListItem
+              <AddBranchListItem
                 item={item}
                 index={index}
                 
