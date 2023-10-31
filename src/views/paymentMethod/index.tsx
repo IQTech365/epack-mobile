@@ -10,7 +10,7 @@ import {
   UNLIMITED_PLAN_LINEARGRADIENT,
 } from '../../utils/colors';
 import styles from './style';
-import PhonePePaymentSDK from 'react-native-phonepe-pg' 
+// import PhonePePaymentSDK from 'react-native-phonepe-pg' 
 
 const PaymentMethodView: React.FC<{}> = () => {
   let plan_type = 'Basic';

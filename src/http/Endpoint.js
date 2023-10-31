@@ -74,6 +74,7 @@ export const GET_FRANCHISE = (company_id) => `/franchise/all/${company_id}`;
 // User Role
 export const ADD_USER_ROLE = `/role/add`;
 export const GET_ROLE_TYPES = `/setting/role-type/getAll`;
+export const CHECK_USERNAME_AVAILABLITY = `/auth/lookup`;
 
 // Submodules
 export const GET_SUBMODULES = `/setting/app-setting/submodule`;

@@ -105,6 +105,12 @@ export const UserRoleManagementSlice = createSlice({
             state.getRoleTypeFailure = true;
             state.getRoleTypeError = action.payload;
         },
+        resetGetRoleTypesRequest: (state) => {
+            state.getRoleTypesRequesting = false;
+            state.getRoleTypeSuccess = false;
+            state.getRoleTypeFailure = false;
+            state.getRoleTypeError = null;
+        },
     }
 });
 
@@ -125,4 +131,5 @@ export const {
     getRoleTypesRequest,
     getRoleTypesSuccess,
     getRoleTypesFailure,
+    resetGetRoleTypesRequest,
 } = UserRoleManagementSlice.actions;

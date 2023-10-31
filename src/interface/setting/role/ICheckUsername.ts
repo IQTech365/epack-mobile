@@ -2,8 +2,12 @@ export interface ICheckUsernameAvailablilityRequest {
     username: string;
 }
 
+interface IUsernameAvailabilityData {
+    message: string;
+}
+
 export interface ICheckUsernameAvailablilityResponse {
-    data: ICheckUsernameAvailablilityRequest;
+    data: IUsernameAvailabilityData;
     status: number;
     error: boolean;
 }

@@ -1,6 +1,6 @@
 import {AxiosResponse} from 'axios';
 import {Api} from '../http/Api';
-import {ADD_CONTACT_DETAIL, ADD_DOCUMENT, ADD_FOOTER_CONTENT, ADD_PAYMENT_METHOD, ADD_USER_ROLE, GET_BANKS, GET_CONTACTS, GET_DOCUMENTS, GET_FOOTER_CONTENTS, GET_OTP, GET_PAYMENT_METHODS, GET_ROLE_TYPES, GET_SUBMODULES, VERIFY_OTP} from '../http/Endpoint';
+import {ADD_CONTACT_DETAIL, ADD_DOCUMENT, ADD_FOOTER_CONTENT, ADD_PAYMENT_METHOD, ADD_USER_ROLE, CHECK_USERNAME_AVAILABLITY, GET_BANKS, GET_CONTACTS, GET_DOCUMENTS, GET_FOOTER_CONTENTS, GET_OTP, GET_PAYMENT_METHODS, GET_ROLE_TYPES, GET_SUBMODULES, VERIFY_OTP} from '../http/Endpoint';
 import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
 import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
 import { IAddContactDetailRequest } from '../interface/setting/packerProfile/contactDetail/IAddContactDetailRequest';
@@ -16,6 +16,7 @@ import { IBankResponse } from '../interface/setting/packerProfile/IBank';
 import { ISubmoduleResponse } from '../interface/setting/packerProfile/ISubmodule';
 import { IAddPaymentMethodRequest } from '../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodRequest';
 import { IAddPaymentMethodResponse } from '../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodResponse';
+import { ICheckUsernameAvailablilityRequest, ICheckUsernameAvailablilityResponse } from '../interface/setting/role/ICheckUsername';
 import { IAddUserRoleRequest, IAddUserRoleResponse, IRoleTypeResponse } from '../interface/setting/role/IUserRole';
 
 // PAYMENT
@@ -66,6 +67,12 @@ export const GetCompanyDocumentsService = async (payload: string): Promise<IGetD
 export const AddUserRoleService = async (payload: IAddUserRoleRequest): Promise<IAddUserRoleResponse> => {
     const api = Api.getInstance();
     return await api.post<IAddUserRoleRequest, AxiosResponse<IAddUserRoleResponse>>(payload, ADD_USER_ROLE);
+}
+
+// CHECK USERNAME AVAILABILITY
+export const CheckUsernameAvailabilityService = async (payload: ICheckUsernameAvailablilityRequest): Promise<ICheckUsernameAvailablilityResponse> => {
+    const api = Api.getInstance();
+    return await api.post<ICheckUsernameAvailablilityRequest, AxiosResponse<ICheckUsernameAvailablilityResponse>>(payload, CHECK_USERNAME_AVAILABLITY);
 }
 
 // ROLE TYPES

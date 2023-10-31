@@ -36,7 +36,6 @@
     "react-native-localize": "^3.0.2",
     "react-native-pager-view": "^6.2.1",
     "react-native-pell-rich-editor": "^1.9.0",
-    "react-native-phonepe-pg": "https://phonepe.mycloudrepo.io/public/repositories/phonepe-mobile-react-native-sdk/react-native-phonepe-pg.tgz",
     "react-native-popup-menu": "^0.16.1",
     "react-native-raw-bottom-sheet": "^2.2.0",
     "react-native-reanimated": "^3.4.1",
