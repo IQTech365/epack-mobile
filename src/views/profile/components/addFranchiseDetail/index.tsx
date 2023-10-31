@@ -22,6 +22,7 @@ const AddFranchiseView = () => {
     state => state.Myprofile,
   );
   const dispatch = useAppDispatch();
+  const {data: franchiseData = []} = Franchises || {};
 
   const getCompanyId = () => {
     let id;
@@ -70,7 +71,7 @@ const AddFranchiseView = () => {
     if (showFranchiseList) {
       return (
         <FlatList
-          data={Franchises}
+          data={franchiseData}
           refreshControl={
             <RefreshControl
               refreshing={getFranchiseRequesting}

@@ -14,9 +14,6 @@ import CollapsibleView from '../../../common/CollapsibleView';
 import Button from '../../../common/Button';
 import {useAppDispatch, useAppSelector} from '../../../redux/hooks';
 import entityOptions from '../../../data/entityOptions.json';
-import branchOptions from '../../../data/branchOptions.json';
-import franchiseOptions from '../../../data/franchiseOptions.json';
-import roleOptions from '../../../data/roleOptions.json';
 import actionOptions from '../../../data/actionOptions.json';
 import {
   IAddUserRoleRequest,
@@ -33,9 +30,10 @@ import Spinner from '../../../common/Spinner';
 import InputWithButton from '../../../common/InputWithButton';
 import {ICheckUsernameAvailablilityRequest} from '../../../interface/setting/role/ICheckUsername';
 import Toast from 'react-native-toast-message';
+import { getBranchsRequest, getFranchiseRequest } from '../../../redux/slices/MyProfile';
 
 const RoleManagementView: React.FC<{}> = ({}) => {
-  const [entityType, setEntityType] = useState<string>('0');
+  const [entityType, setEntityType] = useState<string>('Head Office');
   const [subEntityType, setSubEntityType] = useState<string>('0');
   const [employeeName, setEmployeeName] = useState<string>('');
   const [mobile, setMobile] = useState<string>('');
@@ -55,12 +53,17 @@ const RoleManagementView: React.FC<{}> = ({}) => {
     checkUsernameAvailabilityFailure,
     checkUsernameAvailabilityInfo,
   } = useAppSelector(state => state.UserRole);
+  const {Franchises, Branchs} = useAppSelector(
+    state => state.Myprofile,
+  );
   const {otpData} = useAppSelector(state => state.OTP);
   // Errors
   const [usernameError, setUsernameError] = useState<string>('');
   const [passwordError, setPasswordError] = useState<string>('');
 
   const {data: roleTypesData} = roleTypes || {};
+  const {data: brancheData = []} = Branchs || {};
+  const {data: franchiseData = []} = Franchises || {};
 
   const dispatch = useAppDispatch();
 
@@ -80,6 +83,26 @@ const RoleManagementView: React.FC<{}> = ({}) => {
     }
     return id;
   };
+
+  const transformBranchData = () => {
+    let _data:TDropdownItem[] = [];
+    if(brancheData && Array.isArray(brancheData) && brancheData.length > 0) {
+      _data = brancheData.map(d => {
+        return {label: d.branchName, value: d._id};
+      })
+    }
+    return _data;
+  }
+
+  const transformFranchiseData = () => {
+    let _data:TDropdownItem[] = [];
+    if(franchiseData && Array.isArray(franchiseData) && franchiseData.length > 0) {
+      _data = franchiseData.map(d => {
+        return {label: d.franchiseName, value: d._id};
+      })
+    }
+    return _data;
+  }
 
   const handleEntityType = useCallback(
     (item: TDropdownItem) => {
@@ -170,9 +193,9 @@ const RoleManagementView: React.FC<{}> = ({}) => {
 
   const getSubEntityDropdownOptionsLabel = () => {
     let label = '';
-    if (entityType == '2') {
+    if (entityType == 'Branch') {
       label = 'Branch Name';
-    } else if (entityType == '3') {
+    } else if (entityType == 'Franchise') {
       label = 'Franchise Name';
     }
     return label;
@@ -180,10 +203,10 @@ const RoleManagementView: React.FC<{}> = ({}) => {
 
   const getSubEntityDropdownOptions = () => {
     let options: TDropdownItem[] = [];
-    if (entityType == '2') {
-      options = branchOptions;
-    } else if (entityType == '3') {
-      options = franchiseOptions;
+    if (entityType == 'Branch') {
+      options = transformBranchData();
+    } else if (entityType == 'Franchise') {
+      options = transformFranchiseData();
     }
     return options;
   };
@@ -223,6 +246,8 @@ const RoleManagementView: React.FC<{}> = ({}) => {
 
   useEffect(() => {
     dispatch(getRoleTypesRequest());
+    dispatch(getBranchsRequest(getCompanyId()));
+    dispatch(getFranchiseRequest(getCompanyId()));
   }, []);
 
   useEffect(() => {
@@ -256,7 +281,7 @@ const RoleManagementView: React.FC<{}> = ({}) => {
                 onSelect={handleEntityType}
               />
             </View>
-            {entityType == '2' || entityType == '3' ? (
+            {entityType == 'Branch' || entityType == 'Franchise' ? (
               <>
                 <Spacer height={4} />
                 <View style={styles.elementContainer}>
