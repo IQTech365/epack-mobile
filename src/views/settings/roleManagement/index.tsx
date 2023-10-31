@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {View} from 'react-native';
+import {View, Text} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../common/Spacer';
 import styles from './style';
@@ -14,16 +14,26 @@ import CollapsibleView from '../../../common/CollapsibleView';
 import Button from '../../../common/Button';
 import {useAppDispatch, useAppSelector} from '../../../redux/hooks';
 import entityOptions from '../../../data/entityOptions.json';
-import branchOptions from '../../../data/branchOptions.json';
-import franchiseOptions from '../../../data/franchiseOptions.json';
-import roleOptions from '../../../data/roleOptions.json';
 import actionOptions from '../../../data/actionOptions.json';
-import {IAddUserRoleRequest, IRoleTypeData} from '../../../interface/setting/role/IUserRole';
-import { addUserRoleRequest, getRoleTypesRequest } from '../../../redux/slices/UserRoleManagementSlice';
+import {
+  IAddUserRoleRequest,
+  IRoleTypeData,
+} from '../../../interface/setting/role/IUserRole';
+import {
+  addUserRoleRequest,
+  checkUsernameAvailabilityRequest,
+  getRoleTypesRequest,
+  resetCheckUsernameAvailabilityRequest,
+  resetGetRoleTypesRequest,
+} from '../../../redux/slices/UserRoleManagementSlice';
 import Spinner from '../../../common/Spinner';
+import InputWithButton from '../../../common/InputWithButton';
+import {ICheckUsernameAvailablilityRequest} from '../../../interface/setting/role/ICheckUsername';
+import Toast from 'react-native-toast-message';
+import { getBranchsRequest, getFranchiseRequest } from '../../../redux/slices/MyProfile';
 
 const RoleManagementView: React.FC<{}> = ({}) => {
-  const [entityType, setEntityType] = useState<string>('0');
+  const [entityType, setEntityType] = useState<string>('Head Office');
   const [subEntityType, setSubEntityType] = useState<string>('0');
   const [employeeName, setEmployeeName] = useState<string>('');
   const [mobile, setMobile] = useState<string>('');
@@ -32,24 +42,35 @@ const RoleManagementView: React.FC<{}> = ({}) => {
   const [password, setPassword] = useState<string>('');
   const [roleType, setRoleType] = useState<string>('');
   const [permissions, setPermissions] = useState<string[]>([]);
-  const { addCompanyInfo, companies } = useAppSelector(state => state.Company);
-  const {getRoleTypesRequesting, roleTypes} = useAppSelector(state => state.UserRole);
-  const { otpData } = useAppSelector(state => state.OTP);
+  const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
+  const {
+    getRoleTypesRequesting,
+    getRoleTypeSuccess,
+    getRoleTypeFailure,
+    roleTypes,
+    checkUsernameAvailabilityRequesting,
+    checkUsernameAvailabilitySuccess,
+    checkUsernameAvailabilityFailure,
+    checkUsernameAvailabilityInfo,
+  } = useAppSelector(state => state.UserRole);
+  const {Franchises, Branchs} = useAppSelector(
+    state => state.Myprofile,
+  );
+  const {otpData} = useAppSelector(state => state.OTP);
   // Errors
   const [usernameError, setUsernameError] = useState<string>('');
   const [passwordError, setPasswordError] = useState<string>('');
 
-  console.log('RoleManagement--roleTypes--', JSON.stringify(roleTypes));
-
-  const {data:roleTypesData} = roleTypes || {};
-  
+  const {data: roleTypesData} = roleTypes || {};
+  const {data: brancheData = []} = Branchs || {};
+  const {data: franchiseData = []} = Franchises || {};
 
   const dispatch = useAppDispatch();
 
   const getCompanyId = () => {
     let id;
-    const { data } = addCompanyInfo || {};
-    const { data: companiesData } = companies || {};
+    const {data} = addCompanyInfo || {};
+    const {data: companiesData} = companies || {};
     if (data && Object.keys(data).length > 0) {
       id = data._id;
     } else if (
@@ -62,6 +83,26 @@ const RoleManagementView: React.FC<{}> = ({}) => {
     }
     return id;
   };
+
+  const transformBranchData = () => {
+    let _data:TDropdownItem[] = [];
+    if(brancheData && Array.isArray(brancheData) && brancheData.length > 0) {
+      _data = brancheData.map(d => {
+        return {label: d.branchName, value: d._id};
+      })
+    }
+    return _data;
+  }
+
+  const transformFranchiseData = () => {
+    let _data:TDropdownItem[] = [];
+    if(franchiseData && Array.isArray(franchiseData) && franchiseData.length > 0) {
+      _data = franchiseData.map(d => {
+        return {label: d.franchiseName, value: d._id};
+      })
+    }
+    return _data;
+  }
 
   const handleEntityType = useCallback(
     (item: TDropdownItem) => {
@@ -152,9 +193,9 @@ const RoleManagementView: React.FC<{}> = ({}) => {
 
   const getSubEntityDropdownOptionsLabel = () => {
     let label = '';
-    if (entityType == '2') {
+    if (entityType == 'Branch') {
       label = 'Branch Name';
-    } else if (entityType == '3') {
+    } else if (entityType == 'Franchise') {
       label = 'Franchise Name';
     }
     return label;
@@ -162,17 +203,69 @@ const RoleManagementView: React.FC<{}> = ({}) => {
 
   const getSubEntityDropdownOptions = () => {
     let options: TDropdownItem[] = [];
-    if (entityType == '2') {
-      options = branchOptions;
-    } else if (entityType == '3') {
-      options = franchiseOptions;
+    if (entityType == 'Branch') {
+      options = transformBranchData();
+    } else if (entityType == 'Franchise') {
+      options = transformFranchiseData();
     }
     return options;
   };
 
+  const showUsernameAvailabilityStatusView = () => {
+    if(!checkUsernameAvailabilityRequesting && checkUsernameAvailabilitySuccess) {
+      const {data} = checkUsernameAvailabilityInfo || {};
+      const {message} = data || {};
+      let textStyle = styles.usernameAvailableInfoText;
+      if(message && message.includes('taken')) {
+        textStyle = styles.usernameNotAvailableInfoText;
+      }
+      return (
+        <View style={styles.usernameAvailablityStatusContainer}>
+          <Text style={textStyle}>{checkUsernameAvailabilityInfo?.data?.message}</Text>
+        </View>
+      );
+    }
+    return null;
+  }
+
+  const hanldeUsernameAvailabilityCheck = () => {
+    dispatch(resetCheckUsernameAvailabilityRequest());
+    if (username) {
+      const payload: ICheckUsernameAvailablilityRequest = {
+        username: username,
+      };
+      dispatch(checkUsernameAvailabilityRequest(payload));
+    } else {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Please type keywords to find username.'
+      });
+    }
+  };
+
   useEffect(() => {
     dispatch(getRoleTypesRequest());
+    dispatch(getBranchsRequest(getCompanyId()));
+    dispatch(getFranchiseRequest(getCompanyId()));
   }, []);
+
+  useEffect(() => {
+    if (!getRoleTypesRequesting && (getRoleTypeSuccess || getRoleTypeFailure)) {
+      dispatch(resetGetRoleTypesRequest());
+    }
+  }, [getRoleTypesRequesting, getRoleTypeSuccess, getRoleTypeFailure]);
+
+  useEffect(() => {
+    if (!checkUsernameAvailabilityRequesting && checkUsernameAvailabilityFailure) {
+      Toast.show({
+        type: 'error',
+        text1: 'Username',
+        text2: 'Error in checking username availability. Please try again!'
+      });
+      dispatch(resetCheckUsernameAvailabilityRequest());
+    }
+  }, [checkUsernameAvailabilityRequesting, checkUsernameAvailabilityFailure]);
 
   return (
     <AvoidSoftInputViewHOC>
@@ -188,7 +281,7 @@ const RoleManagementView: React.FC<{}> = ({}) => {
                 onSelect={handleEntityType}
               />
             </View>
-            {entityType == '2' || entityType == '3' ? (
+            {entityType == 'Branch' || entityType == 'Franchise' ? (
               <>
                 <Spacer height={4} />
                 <View style={styles.elementContainer}>
@@ -236,12 +329,12 @@ const RoleManagementView: React.FC<{}> = ({}) => {
             <Spacer height={4} />
             <View style={styles.elementContainer}>
               <Label text="Create Username" style={styles.label} />
-              <Input
+              <InputWithButton
                 onChangeText={handleUsernameInputTextChange}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
+                inProgress={checkUsernameAvailabilityRequesting}
+                onCheckPress={hanldeUsernameAvailabilityCheck}
               />
+              {showUsernameAvailabilityStatusView()}
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
@@ -258,7 +351,7 @@ const RoleManagementView: React.FC<{}> = ({}) => {
               <Label text="Role Type" style={styles.label} />
             </View>
             <View style={styles.elementContainer2}>
-              {roleTypesData.map((role:IRoleTypeData, index: number) => {
+              {roleTypesData?.map((role: IRoleTypeData, index: number) => {
                 return (
                   <BouncyCheckbox
                     key={`${index}`}

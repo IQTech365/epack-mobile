@@ -79,6 +79,7 @@ export const  ADD_LORRY = `/vehicle-management/vehicle-lorry/add`;
 export const  ADD_DRIVER = `/vehicle-management/vehicle-driver/add`;
 
 export const GET_ROLE_TYPES = `/setting/role-type/getAll`;
+export const CHECK_USERNAME_AVAILABLITY = `/auth/lookup`;
 
 // Submodules
 export const GET_SUBMODULES = `/setting/app-setting/submodule`;

@@ -21,8 +21,9 @@ import { IAddDocumentRequest } from '../interface/setting/packerProfile/document
 import { IAddDocumentResponse } from '../interface/setting/packerProfile/document/IAddDocumentResponse';
 import { IGetDocumentsResponse } from '../interface/setting/packerProfile/document/IGetDocumentsResponse';
 import { IAddUserRoleRequest, IAddUserRoleResponse, IRoleTypeResponse } from '../interface/setting/role/IUserRole';
-import { addUserRoleFailure, addUserRoleRequest, addUserRoleSuccess, getRoleTypesFailure, getRoleTypesRequest, getRoleTypesSuccess } from '../redux/slices/UserRoleManagementSlice';
+import { addUserRoleFailure, addUserRoleRequest, addUserRoleSuccess, checkUsernameAvailabilityFailure, checkUsernameAvailabilityRequest, checkUsernameAvailabilitySuccess, getRoleTypesFailure, getRoleTypesRequest, getRoleTypesSuccess } from '../redux/slices/UserRoleManagementSlice';
 import { ISubmoduleResponse } from '../interface/setting/packerProfile/ISubmodule';
+import { ICheckUsernameAvailablilityRequest, ICheckUsernameAvailablilityResponse } from '../interface/setting/role/ICheckUsername';
 
 export function* addFooterContentSaga(action: PayloadAction<IAddFooterContentRequest>) {
     console.log('addFooterContentSaga--action--', JSON.stringify(action));
@@ -145,6 +146,17 @@ export function* addUserRoleSaga(action: PayloadAction<IAddUserRoleRequest>) {
     }
 }
 
+export function* checkUsernameAvailabilitySaga(action: PayloadAction<ICheckUsernameAvailablilityRequest>) {
+    try {
+        const response: ICheckUsernameAvailablilityResponse = yield call(SettingService.CheckUsernameAvailabilityService, action.payload);
+        console.log('checkUsernameAvailabilitySaga-response----', JSON.stringify(response));
+        yield put(checkUsernameAvailabilitySuccess(response));
+    } catch (error) {
+        console.log('checkUsernameAvailabilitySaga-error----', error);
+        yield put(checkUsernameAvailabilityFailure(JSON.stringify(error)));
+    }
+}
+
 export function* getRoleTypesSaga(action: PayloadAction) {
     try {
         const response: IRoleTypeResponse = yield call(SettingService.GetRoleTypesService);
@@ -179,4 +191,5 @@ export function* watcherSettingSaga() {
     yield takeLatest(addUserRoleRequest.type, addUserRoleSaga);
     yield takeLatest(getRoleTypesRequest.type, getRoleTypesSaga);
     yield takeLatest(getSubmodulesRequest.type, getSubmodulesSaga);
+    yield takeLatest(checkUsernameAvailabilityRequest.type, checkUsernameAvailabilitySaga);
 }

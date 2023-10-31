@@ -43,7 +43,18 @@ export const getCities = (arr: any): TDropdownItem[] => {
     });
     }
     return cities;
-  };
+};
+
+export const getLocalities = (arr: any): string[] => {
+  let localities: string[] = [];
+  const {PostOffice} = arr || {};
+  if (PostOffice && Array.isArray(PostOffice)) {
+    const cityArr = PostOffice.map(e => e.Block);
+    const nonDuplicateCityArr = new Set(cityArr);
+    localities = Array.from(nonDuplicateCityArr).map(e => e);
+  }
+  return localities;
+};
 
   const getAddressByPincode = async (pincode:string) => {
     try {

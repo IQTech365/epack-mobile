@@ -20,17 +20,28 @@ import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
 import { IAddBranchRequest } from '../../../../interface/myProfile/IAddBranchRequest';
 import { addBranchRequest, restAddBranchRequest } from '../../../../redux/slices/MyProfile';
 import Spinner from '../../../../common/Spinner';
+import usePincodeHook from '../../../../hooks/usePincodeHook';
+import { getCities, getLocalities, getStates } from '../../../../utils/formatter';
 
 const AddBranchUpdateView: React.FC<{}> = ({ }) => {
     const [state, dispatch] = useReducer(addBranchReducer, initialState);
     const { addCompanyInfo, companies } = useAppSelector(state => state.Company);
+    const {otpData} = useAppSelector(state => state.OTP);
+    const [states, setStates] = useState<string[]>([]);
+    const [cities, setCities] = useState<string[]>([]);
+    const [localities, setLocalities] = useState<string[]>([]);
+
     const {
         addBranchRequesting,
         addBranchSuccess,
         addBranchFailure,
-        addBranchInfo,
       } = useAppSelector(state => state.Myprofile);
     const dispatch2 = useAppDispatch();
+
+    const {result, fetching, setPincode} = usePincodeHook(
+        () => {},
+        () => {},
+      );
 
     const getCompanyId = () => {
         let id;
@@ -85,6 +96,7 @@ const AddBranchUpdateView: React.FC<{}> = ({ }) => {
     };
 
     const handlePincodeInputTextChange = (text: string) => {
+        setPincode(text);
         dispatch({
             type: ADD_BRANCH_FORM_ACTION.PINCODE,
             payload: text,
@@ -123,19 +135,30 @@ const AddBranchUpdateView: React.FC<{}> = ({ }) => {
             landmark: state.landmark,
             email: state.email,
             address: state.address,
-            createdBy: "Dhruv"
+            createdBy: otpData?.data.id as string
         }
         console.log(payload, 'add branch..');
         dispatch2(addBranchRequest(payload));
 
-    }, [state])
+    }, [state]);
+
+    useEffect(() => {
+        if (result && result.Status != 'Error') {
+         const _states = getStates(result).map(e => e.label);
+         const _cities = getCities(result).map(e => e.label);
+         const _localities = getLocalities(result);
+         setStates(_states);
+         setCities(_cities);
+         setLocalities(_localities);
+        }
+      }, [result]);
 
     useEffect(() => {
         if (!addBranchRequesting && addBranchSuccess) {
           Toast.show({
             type: 'success',
             text1: 'Add Branch',
-            text2: 'Add Branch has been added successfully',
+            text2: 'Branch has been added successfully',
           });
           dispatch2(restAddBranchRequest());
         } else if (!addBranchRequesting && addBranchFailure) {
@@ -184,15 +207,15 @@ const AddBranchUpdateView: React.FC<{}> = ({ }) => {
                         <View style={styles.textContainer}>
                             <Label text="State" style={styles.label} />
                             <EpackDropdown
-                                data={stateData}
-                                placeholder={'please select or enter'}
+                                data={states}
+                                placeholder={'Select State'}
                                 hanldeData={handleState} />
                         </View>
                         <View style={styles.textContainer}>
                             <Label text="City" style={styles.label} />
                             <EpackDropdown
-                                data={stateData}
-                                placeholder={'please select or enter'}
+                                data={cities}
+                                placeholder={'Select City'}
                                 hanldeData={handleCity} />
                         </View>
                     </View>
@@ -202,8 +225,8 @@ const AddBranchUpdateView: React.FC<{}> = ({ }) => {
                     <Label text="Lacality" style={styles.label} />
                     <View>
                         <EpackDropdown
-                            data={stateData}
-                            placeholder={'please select or enter'}
+                            data={localities}
+                            placeholder={'Select Locality'}
                             hanldeData={handleLocality} />
                     </View>
                 </View>
@@ -249,7 +272,7 @@ const AddBranchUpdateView: React.FC<{}> = ({ }) => {
                 <Spacer height={12} />
             </View>
         </AvoidSoftInputViewHOC>
-        <Spinner show={addBranchRequesting} />
+        <Spinner show={addBranchRequesting || fetching} />
         </>
     );
 };

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
     View,
     Text,
@@ -55,6 +55,10 @@ const EpackDropdown: React.FC<IEpackDropdownProps> = ({
             setIsOpen(false);
         }
     };
+
+    useEffect(() => {
+        setOptions(data);
+    }, [data]);
 
     return (
         <View style={styles.container}>

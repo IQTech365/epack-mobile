@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   elementContainer: {
     width: width * 0.9,
     justifyContent: 'center',
-    alignItems: 'flex-start',
+    // alignItems: 'flex-start',
     alignSelf: 'center',
   },
   elementContainer2: {
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
   textContainer: {
     width: width * 0.44,
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    // alignItems: 'flex-start',
     alignSelf: 'center',
   },
   textStyle: {
@@ -81,12 +81,13 @@ const styles = StyleSheet.create({
   textAreaContainer: {
     borderColor: COLOR_GRAY2,
     borderWidth: 1,
-    // padding: 5,
+    borderRadius: 5,
   },
   textArea: {
     height: 150,
     width:width*0.88,
     justifyContent: "flex-start",
+    textAlignVertical: 'top',
   }
 });
 

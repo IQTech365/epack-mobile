@@ -2,7 +2,9 @@ import {StyleSheet, Dimensions} from 'react-native';
 import {
   COLOR_BLACK,
   COLOR_BLUE,
+  COLOR_ERROR,
   COLOR_GRAY2,
+  COLOR_GREEN,
   COLOR_WHITE,
 } from '../../../utils/colors';
 
@@ -63,6 +65,19 @@ const styles = StyleSheet.create({
   previewButtonStyle: {
     backgroundColor: COLOR_BLUE,
     borderRadius: 5,
+  },
+  usernameAvailablityStatusContainer: {
+    width: width * 0.9,
+    alignItems: 'flex-start',
+    paddingVertical: 5,
+  },
+  usernameAvailableInfoText: {
+    fontSize: 14,
+    color: COLOR_GREEN,
+  },
+  usernameNotAvailableInfoText: {
+    fontSize: 14,
+    color: COLOR_ERROR,
   },
 });
 
