@@ -30,7 +30,7 @@ const AddLorryView: React.FC<{}> = ({ }) => {
     const [state, dispatch] = useReducer(addAddLorryReducer, initialState);
     const [companyLogo, setCompanyLogo] = useState<string>(null);
     const [imageFile, setImageFile] = useState<any>(null);
-    const {
+    const {     
         addLorryRequesting,
         addLorrySuccess,
         addLorryFailure,

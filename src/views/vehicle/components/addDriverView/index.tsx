@@ -1,5 +1,12 @@
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import {
+    launchCamera,
+    launchImageLibrary,
+    CameraType,
+    MediaType,
+    PhotoQuality,
+} from 'react-native-image-picker';
 import Toast from 'react-native-toast-message';
 import AvoidSoftInputViewHOC from '../../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../../common/Spacer';
@@ -17,10 +24,15 @@ import { IAddDriverRequest } from '../../../../interface/vehicle/IAddDriverReque
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
 import { addDriverRequest, restaddDriverRequest } from '../../../../redux/slices/VehicleSlice';
 import Spinner from '../../../../common/Spinner';
+import usePincodeHook, { PINCODE_REQUEST_KEY } from '../../../../hooks/usePincodeHook';
+import { TDropdownItem } from '../../../../type/TDropdownItem';
+import { getCities, getStates } from '../../../../utils/formatter';
 
 const AddDriverView: React.FC<{}> = ({ }) => {
     const [state, dispatch] = useReducer(addAddDriverReducer, initialState);
     const [checkAddress, setCheckAddress] = useState(false);
+    const [companyLogo, setCompanyLogo] = useState<string>(null);
+    const [imageFile, setImageFile] = useState<any>(null);
     const {
         uploadLogoRequesting,
         uploadLogoSuccess,
@@ -29,13 +41,39 @@ const AddDriverView: React.FC<{}> = ({ }) => {
         companies
     } = useAppSelector(state => state.Company);
 
+    const options: IOptions = {
+        mediaType: 'photo',
+        maxWidth: 200,
+        maxHeight: 200,
+        quality: 1,
+        cameraType: 'back',
+    };
+
     const {
         addDriverRequesting,
         addDriveruccess,
         addDriverFailure,
         addDriverError
     } = useAppSelector(state => state.Vehicle);
+    const [pincodeRequestKey, setPincodeRequestKey] =
+    useState<PINCODE_REQUEST_KEY>(PINCODE_REQUEST_KEY.ADD_DRIVER_PERMANENT_ADDRESS);
+    const [permanentStates, setpermanentStates] = useState<string[]>([]);
+    const [permanentCities, setpermanentCities] = useState<string[]>([]);
+    const [currentStates, setCurrentStates] = useState<string[]>([]);
+    const [currentCities, setCurrentCities] = useState<string[]>([]);
     const dispatch2 = useAppDispatch()
+    console.log(permanentStates, 'latest..');
+    
+
+    const setPincodeError = () => {
+      };
+    
+      const resetPincodeError = () => {
+      };
+      const {result, fetching, setPincode} = usePincodeHook(
+        setPincodeError,
+        resetPincodeError,
+      );
 
     const getCompanyId = () => {
         let id;
@@ -53,9 +91,9 @@ const AddDriverView: React.FC<{}> = ({ }) => {
         }
         return id;
     };
+    
 
     const handleChodeEntity = (text: string) => {
-        console.log(text, 'choose entity.');
         dispatch({
             type: ADD_Driver_FORM_ACTION.CHOOSE_ENTITY,
             payload: text,
@@ -90,6 +128,8 @@ const AddDriverView: React.FC<{}> = ({ }) => {
     };
 
     const handlePermanentPincodeInputTextChange = (text: string) => {
+        setPincodeRequestKey(PINCODE_REQUEST_KEY.ADD_DRIVER_PERMANENT_ADDRESS);
+      setPincode(text);
         const {permanentAddress} = state;
         const tempObj = {
           ...permanentAddress,
@@ -151,6 +191,8 @@ const AddDriverView: React.FC<{}> = ({ }) => {
     };
     
     const handleCurrentPincodeInputTextChange = (text: string) => {
+        setPincodeRequestKey(PINCODE_REQUEST_KEY.ADD_DRIVER_CURRENT_ADDRESS);
+        setPincode(text);
         const {currentAddress} = state;
         const tempObj = {
           ...currentAddress,
@@ -212,8 +254,6 @@ const AddDriverView: React.FC<{}> = ({ }) => {
     };
 
     const handlepermanentCheckInputTextChange = (text: boolean) => {
-        console.log(text, 'boolean..');
-        
         setCheckAddress(text);
     };
 
@@ -252,6 +292,65 @@ const AddDriverView: React.FC<{}> = ({ }) => {
         dispatch2(addDriverRequest(payload));
 
     }
+    const handleLaunchCamera = async () => {
+        try {
+            const result = await launchCamera(options);
+            if (result && result.hasOwnProperty('assets')) {
+                const { assets } = result || {};
+                if (assets && Array.isArray(assets) && assets.length > 0) {
+                    const imageObj = assets[0];
+                    setImageFile(imageObj);
+                    setCompanyLogo(imageObj.uri as string);
+                    // setCompanyLogo2(imageObj.uri as string);
+                }
+            }
+            console.log('Camera-result----', JSON.stringify(result));
+        } catch (error) {
+            console.log('Error in launching camera--', error);
+        }
+    };
+
+    const handleLaunchGallery = async () => {
+        try {
+            const result = await launchImageLibrary(options);
+            console.log('Gallery-result----', JSON.stringify(result));
+            if (result && result.hasOwnProperty('assets')) {
+                const { assets } = result || {};
+                if (assets && Array.isArray(assets) && assets.length > 0) {
+                    const imageObj = assets[0];
+                    setImageFile(imageObj);
+                    setCompanyLogo(imageObj.uri as string);
+                    // setCompanyLogo2(imageObj.uri as string);
+                }
+            }
+        } catch (error) {
+            console.log('Error in opening gallery--', error);
+        }
+    };
+
+    const handleResultChange = useCallback(async() => {
+        if (result && result.Status !== 'Error') {
+          if (
+            pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_DRIVER_PERMANENT_ADDRESS
+          ) {
+            const _states = getStates(result).map(e => e.label);
+            const _cities = getCities(result).map(e => e.label);
+            setpermanentStates(_states);
+            setpermanentCities(_cities);
+          } else{
+            const _states = getStates(result).map(e => e.label);
+            const _cities = getCities(result).map(e => e.label);
+            setCurrentStates(_states);
+            setCurrentCities(_cities);
+          }
+        }
+      }, [result, pincodeRequestKey]);
+    
+    
+      useEffect(() => {
+        handleResultChange();
+      }, [handleResultChange]);
+    
 
     useEffect(() => {
         if (!addDriverRequesting && addDriveruccess) {
@@ -308,6 +407,31 @@ const AddDriverView: React.FC<{}> = ({ }) => {
                         selectionColor={COLOR_BLACK} />
                 </View>
                 <Spacer height={4} />
+                <View style={styles.elementContainer}>
+                    <Label text="Upload Driver Photo" style={styles.label} />
+                    <View style={styles.elementContainer}>
+                        <View style={styles.uploadContaine2}>
+                            <TouchableOpacity style={{ alignSelf: 'center' }} onPress={handleLaunchCamera}>
+                                <CameraIcon width={20} height={20} />
+                            </TouchableOpacity>
+                            <Text style={styles.cameraText}>click By Camera</Text>
+                            <Spacer height={6} />
+                            <View style={styles.twoColumnWrapper2}>
+                                <View style={styles.orBorderStyle} />
+                                <Text style={{ textAlign: 'center' }}>Or</Text>
+                                <View style={styles.orBorderStyle} />
+                            </View>
+                            <Spacer height={6} />
+                            <Button
+                                text="Bourse File"
+                                onPress={handleLaunchGallery}
+                                disabled={false}
+                                style={styles.browserButtonStyle}
+                                textStyle={styles.browsertextStyle} />
+                        </View>
+                    </View>
+                </View>
+                <Spacer height={4} />
 
                 <View style={styles.twoColumnWrapper}>
                     <View style={styles.textContainer}>
@@ -331,7 +455,7 @@ const AddDriverView: React.FC<{}> = ({ }) => {
                 <Spacer height={4} />
                 <View style={styles.elementContainer}>
                     <Label text="Upload License" style={styles.label} />
-                    <TouchableOpacity style={styles.uploadLicenceStyle}>
+                    <TouchableOpacity style={styles.uploadLicenceStyle} onPress={handleLaunchGallery}>
                         <Text style={styles.uploadLicenceTextStyle}>
                             Choose File/Camera
                         </Text>
@@ -343,7 +467,7 @@ const AddDriverView: React.FC<{}> = ({ }) => {
                     <View style={styles.twoColumnWrapper}>
                         <View style={styles.uploadContainer}>
                             <Text style={styles.uploadContainerText}>Front</Text>
-                            <TouchableOpacity style={{ alignSelf: 'center' }}>
+                            <TouchableOpacity style={{ alignSelf: 'center' }} onPress={handleLaunchCamera}>
                                 <CameraIcon width={20} height={20} />
                             </TouchableOpacity>
                             <Text style={styles.cameraText}>click By Camera</Text>
@@ -356,7 +480,7 @@ const AddDriverView: React.FC<{}> = ({ }) => {
                             <Spacer height={6} />
                             <Button
                                 text="Bourse File"
-                                onPress={() => { } }
+                                onPress={handleLaunchGallery}
                                 disabled={false}
                                 style={styles.browserButtonStyle}
                                 textStyle={styles.browsertextStyle} />
@@ -401,8 +525,9 @@ const AddDriverView: React.FC<{}> = ({ }) => {
                     </View>
                     <View style={styles.textContainer}>
                         <Label text="State" style={styles.label} />
+                       
                         <EpackDropdown
-                            data={stateData}
+                            data={permanentStates}
                             placeholder={'please select or enter'}
                             hanldeData={handlePermanentState} />
                     </View>
@@ -412,7 +537,7 @@ const AddDriverView: React.FC<{}> = ({ }) => {
                     <View style={styles.textContainer}>
                         <Label text="City" style={styles.label} />
                         <EpackDropdown
-                            data={stateData}
+                            data={permanentCities}
                             placeholder={'please select or enter'}
                             hanldeData={handlePermanentCity} />
                     </View>
@@ -481,7 +606,7 @@ const AddDriverView: React.FC<{}> = ({ }) => {
                     <View style={styles.textContainer}>
                         <Label text="State" style={styles.label} />
                         <EpackDropdown
-                            data={stateData}
+                            data={currentStates}
                             placeholder={'please select or enter'}
                             hanldeData={handleCurrentState} />
                     </View>
@@ -491,7 +616,8 @@ const AddDriverView: React.FC<{}> = ({ }) => {
                     <View style={styles.textContainer}>
                         <Label text="City" style={styles.label} />
                         <EpackDropdown
-                            data={stateData}
+                        
+                        data={currentCities}
                             placeholder={'please select or enter'}
                             hanldeData={handleCurrentCity} />
                     </View>
@@ -527,7 +653,7 @@ const AddDriverView: React.FC<{}> = ({ }) => {
                 <Spacer height={12} />
             </View>
         </AvoidSoftInputViewHOC>
-        <Spinner show={addDriverRequesting} />
+        <Spinner show={fetching ||addDriverRequesting} />
         </>
     );
 };

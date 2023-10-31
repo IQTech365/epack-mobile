@@ -127,6 +127,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: COLOR_GRAY5
   },
+  uploadContaine2: {
+    height: 150,
+    borderStyle: 'dotted',
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: COLOR_GRAY5
+  },
   uploadContainerText: {
     textAlign: 'center', 
     fontWeight: '500'
