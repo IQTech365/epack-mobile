@@ -8,7 +8,12 @@ import CreateIcon from '../../../../images/icons/create_icon.svg';
 import CreateIcon2 from '../../../../images/icons/create_icon2.svg';
 import Spacer from '../../../../common/Spacer';
 
-const MoneyReceiptSN: React.FC<{}> = ({}) => {
+interface IMoneyReceiptSNProps {
+  moduleId: string;
+  moduleName: string;
+}
+
+const MoneyReceiptSN: React.FC<IMoneyReceiptSNProps> = ({moduleId, moduleName}) => {
   const [showList, setShowList] = useState<boolean>(false);
   const [showForm, setShowForm] = useState<boolean>(true);
 
@@ -32,7 +37,7 @@ const MoneyReceiptSN: React.FC<{}> = ({}) => {
 
   const showFormView = () => {
     if (showForm) {
-      return <SerilaNoSettingFormView />;
+      return <SerilaNoSettingFormView  moduleId={moduleId} moduleName={moduleName}/>;
     }
     return null;
   };

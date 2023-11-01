@@ -80,3 +80,6 @@ export const CHECK_USERNAME_AVAILABLITY = `/auth/lookup`;
 export const GET_SUBMODULES = `/setting/app-setting/submodule`;
 
 export const GET_BANKS = `/bankname/getAll`;
+
+// Serial No's
+export const SERIAL_NO = `/setting/app-setting/add`;

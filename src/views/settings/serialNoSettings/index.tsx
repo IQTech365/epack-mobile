@@ -21,15 +21,15 @@ const AddSerialNoView = () => {
   const showTabItem = () => {
     switch (activeTabIndex) {
       case 0:
-       return <MoneyReceiptSN />
+       return <MoneyReceiptSN moduleId='5' moduleName='MONEY RECEIPT' />
       case 1:
-        return <CarConditionSN />
+        return <CarConditionSN moduleId='4' moduleName='CAR CONDITION' />
       case 2:
-        return <BiltySN/>
+        return <BiltySN moduleId='3' moduleName='BILTY' />
       case 3:
-        return <InvoiceSN/>
+        return <InvoiceSN moduleId='2' moduleName='INVOICE' />
       case 4:
-        return <QuotationSN/>
+        return <QuotationSN moduleId='1' moduleName='QUOTATION'/>
       default:
         return null;
     }

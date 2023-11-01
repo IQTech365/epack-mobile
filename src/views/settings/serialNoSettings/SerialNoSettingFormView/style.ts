@@ -16,6 +16,12 @@ const styles = StyleSheet.create({
         color: COLOR_BLACK,
         fontSize: 14,
     },
+    elementContainer: {
+        width: width * 0.9,
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        alignSelf: 'center',
+    },
     mainWrapper: {
         width: width * 0.9,
         alignSelf: 'center',

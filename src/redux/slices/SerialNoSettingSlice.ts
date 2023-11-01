@@ -2,6 +2,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import { IAddPaymentMethodRequest } from '../../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodRequest';
 import { IAddPaymentMethodResponse } from '../../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodResponse';
 import { IGetPaymentMethodsResponse } from '../../interface/setting/packerProfile/paymentMethod/IGetPaymentMethodsResponse';
+import { ICreateSerialNoRequest } from '../../interface/setting/serialNo/ICreateSerialNoRequest';
 import { ICreateSerialNoResponse } from '../../interface/setting/serialNo/ICreateSerialNoResponse';
 
 interface ISNSettingState {
@@ -11,30 +12,24 @@ interface ISNSettingState {
     biltySNList: ICreateSerialNoResponse | null;
     invoiceSNList: ICreateSerialNoResponse | null;
     quotationSNList: ICreateSerialNoResponse | null;
-    // Add Money Receipt SN
-    createMoneyReceiptSNInfo: IAddPaymentMethodResponse | null;
-    createSerialNoRequesting: boolean;
-    createSerialNoSuccess: boolean;
-    createSerialNoFailure: boolean;
-    createSerialNoError: any;
-    // Delete Money Receipt SN
-    deletePaymentMethodInfo: any;
-    deletePaymentMethodRequesting: boolean;
-    deletePaymentMethodSuccess: boolean;
-    deletePaymentMethodFailure: boolean;
-    deletePaymentMethodError: any;
-    // Update Money Receipt SN
-    updatePaymentMethodInfo: any;
-    updatePaymentMethodRequesting: boolean;
-    updatePaymentMethodSuccess: boolean;
-    updatePaymentMethodFailure: boolean;
-    updatePaymentMethodError: any;
-    // Get Money Receipt SN
+    // Add Serial No
+    createSerialNumberInfo: ICreateSerialNoResponse | null;
+    createSerialNumberRequesting: boolean;
+    createSerialNumberSuccess: boolean;
+    createSerialNumberFailure: boolean;
+    createSerialNumberError: any;
+    // Update Serial No
+    updateSerialNumberInfo: any;
+    updateSerialNumberRequesting: boolean;
+    updateSerialNumberSuccess: boolean;
+    updateSerialNumberFailure: boolean;
+    updateSerialNumberError: any;
+    // Get Serial No
     paymentMethods: IGetPaymentMethodsResponse | null;
-    getSerialNoRequesting: boolean;
-    getSerialNoSuccess: boolean;
-    getSerialNoFailure: boolean;
-    getSerialNoError: any;
+    getSerialNumberRequesting: boolean;
+    getSerialNumberSuccess: boolean;
+    getSerialNumberFailure: boolean;
+    getSerialNumberError: any;
 
 }
 
@@ -46,116 +41,85 @@ const initialState: ISNSettingState = {
     invoiceSNList: null,
     quotationSNList: null,
     // Add Money Receipt SN
-    createMoneyReceiptSNInfo: null,
-    createSerialNoRequesting: false,
-    createSerialNoSuccess: false,
-    createSerialNoFailure: false,
-    createSerialNoError: null,
-    // Delete Money Receipt SN
-    deletePaymentMethodInfo: null,
-    deletePaymentMethodRequesting: false,
-    deletePaymentMethodSuccess: false,
-    deletePaymentMethodFailure: false,
-    deletePaymentMethodError: null,
+    createSerialNumberInfo: null,
+    createSerialNumberRequesting: false,
+    createSerialNumberSuccess: false,
+    createSerialNumberFailure: false,
+    createSerialNumberError: null,
     // Update Money Receipt SN
-    updatePaymentMethodInfo: null,
-    updatePaymentMethodRequesting: false,
-    updatePaymentMethodSuccess: false,
-    updatePaymentMethodFailure: false,
-    updatePaymentMethodError: false,
+    updateSerialNumberInfo: null,
+    updateSerialNumberRequesting: false,
+    updateSerialNumberSuccess: false,
+    updateSerialNumberFailure: false,
+    updateSerialNumberError: false,
     // Get Money Receipt SN
     paymentMethods: null,
-    getSerialNoRequesting: false,
-    getSerialNoSuccess: false,
-    getSerialNoFailure: false,
-    getSerialNoError: null,
+    getSerialNumberRequesting: false,
+    getSerialNumberSuccess: false,
+    getSerialNumberFailure: false,
+    getSerialNumberError: null,
 }
 
 export const SNSettingSlice = createSlice({
     name: 'SNSettingSlice',
     initialState: initialState,
     reducers: {
-        // ***** Add Money Receipt SN *****
-        // ******************************
-        addPaymentMethodRequest: (state, action: PayloadAction<IAddPaymentMethodRequest>) => {
-            state.createSerialNoRequesting = true;
+        // ***** Create SN *****
+        createSerialNoRequest: (state, action: PayloadAction<ICreateSerialNoRequest>) => {
+            state.createSerialNumberRequesting = true;
         },
-        createSerialNoSuccess: (state, action: PayloadAction<IAddPaymentMethodResponse>) => {
-            state.createSerialNoRequesting = false;
-            state.createSerialNoSuccess = true;
-            state.createMoneyReceiptSNInfo = action.payload;
+        createSerialNoSuccess: (state, action: PayloadAction<ICreateSerialNoResponse>) => {
+            state.createSerialNumberRequesting = false;
+            state.createSerialNumberSuccess = true;
+            state.createSerialNumberInfo = action.payload;
         },
         createSerialNoFailure: (state, action: PayloadAction<any>) => {
-            state.createSerialNoRequesting = false;
-            state.createSerialNoSuccess = false;
-            state.createSerialNoFailure = true;
-            state.createSerialNoError = action.payload;
+            state.createSerialNumberRequesting = false;
+            state.createSerialNumberSuccess = false;
+            state.createSerialNumberFailure = true;
+            state.createSerialNumberError = action.payload;
         },
-        resetAddPaymentMethodRequest: (state) => {
-            state.createSerialNoRequesting = false;
-            state.createSerialNoSuccess = false;
-            state.createSerialNoFailure = false;
-            state.createSerialNoError = null;
+        resetCreateSerialNoRequest: (state) => {
+            state.createSerialNumberRequesting = false;
+            state.createSerialNumberSuccess = false;
+            state.createSerialNumberFailure = false;
+            state.createSerialNumberError = null;
         },
-        // ***** Delete Money Receipt SN *****
-        // ******************************
-        deletePaymentMethodRequest: (state, action: PayloadAction<IAddPaymentMethodRequest>) => {
-            state.deletePaymentMethodRequesting = true;
+        // ***** Update SN *****
+        updateSerialNoRequest: (state, action: PayloadAction<IAddPaymentMethodRequest>) => {
+            state.updateSerialNumberRequesting = true;
         },
-        deletePaymentMethodSuccess: (state, action: PayloadAction<IAddPaymentMethodResponse>) => {
-            state.deletePaymentMethodRequesting = false;
-            state.deletePaymentMethodSuccess = true;
-            state.deletePaymentMethodInfo = action.payload;
+        updateSerialNoSuccess: (state, action: PayloadAction<IAddPaymentMethodResponse>) => {
+            state.updateSerialNumberRequesting = false;
+            state.updateSerialNumberSuccess = true;
+            state.updateSerialNumberInfo = action.payload;
         },
-        deletePaymentMethodFailure: (state, action: PayloadAction<any>) => {
-            state.deletePaymentMethodRequesting = false;
-            state.deletePaymentMethodSuccess = false;
-            state.deletePaymentMethodFailure = true;
-            state.deletePaymentMethodError = action.payload;
+        updateSerialNoFailure: (state, action: PayloadAction<any>) => {
+            state.updateSerialNumberRequesting = false;
+            state.updateSerialNumberSuccess = false;
+            state.updateSerialNumberFailure = true;
+            state.updateSerialNumberError = action.payload;
         },
-        resetDeletePaymentMethodRequest: (state) => {
-            state.deletePaymentMethodRequesting = false;
-            state.deletePaymentMethodSuccess = false;
-            state.deletePaymentMethodFailure = false;
-            state.deletePaymentMethodError = null;
+        resetUpdateSerialNoRequest: (state) => {
+            state.updateSerialNumberRequesting = false;
+            state.updateSerialNumberSuccess = false;
+            state.updateSerialNumberFailure = false;
+            state.updateSerialNumberError = null;
         },
-        // ***** Update Money Receipt SN *****
-        // ******************************
-        updatePaymentMethodRequest: (state, action: PayloadAction<IAddPaymentMethodRequest>) => {
-            state.updatePaymentMethodRequesting = true;
-        },
-        updatePaymentMethodSuccess: (state, action: PayloadAction<IAddPaymentMethodResponse>) => {
-            state.updatePaymentMethodRequesting = false;
-            state.updatePaymentMethodSuccess = true;
-            state.updatePaymentMethodInfo = action.payload;
-        },
-        updatePaymentMethodFailure: (state, action: PayloadAction<any>) => {
-            state.updatePaymentMethodRequesting = false;
-            state.updatePaymentMethodSuccess = false;
-            state.updatePaymentMethodFailure = true;
-            state.updatePaymentMethodError = action.payload;
-        },
-        resetUpdatePaymentMethodRequest: (state) => {
-            state.updatePaymentMethodRequesting = false;
-            state.updatePaymentMethodSuccess = false;
-            state.updatePaymentMethodFailure = false;
-            state.updatePaymentMethodError = null;
-        },
-        // ***** Get Money Receipt SN *****
-        // ******************************
-        getPaymentMethodsRequest: (state, action: PayloadAction<string>) => {
-            state.getSerialNoRequesting = true;
+        // ***** Get SN *****
+        getSerialNoRequest: (state, action: PayloadAction<string>) => {
+            state.getSerialNumberRequesting = true;
         },
         getSerialNoSuccess: (state, action: PayloadAction<IGetPaymentMethodsResponse>) => {
-            state.getSerialNoRequesting = false;
-            state.getSerialNoSuccess = true;
+            state.getSerialNumberRequesting = false;
+            state.getSerialNumberSuccess = true;
             state.paymentMethods = action.payload;
         },
         getSerialNoFailure: (state, action: PayloadAction<any>) => {
-            state.getSerialNoRequesting = false;
-            state.getSerialNoSuccess = false;
-            state.getSerialNoFailure = true;
-            state.getSerialNoError = action.payload;
+            state.getSerialNumberRequesting = false;
+            state.getSerialNumberSuccess = false;
+            state.getSerialNumberFailure = true;
+            state.getSerialNumberError = action.payload;
         },
     }
 });
@@ -164,22 +128,17 @@ export default SNSettingSlice.reducer;
 
 export const {
     // Add Payment method
-    addPaymentMethodRequest,
+    createSerialNoRequest,
     createSerialNoSuccess,
     createSerialNoFailure,
-    resetAddPaymentMethodRequest,
-    // Delete Payment method
-    deletePaymentMethodRequest,
-    deletePaymentMethodSuccess,
-    deletePaymentMethodFailure,
-    resetDeletePaymentMethodRequest,
+    resetCreateSerialNoRequest,
     // Update Payment method
-    updatePaymentMethodRequest,
-    updatePaymentMethodSuccess,
-    updatePaymentMethodFailure,
-    resetUpdatePaymentMethodRequest,
+    updateSerialNoRequest,
+    updateSerialNoSuccess,
+    updateSerialNoFailure,
+    resetUpdateSerialNoRequest,
     // Get Money Receipt SN
-    getPaymentMethodsRequest,
+    getSerialNoRequest,
     getSerialNoSuccess,
     getSerialNoFailure,
 

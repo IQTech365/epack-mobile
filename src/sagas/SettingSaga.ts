@@ -24,6 +24,9 @@ import { IAddUserRoleRequest, IAddUserRoleResponse, IRoleTypeResponse } from '..
 import { addUserRoleFailure, addUserRoleRequest, addUserRoleSuccess, checkUsernameAvailabilityFailure, checkUsernameAvailabilityRequest, checkUsernameAvailabilitySuccess, getRoleTypesFailure, getRoleTypesRequest, getRoleTypesSuccess } from '../redux/slices/UserRoleManagementSlice';
 import { ISubmoduleResponse } from '../interface/setting/packerProfile/ISubmodule';
 import { ICheckUsernameAvailablilityRequest, ICheckUsernameAvailablilityResponse } from '../interface/setting/role/ICheckUsername';
+import { ICreateSerialNoRequest } from '../interface/setting/serialNo/ICreateSerialNoRequest';
+import { ICreateSerialNoResponse } from '../interface/setting/serialNo/ICreateSerialNoResponse';
+import { createSerialNoFailure, createSerialNoRequest, createSerialNoSuccess } from '../redux/slices/SerialNoSettingSlice';
 
 export function* addFooterContentSaga(action: PayloadAction<IAddFooterContentRequest>) {
     console.log('addFooterContentSaga--action--', JSON.stringify(action));
@@ -179,6 +182,17 @@ export function* getSubmodulesSaga(action: PayloadAction) {
     }
 }
 
+export function* createSerialNoSaga(action: PayloadAction<ICreateSerialNoRequest>) {
+    try {
+        const response: ICreateSerialNoResponse = yield call(SettingService.CreateSerialNoService, action.payload);
+        console.log('createSerialNoSaga-response----', JSON.stringify(response));
+        yield put(createSerialNoSuccess(response));
+    } catch (error) {
+        console.log('createSerialNoSaga-error----', error);
+        yield put(createSerialNoFailure(JSON.stringify(error)));
+    }
+}
+
 export function* watcherSettingSaga() {
     yield takeLatest(addFooterContentRequest.type, addFooterContentSaga);
     yield takeLatest(getFooterContentsRequest.type, getFooterContentsSaga);
@@ -192,4 +206,5 @@ export function* watcherSettingSaga() {
     yield takeLatest(getRoleTypesRequest.type, getRoleTypesSaga);
     yield takeLatest(getSubmodulesRequest.type, getSubmodulesSaga);
     yield takeLatest(checkUsernameAvailabilityRequest.type, checkUsernameAvailabilitySaga);
+    yield takeLatest(createSerialNoRequest.type, createSerialNoSaga);
 }
