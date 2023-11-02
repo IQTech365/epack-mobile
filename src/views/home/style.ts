@@ -40,7 +40,12 @@ const styles = StyleSheet.create({
     fontSize:10,
     fontWeight:'bold',
     left:width*0.05
-  }
+  },
+  pieChartUI:{ 
+    backgroundColor:COLOR_WHITE,
+    width:width*0.95,
+    borderRadius:8
+}
 });
 
 export default styles;

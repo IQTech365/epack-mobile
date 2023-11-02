@@ -45,6 +45,7 @@
     "react-native-scrollable-tab-view": "^1.0.0",
     "react-native-shadow-2": "^7.0.8",
     "react-native-signature-capture": "^0.4.12",
+    "react-native-snap-carousel": "^3.9.1",
     "react-native-svg": "^13.14.0",
     "react-native-svg-charts": "^5.4.0",
     "react-native-svg-transformer": "^1.0.0",
