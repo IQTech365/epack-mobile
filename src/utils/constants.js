@@ -67,6 +67,12 @@ const MyProfileStackRoute = {
 
 };
 
+const VehicleMangementStackRoute = {
+  AddLorry: 'AddLorry',
+  AddDriver: 'AddDriver',
+  vehicleRoot:'vehicleRoot',
+};
+
 export {
   TabRoute,
   AuthStackRoute,
@@ -77,4 +83,5 @@ export {
   ClientStackRoute,
   SettingStackRoute,
   MyProfileStackRoute,
+  VehicleMangementStackRoute,
 };

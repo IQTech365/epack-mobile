@@ -5,7 +5,7 @@ import {
   COLOR_GRAY2,
   COLOR_GRAY5,
   COLOR_WHITE,
-} from '../../../utils/colors';
+} from '../../../../utils/colors';
 
 const {width} = Dimensions.get('window');
 
@@ -121,6 +121,13 @@ const styles = StyleSheet.create({
 },
   uploadContainer: {
     width: 180,
+    height: 150,
+    borderStyle: 'dotted',
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: COLOR_GRAY5
+  },
+  uploadContaine2: {
     height: 150,
     borderStyle: 'dotted',
     borderWidth: 1,

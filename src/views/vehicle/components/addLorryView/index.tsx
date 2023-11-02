@@ -1,17 +1,17 @@
-import React, { useCallback, useReducer, useState } from 'react';
+import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import AvoidSoftInputViewHOC from '../../../common/AvoidSoftInputViewHOC';
-import Spacer from '../../../common/Spacer';
+import Toast from 'react-native-toast-message';
+import AvoidSoftInputViewHOC from '../../../../common/AvoidSoftInputViewHOC';
+import Spacer from '../../../../common/Spacer';
 import styles from './style';
-import Label from '../../../common/Label';
-import Header from '../../../common/Header';
-import Input from '../../../common/Input';
-import { COLOR_BLACK, COLOR_BLUE } from '../../../utils/colors';
-import Button from '../../../common/Button';
-import EpackDropdown from '../../../common/DropdownComponent2';
-import stateData from '../../../data/stateData.json';
-import CameraIcon from '../../../images/icons/arcticons_camera.svg';
-import DatePickerComponent from '../../../common/DatePickerComponent';
+import Label from '../../../../common/Label';
+import Input from '../../../../common/Input';
+import { COLOR_BLACK, COLOR_BLUE } from '../../../../utils/colors';
+import Button from '../../../../common/Button';
+import EpackDropdown from '../../../../common/DropdownComponent2';
+import stateData from '../../../../data/stateData.json';
+import CameraIcon from '../../../../images/icons/arcticons_camera.svg';
+import DatePickerComponent from '../../../../common/DatePickerComponent';
 import {
     launchCamera,
     launchImageLibrary,
@@ -19,18 +19,31 @@ import {
     MediaType,
     PhotoQuality,
 } from 'react-native-image-picker';
-import { useAppSelector } from '../../../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
+import { ADD_LORRY_FORM_ACTION, addAddLorryReducer, initialState } from './addLorryReducer';
+import { formatDate } from '../../../../utils/formatter';
+import { IAddLorryRequest } from '../../../../interface/vehicle/IAddLorryRequest';
+import { addLorryRequest, restAddLorryRequest } from '../../../../redux/slices/VehicleSlice';
+import Spinner from '../../../../common/Spinner';
 
 const AddLorryView: React.FC<{}> = ({ }) => {
-    // const [state, dispatch] = useReducer(addBranchReducer, initialState);
+    const [state, dispatch] = useReducer(addAddLorryReducer, initialState);
     const [companyLogo, setCompanyLogo] = useState<string>(null);
     const [imageFile, setImageFile] = useState<any>(null);
+    const {     
+        addLorryRequesting,
+        addLorrySuccess,
+        addLorryFailure,
+        addLorryError
+    } = useAppSelector(state => state.Vehicle);
     const {
         uploadLogoRequesting,
         uploadLogoSuccess,
         uploadLogoFailure,
         addCompanyInfo,
+        companies
     } = useAppSelector(state => state.Company);
+    const dispatch2 = useAppDispatch()
 
     const options: IOptions = {
         mediaType: 'photo',
@@ -40,74 +53,140 @@ const AddLorryView: React.FC<{}> = ({ }) => {
         cameraType: 'back',
     };
 
-    const handleState = (text: string) => {
-        // console.log(text, 'state data');
-        // dispatch({
-        //     type: ADD_BRANCH_FORM_ACTION.STATE,
-        //     payload: text,
-        // });
+    const getCompanyId = () => {
+        let id;
+        const { data } = addCompanyInfo || {};
+        const { data: companiesData } = companies || {};
+        if (data && Object.keys(data).length > 0) {
+            id = data._id;
+        } else if (
+            companiesData &&
+            Array.isArray(companiesData) &&
+            companiesData.length > 0
+        ) {
+            const firstCompany = companiesData[0];
+            id = firstCompany._id;
+        }
+        return id;
+    };
+    console.log(getCompanyId(), 'get company id...');
+    
+    const handleChooseEntity = (text: string) => {
+        console.log(text, 'state data');
+        dispatch({
+            type: ADD_LORRY_FORM_ACTION.CHOOSE_ENTITY,
+            payload: text,
+        });
     };
 
-    const handleCity = (text: string) => {
-        // dispatch({
-        //     type: ADD_BRANCH_FORM_ACTION.CITY,
-        //     payload: text,
-        // });
+    const handleBranchname = (text: string) => {
+        dispatch({
+            type: ADD_LORRY_FORM_ACTION.BRANCH_NAME,
+            payload: text,
+        });
     };
 
-    const handleLocality = (text: string) => {
-        // dispatch({
-        //     type: ADD_BRANCH_FORM_ACTION.LOCALITY,
-        //     payload: text,
-        // });
-    };
-    const handleBranchNameInputTextChange = (text: string) => {
-        // dispatch({
-        //     type: ADD_BRANCH_FORM_ACTION.BRANCH_NAME,
-        //     payload: text,
-        // });
+    const handleLorryCompanyname = (text: string) => {
+        dispatch({
+            type: ADD_LORRY_FORM_ACTION.LORRY_COMPANY_NAME,
+            payload: text,
+        });
     };
 
-    const handleContactNumberInputTextChange = (text: string) => {
-        // dispatch({
-        //     type: ADD_BRANCH_FORM_ACTION.REGISTERED_MOBILE,
-        //     payload: text,
-        // });
+
+    const handleLorryType = (text: string) => {
+        dispatch({
+            type: ADD_LORRY_FORM_ACTION.LORRY_TYPE,
+            payload: text,
+        });
     };
 
-    const handlePincodeInputTextChange = (text: string) => {
-        // dispatch({
-        //     type: ADD_BRANCH_FORM_ACTION.PINCODE,
-        //     payload: text,
-        // });
+    const handleRegistrationNoInputTextChange = (text: string) => {
+        dispatch({
+            type: ADD_LORRY_FORM_ACTION.REGISTRATION_NO,
+            payload: text,
+        });
     };
 
-    // const handleAddressTextChange = (text: string) => {
-    //     dispatch({
-    //         type: ADD_BRANCH_FORM_ACTION.ADDRESS,
-    //         payload: text,
-    //     });
-    // };
-
-    // const handleLandmarkInputTextChange = (text: string) => {
-    //     dispatch({
-    //         type: ADD_BRANCH_FORM_ACTION.LANDMARK,
-    //         payload: text,
-    //     });
-    // };
-    // const handleEmailInputTextChange = (text: string) => {
-    //     dispatch({
-    //         type: ADD_BRANCH_FORM_ACTION.EMAIL,
-    //         payload: text,
-    //     });
-    // };
-
-    const handleAddLorryDate = (date: Date) => {
-        // dispatch({
-        //   type: QUOTATION_FORM_ACTION.DATE_OF_QUOTATION,
-        //   payload: formatDate(date),
-        // });
+    const handleManufatureYearDate = (date: Date) => {
+        dispatch({
+            type: ADD_LORRY_FORM_ACTION.MANUFACTURE_YEAR,
+            payload: formatDate(date),
+        });
     };
+
+    const handleVehicleChassisNoInputTextChange = (text: string) => {
+        dispatch({
+            type: ADD_LORRY_FORM_ACTION.VEHICLE_CHASSI_NO,
+            payload: text,
+        });
+    };
+
+    const handlVehicleEngineNoInputTextChange = (text: string) => {
+        dispatch({
+            type: ADD_LORRY_FORM_ACTION.VEHICLE_ENGINE_NO,
+            payload: text,
+        });
+    };
+
+    const handleVehicleRCnoInputTextChange = (text: string) => {
+        dispatch({
+            type: ADD_LORRY_FORM_ACTION.VEHICLE_RC_NO,
+            payload: text,
+        });
+    };
+
+    const handlePollutionCertificateNoInputTextChange = (text: string) => {
+        dispatch({
+            type: ADD_LORRY_FORM_ACTION.POLLUTION_CERTI_NO,
+            payload: text,
+        });
+    };
+
+    const handleRenewalDate = (date: Date) => {
+        dispatch({
+            type: ADD_LORRY_FORM_ACTION.RENEWAL_DATE,
+            payload: formatDate(date),
+        });
+    };
+
+    const handlePermitNoInputTextChange = (text: string) => {
+        dispatch({
+            type: ADD_LORRY_FORM_ACTION.PERMIT_NO,
+            payload: text,
+        });
+    };
+
+    const handleRenewalPermitDate = (date: Date) => {
+        dispatch({
+            type: ADD_LORRY_FORM_ACTION.RENEWAL_PERMIT_DATE,
+            payload: formatDate(date),
+        });
+    };
+    const handleSubmit = () => {
+        const payload: IAddLorryRequest = {
+            companyId: getCompanyId(),
+            entityType: state.chooseEntity,
+            entityId:  state.chooseEntity,
+            driverName:  state.branchName,
+            branchName: state.branchName,
+            lorryCompanyName: state.lorryCompanyName,
+            vehicleManufacturingYear: state.manufactureYear,
+            lorryType: state.lorryType,
+            vehicleRegistrationNo: state.registrationNo,
+            vehicleChassisNo: state.vehicleChassiNo,
+            vehicleEngineNo: state.vehicleEngineNo,
+            permitNo: state.permitNo,
+            permitRenewalDate: state.renewalPermitDate,
+            vehicleRCNo: state.vehicleRCNo,
+            pollutionCertificateNo: state.pollutionCertiNo,
+            pollutionRenewalDate: state.renewalPermitDate,
+            createdBy: getCompanyId()
+        }
+        console.log(payload, 'add Lorry..');
+        dispatch2(addLorryRequest(payload));
+
+    }
     const handleLaunchCamera = async () => {
         try {
             const result = await launchCamera(options);
@@ -143,10 +222,28 @@ const AddLorryView: React.FC<{}> = ({ }) => {
             console.log('Error in opening gallery--', error);
         }
     };
+
+    useEffect(() => {
+        if (!addLorryRequesting && addLorrySuccess) {
+          Toast.show({
+            type: 'success',
+            text1: 'Add Lorry',
+            text2: 'Add Lorry has been added successfully',
+          });
+          dispatch2(restAddLorryRequest());
+        } else if (!addLorryRequesting && addLorryFailure) {
+          Toast.show({
+            type: 'error',
+            text1: 'Add Lorry',
+            text2: 'Error in adding Lorry. Please try again!',
+          });
+          dispatch2(restAddLorryRequest());
+        }
+      }, [addLorryRequesting, addLorrySuccess, addLorryFailure]);
+
     return (
-        <AvoidSoftInputViewHOC>
+        <><AvoidSoftInputViewHOC>
             <View style={styles.container}>
-                <Header label="Add Lorry    " canGoBack={true} />
                 <Spacer height={4} />
 
                 <View>
@@ -157,16 +254,14 @@ const AddLorryView: React.FC<{}> = ({ }) => {
                             <EpackDropdown
                                 data={stateData}
                                 placeholder={'please select or enter'}
-                                hanldeData={handleCity}
-                            />
+                                hanldeData={handleChooseEntity} />
                         </View>
                         <View style={styles.textContainer}>
                             <Label text="Branch Name" style={styles.label} />
                             <EpackDropdown
                                 data={stateData}
                                 placeholder={'please select or enter'}
-                                hanldeData={handleCity}
-                            />
+                                hanldeData={handleBranchname} />
                         </View>
                     </View>
                     <Spacer height={4} />
@@ -177,8 +272,7 @@ const AddLorryView: React.FC<{}> = ({ }) => {
                     <EpackDropdown
                         data={stateData}
                         placeholder={'please select or enter'}
-                        hanldeData={handleCity}
-                    />
+                        hanldeData={handleLorryCompanyname} />
                 </View>
                 <Spacer height={4} />
                 <View style={styles.elementContainer}>
@@ -186,8 +280,7 @@ const AddLorryView: React.FC<{}> = ({ }) => {
                     <EpackDropdown
                         data={stateData}
                         placeholder={'please select or enter'}
-                        hanldeData={handleCity}
-                    />
+                        hanldeData={handleLorryType} />
                 </View>
                 <Spacer height={4} />
 
@@ -195,50 +288,46 @@ const AddLorryView: React.FC<{}> = ({ }) => {
                     <View style={styles.textContainer}>
                         <Label text="Registration Number" style={styles.label} />
                         <Input
-                            onChangeText={handleContactNumberInputTextChange}
+                            onChangeText={handleRegistrationNoInputTextChange}
                             containerStyle={styles.inputContainer}
                             inputStyle={styles.input}
                             selectionColor={COLOR_BLACK}
-                            placeholder='HR 55 hY 2259'
-                        />
+                            placeholder='HR 55 hY 2259' />
                     </View>
                     <View style={styles.textContainer}>
                         <Label text="Manufacturing Year" style={styles.label} />
-                        <DatePickerComponent onDateSelect={handleAddLorryDate} />
+                        <DatePickerComponent onDateSelect={handleManufatureYearDate} />
                     </View>
                 </View>
                 <Spacer height={4} />
                 <View style={styles.elementContainer}>
                     <Label text="Vehicle Chassis Number" style={styles.label} />
                     <Input
-                        // onChangeText={handleBranchNameInputTextChange}
+                        onChangeText={handleVehicleChassisNoInputTextChange}
                         containerStyle={styles.inputContainer}
                         inputStyle={styles.input}
                         selectionColor={COLOR_BLACK}
-                        placeholder='HR 55 hY 2259'
-                    />
+                        placeholder='HR 55 hY 2259' />
                 </View>
                 <Spacer height={4} />
                 <View style={styles.elementContainer}>
                     <Label text="Vehicle Engine Number" style={styles.label} />
                     <Input
-                        // onChangeText={handleBranchNameInputTextChange}
+                        onChangeText={handlVehicleEngineNoInputTextChange}
                         containerStyle={styles.inputContainer}
                         inputStyle={styles.input}
                         selectionColor={COLOR_BLACK}
-                        placeholder='HR 55 hY 2259'
-                    />
+                        placeholder='HR 55 hY 2259' />
                 </View>
                 <Spacer height={4} />
                 <View style={styles.elementContainer}>
                     <Label text="Vehicle RC Number" style={styles.label} />
                     <Input
-                        // onChangeText={handleBranchNameInputTextChange}
+                        onChangeText={handleVehicleRCnoInputTextChange}
                         containerStyle={styles.inputContainer}
                         inputStyle={styles.input}
                         selectionColor={COLOR_BLACK}
-                        placeholder='HR 55 hY 2259'
-                    />
+                        placeholder='HR 55 hY 2259' />
                 </View>
 
                 <Spacer height={4} />
@@ -262,8 +351,7 @@ const AddLorryView: React.FC<{}> = ({ }) => {
                                 onPress={handleLaunchGallery}
                                 disabled={false}
                                 style={styles.browserButtonStyle}
-                                textStyle={styles.browsertextStyle}
-                            />
+                                textStyle={styles.browsertextStyle} />
                         </View>
                     </View>
                 </View>
@@ -272,15 +360,14 @@ const AddLorryView: React.FC<{}> = ({ }) => {
                     <View style={styles.textContainer}>
                         <Label text="Pollution Certificate No." style={styles.label} />
                         <Input
-                            onChangeText={handleContactNumberInputTextChange}
+                            onChangeText={handlePollutionCertificateNoInputTextChange}
                             containerStyle={styles.inputContainer}
                             inputStyle={styles.input}
-                            selectionColor={COLOR_BLACK}
-                        />
+                            selectionColor={COLOR_BLACK} />
                     </View>
                     <View style={styles.textContainer}>
                         <Label text="Renewal Date" style={styles.label} />
-                        <DatePickerComponent onDateSelect={handleAddLorryDate} />
+                        <DatePickerComponent onDateSelect={handleRenewalDate} />
                     </View>
                 </View>
                 <Spacer height={4} />
@@ -304,8 +391,7 @@ const AddLorryView: React.FC<{}> = ({ }) => {
                                 onPress={handleLaunchGallery}
                                 disabled={false}
                                 style={styles.browserButtonStyle}
-                                textStyle={styles.browsertextStyle}
-                            />
+                                textStyle={styles.browsertextStyle} />
                         </View>
                     </View>
                 </View>
@@ -314,15 +400,14 @@ const AddLorryView: React.FC<{}> = ({ }) => {
                     <View style={styles.textContainer}>
                         <Label text="Permit Number" style={styles.label} />
                         <Input
-                            onChangeText={handleContactNumberInputTextChange}
+                            onChangeText={handlePermitNoInputTextChange}
                             containerStyle={styles.inputContainer}
                             inputStyle={styles.input}
-                            selectionColor={COLOR_BLACK}
-                        />
+                            selectionColor={COLOR_BLACK} />
                     </View>
                     <View style={styles.textContainer}>
                         <Label text="Renewal Date" style={styles.label} />
-                        <DatePickerComponent onDateSelect={handleAddLorryDate} />
+                        <DatePickerComponent onDateSelect={handleRenewalPermitDate} />
                     </View>
                 </View>
                 <Spacer height={4} />
@@ -346,8 +431,7 @@ const AddLorryView: React.FC<{}> = ({ }) => {
                                 onPress={handleLaunchGallery}
                                 disabled={false}
                                 style={styles.browserButtonStyle}
-                                textStyle={styles.browsertextStyle}
-                            />
+                                textStyle={styles.browsertextStyle} />
                         </View>
                     </View>
                 </View>
@@ -355,14 +439,16 @@ const AddLorryView: React.FC<{}> = ({ }) => {
                 <Spacer height={12} />
                 <Button
                     text="SAVE"
-                    // onPress={handleSubmit}
+                    onPress={handleSubmit}
                     disabled={false}
                     style={styles.previewButtonStyle}
-                    textStyle={styles.textStyle}
-                />
+                    textStyle={styles.textStyle} />
                 <Spacer height={12} />
             </View>
+
         </AvoidSoftInputViewHOC>
+        <Spinner show={addLorryRequesting} />
+        </>
     );
 };
 

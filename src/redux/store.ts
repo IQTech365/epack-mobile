@@ -19,6 +19,7 @@ import { removeIsRegistrationComplete, removeLoginStatus, removeToken } from '..
 import SNSettingSlice from './slices/SerialNoSettingSlice';
 import  MyProfileSlice  from './slices/MyProfile';
 import UserRoleManagementSlice from './slices/UserRoleManagementSlice';
+import VehicleSlice from './slices/VehicleSlice';
 
 const persistConfig = {
   key: 'root',
@@ -39,6 +40,7 @@ const appReducer = combineReducers({
   SNSetting: SNSettingSlice,
   Myprofile: MyProfileSlice,
   UserRole: UserRoleManagementSlice,
+  Vehicle: VehicleSlice,
 });
 
 const rootReducer: Reducer = (state: RootState, action: AnyAction) => {
