@@ -1,6 +1,6 @@
 import {AxiosResponse} from 'axios';
 import {Api} from '../http/Api';
-import {ADD_CONTACT_DETAIL, ADD_DOCUMENT, ADD_FOOTER_CONTENT, ADD_PAYMENT_METHOD, ADD_USER_ROLE, CHECK_USERNAME_AVAILABLITY, GET_BANKS, GET_CONTACTS, GET_DOCUMENTS, GET_FOOTER_CONTENTS, GET_OTP, GET_PAYMENT_METHODS, GET_ROLE_TYPES, GET_SUBMODULES, SERIAL_NO, VERIFY_OTP} from '../http/Endpoint';
+import {ADD_CONTACT_DETAIL, ADD_DOCUMENT, ADD_FOOTER_CONTENT, ADD_PAYMENT_METHOD, ADD_USER_ROLE, CHECK_USERNAME_AVAILABLITY, GET_BANKS, GET_CONTACTS, GET_DOCUMENTS, GET_FOOTER_CONTENTS, GET_OTP, GET_PAYMENT_METHODS, GET_ROLE_TYPES, GET_SUBMODULES, MODULES, SERIAL_NO, VERIFY_OTP} from '../http/Endpoint';
 import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
 import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
 import { IAddContactDetailRequest } from '../interface/setting/packerProfile/contactDetail/IAddContactDetailRequest';
@@ -17,6 +17,7 @@ import { ISubmoduleResponse } from '../interface/setting/packerProfile/ISubmodul
 import { IAddPaymentMethodRequest } from '../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodRequest';
 import { IAddPaymentMethodResponse } from '../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodResponse';
 import { ICheckUsernameAvailablilityRequest, ICheckUsernameAvailablilityResponse } from '../interface/setting/role/ICheckUsername';
+import { IGetModulesResponse } from '../interface/setting/role/IModule';
 import { IAddUserRoleRequest, IAddUserRoleResponse, IRoleTypeResponse } from '../interface/setting/role/IUserRole';
 import { ICreateSerialNoRequest } from '../interface/setting/serialNo/ICreateSerialNoRequest';
 import { ICreateSerialNoResponse } from '../interface/setting/serialNo/ICreateSerialNoResponse';
@@ -99,4 +100,10 @@ export const GetBanksService = async (): Promise<IBankResponse> => {
 export const CreateSerialNoService = async (payload: ICreateSerialNoRequest): Promise<ICreateSerialNoResponse> => {
     const api = Api.getInstance();
     return await api.post<ICreateSerialNoRequest, AxiosResponse<ICreateSerialNoResponse>>(payload, SERIAL_NO);
+}
+
+// MODULES
+export const GetModulesService = async (): Promise<IGetModulesResponse> => {
+    const api = Api.getInstance();
+    return await api.get<IGetModulesResponse>(MODULES);
 }

@@ -1,5 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import { ICheckUsernameAvailablilityRequest, ICheckUsernameAvailablilityResponse } from '../../interface/setting/role/ICheckUsername';
+import { IGetModulesResponse } from '../../interface/setting/role/IModule';
 import { IAddUserRoleRequest, IAddUserRoleResponse, IRoleTypeResponse } from '../../interface/setting/role/IUserRole';
 
 interface IUserRoleManagementState {
@@ -21,6 +22,12 @@ interface IUserRoleManagementState {
     getRoleTypeSuccess: boolean;
     getRoleTypeFailure: boolean;
     getRoleTypeError: any;
+    // Get Modules
+    modules: IGetModulesResponse | null;
+    getModulesRequesting: boolean;
+    getModulesSuccess: boolean;
+    getModulesFailure: boolean;
+    getModulesError: any;
 }
 
 const initialState: IUserRoleManagementState = {
@@ -41,6 +48,12 @@ const initialState: IUserRoleManagementState = {
     getRoleTypeSuccess: false,
     getRoleTypeFailure: false,
     getRoleTypeError: null,
+    // Get Modules
+    modules: null,
+    getModulesRequesting: false,
+    getModulesSuccess: false,
+    getModulesFailure: false,
+    getModulesError: null,
    
 }
 
@@ -111,6 +124,21 @@ export const UserRoleManagementSlice = createSlice({
             state.getRoleTypeFailure = false;
             state.getRoleTypeError = null;
         },
+        // Get Modules
+        getModulesRequest: (state) => {
+            state.getModulesRequesting = true;
+        },
+        getModulesSuccess: (state, action: PayloadAction<IGetModulesResponse>) => {
+            state.getModulesRequesting = false;
+            state.getModulesSuccess = true;
+            state.modules = action.payload;
+        },
+        getModulesFailure: (state, action: PayloadAction<any>) => {
+            state.getModulesRequesting = false;
+            state.getModulesSuccess = false;
+            state.getModulesFailure = true;
+            state.getModulesError = action.payload;
+        },
     }
 });
 
@@ -132,4 +160,8 @@ export const {
     getRoleTypesSuccess,
     getRoleTypesFailure,
     resetGetRoleTypesRequest,
+    // Get Modules
+    getModulesRequest,
+    getModulesSuccess,
+    getModulesFailure,
 } = UserRoleManagementSlice.actions;

@@ -22,6 +22,7 @@ import {
 import {
   addUserRoleRequest,
   checkUsernameAvailabilityRequest,
+  getModulesRequest,
   getRoleTypesRequest,
   resetCheckUsernameAvailabilityRequest,
   resetGetRoleTypesRequest,
@@ -31,6 +32,7 @@ import InputWithButton from '../../../common/InputWithButton';
 import {ICheckUsernameAvailablilityRequest} from '../../../interface/setting/role/ICheckUsername';
 import Toast from 'react-native-toast-message';
 import { getBranchsRequest, getFranchiseRequest } from '../../../redux/slices/MyProfile';
+import { IModule } from '../../../interface/setting/role/IModule';
 
 const RoleManagementView: React.FC<{}> = ({}) => {
   const [entityType, setEntityType] = useState<string>('Head Office');
@@ -52,6 +54,8 @@ const RoleManagementView: React.FC<{}> = ({}) => {
     checkUsernameAvailabilitySuccess,
     checkUsernameAvailabilityFailure,
     checkUsernameAvailabilityInfo,
+    getModulesRequesting,
+    modules = [],
   } = useAppSelector(state => state.UserRole);
   const {Franchises, Branchs} = useAppSelector(
     state => state.Myprofile,
@@ -64,6 +68,8 @@ const RoleManagementView: React.FC<{}> = ({}) => {
   const {data: roleTypesData} = roleTypes || {};
   const {data: brancheData = []} = Branchs || {};
   const {data: franchiseData = []} = Franchises || {};
+  console.log('Modules----', JSON.stringify(modules));
+  
 
   const dispatch = useAppDispatch();
 
@@ -244,10 +250,30 @@ const RoleManagementView: React.FC<{}> = ({}) => {
     }
   };
 
+  const showModules = () => {
+    const {data} = modules || {};
+    if(data && Array.isArray(data) && data.length > 0) {
+      return data.map((module:IModule, index) => {
+        return (
+          <>
+          <Spacer height={8} />
+          <CollapsibleView title={module.moduleName} collapsed={true}>
+            <View>
+              <Text>my content</Text>
+            </View>
+          </CollapsibleView>
+          </>
+        );
+      });
+    }
+    return null;
+  }
+
   useEffect(() => {
     dispatch(getRoleTypesRequest());
     dispatch(getBranchsRequest(getCompanyId()));
     dispatch(getFranchiseRequest(getCompanyId()));
+    dispatch(getModulesRequest());
   }, []);
 
   useEffect(() => {
@@ -389,6 +415,7 @@ const RoleManagementView: React.FC<{}> = ({}) => {
           <Label text="Allow Permissions" style={styles.label} />
         </View>
         <Spacer height={4} />
+        {showModules()}
         <CollapsibleView title="ENQUIRY MANAGEMENT" collapsed={true}>
           <View>
             <View style={styles.labelContainer}>
@@ -532,6 +559,7 @@ const RoleManagementView: React.FC<{}> = ({}) => {
             </View>
           </View>
         </CollapsibleView>
+        {/* 
         <Spacer height={4} />
         <CollapsibleView title="ORDER MANAGEMENT" collapsed={true}>
           <View>
@@ -974,7 +1002,7 @@ const RoleManagementView: React.FC<{}> = ({}) => {
                 })}
             </View>
           </View>
-        </CollapsibleView>
+        </CollapsibleView> */}
         <Spacer height={12} />
         <Button
           text="SUBMIT"
@@ -984,7 +1012,7 @@ const RoleManagementView: React.FC<{}> = ({}) => {
           textStyle={styles.textStyle}
         />
         <Spacer height={12} />
-        <Spinner show={getRoleTypesRequesting} />
+        <Spinner show={getRoleTypesRequesting || getModulesRequesting} />
       </View>
     </AvoidSoftInputViewHOC>
   );

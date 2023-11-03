@@ -21,12 +21,13 @@ import { IAddDocumentRequest } from '../interface/setting/packerProfile/document
 import { IAddDocumentResponse } from '../interface/setting/packerProfile/document/IAddDocumentResponse';
 import { IGetDocumentsResponse } from '../interface/setting/packerProfile/document/IGetDocumentsResponse';
 import { IAddUserRoleRequest, IAddUserRoleResponse, IRoleTypeResponse } from '../interface/setting/role/IUserRole';
-import { addUserRoleFailure, addUserRoleRequest, addUserRoleSuccess, checkUsernameAvailabilityFailure, checkUsernameAvailabilityRequest, checkUsernameAvailabilitySuccess, getRoleTypesFailure, getRoleTypesRequest, getRoleTypesSuccess } from '../redux/slices/UserRoleManagementSlice';
+import { addUserRoleFailure, addUserRoleRequest, addUserRoleSuccess, checkUsernameAvailabilityFailure, checkUsernameAvailabilityRequest, checkUsernameAvailabilitySuccess, getModulesFailure, getModulesRequest, getModulesSuccess, getRoleTypesFailure, getRoleTypesRequest, getRoleTypesSuccess } from '../redux/slices/UserRoleManagementSlice';
 import { ISubmoduleResponse } from '../interface/setting/packerProfile/ISubmodule';
 import { ICheckUsernameAvailablilityRequest, ICheckUsernameAvailablilityResponse } from '../interface/setting/role/ICheckUsername';
 import { ICreateSerialNoRequest } from '../interface/setting/serialNo/ICreateSerialNoRequest';
 import { ICreateSerialNoResponse } from '../interface/setting/serialNo/ICreateSerialNoResponse';
 import { createSerialNoFailure, createSerialNoRequest, createSerialNoSuccess } from '../redux/slices/SerialNoSettingSlice';
+import { IGetModulesResponse } from '../interface/setting/role/IModule';
 
 export function* addFooterContentSaga(action: PayloadAction<IAddFooterContentRequest>) {
     console.log('addFooterContentSaga--action--', JSON.stringify(action));
@@ -193,6 +194,17 @@ export function* createSerialNoSaga(action: PayloadAction<ICreateSerialNoRequest
     }
 }
 
+export function* getModulesSaga(action: PayloadAction) {
+    try {
+        const response: IGetModulesResponse = yield call(SettingService.GetModulesService);
+        console.log('getModulesSaga-response----', JSON.stringify(response));
+        yield put(getModulesSuccess(response));
+    } catch (error) {
+        console.log('getModulesSaga-error----', error);
+        yield put(getModulesFailure(JSON.stringify(error)));
+    }
+}
+
 export function* watcherSettingSaga() {
     yield takeLatest(addFooterContentRequest.type, addFooterContentSaga);
     yield takeLatest(getFooterContentsRequest.type, getFooterContentsSaga);
@@ -207,4 +219,5 @@ export function* watcherSettingSaga() {
     yield takeLatest(getSubmodulesRequest.type, getSubmodulesSaga);
     yield takeLatest(checkUsernameAvailabilityRequest.type, checkUsernameAvailabilitySaga);
     yield takeLatest(createSerialNoRequest.type, createSerialNoSaga);
+    yield takeLatest(getModulesRequest.type, getModulesSaga);
 }

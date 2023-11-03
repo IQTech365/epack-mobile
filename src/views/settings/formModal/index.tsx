@@ -1,5 +1,5 @@
 import React, {ReactElement, useCallback, useMemo, forwardRef} from 'react';
-import {View } from 'react-native';
+import {View} from 'react-native';
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
@@ -7,10 +7,8 @@ import BottomSheet, {
 import styles from './style';
 import CloseIcon from '../../../images/icons/close_icon.svg';
 
-import {
-  TouchableOpacity,
-} from 'react-native-gesture-handler';
-
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {Shadow} from 'react-native-shadow-2';
 interface IFormModalProps {
   children: ReactElement;
   onClose: () => void;
@@ -18,7 +16,7 @@ interface IFormModalProps {
 
 const FormModal = forwardRef<BottomSheet, IFormModalProps>(
   ({children, onClose}, ref) => {
-    const snapPoints = useMemo(() => ['150%'], []);
+    const snapPoints = useMemo(() => ['30%'], []);
 
     const handleSheetChanges = useCallback((index: number) => {
       console.log('handleSheetChanges', index);
@@ -42,16 +40,16 @@ const FormModal = forwardRef<BottomSheet, IFormModalProps>(
         index={-1}
         snapPoints={snapPoints}
         backdropComponent={renderBackdrop}
-        containerStyle={{flex: 1}}
+        containerStyle={styles.contentContainer}
         onChange={handleSheetChanges}>
-        <View style={{flex: 1}}>
-          <View style={styles.closeContainer}>
-            <TouchableOpacity onPress={onClose} activeOpacity={0.4}>
-              <CloseIcon width={32} height={32} />
-            </TouchableOpacity>
+          <View style={styles.container}>
+            <View style={styles.closeContainer}>
+              <TouchableOpacity onPress={onClose} activeOpacity={0.4}>
+                <CloseIcon width={32} height={32} />
+              </TouchableOpacity>
+            </View>
+            {children}
           </View>
-          {children}
-        </View>
       </BottomSheet>
     );
   },
