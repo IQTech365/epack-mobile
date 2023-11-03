@@ -18,6 +18,7 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import Button from '../../../../common/Button';
 import EpackDropdown from '../../../../common/DropdownComponent2';
 import stateData from '../../../../data/stateData.json';
+import chooseEntity1 from '../../../../data/chooseEntity1.json';
 import CameraIcon from '../../../../images/icons/arcticons_camera.svg';
 import { ADD_Driver_FORM_ACTION, TAddressInfo, addAddDriverReducer, initialState } from './addDriverReducer';
 import { IAddDriverRequest } from '../../../../interface/vehicle/IAddDriverRequest';
@@ -27,6 +28,7 @@ import Spinner from '../../../../common/Spinner';
 import usePincodeHook, { PINCODE_REQUEST_KEY } from '../../../../hooks/usePincodeHook';
 import { TDropdownItem } from '../../../../type/TDropdownItem';
 import { getCities, getStates } from '../../../../utils/formatter';
+import { getBranchsRequest, getFranchiseRequest } from '../../../../redux/slices/MyProfile';
 
 const AddDriverView: React.FC<{}> = ({ }) => {
     const [state, dispatch] = useReducer(addAddDriverReducer, initialState);
@@ -61,8 +63,16 @@ const AddDriverView: React.FC<{}> = ({ }) => {
     const [permanentCities, setpermanentCities] = useState<string[]>([]);
     const [currentStates, setCurrentStates] = useState<string[]>([]);
     const [currentCities, setCurrentCities] = useState<string[]>([]);
+    const [branchStatus, setBranchStatus] = useState<any>('');
+    const [branchData, setBranchData] = useState([]);
+    const {Branchs, 
+        getBranchsRequesting,
+        Franchises, 
+        getFranchiseRequesting
+    } = useAppSelector(
+        state => state.Myprofile,
+      );
     const dispatch2 = useAppDispatch()
-    console.log(permanentStates, 'latest..');
     
 
     const setPincodeError = () => {
@@ -91,9 +101,33 @@ const AddDriverView: React.FC<{}> = ({ }) => {
         }
         return id;
     };
+
+    useEffect(() => {
+        const fetchData = async () => {
+          let data = [];
+          if(branchStatus === "Branch"){
+            data = Branchs && Branchs.data.map((data:any) => {
+              return data.branchName
+            });
+          } else {
+            data = Franchises && Franchises.data.map((data:any) => {
+              return data.branchName
+            });
+          }
+          setBranchData(data);
+        };
+    
+        fetchData();
+      }, [Franchises, Branchs, branchStatus]);
     
 
     const handleChodeEntity = (text: string) => {
+        setBranchStatus(text)
+        if(text='Branch'){
+      dispatch2(getBranchsRequest(getCompanyId()));
+        }else{
+            dispatch2(getFranchiseRequest(getCompanyId()));
+        }
         dispatch({
             type: ADD_Driver_FORM_ACTION.CHOOSE_ENTITY,
             payload: text,
@@ -383,14 +417,14 @@ const AddDriverView: React.FC<{}> = ({ }) => {
                         <View style={styles.textContainer}>
                             <Label text="Choose Entity" style={styles.label} />
                             <EpackDropdown
-                                data={stateData}
+                                data={chooseEntity1}
                                 placeholder={'please select or enter'}
                                 hanldeData={handleChodeEntity} />
                         </View>
                         <View style={styles.textContainer}>
                             <Label text="Branch Name" style={styles.label} />
                             <EpackDropdown
-                                data={stateData}
+                                data={branchData}
                                 placeholder={'please select or enter'}
                                 hanldeData={handleBranchName} />
                         </View>
@@ -653,7 +687,7 @@ const AddDriverView: React.FC<{}> = ({ }) => {
                 <Spacer height={12} />
             </View>
         </AvoidSoftInputViewHOC>
-        <Spinner show={fetching ||addDriverRequesting} />
+        <Spinner show={fetching ||addDriverRequesting || getBranchsRequesting || getFranchiseRequesting} />
         </>
     );
 };

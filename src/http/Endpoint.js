@@ -76,7 +76,9 @@ export const ADD_USER_ROLE = `/role/add`;
 
 //Vehicle
 export const  ADD_LORRY = `/vehicle-management/vehicle-lorry/add`;
+export const GET_LORRY = (company_id) => `/vehicle-management/vehicle-lorry/all/${company_id}`;
 export const  ADD_DRIVER = `/vehicle-management/vehicle-driver/add`;
+export const GET_DRIVER = (company_id) => `/vehicle-management/vehicle-driver/all/${company_id}`;
 
 export const GET_ROLE_TYPES = `/setting/role-type/getAll`;
 export const CHECK_USERNAME_AVAILABLITY = `/auth/lookup`;

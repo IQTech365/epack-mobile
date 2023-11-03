@@ -24,7 +24,7 @@ const EpackDropdown: React.FC<IEpackDropdownProps> = ({
 }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedValue, setSelectedValue] = useState<string | null>(null);
-    const [inputValue, setInputValue] = useState(data[0]);
+    const [inputValue, setInputValue] = useState(data &&data[0]);
     const [options, setOptions] = useState(data);
     const inputRef = useRef<TextInput | null>(null);
     const { width: windowWidth } = Dimensions.get('window');
@@ -49,7 +49,7 @@ const EpackDropdown: React.FC<IEpackDropdownProps> = ({
     };
 
     const addCustomOption = () => {
-        if (inputValue.trim() !== '' && !data.includes(inputValue)) {
+        if (inputValue&&inputValue.trim() !== '' && !data.includes(inputValue)) {
             hanldeData(inputValue);
             setSelectedValue(inputValue);
             setIsOpen(false);
@@ -95,7 +95,7 @@ const EpackDropdown: React.FC<IEpackDropdownProps> = ({
                         </TouchableOpacity>
                     </View>
                     <View>
-                        {data.map(option => (
+                        {data&&data.map(option => (
                             <TouchableOpacity
                                 key={option}
                                 onPress={() => selectOption(option)}

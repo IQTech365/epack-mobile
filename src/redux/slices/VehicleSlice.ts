@@ -4,15 +4,18 @@ import { IAddLorryRequest } from '../../interface/vehicle/IAddLorryRequest';
 import { IAddDriverResponse } from '../../interface/vehicle/IAddDriverResponse';
 import { IAddDriverRequest } from '../../interface/vehicle/IAddDriverRequest';
 import { IAddBranchResponse } from '../../interface/myProfile/IAddbranchResponse';
+import { IGetLorryResponse } from '../../interface/vehicle/IGetLorryResponse';
+import { IGetDriverResponse } from '../../interface/vehicle/IGetDriverReuest';
 
 
 interface IVehicleState {
-    // Get Branch
-    // Branchs: IGetBranchsResponse | null;
-    // getBranchsRequesting: boolean;
-    // getBranchsSuccess: boolean;
-    // getBranchsFailure: boolean;
-    // getBranchsError: any;
+    // Get Lorry
+    lorryData: IGetLorryResponse | null;
+    getLorryRequesting: boolean;
+    getLorrySuccess: boolean;
+    getLorryFailure: boolean;
+    getLorryError: any;
+
     // Add Lorry
     addLorryInfo: IAddLorryResponse | null;
     addLorryRequesting: boolean;
@@ -21,11 +24,11 @@ interface IVehicleState {
     addLorryError: any;
 
     // Get Driver
-    // Franchises: IGetFranchiseResponse | null;
-    // getFranchiseRequesting: boolean;
-    // getFranchiseSuccess: boolean;
-    // getFranchiseFailure: boolean;
-    // getFranchiseError: any;
+    Drivers: IGetDriverResponse | null;
+    getDriversRequesting: boolean;
+    getDriversSuccess: boolean;
+    getDriversFailure: boolean;
+    getDriversError: any;
 
     // Add Driver
     addDriverInfo: IAddDriverResponse | null;
@@ -37,25 +40,26 @@ interface IVehicleState {
 
 const initialState: IVehicleState = {
 
-    // Get Branch
-    // Branchs: null,
-    // getBranchsRequesting: false,
-    // getBranchsSuccess: false,
-    // getBranchsFailure: false,
-    // getBranchsError: null,
-    // Add Branch
+    // Get lorry
+    lorryData: null,
+    getLorryRequesting: false,
+    getLorrySuccess: false,
+    getLorryFailure: false,
+    getLorryError: null,
+
+    // Add lorry
     addLorryInfo: null,
     addLorryRequesting: false,
     addLorrySuccess: false,
     addLorryFailure: false,
     addLorryError: null,
 
-     // Get Franchise
-    //  Franchises: null,
-    //  getFranchiseRequesting: false,
-    //  getFranchiseSuccess: false,
-    //  getFranchiseFailure: false,
-    //  getFranchiseError: null,
+     // Get Driver
+     Drivers: null,
+     getDriversRequesting: false,
+     getDriversSuccess: false,
+     getDriversFailure: false,
+     getDriversError: null,
 
      // Add Driver
      addDriverInfo:  null,
@@ -69,21 +73,21 @@ export const VehicleSlice = createSlice({
     name: 'VehicleSlice',
     initialState: initialState,
     reducers: {
-        // Get branch
-        // getBranchsRequest: (state, action: PayloadAction<string>) => {
-        //     state.getBranchsRequesting = true;
-        // },
-        // getBranchsSuccess: (state, action: PayloadAction<IGetBranchsResponse>) => {
-        //     state.getBranchsRequesting = false;
-        //     state.getBranchsSuccess = true;
-        //     state.Branchs = action.payload;
-        // },
-        // getBranchFailure: (state, action: PayloadAction<any>) => {
-        //     state.getBranchsRequesting = false;
-        //     state.getBranchsSuccess = false;
-        //     state.getBranchsFailure = true;
-        //     state.getBranchsError = action.payload;
-        // },
+        // Get Lorry
+        getLorryRequest: (state, action: PayloadAction<string>) => {
+            state.getLorryRequesting = true;
+        },
+        getLorrySuccess: (state, action: PayloadAction<IGetLorryResponse>) => {
+            state.getLorryRequesting = false;
+            state.getLorrySuccess = true;
+            state.lorryData = action.payload;
+        },
+        getLorryFailure: (state, action: PayloadAction<any>) => {
+            state.getLorryRequesting = false;
+            state.getLorrySuccess = false;
+            state.getLorryFailure = true;
+            state.getLorryError = action.payload;
+        },
 
         // Add Lorry
         addLorryRequest: (state, action: PayloadAction<IAddLorryRequest>) => {
@@ -106,21 +110,21 @@ export const VehicleSlice = createSlice({
             state.addLorryFailure = false;
             state.addLorryError = null;
         },
-         // Get Franchise
-        //  getFranchiseRequest: (state, action: PayloadAction<string>) => {
-        //     state.getFranchiseRequesting = true;
-        // },
-        // getFranchiseSuccess: (state, action: PayloadAction<IGetFranchiseResponse>) => {
-        //     state.getFranchiseRequesting = false;
-        //     state.getFranchiseSuccess = true;
-        //     state.Franchises = action.payload;
-        // },
-        // getFranchiseFailure: (state, action: PayloadAction<any>) => {
-        //     state.getFranchiseRequesting = false;
-        //     state.getFranchiseSuccess = false;
-        //     state.getFranchiseFailure = true;
-        //     state.getFranchiseError = action.payload;
-        // },
+         // Get Drivers
+         getDriverRequest: (state, action: PayloadAction<string>) => {
+            state.getDriversRequesting = true;
+        },
+        getDriverSuccess: (state, action: PayloadAction<IGetDriverResponse>) => {
+            state.getDriversRequesting = false;
+            state.getDriversSuccess = true;
+            state.Drivers = action.payload;
+        },
+        getDriverFailure: (state, action: PayloadAction<any>) => {
+            state.getDriversRequesting = false;
+            state.getDriversSuccess = false;
+            state.getDriversFailure = true;
+            state.getDriversError = action.payload;
+        },
 
         // Add Driver
         addDriverRequest: (state, action: PayloadAction<IAddDriverRequest>) => {
@@ -149,20 +153,20 @@ export const VehicleSlice = createSlice({
 export default VehicleSlice.reducer;
 
 export const {
-    //Get branch
-    // getBranchsRequest,
-    // getBranchsSuccess,
-    // getBranchFailure,
+    //Get Lorry
+    getLorryRequest,
+    getLorrySuccess,
+    getLorryFailure,
     //Add Lorry
     addLorryRequest,
     addLorrySuccess,
     addLorryFailure,
     restAddLorryRequest,
 
-    //Get Franchise
-    // getFranchiseRequest,
-    // getFranchiseSuccess,
-    // getFranchiseFailure,
+    //Get Driver
+    getDriverRequest,
+    getDriverSuccess,
+    getDriverFailure,
 
     //Add Driver
     addDriverRequest,
