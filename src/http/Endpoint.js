@@ -88,3 +88,6 @@ export const GET_BANKS = `/bankname/getAll`;
 
 // Serial No's
 export const SERIAL_NO = `/setting/app-setting/add`;
+
+// Modules
+export const MODULES = `/content-management/module/getAll`;

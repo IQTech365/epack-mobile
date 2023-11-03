@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import {Shadow} from 'react-native-shadow-2';
 import styles from './style';
@@ -7,9 +7,10 @@ import LocationIcon from '../../../../../images/icons/location.svg';
 import RupeeIcon from '../../../../../images/icons/rupee.svg';
 import ShippingTypeIcon from '../../../../../images/icons/delivery-truck.svg';
 import PhoneCallIcon from '../../../../../images/icons/phone-call.svg';
-
-
 import Spacer from '../../../../../common/Spacer';
+import DocumentActionView, {
+  DOCUMENT_TYPE,
+} from '../../../../../common/DocumentActionView';
 
 export interface IQuotationItem {
   quotationNo: string;
@@ -19,19 +20,36 @@ export interface IQuotationItem {
   shiftingType: string;
   quotationAmount: string;
   quotationDate: string;
-  phoneNumber:string;
+  phoneNumber: string;
 }
 
 interface IQuotationListItemProps {
   item: IQuotationItem;
   index: number;
   onPress: () => void;
+  onDownload: () => void;
 }
 
 const QuotationListItem: React.FC<IQuotationListItemProps> = ({
   item,
   index,
+  onDownload,
 }) => {
+  const [show, setShow] = useState<boolean>(false);
+  const [label, setLabel] = useState<string>('VIEW DETAILS');
+
+  const handleShowDetail = () => {
+    setShow(!show);
+  };
+
+  useEffect(() => {
+    if (show) {
+      setLabel('HIDE DETAILS');
+    } else {
+      setLabel('SHOW DETAILS');
+    }
+  }, [show]);
+
   return (
     <Shadow style={styles.cardWrapper} distance={4}>
       <View style={styles.container}>
@@ -102,10 +120,18 @@ const QuotationListItem: React.FC<IQuotationListItemProps> = ({
         </View>
         <Spacer height={10} />
         <View style={styles.viewDetailsContainer}>
-            <TouchableOpacity activeOpacity={0.6}>
-            <Text style={styles.viewDetailsText}>View Details</Text>
-            </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.6} onPress={handleShowDetail}>
+            <Text style={styles.viewDetailsText}>{label}</Text>
+          </TouchableOpacity>
         </View>
+        <DocumentActionView
+          documentType={DOCUMENT_TYPE.QUOTATION}
+          onShare={() => {}}
+          onDownload={onDownload}
+          onPreview={() => {}}
+          onEdit={() => {}}
+          show={show}
+        />
       </View>
     </Shadow>
   );

@@ -1,18 +1,23 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import {COLOR_BLUE, COLOR_GRAY, COLOR_GRAY2, COLOR_WHITE} from '../../../../../utils/colors';
+import {
+  COLOR_BLUE,
+  COLOR_GRAY,
+  COLOR_GRAY2,
+  COLOR_WHITE,
+} from '../../../../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   cardWrapper: {
     borderRadius: 8,
     alignItems: 'center',
+    marginBottom: 15,
   },
   container: {
     width: width * 0.92,
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',
-    // padding: 6,
   },
   dateAndQuotationNumberContainer: {
     width: '100%',
@@ -37,51 +42,51 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   iconContainer: {
-      width: 30,
-      height: 30,
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: COLOR_BLUE,
-      borderRadius: 15,
-      marginRight: 4,
+    width: 30,
+    height: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: COLOR_BLUE,
+    borderRadius: 15,
+    marginRight: 4,
   },
   rowContainer: {
-      width: '100%',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      paddingVertical: 4,
-      paddingHorizontal: 4,
-      padding: 6,
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 4,
+    paddingHorizontal: 4,
+    padding: 6,
   },
   rowItemContainer: {
     width: '50%',
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   nameText: {
-      color: COLOR_GRAY,
-      fontSize: 13,
-      fontWeight: '500'
+    color: COLOR_GRAY,
+    fontSize: 13,
+    fontWeight: '500',
   },
   amountText: {
     color: COLOR_GRAY,
     fontSize: 13,
-    fontWeight: '500'
+    fontWeight: '500',
   },
   viewDetailsText: {
     color: COLOR_GRAY,
     fontSize: 13,
-    fontWeight: '600'
+    fontWeight: '600',
   },
   destinationTypeText: {
-      color: COLOR_GRAY,
-      fontSize: 10,
+    color: COLOR_GRAY,
+    fontSize: 10,
   },
   destinationText: {
     color: COLOR_GRAY,
     fontSize: 13,
-    fontWeight: '500'
+    fontWeight: '500',
   },
   viewDetailsContainer: {
     width: '100%',
@@ -95,7 +100,20 @@ const styles = StyleSheet.create({
     borderTopColor: COLOR_BLUE,
     borderBottomLeftRadius: 8,
     borderBottomRightRadius: 8,
-},
+  },
+  viewDetailContainer: {
+    width: '100%',
+    alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    marginBottom: 10,
+  },
+  viewDetail: {
+    width: '25%',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
 });
 
 export default styles;

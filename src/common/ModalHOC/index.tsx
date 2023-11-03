@@ -21,10 +21,7 @@ const ModalHOC: React.FC<IModalProps> = ({
       animationType="slide"
       transparent={true}
       visible={visible}
-      onRequestClose={() => {
-        // Alert.alert('Modal has been closed.');
-        // setModalVisible(!modalVisible);
-      }}>
+      onRequestClose={() => {}}>
       <View style={styles.centeredView}>
         <View style={styles.header}>
           <Text style={styles.titleText}>{title}</Text>
