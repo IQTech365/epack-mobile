@@ -79,6 +79,18 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: COLOR_ERROR,
   },
+  submoduleContainer: {
+    width: width * 0.9,
+    alignItems: 'flex-start',
+    paddingVertical: 5,
+  },
+  submoduleFeaturesContainer: {
+    flexWrap: 'wrap',
+    width: width * 0.9,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    paddingVertical: 5,
+  },
 });
 
 export default styles;

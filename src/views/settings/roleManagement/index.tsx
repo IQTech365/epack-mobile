@@ -24,6 +24,7 @@ import {
   checkUsernameAvailabilityRequest,
   getModulesRequest,
   getRoleTypesRequest,
+  resetAddUserRoleRequest,
   resetCheckUsernameAvailabilityRequest,
   resetGetRoleTypesRequest,
 } from '../../../redux/slices/UserRoleManagementSlice';
@@ -31,8 +32,15 @@ import Spinner from '../../../common/Spinner';
 import InputWithButton from '../../../common/InputWithButton';
 import {ICheckUsernameAvailablilityRequest} from '../../../interface/setting/role/ICheckUsername';
 import Toast from 'react-native-toast-message';
-import { getBranchsRequest, getFranchiseRequest } from '../../../redux/slices/MyProfile';
-import { IModule } from '../../../interface/setting/role/IModule';
+import {
+  getBranchsRequest,
+  getFranchiseRequest,
+} from '../../../redux/slices/MyProfile';
+import {
+  IModule,
+  ISubmodule,
+  ISubmoduleFeature,
+} from '../../../interface/setting/role/IModule';
 
 const RoleManagementView: React.FC<{}> = ({}) => {
   const [entityType, setEntityType] = useState<string>('Head Office');
@@ -56,10 +64,11 @@ const RoleManagementView: React.FC<{}> = ({}) => {
     checkUsernameAvailabilityInfo,
     getModulesRequesting,
     modules = [],
+    addUserRoleRequesting,
+    addUserRoleSuccess,
+    addUserRoleFailure,
   } = useAppSelector(state => state.UserRole);
-  const {Franchises, Branchs} = useAppSelector(
-    state => state.Myprofile,
-  );
+  const {Franchises, Branchs} = useAppSelector(state => state.Myprofile);
   const {otpData} = useAppSelector(state => state.OTP);
   // Errors
   const [usernameError, setUsernameError] = useState<string>('');
@@ -69,7 +78,6 @@ const RoleManagementView: React.FC<{}> = ({}) => {
   const {data: brancheData = []} = Branchs || {};
   const {data: franchiseData = []} = Franchises || {};
   console.log('Modules----', JSON.stringify(modules));
-  
 
   const dispatch = useAppDispatch();
 
@@ -91,24 +99,28 @@ const RoleManagementView: React.FC<{}> = ({}) => {
   };
 
   const transformBranchData = () => {
-    let _data:TDropdownItem[] = [];
-    if(brancheData && Array.isArray(brancheData) && brancheData.length > 0) {
+    let _data: TDropdownItem[] = [];
+    if (brancheData && Array.isArray(brancheData) && brancheData.length > 0) {
       _data = brancheData.map(d => {
         return {label: d.branchName, value: d._id};
-      })
+      });
     }
     return _data;
-  }
+  };
 
   const transformFranchiseData = () => {
-    let _data:TDropdownItem[] = [];
-    if(franchiseData && Array.isArray(franchiseData) && franchiseData.length > 0) {
+    let _data: TDropdownItem[] = [];
+    if (
+      franchiseData &&
+      Array.isArray(franchiseData) &&
+      franchiseData.length > 0
+    ) {
       _data = franchiseData.map(d => {
         return {label: d.franchiseName, value: d._id};
-      })
+      });
     }
     return _data;
-  }
+  };
 
   const handleEntityType = useCallback(
     (item: TDropdownItem) => {
@@ -191,9 +203,11 @@ const RoleManagementView: React.FC<{}> = ({}) => {
       mobile: mobile,
       username: username,
       password: password,
-      permissions: [],
+      permissions: permissions,
       createdBy: otpData?.data.id as string,
     };
+    console.log('add-role-payload--', JSON.stringify(payload));
+
     dispatch(addUserRoleRequest(payload));
   };
 
@@ -218,21 +232,26 @@ const RoleManagementView: React.FC<{}> = ({}) => {
   };
 
   const showUsernameAvailabilityStatusView = () => {
-    if(!checkUsernameAvailabilityRequesting && checkUsernameAvailabilitySuccess) {
+    if (
+      !checkUsernameAvailabilityRequesting &&
+      checkUsernameAvailabilitySuccess
+    ) {
       const {data} = checkUsernameAvailabilityInfo || {};
       const {message} = data || {};
       let textStyle = styles.usernameAvailableInfoText;
-      if(message && message.includes('taken')) {
+      if (message && message.includes('taken')) {
         textStyle = styles.usernameNotAvailableInfoText;
       }
       return (
         <View style={styles.usernameAvailablityStatusContainer}>
-          <Text style={textStyle}>{checkUsernameAvailabilityInfo?.data?.message}</Text>
+          <Text style={textStyle}>
+            {checkUsernameAvailabilityInfo?.data?.message}
+          </Text>
         </View>
       );
     }
     return null;
-  }
+  };
 
   const hanldeUsernameAvailabilityCheck = () => {
     dispatch(resetCheckUsernameAvailabilityRequest());
@@ -245,29 +264,81 @@ const RoleManagementView: React.FC<{}> = ({}) => {
       Toast.show({
         type: 'error',
         text1: 'Error',
-        text2: 'Please type keywords to find username.'
+        text2: 'Please type keywords to find username.',
       });
     }
   };
 
+  const showSubmoduleFeatures = (submoduleFeatures: ISubmoduleFeature[]) => {
+    if (submoduleFeatures.length > 0) {
+      return submoduleFeatures.map(
+        (submodFeat: ISubmoduleFeature, index: number) => {
+          return (
+            <BouncyCheckbox
+              text={submodFeat.feature}
+              fillColor={COLOR_BLUE}
+              iconStyle={{
+                borderColor: 'red',
+                borderRadius: 0,
+                width: 16,
+                height: 16,
+              }}
+              innerIconStyle={{
+                borderWidth: 1,
+                borderRadius: 0,
+                width: 16,
+                height: 16,
+              }}
+              textStyle={{
+                fontFamily: 'JosefinSans-Regular',
+                textDecorationLine: 'none',
+              }}
+              style={{marginRight: 15, marginBottom: 10}}
+              textContainerStyle={{paddingLeft: 0}}
+              onPress={(isChecked: boolean) => {
+                handlePermissions(isChecked, submodFeat._id);
+              }}
+            />
+          );
+        },
+      );
+    }
+    return null;
+  };
+
+  const showSubmodules = (module: IModule) => {
+    if (module.submodulename.length > 0) {
+      return module.submodulename.map((submod: ISubmodule, index: number) => {
+        return (
+          <View style={styles.submoduleContainer}>
+            <Text>{submod.subModuleName}</Text>
+            <View style={styles.submoduleFeaturesContainer}>
+              {showSubmoduleFeatures(module.submodulefeature)}
+            </View>
+          </View>
+        );
+      });
+    }
+
+    return null;
+  };
+
   const showModules = () => {
     const {data} = modules || {};
-    if(data && Array.isArray(data) && data.length > 0) {
-      return data.map((module:IModule, index) => {
+    if (data && Array.isArray(data) && data.length > 0) {
+      return data.slice(0, 3).map((module: IModule, index) => {
         return (
           <>
-          <Spacer height={8} />
-          <CollapsibleView title={module.moduleName} collapsed={true}>
-            <View>
-              <Text>my content</Text>
-            </View>
-          </CollapsibleView>
+            <Spacer height={8} />
+            <CollapsibleView title={module.moduleName} collapsed={true}>
+              <View>{showSubmodules(module)}</View>
+            </CollapsibleView>
           </>
         );
       });
     }
     return null;
-  }
+  };
 
   useEffect(() => {
     dispatch(getRoleTypesRequest());
@@ -283,15 +354,36 @@ const RoleManagementView: React.FC<{}> = ({}) => {
   }, [getRoleTypesRequesting, getRoleTypeSuccess, getRoleTypeFailure]);
 
   useEffect(() => {
-    if (!checkUsernameAvailabilityRequesting && checkUsernameAvailabilityFailure) {
+    if (
+      !checkUsernameAvailabilityRequesting &&
+      checkUsernameAvailabilityFailure
+    ) {
       Toast.show({
         type: 'error',
         text1: 'Username',
-        text2: 'Error in checking username availability. Please try again!'
+        text2: 'Error in checking username availability. Please try again!',
       });
       dispatch(resetCheckUsernameAvailabilityRequest());
     }
   }, [checkUsernameAvailabilityRequesting, checkUsernameAvailabilityFailure]);
+
+  useEffect(() => {
+    if (!addUserRoleRequesting && addUserRoleSuccess) {
+      Toast.show({
+        type: 'success',
+        text1: 'User Role',
+        text2: 'User role has been added successfully. Please try again!',
+      });
+      dispatch(resetAddUserRoleRequest());
+    } else if (!addUserRoleRequesting && addUserRoleFailure) {
+      Toast.show({
+        type: 'error',
+        text1: 'User Role',
+        text2: 'Error in adding new User Role. Please try again!',
+      });
+      dispatch(resetAddUserRoleRequest());
+    }
+  }, [addUserRoleRequesting, addUserRoleSuccess, addUserRoleFailure]);
 
   return (
     <AvoidSoftInputViewHOC>
@@ -416,593 +508,6 @@ const RoleManagementView: React.FC<{}> = ({}) => {
         </View>
         <Spacer height={4} />
         {showModules()}
-        <CollapsibleView title="ENQUIRY MANAGEMENT" collapsed={true}>
-          <View>
-            <View style={styles.labelContainer}>
-              <Label text="Enquiry" style={styles.label} />
-            </View>
-            <View style={styles.elementContainer2}>
-              {actionOptions.map((item, index) => {
-                return (
-                  <BouncyCheckbox
-                    text={item.action}
-                    fillColor={COLOR_BLUE}
-                    iconStyle={{
-                      borderColor: 'red',
-                      borderRadius: 0,
-                      width: 16,
-                      height: 16,
-                    }}
-                    innerIconStyle={{
-                      borderWidth: 1,
-                      borderRadius: 0,
-                      width: 16,
-                      height: 16,
-                    }}
-                    textStyle={{
-                      fontFamily: 'JosefinSans-Regular',
-                      textDecorationLine: 'none',
-                    }}
-                    style={{marginRight: 15, marginBottom: 10}}
-                    textContainerStyle={{paddingLeft: 0}}
-                    onPress={(isChecked: boolean) => {
-                      handlePermissions(isChecked, item.action);
-                    }}
-                  />
-                );
-              })}
-            </View>
-            <Spacer height={4} />
-            <View style={styles.labelContainer}>
-              <Label text="Follow-Ups" style={styles.label} />
-            </View>
-            <View style={styles.elementContainer2}>
-              {actionOptions.map((item, index) => {
-                return (
-                  <BouncyCheckbox
-                    text={item.action}
-                    fillColor={COLOR_BLUE}
-                    iconStyle={{
-                      borderColor: 'red',
-                      borderRadius: 0,
-                      width: 16,
-                      height: 16,
-                    }}
-                    innerIconStyle={{
-                      borderWidth: 1,
-                      borderRadius: 0,
-                      width: 16,
-                      height: 16,
-                    }}
-                    textStyle={{
-                      fontFamily: 'JosefinSans-Regular',
-                      textDecorationLine: 'none',
-                    }}
-                    style={{marginRight: 15, marginBottom: 10}}
-                    textContainerStyle={{paddingLeft: 0}}
-                    onPress={(isChecked: boolean) => {
-                      handlePermissions(isChecked, item.action);
-                    }}
-                  />
-                );
-              })}
-            </View>
-            <View style={styles.labelContainer}>
-              <Label text="Survey" style={styles.label} />
-            </View>
-            <View style={styles.elementContainer2}>
-              {actionOptions
-                .slice(0, actionOptions.length - 1)
-                .map((item, index) => {
-                  return (
-                    <BouncyCheckbox
-                      text={item.action}
-                      fillColor={COLOR_BLUE}
-                      iconStyle={{
-                        borderColor: 'red',
-                        borderRadius: 0,
-                        width: 16,
-                        height: 16,
-                      }}
-                      innerIconStyle={{
-                        borderWidth: 1,
-                        borderRadius: 0,
-                        width: 16,
-                        height: 16,
-                      }}
-                      textStyle={{
-                        fontFamily: 'JosefinSans-Regular',
-                        textDecorationLine: 'none',
-                      }}
-                      style={{marginRight: 15, marginBottom: 10}}
-                      textContainerStyle={{paddingLeft: 0}}
-                      onPress={(isChecked: boolean) => {
-                        handlePermissions(isChecked, item.action);
-                      }}
-                    />
-                  );
-                })}
-            </View>
-            <View style={styles.labelContainer}>
-              <Label text="Quotation" style={styles.label} />
-            </View>
-            <View style={styles.elementContainer2}>
-              {actionOptions.map((item, index) => {
-                return (
-                  <BouncyCheckbox
-                    text={item.action}
-                    fillColor={COLOR_BLUE}
-                    iconStyle={{
-                      borderColor: 'red',
-                      borderRadius: 0,
-                      width: 16,
-                      height: 16,
-                    }}
-                    innerIconStyle={{
-                      borderWidth: 1,
-                      borderRadius: 0,
-                      width: 16,
-                      height: 16,
-                    }}
-                    textStyle={{
-                      fontFamily: 'JosefinSans-Regular',
-                      textDecorationLine: 'none',
-                    }}
-                    style={{marginRight: 15, marginBottom: 10}}
-                    textContainerStyle={{paddingLeft: 0}}
-                    onPress={(isChecked: boolean) => {
-                      handlePermissions(isChecked, item.action);
-                    }}
-                  />
-                );
-              })}
-            </View>
-          </View>
-        </CollapsibleView>
-        {/* 
-        <Spacer height={4} />
-        <CollapsibleView title="ORDER MANAGEMENT" collapsed={true}>
-          <View>
-            <View style={styles.labelContainer}>
-              <Label text="Order" style={styles.label} />
-            </View>
-            <View style={styles.elementContainer2}>
-              {actionOptions
-                .slice(0, actionOptions.length - 1)
-                .map((item, index) => {
-                  return (
-                    <BouncyCheckbox
-                      text={item.action}
-                      fillColor={COLOR_BLUE}
-                      iconStyle={{
-                        borderColor: 'red',
-                        borderRadius: 0,
-                        width: 16,
-                        height: 16,
-                      }}
-                      innerIconStyle={{
-                        borderWidth: 1,
-                        borderRadius: 0,
-                        width: 16,
-                        height: 16,
-                      }}
-                      textStyle={{
-                        fontFamily: 'JosefinSans-Regular',
-                        textDecorationLine: 'none',
-                      }}
-                      style={{marginRight: 15, marginBottom: 10}}
-                      textContainerStyle={{paddingLeft: 0}}
-                      onPress={(isChecked: boolean) => {
-                        handlePermissions(isChecked, item.action);
-                      }}
-                    />
-                  );
-                })}
-            </View>
-            <Spacer height={4} />
-            <View style={styles.labelContainer}>
-              <Label text="Money Receipt" style={styles.label} />
-            </View>
-            <View style={styles.elementContainer2}>
-              {actionOptions
-                .slice(0, actionOptions.length - 1)
-                .map((item, index) => {
-                  return (
-                    <BouncyCheckbox
-                      text={item.action}
-                      fillColor={COLOR_BLUE}
-                      iconStyle={{
-                        borderColor: 'red',
-                        borderRadius: 0,
-                        width: 16,
-                        height: 16,
-                      }}
-                      innerIconStyle={{
-                        borderWidth: 1,
-                        borderRadius: 0,
-                        width: 16,
-                        height: 16,
-                      }}
-                      textStyle={{
-                        fontFamily: 'JosefinSans-Regular',
-                        textDecorationLine: 'none',
-                      }}
-                      style={{marginRight: 15, marginBottom: 10}}
-                      textContainerStyle={{paddingLeft: 0}}
-                      onPress={(isChecked: boolean) => {
-                        handlePermissions(isChecked, item.action);
-                      }}
-                    />
-                  );
-                })}
-            </View>
-            <View style={styles.labelContainer}>
-              <Label text="Car Condition" style={styles.label} />
-            </View>
-            <View style={styles.elementContainer2}>
-              {actionOptions
-                .slice(0, actionOptions.length - 1)
-                .map((item, index) => {
-                  return (
-                    <BouncyCheckbox
-                      text={item.action}
-                      fillColor={COLOR_BLUE}
-                      iconStyle={{
-                        borderColor: 'red',
-                        borderRadius: 0,
-                        width: 16,
-                        height: 16,
-                      }}
-                      innerIconStyle={{
-                        borderWidth: 1,
-                        borderRadius: 0,
-                        width: 16,
-                        height: 16,
-                      }}
-                      textStyle={{
-                        fontFamily: 'JosefinSans-Regular',
-                        textDecorationLine: 'none',
-                      }}
-                      style={{marginRight: 15, marginBottom: 10}}
-                      textContainerStyle={{paddingLeft: 0}}
-                      onPress={(isChecked: boolean) => {
-                        handlePermissions(isChecked, item.action);
-                      }}
-                    />
-                  );
-                })}
-            </View>
-            <View style={styles.labelContainer}>
-              <Label text="Bilty" style={styles.label} />
-            </View>
-            <View style={styles.elementContainer2}>
-              {actionOptions
-                .slice(0, actionOptions.length - 1)
-                .map((item, index) => {
-                  return (
-                    <BouncyCheckbox
-                      text={item.action}
-                      fillColor={COLOR_BLUE}
-                      iconStyle={{
-                        borderColor: 'red',
-                        borderRadius: 0,
-                        width: 16,
-                        height: 16,
-                      }}
-                      innerIconStyle={{
-                        borderWidth: 1,
-                        borderRadius: 0,
-                        width: 16,
-                        height: 16,
-                      }}
-                      textStyle={{
-                        fontFamily: 'JosefinSans-Regular',
-                        textDecorationLine: 'none',
-                      }}
-                      style={{marginRight: 15, marginBottom: 10}}
-                      textContainerStyle={{paddingLeft: 0}}
-                      onPress={(isChecked: boolean) => {
-                        handlePermissions(isChecked, item.action);
-                      }}
-                    />
-                  );
-                })}
-            </View>
-            <View style={styles.labelContainer}>
-              <Label text="Invoice" style={styles.label} />
-            </View>
-            <View style={styles.elementContainer2}>
-              {actionOptions
-                .slice(0, actionOptions.length - 1)
-                .map((item, index) => {
-                  return (
-                    <BouncyCheckbox
-                      text={item.action}
-                      fillColor={COLOR_BLUE}
-                      iconStyle={{
-                        borderColor: 'red',
-                        borderRadius: 0,
-                        width: 16,
-                        height: 16,
-                      }}
-                      innerIconStyle={{
-                        borderWidth: 1,
-                        borderRadius: 0,
-                        width: 16,
-                        height: 16,
-                      }}
-                      textStyle={{
-                        fontFamily: 'JosefinSans-Regular',
-                        textDecorationLine: 'none',
-                      }}
-                      style={{marginRight: 15, marginBottom: 10}}
-                      textContainerStyle={{paddingLeft: 0}}
-                      onPress={(isChecked: boolean) => {
-                        handlePermissions(isChecked, item.action);
-                      }}
-                    />
-                  );
-                })}
-            </View>
-            <View style={styles.labelContainer}>
-              <Label text="Order Status" style={styles.label} />
-            </View>
-            <View style={styles.elementContainer2}>
-              {actionOptions
-                .slice(0, actionOptions.length - 1)
-                .map((item, index) => {
-                  return (
-                    <BouncyCheckbox
-                      text={item.action}
-                      fillColor={COLOR_BLUE}
-                      iconStyle={{
-                        borderColor: 'red',
-                        borderRadius: 0,
-                        width: 16,
-                        height: 16,
-                      }}
-                      innerIconStyle={{
-                        borderWidth: 1,
-                        borderRadius: 0,
-                        width: 16,
-                        height: 16,
-                      }}
-                      textStyle={{
-                        fontFamily: 'JosefinSans-Regular',
-                        textDecorationLine: 'none',
-                      }}
-                      style={{marginRight: 15, marginBottom: 10}}
-                      textContainerStyle={{paddingLeft: 0}}
-                      onPress={(isChecked: boolean) => {
-                        handlePermissions(isChecked, item.action);
-                      }}
-                    />
-                  );
-                })}
-            </View>
-          </View>
-        </CollapsibleView>
-        <CollapsibleView title="CUSTOMER MANAGEMENT" collapsed={true}>
-          <View>
-            <View style={styles.labelContainer}>
-              <Label text="Contact Details" style={styles.label} />
-            </View>
-            <View style={styles.elementContainer2}>
-              {actionOptions
-                .slice(0, actionOptions.length - 1)
-                .map((item, index) => {
-                  return (
-                    <BouncyCheckbox
-                      text={item.action}
-                      fillColor={COLOR_BLUE}
-                      iconStyle={{
-                        borderColor: 'red',
-                        borderRadius: 0,
-                        width: 16,
-                        height: 16,
-                      }}
-                      innerIconStyle={{
-                        borderWidth: 1,
-                        borderRadius: 0,
-                        width: 16,
-                        height: 16,
-                      }}
-                      textStyle={{
-                        fontFamily: 'JosefinSans-Regular',
-                        textDecorationLine: 'none',
-                      }}
-                      style={{marginRight: 15, marginBottom: 10}}
-                      textContainerStyle={{paddingLeft: 0}}
-                      onPress={(isChecked: boolean) => {
-                        handlePermissions(isChecked, item.action);
-                      }}
-                    />
-                  );
-                })}
-            </View>
-            <Spacer height={4} />
-            <View style={styles.labelContainer}>
-              <Label text="Order Details" style={styles.label} />
-            </View>
-            <View style={styles.elementContainer2}>
-              {actionOptions
-                .slice(0, actionOptions.length - 1)
-                .map((item, index) => {
-                  return (
-                    <BouncyCheckbox
-                      text={item.action}
-                      fillColor={COLOR_BLUE}
-                      iconStyle={{
-                        borderColor: 'red',
-                        borderRadius: 0,
-                        width: 16,
-                        height: 16,
-                      }}
-                      innerIconStyle={{
-                        borderWidth: 1,
-                        borderRadius: 0,
-                        width: 16,
-                        height: 16,
-                      }}
-                      textStyle={{
-                        fontFamily: 'JosefinSans-Regular',
-                        textDecorationLine: 'none',
-                      }}
-                      style={{marginRight: 15, marginBottom: 10}}
-                      textContainerStyle={{paddingLeft: 0}}
-                      onPress={(isChecked: boolean) => {
-                        handlePermissions(isChecked, item.action);
-                      }}
-                    />
-                  );
-                })}
-            </View>
-            <View style={styles.labelContainer}>
-              <Label text="Car Condition" style={styles.label} />
-            </View>
-            <View style={styles.elementContainer2}>
-              {actionOptions
-                .slice(0, actionOptions.length - 1)
-                .map((item, index) => {
-                  return (
-                    <BouncyCheckbox
-                      text={item.action}
-                      fillColor={COLOR_BLUE}
-                      iconStyle={{
-                        borderColor: 'red',
-                        borderRadius: 0,
-                        width: 16,
-                        height: 16,
-                      }}
-                      innerIconStyle={{
-                        borderWidth: 1,
-                        borderRadius: 0,
-                        width: 16,
-                        height: 16,
-                      }}
-                      textStyle={{
-                        fontFamily: 'JosefinSans-Regular',
-                        textDecorationLine: 'none',
-                      }}
-                      style={{marginRight: 15, marginBottom: 10}}
-                      textContainerStyle={{paddingLeft: 0}}
-                      onPress={(isChecked: boolean) => {
-                        handlePermissions(isChecked, item.action);
-                      }}
-                    />
-                  );
-                })}
-            </View>
-            <View style={styles.labelContainer}>
-              <Label text="Bilty" style={styles.label} />
-            </View>
-            <View style={styles.elementContainer2}>
-              {actionOptions
-                .slice(0, actionOptions.length - 1)
-                .map((item, index) => {
-                  return (
-                    <BouncyCheckbox
-                      text={item.action}
-                      fillColor={COLOR_BLUE}
-                      iconStyle={{
-                        borderColor: 'red',
-                        borderRadius: 0,
-                        width: 16,
-                        height: 16,
-                      }}
-                      innerIconStyle={{
-                        borderWidth: 1,
-                        borderRadius: 0,
-                        width: 16,
-                        height: 16,
-                      }}
-                      textStyle={{
-                        fontFamily: 'JosefinSans-Regular',
-                        textDecorationLine: 'none',
-                      }}
-                      style={{marginRight: 15, marginBottom: 10}}
-                      textContainerStyle={{paddingLeft: 0}}
-                      onPress={(isChecked: boolean) => {
-                        handlePermissions(isChecked, item.action);
-                      }}
-                    />
-                  );
-                })}
-            </View>
-            <View style={styles.labelContainer}>
-              <Label text="Invoice" style={styles.label} />
-            </View>
-            <View style={styles.elementContainer2}>
-              {actionOptions
-                .slice(0, actionOptions.length - 1)
-                .map((item, index) => {
-                  return (
-                    <BouncyCheckbox
-                      text={item.action}
-                      fillColor={COLOR_BLUE}
-                      iconStyle={{
-                        borderColor: 'red',
-                        borderRadius: 0,
-                        width: 16,
-                        height: 16,
-                      }}
-                      innerIconStyle={{
-                        borderWidth: 1,
-                        borderRadius: 0,
-                        width: 16,
-                        height: 16,
-                      }}
-                      textStyle={{
-                        fontFamily: 'JosefinSans-Regular',
-                        textDecorationLine: 'none',
-                      }}
-                      style={{marginRight: 15, marginBottom: 10}}
-                      textContainerStyle={{paddingLeft: 0}}
-                      onPress={(isChecked: boolean) => {
-                        handlePermissions(isChecked, item.action);
-                      }}
-                    />
-                  );
-                })}
-            </View>
-            <View style={styles.labelContainer}>
-              <Label text="Order Status" style={styles.label} />
-            </View>
-            <View style={styles.elementContainer2}>
-              {actionOptions
-                .slice(0, actionOptions.length - 1)
-                .map((item, index) => {
-                  return (
-                    <BouncyCheckbox
-                      text={item.action}
-                      fillColor={COLOR_BLUE}
-                      iconStyle={{
-                        borderColor: 'red',
-                        borderRadius: 0,
-                        width: 16,
-                        height: 16,
-                      }}
-                      innerIconStyle={{
-                        borderWidth: 1,
-                        borderRadius: 0,
-                        width: 16,
-                        height: 16,
-                      }}
-                      textStyle={{
-                        fontFamily: 'JosefinSans-Regular',
-                        textDecorationLine: 'none',
-                      }}
-                      style={{marginRight: 15, marginBottom: 10}}
-                      textContainerStyle={{paddingLeft: 0}}
-                      onPress={(isChecked: boolean) => {
-                        handlePermissions(isChecked, item.action);
-                      }}
-                    />
-                  );
-                })}
-            </View>
-          </View>
-        </CollapsibleView> */}
         <Spacer height={12} />
         <Button
           text="SUBMIT"
