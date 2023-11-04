@@ -1,14 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import Button from '../../../../../common/Button';
 import DatePickerComponent from '../../../../../common/DatePickerComponent';
 import Input from '../../../../../common/Input';
 import Spacer from '../../../../../common/Spacer';
-import {COLOR_BLACK} from '../../../../../utils/colors';
+import { COLOR_BLACK } from '../../../../../utils/colors';
 import styles from './style';
-import {formatDate, formatDate2} from '../../../../../utils/formatter';
-import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
-import {IAddFollowupRequest} from '../../../../../interface/enquiry/IAddFollowupRequest';
+import { formatDate, formatDate2 } from '../../../../../utils/formatter';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
+import { IAddFollowupRequest } from '../../../../../interface/enquiry/IAddFollowupRequest';
 import {
   addFollowupRequest,
   addSurveyRequest,
@@ -19,7 +19,9 @@ import {
 } from '../../../../../redux/slices/EnquirySlice';
 import Toast from 'react-native-toast-message';
 import Spinner from '../../../../../common/Spinner';
-import {IAddSurveyRequest} from '../../../../../interface/enquiry/IAddSurveyRequest';
+import { IAddSurveyRequest } from '../../../../../interface/enquiry/IAddSurveyRequest';
+import SurveyTab from '../../../../../data/survey.json';
+import SurveyListView from '../SurveyListView';
 
 interface IFollowupListHeaderComponentProps {
   taskName: string;
@@ -28,9 +30,11 @@ interface IFollowupListHeaderComponentProps {
   nextFollowupOrSurveyDate?: string;
 }
 
-const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> = ({taskName, assigneeRole, enquiryId, nextFollowupOrSurveyDate}) => {
+const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> = ({ taskName, assigneeRole, enquiryId, nextFollowupOrSurveyDate }) => {
   const [comment, setComment] = useState<string>('');
   const [date, setDate] = useState<Date>(new Date());
+  const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
+  const [index, setIndex] = React.useState(0);
 
   const dispatch = useAppDispatch();
   const {
@@ -41,10 +45,10 @@ const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> =
     addSurveySuccess,
     addSurveyFailure,
   } = useAppSelector(state => state.Enquiry);
-  const {verifiedData} = useAppSelector(state => state.OTP);
+  const { verifiedData } = useAppSelector(state => state.OTP);
   //@ts-ignore
-  const {data} = verifiedData || {};
-  const {id} = data || {};
+  const { data } = verifiedData || {};
+  const { id } = data || {};
 
   const handleFollowupDate = (date: Date) => {
     setDate(date);
@@ -53,6 +57,53 @@ const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> =
   const handleCommentInputTextChange = (text: string) => {
     setComment(text);
   };
+
+  const handleTabChange = (index: number) => {
+    setActiveTabIndex(index);
+
+  };
+
+  const showTabItem = () => {
+    switch (activeTabIndex) {
+      case 0:
+        return SurveyRoute();
+      case 1:
+        return <SurveyListView />
+      default:
+        return null;
+    }
+  };
+
+  const SurveyRoute = () => (
+    <><Spacer height={8} /><View style={styles.contentContainer}>
+      <Text style={styles.contentLabelText}>
+        {assigneeRole} Manager - <Text style={styles.nameText}>Ramesh</Text>
+      </Text>
+    </View><Spacer height={8} /><View style={styles.contentContainer}>
+        <Text style={styles.contentLabelText}>
+          Next {taskName.charAt(0)}{taskName.substring(1, taskName.length).toLowerCase()} - {nextFollowupOrSurveyDate}
+        </Text>
+      </View><Spacer height={12} /><View style={styles.elementContainer}>
+        <DatePickerComponent
+          onDateSelect={handleFollowupDate}
+          style={styles.datePicker}
+          showTime={true} />
+      </View><Spacer height={12} /><View style={styles.elementContainer}>
+        <Input
+          onChangeText={handleCommentInputTextChange}
+          containerStyle={styles.inputContainer}
+          inputStyle={styles.input}
+          selectionColor={COLOR_BLACK}
+          placeholder="Comment" />
+      </View><Spacer height={12} />
+      <Button
+        text="SAVE"
+        onPress={handleSave}
+        style={styles.previewButtonStyle}
+        textStyle={styles.textStyle} /></>
+  );
+
+
 
   useEffect(() => {
     if ((!addFollowupRequesting && addFollowupSuccess) || (!addSurveyRequesting && addSurveySuccess)) {
@@ -64,10 +115,10 @@ const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> =
             ? 'Followup has been added successfully'
             : 'Survey has been added successfully',
       });
-      if(taskName == 'FOLLOW UP') {
+      if (taskName == 'FOLLOW UP') {
         dispatch(resetAddFollowupRequest());
         dispatch(getFollowupsRequest(enquiryId));
-      } else if(taskName == 'SURVEY') {
+      } else if (taskName == 'SURVEY') {
         dispatch(resetAddSurveyRequest());
         dispatch(getSurveyListRequest(enquiryId));
       }
@@ -80,9 +131,9 @@ const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> =
             ? 'Error in adding followup. Try again!'
             : 'Error in adding survey. Try again!',
       });
-      if(taskName == 'FOLLOW UP') {
+      if (taskName == 'FOLLOW UP') {
         dispatch(resetAddFollowupRequest());
-      } else if(taskName == 'SURVEY') {
+      } else if (taskName == 'SURVEY') {
         dispatch(resetAddSurveyRequest());
       }
     }
@@ -113,46 +164,38 @@ const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> =
   return (
     <View style={styles.container}>
       <Spacer height={4} />
-      <View style={styles.labelContainer}>
-        <Text style={styles.labelText}>{taskName}</Text>
-      </View>
-      <Spacer height={8} />
-      <View style={styles.contentContainer}>
-        <Text style={styles.contentLabelText}>
-          {assigneeRole} Manager - <Text style={styles.nameText}>Ramesh</Text>
-        </Text>
-      </View>
-      <Spacer height={8} />
-      <View style={styles.contentContainer}>
-        <Text style={styles.contentLabelText}>
-          Next {taskName.charAt(0)}{taskName.substring(1, taskName.length).toLowerCase()} - {nextFollowupOrSurveyDate}
-        </Text>
-      </View>
-      <Spacer height={12} />
-      <View style={styles.elementContainer}>
-        <DatePickerComponent
-          onDateSelect={handleFollowupDate}
-          style={styles.datePicker}
-          showTime={true}
-        />
-      </View>
-      <Spacer height={12} />
-      <View style={styles.elementContainer}>
-        <Input
-          onChangeText={handleCommentInputTextChange}
-          containerStyle={styles.inputContainer}
-          inputStyle={styles.input}
-          selectionColor={COLOR_BLACK}
-          placeholder="Comment"
-        />
-      </View>
-      <Spacer height={12} />
-      <Button
-        text="SAVE"
-        onPress={handleSave}
-        style={styles.previewButtonStyle}
-        textStyle={styles.textStyle}
-      />
+      {taskName == 'FOLLOW UP' ?
+        <View style={styles.labelContainer}>
+          <Text style={styles.labelText}>{taskName}</Text>
+        </View>
+        :
+        <View style={styles.tabsContainer}>
+          <FlatList
+            style={{ paddingHorizontal: 8 }}
+            data={SurveyTab}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            renderItem={({ item, index }) => {
+              const container = index === activeTabIndex ? styles.containerActive : styles.container2;
+              const textStyle = index === activeTabIndex ? styles.activeText : styles.inactiveText;
+              return(
+              <TouchableOpacity
+                style={container}
+                onPress={() => handleTabChange(index)}
+                activeOpacity={0.6}
+                key={`${index}`}>
+                <Text style={textStyle}>{item.label}</Text>
+              </TouchableOpacity>
+              )
+            }
+            }
+          />
+        </View>
+      }
+
+      {taskName == 'FOLLOW UP' ? SurveyRoute() : <><Spacer height={10} />
+        {showTabItem()}</>}
+
       <Spacer height={12} />
       <Spinner show={addFollowupRequesting || addSurveyRequesting} />
     </View>

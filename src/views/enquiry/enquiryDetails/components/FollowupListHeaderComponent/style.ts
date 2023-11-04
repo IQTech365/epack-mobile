@@ -68,6 +68,36 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR_BLUE,
     borderRadius: 5,
   },
+  tabsContainer: {
+    width: width,
+    height: 40,
+},
+container2: {
+  paddingHorizontal: 12,
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderBottomWidth: 2,
+  borderBottomColor:COLOR_WHITE,
+  marginRight: 8,
+},
+containerActive: {
+  paddingHorizontal: 12,
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderBottomWidth: 2,
+  borderBottomColor: COLOR_BLUE,
+  marginRight: 8,
+},
+activeText: {
+  color: COLOR_BLACK,
+  fontSize: 16,
+  fontWeight: '500',
+},
+inactiveText: {
+  color: COLOR_GRAY,
+  fontSize: 16,
+  fontWeight: '500',
+}
 });
 
 export default styles;
