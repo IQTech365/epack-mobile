@@ -90,6 +90,15 @@ const AddDriverListItem: React.FC<IAddDriverListItemProps> = ({
                             <Text style={styles.valueText}>{item.permanentAddress.city}</Text>
                         </View>
                     </View>
+                    <View style={styles.rowContainer}>
+                        <View style={styles.rowItemContainer}>
+                            <Text style={styles.labelText}>Current Address</Text>
+                        </View>
+                        <View style={styles.rowItemContainer2}>
+                            <Text style={styles.valueText}>{item.currentAddress.address}</Text>
+                            <Text style={styles.valueText}>{item.currentAddress.city}</Text>
+                        </View>
+                    </View>
                     
                     <Spacer height={6} />
                 </TouchableOpacity>
