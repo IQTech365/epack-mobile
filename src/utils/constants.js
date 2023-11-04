@@ -27,7 +27,8 @@ const HomeStackRoute = {
 
 const QuotationStackRoute = {
   QuotationRoot: 'QuotationRoot',
-  AddQuotation: 'AddQuotation'
+  AddQuotation: 'AddQuotation',
+  QuotationDetails: 'QuotationDetails',
 };
 
 const OrderStackRoute = {

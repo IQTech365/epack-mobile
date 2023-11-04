@@ -5,6 +5,7 @@ import { IAddQuotationRequest } from '../interface/quotation/IAddQuotationReques
 import { aaddQuotationSuccess, addQuotationFailure, addQuotationRequest, getQuotationsFailure, getQuotationsRequest, getQuotationsSuccess } from '../redux/slices/QuotationSlice';
 import { IAddQuotationResponse } from '../interface/quotation/IAddQuotationResponse';
 import { IGetQuotationsResponse } from '../interface/quotation/IGetQuotationsResponse';
+import { IGetQuotationRequest } from '../interface/quotation/IGetQuotationRequest';
 
 export function* addQuotationSaga(action: PayloadAction<IAddQuotationRequest>) {
     try {
@@ -17,7 +18,7 @@ export function* addQuotationSaga(action: PayloadAction<IAddQuotationRequest>) {
     }
 }
 
-export function* getQuotationsSaga(action: PayloadAction<string>) {
+export function* getQuotationsSaga(action: PayloadAction<IGetQuotationRequest>) {
     try {
         const response: IGetQuotationsResponse = yield call(QuotationService.GetQuotationsService, action.payload);
         console.log('getQuotationsSaga-response----', JSON.stringify(response));

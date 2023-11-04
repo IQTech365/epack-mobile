@@ -1,6 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {IAddQuotationRequest} from '../../interface/quotation/IAddQuotationRequest';
 import {IAddQuotationResponse} from '../../interface/quotation/IAddQuotationResponse';
+import { IGetQuotationRequest } from '../../interface/quotation/IGetQuotationRequest';
 import { IGetQuotationsResponse } from '../../interface/quotation/IGetQuotationsResponse';
 
 interface IQuotationState {
@@ -69,7 +70,7 @@ export const QuotationSlice = createSlice({
     // Get Quotations
     getQuotationsRequest: (
       state,
-      action: PayloadAction<string>,
+      action: PayloadAction<IGetQuotationRequest>,
     ) => {
       state.getQuotationsRequesting = true;
     },

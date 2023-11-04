@@ -12,7 +12,7 @@ import Header from '../../common/Header';
 import Spacer from '../../common/Spacer';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {getQuotationsRequest} from '../../redux/slices/QuotationSlice';
-import {QuotationStackRoute} from '../../utils/constants';
+import {EnquiryStackRoute, QuotationStackRoute} from '../../utils/constants';
 import QuotationListItem, {
   IQuotationItem,
 } from './quotationList/components/QuotationListItem';
@@ -21,6 +21,13 @@ import BottomSheet from '@gorhom/bottom-sheet';
 import FormModal from '../settings/formModal';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {COLOR_BLACK, COLOR_BLUE} from '../../utils/colors';
+import {IGetQuotationRequest} from '../../interface/quotation/IGetQuotationRequest';
+import {
+  IEnquiry,
+  IGetQuotationData,
+} from '../../interface/quotation/IGetQuotationsResponse';
+import {IGetEnquiriesData} from '../../interface/enquiry/IGetEnquiriesResponse';
+import {CommonActions} from '@react-navigation/native';
 interface IQuotationPageViewProps {
   navigation: NavigationProp<any, any>;
 }
@@ -29,27 +36,65 @@ const downloadOptions = ['With Sign. & Stamp', 'Without Sign. & Stamp'];
 
 const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
   const dispatch = useAppDispatch();
-  const {
-    quotations,
-    getQuotationsRequesting,
-    getQuotationsSuccess,
-    getQuotationsFailure,
-  } = useAppSelector(state => state.Quotation);
+  const {quotations = [], getQuotationsRequesting} = useAppSelector(
+    state => state.Quotation,
+  );
   const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
   const {verifiedData} = useAppSelector(state => state.OTP);
   const [downloadOption, setDownloadOption] = useState<string>('');
   const bottomSheetRef = useRef<BottomSheet>(null);
   console.log('quotations----', JSON.stringify(quotations));
+  const {data: quotationData} = quotations || {};
 
-  const tempItem: IQuotationItem = {
-    quotationNo: '#9877654',
-    clientName: 'Ms. Vanshika',
-    fromDestination: 'Delhi',
-    toDestination: 'Gurgaon',
-    shiftingType: 'Home',
-    quotationAmount: '12000.00',
-    quotationDate: '14-07-2023',
-    phoneNumber: '9898989898',
+  const getTotalQuotations = () => {
+    let _count = 0;
+    if (
+      quotationData &&
+      Array.isArray(quotationData) &&
+      quotationData.length > 0
+    ) {
+      _count = quotationData.length;
+    }
+    return _count;
+  };
+
+  const transformQuotationData = () => {
+    let _data: IQuotationItem[] = [];
+    if (
+      quotationData &&
+      Array.isArray(quotationData) &&
+      quotationData.length > 0
+    ) {
+      _data = quotationData.map((quotation: IGetQuotationData) => {
+        const item: IQuotationItem = {
+          quotationNo: quotation.quotationNumber,
+          clientName: quotation.enquiries[0].partyName,
+          fromDestination: quotation.enquiries[0].pickupAddress.city,
+          toDestination: quotation.enquiries[0].dropAddress.city,
+          shiftingType: quotation.enquiries[0].shiftingType,
+          quotationAmount: quotation.quotationAmount,
+          quotationDate: quotation.quotationData,
+          phoneNumber: quotation.enquiries[0].mobile,
+        };
+        return item;
+      });
+      return _data;
+    }
+    return _data;
+  };
+
+  const handleCardClick = (index: number) => {
+    const item: IGetEnquiriesData = quotationData[index]?.enquiries[0];
+    // navigation.navigate(QuotationStackRoute.QuotationDetails, {enquiryId: item._id, item: item});
+    // navigation.dispatch(
+    //   CommonActions.navigate({
+    //     key: EnquiryStackRoute.EnquiryDetails,
+    //     params: {
+    //       enquiryId: item._id,
+    //       item: item,
+    //     },
+    //   }),
+    // );
   };
 
   const presentModal = () => {
@@ -88,13 +133,18 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
   };
 
   const handleOnRefresh = useCallback(() => {
-    const urlParams = `${getAuthId()}/${getCompanyId()}`;
-    dispatch(getQuotationsRequest(urlParams));
+    const payload: IGetQuotationRequest = {
+      companyId: getCompanyId(),
+    };
+    dispatch(getQuotationsRequest(payload));
   }, []);
 
   useEffect(() => {
-    const urlParams = `${getAuthId()}/${getCompanyId()}`;
-    dispatch(getQuotationsRequest(urlParams));
+    // const urlParams = `${getAuthId()}/${getCompanyId()}`;
+    const payload: IGetQuotationRequest = {
+      companyId: getCompanyId(),
+    };
+    dispatch(getQuotationsRequest(payload));
   }, []);
 
   const downloadButtonStyle =
@@ -112,13 +162,13 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
       <Spacer height={4} />
       <AddNew
         countLabel="Total Quotations"
-        count="200"
+        count={getTotalQuotations().toString()}
         onPress={handleAddNew}
       />
       <Spacer height={12} />
       <FlatList
         contentContainerStyle={styles.listContent}
-        data={[tempItem, tempItem, tempItem]}
+        data={transformQuotationData()}
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl
@@ -129,8 +179,8 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
         renderItem={({item, index}) => (
           <QuotationListItem
             item={item}
-            index={1}
-            onPress={() => {}}
+            index={index}
+            onPress={() => handleCardClick(index)}
             onDownload={presentModal}
           />
         )}
@@ -150,7 +200,6 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
                   innerIconStyle={{borderWidth: 1, borderRadius: 0}}
                   onPress={(isChecked: boolean) => {
                     setDownloadOption(option);
-                    // setWithSignAndStamp(isChecked);
                   }}
                   textStyle={{
                     fontFamily: 'JosefinSans-Regular',

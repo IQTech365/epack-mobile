@@ -6,13 +6,7 @@ import DownloadIcon from '../../images/icons/download_icon.svg';
 import EditIcon from '../../images/icons/create_icon.svg';
 import PreviewIcon from '../../images/icons/preview_icon.svg';
 
-export enum DOCUMENT_TYPE {
-  QUOTATION,
-  BILTY,
-}
-
 interface Props {
-  documentType: DOCUMENT_TYPE;
   onDownload: () => void;
   onShare: () => void;
   onPreview: () => void;
@@ -20,7 +14,7 @@ interface Props {
   show: boolean;
 }
 
-const DocumentActionView: React.FC<Props> = ({documentType, onDownload, onShare, onPreview, onEdit, show}) => {
+const DocumentActionView: React.FC<Props> = ({onDownload, onShare, onPreview, onEdit, show}) => {
   if (!show) return null;
   return (
     <View style={styles.container}>
