@@ -25,7 +25,7 @@ export const GET_FOLLOWUP_COMMENTS = (enquiry_id) => `/followup/${enquiry_id}`;
 export const ADD_QUOTATION = `/quotation/add`;
 //README:- id = `company_id` or `enquiry_id`
 export const GET_QUOTATION_LIST = `/quotation/getquotation`;
-export const GET_QUOTATION = () => ``;
+export const GET_QUOTATION = (quotation_id) => `/quotation/${quotation_id}`;
 
 // Order Module
 export const GET_ORDER_LIST = `/enquiry/orderlist`;

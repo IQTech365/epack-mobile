@@ -3,10 +3,10 @@
  */
 const TabRoute = {
   HomeStack: 'HomeStack',
-  ProfileStack: 'ProfileStack',
-  MessageStack: 'MessageStack',
-  ZoomStack: 'ZoomStack',
-  MenuStack: 'MenuStack',
+  QuotationStack: 'QuotationStack',
+  EnquiryStack: 'EnquiryStack',
+  OrderStack: 'OrderStack',
+  ClientStack: 'ClientStack',
 }
 
 const AuthStackRoute = {

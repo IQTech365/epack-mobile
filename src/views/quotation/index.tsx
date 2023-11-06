@@ -12,7 +12,11 @@ import Header from '../../common/Header';
 import Spacer from '../../common/Spacer';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {getQuotationsRequest} from '../../redux/slices/QuotationSlice';
-import {EnquiryStackRoute, QuotationStackRoute} from '../../utils/constants';
+import {
+  EnquiryStackRoute,
+  QuotationStackRoute,
+  TabRoute,
+} from '../../utils/constants';
 import QuotationListItem, {
   IQuotationItem,
 } from './quotationList/components/QuotationListItem';
@@ -23,11 +27,9 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {COLOR_BLACK, COLOR_BLUE} from '../../utils/colors';
 import {IGetQuotationRequest} from '../../interface/quotation/IGetQuotationRequest';
 import {
-  IEnquiry,
   IGetQuotationData,
 } from '../../interface/quotation/IGetQuotationsResponse';
 import {IGetEnquiriesData} from '../../interface/enquiry/IGetEnquiriesResponse';
-import {CommonActions} from '@react-navigation/native';
 interface IQuotationPageViewProps {
   navigation: NavigationProp<any, any>;
 }
@@ -85,16 +87,15 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
 
   const handleCardClick = (index: number) => {
     const item: IGetEnquiriesData = quotationData[index]?.enquiries[0];
-    // navigation.navigate(QuotationStackRoute.QuotationDetails, {enquiryId: item._id, item: item});
-    // navigation.dispatch(
-    //   CommonActions.navigate({
-    //     key: EnquiryStackRoute.EnquiryDetails,
-    //     params: {
-    //       enquiryId: item._id,
-    //       item: item,
-    //     },
-    //   }),
-    // );
+    navigation.navigate(TabRoute.EnquiryStack, {
+      screen: EnquiryStackRoute.EnquiryDetails,
+      params: {enquiryId: item._id, item: item},
+    });
+  };
+
+  const handleEditClick = (index: number) => {
+    const item: IGetQuotationData = quotationData[index];
+    navigation.navigate(QuotationStackRoute.AddQuotation, {item: item, isEdit: true});
   };
 
   const presentModal = () => {
@@ -140,8 +141,8 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
   }, []);
 
   useEffect(() => {
-    // const urlParams = `${getAuthId()}/${getCompanyId()}`;
     const payload: IGetQuotationRequest = {
+      //Note: we can also pass branchId, authId, or id to get the quotation info.
       companyId: getCompanyId(),
     };
     dispatch(getQuotationsRequest(payload));
@@ -181,7 +182,10 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
             item={item}
             index={index}
             onPress={() => handleCardClick(index)}
+            onShare={() => {}}
             onDownload={presentModal}
+            onPreview={() => {}}
+            onEdit={() => handleEditClick(index)}
           />
         )}
       />

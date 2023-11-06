@@ -3,6 +3,7 @@ import {IAddQuotationRequest} from '../../interface/quotation/IAddQuotationReque
 import {IAddQuotationResponse} from '../../interface/quotation/IAddQuotationResponse';
 import { IGetQuotationRequest } from '../../interface/quotation/IGetQuotationRequest';
 import { IGetQuotationsResponse } from '../../interface/quotation/IGetQuotationsResponse';
+import { IGetSingleQuotationResponse } from '../../interface/quotation/IGetSingleQuotationResponse';
 
 interface IQuotationState {
   // Add Quotation
@@ -17,6 +18,12 @@ interface IQuotationState {
   getQuotationsSuccess: boolean;
   getQuotationsFailure: boolean;
   getQuotationsError: any;
+  // Get Quotation
+  quotation: IGetSingleQuotationResponse | null;
+  getQuotationRequesting: boolean;
+  getQuotationSuccess: boolean;
+  getQuotationFailure: boolean;
+  getQuotationError: any;
 }
 
 const initialState: IQuotationState = {
@@ -32,6 +39,12 @@ const initialState: IQuotationState = {
   getQuotationsSuccess: false,
   getQuotationsFailure: false,
   getQuotationsError: null,
+  // Get Quotation
+  quotation: null,
+  getQuotationRequesting: false,
+  getQuotationSuccess: false,
+  getQuotationFailure: false,
+  getQuotationError: null,
 };
 
 export const QuotationSlice = createSlice({
@@ -91,6 +104,30 @@ export const QuotationSlice = createSlice({
       state.getQuotationsFailure = false;
       state.getQuotationsError = null;
     },
+    // Get Single Quotation
+    getSingleQuotationRequest: (
+      state,
+      action: PayloadAction<string>,
+    ) => {
+      state.getQuotationRequesting = true;
+    },
+    getSingleQuotationSuccess: (state,action: PayloadAction<IGetSingleQuotationResponse>) => {
+      state.getQuotationRequesting = false;
+      state.getQuotationSuccess = true;
+      state.quotation = action.payload;
+    },
+    getSingleQuotationFailure: (state, action: PayloadAction<any>) => {
+      state.getQuotationRequesting = false;
+      state.getQuotationSuccess = false;
+      state.getQuotationFailure = true;
+      state.getQuotationError = action.payload;
+    },
+    resetGetSingleQuotationRequest: (state) => {
+      state.getQuotationRequesting = false;
+      state.getQuotationSuccess = false;
+      state.getQuotationFailure = false;
+      state.getQuotationError = null;
+    },
    },
 });
 
@@ -108,5 +145,10 @@ export const {
   getQuotationsSuccess,
   getQuotationsFailure,
   resetGetQuotationsRequest,
+  // Get Single Quotation
+  getSingleQuotationRequest,
+  getSingleQuotationSuccess,
+  getSingleQuotationFailure,
+  resetGetSingleQuotationRequest,
 
 } = QuotationSlice.actions;
