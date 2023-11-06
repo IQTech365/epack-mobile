@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Text, View, TouchableOpacity} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../../common/Spacer';
@@ -6,18 +6,21 @@ import EnquiryDetailListItem from '../../../enquiry/enquiryDetails/components/En
 import styles from './style';
 import EditIcon from '../../../../images/icons/edit.svg';
 import Header from '../../../../common/Header';
-import {useAppSelector} from '../../../../redux/hooks';
+import {useAppDispatch, useAppSelector} from '../../../../redux/hooks';
 import ModalHOC from '../../../../common/ModalHOC';
 import UpdateBasicDetailsForm from './Form/UpdateBasicDetailsForm';
 import Toast from 'react-native-toast-message';
 import {ICompanyInfoData} from '../../../../interface/companyRegistration/IGetCompaniesResponse';
+import { getCompaniesRequest } from '../../../../redux/slices/CompanySlice';
+import Spinner from '../../../../common/Spinner';
 
 interface IBasicDetailsViewProps {}
 
 const BasicDetailsView: React.FC<IBasicDetailsViewProps> = ({}) => {
-  const {companies} = useAppSelector(state => state.Company);
+  const {companies, getCompaniesRequesting} = useAppSelector(state => state.Company);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const {data: companiesData} = companies || {};
+  const dispatch = useAppDispatch();
   console.log('companiesData----', JSON.stringify(companiesData));
 
   const getFirstCompany = () => {
@@ -36,10 +39,15 @@ const BasicDetailsView: React.FC<IBasicDetailsViewProps> = ({}) => {
 
   const handleModalClose = () => {
     setOpenModal(false);
+    dispatch(getCompaniesRequest(firstCompany?.authId as string));
   };
 
+  useEffect(() => {
+    dispatch(getCompaniesRequest(firstCompany?.authId as string));
+  }, [dispatch]);
+
   return (
-    <AvoidSoftInputViewHOC>
+    <><AvoidSoftInputViewHOC>
       <View style={styles.container}>
         <Header label="Basic Details" canGoBack={true} />
         <Spacer height={4} />
@@ -56,7 +64,7 @@ const BasicDetailsView: React.FC<IBasicDetailsViewProps> = ({}) => {
           <EnquiryDetailListItem label="Contact Person" value={firstCompany?.contactPerson} />
           <EnquiryDetailListItem label="Website" value={firstCompany?.companyWebite || "Not Available"} />
           <EnquiryDetailListItem label="Email" value={firstCompany?.email} />
-          <EnquiryDetailListItem label="Reg. Mobile Number" value={firstCompany?.companyMobile}  />
+          <EnquiryDetailListItem label="Reg. Mobile Number" value={firstCompany?.companyMobile} />
         </View>
         <Spacer height={8} />
         <ModalHOC
@@ -69,7 +77,7 @@ const BasicDetailsView: React.FC<IBasicDetailsViewProps> = ({}) => {
           </>
         </ModalHOC>
       </View>
-    </AvoidSoftInputViewHOC>
+    </AvoidSoftInputViewHOC><Spinner show={getCompaniesRequesting} /></>
   );
 };
 
