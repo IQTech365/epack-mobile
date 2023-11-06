@@ -63,18 +63,15 @@ import {
 } from '../../../interface/quotation/IAddQuotationRequest';
 import {
   addQuotationRequest,
+  getSingleQuotationRequest,
   resetaddQuotationRequest,
 } from '../../../redux/slices/QuotationSlice';
 import Toast from 'react-native-toast-message';
 import {useRef} from 'react';
-import {NavigationProp} from '@react-navigation/native';
-import EpackDropdown from '../../../common/DropdownComponent2';
 import DeleteIcon from '../../../images/icons/delete.svg';
-import {QuotationStackRoute} from '../../../utils/constants';
-import {
-  IQuotationItem,
-} from '../quotationList/components/QuotationListItem';
-
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { QuotationStackParamList } from '../../../navigation/params/QuotationStackParamList';
+import { IGetQuotationData } from '../../../interface/quotation/IGetQuotationsResponse';
 const chargeOptions = [
   'Included',
   'Additional',
@@ -215,15 +212,20 @@ const discountTypeOptions: Array<ICheckboxButton> = [
   },
 ];
 
-interface IAddQuotationProps {
+interface Props extends NativeStackScreenProps<QuotationStackParamList, 'AddQuotation'> {
   showHeader?: boolean;
-  navigation?: NavigationProp<any, any>;
 }
 
-const AddQuotationView: React.FC<IAddQuotationProps> = ({
+const AddQuotationView: React.FC<Props> = ({
   showHeader = true,
   navigation,
+  route
 }) => {
+  const item: IGetQuotationData | undefined = route.params?.item;
+  const isEdit: boolean | undefined = route.params?.isEdit;
+  // console.log('AddQuotation-Edit-Item----', JSON.stringify(item));
+  // console.log('AddQuotation-Edit-Item----', isEdit);
+
   const [switchState, setSwitchState] = useState<boolean>(false);
   const [state, dispatch] = useReducer(quotationReducer, initialState);
   const [isPartLoad, setIsPartLoad] = useState<boolean>(true);
@@ -264,9 +266,6 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
   const dropCityDropdownRef = useRef(null);
   const surchargePercentDropdownRef = useRef(null);
 
-  const calcPartloadAmount =
-    Number.parseInt(partLoadRatePerItem) * Number.parseInt(partLoadAmount);
-
   const dispatch2 = useAppDispatch();
 
   const {
@@ -274,8 +273,10 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
     addQuotationSuccess,
     addQuotationFailure,
     addQuotationInfo,
+    quotation,
+    getQuotationRequesting,
   } = useAppSelector(state => state.Quotation);
-
+  console.log('AddQuotation-quotation----', JSON.stringify(quotation));
   const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
   const {otpData} = useAppSelector(state => state.OTP);
 
@@ -686,6 +687,12 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
       payload: tempObj as TSurcharge,
     });
   };
+
+  useEffect(() => {
+    if(isEdit) {
+      dispatch2(getSingleQuotationRequest(item?._id as string));
+    }
+  }, []);
 
   useEffect(() => {
     const {storageCharges} = state;
@@ -2716,7 +2723,7 @@ const AddQuotationView: React.FC<IAddQuotationProps> = ({
           <Spacer height={12} />
         </View>
       </AvoidSoftInputViewHOC>
-      <Spinner show={fetching || addQuotationRequesting} />
+      <Spinner show={fetching || addQuotationRequesting || getQuotationRequesting} />
     </>
   );
 };

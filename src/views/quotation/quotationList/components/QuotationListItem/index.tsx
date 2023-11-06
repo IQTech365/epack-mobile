@@ -31,6 +31,9 @@ interface IQuotationListItemProps {
   index: number;
   onPress: () => void;
   onDownload: () => void;
+  onShare: () => void;
+  onEdit: () => void;
+  onPreview: () => void;
 }
 
 const QuotationListItem: React.FC<IQuotationListItemProps> = ({
@@ -38,6 +41,9 @@ const QuotationListItem: React.FC<IQuotationListItemProps> = ({
   index,
   onPress,
   onDownload,
+  onShare,
+  onEdit,
+  onPreview,
 }) => {
   const [show, setShow] = useState<boolean>(false);
   const [label, setLabel] = useState<string>('VIEW DETAILS');
@@ -139,10 +145,10 @@ const QuotationListItem: React.FC<IQuotationListItemProps> = ({
           </TouchableOpacity>
         </View>
         <DocumentActionView
-          onShare={() => {}}
+          onShare={onShare}
           onDownload={onDownload}
-          onPreview={() => {}}
-          onEdit={() => {}}
+          onPreview={onPreview}
+          onEdit={onEdit}
           show={show}
         />
       </View>
