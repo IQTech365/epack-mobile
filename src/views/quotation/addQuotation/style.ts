@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import { COLOR_BLACK, COLOR_BLUE, COLOR_GRAY, COLOR_GRAY2, COLOR_WHITE } from '../../../utils/colors';
+import { COLOR_BLACK, COLOR_BLUE, COLOR_GRAY, COLOR_GRAY2, COLOR_GRAY3, COLOR_GRAY4, COLOR_WHITE } from '../../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -37,13 +37,13 @@ const styles = StyleSheet.create({
     textContainer: {
         width: width * 0.44,
         justifyContent: 'space-between',
-        alignItems: 'flex-start',
+        // alignItems: 'flex-start',
         alignSelf: 'center',
     },
     textContainer2: {
         width: width * 0.9,
         justifyContent: 'center',
-        alignItems: 'flex-start',
+        // alignItems: 'flex-start',
         alignSelf: 'center',
     },
     checkboxContainer: {
@@ -69,11 +69,14 @@ const styles = StyleSheet.create({
     },
     switchInputContainer: {
         width: '100%',
-        borderColor: COLOR_GRAY2,
+        borderColor: COLOR_GRAY4,
         borderTopWidth: 0,
         borderRightWidth: 0,
         borderBottomWidth: 0,
-        borderRadius: 0,
+        borderTopLeftRadius: 0,
+        borderBottomLeftRadius: 0,
+        borderTopRightRadius: 8,
+        borderBottomRightRadius: 8,
         paddingLeft: 4,
     },
     input: {

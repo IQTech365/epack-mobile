@@ -15,12 +15,14 @@ interface IEpackDropdownProps {
     placeholder: string;
     data: string[];
     hanldeData: (data: string) => void;
+    inputDefaultValue?: string;
 }
 
 const EpackDropdown: React.FC<IEpackDropdownProps> = ({
     placeholder,
     data,
     hanldeData,
+    inputDefaultValue,
 }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedValue, setSelectedValue] = useState<string | null>(null);
@@ -49,7 +51,7 @@ const EpackDropdown: React.FC<IEpackDropdownProps> = ({
     };
 
     const addCustomOption = () => {
-        if (inputValue.trim() !== '' && !data.includes(inputValue)) {
+        if (inputValue && inputValue.trim() !== '' && !data.includes(inputValue)) {
             hanldeData(inputValue);
             setSelectedValue(inputValue);
             setIsOpen(false);
@@ -59,6 +61,12 @@ const EpackDropdown: React.FC<IEpackDropdownProps> = ({
     useEffect(() => {
         setOptions(data);
     }, [data]);
+
+    useEffect(() => {
+        if(inputDefaultValue) {
+            setInputValue(inputDefaultValue);
+        }
+    }, [inputDefaultValue]);
 
     return (
         <View style={styles.container}>

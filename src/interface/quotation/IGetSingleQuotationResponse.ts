@@ -1,5 +1,30 @@
+interface ICharge {
+  luggageType: string;
+  insurancePerc: string;
+  gst: string;
+  value: string;
+}
 interface ITransitInsurance {
-    
+  isRequired: string;
+  transitType: string;
+  charges: ICharge[];
+}
+
+interface IStorage {
+  isRequired: string;
+  storageChargesType: string;
+  amount: string;
+}
+
+interface ILoad {
+  ratePerItem: string;
+  amount: string;
+}
+interface IOtherCharge {
+  jobType: string;
+  qty: string;
+  partLoad: ILoad;
+  fullLoad: ILoad;
 }
 export interface IQuotationFreight {
   _id: string;
@@ -34,6 +59,14 @@ export interface IQuotationFreight {
   surchargeCharges: string;
   discountType: string;
   discountAmount: string;
+  transitInsurance: ITransitInsurance;
+  storageCharges: IStorage;
+  otherCharges: IOtherCharge;
+  otherDetail1: string;
+  otherDetail2: string;
+  isActive: boolean;
+  isDeleted: boolean;
+  createdAt: string;
 }
 export interface ISingleQuotationData {
   _id: string;
@@ -48,6 +81,7 @@ export interface ISingleQuotationData {
   isActive: boolean;
   isDeleted: boolean;
   createdAt: string;
+  quotationfreights: IQuotationFreight[];
 }
 
 export interface IGetSingleQuotationResponse {
