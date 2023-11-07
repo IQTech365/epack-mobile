@@ -14,6 +14,9 @@ import {
   createMoneyReceiptFailure,
   createMoneyReceiptRequest,
   createMoneyReceiptSuccess,
+  getApprovedOrdersFailure,
+  getApprovedOrdersRequest,
+  getApprovedOrdersSuccess,
   getBiltyListFailure,
   getBiltyListRequest,
   getBiltyListSuccess,
@@ -38,6 +41,7 @@ import { IGetOrdersResponse } from '../interface/order/IGetOrdersResponse';
 import { IGetMoneyReceiptsResponse } from '../interface/order/IGetMoneyReceiptsResponse';
 import { IGetCarConditionListResponse } from '../interface/order/IGetCarConditionListResponse';
 import { IGetBiltyListResponse } from '../interface/order/IGetBiltyListResponse';
+import { IGetOrdersRequest } from '../interface/order/IGetOrdersRequest';
 
 export function* addOrderSaga(action: PayloadAction<IAddOrderRequest>) {
   console.log('addOrderSaga--action--', JSON.stringify(action));
@@ -54,7 +58,7 @@ export function* addOrderSaga(action: PayloadAction<IAddOrderRequest>) {
   }
 }
 
-export function* getOrderListSaga(action: PayloadAction<string>) {
+export function* getOrderListSaga(action: PayloadAction<Partial<IGetOrdersRequest>>) {
   try {
       const response: IGetOrdersResponse = yield call(OrderService.GetOrdersService, action.payload);
       console.log('getOrderListSaga-response----', JSON.stringify(response));
@@ -62,6 +66,17 @@ export function* getOrderListSaga(action: PayloadAction<string>) {
   } catch (error) {
       console.log('getOrderListSaga-error----', JSON.stringify(error));
       yield put(getOrdersFailure(error));
+  }
+}
+
+export function* getApprovedOrderListSaga(action: PayloadAction<IGetOrdersRequest>) {
+  try {
+      const response: IGetOrdersResponse = yield call(OrderService.GetOrdersService, action.payload);
+      console.log('getApprovedOrderListSaga-response----', JSON.stringify(response));
+      yield put(getApprovedOrdersSuccess(response));
+  } catch (error) {
+      console.log('getApprovedOrderListSaga-error----', JSON.stringify(error));
+      yield put(getApprovedOrdersFailure(error));
   }
 }
 
@@ -165,4 +180,5 @@ export function* watcherOrderSaga() {
   yield takeLatest(getCarConditionListRequest.type, getCarConditionListSaga);
   yield takeLatest(createBiltyRequest.type, createBiltySaga);
   yield takeLatest(getBiltyListRequest.type, getBiltyListSaga);
+  yield takeLatest(getApprovedOrdersRequest.type, getApprovedOrderListSaga);
 }
