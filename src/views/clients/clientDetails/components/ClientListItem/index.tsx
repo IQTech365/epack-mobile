@@ -31,12 +31,12 @@ interface IClientListItemProps {
 }
 
 const ClientListItem: React.FC<IClientListItemProps> = ({item, index, onPress}) => {
-  return (
+    return (
     <Shadow style={styles.cardWrapper} distance={4}>
       <TouchableOpacity style={styles.container} activeOpacity={0.6} onPress={onPress}>
         <View style={styles.dateAndQuotationNumberContainer}>
           <View style={styles.nameContainer}>
-            <Text style={styles.nameText}>{item.clientName}</Text>
+            <Text style={styles.nameText}>{item.partyName}</Text>
           </View>
           <View style={styles.contactOptionsContainer}>
             <TouchableOpacity activeOpacity={0.6}>
@@ -55,7 +55,7 @@ const ClientListItem: React.FC<IClientListItemProps> = ({item, index, onPress}) 
           </View>
           <View style={styles.colonContainer}><Text>:</Text></View>
           <View style={styles.rowItemContainer2}>
-            <Text style={styles.valueText}>{item.clientId}</Text>
+            <Text style={styles.valueText}>{item.companyId}</Text>
           </View>
         </View>
         <Spacer height={2} />
@@ -65,7 +65,7 @@ const ClientListItem: React.FC<IClientListItemProps> = ({item, index, onPress}) 
           </View>
           <View style={styles.colonContainer}><Text>:</Text></View>
           <View style={styles.rowItemContainer2}>
-            <Text style={styles.valueText}>{item.registrationDate}</Text>
+            <Text style={styles.valueText}>{item.createdAt}</Text>
           </View>
         </View>
         <Spacer height={2} />
@@ -85,7 +85,7 @@ const ClientListItem: React.FC<IClientListItemProps> = ({item, index, onPress}) 
           </View>
           <View style={styles.colonContainer}><Text>:</Text></View>
           <View style={styles.rowItemContainer2}>
-            <Text style={styles.valueText}>{item.companyName}</Text>
+            <Text style={styles.valueText}>{item.partyCompanyName}</Text>
           </View>
         </View>
         <Spacer height={6} />

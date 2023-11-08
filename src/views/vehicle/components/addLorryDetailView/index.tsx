@@ -16,6 +16,9 @@ import CreateIcon2 from '../../../../images/icons/create_icon2.svg';
 // import Spinner from '../../../../../common/Spinner';
 import AddLorryView from '../addLorryView';
 import Header from '../../../../common/Header';
+import { getLorryRequest } from '../../../../redux/slices/VehicleSlice';
+import AddLorryListItem from '../addLorryListView';
+import Spinner from '../../../../common/Spinner';
 
 interface IAddLorryDetailViewProps {
 
@@ -23,10 +26,33 @@ interface IAddLorryDetailViewProps {
 
 const AddLorryDetailView: React.FC<IAddLorryDetailViewProps> = ({}) => {
   const dispatch = useAppDispatch();
-  const {AddLorryDetailList, getAddLorryDetailListRequesting} = useAppSelector(state => state.Order);
+  const {lorryData, getLorryRequesting} = useAppSelector(state => state.Vehicle);
+  
+  const {
+    addCompanyInfo,
+    companies
+} = useAppSelector(state => state.Company);
 
   const [showAddLorryDetailList, setShowAddLorryDetailList] = useState<boolean>(false);
   const [createNewAddLorryDetail, setCreateNewAddLorryDetail] = useState<boolean>(true);
+  const {data: lorryArray = []} = lorryData || {};
+
+  const getCompanyId = () => {
+    let id;
+    const { data } = addCompanyInfo || {};
+    const { data: companiesData } = companies || {};
+    if (data && Object.keys(data).length > 0) {
+        id = data._id;
+    } else if (
+        companiesData &&
+        Array.isArray(companiesData) &&
+        companiesData.length > 0
+    ) {
+        const firstCompany = companiesData[0];
+        id = firstCompany._id;
+    }
+    return id;
+};
 
   const handleCreateNewAddLorryDetail = () => {
     setShowAddLorryDetailList(false);
@@ -39,7 +65,7 @@ const AddLorryDetailView: React.FC<IAddLorryDetailViewProps> = ({}) => {
   };
 
   useEffect(() => {
-    // dispatch(getAddLorryDetailListRequest(orderId));
+    dispatch(getLorryRequest(getCompanyId()));
   }, []);
 
   const showEmptyView = () => {
@@ -51,7 +77,7 @@ const AddLorryDetailView: React.FC<IAddLorryDetailViewProps> = ({}) => {
   };
 
   const handleOnRefresh = useCallback(() => {
-    // dispatch(getAddLorryDetailListRequest(orderId));
+    dispatch(getLorryRequest(getCompanyId()));
   }, []);
 
   const showForm = () => {
@@ -66,14 +92,20 @@ const AddLorryDetailView: React.FC<IAddLorryDetailViewProps> = ({}) => {
       return (
         <FlatList
           contentContainerStyle={{alignItems: 'center', paddingVertical: 10}}
-          data={[]}
+          data={lorryArray}
           refreshControl={
-            <RefreshControl refreshing={getAddLorryDetailListRequesting} onRefresh={handleOnRefresh} />
+            <RefreshControl refreshing={getLorryRequesting} onRefresh={handleOnRefresh} />
           }
-          //   renderItem={({item, index}) => (
-          //     <QuotationListItem item={item} index={1} onPress={() => {}} />
-          //   )}
-          renderItem={({item, index}) => <Text>Bilty item</Text>}
+            renderItem={({item, index}) => (
+                <View style={{padding: 10}}>
+                <AddLorryListItem
+                  item={item}
+                  index={index}
+                  
+                />
+              </View>
+            )}
+        
           ListEmptyComponent={showEmptyView()}
         />
       );
@@ -104,7 +136,7 @@ const AddLorryDetailView: React.FC<IAddLorryDetailViewProps> = ({}) => {
       </View>
       {showForm()}
       {showList()}
-      {/* <Spinner show={getAddLorryDetailListRequesting} /> */}
+      <Spinner show={getLorryRequesting} />
     </>
   );
 };

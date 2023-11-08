@@ -16,6 +16,9 @@ import CreateIcon2 from '../../../../images/icons/create_icon2.svg';
 // import Spinner from '../../../../../common/Spinner';
 import Header from '../../../../common/Header';
 import AddDriverView from '../addDriverView';
+import AddDriverListItem from '../addDriverListView';
+import Spinner from '../../../../common/Spinner';
+import { getDriverRequest } from '../../../../redux/slices/VehicleSlice';
 
 interface IAddDriverDetailViewProps {
 
@@ -23,7 +26,13 @@ interface IAddDriverDetailViewProps {
 
 const AddDriverDetailView: React.FC<IAddDriverDetailViewProps> = ({}) => {
   const dispatch = useAppDispatch();
-  const {AddDriverDetailList, getAddDriverDetailListRequesting} = useAppSelector(state => state.Order);
+  const {Drivers, getDriversRequesting} = useAppSelector(state => state.Vehicle);
+  const {data: DriversData = []} = Drivers || {};
+    
+  const {
+    addCompanyInfo,
+    companies
+} = useAppSelector(state => state.Company);
 
   const [showAddDriverDetailList, setShowAddDriverDetailList] = useState<boolean>(false);
   const [createNewAddDriverDetail, setCreateNewAddDriverDetail] = useState<boolean>(true);
@@ -38,8 +47,25 @@ const AddDriverDetailView: React.FC<IAddDriverDetailViewProps> = ({}) => {
     setCreateNewAddDriverDetail(false);
   };
 
+  const getCompanyId = () => {
+    let id;
+    const { data } = addCompanyInfo || {};
+    const { data: companiesData } = companies || {};
+    if (data && Object.keys(data).length > 0) {
+        id = data._id;
+    } else if (
+        companiesData &&
+        Array.isArray(companiesData) &&
+        companiesData.length > 0
+    ) {
+        const firstCompany = companiesData[0];
+        id = firstCompany._id;
+    }
+    return id;
+};
+
   useEffect(() => {
-    // dispatch(getAddDriverDetailListRequest(orderId));
+    dispatch(getDriverRequest(getCompanyId()));
   }, []);
 
   const showEmptyView = () => {
@@ -51,7 +77,7 @@ const AddDriverDetailView: React.FC<IAddDriverDetailViewProps> = ({}) => {
   };
 
   const handleOnRefresh = useCallback(() => {
-    // dispatch(getAddDriverDetailListRequest(orderId));
+    dispatch(getDriverRequest(getCompanyId()));
   }, []);
 
   const showForm = () => {
@@ -66,14 +92,20 @@ const AddDriverDetailView: React.FC<IAddDriverDetailViewProps> = ({}) => {
       return (
         <FlatList
           contentContainerStyle={{alignItems: 'center', paddingVertical: 10}}
-          data={[]}
+          data={DriversData}
           refreshControl={
-            <RefreshControl refreshing={getAddDriverDetailListRequesting} onRefresh={handleOnRefresh} />
+            <RefreshControl refreshing={getDriversRequesting} onRefresh={handleOnRefresh} />
           }
-          //   renderItem={({item, index}) => (
-          //     <QuotationListItem item={item} index={1} onPress={() => {}} />
-          //   )}
-          renderItem={({item, index}) => <Text>Bilty item</Text>}
+            renderItem={({item, index}) => (
+              <View style={{padding: 10}}>
+                <AddDriverListItem
+                  item={item}
+                  index={index}
+                  
+                />
+              </View>
+            )}
+         
           ListEmptyComponent={showEmptyView()}
         />
       );
@@ -104,7 +136,7 @@ const AddDriverDetailView: React.FC<IAddDriverDetailViewProps> = ({}) => {
       </View>
       {showForm()}
       {showList()}
-      {/* <Spinner show={getAddDriverDetailListRequesting} /> */}
+      <Spinner show={getDriversRequesting} />
     </>
   );
 };

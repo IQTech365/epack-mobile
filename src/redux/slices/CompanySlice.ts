@@ -2,6 +2,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {ICompanyRegistrationResponse} from '../../interface/companyRegistration/ICompanyRegistrationResponse';
 import {ICompanyRegistrationRequest} from '../../interface/companyRegistration/ICompanyRegistrationRequest';
 import { IGetCompaniesResponse } from '../../interface/companyRegistration/IGetCompaniesResponse';
+import { ICompanyEditRequest, ICompanyEditResponse } from '../../interface/companyRegistration/ICompanyEditRequest';
 
 interface ICompanyState {
   // Add Company
@@ -17,7 +18,7 @@ interface ICompanyState {
   getCompaniesFailure: boolean;
   getCompaniesError: any;
   // Edit Company
-  editCompanyInfo: ICompanyRegistrationResponse | null;
+  editCompanyInfo: ICompanyEditResponse | null;
   editCompanyRequesting: boolean;
   editCompanySuccess: boolean;
   editCompanyFailure: boolean;
@@ -131,13 +132,13 @@ export const CompanySlice = createSlice({
     // Edit Company
     editCompanyRequest: (
       state,
-      action: PayloadAction<ICompanyRegistrationRequest>,
+      action: PayloadAction<ICompanyEditRequest>,
     ) => {
       state.editCompanyRequesting = true;
     },
     editCompanySuccess: (
       state,
-      action: PayloadAction<ICompanyRegistrationResponse>,
+      action: PayloadAction<ICompanyEditResponse>,
     ) => {
       state.editCompanyRequesting = false;
       state.editCompanySuccess = true;

@@ -12,6 +12,7 @@ import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
 import { ICompanyRegistrationRequest } from '../interface/companyRegistration/ICompanyRegistrationRequest';
 import { ICompanyRegistrationResponse } from '../interface/companyRegistration/ICompanyRegistrationResponse';
 import { IGetCompaniesResponse } from '../interface/companyRegistration/IGetCompaniesResponse';
+import { ICompanyEditRequest, ICompanyEditResponse } from '../interface/companyRegistration/ICompanyEditRequest';
 
 export const AddCompanyService = async (payload: ICompanyRegistrationRequest): Promise<ICompanyRegistrationResponse> => {
     console.log('AddCompanyService--payload--', JSON.stringify(payload));
@@ -25,9 +26,9 @@ export const GetCompaniesService = async (payload: string): Promise<IGetCompanie
 }
 
 // TODO: refactor code once in use
-export const EditCompanyService = async (payload: IOtpVerifyRequest): Promise<IOtpVerifyResponse> => {
+export const EditCompanyService = async (payload: ICompanyEditRequest): Promise<ICompanyEditResponse> => {
     const api = Api.getInstance();
-    return await api.update<IOtpVerifyRequest, AxiosResponse<IOtpVerifyResponse>>(payload, EDIT_COMPANY);
+    return await api.update<ICompanyEditRequest, AxiosResponse<ICompanyEditResponse>>(payload, EDIT_COMPANY);
 }
 
 export const UploadCompanyLogoService = async (payload: any): Promise<any> => {

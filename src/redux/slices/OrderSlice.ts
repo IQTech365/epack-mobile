@@ -29,6 +29,14 @@ interface IOrderState {
   getOrdersSuccess: boolean;
   getOrdersFailure: boolean;
   getOrdersError: any;
+
+    // Get Approved Order List
+    approvedOrders: IGetOrdersResponse | null;
+    getApprovedOrdersRequesting: boolean;
+    getApprovedOrdersSuccess: boolean;
+    getApprovedOrdersFailure: boolean;
+    getApprovedOrdersError: any;
+
   // Get Order Details
   orderDetailsInfo: IOrderDetailsResponse | null;
   getOrderDetailsRequesting: boolean;
@@ -92,6 +100,12 @@ const initialState: IOrderState = {
   getOrdersSuccess: false,
   getOrdersFailure: false,
   getOrdersError: null,
+// Get Approved Order List
+  approvedOrders: null,
+  getApprovedOrdersRequesting: false,
+  getApprovedOrdersSuccess: false,
+  getApprovedOrdersFailure: false,
+  getApprovedOrdersError: null,
   // Get Order Details
   orderDetailsInfo: null,
   getOrderDetailsRequesting: false,
@@ -181,6 +195,22 @@ export const OrderSlice = createSlice({
       state.getOrdersSuccess = false;
       state.getOrdersFailure = true;
       state.getOrdersError = action.payload;
+    },
+
+    // Get Approved Order List
+    getApprovedOrdersRequest: (state, action: PayloadAction<IGetOrdersRequest>) => {
+      state.getApprovedOrdersRequesting = true;
+    },
+    getApprovedOrdersSuccess: (state, action: PayloadAction<IGetOrdersResponse>) => {
+      state.getApprovedOrdersRequesting = false;
+      state.getApprovedOrdersSuccess = true;
+      state.approvedOrders = action.payload;
+    },
+    getApprovedOrdersFailure: (state, action: PayloadAction<any>) => {
+      state.getApprovedOrdersRequesting = false;
+      state.getApprovedOrdersSuccess = false;
+      state.getApprovedOrdersFailure = true;
+      state.getApprovedOrdersError = action.payload;
     },
     // Get Order Details
     getOrderDetailsRequest: (state, action: PayloadAction<string>) => {
@@ -365,6 +395,10 @@ export const {
   getOrdersRequest,
   getOrdersSuccess,
   getOrdersFailure,
+  // Get Approved Order List
+  getApprovedOrdersRequest,
+  getApprovedOrdersSuccess,
+  getApprovedOrdersFailure,
   // Get Order Details
   getOrderDetailsRequest,
   getOrderDetailsSuccess,
