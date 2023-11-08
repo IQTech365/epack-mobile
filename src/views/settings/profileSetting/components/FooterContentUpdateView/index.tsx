@@ -26,6 +26,7 @@ import { IAddFooterContentRequest } from '../../../../../interface/setting/packe
 import { addFooterContentRequest, resetFooterContentRequest } from '../../../../../redux/slices/ProfileSettingSlice';
 import Toast from 'react-native-toast-message';
 import Spinner from '../../../../../common/Spinner';
+import { ISubmoduleData } from '../../../../../interface/setting/packerProfile/ISubmodule';
 
 interface IContentUpdateProps {}
 
@@ -39,8 +40,9 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({}) => {
   const [modules, setModules] = useState<string[]>(['']);
   const dispatch = useAppDispatch();
   const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
-  const {addFooterContentRequesting, addFooterContentSuccess, addFooterContentFailure} = useAppSelector(state => state.Setting);
+  const {addFooterContentRequesting, addFooterContentSuccess, addFooterContentFailure, submodules} = useAppSelector(state => state.Setting);
   const richText = React.useRef();
+  const {data: submodulesData = []} = submodules || {};
 
   const getCompanyId = () => {
     let id;
@@ -123,7 +125,7 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({}) => {
             onSelect={handleAccountType}
           />
         </View>
-        <View style={styles.textContainer2}>
+        {accountType == 'Other' ? <View style={styles.textContainer2}>
           <Label text="Add Title" style={styles.label} />
           <Input
             onChangeText={handleTitleTextInputChange}
@@ -131,7 +133,7 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({}) => {
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
           />
-        </View>
+        </View> : null}
         <Spacer height={12} />
         <View style={styles.toolbarContentContainer}>
           <RichToolbar
@@ -141,6 +143,7 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({}) => {
               actions.setItalic,
               actions.setUnderline,
               actions.heading1,
+              actions.setParagraph
             ]}
             iconMap={{[actions.heading1]: handleHead}}
           />
@@ -167,14 +170,14 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({}) => {
           <Label text="Applicable For" style={styles.label} />
         </View>
         <View style={styles.applicableWrapper}>
-          {applicableForOptions.map((item, index) => {
+          {submodulesData.map((item:ISubmoduleData, index: number) => {
             return (
               <View style={styles.checkboxItem} key={`${index}`}>
                 <BouncyCheckbox
                   size={25}
                   fillColor={COLOR_BLUE}
                   unfillColor="#FFFFFF"
-                  text={item.template}
+                  text={item.submoduleName}
                   iconStyle={{
                     borderColor: 'red',
                     borderRadius: 0,
@@ -194,7 +197,7 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({}) => {
                   style={{marginRight: 15}}
                   textContainerStyle={{paddingLeft: 0}}
                   onPress={(isChecked: boolean) => {
-                    handleModulesApplyFor(item.template, isChecked);
+                    handleModulesApplyFor(item.submoduleId, isChecked);
                   }}
                   isChecked={false}
                 />

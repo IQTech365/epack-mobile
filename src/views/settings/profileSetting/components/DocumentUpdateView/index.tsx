@@ -17,38 +17,56 @@ import isoTypeOptions from '../../../../../data/isoTypeOptions.json';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import DatePickerComponent from '../../../../../common/DatePickerComponent';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
+import { ISubmoduleData } from '../../../../../interface/setting/packerProfile/ISubmodule';
 
 interface IDocumentUpdateProps {}
 
 const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
-  const [documentType, setDocumentType] = useState<string>('1');
-  const [isoType, setISOType] = useState<string>('1');
+  const [documentType, setDocumentType] = useState<string>(documentTypeOptions[0].label);
+  const [isoType, setISOType] = useState<string>(isoTypeOptions[0].label);
+  const [isoNumber, setISONumber] = useState<string>('');
+  const [modules, setModules] = useState<string[]>(['']);
   const dispatch = useAppDispatch();
-  const {} = useAppSelector(state => state.Setting);
-
-  const handleAccountType = () => {
-    console.log('account type');
-  };
+  const {submodules, addDocumentRequesting, addDocumentSuccess, addDocumentFailure} = useAppSelector(state => state.Setting);
+  const {data: submodulesData = []} = submodules || {};
 
   const handleDocumentType = (item: TDropdownItem) => {
-    setDocumentType(item.value);
+    setDocumentType(item.label);
   };
 
   const handleISOType = (item: TDropdownItem) => {
-    setISOType(item.value);
+    setISOType(item.label);
   };
 
   const handleValidTillDate = (date: Date) => {};
 
+  const handleModulesApplyFor = (moduleName: string, isChecked: boolean) => {
+    const tempArr = [...modules];
+    if(isChecked) {
+      const itemIndex = tempArr.findIndex(e => e == moduleName);
+      if(itemIndex == -1) {
+        tempArr.push(moduleName);
+        setModules(tempArr);
+      }
+    } else {
+      const filterArr = tempArr.filter(e => e !== moduleName);
+      setModules(filterArr);
+    }
+  }
+
+  const handleSave = () => {
+    //
+  }
+
   const showISOTypeSelectionView = () => {
-    if (documentType == '2') {
+    if (documentType == 'ISO Certificate') {
       return (
         <>
           <View style={styles.textContainer2}>
             <Label text="Choose ISO Type" style={styles.label} />
             <DropdownComponent data={isoTypeOptions} onSelect={handleISOType} />
           </View>
-          {isoType == '3' ? (
+          {isoType == 'Other' ? (
             <>
               <Spacer height={4} />
               <View style={styles.textContainer2}>
@@ -69,7 +87,7 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
   };
 
   const showIBAApprovalView = () => {
-    if (documentType == '5') {
+    if (documentType == 'IBA Approval') {
       return (
         <>
           <View style={styles.mainWrapper}>
@@ -105,7 +123,7 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
         </View>
         {showISOTypeSelectionView()}
         {showIBAApprovalView()}
-        {documentType == '10' ? (
+        {documentType == 'Other' ? (
           <>
             <View style={styles.textContainer2}>
               <Label text="Enter Document Title" style={styles.label} />
@@ -118,7 +136,7 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
             </View>
           </>
         ) : null}
-        {(documentType != '2' && documentType != '5') ? (
+        {(documentType != 'ISO Certificate' && documentType != 'IBA Approval') ? (
           <>
             <View style={styles.textContainer2}>
               <Label text="Enter Number" style={styles.label} />
@@ -136,14 +154,14 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
           <Label text="Applicable For" style={styles.label} />
         </View>
         <View style={styles.applicableWrapper}>
-          {applicableForOptions.map((item, index) => {
+          {submodulesData.map((item:ISubmoduleData, index: number) => {
             return (
               <View style={styles.checkboxItem}>
                 <BouncyCheckbox
                   size={25}
                   fillColor={COLOR_BLUE}
                   unfillColor="#FFFFFF"
-                  text={item.template}
+                  text={item.submoduleName}
                   iconStyle={{
                     borderColor: 'red',
                     borderRadius: 0,
@@ -163,8 +181,7 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
                   style={{marginRight: 15}}
                   textContainerStyle={{paddingLeft: 0}}
                   onPress={(isChecked: boolean) => {
-                    //   setFixedFreight(isChecked);
-                    //   handleFixedFreightTemplate(isChecked);
+                    handleModulesApplyFor(item.submoduleId, isChecked);
                   }}
                   isChecked={false}
                 />
@@ -175,9 +192,7 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
         <Spacer height={12} />
         <Button
           text="SAVE"
-          onPress={() => {
-            console.log('submitted data');
-          }}
+          onPress={handleSave}
           disabled={false}
           style={styles.previewButtonStyle}
           textStyle={styles.textStyle}

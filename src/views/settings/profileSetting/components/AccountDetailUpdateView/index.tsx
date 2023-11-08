@@ -36,6 +36,7 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
   const [upiId, setUPIId] = useState<string>('');
   const [bankId, setBankId] = useState<string>('');
   const [accountOptions, setAccountOptions] = useState<IAccountOptions[]>(bankNameOptions);
+  const [modules, setModules] = useState<string[]>(['']);
   const dispatch = useAppDispatch();
   const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
   const {
@@ -90,6 +91,20 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
     }
     return id;
   };
+
+  const handleModulesApplyFor = (moduleName: string, isChecked: boolean) => {
+    const tempArr = [...modules];
+    if(isChecked) {
+      const itemIndex = tempArr.findIndex(e => e == moduleName);
+      if(itemIndex == -1) {
+        tempArr.push(moduleName);
+        setModules(tempArr);
+      }
+    } else {
+      const filterArr = tempArr.filter(e => e !== moduleName);
+      setModules(filterArr);
+    }
+  }
 
   
   const handleSave = useCallback(() => {
@@ -263,8 +278,7 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
                   style={{marginRight: 15}}
                   textContainerStyle={{paddingLeft: 0}}
                   onPress={(isChecked: boolean) => {
-                    //   setFixedFreight(isChecked);
-                    //   handleFixedFreightTemplate(isChecked);
+                    handleModulesApplyFor(item.submoduleId, isChecked);
                   }}
                   isChecked={false}
                 />

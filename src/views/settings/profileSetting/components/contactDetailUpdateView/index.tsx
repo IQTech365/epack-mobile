@@ -18,6 +18,7 @@ import Toast from 'react-native-toast-message';
 import { addContactRequest, getContactsRequest, resetAddContactRequest } from '../../../../../redux/slices/ProfileSettingSlice';
 import { IAddContactDetailRequest } from '../../../../../interface/setting/packerProfile/contactDetail/IAddContactDetailRequest';
 import Spinner from '../../../../../common/Spinner';
+import { ISubmoduleData } from '../../../../../interface/setting/packerProfile/ISubmodule';
 
 interface IContactDetailsProps {}
 
@@ -31,7 +32,9 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
     addContactRequesting,
     addContactSuccess,
     addContactFailure,
+    submodules,
   } = useAppSelector(state => state.Setting);
+  const {data: submodulesData = []} = submodules || {};
   const {otpData} = useAppSelector(state => state.OTP);
   const dispatch = useAppDispatch();
 
@@ -186,14 +189,14 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
           <Label text="Applicable For" style={styles.label} />
         </View>
         <View style={styles.applicableWrapper}>
-          {applicableForOptions.map((item, index) => {
+          {submodulesData.map((item:ISubmoduleData, index: number) => {
             return (
-              <View style={styles.checkboxItem}>
+              <View style={styles.checkboxItem} key={`${index}`}>
                 <BouncyCheckbox
                   size={25}
                   fillColor={COLOR_BLUE}
                   unfillColor="#FFFFFF"
-                  text={item.template}
+                  text={item.submoduleName}
                   iconStyle={{
                     borderColor: 'red',
                     borderRadius: 0,
@@ -213,7 +216,7 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
                   style={{marginRight: 15}}
                   textContainerStyle={{paddingLeft: 0}}
                   onPress={(isChecked: boolean) => {
-                    handleModulesApplyFor(item.template, isChecked);
+                    handleModulesApplyFor(item.submoduleId, isChecked);
                   }}
                   isChecked={false}
                 />

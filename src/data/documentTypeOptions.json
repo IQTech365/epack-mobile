@@ -19,23 +19,6 @@
       "label": "IBA Approval",
       "value": "5"
     },
-    
-    {
-      "label": "Proprietorship",
-      "value": "6"
-    },
-    {
-      "label": "Partnership Firm",
-      "value": "7"
-    },
-    {
-      "label": "Pvt. Ltd. Company",
-      "value": "8"
-    },
-    {
-      "label": "LLP",
-      "value": "9"
-    },
     {
       "label": "Other",
       "value": "10"
