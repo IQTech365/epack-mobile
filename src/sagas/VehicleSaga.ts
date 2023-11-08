@@ -1,11 +1,13 @@
 import {takeLatest, put, call} from 'redux-saga/effects';
 import {PayloadAction} from '@reduxjs/toolkit';
 import * as VehicleService from '../service/VehicleService';
-import { addDriverFailure, addDriverRequest, addDriverSuccess, addLorryFailure, addLorryRequest, addLorrySuccess } from '../redux/slices/VehicleSlice';
+import { addDriverFailure, addDriverRequest, addDriverSuccess, addLorryFailure, addLorryRequest, addLorrySuccess, getDriverFailure, getDriverRequest, getDriverSuccess, getLorryFailure, getLorryRequest, getLorrySuccess } from '../redux/slices/VehicleSlice';
 import { IAddLorryRequest } from '../interface/vehicle/IAddLorryRequest';
 import { IAddLorryResponse } from '../interface/vehicle/IAddLorryResponse';
 import { IAddDriverRequest } from '../interface/vehicle/IAddDriverRequest';
 import { IAddDriverResponse } from '../interface/vehicle/IAddDriverResponse';
+import { IGetLorryResponse } from '../interface/vehicle/IGetLorryResponse';
+import { IGetDriverResponse } from '../interface/vehicle/IGetDriverReuest';
 
 export function* addLorrySaga(action: PayloadAction<IAddLorryRequest>) {
     console.log('addLorrySaga--action--', JSON.stringify(action));
@@ -19,17 +21,17 @@ export function* addLorrySaga(action: PayloadAction<IAddLorryRequest>) {
     }
 }
 
-// export function* getBranchSaga(action: PayloadAction<string>) {
-//     console.log('getBranchSaga--action--', JSON.stringify(action));
-//     try {
-//         const response: IGetBranchsResponse = yield call(MyProfileService.GetBranchService, action.payload);
-//         console.log('getBranchSaga-response----', JSON.stringify(response));
-//         yield put(getBranchsSuccess(response));
-//     } catch (error) {
-//         console.log('getBranchSaga-error----', error);
-//         yield put(getBranchFailure(JSON.stringify(error)));
-//     }
-// }
+export function* getLorrySaga(action: PayloadAction<string>) {
+    console.log('getLorrySaga--action--', JSON.stringify(action));
+    try {
+        const response: IGetLorryResponse = yield call(VehicleService.GetLorryService, action.payload);
+        console.log('getLorrySaga-response----', JSON.stringify(response));
+        yield put(getLorrySuccess(response));
+    } catch (error) {
+        console.log('getLorrySaga-error----', error);
+        yield put(getLorryFailure(JSON.stringify(error)));
+    }
+}
 
 export function* addDriverSaga(action: PayloadAction<IAddDriverRequest>) {
     console.log('addDriverSaga--action--', JSON.stringify(action));
@@ -43,20 +45,21 @@ export function* addDriverSaga(action: PayloadAction<IAddDriverRequest>) {
     }
 }
 
-// export function* getFranchiseSaga(action: PayloadAction<string>) {
-//     console.log('getFranchiseSaga--action--', JSON.stringify(action));
-//     try {
-//         const response: IGetFranchiseResponse = yield call(MyProfileService.GetFranchiseService, action.payload);
-//         console.log('getFranchiseSaga-response----', JSON.stringify(response));
-//         yield put(getFranchiseSuccess(response));
-//     } catch (error) {
-//         console.log('getFranchiseSaga-error----', error);
-//         yield put(getFranchiseFailure(JSON.stringify(error)));
-//     }
-// }
+export function* getDriverSaga(action: PayloadAction<string>) {
+    console.log('getDriverSaga--action--', JSON.stringify(action));
+    try {
+        const response: IGetDriverResponse = yield call(VehicleService.GetDriverService, action.payload);
+        console.log('getDriverSaga-response----', JSON.stringify(response));
+        yield put(getDriverSuccess(response));
+    } catch (error) {
+        console.log('getDriverSaga-error----', error);
+        yield put(getDriverFailure(JSON.stringify(error)));
+    }
+}
+
 export function* watcherVehicleSaga() {
     yield takeLatest(addLorryRequest.type, addLorrySaga);
-    // yield takeLatest(getBranchsRequest.type, getBranchSaga);
+    yield takeLatest(getLorryRequest.type, getLorrySaga);
     yield takeLatest(addDriverRequest.type, addDriverSaga);
-    // yield takeLatest(getFranchiseRequest.type, getFranchiseSaga);
+    yield takeLatest(getDriverRequest.type, getDriverSaga);
 }

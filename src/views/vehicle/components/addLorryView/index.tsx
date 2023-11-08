@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useReducer, useState } from 'react';
+import React, { useCallback, useEffect, useReducer, useState, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import Toast from 'react-native-toast-message';
 import AvoidSoftInputViewHOC from '../../../../common/AvoidSoftInputViewHOC';
@@ -10,6 +10,7 @@ import { COLOR_BLACK, COLOR_BLUE } from '../../../../utils/colors';
 import Button from '../../../../common/Button';
 import EpackDropdown from '../../../../common/DropdownComponent2';
 import stateData from '../../../../data/stateData.json';
+import chooseEntity1 from '../../../../data/chooseEntity1.json';
 import CameraIcon from '../../../../images/icons/arcticons_camera.svg';
 import DatePickerComponent from '../../../../common/DatePickerComponent';
 import {
@@ -25,17 +26,30 @@ import { formatDate } from '../../../../utils/formatter';
 import { IAddLorryRequest } from '../../../../interface/vehicle/IAddLorryRequest';
 import { addLorryRequest, restAddLorryRequest } from '../../../../redux/slices/VehicleSlice';
 import Spinner from '../../../../common/Spinner';
+import { getBranchsRequest, getFranchiseRequest } from '../../../../redux/slices/MyProfile';
 
 const AddLorryView: React.FC<{}> = ({ }) => {
     const [state, dispatch] = useReducer(addAddLorryReducer, initialState);
     const [companyLogo, setCompanyLogo] = useState<string>(null);
     const [imageFile, setImageFile] = useState<any>(null);
+    const [branchStatus, setBranchStatus] = useState<any>('');
+    const [branchData, setBranchData] = useState([]);
+    // const branchData = useRef([])
     const {     
         addLorryRequesting,
         addLorrySuccess,
         addLorryFailure,
         addLorryError
     } = useAppSelector(state => state.Vehicle);
+    const {Branchs, 
+        getBranchsRequesting,
+        Franchises, 
+        getFranchiseRequesting
+    } = useAppSelector(
+        state => state.Myprofile,
+      );
+    
+      
     const {
         uploadLogoRequesting,
         uploadLogoSuccess,
@@ -43,7 +57,7 @@ const AddLorryView: React.FC<{}> = ({ }) => {
         addCompanyInfo,
         companies
     } = useAppSelector(state => state.Company);
-    const dispatch2 = useAppDispatch()
+    const dispatch2 = useAppDispatch();
 
     const options: IOptions = {
         mediaType: 'photo',
@@ -69,10 +83,32 @@ const AddLorryView: React.FC<{}> = ({ }) => {
         }
         return id;
     };
-    console.log(getCompanyId(), 'get company id...');
+    
+    useEffect(() => {
+        const fetchData = async () => {
+          let data = [];
+          if(branchStatus === "Branch"){
+            data = Branchs && Branchs.data.map((data:any) => {
+              return data.branchName
+            });
+          } else {
+            data = Franchises && Franchises.data.map((data:any) => {
+              return data.branchName
+            });
+          }
+          setBranchData(data);
+        };
+    
+        fetchData();
+      }, [Franchises, Branchs, branchStatus]);
     
     const handleChooseEntity = (text: string) => {
-        console.log(text, 'state data');
+        setBranchStatus(text)
+        if(text='Branch'){
+      dispatch2(getBranchsRequest(getCompanyId()));
+        }else{
+            dispatch2(getFranchiseRequest(getCompanyId()));
+        }
         dispatch({
             type: ADD_LORRY_FORM_ACTION.CHOOSE_ENTITY,
             payload: text,
@@ -167,7 +203,7 @@ const AddLorryView: React.FC<{}> = ({ }) => {
         const payload: IAddLorryRequest = {
             companyId: getCompanyId(),
             entityType: state.chooseEntity,
-            entityId:  state.chooseEntity,
+            entityId:  getCompanyId(),
             driverName:  state.branchName,
             branchName: state.branchName,
             lorryCompanyName: state.lorryCompanyName,
@@ -252,14 +288,15 @@ const AddLorryView: React.FC<{}> = ({ }) => {
                         <View style={styles.textContainer}>
                             <Label text="Choose Entity" style={styles.label} />
                             <EpackDropdown
-                                data={stateData}
+                                data={chooseEntity1}
                                 placeholder={'please select or enter'}
                                 hanldeData={handleChooseEntity} />
                         </View>
                         <View style={styles.textContainer}>
                             <Label text="Branch Name" style={styles.label} />
+                            
                             <EpackDropdown
-                                data={stateData}
+                                data={branchData}
                                 placeholder={'please select or enter'}
                                 hanldeData={handleBranchname} />
                         </View>
@@ -447,7 +484,7 @@ const AddLorryView: React.FC<{}> = ({ }) => {
             </View>
 
         </AvoidSoftInputViewHOC>
-        <Spinner show={addLorryRequesting} />
+        <Spinner show={getBranchsRequesting || getFranchiseRequesting|| addLorryRequesting} />
         </>
     );
 };
