@@ -7,6 +7,11 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         backgroundColor: COLOR_WHITE
+    },
+    listContent: {
+        alignItems: 'center', 
+        paddingVertical: 10, 
+        paddingHorizontal: 5,
     }
 });
 
