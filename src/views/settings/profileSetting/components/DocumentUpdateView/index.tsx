@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Text, View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../../../common/Spacer';
@@ -10,14 +10,17 @@ import {COLOR_BLACK, COLOR_BLUE} from '../../../../../utils/colors';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import styles from './style';
 import Button from '../../../../../common/Button';
-import accountType from '../../../../../data/accountType.json';
-import applicableForOptions from '../../../../../data/applicableForOptions.json';
 import documentTypeOptions from '../../../../../data/documentTypeOptions.json';
 import isoTypeOptions from '../../../../../data/isoTypeOptions.json';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import DatePickerComponent from '../../../../../common/DatePickerComponent';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import { ISubmoduleData } from '../../../../../interface/setting/packerProfile/ISubmodule';
+import { formatDate } from '../../../../../utils/formatter';
+import { IAddDocumentRequest } from '../../../../../interface/setting/packerProfile/document/IAddDocumentRequest';
+import { addDocumentRequest, resetAddDocumentRequest } from '../../../../../redux/slices/ProfileSettingSlice';
+import Toast from 'react-native-toast-message';
+import Spinner from '../../../../../common/Spinner';
 
 interface IDocumentUpdateProps {}
 
@@ -25,10 +28,33 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
   const [documentType, setDocumentType] = useState<string>(documentTypeOptions[0].label);
   const [isoType, setISOType] = useState<string>(isoTypeOptions[0].label);
   const [isoNumber, setISONumber] = useState<string>('');
+  const [ibaCode, setIBACode] = useState<string>('');
+  const [ibaValidTillDate, setIBAValidTillDate] = useState<string>('');
+  const [documentNumber, setDocumentNumber] = useState<string>('');
+  const [documentTitle, setDocumentTitle] = useState<string>('');
   const [modules, setModules] = useState<string[]>(['']);
   const dispatch = useAppDispatch();
+  const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
+  const {otpData} = useAppSelector(state => state.OTP);
   const {submodules, addDocumentRequesting, addDocumentSuccess, addDocumentFailure} = useAppSelector(state => state.Setting);
   const {data: submodulesData = []} = submodules || {};
+
+  const getCompanyId = () => {
+    let id;
+    const {data} = addCompanyInfo || {};
+    const {data: companiesData} = companies || {};
+    if (data && Object.keys(data).length > 0) {
+      id = data._id;
+    } else if (
+      companiesData &&
+      Array.isArray(companiesData) &&
+      companiesData.length > 0
+    ) {
+      const firstCompany = companiesData[0];
+      id = firstCompany._id;
+    }
+    return id;
+  };
 
   const handleDocumentType = (item: TDropdownItem) => {
     setDocumentType(item.label);
@@ -38,7 +64,25 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
     setISOType(item.label);
   };
 
-  const handleValidTillDate = (date: Date) => {};
+  const handleISONumber = (text: string) => {
+    setISONumber(text);
+  }
+
+  const handleIBACode = (text: string) => {
+    setIBACode(text);
+  }
+
+  const handleValidTillDate = (date: Date) => {
+    setIBAValidTillDate(formatDate(date));
+  };
+
+  const handleDocumentNumber = (text: string) => {
+    setDocumentNumber(text);
+  }
+
+  const handleDocumentTitle = (text: string) => {
+    setDocumentTitle(text);
+  }
 
   const handleModulesApplyFor = (moduleName: string, isChecked: boolean) => {
     const tempArr = [...modules];
@@ -54,9 +98,55 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
     }
   }
 
-  const handleSave = () => {
-    //
+  const getDocumentValue = () => {
+    let _value:string = documentNumber;
+    if(documentType == 'ISO Certificate') {
+      _value = isoNumber;
+    } else if(documentType == 'IBA Approval') {
+      _value = ibaCode;
+    }
+    return _value;
   }
+
+  const getDocumentTitle = () => {
+    let _value:string = documentTitle;
+    if(documentType == 'ISO Certificate') {
+      _value = isoType;
+    }
+    return _value;
+  }
+
+  const handleSave = () => {
+    const payload:IAddDocumentRequest = {
+      companyId: getCompanyId(),
+      moduleId: modules,
+      documentType: documentType,
+      documentTypeValue: getDocumentValue(),
+      documentTypeTitle: getDocumentTitle(),
+      ibaValidTillDate: ibaValidTillDate,
+      createdBy: otpData?.data.id as string,
+    }
+    dispatch(addDocumentRequest(payload));
+  }
+
+  useEffect(() => {
+    if (!addDocumentRequesting && addDocumentSuccess) {
+      Toast.show({
+        type: 'success',
+        text1: 'Company Document',
+        text2: 'Document Number has been added successfully',
+      });
+      dispatch(resetAddDocumentRequest());
+      // dispatch(getContactsRequest(getCompanyId()));
+    } else if (!addDocumentRequesting && addDocumentFailure) {
+      Toast.show({
+        type: 'error',
+        text1: 'Company Document',
+        text2: 'Error in adding Document Number. Please try again!',
+      });
+      dispatch(resetAddDocumentRequest());
+    }
+  }, [addDocumentRequesting, addDocumentSuccess, addDocumentFailure]);
 
   const showISOTypeSelectionView = () => {
     if (documentType == 'ISO Certificate') {
@@ -72,7 +162,7 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
               <View style={styles.textContainer2}>
                 <Label text="Enter ISO Number" style={styles.label} />
                 <Input
-                  onChangeText={() => {}}
+                  onChangeText={handleISONumber}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
@@ -94,7 +184,7 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
             <View style={styles.textContainer}>
               <Label text="Enter Code" style={styles.label} />
               <Input
-                onChangeText={() => {}}
+                onChangeText={handleIBACode}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -128,7 +218,7 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
             <View style={styles.textContainer2}>
               <Label text="Enter Document Title" style={styles.label} />
               <Input
-                onChangeText={() => {}}
+                onChangeText={handleDocumentTitle}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -141,7 +231,7 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
             <View style={styles.textContainer2}>
               <Label text="Enter Number" style={styles.label} />
               <Input
-                onChangeText={() => {}}
+                onChangeText={handleDocumentNumber}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
@@ -198,6 +288,7 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
           textStyle={styles.textStyle}
         />
         <Spacer height={12} />
+        <Spinner show={addDocumentRequesting} />
       </View>
     </AvoidSoftInputViewHOC>
   );

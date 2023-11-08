@@ -1,8 +1,9 @@
 export interface IAddDocumentRequest {
-    companyId: string;
-    documentTypeId: string;
-    documentNumber: string;
-    title: string;
-    modulesView: string[];
-    createdBy: string;
+  companyId: string;
+  moduleId: string[];
+  documentType: string;
+  ibaValidTillDate?: string;
+  documentTypeValue: string;
+  documentTypeTitle: string;
+  createdBy: string;
 }

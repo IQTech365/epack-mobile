@@ -50,7 +50,7 @@ export const DELETE_FOOTER_CONTENT = (company_id) => `/content-management/footer
 export const UPDATE_FOOTER_CONTENT = (company_id) => `/content-management/footer-setting/addFooter`;
 export const GET_FOOTER_CONTENTS = (company_id) => `/content-management/footer-setting/${company_id}`;
 
-export const ADD_DOCUMENT = `/content-management/company-document/add`;
+export const ADD_DOCUMENT = `/content-management/govt-registration/add`;
 export const DELETE_DOCUMENT = (company_id) => ``;
 export const UPDATE_DOCUMENT = (company_id) => ``;
 export const GET_DOCUMENTS = (company_id) => `/content-management/company-document/${company_id}`;

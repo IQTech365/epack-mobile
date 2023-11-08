@@ -43,7 +43,7 @@ import {
 } from '../../../interface/setting/role/IModule';
 
 const RoleManagementView: React.FC<{}> = ({}) => {
-  const [entityType, setEntityType] = useState<string>('Head Office');
+  const [entityType, setEntityType] = useState<string>(entityOptions[0].label);
   const [subEntityType, setSubEntityType] = useState<string>('0');
   const [employeeName, setEmployeeName] = useState<string>('');
   const [mobile, setMobile] = useState<string>('');
@@ -195,7 +195,7 @@ const RoleManagementView: React.FC<{}> = ({}) => {
   const handleSubmit = () => {
     const payload: IAddUserRoleRequest = {
       companyId: getCompanyId(),
-      roleTypeId: roleType,
+      roleTypeId: 'roleType',
       entityType: entityType,
       entityId: subEntityType,
       name: employeeName,
@@ -306,14 +306,14 @@ const RoleManagementView: React.FC<{}> = ({}) => {
     return null;
   };
 
-  const showSubmodules = (module: IModule) => {
-    if (module.submodulename.length > 0) {
-      return module.submodulename.map((submod: ISubmodule, index: number) => {
+  const showSubmodules = (submodulename: ISubmodule[]) => {
+    if (submodulename.length > 0) {
+      return submodulename.map((submod: ISubmodule, index: number) => {
         return (
           <View style={styles.submoduleContainer}>
             <Text>{submod.subModuleName}</Text>
             <View style={styles.submoduleFeaturesContainer}>
-              {showSubmoduleFeatures(module.submodulefeature)}
+              {showSubmoduleFeatures(submod.submodulesfeatures)}
             </View>
           </View>
         );
@@ -326,12 +326,12 @@ const RoleManagementView: React.FC<{}> = ({}) => {
   const showModules = () => {
     const {data} = modules || {};
     if (data && Array.isArray(data) && data.length > 0) {
-      return data.slice(0, 3).map((module: IModule, index) => {
+      return data.slice(0, 2).map((module: IModule, index) => {
         return (
           <>
             <Spacer height={8} />
             <CollapsibleView title={module.moduleName} collapsed={true}>
-              <View>{showSubmodules(module)}</View>
+              <View>{showSubmodules(module.submodulename)}</View>
             </CollapsibleView>
           </>
         );

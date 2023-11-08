@@ -25,7 +25,7 @@ interface IMoneyReceiptSNProps {
 }
 
 const SerialNoSettingFormView:React.FC<IMoneyReceiptSNProps> = ({moduleId, moduleName}) => {
-  const [entityType, setEntityType] = useState<string>('Head Office');
+  const [entityType, setEntityType] = useState<string>(chooseEntity[0].label);
   const [subEntityType, setSubEntityType] = useState<string>('0');
   const [prefix, setPrefix] = useState<string>('');
   const [suffix, setSuffix] = useState<string>('');
