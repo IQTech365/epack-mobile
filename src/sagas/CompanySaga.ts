@@ -6,6 +6,9 @@ import {
   addCompanyFailure,
   addCompanyRequest,
   addCompanySuccess,
+  editCompanyFailure,
+  editCompanyRequest,
+  editCompanySuccess,
   getCompaniesFailure,
   getCompaniesRequest,
   getCompaniesSuccess,
@@ -18,6 +21,7 @@ import {
 } from '../redux/slices/CompanySlice';
 import { ICompanyRegistrationRequest } from '../interface/companyRegistration/ICompanyRegistrationRequest';
 import { IGetCompaniesResponse } from '../interface/companyRegistration/IGetCompaniesResponse';
+import { ICompanyEditRequest, ICompanyEditResponse } from '../interface/companyRegistration/ICompanyEditRequest';
 
 export function* addCompanySaga(action: PayloadAction<ICompanyRegistrationRequest>) {
     console.log('addCompanySaga--action--', JSON.stringify(action));
@@ -30,6 +34,19 @@ export function* addCompanySaga(action: PayloadAction<ICompanyRegistrationReques
         yield put(addCompanyFailure(error));
     }
 }
+
+export function* editCompanySaga(action: PayloadAction<ICompanyEditRequest>) {
+    console.log('editCompanySaga--action--', JSON.stringify(action));
+    try {
+        const response: ICompanyEditResponse = yield call(CompanyService.EditCompanyService, action.payload);
+        console.log('editCompanySaga-response----', JSON.stringify(response));
+        yield put(editCompanySuccess(response));
+    } catch (error) {
+        console.log('editCompanySaga-error----', error);
+        yield put(editCompanyFailure(error));
+    }
+}
+
 
 export function* getCompaniesSaga(action: PayloadAction<string>) {
     try {
@@ -72,4 +89,5 @@ export function* watcherCompanySaga() {
     yield takeLatest(getCompaniesRequest.type, getCompaniesSaga);
     yield takeLatest(uploadCompanyLogoRequest.type, uploadCompanyLogoSaga);
     yield takeLatest(uploadSignatureRequest.type, uploadSignatureSaga);
+    yield takeLatest(editCompanyRequest.type, editCompanySaga);
 }

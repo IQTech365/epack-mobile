@@ -1,53 +1,134 @@
-import React from 'react';
-import {View} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View } from 'react-native';
+import Toast from 'react-native-toast-message';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import Button from '../../../../../common/Button';
 import Input from '../../../../../common/Input';
 import Label from '../../../../../common/Label';
 import Spacer from '../../../../../common/Spacer';
 import Spinner from '../../../../../common/Spinner';
-import {COLOR_BLACK} from '../../../../../utils/colors';
+import { COLOR_BLACK } from '../../../../../utils/colors';
 import styles from './style';
+import { ICompanyInfoData } from '../../../../../interface/companyRegistration/IGetCompaniesResponse';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
+import { editCompanyRequest, getCompaniesRequest } from '../../../../../redux/slices/CompanySlice';
+import { ICompanyEditRequest } from '../../../../../interface/companyRegistration/ICompanyEditRequest';
 
 interface IUpdateBasicDetailsFormProps {
   //
 }
 
-const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({}) => {
+const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({ }) => {
+  const [comapnyPunch, setCompanyPunch] = useState<string>('');
+  const [contactPerson, setContactPerson] = useState<string>('');
+  const [website, setWebsite] = useState<string>('');
+  const { companies,
+    editCompanyRequesting,
+    editCompanySuccess,
+    editCompanyFailure
+  } = useAppSelector(state => state.Company);
+  const {
+    verifiedData
+  } = useAppSelector(state => state.OTP);
+  const { data: companiesData } = companies || {};
+  const dispatch = useAppDispatch();
+  const { data } = verifiedData || {};
+
+  const getFirstCompany = () => {
+    let company: ICompanyInfoData | null = null;
+    if (companiesData && Array.isArray(companiesData) && companiesData.length > 0) {
+      company = companiesData[0];
+    }
+    return company;
+  }
+
+  const firstCompany = getFirstCompany();
+
+  const handleCompnyPunchLineInput = (text: string) => {
+    setCompanyPunch(text);
+  }
+
+  const handleContactPersonInput = (text: string) => {
+    setContactPerson(text);
+  }
+
+  const handleWebsiteInput = (text: string) => {
+    setWebsite(text);
+  }
+
   const handleUpdate = () => {
-    //
+    const payload: ICompanyEditRequest = {
+      _id: firstCompany?._id as string,
+      authId: firstCompany?.authId as string,
+      companyName: firstCompany?.companyName as string,
+      contactPerson: contactPerson,
+      email: firstCompany?.email as string,
+      companyMobile: firstCompany?.companyMobile as string,
+      companyAddress: firstCompany?.companyAddress as string,
+      state: firstCompany?.state as string,
+      city: firstCompany?.city as string,
+      pincode: firstCompany?.pincode as string,
+      ibaApprovalCode: firstCompany?.ibaApprovalCode as string,
+      ibaValidDate: "2023-10-25",
+      companyWebite: website,
+      CINNumber: firstCompany?.CINNumber as string,
+      companyLogo: "",
+      punchLine: comapnyPunch,
+      companyProfile: "",
+      district: "",
+      postOffice: "",
+      companySignature: firstCompany?.companySignature as string
+    };
+    dispatch(editCompanyRequest(payload));
+    // dispatch(getCompaniesRequest(firstCompany?.authId as string));
   };
+
+    useEffect(() => {
+      if (!editCompanyRequesting &&editCompanySuccess) {
+        Toast.show({
+          type: 'success',
+          text1: 'Edit Company',
+          text2: 'Company has been added successfully',
+        });
+       
+      } else if (!editCompanyRequesting && editCompanyFailure) {
+        Toast.show({
+          type: 'error',
+          text1: 'Edit Company',
+          text2: 'Error in Edit Company. Please try again!',
+        });
+
+      }
+    }, [editCompanyRequesting, editCompanySuccess, editCompanyFailure]);
+ 
   return (
-    <AvoidSoftInputViewHOC>
+    <><AvoidSoftInputViewHOC>
       <View style={styles.container}>
         <View style={styles.elementContainer3}>
           <Label text="Company Punch Line" style={styles.label} />
           <Input
-            onChangeText={() => {}}
+            onChangeText={handleCompnyPunchLineInput}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
-            selectionColor={COLOR_BLACK}
-          />
+            selectionColor={COLOR_BLACK} />
         </View>
         <Spacer height={4} />
         <View style={styles.elementContainer3}>
           <Label text="Contact Person" style={styles.label} />
           <Input
-            onChangeText={() => {}}
+            onChangeText={handleContactPersonInput}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
-            selectionColor={COLOR_BLACK}
-          />
+            selectionColor={COLOR_BLACK} />
         </View>
         <Spacer height={4} />
         <View style={styles.elementContainer3}>
           <Label text="Website" style={styles.label} />
           <Input
-            onChangeText={() => {}}
+            onChangeText={handleWebsiteInput}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
-            selectionColor={COLOR_BLACK}
-          />
+            selectionColor={COLOR_BLACK} />
         </View>
         <Spacer height={20} />
         <Button
@@ -55,11 +136,10 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({}) => {
           onPress={handleUpdate}
           disabled={false}
           style={styles.previewButtonStyle}
-          textStyle={styles.textStyle}
-        />
+          textStyle={styles.textStyle} />
         <Spinner show={false} />
       </View>
-    </AvoidSoftInputViewHOC>
+    </AvoidSoftInputViewHOC><Spinner show={editCompanyRequesting} /></>
   );
 };
 
