@@ -29,9 +29,12 @@ import Toast from 'react-native-toast-message';
 
 interface IMoneyReceiptFormViewProps {
   orderId: string | undefined;
+  editData:any;
+  isEdit:boolean;
 }
 
-const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({ orderId }) => {
+const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({ orderId, editData, isEdit }) => {
+  
   const [reducerState, dispatch] = useReducer(
     moneyReceiptReducer,
     initialState,
@@ -85,19 +88,19 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({ orderId })
   const handleTemplateDesign = (item: TDropdownItem) => {
     dispatch({
       type: MONEYRECEIPT_FORM_ACTION.MONEY_RECEIPT_DESIGNS,
-      payload: item.value,
+      payload: item.label,
     });
   };
   const handlePaymentType = (item: TDropdownItem) => {
     dispatch({
       type: MONEYRECEIPT_FORM_ACTION.PAYMENT_TYPE,
-      payload: item.value,
+      payload: item.label,
     });
   };
   const handleReceiptAgainst = (item: TDropdownItem) => {
     dispatch({
       type: MONEYRECEIPT_FORM_ACTION.RECEIPT_AGAINST,
-      payload: item.value,
+      payload: item.label,
     });
   };
 
@@ -147,7 +150,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({ orderId })
   const handleCreate = () => {
     const payload: ICreateMoneyReceiptRequest = {
       companyId: getCompanyId(),
-      orderId: '649db2c88f79210c6bcfed39',
+      orderId: orderId,
       receiptNumber: reducerState.receiptNumber,
       receiptDate: reducerState.receiptDate,
       arivalDate: reducerState.arivalDate,
@@ -204,6 +207,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({ orderId })
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
+                  value={isEdit?editData.receiptNumber:''}
                 />
               </View>
               <View style={styles.itemContainer}>
@@ -225,6 +229,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({ orderId })
               <DropdownComponent
                 data={paymentTypeOptions}
                 onSelect={handlePaymentType}
+                defaultValue= {isEdit?editData.paymentType:''}
               />
             </View>
             <Spacer height={4} />
@@ -243,6 +248,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({ orderId })
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
+                  value={isEdit?editData.quotationNumber:''}
                 />
               </View>
             </View>
@@ -262,6 +268,8 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({ orderId })
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
+                value={isEdit?editData.referenceNumber:''}
+                
               />
             </View>
             <Spacer height={4} />
@@ -272,6 +280,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({ orderId })
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
+                value={isEdit?editData.paymentAmount:''}
               />
             </View>
           </View>
@@ -297,6 +306,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({ orderId })
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
+                  value={isEdit?editData.numbersOfArticles:''}
                 />
               </View>
               <View style={styles.itemContainer}>
