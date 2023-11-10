@@ -66,7 +66,6 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({navigation, orderId
     setShowMoneyReceiptList(false);
     setEditData(item);
     setIsEdit(true);
-    // navigation.navigate(QuotationStackRoute.AddQuotation, {item: item, isEdit: true});
   };
 
 
