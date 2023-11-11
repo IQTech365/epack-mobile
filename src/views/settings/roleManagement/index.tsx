@@ -195,7 +195,7 @@ const RoleManagementView: React.FC<{}> = ({}) => {
   const handleSubmit = () => {
     const payload: IAddUserRoleRequest = {
       companyId: getCompanyId(),
-      roleTypeId: 'roleType',
+      roleTypeId: roleType,
       entityType: entityType,
       entityId: subEntityType,
       name: employeeName,
