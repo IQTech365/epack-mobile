@@ -1,15 +1,15 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {IOrderDetailsResponse} from '../../interface/order/IOrderDetailsResponse';
-import {ICreateCarConditionResponse} from '../../interface/order/ICreateCarConditionResponse';
-import {ICreateBiltyResponse} from '../../interface/order/ICreateBiltyResponse';
-import {ICreateInvoiceResponse} from '../../interface/order/ICreateInvoiceResponse';
-import {ICreateCarConditionRequest} from '../../interface/order/ICreateCarConditionRequest';
-import {ICreateBiltyRequest} from '../../interface/order/ICreateBiltyRequest';
-import {ICreateInvoiceRequest} from '../../interface/order/ICreateInvoiceRequest';
-import {ICreateMoneyReceiptResponse} from '../../interface/order/ICreateMoneyReceiptResponse';
-import {ICreateMoneyReceiptRequest} from '../../interface/order/ICreateMoneyReceiptRequest';
-import {IAddOrderResponse} from '../../interface/order/IAddOrderResponse';
-import {IAddOrderRequest} from '../../interface/order/IAddOrderRequest';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { IOrderDetailsResponse } from '../../interface/order/IOrderDetailsResponse';
+import { ICreateCarConditionResponse } from '../../interface/order/ICreateCarConditionResponse';
+import { ICreateBiltyResponse } from '../../interface/order/ICreateBiltyResponse';
+import { ICreateInvoiceResponse } from '../../interface/order/ICreateInvoiceResponse';
+import { ICreateCarConditionRequest } from '../../interface/order/ICreateCarConditionRequest';
+import { ICreateBiltyRequest } from '../../interface/order/ICreateBiltyRequest';
+import { ICreateInvoiceRequest } from '../../interface/order/ICreateInvoiceRequest';
+import { ICreateMoneyReceiptResponse } from '../../interface/order/ICreateMoneyReceiptResponse';
+import { ICreateMoneyReceiptRequest } from '../../interface/order/ICreateMoneyReceiptRequest';
+import { IAddOrderResponse } from '../../interface/order/IAddOrderResponse';
+import { IAddOrderRequest } from '../../interface/order/IAddOrderRequest';
 import { IGetOrdersResponse } from '../../interface/order/IGetOrdersResponse';
 import { IGetMoneyReceiptsResponse } from '../../interface/order/IGetMoneyReceiptsResponse';
 import { IGetCarConditionListResponse } from '../../interface/order/IGetCarConditionListResponse';
@@ -30,12 +30,12 @@ interface IOrderState {
   getOrdersFailure: boolean;
   getOrdersError: any;
 
-    // Get Approved Order List
-    approvedOrders: IGetOrdersResponse | null;
-    getApprovedOrdersRequesting: boolean;
-    getApprovedOrdersSuccess: boolean;
-    getApprovedOrdersFailure: boolean;
-    getApprovedOrdersError: any;
+  // Get Approved Order List
+  approvedOrders: IGetOrdersResponse | null;
+  getApprovedOrdersRequesting: boolean;
+  getApprovedOrdersSuccess: boolean;
+  getApprovedOrdersFailure: boolean;
+  getApprovedOrdersError: any;
 
   // Get Order Details
   orderDetailsInfo: IOrderDetailsResponse | null;
@@ -55,6 +55,12 @@ interface IOrderState {
   getMoneyReceiptListSuccess: boolean;
   getMoneyReceiptListFailure: boolean;
   getMoneyReceiptListError: any;
+  // Edit Money Receipt 
+  moneyReceiptData: IGetMoneyReceiptsResponse | null;
+  editMoneyReceiptListRequesting: boolean;
+  editMoneyReceiptListSuccess: boolean;
+  editMoneyReceiptListFailure: boolean;
+  editMoneyReceiptListError: any;
   // Create Car Condition
   createCarConditionInfo: ICreateCarConditionResponse | null;
   createCarConditionRequesting: boolean;
@@ -100,7 +106,7 @@ const initialState: IOrderState = {
   getOrdersSuccess: false,
   getOrdersFailure: false,
   getOrdersError: null,
-// Get Approved Order List
+  // Get Approved Order List
   approvedOrders: null,
   getApprovedOrdersRequesting: false,
   getApprovedOrdersSuccess: false,
@@ -124,6 +130,13 @@ const initialState: IOrderState = {
   getMoneyReceiptListSuccess: false,
   getMoneyReceiptListFailure: false,
   getMoneyReceiptListError: null,
+
+  // Edit Money Receipt 
+  moneyReceiptData:  null,
+  editMoneyReceiptListRequesting: false,
+  editMoneyReceiptListSuccess: false,
+  editMoneyReceiptListFailure: false,
+  editMoneyReceiptListError: false,
   // Create Car Condition
   createCarConditionInfo: null,
   createCarConditionRequesting: false,
@@ -272,6 +285,21 @@ export const OrderSlice = createSlice({
       state.getMoneyReceiptListFailure = true;
       state.getMoneyReceiptListError = action.payload;
     },
+    // Edit Money Receipt List
+    editMoneyReceiptListRequest: (state, action: PayloadAction<{id:string, requestBody: any }>) => {
+      state.editMoneyReceiptListRequesting = true;
+    },
+    editMoneyReceiptListSuccess: (state, action: PayloadAction<IGetMoneyReceiptsResponse>) => {
+      state.editMoneyReceiptListRequesting = false;
+      state.editMoneyReceiptListSuccess = true;
+      state.moneyReceiptData = action.payload;
+    },
+    editMoneyReceiptListFailure: (state, action: PayloadAction<any>) => {
+      state.editMoneyReceiptListRequesting = false;
+      state.editMoneyReceiptListSuccess = false;
+      state.editMoneyReceiptListFailure = true;
+      state.editMoneyReceiptListError = action.payload;
+    },
     // Create Car Condition
     createCarConditionRequest: (
       state,
@@ -412,6 +440,10 @@ export const {
   getMoneyReceiptListRequest,
   getMoneyReceiptListSuccess,
   getMoneyReceiptListFailure,
+  // Edit Money Receipt 
+  editMoneyReceiptListRequest,
+  editMoneyReceiptListSuccess,
+  editMoneyReceiptListFailure,
   // Create Car Condition
   createCarConditionRequest,
   createCarConditionSuccess,
