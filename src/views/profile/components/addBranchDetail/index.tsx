@@ -12,8 +12,6 @@ import AddBranchUpdateView from '../addBranchUpdateView';
 import { getBranchsRequest } from '../../../../redux/slices/MyProfile';
 import Spinner from '../../../../common/Spinner';
 import AddBranchListItem from '../addBranchList';
-import AddFranchiseListItem from '../addFranchiseList';
-// import Spinner from '../../../../../common/Spinner';
 
 const AddBranchView = () => {
   const [showBranchList, setshowBranchList] = useState<boolean>(false);
@@ -22,6 +20,7 @@ const AddBranchView = () => {
   const {Branchs, getBranchsRequesting} = useAppSelector(
     state => state.Myprofile,
   );
+  const {data: BranchsData = []} = Branchs || {};
   const dispatch = useAppDispatch();
   const getCompanyId = () => {
     let id;
@@ -69,7 +68,7 @@ const AddBranchView = () => {
     if (showBranchList) {
       return (
         <FlatList
-          data={Branchs.data}
+          data={BranchsData}
           refreshControl={
             <RefreshControl
               refreshing={getBranchsRequesting}

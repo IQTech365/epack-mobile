@@ -6,6 +6,7 @@ import {
   CREATE_CAR_CONDITION,
   CREATE_MONEY_RECEIPT,
   EDIT_COMPANY,
+  EDIT_MONEY_RECEIPT_LIST,
   GET_BILTY_LIST,
   GET_CAR_CONDITION_LIST,
   GET_INVOICE_LIST,
@@ -78,6 +79,12 @@ export const GetMoneyReceiptListService = async (payload: string): Promise<IGetM
     console.log('GetMoneyReceiptListService--payload--', JSON.stringify(payload));
     const api = Api.getInstance();
     return await api.get<IGetMoneyReceiptsResponse>(GET_MONEY_RECEIPT_LIST(payload));
+}
+
+export const EditMoneyReceiptListService = async (id:string, requestBody: any): Promise<IGetMoneyReceiptsResponse> => {
+    console.log('EditMoneyReceiptListService--payload--', JSON.stringify(requestBody));
+    const api = Api.getInstance();
+    return await api.update<any, AxiosResponse<IGetMoneyReceiptsResponse>>(requestBody, EDIT_MONEY_RECEIPT_LIST(id));
 }
 
 export const CreateInvoiceService = async (payload: ICreateInvoiceRequest): Promise<ICreateInvoiceResponse> => {
