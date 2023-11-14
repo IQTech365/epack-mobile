@@ -26,7 +26,7 @@ import { ISubmoduleResponse } from '../interface/setting/packerProfile/ISubmodul
 import { ICheckUsernameAvailablilityRequest, ICheckUsernameAvailablilityResponse } from '../interface/setting/role/ICheckUsername';
 import { ICreateSerialNoRequest } from '../interface/setting/serialNo/ICreateSerialNoRequest';
 import { ICreateSerialNoResponse } from '../interface/setting/serialNo/ICreateSerialNoResponse';
-import { createSerialNoFailure, createSerialNoRequest, createSerialNoSuccess } from '../redux/slices/SerialNoSettingSlice';
+import { createSerialNoFailure, createSerialNoRequest, createSerialNoSuccess, getSerialNoFailure, getSerialNoRequest, getSerialNoSuccess } from '../redux/slices/SerialNoSettingSlice';
 import { IGetModulesResponse } from '../interface/setting/role/IModule';
 
 export function* addFooterContentSaga(action: PayloadAction<IAddFooterContentRequest>) {
@@ -194,6 +194,17 @@ export function* createSerialNoSaga(action: PayloadAction<ICreateSerialNoRequest
     }
 }
 
+export function* getSerialNoSaga(action: PayloadAction<string>) {
+    try {
+        const response: IGetPaymentMethodsResponse = yield call(SettingService.GetSerialNoService, action.payload);
+        console.log('getSerialNoSaga-response----', JSON.stringify(response));
+        yield put(getSerialNoSuccess(response));
+    } catch (error) {
+        console.log('getSerialNoSaga-error----', error);
+        yield put(getSerialNoFailure(JSON.stringify(error)));
+    }
+}
+
 export function* getModulesSaga(action: PayloadAction) {
     try {
         const response: IGetModulesResponse = yield call(SettingService.GetModulesService);
@@ -220,4 +231,5 @@ export function* watcherSettingSaga() {
     yield takeLatest(checkUsernameAvailabilityRequest.type, checkUsernameAvailabilitySaga);
     yield takeLatest(createSerialNoRequest.type, createSerialNoSaga);
     yield takeLatest(getModulesRequest.type, getModulesSaga);
+    yield takeLatest(getSerialNoRequest.type, getSerialNoSaga);
 }

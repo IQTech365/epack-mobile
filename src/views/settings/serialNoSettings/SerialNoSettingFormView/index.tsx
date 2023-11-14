@@ -130,11 +130,11 @@ const SerialNoSettingFormView:React.FC<IMoneyReceiptSNProps> = ({moduleId, modul
       companyId: getCompanyId(),
       companyEntity: entityType,
       branchId: subEntityType,
-      moduleId: moduleId,
+      moduleId: subEntityType,
       moduleName: moduleName,
       prefix: prefix,
       initialValue: suffix,
-      createdBy: otpData?.data.id as string,
+      // createdBy: otpData?.data.id as string,
     };
     console.log('SerialNO-Payload--', JSON.stringify(payload));
     dispatch(createSerialNoRequest(payload));

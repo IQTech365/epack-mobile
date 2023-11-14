@@ -91,6 +91,7 @@ export const GET_BANKS = `/bankname/getAll`;
 
 // Serial No's
 export const SERIAL_NO = `/setting/app-setting/add`;
+export const GET_SERIAL_NO = (company_id) => `/setting/app-setting/company/${company_id}`;
 
 // Modules
 export const MODULES = `/content-management/module/getAll`;

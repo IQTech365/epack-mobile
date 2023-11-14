@@ -6,5 +6,5 @@ export interface ICreateSerialNoRequest {
     moduleName: string;
     prefix: string;
     initialValue: string;
-    createdBy: string;
+    // createdBy: string;
 }
