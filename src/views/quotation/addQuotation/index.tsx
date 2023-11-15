@@ -696,7 +696,7 @@ const AddQuotationView: React.FC<Props> = ({
   // README: This function we are using to populate the form with previous quotation values
   const initFormValues = () => {
       const {enquiries} = item as IGetQuotationData;
-      const {data: singleQuotationData} = quotation;
+      const {data: singleQuotationData} = quotation || {};
       if(enquiries.length > 0) {
         const enquiry = enquiries[0];
         const {shiftingDate, shiftingType, billingBy} = enquiry;
@@ -704,12 +704,12 @@ const AddQuotationView: React.FC<Props> = ({
         const billingByItemIndex = billingByOptions.findIndex(e => e.label.toLowerCase() == billingBy.toLowerCase());
         if(billingByItemIndex != -1 && billingByDropdwonRef) {
           //@ts-ignore
-          billingByDropdwonRef.current.setDefaultValue(billingByOptions[billingByItemIndex]);
+          billingByDropdwonRef?.current?.setDefaultValue(billingByOptions[billingByItemIndex]);
         }
         const itemIndex = shiftingTypes.findIndex(e => e.label.toLowerCase() == shiftingType.toLowerCase());
         if(itemIndex != -1 && shiftingTypeDropdownRef) {
           //@ts-ignore
-          shiftingTypeDropdownRef.current.setDefaultValue(shiftingTypes[itemIndex]);
+          shiftingTypeDropdownRef?.current?.setDefaultValue(shiftingTypes[itemIndex]);
         }
       }
       const {shiftingLuggage, quotationNumber, quotationData} = singleQuotationData as ISingleQuotationData;
