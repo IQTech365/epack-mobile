@@ -1,5 +1,5 @@
 import React, {useState, useCallback, useEffect} from 'react';
-import {View, Text, TouchableOpacity, FlatList} from 'react-native';
+import {View, Text, TouchableOpacity, FlatList, RefreshControl} from 'react-native';
 import styles from './style';
 import SerilaNoSettingFormView from '../SerialNoSettingFormView';
 import ListViewIcon from '../../../../images/icons/list_view_icon.svg';
@@ -7,9 +7,9 @@ import ListViewIcon2 from '../../../../images/icons/list_view_icon2.svg';
 import CreateIcon from '../../../../images/icons/create_icon.svg';
 import CreateIcon2 from '../../../../images/icons/create_icon2.svg';
 import Spacer from '../../../../common/Spacer';
-import BiltyListItem from '../BiltyListItem';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
 import { getSerialNoRequest } from '../../../../redux/slices/SerialNoSettingSlice';
+import SerialNoListItem from '../SerialNoSettingListItem';
 
 interface IMoneyReceiptSNProps {
   moduleId: string;
@@ -79,9 +79,15 @@ const MoneyReceiptSN: React.FC<IMoneyReceiptSNProps> = ({moduleId, moduleName}) 
       return (
         <FlatList
           data={PaymentMethodsData}
+          refreshControl={
+            <RefreshControl
+              refreshing={getSerialNumberRequesting}
+              onRefresh={handleOnRefresh}
+            />
+          }
           renderItem={({item, index}) => 
           item.moduleName == 'MONEY RECEIPT'?
-          <BiltyListItem item={item} index={1}
+          <SerialNoListItem item={item} index={1}
             onPress={() => { } }
             onShare={() => { } }
             onDownload={()=> {}}

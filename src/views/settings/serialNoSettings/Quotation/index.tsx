@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, FlatList} from 'react-native';
+import React, {useState, useEffect, useCallback} from 'react';
+import {View, Text, TouchableOpacity, FlatList, RefreshControl} from 'react-native';
 import styles from './style';
 import SerilaNoSettingFormView from '../SerialNoSettingFormView';
 import ListViewIcon from '../../../../images/icons/list_view_icon.svg';
@@ -7,6 +7,9 @@ import ListViewIcon2 from '../../../../images/icons/list_view_icon2.svg';
 import CreateIcon from '../../../../images/icons/create_icon.svg';
 import CreateIcon2 from '../../../../images/icons/create_icon2.svg';
 import Spacer from '../../../../common/Spacer';
+import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
+import { getSerialNoRequest } from '../../../../redux/slices/SerialNoSettingSlice';
+import SerialNoListItem from '../SerialNoSettingListItem';
 
 interface IQuotationSNProps {
   moduleId: string;
@@ -16,6 +19,10 @@ interface IQuotationSNProps {
 const QuotationSN: React.FC<IQuotationSNProps> = ({moduleId,moduleName}) => {
   const [showList, setShowList] = useState<boolean>(false);
   const [showForm, setShowForm] = useState<boolean>(true);
+  const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
+  const {getSerialNumberRequesting, paymentMethods} = useAppSelector(state => state.SNSetting);
+  const {data: PaymentMethodsData = []} = paymentMethods || {};
+  const dispatch = useAppDispatch();
 
   const showEmptyView = () => {
     return (
@@ -42,12 +49,50 @@ const QuotationSN: React.FC<IQuotationSNProps> = ({moduleId,moduleName}) => {
     return null;
   };
 
+  const getCompanyId = () => {
+    let id;
+    const {data} = addCompanyInfo || {};
+    const {data: companiesData} = companies || {};
+    if (data && Object.keys(data).length > 0) {
+      id = data._id;
+    } else if (
+      companiesData &&
+      Array.isArray(companiesData) &&
+      companiesData.length > 0
+    ) {
+      const firstCompany = companiesData[0];
+      id = firstCompany._id;
+    }
+    return id;
+  };
+
+  const handleOnRefresh = useCallback(() => {
+    dispatch(getSerialNoRequest(getCompanyId()));
+  }, []);
+
+  useEffect(() => {
+    dispatch(getSerialNoRequest(getCompanyId()));
+  }, []);
+
   const showListView = () => {
     if (showList) {
       return (
         <FlatList
-          data={[]}
-          renderItem={({item, index}) => <Text>Hello</Text>}
+          data={PaymentMethodsData}
+          refreshControl={
+            <RefreshControl
+              refreshing={getSerialNumberRequesting}
+              onRefresh={handleOnRefresh}
+            />
+          }
+          renderItem={({item, index}) =>
+          item.moduleName == 'QUOTATION'?
+          <SerialNoListItem item={item} index={1}
+            onPress={() => { } }
+            onShare={() => { } }
+            onDownload={()=> {}}
+            onPreview={() => { } }
+            onEdit={() => {}} />:null}
           ListEmptyComponent={showEmptyView()}
         />
       );

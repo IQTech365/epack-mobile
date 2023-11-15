@@ -5,7 +5,7 @@ import styles from './style';
 import Spacer from '../../../../common/Spacer';
 import DocumentActionView from '../../../../common/DocumentActionView';
 
-export interface IBiltyItem {
+export interface ISerialNoItem {
     branches: object,
     companyEntity: string,
     companyId: string,
@@ -16,8 +16,8 @@ export interface IBiltyItem {
     prefix: string
 }
 
-interface IBiltyListItemProps {
-    item: IBiltyItem;
+interface ISerialNoListItemProps {
+    item: ISerialNoItem;
     index: number;
     onPress: () => void;
     onDownload: () => void;
@@ -27,7 +27,7 @@ interface IBiltyListItemProps {
 
 }
 
-const BiltyListItem: React.FC<IBiltyListItemProps> = ({
+const SerialNoListItem: React.FC<ISerialNoListItemProps> = ({
     item,
     index,
     onPress,
@@ -110,4 +110,4 @@ const BiltyListItem: React.FC<IBiltyListItemProps> = ({
     );
 };
 
-export default BiltyListItem;
+export default SerialNoListItem;

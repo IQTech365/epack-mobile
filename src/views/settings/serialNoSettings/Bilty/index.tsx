@@ -8,12 +8,12 @@ import ListViewIcon2 from '../../../../images/icons/list_view_icon2.svg';
 import CreateIcon from '../../../../images/icons/create_icon.svg';
 import CreateIcon2 from '../../../../images/icons/create_icon2.svg';
 import Spacer from '../../../../common/Spacer';
-import BiltyListItem from '../BiltyListItem';
 import FormModal from '../../formModal';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { COLOR_BLACK, COLOR_BLUE } from '../../../../utils/colors';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
 import { getSerialNoRequest } from '../../../../redux/slices/SerialNoSettingSlice';
+import SerialNoListItem from '../SerialNoSettingListItem';
 
 interface IBiltySNProps {
   moduleId: string;
@@ -120,7 +120,7 @@ const BiltySN: React.FC<IBiltySNProps> = ({moduleId, moduleName}) => {
           }
           renderItem={({ item, index }) => 
           item.moduleName == 'BILTY'?
-          <BiltyListItem item={item} index={1}
+          <SerialNoListItem item={item} index={1}
             onPress={() => { } }
             onShare={() => { } }
             onDownload={presentModal}
