@@ -224,8 +224,8 @@ const AddQuotationView: React.FC<Props> = ({
   navigation,
   route,
 }) => {
-  const item: IGetQuotationData | undefined = route.params?.item;
-  const isEdit: boolean | undefined = route.params?.isEdit;
+  const item: IGetQuotationData | undefined = route?.params?.item;
+  const isEdit: boolean | undefined = route?.params?.isEdit;
   // console.log('AddQuotation-Edit-Item----', JSON.stringify(item));
 
   const [switchState, setSwitchState] = useState<boolean>(false);
