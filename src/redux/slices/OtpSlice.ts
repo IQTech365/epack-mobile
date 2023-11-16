@@ -38,7 +38,7 @@ export const OtpSlice = createSlice({
   name: 'OtpSlice',
   initialState: initialState,
   reducers: {
-    getOtpRequest: (state, action: PayloadAction<IOtpGetRequest>) => {
+    getOtpRequest: (state, action: PayloadAction<Partial<IOtpGetRequest>>) => {
       state.requesting = true;
     },
     getOtpSuccess: (state, action: PayloadAction<IOtpGetResponse>) => {
@@ -52,7 +52,7 @@ export const OtpSlice = createSlice({
       state.failure = true;
       state.error = action.payload;
     },
-    restGetOtpRequest: (state, action) => {
+    restGetOtpRequest: (state) => {
       state.requesting = false;
       state.success = false;
       state.failure = false;
@@ -90,6 +90,7 @@ export const {
   getOtpRequest,
   getOtpSuccess,
   getOtpFailure,
+  restGetOtpRequest,
   verifyOtpRequest,
   verifyOtpSuccess,
   verifyOtpFailure,

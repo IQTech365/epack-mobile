@@ -242,7 +242,6 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({ orderId })
         text2: 'Car Condition has been added successfully',
       });
     } else if (!createCarConditionRequesting && createCarConditionError) {
-      // Alert.alert('Something went wrong. Please try again!');
       Toast.show({
         type: 'error',
         text1: 'Car condition',

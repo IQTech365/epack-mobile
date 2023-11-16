@@ -14,7 +14,7 @@ import { IOtpGetResponse } from '../interface/otp/IOtpGetResponse';
 import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
 import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
 
-export function* getOtpSaga(action: PayloadAction<IOtpGetRequest>) {
+export function* getOtpSaga(action: PayloadAction<Partial<IOtpGetRequest>>) {
     console.log('getOtpSaga--action--', JSON.stringify(action));
     try {
         const response: IOtpGetResponse = yield call(OtpService.GetOtpService, action.payload);

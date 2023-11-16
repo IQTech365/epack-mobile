@@ -6,10 +6,10 @@ import { IOtpGetResponse } from '../interface/otp/IOtpGetResponse';
 import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
 import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
 
-export const GetOtpService = async (payload: IOtpGetRequest): Promise<IOtpGetResponse> => {
+export const GetOtpService = async (payload: Partial<IOtpGetRequest>): Promise<IOtpGetResponse> => {
     console.log('GetOtpService--payload--', JSON.stringify(payload));
     const api = Api.getInstance();
-    return await api.post<IOtpGetRequest, AxiosResponse<IOtpGetResponse>>(payload, GET_OTP);
+    return await api.post<Partial<IOtpGetRequest>, AxiosResponse<IOtpGetResponse>>(payload, GET_OTP);
 }
 
 export const VerifyOtpService = async (payload: IOtpVerifyRequest): Promise<IOtpVerifyResponse> => {

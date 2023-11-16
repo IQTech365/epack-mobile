@@ -14,9 +14,12 @@ import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {COLOR_BLUE, INTRO_BG_LINEARGRADIENT} from '../../utils/colors';
 import Label from '../../common/Label';
 import {IOtpGetRequest} from '../../interface/otp/IOtpGetRequest';
-import {getOtpRequest} from '../../redux/slices/OtpSlice';
+import {getOtpRequest, restGetOtpRequest} from '../../redux/slices/OtpSlice';
 import {AuthStackRoute} from '../../utils/constants';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import { setAuthToken, setIsRegistrationComplete, setLoginStatus } from '../../utils/storage';
+import { useAuthContext } from '../../provider/AuthProvider';
+import { getCompaniesRequest } from '../../redux/slices/CompanySlice';
 
 const SignInPageView = (props: any) => {
   const {navigation} = props;
@@ -24,22 +27,62 @@ const SignInPageView = (props: any) => {
   const {requesting, success, error, failure, otpData} = useAppSelector(
     state => state.OTP,
   );
+  const {
+    getCompaniesRequesting,
+    getCompaniesSuccess,
+    getCompaniesFailure,
+    companies,
+  } = useAppSelector(state => state.Company);
   const [mobile, setMobile] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const [isStaffLogin, setIsStaffLogin] = useState<boolean>(false);
   const [topLabel, setTopLabel] = useState<string>('Enter mobile number');
   const [inputLabel, setInputLabel] = useState<string>('Mobile Number');
   const [inputKeyboardType, setInputKeyboardType] = useState<string>('numeric');
+  const authContext = useAuthContext();
+  const {setLoggedIn} = authContext;
+  const {data = {}} = otpData || {};
+  const {userRolePermission = []} = data || {};
 
+  const getCompanyId = () => {
+    let id:string = '';
+    if(userRolePermission && Array.isArray(userRolePermission) && userRolePermission.length > 0) {
+      const firstPermissionItem = userRolePermission[0];
+      id = firstPermissionItem.companyId;
+    }
+    return id;
+  }
+
+  console.log('companies------', JSON.stringify(companies));
+  
   const onChangeMobileText = (text: string) => {
     setMobile(text);
   };
 
+  const onChangePasswordText = (text: string) => {
+    setPassword(text);
+  };
+
+  const completeRegistrationAndLoggedIn = async () => {
+    await setIsRegistrationComplete();
+    await setLoginStatus();
+    setLoggedIn(true);
+  }
+
   const onLoginPress = useCallback(() => {
-    const payload: IOtpGetRequest = {
-      mobile: mobile,
-    };
+    let payload:Partial<IOtpGetRequest>;
+    if(isStaffLogin) {
+      payload = {
+        username: mobile,
+        password: password,
+      };
+    } else {
+      payload = {
+        mobile: mobile,
+      };
+    }
     dispatch(getOtpRequest(payload));
-  }, [mobile]);
+  }, [mobile, password]);
 
   useEffect(() => {
     if(isStaffLogin){
@@ -56,11 +99,28 @@ const SignInPageView = (props: any) => {
   useEffect(() => {
     if (!requesting && success) {
       console.log('otpData--------', JSON.stringify(otpData));
-      navigation.navigate(AuthStackRoute.OTPInput);
+      if(isStaffLogin) {
+        setAuthToken(otpData?.data?.jwtToken);
+        dispatch(restGetOtpRequest());
+        dispatch(getCompaniesRequest(getCompanyId()));
+      } else {
+        dispatch(restGetOtpRequest());
+        navigation.navigate(AuthStackRoute.OTPInput);
+      }
     } else if (!requesting && error) {
       Alert.alert('Something went wrong. Please try again!');
     }
   }, [requesting, success, failure]);
+
+  useEffect(() => {
+    if(!getCompaniesRequesting && getCompaniesSuccess) {
+      completeRegistrationAndLoggedIn();
+    } else if(!getCompaniesRequesting && getCompaniesFailure) {
+      Alert.alert('Error in Getting companies details.');
+    }
+  }, [getCompaniesRequesting, getCompaniesSuccess, getCompaniesFailure]);
+
+  const buttonDisable = isStaffLogin ? (!mobile || !password) : !mobile || mobile.length < 10;
 
   return (
     <AvoidSoftInputViewHOC>
@@ -79,7 +139,7 @@ const SignInPageView = (props: any) => {
           inputType={inputKeyboardType}
           onChangeText={onChangeMobileText}
           error={null}
-          maxLength={10}
+          maxLength={isStaffLogin ? 20 : 10}
         />
         <Spacer />
         {isStaffLogin && (
@@ -87,9 +147,8 @@ const SignInPageView = (props: any) => {
             icon={<MobileIcon width={22} height={22} />}
             placeholder="Password"
             inputType="default"
-            onChangeText={onChangeMobileText}
+            onChangeText={onChangePasswordText}
             error={null}
-            maxLength={10}
           />
         )}
         <Spacer />
@@ -108,14 +167,14 @@ const SignInPageView = (props: any) => {
           style={{marginRight: 15, marginBottom: 10}}
           textContainerStyle={{paddingLeft: 0}}
           onPress={(isChecked: boolean) => {
-            setIsStaffLogin(isChecked)
+            setIsStaffLogin(!isStaffLogin);
           }}
         />
         <Spacer height={50} />
         <Button
           text="GET OTP"
           onPress={onLoginPress}
-          disabled={!mobile || mobile.length < 10}
+          disabled={buttonDisable}
         />
         <Spacer height={50} />
         <Spinner show={requesting} variant='white' />

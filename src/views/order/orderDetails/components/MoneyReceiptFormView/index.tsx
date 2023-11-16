@@ -154,7 +154,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({ orderId, e
   const handleCreate = () => {
     const payload: ICreateMoneyReceiptRequest = {
       companyId: getCompanyId(),
-      orderId: orderId,
+      orderId: orderId as string,
       receiptNumber: reducerState.receiptNumber,
       receiptDate: reducerState.receiptDate,
       arivalDate: reducerState.arivalDate,
@@ -212,7 +212,6 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({ orderId, e
         text1: `${isEdit ? 'Updated Money Receipt' : 'Money Receipt'}`,
         text2: 'Error in adding Money Receipt. Please try again!',
       });
-      // Alert.alert('Something went wrong. Please try again!');
     }
   }, [
     createMoneyReceiptRequesting,
