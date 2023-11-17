@@ -19,6 +19,8 @@ interface ICarConditionSNProps {
 const CarConditionSN: React.FC<ICarConditionSNProps> = ({moduleId, moduleName}) => {
   const [showList, setShowList] = useState<boolean>(false);
   const [showForm, setShowForm] = useState<boolean>(true);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [editData, setEditData] = useState<any>([]);
   const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
   const {getSerialNumberRequesting, paymentMethods} = useAppSelector(state => state.SNSetting);
   const {data: PaymentMethodsData = []} = paymentMethods || {};
@@ -35,6 +37,7 @@ const CarConditionSN: React.FC<ICarConditionSNProps> = ({moduleId, moduleName}) 
   const handleShowForm = () => {
     setShowList(false);
     setShowForm(true);
+    setIsEdit(false);
   };
 
   const handleShowList = () => {
@@ -42,9 +45,17 @@ const CarConditionSN: React.FC<ICarConditionSNProps> = ({moduleId, moduleName}) 
     setShowForm(false);
   };
 
+  const handleEditClick = (index: number) => {
+    const item: any = PaymentMethodsData[index];  
+    setShowList(false);
+    setShowForm(true);
+    setEditData(item);
+    setIsEdit(true);
+  };
+
   const showFormView = () => {
     if (showForm) {
-      return <SerilaNoSettingFormView moduleId={moduleId} moduleName={moduleName} />;
+      return <SerilaNoSettingFormView moduleId={moduleId} moduleName={moduleName} editData={editData} isEdit={isEdit} />;
     }
     return null;
   };
@@ -67,7 +78,7 @@ const CarConditionSN: React.FC<ICarConditionSNProps> = ({moduleId, moduleName}) 
             onShare={() => { } }
             onDownload={()=> {}}
             onPreview={() => { } }
-            onEdit={() => {}} />:null
+            onEdit={() => handleEditClick(index)} />:null
           }
           ListEmptyComponent={showEmptyView()}
         />

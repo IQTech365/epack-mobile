@@ -22,9 +22,11 @@ import Spinner from '../../../../common/Spinner';
 interface IMoneyReceiptSNProps {
   moduleId: string;
   moduleName: string;
+  editData:any;
+  isEdit:boolean;
 }
 
-const SerialNoSettingFormView:React.FC<IMoneyReceiptSNProps> = ({moduleId, moduleName}) => {
+const SerialNoSettingFormView:React.FC<IMoneyReceiptSNProps> = ({moduleId, moduleName, editData, isEdit}) => {
   const [entityType, setEntityType] = useState<string>(chooseEntity[0].label);
   const [subEntityType, setSubEntityType] = useState<string>('0');
   const [prefix, setPrefix] = useState<string>('');
@@ -193,6 +195,7 @@ const SerialNoSettingFormView:React.FC<IMoneyReceiptSNProps> = ({moduleId, modul
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
             placeholder="#RD"
+            value={isEdit ? editData.prefix : ''}
           />
         </View>
         <View style={styles.textContainer}>
@@ -203,12 +206,13 @@ const SerialNoSettingFormView:React.FC<IMoneyReceiptSNProps> = ({moduleId, modul
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
             placeholder="Ex. 101"
+            value={isEdit ? editData.initialValue : ''}
           />
         </View>
       </View>
       <Spacer height={8} />
       <Button
-        text="SAVE"
+        text={`${isEdit ? 'UPDATE' : 'SAVE'}`}
         onPress={handleSave}
         disabled={false}
         style={styles.previewButtonStyle}

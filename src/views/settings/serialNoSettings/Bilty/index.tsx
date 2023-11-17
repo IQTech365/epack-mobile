@@ -23,10 +23,9 @@ interface IBiltySNProps {
 const BiltySN: React.FC<IBiltySNProps> = ({moduleId, moduleName}) => {
   const {getSerialNumberRequesting, paymentMethods} = useAppSelector(state => state.SNSetting);
   const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
-  const [showMoneyReceiptList, setShowMoneyReceiptList] = useState<boolean>(false);
-  const [createNewBiltyMoneyReceipt, setCreateNewMoneyReceipt] = useState<boolean>(true);
   const [downloadOption, setDownloadOption] = useState<string>('');
   const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [editData, setEditData] = useState<any>([]);
   const [showList, setShowList] = useState<boolean>(false);
   const [showForm, setShowForm] = useState<boolean>(true);
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -45,6 +44,7 @@ const BiltySN: React.FC<IBiltySNProps> = ({moduleId, moduleName}) => {
   const handleShowForm = () => {
     setShowList(false);
     setShowForm(true);
+    setIsEdit(false);
   };
 
   const handleShowList = () => {
@@ -54,7 +54,7 @@ const BiltySN: React.FC<IBiltySNProps> = ({moduleId, moduleName}) => {
 
   const showFormView = () => {
     if (showForm) {
-      return <SerilaNoSettingFormView  moduleId={moduleId} moduleName={moduleName} />;
+      return <SerilaNoSettingFormView  moduleId={moduleId} moduleName={moduleName} editData = {editData} isEdit = {isEdit} />;
     }
     return null;
   };
@@ -74,11 +74,10 @@ const BiltySN: React.FC<IBiltySNProps> = ({moduleId, moduleName}) => {
   };
 
   const handleEditClick = (index: number) => {
-    // const item: any = MoneyReceiptData[index];
-    
-    setCreateNewMoneyReceipt(true);
-    setShowMoneyReceiptList(false);
-    // setEditData(item);
+    const item: any = PaymentMethodsData[index];  
+    setShowList(false);
+    setShowForm(true);
+    setEditData(item);
     setIsEdit(true);
   };
 
@@ -110,7 +109,8 @@ const BiltySN: React.FC<IBiltySNProps> = ({moduleId, moduleName}) => {
   const showListView = () => {
     if (showList) {
       return (
-        <><FlatList
+        <>
+        <FlatList
           data={PaymentMethodsData}
           refreshControl={
             <RefreshControl

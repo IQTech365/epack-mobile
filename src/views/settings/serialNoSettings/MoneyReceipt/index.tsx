@@ -20,6 +20,8 @@ const MoneyReceiptSN: React.FC<IMoneyReceiptSNProps> = ({moduleId, moduleName}) 
   const {getSerialNumberRequesting, paymentMethods} = useAppSelector(state => state.SNSetting);
   const [showList, setShowList] = useState<boolean>(false);
   const [showForm, setShowForm] = useState<boolean>(true);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [editData, setEditData] = useState<any>([]);
   const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
   const {data: PaymentMethodsData = []} = paymentMethods || {};
   const dispatch = useAppDispatch();
@@ -35,6 +37,7 @@ const MoneyReceiptSN: React.FC<IMoneyReceiptSNProps> = ({moduleId, moduleName}) 
   const handleShowForm = () => {
     setShowList(false);
     setShowForm(true);
+    setIsEdit(false);
   };
 
   const handleShowList = () => {
@@ -44,7 +47,7 @@ const MoneyReceiptSN: React.FC<IMoneyReceiptSNProps> = ({moduleId, moduleName}) 
 
   const showFormView = () => {
     if (showForm) {
-      return <SerilaNoSettingFormView  moduleId={moduleId} moduleName={moduleName}/>;
+      return <SerilaNoSettingFormView  moduleId={moduleId} moduleName={moduleName} editData={editData} isEdit={isEdit}/>;
     }
     return null;
   };
@@ -64,6 +67,14 @@ const MoneyReceiptSN: React.FC<IMoneyReceiptSNProps> = ({moduleId, moduleName}) 
       id = firstCompany._id;
     }
     return id;
+  };
+
+  const handleEditClick = (index: number) => {
+    const item: any = PaymentMethodsData[index];  
+    setShowList(false);
+    setShowForm(true);
+    setEditData(item);
+    setIsEdit(true);
   };
 
   const handleOnRefresh = useCallback(() => {
@@ -92,7 +103,7 @@ const MoneyReceiptSN: React.FC<IMoneyReceiptSNProps> = ({moduleId, moduleName}) 
             onShare={() => { } }
             onDownload={()=> {}}
             onPreview={() => { } }
-            onEdit={() => {}} />:null
+            onEdit={() => handleEditClick(index)} />:null
         }
           ListEmptyComponent={showEmptyView()}
         />

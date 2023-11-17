@@ -21,6 +21,8 @@ const InvoiceSN: React.FC<IInvoiceSNProps> = ({moduleId, moduleName}) => {
   const [showForm, setShowForm] = useState<boolean>(true);
   const {getSerialNumberRequesting, paymentMethods} = useAppSelector(state => state.SNSetting);
   const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [editData, setEditData] = useState<any>([]);
   const {data: PaymentMethodsData = []} = paymentMethods || {};
   const dispatch = useAppDispatch();
 
@@ -35,8 +37,17 @@ const InvoiceSN: React.FC<IInvoiceSNProps> = ({moduleId, moduleName}) => {
   const handleShowForm = () => {
     setShowList(false);
     setShowForm(true);
+    setIsEdit(false);
   };
 
+  const handleEditClick = (index: number) => {
+    const item: any = PaymentMethodsData[index];  
+    setShowList(false);
+    setShowForm(true);
+    setEditData(item);
+    setIsEdit(true);
+  };
+  
   const handleShowList = () => {
     setShowList(true);
     setShowForm(false);
@@ -70,7 +81,7 @@ const InvoiceSN: React.FC<IInvoiceSNProps> = ({moduleId, moduleName}) => {
 
   const showFormView = () => {
     if (showForm) {
-      return <SerilaNoSettingFormView moduleId={moduleId} moduleName={moduleName} />;
+      return <SerilaNoSettingFormView moduleId={moduleId} moduleName={moduleName} editData={editData} isEdit={isEdit} />;
     }
     return null;
   };
@@ -93,7 +104,7 @@ const InvoiceSN: React.FC<IInvoiceSNProps> = ({moduleId, moduleName}) => {
             onShare={() => { } }
             onDownload={()=> {}}
             onPreview={() => { } }
-            onEdit={() => {}} />:null}
+            onEdit={() =>  handleEditClick(index)} />:null}
           ListEmptyComponent={showEmptyView()}
         />
       );
