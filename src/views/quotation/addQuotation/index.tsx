@@ -73,7 +73,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {QuotationStackParamList} from '../../../navigation/params/QuotationStackParamList';
 import {IGetQuotationData} from '../../../interface/quotation/IGetQuotationsResponse';
 import EpackDropdown from '../../../common/DropdownComponent2';
-import { ISingleQuotationData } from '../../../interface/quotation/IGetSingleQuotationResponse';
+import {ISingleQuotationData} from '../../../interface/quotation/IGetSingleQuotationResponse';
 const chargeOptions = [
   'Included',
   'Additional',
@@ -264,12 +264,13 @@ const AddQuotationView: React.FC<Props> = ({
 
   // Below states will be used in 'Edit' case
   const [quotationserialNo, setQuotationserialNo] = useState<string>('');
-  const [dateOfQuotation, setDateOfQuotation] = useState<string>('');
-  const [dateOfMoving, setDateOfMoving] = useState<string>('');
 
   const surchargePercentDropdownRef = useRef(null);
   const shiftingTypeDropdownRef = useRef(null);
   const billingByDropdwonRef = useRef(null);
+  const shiftingLuggageDropdownRef = useRef(null);
+  const dateOfQuotationCompRef = useRef(null);
+  const dateOfMovingCompRef = useRef(null);
 
   const dispatch2 = useAppDispatch();
 
@@ -281,7 +282,7 @@ const AddQuotationView: React.FC<Props> = ({
     quotation,
     getQuotationRequesting,
   } = useAppSelector(state => state.Quotation);
-  console.log('AddQuotation-quotation----', JSON.stringify(quotation));
+  // console.log('AddQuotation-quotation----', JSON.stringify(quotation));
   const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
   const {otpData} = useAppSelector(state => state.OTP);
 
@@ -298,7 +299,7 @@ const AddQuotationView: React.FC<Props> = ({
     ) {
       const firstCompany = companiesData[0];
       id = firstCompany._id;
-    } else if(companiesData && companiesData.hasOwnProperty('_id')) {
+    } else if (companiesData && companiesData.hasOwnProperty('_id')) {
       id = companiesData._id;
     }
     return id;
@@ -373,10 +374,10 @@ const AddQuotationView: React.FC<Props> = ({
     });
   };
 
-  const handleShiftingLuggage = (item: string) => {
+  const handleShiftingLuggage = (item: TDropdownItem) => {
     dispatch({
       type: QUOTATION_FORM_ACTION.SHIFTING_LUGGAGE,
-      payload: item,
+      payload: item.label,
     });
   };
 
@@ -697,31 +698,138 @@ const AddQuotationView: React.FC<Props> = ({
 
   // README: This function we are using to populate the form with previous quotation values
   const initFormValues = () => {
-      const {enquiries} = item as IGetQuotationData;
-      const {data: singleQuotationData} = quotation || {};
-      if(enquiries.length > 0) {
-        const enquiry = enquiries[0];
-        const {shiftingDate, shiftingType, billingBy} = enquiry;
-        setDateOfMoving(shiftingDate);
-        const billingByItemIndex = billingByOptions.findIndex(e => e.label.toLowerCase() == billingBy.toLowerCase());
-        if(billingByItemIndex != -1 && billingByDropdwonRef) {
-          //@ts-ignore
-          billingByDropdwonRef?.current?.setDefaultValue(billingByOptions[billingByItemIndex]);
-        }
-        const itemIndex = shiftingTypes.findIndex(e => e.label.toLowerCase() == shiftingType.toLowerCase());
-        if(itemIndex != -1 && shiftingTypeDropdownRef) {
-          //@ts-ignore
-          shiftingTypeDropdownRef?.current?.setDefaultValue(shiftingTypes[itemIndex]);
-        }
+    const {enquiries} = item as IGetQuotationData;
+    const {data: singleQuotationData} = quotation || {};
+    if (enquiries.length > 0) {
+      const enquiry = enquiries[0];
+      const {shiftingDate, shiftingType, billingBy, partyName, mobile, pickupAddress} = enquiry;
+      handlePartyNameInputTextChange(partyName);
+      handleMobileNumberInputTextChange(mobile);
+      const {pincode} = pickupAddress || {};
+      dispatch({
+        type: QUOTATION_FORM_ACTION.PICKUP_PINCODE,
+        payload: pincode,
+      });
+      //@ts-ignore
+      dateOfMovingCompRef?.current?.setDefaultValue(new Date(shiftingDate))
+      const billingByItemIndex = billingByOptions.findIndex(
+        e => e.label.toLowerCase() == billingBy.toLowerCase(),
+      );
+      if (billingByItemIndex != -1 && billingByDropdwonRef) {
+        //@ts-ignore
+        billingByDropdwonRef?.current?.setDefaultValue(
+          billingByOptions[billingByItemIndex],
+        );
       }
-      const {shiftingLuggage, quotationNumber, quotationData} = singleQuotationData as ISingleQuotationData;
-      setQuotationserialNo(quotationNumber);
-      setDateOfQuotation(quotationData);
-      const itmIndex = shiftingLuggages.findIndex(e => e.label.toLowerCase() == shiftingLuggage.toLowerCase());
-      if(itmIndex != -1) {
-        //
+      const itemIndex = shiftingTypes.findIndex(
+        e => e.label.toLowerCase() == shiftingType.toLowerCase(),
+      );
+      if (itemIndex != -1 && shiftingTypeDropdownRef) {
+        //@ts-ignore
+        shiftingTypeDropdownRef?.current?.setDefaultValue(
+          shiftingTypes[itemIndex],
+        );
       }
-  }
+    }
+    const {shiftingLuggage, quotationNumber, quotationData, quotationfreights} = singleQuotationData as ISingleQuotationData;
+    setQuotationserialNo(quotationNumber);
+
+    if(quotationfreights && Array.isArray(quotationfreights) && quotationfreights.length > 0) {
+      const firstQuotationItem = quotationfreights[0];
+      const {
+        isPartLoad,
+        isFullLoad,
+        partLoadCharge,
+        fullLoadCharge,
+
+        packagingChargesStatus,
+        packagingPartLoadCharges,
+        packagingFullLoadCharges,
+
+        packingMaterialChargesStatus,
+        packingMaterialPartLoadCharges,
+        packingMaterialFullLoadCharges,
+
+        loadingChargesStatus,
+        loadingPartLoadCharges,
+        loadingFullLoadCharges,
+
+        unLoadingChargesStatus,
+        unLoadingFullLoadCharges,
+        unLoadingPartLoadCharges,
+
+        unPackagingChargesStatus,
+        unPackagingFullLoadCharges,
+        unPackagingPartLoadCharges,
+
+        otherCharges,
+        surchargeCharges,
+        surchargeIsRequired,
+        discountType,
+        discountAmount,
+
+        transitInsurance,
+        storageCharges,
+        
+        otherDetail1,
+        otherDetail2,
+      } = firstQuotationItem || {};
+
+      const {isRequired, transitType, charges} = transitInsurance || {};
+      if(charges && Array.isArray(charges) && charges.length > 0) {
+        const firstItem = charges[0];
+        const {luggageType, insurancePerc, gst, value} = firstItem || {};
+        // TODO: set insurance fileds in this block
+      }
+
+      const {isRequired: isReq, storageChargesType, amount} = storageCharges || {};
+
+      // =========== ++++++ Part Load data setup +++++ =========
+      setIsPartLoad(isPartLoad == 'true');
+      handleFreightPartChargeTextChange(partLoadCharge);
+      dispatch({
+        type: QUOTATION_FORM_ACTION.PART_LOAD,
+        payload: isPartLoad == 'true',
+      });
+      setPackingCharges(packagingChargesStatus);
+      const {packingCharges: statePackageCharges} = state;
+      const tempObj = {
+        ...statePackageCharges,
+        status: packagingChargesStatus,
+        part_load_charge: '0',
+        full_load_charge: '0',
+      };
+      dispatch({
+        type: QUOTATION_FORM_ACTION.PACKING_CHARGES,
+        payload: tempObj as TCharge,
+      });
+      console.log('packagingPartLoadCharges--', packagingPartLoadCharges);
+      console.log('packagingFullLoadCharges--', packagingFullLoadCharges);
+
+      handlePackingChargeChange(packagingPartLoadCharges, 'part');
+      handlePackingChargeChange(packagingFullLoadCharges, 'full');
+
+      // =========== ++++++ Full Load data setup +++++ =========
+      setIsFullLoad(isFullLoad == 'true');
+      dispatch({
+        type: QUOTATION_FORM_ACTION.FULL_LOAD,
+        payload: isFullLoad == 'true',
+      });
+      handleFreightFullChargeTextChange(fullLoadCharge);
+    }
+
+    //@ts-ignore
+    dateOfQuotationCompRef?.current?.setDefaultValue(new Date(quotationData))
+    const itmIndex = shiftingLuggages.findIndex(
+      e => e.label.toLowerCase() == shiftingLuggage.toLowerCase(),
+    );
+    if (itmIndex != -1) {
+      //@ts-ignore
+      shiftingLuggageDropdownRef?.current?.setDefaultValue(
+        shiftingLuggages[itmIndex],
+      );
+    }
+  };
 
   useEffect(() => {
     if (isEdit) {
@@ -730,7 +838,7 @@ const AddQuotationView: React.FC<Props> = ({
   }, []);
 
   useEffect(() => {
-    if(isEdit) {
+    if (isEdit) {
       initFormValues();
     }
   }, [quotation, isEdit]);
@@ -1058,6 +1166,7 @@ const AddQuotationView: React.FC<Props> = ({
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
+            value={state?.partyName}
           />
         </View>
         <Spacer height={4} />
@@ -1068,6 +1177,7 @@ const AddQuotationView: React.FC<Props> = ({
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
+            value={state?.mobileNumber}
           />
         </View>
       </>
@@ -1306,37 +1416,6 @@ const AddQuotationView: React.FC<Props> = ({
     }
   }, [result]);
 
-  // useEffect(() => {
-  //   if (
-  //     pickupStates &&
-  //     pickupCities &&
-  //     pickupCityDropdownRef &&
-  //     pickupStateDropwdownRef &&
-  //     pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_QUOTATION_PICKUP_ADDRESS
-  //   ) {
-  //     //@ts-ignore
-  //     pickupStateDropwdownRef?.current?.setDefaultValue(pickupStates[0]);
-  //     //@ts-ignore
-  //     pickupCityDropdownRef?.current?.setDefaultValue(pickupCities[0]);
-  //   }
-  // }, [pickupStates, pickupCities]);
-
-  // useEffect(() => {
-  //   if (
-  //     deliveryStates &&
-  //     deliveryCities &&
-  //     dropStateDropdownRef &&
-  //     dropCityDropdownRef &&
-  //     pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_QUOTATION_DELIVERY_ADDRESS
-  //   ) {
-  //     //@ts-ignore
-  //     dropStateDropdownRef?.current?.setDefaultValue(deliveryStates[0]);
-  //     //@ts-ignore
-  //     dropCityDropdownRef?.current?.setDefaultValue(deliveryCities[0]);
-  //   }
-  // }, [deliveryStates, deliveryCities]);
-
-
   useEffect(() => {
     if (!addQuotationRequesting && addQuotationSuccess) {
       Toast.show({
@@ -1515,10 +1594,11 @@ const AddQuotationView: React.FC<Props> = ({
                 </View>
                 <View style={styles.textContainer}>
                   <Label text="Shifting Luggage" style={styles.label} />
-                  <EpackDropdown
-                    data={shiftingLuggages.map(e => e.label)}
-                    placeholder={'Select State'}
-                    hanldeData={handleShiftingLuggage}
+                  <DropdownComponent
+                    data={shiftingLuggages}
+                    onSelect={handleShiftingLuggage}
+                    //@ts-ignore
+                    ref={shiftingLuggageDropdownRef}
                   />
                 </View>
               </View>
@@ -1557,11 +1637,19 @@ const AddQuotationView: React.FC<Props> = ({
               <View style={styles.mainWrapper}>
                 <View style={styles.textContainer}>
                   <Label text="Date of Quotation" style={styles.label} />
-                  <DatePickerComponent onDateSelect={handleQuotationDate} />
+                  <DatePickerComponent
+                    onDateSelect={handleQuotationDate}
+                    //@ts-ignore
+                    ref={dateOfQuotationCompRef}
+                  />
                 </View>
                 <View style={styles.textContainer}>
                   <Label text="Date of Moving" style={styles.label} />
-                  <DatePickerComponent onDateSelect={handleMovingDate} />
+                  <DatePickerComponent
+                    onDateSelect={handleMovingDate}
+                    //@ts-ignore
+                    ref={dateOfMovingCompRef}
+                  />
                 </View>
               </View>
               <Spacer height={4} />
@@ -1588,6 +1676,7 @@ const AddQuotationView: React.FC<Props> = ({
                     inputStyle={styles.input}
                     selectionColor={COLOR_BLACK}
                     error={state.errors.pickupAddress}
+                    value={state?.pickupPincode}
                   />
                 </View>
                 <View style={styles.textContainer}>
@@ -1615,6 +1704,7 @@ const AddQuotationView: React.FC<Props> = ({
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
+                  value={state?.pickupAddress}
                 />
               </View>
               <View style={styles.mainWrapper}>
@@ -1781,6 +1871,7 @@ const AddQuotationView: React.FC<Props> = ({
                       inputStyle={styles.input}
                       selectionColor={COLOR_BLACK}
                       inputType="numeric"
+                      value={state?.freightPartCharge}
                     />
                   </View>
                 )}
@@ -1793,6 +1884,7 @@ const AddQuotationView: React.FC<Props> = ({
                       inputStyle={styles.input}
                       selectionColor={COLOR_BLACK}
                       inputType="numeric"
+                      value={state?.freightFullCharge}
                     />
                   </View>
                 )}
@@ -1853,6 +1945,7 @@ const AddQuotationView: React.FC<Props> = ({
                         inputStyle={styles.input}
                         selectionColor={COLOR_BLACK}
                         inputType="numeric"
+                        value={state.packingCharges?.part_load_charge}
                       />
                     </View>
                   )}
@@ -1868,6 +1961,7 @@ const AddQuotationView: React.FC<Props> = ({
                         inputStyle={styles.input}
                         selectionColor={COLOR_BLACK}
                         inputType="numeric"
+                        value={state.packingCharges?.full_load_charge}
                       />
                     </View>
                   )}

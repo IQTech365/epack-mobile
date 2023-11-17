@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, forwardRef} from 'react';
 import {View, TouchableOpacity, Text, ViewStyle} from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import {formatDate, formatDate3} from '../../utils/formatter';
@@ -13,15 +13,19 @@ interface IDatePickerProps {
   defaultValue?: Date;
 }
 
-const DatePickerComponent: React.FC<IDatePickerProps> = ({
+const DatePickerComponent: React.FC<IDatePickerProps> = forwardRef(({
   onDateSelect,
   style,
   error,
   showTime = false,
   defaultValue
-}) => {
+}, ref) => {
   const [date, setDate] = useState<Date>(new Date());
   const [open, setOpen] = useState<boolean>(false);
+
+  React.useImperativeHandle(ref, () => ({
+    setDefaultValue
+  }));
 
   const errorBorderStyle = error ? styles.errorBorderColor : null;
 
@@ -30,6 +34,10 @@ const DatePickerComponent: React.FC<IDatePickerProps> = ({
       return formatDate3(date);
     }
     return formatDate(date);
+  }
+
+  const setDefaultValue = (value: Date) => {
+    setDate(value);
   }
 
   useEffect(() => {
@@ -69,6 +77,6 @@ const DatePickerComponent: React.FC<IDatePickerProps> = ({
       )}
     </>
   );
-};
+});
 
 export default DatePickerComponent;
