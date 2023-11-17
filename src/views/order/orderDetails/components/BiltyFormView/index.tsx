@@ -771,6 +771,8 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
     ) {
       const firstCompany = companiesData[0];
       id = firstCompany._id;
+    } else if(companiesData && companiesData.hasOwnProperty('_id')) {
+      id = companiesData._id;
     }
     return id;
   };

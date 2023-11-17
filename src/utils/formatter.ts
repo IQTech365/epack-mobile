@@ -75,3 +75,9 @@ export const getLocalities = (arr: any): string[] => {
       console.log('error----', error);
     }
   };
+
+  export const sortItemByDate = (a:any, b:any) => {
+    const date1:any = new Date(a)
+    const date2:any = new Date(b)
+    return date2 - date1;
+  }

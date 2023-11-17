@@ -9,7 +9,7 @@ import { IGetOrdersData } from '../../interface/order/IGetOrdersResponse';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {getOrdersRequest} from '../../redux/slices/OrderSlice';
 import {OrderStackRoute} from '../../utils/constants';
-import { formatDate } from '../../utils/formatter';
+import { formatDate, sortItemByDate } from '../../utils/formatter';
 import OrderListItem, {
   IOrderItem,
 } from './orderDetails/components/OrderListItem';
@@ -41,6 +41,8 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
     ) {
       const firstCompany = companiesData[0];
       id = firstCompany._id;
+    } else if(companiesData && companiesData.hasOwnProperty('_id')) {
+      id = companiesData._id;
     }
     return id;
   };
@@ -96,11 +98,12 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
           pickupAddress: getAddress('pick', el),
           deliveryAddress: getAddress('drop', el),
           orderData: formatDate(el.createdAt),
+          createdAt: el?.createdAt,
         }
         return item;
       })
     }
-    return dataSet;
+    return dataSet.sort((a, b) => sortItemByDate(a.orderData, b.orderData));
   }
 
   const handleAddNew = () => {

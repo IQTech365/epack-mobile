@@ -17,6 +17,7 @@ export interface IOrderItem {
   shiftingLuggage: string;
   phoneNumber: string;
   orderData: string;
+  createdAt: string;
 }
 
 interface IOrderListItemProps {

@@ -52,8 +52,6 @@ const SignInPageView = (props: any) => {
     }
     return id;
   }
-
-  console.log('companies------', JSON.stringify(companies));
   
   const onChangeMobileText = (text: string) => {
     setMobile(text);
@@ -102,7 +100,8 @@ const SignInPageView = (props: any) => {
       if(isStaffLogin) {
         setAuthToken(otpData?.data?.jwtToken);
         dispatch(restGetOtpRequest());
-        dispatch(getCompaniesRequest(getCompanyId()));
+        const uri = `companyId/${getCompanyId()}`;
+        dispatch(getCompaniesRequest(uri));
       } else {
         dispatch(restGetOtpRequest());
         navigation.navigate(AuthStackRoute.OTPInput);

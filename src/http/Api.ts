@@ -20,21 +20,32 @@ export class Api extends HttpClient {
 
   // ** POST **
   public post = async <T, R>(data: T, uri: string): Promise<R> => {
+    console.info('Method-', 'Post');
+    console.info('Uri-', uri);
+    console.info('Payload-', JSON.stringify(data));
     return this.instance.post<T, AxiosResponse<R>>(uri, data);
   }
 
   // ** GET **
   public get = async <R>(uri: string): Promise<R> => {
+    console.info('Method-', 'Get');
+    console.info('Uri-', uri);
     return this.instance.get<R>(uri);
   }
 
   // ** PATCH **
   public update = async <T, R>(data: T, uri: string): Promise<R> => {
+    console.info('Method-', 'Patch');
+    console.info('Uri-', uri);
+    console.info('Payload-', JSON.stringify(data));
     return this.instance.patch<T, AxiosResponse<R>>(uri, data);
   }
 
   // ** DELETE **
   public delete = async <T, R>(data: T, uri: string): Promise<R> => {
+    console.info('Method-', 'Delete');
+    console.info('Uri-', uri);
+    console.info('Payload-', JSON.stringify(data));
     return this.instance.delete<T, AxiosResponse<R>>(uri);
   }
 

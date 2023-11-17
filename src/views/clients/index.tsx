@@ -31,13 +31,11 @@ const ClientPageView: React.FC<IClientPageViewProps> = ({ navigation }) => {
     const { data: companiesData } = companies || {};
     if (data && Object.keys(data).length > 0) {
       id = data._id;
-    } else if (
-      companiesData &&
-      Array.isArray(companiesData) &&
-      companiesData.length > 0
-    ) {
+    } else if (companiesData && Array.isArray(companiesData) && companiesData.length > 0) {
       const firstCompany = companiesData[0];
       id = firstCompany._id;
+    } else if(companiesData && companiesData.hasOwnProperty('_id')) {
+      id = companiesData._id;
     }
     return id;
   };

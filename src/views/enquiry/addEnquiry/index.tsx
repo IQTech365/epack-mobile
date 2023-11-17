@@ -76,7 +76,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
   const dropStateDropdownRef = useRef(null);
   const dropCityDropdownRef = useRef(null);
 
-  console.log('AddEnquiry-addEnquiryInfo--', JSON.stringify(addEnquiryInfo));
+  // console.log('AddEnquiry-addEnquiryInfo--', JSON.stringify(addEnquiryInfo));
 
   const getCompanyId = () => {
     let id;
@@ -91,6 +91,8 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
     ) {
       const firstCompany = companiesData[0];
       id = firstCompany._id;
+    } else if(companiesData && companiesData.hasOwnProperty('_id')) {
+      id = companiesData._id;
     }
     return id;
   };
@@ -478,8 +480,6 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
       },
       status: 'NEW',
     };
-    console.log('AddEnquiry-payload--', JSON.stringify(payload));
-
     dispatch2(addEnquiryRequest(payload));
   }, [state]);
 
@@ -504,6 +504,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
             onChangeText={handleMobileNumInputTextChange}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
+            inputType='numeric'
             selectionColor={COLOR_BLACK}
           />
         </View>
@@ -683,6 +684,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
                 payload: tempObj as TBillingBy,
               });
             }}
+            inputType='numeric'
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}

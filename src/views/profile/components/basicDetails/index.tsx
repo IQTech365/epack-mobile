@@ -21,12 +21,13 @@ const BasicDetailsView: React.FC<IBasicDetailsViewProps> = ({}) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const {data: companiesData} = companies || {};
   const dispatch = useAppDispatch();
-  console.log('companiesData----', JSON.stringify(companiesData));
 
   const getFirstCompany = () => {
     let company:ICompanyInfoData | null  = null;
     if(companiesData && Array.isArray(companiesData) && companiesData.length > 0) {
       company = companiesData[0];
+    } else if(companiesData && companiesData.hasOwnProperty('authId')) {
+      company = companiesData;
     }
     return company;
   }
