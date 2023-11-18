@@ -74,72 +74,7 @@ import {QuotationStackParamList} from '../../../navigation/params/QuotationStack
 import {IGetQuotationData} from '../../../interface/quotation/IGetQuotationsResponse';
 import EpackDropdown from '../../../common/DropdownComponent2';
 import {ISingleQuotationData} from '../../../interface/quotation/IGetSingleQuotationResponse';
-const chargeOptions = [
-  'Included',
-  'Additional',
-  'Not Required',
-  'Loading by Party',
-  'Unloading by Party',
-];
-
-const GSTOptions: Array<ICheckboxButton> = [
-  {
-    id: '1',
-    text: 'With GST',
-    fillColor: COLOR_BLUE,
-    textStyle: {
-      fontFamily: 'JosefinSans-Regular',
-      textDecorationLine: 'none',
-      fontSize: 14,
-    },
-    iconStyle: {borderColor: 'red', width: 20, height: 20},
-    innerIconStyle: {borderWidth: 1, width: 20, height: 20},
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
-    style: {paddingRight: 16},
-  },
-  {
-    id: '2',
-    text: 'Without GST',
-    fillColor: COLOR_BLUE,
-    textStyle: {
-      fontFamily: 'JosefinSans-Regular',
-      textDecorationLine: 'none',
-      fontSize: 14,
-    },
-    iconStyle: {borderColor: 'red', width: 20, height: 20},
-    innerIconStyle: {borderWidth: 1, width: 20, height: 20},
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
-    style: {paddingRight: 16},
-  },
-  {
-    id: '3',
-    text: 'Exempted',
-    fillColor: COLOR_BLUE,
-    textStyle: {
-      fontFamily: 'JosefinSans-Regular',
-      textDecorationLine: 'none',
-      fontSize: 14,
-    },
-    iconStyle: {borderColor: 'red', width: 20, height: 20},
-    innerIconStyle: {borderWidth: 1, width: 20, height: 20},
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
-    style: {paddingRight: 16},
-  },
-  {
-    id: '4',
-    text: 'Extra',
-    fillColor: COLOR_BLUE,
-    textStyle: {
-      fontFamily: 'JosefinSans-Regular',
-      textDecorationLine: 'none',
-      fontSize: 14,
-    },
-    iconStyle: {borderColor: 'red', width: 20, height: 20},
-    innerIconStyle: {borderWidth: 1, width: 20, height: 20},
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
-    style: {marginTop: 16, marginBottom: 10},
-  },
-];
+import {GSTOptions, chargeOptions, discountTypeOptions} from '../utils/utils';
 
 const yesNoOptions: Array<ICheckboxButton> = [
   {
@@ -171,49 +106,6 @@ const yesNoOptions: Array<ICheckboxButton> = [
   },
 ];
 
-const discountTypeOptions: Array<ICheckboxButton> = [
-  {
-    id: '1',
-    text: 'Discount @%',
-    fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', width: 20, height: 20},
-    innerIconStyle: {borderWidth: 1, width: 20, height: 20},
-    textStyle: {
-      fontFamily: 'JosefinSans-Regular',
-      textDecorationLine: 'none',
-      fontSize: 14,
-    },
-    style: {paddingRight: 20},
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
-  },
-  {
-    id: '2',
-    text: 'Flat Discount',
-    fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', width: 20, height: 20},
-    innerIconStyle: {borderWidth: 1, width: 20, height: 20},
-    textStyle: {
-      fontFamily: 'JosefinSans-Regular',
-      textDecorationLine: 'none',
-      fontSize: 14,
-    },
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
-  },
-  {
-    id: '3',
-    text: 'Not Required',
-    fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', width: 20, height: 20},
-    innerIconStyle: {borderWidth: 1, width: 20, height: 20},
-    textStyle: {
-      fontFamily: 'JosefinSans-Regular',
-      textDecorationLine: 'none',
-      fontSize: 14,
-    },
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
-  },
-];
-
 interface Props
   extends NativeStackScreenProps<QuotationStackParamList, 'AddQuotation'> {
   showHeader?: boolean;
@@ -230,6 +122,8 @@ const AddQuotationView: React.FC<Props> = ({
 
   const [switchState, setSwitchState] = useState<boolean>(false);
   const [state, dispatch] = useReducer(quotationReducer, initialState);
+  console.log('QuotationReducer-State--', JSON.stringify(state));
+
   const [isPartLoad, setIsPartLoad] = useState<boolean>(true);
   const [isFullLoad, setIsFullLoad] = useState<boolean>(false);
   const [isSurchargeApplicable, setIsSurchargeApplicable] =
@@ -266,11 +160,22 @@ const AddQuotationView: React.FC<Props> = ({
   const [quotationserialNo, setQuotationserialNo] = useState<string>('');
 
   const surchargePercentDropdownRef = useRef(null);
+  const surchargeDropdownRef = useRef(null);
   const shiftingTypeDropdownRef = useRef(null);
   const billingByDropdwonRef = useRef(null);
   const shiftingLuggageDropdownRef = useRef(null);
+  const discountPercentDropdownRef = useRef(null);
   const dateOfQuotationCompRef = useRef(null);
   const dateOfMovingCompRef = useRef(null);
+  const gstPercentDropdownRef = useRef(null);
+  const gstTypeDropdownRef = useRef(null);
+  const insuranceTypeDropdownRef = useRef(null);
+  const insuranceChargePercentDropdownRef = useRef(null);
+  const insuranceGSTPercentDropdownRef = useRef(null);
+  const storageDurationDropdownRef = useRef(null);
+  const storageFromdateDropdownRef = useRef(null);
+  const storageTodateDropdownRef = useRef(null);
+  const loryTypeDropdownRef = useRef(null);
 
   const dispatch2 = useAppDispatch();
 
@@ -533,124 +438,77 @@ const AddQuotationView: React.FC<Props> = ({
     });
   };
 
-  const handlePackingChargeChange = (text: string, type: string) => {
+  const handlePackingChargeChange = (
+    partCharge: string = '0',
+    fullCharge: string = '0',
+  ) => {
     const {packingCharges: statePackageCharges} = state;
-    if (type === 'part') {
-      const tempObj = {
-        ...statePackageCharges,
-        status: packingCharges,
-        part_load_charge: text,
-      };
-      dispatch({
-        type: QUOTATION_FORM_ACTION.PACKING_CHARGES,
-        payload: tempObj as TCharge,
-      });
-    } else if (type === 'full') {
-      const tempObj = {
-        ...statePackageCharges,
-        status: packingCharges,
-        full_load_charge: text,
-      };
-      dispatch({
-        type: QUOTATION_FORM_ACTION.PACKING_CHARGES,
-        payload: tempObj as TCharge,
-      });
-    }
+    const tempObj = {
+      ...statePackageCharges,
+      status: packingCharges,
+      part_load_charge: partCharge,
+      full_load_charge: fullCharge,
+    };
+    dispatch({
+      type: QUOTATION_FORM_ACTION.PACKING_CHARGES,
+      payload: tempObj as TCharge,
+    });
   };
 
-  const handlePackingMaterialChargeChange = (text: string, type: string) => {
+  const handlePackingMaterialChargeChange = (
+    partCharge: string = '0',
+    fullCharge: string = '0',
+  ) => {
     const {packingMaterialCharges: statePackageMaterialCharges} = state;
-    if (type === 'part') {
-      const tempObj = {
-        ...statePackageMaterialCharges,
-        status: packingMaterialCharges,
-        part_load_charge: text,
-      };
-      dispatch({
-        type: QUOTATION_FORM_ACTION.PACKING_MATERIAL_CHARGES,
-        payload: tempObj as TCharge,
-      });
-    } else if (type === 'full') {
-      const tempObj = {
-        ...statePackageMaterialCharges,
-        status: packingMaterialCharges,
-        full_load_charge: text,
-      };
-      dispatch({
-        type: QUOTATION_FORM_ACTION.PACKING_MATERIAL_CHARGES,
-        payload: tempObj as TCharge,
-      });
-    }
+    const tempObj = {
+      ...statePackageMaterialCharges,
+      status: packingMaterialCharges,
+      part_load_charge: partCharge,
+      full_load_charge: fullCharge,
+    };
+    dispatch({
+      type: QUOTATION_FORM_ACTION.PACKING_MATERIAL_CHARGES,
+      payload: tempObj as TCharge,
+    });
   };
 
-  //handleLoadingCharges
-  const handleLoadingCharges = (text: string, type: string) => {
+  const handleLoadingCharges = (text1: string = '0', text2: string = '0') => {
     const {loadingCharges: mLoadingCharges} = state;
-    if (type === 'part') {
-      const tempObj = {
-        ...mLoadingCharges,
-        part_load_charge: text,
-      };
-      dispatch({
-        type: QUOTATION_FORM_ACTION.LOADING_CHARGES,
-        payload: tempObj as TCharge,
-      });
-    } else if (type === 'full') {
-      const tempObj = {
-        ...mLoadingCharges,
-        full_load_charge: text,
-      };
-      dispatch({
-        type: QUOTATION_FORM_ACTION.LOADING_CHARGES,
-        payload: tempObj as TCharge,
-      });
-    }
+    const tempObj = {
+      ...mLoadingCharges,
+      part_load_charge: text1,
+      full_load_charge: text2,
+    };
+    dispatch({
+      type: QUOTATION_FORM_ACTION.LOADING_CHARGES,
+      payload: tempObj as TCharge,
+    });
   };
 
-  const handleUnLoadingCharges = (text: string, type: string) => {
+  const handleUnLoadingCharges = (text1: string = '0', text2: string = '0') => {
     const {unLoadingCharges} = state;
-    if (type === 'part') {
-      const tempObj = {
-        ...unLoadingCharges,
-        part_load_charge: text,
-      };
-      dispatch({
-        type: QUOTATION_FORM_ACTION.UNLOADING_CHARGES,
-        payload: tempObj as TCharge,
-      });
-    } else if (type === 'full') {
-      const tempObj = {
-        ...unLoadingCharges,
-        full_load_charge: text,
-      };
-      dispatch({
-        type: QUOTATION_FORM_ACTION.UNLOADING_CHARGES,
-        payload: tempObj as TCharge,
-      });
-    }
+    const tempObj = {
+      ...unLoadingCharges,
+      part_load_charge: text1,
+      full_load_charge: text2,
+    };
+    dispatch({
+      type: QUOTATION_FORM_ACTION.UNLOADING_CHARGES,
+      payload: tempObj as TCharge,
+    });
   };
 
-  const handleUnPackingCharges = (text: string, type: string) => {
+  const handleUnPackingCharges = (text1: string = '0', text2: string = '0') => {
     const {unPackingCharges: mUnpackingCharges} = state;
-    if (type === 'part') {
-      const tempObj = {
-        ...mUnpackingCharges,
-        part_load_charge: text,
-      };
-      dispatch({
-        type: QUOTATION_FORM_ACTION.UNPACKING_CHARGES,
-        payload: tempObj as TCharge,
-      });
-    } else if (type === 'full') {
-      const tempObj = {
-        ...mUnpackingCharges,
-        full_load_charge: text,
-      };
-      dispatch({
-        type: QUOTATION_FORM_ACTION.UNPACKING_CHARGES,
-        payload: tempObj as TCharge,
-      });
-    }
+    const tempObj = {
+      ...mUnpackingCharges,
+      part_load_charge: text1,
+      full_load_charge: text2,
+    };
+    dispatch({
+      type: QUOTATION_FORM_ACTION.UNPACKING_CHARGES,
+      payload: tempObj as TCharge,
+    });
   };
 
   const handleAdvanceAmountInputTextChange = (text: string) => {
@@ -702,7 +560,15 @@ const AddQuotationView: React.FC<Props> = ({
     const {data: singleQuotationData} = quotation || {};
     if (enquiries.length > 0) {
       const enquiry = enquiries[0];
-      const {shiftingDate, shiftingType, billingBy, partyName, mobile, pickupAddress} = enquiry;
+      const {
+        shiftingDate,
+        shiftingType,
+        billingBy,
+        partyName,
+        mobile,
+        pickupAddress,
+        dropAddress,
+      } = enquiry;
       handlePartyNameInputTextChange(partyName);
       handleMobileNumberInputTextChange(mobile);
       const {pincode} = pickupAddress || {};
@@ -710,8 +576,12 @@ const AddQuotationView: React.FC<Props> = ({
         type: QUOTATION_FORM_ACTION.PICKUP_PINCODE,
         payload: pincode,
       });
+      dispatch({
+        type: QUOTATION_FORM_ACTION.DELIVERY_PINCODE,
+        payload: dropAddress.pincode,
+      });
       //@ts-ignore
-      dateOfMovingCompRef?.current?.setDefaultValue(new Date(shiftingDate))
+      dateOfMovingCompRef?.current?.setDefaultValue(new Date(shiftingDate));
       const billingByItemIndex = billingByOptions.findIndex(
         e => e.label.toLowerCase() == billingBy.toLowerCase(),
       );
@@ -731,16 +601,27 @@ const AddQuotationView: React.FC<Props> = ({
         );
       }
     }
-    const {shiftingLuggage, quotationNumber, quotationData, quotationfreights} = singleQuotationData as ISingleQuotationData;
+    const {
+      shiftingLuggage,
+      quotationNumber,
+      quotationData,
+      quotationfreights,
+      advanceAmount,
+    } = singleQuotationData as ISingleQuotationData || {};
     setQuotationserialNo(quotationNumber);
-
-    if(quotationfreights && Array.isArray(quotationfreights) && quotationfreights.length > 0) {
+    handleAdvanceAmountInputTextChange(advanceAmount);
+    if (
+      quotationfreights &&
+      Array.isArray(quotationfreights) &&
+      quotationfreights.length > 0
+    ) {
       const firstQuotationItem = quotationfreights[0];
       const {
         isPartLoad,
         isFullLoad,
         partLoadCharge,
         fullLoadCharge,
+        lorryType,
 
         packagingChargesStatus,
         packagingPartLoadCharges,
@@ -770,21 +651,254 @@ const AddQuotationView: React.FC<Props> = ({
 
         transitInsurance,
         storageCharges,
-        
+
+        gstType,
+        gstStatus,
+        gstPercentage,
+
         otherDetail1,
         otherDetail2,
       } = firstQuotationItem || {};
 
-      const {isRequired, transitType, charges} = transitInsurance || {};
-      if(charges && Array.isArray(charges) && charges.length > 0) {
-        const firstItem = charges[0];
-        const {luggageType, insurancePerc, gst, value} = firstItem || {};
-        // TODO: set insurance fileds in this block
+      dispatch({
+        type: QUOTATION_FORM_ACTION.LORRY_TYPE,
+        payload: lorryType,
+      });
+
+      const loryTypeItemIndex = loaryTypeOptions.findIndex(e => e.label.toLowerCase() == lorryType.toLowerCase(),);
+      if(loryTypeItemIndex != -1) {
+        //@ts-ignore
+        gstPercentDropdownRef?.current?.setDefaultValue(
+          loaryTypeOptions[loryTypeItemIndex],
+        );
       }
 
-      const {isRequired: isReq, storageChargesType, amount} = storageCharges || {};
+      const {otherDetails} = state;
+      const tempObj10 = {
+        ...otherDetails,
+        items_got_down_from_balcony: otherDetail1,
+        any_needs_or_concern: otherDetail2,
+      };
+      dispatch({
+        type: QUOTATION_FORM_ACTION.OTHER_DETAILS,
+        payload: tempObj10 as TOtherDetails,
+      });
 
-      // =========== ++++++ Part Load data setup +++++ =========
+      handleDiscountType(discountType);
+      handleQuotationFlatDiscountInputTextChange(discountAmount);
+      const {discountInQuotation} = state;
+      const tempObj6 = {
+        ...discountInQuotation,
+        discount_type: discountType,
+      };
+      dispatch({
+        type: QUOTATION_FORM_ACTION.DISCOUNT_IN_QUOTATION,
+        payload: tempObj6 as TDiscountInQuotation,
+      });
+
+      if (surchargeIsRequired == 'Applicable') {
+        setIsSurchargeApplicable(true);
+      }
+
+      const tempObj7 = {
+        ...discountInQuotation,
+        discount_value: discountAmount,
+      };
+      dispatch({
+        type: QUOTATION_FORM_ACTION.DISCOUNT_IN_QUOTATION,
+        payload: tempObj7 as TDiscountInQuotation,
+      });
+
+      const discountPercentItemIndex = discountPercentOptions.findIndex(
+        e => e.label.toLowerCase() == discountAmount.toLowerCase(),
+      );
+      if (discountPercentItemIndex != -1) {
+        //@ts-ignore
+        discountPercentDropdownRef?.current?.setDefaultValue(
+          discountPercentOptions[discountPercentItemIndex],
+        );
+      }
+
+      setGstInQuotation(gstStatus);
+      const {gstInQuotation} = state;
+      const tempObj8 = {
+        ...gstInQuotation,
+        status: gstStatus,
+      };
+      dispatch({
+        type: QUOTATION_FORM_ACTION.GST_IN_QUOTATION,
+        payload: tempObj8 as TGstInQuotation,
+      });
+
+      const gstPercentItemIndex = gstPercentOptions.findIndex(e => e.label.toLowerCase() == gstPercentage.toLowerCase(),);
+      if(gstPercentItemIndex != -1) {
+        //@ts-ignore
+        gstPercentDropdownRef?.current?.setDefaultValue(
+          gstPercentOptions[gstPercentItemIndex],
+        );
+      }
+
+      const gstTypeItemIndex = gstTypeOptions.findIndex(e => e.label.toLowerCase() == gstType.toLowerCase(),);
+      if(gstTypeItemIndex != -1) {
+        //@ts-ignore
+        gstTypeDropdownRef?.current?.setDefaultValue(
+          gstTypeOptions[gstTypeItemIndex],
+        );
+      }
+
+      const itmIndex = surchargeOptions.findIndex(
+        e => e.label.toLowerCase() == surchargeIsRequired.toLowerCase(),
+      );
+      if (itmIndex != -1) {
+        //@ts-ignore
+        surchargeDropdownRef?.current?.setDefaultValue(
+          surchargeOptions[itmIndex],
+        );
+      }
+
+      const surchargeItemIndex = surchargePercentOptions.findIndex(
+        e => e.label.toLowerCase() == surchargeCharges.toLowerCase(),
+      );
+      if (surchargeItemIndex != -1) {
+        //@ts-ignore
+        surchargePercentDropdownRef?.current?.setDefaultValue(
+          surchargePercentOptions[surchargeItemIndex],
+        );
+      }
+
+      const {isRequired, transitType, charges} = transitInsurance || {};
+      if (charges && Array.isArray(charges) && charges.length > 0) {
+        const firstItem = charges[0];
+        const {luggageType, insurancePerc, gst, value} = firstItem || {};
+        setIsInsuranceRequired(isRequired == 'required');
+        const {insuranceDetails} = state;
+        const tempObj = {
+          ...insuranceDetails,
+          status: isRequired,
+        };
+        dispatch({
+          type: QUOTATION_FORM_ACTION.INSURANCE_DETAILS,
+          payload: tempObj as TInsuranceDetails,
+        });
+        const insuranceTypeItemIndex = insuranceTypeOptions.findIndex(e => e.label.toLowerCase() == transitType.toLowerCase(),);
+        if(insuranceTypeItemIndex != -1) {
+          //@ts-ignore
+          insuranceTypeDropdownRef?.current?.setDefaultValue(
+            insuranceTypeOptions[insuranceTypeItemIndex],
+          );
+        }
+
+        const insurancePercentItemIndex = insurancePercentOptions.findIndex(e => e.label.toLowerCase() == insurancePerc.toLowerCase(),);
+        if(insurancePercentItemIndex != -1) {
+          //@ts-ignore
+          insuranceChargePercentDropdownRef?.current?.setDefaultValue(
+            insurancePercentOptions[insurancePercentItemIndex],
+          );
+        }
+
+        const insuranceGSTPercentItemIndex = gstPercentOptions.findIndex(e => e.label.toLowerCase() == gst.toLowerCase(),);
+        if(insuranceGSTPercentItemIndex != -1) {
+          //@ts-ignore
+          insuranceGSTPercentDropdownRef?.current?.setDefaultValue(
+            gstPercentOptions[insuranceGSTPercentItemIndex],
+          );
+        }
+        handleInsuranceGoodsValueInputTextChange(value);
+      }
+
+      const {
+        isRequired: isReq,
+        storageChargesType,
+        amount,
+      } = storageCharges || {};
+      setIsStorageRequired(isReq == 'required');
+      const {storageCharges: localStorageCharges} = state;
+      const tempObj9 = {
+        ...localStorageCharges,
+        status: isReq == 'required' ? 'Required' : 'Not Required',
+        storage_duration_type: storageChargesType,
+        storage_from_date: '',
+        storage_to_date: '',
+        storage_amount: amount,
+      };
+      dispatch({
+        type: QUOTATION_FORM_ACTION.STORAGE_CHARGES,
+        payload: tempObj9 as TStorageCharge,
+      });
+
+      const storageChargeTypeItemIndex = storageDurationOptions.findIndex(e => e.label.toLowerCase() == storageChargesType.toLowerCase(),);
+      if(storageChargeTypeItemIndex != -1) {
+        //@ts-ignore
+        storageDurationDropdownRef?.current?.setDefaultValue(
+          storageDurationOptions[storageChargeTypeItemIndex],
+        );
+      }
+      // handleStorageAmountInputTextChange(amount);
+
+      setPackingMaterialCharges(packingMaterialChargesStatus);
+      const {packingMaterialCharges: statePackageMaterialCharges} = state;
+      const tempObj2 = {
+        ...statePackageMaterialCharges,
+        status: packingMaterialChargesStatus,
+        part_load_charge: '0',
+        full_load_charge: '0',
+      };
+      dispatch({
+        type: QUOTATION_FORM_ACTION.PACKING_MATERIAL_CHARGES,
+        payload: tempObj2 as TCharge,
+      });
+      handlePackingMaterialChargeChange(
+        packingMaterialPartLoadCharges,
+        packingMaterialFullLoadCharges,
+      );
+
+      setLoadingCharges(loadingChargesStatus);
+      const {loadingCharges: mLoadingCharges} = state;
+      const tempObj3 = {
+        ...mLoadingCharges,
+        status: loadingChargesStatus,
+      };
+      dispatch({
+        type: QUOTATION_FORM_ACTION.LOADING_CHARGES,
+        payload: tempObj3 as TCharge,
+      });
+      handleLoadingCharges(loadingPartLoadCharges, loadingFullLoadCharges);
+
+      setUnloadingCharges(unLoadingChargesStatus);
+      const {unLoadingCharges} = state;
+      const tempObj4 = {
+        ...unLoadingCharges,
+        status: unLoadingChargesStatus,
+      };
+      dispatch({
+        type: QUOTATION_FORM_ACTION.UNLOADING_CHARGES,
+        payload: tempObj4 as TCharge,
+      });
+      handleUnLoadingCharges(
+        unLoadingPartLoadCharges,
+        unLoadingFullLoadCharges,
+      );
+
+      setUnpackingCharges(unPackagingChargesStatus);
+      const {unPackingCharges: mUnpackingCharges} = state;
+      const tempObj5 = {
+        ...mUnpackingCharges,
+        status: unPackagingChargesStatus,
+      };
+      dispatch({
+        type: QUOTATION_FORM_ACTION.UNPACKING_CHARGES,
+        payload: tempObj5 as TCharge,
+      });
+      handleUnPackingCharges(
+        unPackagingPartLoadCharges,
+        unPackagingFullLoadCharges,
+      );
+
+      dispatch({
+        type: QUOTATION_FORM_ACTION.OTHER_CHARGES,
+        payload: otherCharges as unknown as [TOtherCharges],
+      });
+
       setIsPartLoad(isPartLoad == 'true');
       handleFreightPartChargeTextChange(partLoadCharge);
       dispatch({
@@ -803,13 +917,11 @@ const AddQuotationView: React.FC<Props> = ({
         type: QUOTATION_FORM_ACTION.PACKING_CHARGES,
         payload: tempObj as TCharge,
       });
-      console.log('packagingPartLoadCharges--', packagingPartLoadCharges);
-      console.log('packagingFullLoadCharges--', packagingFullLoadCharges);
+      handlePackingChargeChange(
+        packagingPartLoadCharges,
+        packagingFullLoadCharges,
+      );
 
-      handlePackingChargeChange(packagingPartLoadCharges, 'part');
-      handlePackingChargeChange(packagingFullLoadCharges, 'full');
-
-      // =========== ++++++ Full Load data setup +++++ =========
       setIsFullLoad(isFullLoad == 'true');
       dispatch({
         type: QUOTATION_FORM_ACTION.FULL_LOAD,
@@ -819,7 +931,7 @@ const AddQuotationView: React.FC<Props> = ({
     }
 
     //@ts-ignore
-    dateOfQuotationCompRef?.current?.setDefaultValue(new Date(quotationData))
+    dateOfQuotationCompRef?.current?.setDefaultValue(new Date(quotationData));
     const itmIndex = shiftingLuggages.findIndex(
       e => e.label.toLowerCase() == shiftingLuggage.toLowerCase(),
     );
@@ -1049,8 +1161,8 @@ const AddQuotationView: React.FC<Props> = ({
   };
 
   const handleDiscountType = useCallback(
-    (item: ICheckboxButton) => {
-      setDiscountType(item.id as string);
+    (item: string) => {
+      setDiscountType(item);
     },
     [discountType],
   );
@@ -1065,6 +1177,8 @@ const AddQuotationView: React.FC<Props> = ({
             <DropdownComponent
               data={loaryTypeOptions}
               onSelect={handleLorryType}
+              //@ts-ignore
+              ref={loryTypeDropdownRef}
             />
           </View>
         </>
@@ -1098,7 +1212,7 @@ const AddQuotationView: React.FC<Props> = ({
   };
 
   const renderDiscountTypeView = () => {
-    if (discountType === '1') {
+    if (discountType === 'Discount @%') {
       return (
         <>
           <Spacer height={12} />
@@ -1106,11 +1220,13 @@ const AddQuotationView: React.FC<Props> = ({
             <DropdownComponent
               data={discountPercentOptions}
               onSelect={handleQuotationDiscountPercent}
+              //@ts-ignore
+              ref={discountPercentDropdownRef}
             />
           </View>
         </>
       );
-    } else if (discountType === '2') {
+    } else if (discountType === 'Flat Discount') {
       return (
         <>
           <Spacer height={12} />
@@ -1122,6 +1238,7 @@ const AddQuotationView: React.FC<Props> = ({
               selectionColor={COLOR_BLACK}
               inputType="numeric"
               placeholder="Enter discount amount"
+              value={state?.discountInQuotation?.discount_value}
             />
           </View>
         </>
@@ -1507,8 +1624,8 @@ const AddQuotationView: React.FC<Props> = ({
       closeBody: true,
       lorryType: state?.lorryType as string,
       freightChargesStatus: 'NOT_REQUIRED',
-      partLoadCharge: '',
-      fullLoadCharge: '',
+      partLoadCharge: state.freightPartCharge,
+      fullLoadCharge: state.freightFullCharge,
       packagingChargesStatus: state?.packingCharges?.status as string,
       packagingPartLoadCharges: state?.packingCharges
         ?.part_load_charge as string,
@@ -1563,7 +1680,8 @@ const AddQuotationView: React.FC<Props> = ({
         employeeMobile: state?.billingBy?.billing_info
           ?.employee_mobile_number as string,
       },
-      otherDetails: state?.otherDetails?.any_needs_or_concern as string,
+      otherDetail1: state.otherDetails?.items_got_down_from_balcony as string,
+      otherDetail2: state.otherDetails?.any_needs_or_concern as string,
     };
     console.log(
       'add-quotation-payload----',
@@ -1737,6 +1855,7 @@ const AddQuotationView: React.FC<Props> = ({
                     containerStyle={styles.inputContainer}
                     inputStyle={styles.input}
                     selectionColor={COLOR_BLACK}
+                    value={state.deliveryPincode}
                   />
                 </View>
                 <View style={styles.textContainer}>
@@ -1824,6 +1943,7 @@ const AddQuotationView: React.FC<Props> = ({
                       payload: isChecked,
                     });
                   }}
+                  disableBuiltInState={true}
                 />
                 <BouncyCheckbox
                   size={25}
@@ -1857,6 +1977,7 @@ const AddQuotationView: React.FC<Props> = ({
                       payload: isChecked,
                     });
                   }}
+                  disableBuiltInState={true}
                 />
               </View>
               {renderLoryTypeView()}
@@ -1939,7 +2060,7 @@ const AddQuotationView: React.FC<Props> = ({
                       <Label text="Part Load" style={styles.label} />
                       <Input
                         onChangeText={(text: string) => {
-                          handlePackingChargeChange(text, 'part');
+                          handlePackingChargeChange(text, '0');
                         }}
                         containerStyle={styles.inputContainer}
                         inputStyle={styles.input}
@@ -1955,7 +2076,7 @@ const AddQuotationView: React.FC<Props> = ({
                       <Label text="Full Load" style={styles.label} />
                       <Input
                         onChangeText={(text: string) => {
-                          handlePackingChargeChange(text, 'full');
+                          handlePackingChargeChange('0', text);
                         }}
                         containerStyle={styles.inputContainer}
                         inputStyle={styles.input}
@@ -2019,12 +2140,13 @@ const AddQuotationView: React.FC<Props> = ({
                       <Label text="Part Load" style={styles.label} />
                       <Input
                         onChangeText={(text: string) => {
-                          handlePackingMaterialChargeChange(text, 'part');
+                          handlePackingMaterialChargeChange(text, '0');
                         }}
                         containerStyle={styles.inputContainer}
                         inputStyle={styles.input}
                         selectionColor={COLOR_BLACK}
                         inputType="numeric"
+                        value={state?.packingMaterialCharges?.part_load_charge}
                       />
                     </View>
                   )}
@@ -2034,12 +2156,13 @@ const AddQuotationView: React.FC<Props> = ({
                       <Label text="Full Load" style={styles.label} />
                       <Input
                         onChangeText={(text: string) => {
-                          handlePackingMaterialChargeChange(text, 'full');
+                          handlePackingMaterialChargeChange('0', text);
                         }}
                         containerStyle={styles.inputContainer}
                         inputStyle={styles.input}
                         selectionColor={COLOR_BLACK}
                         inputType="numeric"
+                        value={state?.packingMaterialCharges?.full_load_charge}
                       />
                     </View>
                   )}
@@ -2098,12 +2221,13 @@ const AddQuotationView: React.FC<Props> = ({
                           <Label text="Part Load" style={styles.label} />
                           <Input
                             onChangeText={(text: string) => {
-                              handleLoadingCharges(text, 'part');
+                              handleLoadingCharges(text, '0');
                             }}
                             containerStyle={styles.inputContainer}
                             inputStyle={styles.input}
                             selectionColor={COLOR_BLACK}
                             inputType="numeric"
+                            value={state?.loadingCharges?.part_load_charge}
                           />
                         </View>
                       )}
@@ -2116,12 +2240,13 @@ const AddQuotationView: React.FC<Props> = ({
                           <Label text="Full Load" style={styles.label} />
                           <Input
                             onChangeText={(text: string) => {
-                              handleLoadingCharges(text, 'full');
+                              handleLoadingCharges('0', text);
                             }}
                             containerStyle={styles.inputContainer}
                             inputStyle={styles.input}
                             selectionColor={COLOR_BLACK}
                             inputType="numeric"
+                            value={state?.loadingCharges?.full_load_charge}
                           />
                         </View>
                       )}
@@ -2184,12 +2309,13 @@ const AddQuotationView: React.FC<Props> = ({
                           <Label text="Part Load" style={styles.label} />
                           <Input
                             onChangeText={(text: string) => {
-                              handleUnLoadingCharges(text, 'part');
+                              handleUnLoadingCharges(text, '0');
                             }}
                             containerStyle={styles.inputContainer}
                             inputStyle={styles.input}
                             selectionColor={COLOR_BLACK}
                             inputType="numeric"
+                            value={state?.unLoadingCharges?.part_load_charge}
                           />
                         </View>
                       )}
@@ -2202,12 +2328,13 @@ const AddQuotationView: React.FC<Props> = ({
                           <Label text="Full Load" style={styles.label} />
                           <Input
                             onChangeText={(text: string) => {
-                              handleUnLoadingCharges(text, 'full');
+                              handleUnLoadingCharges('0', text);
                             }}
                             containerStyle={styles.inputContainer}
                             inputStyle={styles.input}
                             selectionColor={COLOR_BLACK}
                             inputType="numeric"
+                            value={state?.unLoadingCharges?.full_load_charge}
                           />
                         </View>
                       )}
@@ -2263,12 +2390,13 @@ const AddQuotationView: React.FC<Props> = ({
                       <Label text="Part Load" style={styles.label} />
                       <Input
                         onChangeText={(text: string) => {
-                          handleUnPackingCharges(text, 'part');
+                          handleUnPackingCharges(text, '0');
                         }}
                         containerStyle={styles.inputContainer}
                         inputStyle={styles.input}
                         selectionColor={COLOR_BLACK}
                         inputType="numeric"
+                        value={state?.unPackingCharges?.part_load_charge}
                       />
                     </View>
                   )}
@@ -2278,12 +2406,13 @@ const AddQuotationView: React.FC<Props> = ({
                       <Label text="Full Load" style={styles.label} />
                       <Input
                         onChangeText={(text: string) => {
-                          handleUnPackingCharges(text, 'full');
+                          handleUnPackingCharges('0', text);
                         }}
                         containerStyle={styles.inputContainer}
                         inputStyle={styles.input}
                         selectionColor={COLOR_BLACK}
                         inputType="numeric"
+                        value={state?.unPackingCharges?.full_load_charge}
                       />
                     </View>
                   )}
@@ -2402,6 +2531,7 @@ const AddQuotationView: React.FC<Props> = ({
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
                   inputType="numeric"
+                  value={state?.advanceAmount}
                 />
               </View>
               <View style={styles.labelContainer}>
@@ -2413,6 +2543,8 @@ const AddQuotationView: React.FC<Props> = ({
                   <DropdownComponent
                     data={surchargeOptions}
                     onSelect={handleSurcharge}
+                    //@ts-ignore
+                    ref={surchargeDropdownRef}
                   />
                 </View>
                 <View style={styles.textContainer}>
@@ -2429,22 +2561,41 @@ const AddQuotationView: React.FC<Props> = ({
               <View style={styles.labelContainer}>
                 <Label text="Discount in Quotation" style={styles.label} />
               </View>
-              <View style={styles.textContainer2}>
-                <BouncyCheckboxGroup
-                  data={discountTypeOptions}
-                  onChange={(selectedItem: ICheckboxButton) => {
-                    handleDiscountType(selectedItem);
-                    const {discountInQuotation} = state;
-                    const tempObj = {
-                      ...discountInQuotation,
-                      discount_type: selectedItem.text,
-                    };
-                    dispatch({
-                      type: QUOTATION_FORM_ACTION.DISCOUNT_IN_QUOTATION,
-                      payload: tempObj as TDiscountInQuotation,
-                    });
-                  }}
-                />
+              <View style={styles.checkboxContainer}>
+                {discountTypeOptions.map((option, index) => {
+                  return (
+                    <BouncyCheckbox
+                      key={`${index}`}
+                      size={20}
+                      fillColor={COLOR_BLUE}
+                      unfillColor="#FFFFFF"
+                      text={option}
+                      iconStyle={{borderColor: 'red'}}
+                      innerIconStyle={{borderWidth: 1}}
+                      onPress={(isChecked: boolean) => {
+                        handleDiscountType(option);
+                        const {discountInQuotation} = state;
+                        const tempObj = {
+                          ...discountInQuotation,
+                          discount_type: option,
+                        };
+                        dispatch({
+                          type: QUOTATION_FORM_ACTION.DISCOUNT_IN_QUOTATION,
+                          payload: tempObj as TDiscountInQuotation,
+                        });
+                      }}
+                      textStyle={{
+                        fontFamily: 'JosefinSans-Regular',
+                        textDecorationLine: 'none',
+                        fontSize: 14,
+                      }}
+                      style={{paddingRight: 8, paddingVertical: 10}}
+                      textContainerStyle={{marginLeft: 4, marginRight: 4}}
+                      isChecked={option == discountType}
+                      disableBuiltInState={true}
+                    />
+                  );
+                })}
               </View>
               {renderDiscountTypeView()}
               <Spacer height={4} />
@@ -2452,26 +2603,44 @@ const AddQuotationView: React.FC<Props> = ({
                 <Label text="GST IN QUOTATION" style={styles.label} />
               </View>
               <View style={styles.textContainer3}>
-                <View style={styles.textContainer2}>
-                  <BouncyCheckboxGroup
-                    data={GSTOptions}
-                    onChange={(selectedItem: ICheckboxButton) => {
-                      setGstInQuotation(selectedItem.id as string);
-                      const {gstInQuotation} = state;
-                      const tempObj = {
-                        ...gstInQuotation,
-                        status: selectedItem.text,
-                      };
-                      dispatch({
-                        type: QUOTATION_FORM_ACTION.GST_IN_QUOTATION,
-                        payload: tempObj as TGstInQuotation,
-                      });
-                    }}
-                    style={{flexDirection: 'row', flexWrap: 'wrap'}}
-                  />
+                <View style={styles.checkboxContainer}>
+                  {GSTOptions.map((option, index) => {
+                    return (
+                      <BouncyCheckbox
+                        key={`${index}`}
+                        size={20}
+                        fillColor={COLOR_BLUE}
+                        unfillColor="#FFFFFF"
+                        text={option}
+                        iconStyle={{borderColor: 'red'}}
+                        innerIconStyle={{borderWidth: 1}}
+                        onPress={(isChecked: boolean) => {
+                          setGstInQuotation(option);
+                          const {gstInQuotation} = state;
+                          const tempObj = {
+                            ...gstInQuotation,
+                            status: option,
+                          };
+                          dispatch({
+                            type: QUOTATION_FORM_ACTION.GST_IN_QUOTATION,
+                            payload: tempObj as TGstInQuotation,
+                          });
+                        }}
+                        textStyle={{
+                          fontFamily: 'JosefinSans-Regular',
+                          textDecorationLine: 'none',
+                          fontSize: 14,
+                        }}
+                        style={{paddingRight: 8, paddingVertical: 10}}
+                        textContainerStyle={{marginLeft: 4, marginRight: 4}}
+                        isChecked={option == gstInQuotation}
+                        disableBuiltInState={true}
+                      />
+                    );
+                  })}
                 </View>
               </View>
-              {gstInQuotation === '1' && (
+              {gstInQuotation === 'With GST' && (
                 <>
                   <View style={styles.mainWrapper}>
                     <View style={styles.textContainer}>
@@ -2479,6 +2648,8 @@ const AddQuotationView: React.FC<Props> = ({
                       <DropdownComponent
                         data={gstPercentOptions}
                         onSelect={handleQuotationGstPercent}
+                        //@ts-ignore
+                        ref={gstPercentDropdownRef}
                       />
                     </View>
                     <View style={styles.textContainer}>
@@ -2486,6 +2657,8 @@ const AddQuotationView: React.FC<Props> = ({
                       <DropdownComponent
                         data={gstTypeOptions}
                         onSelect={handleQuotationGstType}
+                        //@ts-ignore
+                        ref={gstTypeDropdownRef}
                       />
                     </View>
                   </View>
@@ -2585,6 +2758,8 @@ const AddQuotationView: React.FC<Props> = ({
                     <DropdownComponent
                       data={insuranceTypeOptions}
                       onSelect={handleInsuranceType}
+                      //@ts-ignore
+                      ref={insuranceTypeDropdownRef}
                     />
                   </View>
                   <Spacer height={4} />
@@ -2594,6 +2769,8 @@ const AddQuotationView: React.FC<Props> = ({
                       <DropdownComponent
                         data={insurancePercentOptions}
                         onSelect={handleInsuranceCharge}
+                        //@ts-ignore
+                        ref={insuranceChargePercentDropdownRef}
                       />
                     </View>
                     <View style={styles.textContainer}>
@@ -2601,6 +2778,8 @@ const AddQuotationView: React.FC<Props> = ({
                       <DropdownComponent
                         data={gstPercentOptions}
                         onSelect={handleInsuranceGSTPercent}
+                        //@ts-ignore
+                        ref={insuranceGSTPercentDropdownRef}
                       />
                     </View>
                   </View>
@@ -2616,6 +2795,7 @@ const AddQuotationView: React.FC<Props> = ({
                         inputStyle={styles.input}
                         selectionColor={COLOR_BLACK}
                         inputType="numeric"
+                        value={state?.insuranceDetails?.insurance_goods_value}
                       />
                     </View>
                   </View>
@@ -2705,6 +2885,8 @@ const AddQuotationView: React.FC<Props> = ({
                           payload: tempObj as TStorageCharge,
                         });
                       }}
+                      //@ts-ignore
+                      ref={storageDurationDropdownRef}
                     />
                   </View>
                   {state.storageCharges?.storage_duration_type ==
@@ -2714,12 +2896,16 @@ const AddQuotationView: React.FC<Props> = ({
                         <Label text="From Date" style={styles.label} />
                         <DatePickerComponent
                           onDateSelect={handleStorageFromDate}
+                          //@ts-ignore
+                          ref={storageFromdateDropdownRef}
                         />
                       </View>
                       <View style={styles.textContainer}>
                         <Label text="To Date" style={styles.label} />
                         <DatePickerComponent
                           onDateSelect={handleStorageToDate}
+                          //@ts-ignore
+                          ref={storageTodateDropdownRef}
                         />
                       </View>
                     </View>
@@ -2735,6 +2921,7 @@ const AddQuotationView: React.FC<Props> = ({
                       inputStyle={styles.input}
                       selectionColor={COLOR_BLACK}
                       inputType="numeric"
+                      value={state?.storageCharges?.storage_amount}
                     />
                   </View>
                 </>
@@ -2792,6 +2979,7 @@ const AddQuotationView: React.FC<Props> = ({
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
+                  value={state.otherDetails?.items_got_down_from_balcony}
                 />
               </View>
               <Spacer height={4} />
@@ -2841,6 +3029,7 @@ const AddQuotationView: React.FC<Props> = ({
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
+                  value={state.otherDetails?.any_needs_or_concern}
                 />
               </View>
             </View>

@@ -1,3 +1,5 @@
+import { TOtherCharges } from "../../views/quotation/addQuotation/quotationReducer";
+
 interface ICharge {
   luggageType: string;
   insurancePerc: string;
@@ -61,7 +63,7 @@ export interface IQuotationFreight {
   discountAmount: string;
   transitInsurance: ITransitInsurance;
   storageCharges: IStorage;
-  otherCharges: IOtherCharge;
+  otherCharges: TOtherCharges;
   otherDetail1: string;
   otherDetail2: string;
   isActive: boolean;

@@ -69,6 +69,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
         <ShifingDetailForm
           moduleName={MODULE_NAME.ENQUIRY}
           item={item as IGetEnquiriesData}
+          enquiryId={enquiryId}
         />
       );
     } else if (editContactDetail) {

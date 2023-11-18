@@ -112,5 +112,6 @@ export interface IAddQuotationRequest {
     employeeDesignation: string;
     employeeMobile: string;
   };
-  otherDetails: string;
+  otherDetail1: string;
+  otherDetail2: string;
 }
