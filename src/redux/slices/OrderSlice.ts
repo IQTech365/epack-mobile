@@ -423,7 +423,7 @@ export const {
   getOrdersRequest,
   getOrdersSuccess,
   getOrdersFailure,
-  // Get Approved Order List
+  // Get Approved Order Lists
   getApprovedOrdersRequest,
   getApprovedOrdersSuccess,
   getApprovedOrdersFailure,

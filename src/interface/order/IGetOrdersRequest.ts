@@ -1,5 +1,5 @@
 export interface IGetOrdersRequest {
-    authId: string;
+    authId?: string;
     companyId: string;
     status:string;
 }

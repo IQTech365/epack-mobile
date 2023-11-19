@@ -22,6 +22,8 @@ const ClientPageView: React.FC<IClientPageViewProps> = ({ navigation }) => {
   const { approvedOrders, getOrdersRequesting } =
     useAppSelector(state => state.Order);
   const { data: ordersArr } = approvedOrders || {};
+  console.log('ClientPageView--orders--', JSON.stringify(ordersArr));
+  
   const dispatch = useAppDispatch();
 
 
@@ -37,14 +39,16 @@ const ClientPageView: React.FC<IClientPageViewProps> = ({ navigation }) => {
     } else if(companiesData && companiesData.hasOwnProperty('_id')) {
       id = companiesData._id;
     }
+    console.log('company_id-', id);
+    
     return id;
   };
 
   const handleOnRefresh = useCallback(() => {
     let orderListReq: IGetOrdersRequest = {
-      authId: otpData?.data.id as string,
+      // authId: otpData?.data.id as string,
       companyId: getCompanyId(),
-      status: "APPROVED"
+      status: "COMPLETED"
     }
     dispatch(getApprovedOrdersRequest(orderListReq));
   }, []);
@@ -53,7 +57,7 @@ const ClientPageView: React.FC<IClientPageViewProps> = ({ navigation }) => {
     let orderListReq: IGetOrdersRequest = {
       authId: otpData?.data.id as string,
       companyId: getCompanyId(),
-      status: "APPROVED"
+      status: "COMPLETED"
     }
     dispatch(getApprovedOrdersRequest(orderListReq));
 
