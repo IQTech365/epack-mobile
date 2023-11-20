@@ -22,7 +22,7 @@ const PackingMaterialsView = () => {
 
     const handleLorryType = (item: TDropdownItem) => { };
 
-    const handleDecrementCount = event => {
+    const handleDecrementCount = (event:string) => {
         switch (event) {
             case 'Labour':
                 labourCount > 0 ? setLabourount(labourCount - 1) : null;
@@ -34,7 +34,7 @@ const PackingMaterialsView = () => {
         }
     };
 
-    const handleIncrementCount = event => {
+    const handleIncrementCount = (event:string) => {
         switch (event) {
             case 'Labour':
                 setLabourount(labourCount + 1);
@@ -45,13 +45,13 @@ const PackingMaterialsView = () => {
         }
     };
 
-    const incrementCount = index => {
+    const incrementCount = (index:number) => {
         const updatedItems = [...items];
         updatedItems[index].count += 1;
         setItems(updatedItems);
     };
 
-    const decrementCount = index => {
+    const decrementCount = (index:number) => {
         const updatedItems = [...items];
         if (updatedItems[index].count > 0) {
             updatedItems[index].count -= 1;
@@ -72,6 +72,7 @@ const PackingMaterialsView = () => {
 
     return (
         <AvoidSoftInputViewHOC>
+            <>
             <Spacer height={4} />
             <View style={styles.labelContainer}>
                 <Text style={styles.labelText}>Material List Form</Text>
@@ -470,6 +471,7 @@ const PackingMaterialsView = () => {
                 textStyle={styles.textStyle}
             />
             <Spacer height={12} />
+            </>
         </AvoidSoftInputViewHOC>
     );
 };

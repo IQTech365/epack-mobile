@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   },
   labelText: {
     color: COLOR_GRAY,
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '500',
   },
   textContainer2: {
@@ -70,15 +70,14 @@ counterContainer: {
     
   },
   touchableContainer: {
-    width: width * 0.07,
-    // paddingVertical: 9,
-    // paddingHorizontal: 19,
+    width: 30,
+    height: 30,
     borderRadius: 15,
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: COLOR_GRAY,
-    // alignItems: 'flex-start',
     justifyContent: 'center',
     alignSelf: 'center',
+    alignItems: 'center',
     
   },
   textStyle: {
@@ -102,7 +101,8 @@ counterContainer: {
 
   opratorTextStyle:{ 
     textAlign: 'center', 
-    fontWeight: '500' 
+    fontWeight: '500', 
+    fontSize: 22,
   },
   inputContainer: {
     width: '100%',
