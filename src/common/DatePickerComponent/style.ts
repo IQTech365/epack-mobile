@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     errorContainer: {
-        width: width * 0.9,
+        width: '100%',
         alignSelf: 'center',
         textAlign: 'left',
         marginTop: 5,

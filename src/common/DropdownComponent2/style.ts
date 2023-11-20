@@ -16,11 +16,12 @@ const styles = StyleSheet.create({
     right: 10,
   },
   container: {
-    position: 'relative',
+    // position: 'relative',
+    // backgroundColor: 'red'
   },
   optionsContainer: {
-    left: 0,
-    right: 0,
+    // left: 0,
+    // right: 0,
   },
   card: {
     backgroundColor: 'white',

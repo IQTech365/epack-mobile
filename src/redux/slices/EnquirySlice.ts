@@ -18,6 +18,7 @@ import { IUpdateShiftingInfoRequest, IUpdateShiftingInfoResponse } from '../../i
 import { IUpdateEnquiryStatusRequest } from '../../interface/enquiry/IUpdateEnquiryStatusRequest';
 import { IAddSurveyItemRequest } from '../../interface/enquiry/IAddSurveyItemRequest';
 import { IGetSurveyItemListResponse } from '../../interface/enquiry/IGetSurveyItemListResponse';
+import { ISingleEnquiryResponse } from '../../interface/enquiry/ISingleEnquiryResponse';
 
 interface IEnquiryState {
   // Get Enquiries
@@ -26,6 +27,12 @@ interface IEnquiryState {
   getEnquiriesSuccess: boolean;
   getEnquiriesFailure: boolean;
   getEnquiriesError: any;
+  // Get Enquiry
+  enquiry: ISingleEnquiryResponse | null;
+  getEnquiryRequesting: boolean;
+  getEnquirySuccess: boolean;
+  getEnquiryFailure: boolean;
+  getEnquiryError: any;
   // Add Enquiry
   addEnquiryInfo: IAddEnquiryResponse | null;
   addEnquiryRequesting: boolean;
@@ -113,6 +120,12 @@ const initialState: IEnquiryState = {
   getEnquiriesSuccess: false,
   getEnquiriesFailure: false,
   getEnquiriesError: null,
+  // Get Enquiry
+  enquiry: null,
+  getEnquiryRequesting: false,
+  getEnquirySuccess: false,
+  getEnquiryFailure: false,
+  getEnquiryError: null,
   // Add Enquiry
   addEnquiryInfo: null,
   addEnquiryRequesting: false,
@@ -211,6 +224,27 @@ export const EnquirySlice = createSlice({
       state.getEnquiriesSuccess = false;
       state.getEnquiriesFailure = true;
       state.getEnquiriesError = action.payload;
+    },
+    // Get Enquiries
+    getEnquiryRequest: (state, action: PayloadAction<string>) => {
+      state.getEnquiryRequesting = true;
+    },
+    getEnquirySuccess: (state, action: PayloadAction<ISingleEnquiryResponse>) => {
+      state.getEnquiryRequesting = false;
+      state.getEnquirySuccess = true;
+      state.enquiry = action.payload;
+    },
+    getEnquiryFailure: (state, action: PayloadAction<any>) => {
+      state.getEnquiryRequesting = false;
+      state.getEnquirySuccess = false;
+      state.getEnquiryFailure = true;
+      state.getEnquiryError = action.payload;
+    },
+    resetEnquiryRequest: (state) => {
+      state.getEnquiryRequesting = false;
+      state.getEnquirySuccess = false;
+      state.getEnquiryFailure = false;
+      state.getEnquiryError = null;
     },
     // Add Enquiry
     addEnquiryRequest: (state, action: PayloadAction<IAddEnquiryRequest>) => {
@@ -539,6 +573,11 @@ export const {
   getEnquiriesRequest,
   getEnquiriesSuccess,
   getEnquiriesFailure,
+  // Get Enquiry
+  getEnquiryRequest,
+  getEnquirySuccess,
+  getEnquiryFailure,
+  resetEnquiryRequest,
   // Add Enquiry
   addEnquiryRequest,
   addEnquirySuccess,

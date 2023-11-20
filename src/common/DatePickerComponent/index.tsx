@@ -8,7 +8,7 @@ import styles from './style';
 interface IDatePickerProps {
   onDateSelect: (date: Date) => void;
   style?: ViewStyle;
-  error?: string;
+  error?: string | undefined | null;
   showTime?: boolean;
   defaultValue?: Date;
 }

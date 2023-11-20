@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   elementContainer: {
     width: width * 0.9,
     justifyContent: 'center',
-    alignItems: 'flex-start',
+    // alignItems: 'flex-start',
     alignSelf: 'center',
   },
   elementContainer2: {
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   textContainer: {
     width: width * 0.44,
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    // alignItems: 'flex-start',
     alignSelf: 'center',
   },
   textStyle: {

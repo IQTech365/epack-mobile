@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {View, Text} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../../../common/AvoidSoftInputViewHOC';
 import Input from '../../../../../../../common/Input';
@@ -13,24 +13,46 @@ import Spacer from '../../../../../../../common/Spacer';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import DatePickerComponent from '../../../../../../../common/DatePickerComponent';
 import Button from '../../../../../../../common/Button';
-import { MODULE_NAME } from '../../enum/EModuleName';
-import { IGetEnquiriesData } from '../../../../../../../interface/enquiry/IGetEnquiriesResponse';
-import { IGetOrdersData } from '../../../../../../../interface/order/IGetOrdersResponse';
-import { formatDate4 } from '../../../../../../../utils/formatter';
-import { useAppDispatch, useAppSelector } from '../../../../../../../redux/hooks';
-import { resetUpdateShiftingInfoRequest, updateShiftingInfoRequest } from '../../../../../../../redux/slices/EnquirySlice';
+import {MODULE_NAME} from '../../enum/EModuleName';
+import {IGetEnquiriesData} from '../../../../../../../interface/enquiry/IGetEnquiriesResponse';
+import {IGetOrdersData} from '../../../../../../../interface/order/IGetOrdersResponse';
+import {formatDate4} from '../../../../../../../utils/formatter';
+import {useAppDispatch, useAppSelector} from '../../../../../../../redux/hooks';
+import {
+  getEnquiryRequest,
+  resetUpdateShiftingInfoRequest,
+  updateShiftingInfoRequest,
+} from '../../../../../../../redux/slices/EnquirySlice';
 import Spinner from '../../../../../../../common/Spinner';
-import { IUpdateShiftingInfoRequest } from '../../../../../../../interface/enquiry/IUpdateShiftingInfo';
+import {IUpdateShiftingInfoRequest} from '../../../../../../../interface/enquiry/IUpdateShiftingInfo';
 import Toast from 'react-native-toast-message';
+import {ISingleEnquiryData} from '../../../../../../../interface/enquiry/ISingleEnquiryResponse';
 interface IShiftingFormProps {
   moduleName: MODULE_NAME;
-  item: IGetOrdersData | IGetEnquiriesData;
+  item: IGetOrdersData | ISingleEnquiryData;
   enquiryId: string;
 }
 
-const ShifingDetailForm: React.FC<IShiftingFormProps> = ({moduleName, item, enquiryId}) => {
+interface IErrors {
+  shiftingDate: string | null,
+  deliveryDate: string | null,
+  deliveredDate: string | null,
+}
+
+const ShifingDetailForm: React.FC<IShiftingFormProps> = ({
+  moduleName,
+  item,
+  enquiryId,
+}) => {
   const shiftingTypeDropdownRef = useRef();
-  const itemObj = moduleName == MODULE_NAME.ORDER ? item as IGetOrdersData : item as IGetEnquiriesData;
+  const dateOfMoivingCompRef = useRef();
+  const dateOfDeliveryCompRef = useRef();
+  const dateOfDeliveredCompRef = useRef();
+
+  const itemObj =
+    moduleName == MODULE_NAME.ORDER
+      ? (item as IGetOrdersData)
+      : (item as ISingleEnquiryData);
 
   const [shiftingLuggages, setShiftingLuggages] = useState<string[]>([]);
   const [shiftingType, setShiftingType] = useState<string>('');
@@ -38,40 +60,73 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({moduleName, item, enqu
   const [dateOfDelivery, setDateOfDelivery] = useState<string>('');
   const [dateOfDelivered, setDateOfDelivered] = useState<string>('');
   const [carriageVehicle, setCarriageVehicle] = useState<string>('');
-  const {updateShiftingInfoRequesting, updateShiftingInfoSuccess, updateShiftingInfoFailure} = useAppSelector(state => state.Enquiry);
+  // Error states
+  const [errors, setErrors] = useState<IErrors|undefined>(undefined);
+  const [shiftingDateError, setShiftingDateError] = useState<string>('');
+  const [deliveryDateError, setDeliveryDateError] = useState<string>('');
+  const [deliveredDateError, setDeliveredDateError] = useState<string>('');
+  const {
+    updateShiftingInfoRequesting,
+    updateShiftingInfoSuccess,
+    updateShiftingInfoFailure,
+    getEnquiryRequesting,
+  } = useAppSelector(state => state.Enquiry);
 
   const dispatch = useAppDispatch();
-  
+
   const handleShiftingType = (item: TDropdownItem) => {
     setShiftingType(item.label);
   };
 
   const handleDateOfMoving = (date: Date) => {
-    setDateOfMoving(formatDate4(date))
+    setDateOfMoving(formatDate4(date));
   };
 
   const handleDateOfDelivery = (date: Date) => {
-    setDateOfDelivery(formatDate4(date))
+    setDateOfDelivery(formatDate4(date));
   };
 
   const handleDateOfDelivered = (date: Date) => {
-    setDateOfDelivered(formatDate4(date))
+    setDateOfDelivered(formatDate4(date));
   };
 
   const handleCarriageVehicleInputTextChange = (text: string) => {
     setCarriageVehicle(text);
-  }
+  };
+
 
   const handleUpdate = () => {
-    const payload:IUpdateShiftingInfoRequest ={
-      shiftingType: shiftingType.toUpperCase(),
-      shiftingLuggage: shiftingLuggages,
-      shiftingDate: dateOfMoving,
-      deliveryDate: dateOfDelivery,
-      deliveredDate: dateOfDelivered,
-    };
-    dispatch(updateShiftingInfoRequest({id: enquiryId, requestBody: payload}))
-  }
+    if(!dateOfMoving) {
+      setShiftingDateError('Shifting date required');
+    } else {
+      setShiftingDateError('');
+    }
+    if(!dateOfDelivery) {
+      setDeliveryDateError('Delivery date required');
+    } else {
+      setDeliveryDateError('');
+    }
+    if(!dateOfDelivered) {
+      setDeliveredDateError('Delivered date required');
+    } else {
+      setDeliveredDateError('');
+    }
+  };
+
+  useEffect(() => {
+    const noErrors = !shiftingDateError && !deliveryDateError && !deliveredDateError;
+    const allValues = dateOfMoving && dateOfDelivery && dateOfDelivered;
+    if(noErrors && allValues) {
+      const payload: IUpdateShiftingInfoRequest = {
+        shiftingType: shiftingType.toUpperCase(),
+        shiftingLuggage: shiftingLuggages,
+        shiftingDate: dateOfMoving,
+        deliveryDate: dateOfDelivery,
+        deliveredDate: dateOfDelivered,
+      };
+      dispatch(updateShiftingInfoRequest({id: enquiryId, requestBody: payload}));
+    }
+  }, [shiftingDateError, deliveryDateError, deliveredDateError]);
 
   const handleShiftingLuggage = (isChecked: boolean, value: string) => {
     let temp = [...shiftingLuggages];
@@ -85,18 +140,34 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({moduleName, item, enqu
   };
 
   useEffect(() => {
-    if(itemObj) {
-      if(shiftingTypeDropdownRef) {
-        const findPreviousShiftingTypeItemIndex = shiftingTypeOptions.findIndex(e => e.label.toLowerCase() == itemObj.shiftingType.toLowerCase());
+    if (itemObj) {
+      if (shiftingTypeDropdownRef) {
+        const findPreviousShiftingTypeItemIndex = shiftingTypeOptions.findIndex(
+          e => e.label.toLowerCase() == itemObj.shiftingType.toLowerCase(),
+        );
         //@ts-ignore
-        shiftingTypeDropdownRef?.current.setDefaultValue(shiftingTypeOptions[findPreviousShiftingTypeItemIndex]);
+        shiftingTypeDropdownRef?.current.setDefaultValue(
+          shiftingTypeOptions[findPreviousShiftingTypeItemIndex],
+        );
         setShiftingLuggages([...itemObj.shiftingLuggage]);
         setShiftingType(itemObj.shiftingType);
         setDateOfMoving(itemObj.shiftingDate);
+        if(itemObj.shiftingDate) {
+          //@ts-ignore
+          dateOfMoivingCompRef && dateOfMoivingCompRef.current?.setDefaultValue(new Date(itemObj.shiftingDate))
+        }
         //@ts-ignore
         setDateOfDelivery(itemObj.deliveryDate);
+        if(itemObj.deliveryDate) {
+          //@ts-ignore
+          dateOfDeliveryCompRef && dateOfDeliveryCompRef.current?.setDefaultValue(new Date(itemObj.deliveryDate))
+        }
         //@ts-ignore
-        setDateOfDelivered(itemObj.dateOfDelivered);
+        setDateOfDelivered(itemObj.deliveredDate);
+        if(itemObj.deliveredDate) {
+          //@ts-ignore
+          dateOfDeliveredCompRef && dateOfDeliveredCompRef.current?.setDefaultValue(new Date(itemObj.deliveredDate))
+        }
       }
     }
   }, []);
@@ -109,6 +180,7 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({moduleName, item, enqu
         text2: 'Shifting Info has been updated successfully',
       });
       dispatch(resetUpdateShiftingInfoRequest());
+      dispatch(getEnquiryRequest(enquiryId));
     } else if (!updateShiftingInfoRequesting && updateShiftingInfoFailure) {
       Toast.show({
         type: 'error',
@@ -117,7 +189,11 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({moduleName, item, enqu
       });
       dispatch(resetUpdateShiftingInfoRequest());
     }
-  }, [updateShiftingInfoRequesting, updateShiftingInfoSuccess, updateShiftingInfoFailure]);
+  }, [
+    updateShiftingInfoRequesting,
+    updateShiftingInfoSuccess,
+    updateShiftingInfoFailure,
+  ]);
 
   return (
     <AvoidSoftInputViewHOC>
@@ -137,11 +213,13 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({moduleName, item, enqu
             <Label text="Date of Moving" style={styles.label} />
             <DatePickerComponent
               onDateSelect={handleDateOfMoving}
-              defaultValue={new Date(itemObj.shiftingDate)}
+              //@ts-ignore
+              ref={dateOfMoivingCompRef}
+              error={shiftingDateError}
             />
           </View>
         </View>
-        <View style={styles.elementContainer3}>
+        {/* <View style={styles.elementContainer3}>
           <Label text="Carriage Vehicle" style={styles.label} />
           <Input
             onChangeText={handleCarriageVehicleInputTextChange}
@@ -149,7 +227,7 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({moduleName, item, enqu
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
           />
-        </View>
+        </View> */}
         <Spacer height={4} />
         <View style={styles.labelContainer}>
           <Label text="Shifting Luggage" style={styles.label} />
@@ -182,7 +260,7 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({moduleName, item, enqu
                 style={{marginRight: 15, marginBottom: 10}}
                 textContainerStyle={{paddingLeft: 0}}
                 onPress={(isChecked: boolean) => {
-                    handleShiftingLuggage(isChecked, item.label);
+                  handleShiftingLuggage(isChecked, item.label);
                 }}
                 isChecked={itemObj.shiftingLuggage.some(e => e == item.label)}
               />
@@ -192,11 +270,21 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({moduleName, item, enqu
         <View style={styles.elementContainer}>
           <View style={styles.itemContainer}>
             <Label text="Date of Delivery" style={styles.label} />
-            <DatePickerComponent onDateSelect={handleDateOfDelivery} />
+            <DatePickerComponent
+              onDateSelect={handleDateOfDelivery} 
+              //@ts-ignore
+              ref={dateOfDeliveryCompRef}
+              error={deliveryDateError}
+            />
           </View>
           <View style={styles.itemContainer}>
             <Label text="Date of Delivered" style={styles.label} />
-            <DatePickerComponent onDateSelect={handleDateOfDelivered} />
+            <DatePickerComponent 
+              onDateSelect={handleDateOfDelivered}
+              //@ts-ignore
+              ref={dateOfDeliveredCompRef}
+              error={deliveredDateError}
+             />
           </View>
         </View>
         <Spacer height={20} />
@@ -207,7 +295,7 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({moduleName, item, enqu
           style={styles.previewButtonStyle}
           textStyle={styles.textStyle}
         />
-        <Spinner show={updateShiftingInfoRequesting} />
+        <Spinner show={updateShiftingInfoRequesting || getEnquiryRequesting} />
       </View>
     </AvoidSoftInputViewHOC>
   );

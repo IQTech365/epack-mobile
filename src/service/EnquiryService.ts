@@ -1,6 +1,6 @@
 import {AxiosResponse} from 'axios';
 import {Api} from '../http/Api';
-import {ADD_ENQUIRY, EDIT_COMPANY, GET_ENQUIRY_LIST, ADD_FOLLOWUP, GET_FOLLOWUP_COMMENTS, ADD_SURVEY, GET_SURVEY_COMMENTS, EDIT_ENQUIRY, ADD_SURVEY_ITEM, GET_SURVEY_ITEM} from '../http/Endpoint';
+import {ADD_ENQUIRY, EDIT_COMPANY, GET_ENQUIRY_LIST, ADD_FOLLOWUP, GET_FOLLOWUP_COMMENTS, ADD_SURVEY, GET_SURVEY_COMMENTS, EDIT_ENQUIRY, GET_ENQUIRY, ADD_SURVEY_ITEM, GET_SURVEY_ITEM} from '../http/Endpoint';
 import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
 import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
 import { IAddEnquiryRequest } from '../interface/enquiry/IAddEnquiryRequest';
@@ -20,6 +20,7 @@ import { IUpdateCompanyContactDetailRequest, IUpdateContactDetailResponse, IUpda
 import { IUpdateShiftingInfoRequest, IUpdateShiftingInfoResponse } from '../interface/enquiry/IUpdateShiftingInfo';
 import { IAddSurveyItemRequest } from '../interface/enquiry/IAddSurveyItemRequest';
 import { IGetSurveyItemListResponse } from '../interface/enquiry/IGetSurveyItemListResponse';
+import { ISingleEnquiryResponse } from '../interface/enquiry/ISingleEnquiryResponse';
 
 export const AddEnquiryService = async (payload: IAddEnquiryRequest): Promise<IAddEnquiryResponse> => {
     const api = Api.getInstance();
@@ -35,6 +36,11 @@ export const EditEnquiryService = async (payload: IOtpVerifyRequest): Promise<IO
 export const GetEnquiriesService = async (payload: string): Promise<IGetEnquiriesResponse> => {
     const api = Api.getInstance();
     return await api.get<IGetEnquiriesResponse>(GET_ENQUIRY_LIST(payload));
+}
+
+export const GetEnquiryService = async (payload: string): Promise<ISingleEnquiryResponse> => {
+    const api = Api.getInstance();
+    return await api.get<ISingleEnquiryResponse>(GET_ENQUIRY(payload));
 }
 
 export const AddFollowupService = async (payload: IAddFollowupRequest): Promise<IAddFollowupResponse> => {

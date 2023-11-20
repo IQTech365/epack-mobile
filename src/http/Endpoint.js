@@ -16,7 +16,7 @@ export const ADD_ENQUIRY = `/enquiry/add`;
 export const GET_ENQUIRY_LIST = (company_id) => `/enquiry/${company_id}`;
 export const EDIT_ENQUIRY = (enquiry_id) => `/enquiry/edit/${enquiry_id}`;
 export const DELETE_ENQUIRY = (enquiry_id) => `/enquiry/${enquiry_id}`;
-export const GET_ENQUIRY = (enquiry_id) => `/enquiry/${enquiry_id}`;
+export const GET_ENQUIRY = (enquiry_id) => `/enquiry/enquiryId/${enquiry_id}`;
 export const GET_ENQUIRIES = (company_id) => `/enquiry/${company_id}`;
 export const ADD_SURVEY = `/survey/add`;
 export const GET_SURVEY_COMMENTS = (enquiry_id) => `/survey/${enquiry_id}`;

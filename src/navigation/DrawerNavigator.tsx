@@ -1,10 +1,11 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ImageBackground,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import {
   createDrawerNavigator,
@@ -35,30 +36,50 @@ import NewsRoomView from '../views/newsRoom';
 import SettingStackNavigator from './SettingStackNavigator';
 import MyProfileStackNavigator from './MyProfileStackNavigator';
 import { logout } from '../redux/slices/OtpSlice';
-import { useAppDispatch } from '../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { useAuthContext } from '../provider/AuthProvider';
 import VehicleMangementStacknavigator from './VehicleMangementStacknavigator';
 import SubscriptionPlanView from '../views/subscriptionPlan';
 import PaymentMethodView from '../views/paymentMethod';
+import { getCompaniesRequest } from '../redux/slices/CompanySlice';
+import { ICompanyInfoData } from '../interface/companyRegistration/IGetCompaniesResponse';
 
 const Drawer = createDrawerNavigator();
 
-const appUser: IAppUser = {
-  companyName: 'Gayatri Packers',
-  usesrId: '1159',
-  mobile: '+91 9876543210',
-  email: 'gayatri@gmail.com',
-};
+// const appUser: IAppUser = {
+//   companyName: 'Gayatri Packers',
+//   usesrId: '1159',
+//   mobile: '+91 9876543210',
+//   email: 'gayatri@gmail.com',
+// };
 
 const DrawerContent = (props: any) => {
   const dispatch = useAppDispatch();
   const authContext = useAuthContext();
   const {setLoggedIn} = authContext;
+  const {companies, getCompaniesRequesting} = useAppSelector(state => state.Company);
+  const {data: companiesData} = companies || {};
+
+  const getFirstCompany = () => {
+    let company:ICompanyInfoData | null  = null;
+    if(companiesData && Array.isArray(companiesData) && companiesData.length > 0) {
+      company = companiesData[0];
+    } else if(companiesData && companiesData.hasOwnProperty('authId')) {
+      company = companiesData;
+    }
+    return company;
+  }
 
   const handleLogout = () => {
     setLoggedIn(false);
     dispatch(logout());
   }
+  const firstCompany = getFirstCompany();
+
+  useEffect(() => {
+    dispatch(getCompaniesRequest(firstCompany?.authId as string));
+  }, [dispatch]);
+  
   return (
     <View style={styles.container2}>
       <DrawerContentScrollView
@@ -69,12 +90,17 @@ const DrawerContent = (props: any) => {
           source={HeaderGridBackgroundImage}>
           <View style={styles.innerContainer}>
             <View style={styles.avatarContainer}>
-              <View style={styles.avatar} />
+              {/* <View style={styles.avatar} /> */}
+              <Image 
+                 source={{ uri: firstCompany?.companyLogo }}
+                 resizeMode="center"
+                 style={styles.avatar}
+               />
             </View>
-            <Text style={styles.nameText}>{appUser.companyName}</Text>
-            <Text style={styles.text}>{`User ID: ${appUser.usesrId}`}</Text>
-            <Text style={styles.text}>{`Mobile: ${appUser.mobile}`}</Text>
-            <Text style={styles.text}>{`Email: ${appUser.email}`}</Text>
+            <Text style={styles.nameText}>{firstCompany?.companyName}</Text>
+            <Text style={styles.text}>{`User ID: ${firstCompany?._id}`}</Text>
+            <Text style={styles.text}>{`Mobile: ${firstCompany?.companyMobile}`}</Text>
+            <Text style={styles.text}>{`Email: ${firstCompany?.email}`}</Text>
             <Spacer height={8} />
           </View>
         </ImageBackground>
