@@ -9,7 +9,7 @@ import { IGetEnquiriesData } from '../../interface/enquiry/IGetEnquiriesResponse
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {getEnquiriesRequest} from '../../redux/slices/EnquirySlice';
 import {EnquiryStackRoute} from '../../utils/constants';
-import { formatDate } from '../../utils/formatter';
+import { formatDate, sortItemByDate } from '../../utils/formatter';
 import EnquiryListItem, {
   IEnquiryItem,
 } from './enquiryList/components/EnquiryListItem';
@@ -62,7 +62,7 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
         enquiryId: enq._id,
         enquiryDate: formatDate(enq.createdAt),
       } as IEnquiryItem;
-    });
+    }).sort((a:IEnquiryItem, b:IEnquiryItem) => sortItemByDate(a.enquiryDate, b.enquiryDate));
   }
 
   const getEnquiryDataByIndex = (index: number) => {
