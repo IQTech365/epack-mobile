@@ -12,11 +12,16 @@ import Button from '../../../../../common/Button';
 import Input from '../../../../../common/Input';
 import { COLOR_BLACK } from '../../../../../utils/colors';
 
+interface IItems {
+    name: string;
+    count: number;
+}
+
 const PackingMaterialsView = () => {
     const [labourCount, setLabourount] = useState<number>(0);
     const [packingTape, setPackingTape] = useState<number>(0);
     const [inputText, setInputText] = useState('');
-    const [items, setItems] = useState([]);
+    const [items, setItems] = useState<IItems[]>([]);
     /** Effects */
     useEffect(() => { }, []);
 
