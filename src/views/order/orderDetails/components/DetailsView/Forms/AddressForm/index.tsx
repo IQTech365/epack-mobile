@@ -22,8 +22,9 @@ import {
   IPickupAddress,
 } from '../../../../../../../interface/order/IUpdateAddressRequest';
 import {useAppDispatch, useAppSelector} from '../../../../../../../redux/hooks';
-import { resetUpdateAddressRequest, updateAddressRequest } from '../../../../../../../redux/slices/EnquirySlice';
+import { getEnquiryRequest, resetUpdateAddressRequest, updateAddressRequest } from '../../../../../../../redux/slices/EnquirySlice';
 import Toast from 'react-native-toast-message';
+import { ISingleEnquiryData } from '../../../../../../../interface/enquiry/ISingleEnquiryResponse';
 
 export enum ADDRESS_TYPE {
   PICKUP,
@@ -33,7 +34,7 @@ export enum ADDRESS_TYPE {
 interface IAddressFormProps {
   addressType: ADDRESS_TYPE;
   moduleName: MODULE_NAME;
-  item: IGetOrdersData | IGetEnquiriesData;
+  item: IGetOrdersData | ISingleEnquiryData;
   enquiryId: string;
 }
 
@@ -114,7 +115,7 @@ const AddressForm: React.FC<IAddressFormProps> = ({
       setPin(item.pickupAddress.pincode);
       setCity(item.pickupAddress.city);
       setState(item.pickupAddress.state);
-      setAddress(item.pickupAddress.address as string);
+      setAddress(item.pickupAddress.locality as string);
       setLandmark(item.pickupAddress.landmark as string);
       //@ts-ignore
       setLocality(item.pickupAddress?.locality as string);
@@ -125,7 +126,7 @@ const AddressForm: React.FC<IAddressFormProps> = ({
       setPin(item.dropAddress.pincode);
       setCity(item.dropAddress.city);
       setState(item.dropAddress.state);
-      setAddress(item.dropAddress.address as string);
+      setAddress(item.dropAddress.locality as string);
       setLandmark(item.dropAddress.landmark as string);
       //@ts-ignore
       setLocality(item.dropAddress?.locality as string);
@@ -229,6 +230,7 @@ const AddressForm: React.FC<IAddressFormProps> = ({
         text2: 'Address has been updated successfully',
       });
       dispatch(resetUpdateAddressRequest());
+      dispatch(getEnquiryRequest(enquiryId));
     } else if (!updateAddressRequesting && updateAddressFailure) {
       Toast.show({
         type: 'error',

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
@@ -14,6 +14,10 @@ import ShifingDetailForm from '../../../../order/orderDetails/components/Details
 import EnquiryDetailListItem from '../EnquiryDetailListItem';
 import styles from './style';
 import Toast from 'react-native-toast-message';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
+import { getEnquiryRequest } from '../../../../../redux/slices/EnquirySlice';
+import Spinner from '../../../../../common/Spinner';
+import { ISingleEnquiryData } from '../../../../../interface/enquiry/ISingleEnquiryResponse';
 
 interface IDetailsViewProps {
   item: IGetEnquiriesData | undefined;
@@ -25,6 +29,26 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
   const [editContactDetail, setEditContactDetail] = useState<boolean>(false);
   const [editPickupAddress, setEditPickupAddress] = useState<boolean>(false);
   const [editDropAddress, setEditDropAddress] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
+  const {enquiry, getEnquiryRequesting} = useAppSelector(state => state.Enquiry);
+  const {data} = enquiry || {};
+  console.log('Single Enquiry-data--', JSON.stringify(data));
+
+  const getSingleEnquiry = () => {
+    let enquiry:ISingleEnquiryData;
+    if(data && Array.isArray(data) && data.length > 0) {
+      enquiry = data[0];
+    }
+    //@ts-ignore
+    return enquiry;
+  }
+
+  const singleEnquiry = getSingleEnquiry();
+  
+
+  useEffect(() => {
+    dispatch(getEnquiryRequest(enquiryId));
+  }, []);
 
   const handleEditShiftingDetail = () => {
     setEditShifingDetail(true);
@@ -68,7 +92,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
       return (
         <ShifingDetailForm
           moduleName={MODULE_NAME.ENQUIRY}
-          item={item as IGetEnquiriesData}
+          item={getSingleEnquiry() as ISingleEnquiryData}
           enquiryId={enquiryId}
         />
       );
@@ -76,7 +100,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
       return (
         <ContactDetailForm
           moduleName={MODULE_NAME.ENQUIRY}
-          item={item as IGetEnquiriesData}
+          item={getSingleEnquiry() as ISingleEnquiryData}
           enquiryId={enquiryId}
         />
       );
@@ -85,7 +109,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
         <AddressForm
           addressType={ADDRESS_TYPE.PICKUP}
           moduleName={MODULE_NAME.ENQUIRY}
-          item={item as IGetEnquiriesData}
+          item={getSingleEnquiry() as ISingleEnquiryData}
           enquiryId={enquiryId}
         />
       );
@@ -94,7 +118,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
         <AddressForm
           addressType={ADDRESS_TYPE.DROP}
           moduleName={MODULE_NAME.ENQUIRY}
-          item={item as IGetEnquiriesData}
+          item={getSingleEnquiry() as ISingleEnquiryData}
           enquiryId={enquiryId}
         />
       );
@@ -105,10 +129,30 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
   const showIndividualContactDetails = () => {
     return (
       <>
-        <EnquiryDetailListItem label="Contact Person" value={item?.partyName} />
+        <EnquiryDetailListItem label="Contact Person" value={singleEnquiry?.partyName} />
+        <EnquiryDetailListItem
+          label="Email"
+          value={singleEnquiry?.email}
+        />
         <EnquiryDetailListItem
           label="Mobile"
-          value={item?.mobile}
+          value={singleEnquiry?.mobile}
+        />
+        <EnquiryDetailListItem
+          label="Landline"
+          value={singleEnquiry?.landline}
+        />
+        <EnquiryDetailListItem
+          label="Order Amount"
+          value={singleEnquiry?.orderAmount}
+        />
+         <EnquiryDetailListItem
+          label="Token Amount"
+          value={singleEnquiry?.tokenAmount}
+        />
+        <EnquiryDetailListItem
+          label="Alternate Numbers"
+          value={singleEnquiry?.alternateNumbers.join(", ")}
           isLast={true}
         />
       </>
@@ -120,39 +164,39 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
       <>
         <EnquiryDetailListItem
           label="Company Name"
-          value={item?.billingDetails?.companyName}
+          value={singleEnquiry?.billingDetails?.companyName}
         />
         <EnquiryDetailListItem
           label="Company Address"
-          value={item?.billingDetails?.companyAddress}
+          value={singleEnquiry?.billingDetails?.companyAddress}
         />
         <EnquiryDetailListItem
           label="Company GST"
-          value={item?.billingDetails?.companyGST}
+          value={singleEnquiry?.billingDetails?.companyGST}
         />
         <EnquiryDetailListItem
           label="Approval Authority"
-          value={item?.billingDetails?.approvalAuthority}
+          value={singleEnquiry?.billingDetails?.approvalAuthority}
         />
         <EnquiryDetailListItem
           label="Authority Person"
-          value={item?.billingDetails?.authorityPersonName}
+          value={singleEnquiry?.billingDetails?.authorityPersonName}
         />
         <EnquiryDetailListItem
           label="Mobile Number"
-          value={item?.billingDetails?.authorityPersonMobile}
+          value={singleEnquiry?.billingDetails?.authorityPersonMobile}
         />
         <EnquiryDetailListItem
           label="Employee Name"
-          value={item?.billingDetails?.employeeName}
+          value={singleEnquiry?.billingDetails?.employeeName}
         />
         <EnquiryDetailListItem
           label="Employee Desig."
-          value={item?.billingDetails?.employeeDesignation}
+          value={singleEnquiry?.billingDetails?.employeeDesignation}
         />
         <EnquiryDetailListItem
           label="Employee Mobile"
-          value={item?.billingDetails?.employeeMobile}
+          value={singleEnquiry?.billingDetails?.employeeMobile}
           isLast={true}
         />
       </>
@@ -171,27 +215,27 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
             <View style={styles.elementContainer}>
               <EnquiryDetailListItem
                 label="Shifting Type"
-                value={item?.shiftingType}
+                value={singleEnquiry?.shiftingType}
               />
               <EnquiryDetailListItem
                 label="Shifting From"
                 value={
-                  `${item?.pickupAddress.address}, ${item?.pickupAddress.city}, ${item?.pickupAddress.state}, ${item?.pickupAddress.pincode}` as string
+                  `${singleEnquiry?.pickupAddress.address}, ${singleEnquiry?.pickupAddress.city}, ${singleEnquiry?.pickupAddress.state}, ${singleEnquiry?.pickupAddress.pincode}` as string
                 }
               />
               <EnquiryDetailListItem
                 label="Shifting To"
                 value={
-                  `${item?.dropAddress.address}, ${item?.dropAddress.city}, ${item?.dropAddress.state}, ${item?.dropAddress.pincode}` as string
+                  `${singleEnquiry?.dropAddress.address}, ${singleEnquiry?.dropAddress.city}, ${singleEnquiry?.dropAddress.state}, ${singleEnquiry?.dropAddress.pincode}` as string
                 }
               />
               <EnquiryDetailListItem
                 label="Shifting Luggage"
-                value={item?.shiftingLuggage.join(', ')}
+                value={singleEnquiry?.shiftingLuggage.join(', ')}
               />
               <EnquiryDetailListItem
                 label="Billing By"
-                value={item?.billingBy}
+                value={singleEnquiry?.billingBy}
                 isLast={true}
               />
             </View>
@@ -205,7 +249,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
           onEditPress={handleEditContactDetail}>
           <View>
             <View style={styles.elementContainer}>
-              {item?.billingBy == 'by Company'
+              {singleEnquiry?.billingBy == 'by Company'
                 ? showCompanyContactDetails()
                 : showIndividualContactDetails()}
             </View>
@@ -221,40 +265,40 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
             <View style={styles.elementContainer}>
               <EnquiryDetailListItem
                 label="Shifting From"
-                value={item?.pickupAddress.shiftingFrom}
+                value={singleEnquiry?.pickupAddress.shiftingFrom}
               />
               <EnquiryDetailListItem
                 label="State"
-                value={item?.pickupAddress.state}
+                value={singleEnquiry?.pickupAddress.state}
               />
               <EnquiryDetailListItem
                 label="City"
-                value={item?.pickupAddress.city}
+                value={singleEnquiry?.pickupAddress.city}
               />
               <EnquiryDetailListItem
                 label="Address"
-                value={item?.pickupAddress.address}
+                value={singleEnquiry?.pickupAddress.address}
               />
               <EnquiryDetailListItem
                 label="Landmark"
-                value={item?.pickupAddress.landmark || 'Not Available'}
+                value={singleEnquiry?.pickupAddress.landmark}
               />
               <EnquiryDetailListItem
                 label="Locality"
                 //@ts-ignore
-                value={item?.pickupAddress.locality || 'Not Available'}
+                value={singleEnquiry?.pickupAddress.locality}
               />
               <EnquiryDetailListItem
                 label="Pincode"
-                value={item?.pickupAddress.pincode}
+                value={singleEnquiry?.pickupAddress.pincode}
               />
               <EnquiryDetailListItem
                 label="Floor"
-                value={item?.pickupAddress.floor}
+                value={singleEnquiry?.pickupAddress.floor}
               />
               <EnquiryDetailListItem
                 label="Lift Available"
-                value={item?.pickupAddress.isLiftAvailable}
+                value={singleEnquiry?.pickupAddress.isLiftAvailable}
                 isLast={true}
               />
             </View>
@@ -270,40 +314,40 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
             <View style={styles.elementContainer}>
               <EnquiryDetailListItem
                 label="Shifting To"
-                value={item?.dropAddress.shiftingTo}
+                value={singleEnquiry?.dropAddress.shiftingTo}
               />
               <EnquiryDetailListItem
                 label="State"
-                value={item?.dropAddress.state}
+                value={singleEnquiry?.dropAddress.state}
               />
               <EnquiryDetailListItem
                 label="City"
-                value={item?.dropAddress.city}
+                value={singleEnquiry?.dropAddress.city}
               />
               <EnquiryDetailListItem
                 label="Address"
-                value={item?.dropAddress.address}
+                value={singleEnquiry?.dropAddress.address}
               />
               <EnquiryDetailListItem
                 label="Landmark"
-                value={item?.dropAddress.landmark || 'Not Available'}
+                value={singleEnquiry?.dropAddress.landmark}
               />
               <EnquiryDetailListItem
                 label="Locality"
                 //@ts-ignore
-                value={item?.dropAddress.locality || 'Not Available'}
+                value={singleEnquiry?.dropAddress.locality}
               />
               <EnquiryDetailListItem
                 label="Pincode"
-                value={item?.dropAddress.pincode}
+                value={singleEnquiry?.dropAddress.pincode}
               />
               <EnquiryDetailListItem
                 label="Floor"
-                value={item?.dropAddress.floor}
+                value={singleEnquiry?.dropAddress.floor}
               />
               <EnquiryDetailListItem
                 label="Lift Available"
-                value={item?.dropAddress.isLiftAvailable}
+                value={singleEnquiry?.dropAddress.isLiftAvailable}
                 isLast={true}
               />
             </View>
@@ -324,6 +368,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
           <Toast />
           </>
         </ModalHOC>
+        <Spinner show={getEnquiryRequesting} />
       </View>
     </AvoidSoftInputViewHOC>
   );

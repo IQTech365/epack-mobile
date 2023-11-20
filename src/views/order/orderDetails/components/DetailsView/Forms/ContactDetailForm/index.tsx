@@ -16,11 +16,12 @@ import DeleteIcon from '../../../../../../../images/icons/delete.svg';
 import approvalAuthorityOptions from '../../../../../../../data/ApprovalAuthorityOptions.json';
 import { IUpdateCompanyContactDetailRequest, IUpdateIndividualContactDetailRequest } from '../../../../../../../interface/order/IUpdateContactDetails';
 import { useAppDispatch, useAppSelector } from '../../../../../../../redux/hooks';
-import { resetUpdateContactDetailsRequest, updateContactDetailsRequest } from '../../../../../../../redux/slices/EnquirySlice';
+import { getEnquiryRequest, resetUpdateContactDetailsRequest, updateContactDetailsRequest } from '../../../../../../../redux/slices/EnquirySlice';
 import Toast from 'react-native-toast-message';
+import { ISingleEnquiryData } from '../../../../../../../interface/enquiry/ISingleEnquiryResponse';
 interface IContactDetailFormProps {
   moduleName: MODULE_NAME;
-  item: IGetOrdersData | IGetEnquiriesData;
+  item: IGetOrdersData | ISingleEnquiryData;
   enquiryId: string;
 }
 
@@ -32,11 +33,11 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
   let itemObj =
     moduleName == MODULE_NAME.ORDER
       ? (item as IGetOrdersData)
-      : (item as IGetEnquiriesData);
+      : (item as ISingleEnquiryData);
   if (moduleName == MODULE_NAME.ORDER) {
     itemObj = item as IGetOrdersData;
   } else if (moduleName == MODULE_NAME.ENQUIRY) {
-    itemObj = item as IGetEnquiriesData;
+    itemObj = item as ISingleEnquiryData;
   }
   const [contactPersonName, setContactPersonName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -62,12 +63,11 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
     updateContactDetailRequesting,
     updateContactDetailSuccess,
     updateContactDetailFailure,
+    getEnquiryRequesting,
   } = useAppSelector(state => state.Enquiry);
 
   const approvalAuthDropdownRef = useRef(null);
-
-  console.log('alternateNumbers--', JSON.stringify(alternateNumbers));
-
+  
   const getContactPersonName = () => {
     let name: string = '';
     if (itemObj.billingBy == 'by Individual') {
@@ -228,7 +228,7 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
 
   const showAlternateNumbers = () => {
     if (alternateNumbers.length > 0) {
-      return alternateNumbers.map((e, i) => {
+      return alternateNumbers.filter(e => e != '').map((e, i) => {
         return (
           <View key={`{${i}}`}>
             <Spacer height={20} />
@@ -259,7 +259,11 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
     setOrderAmount(itemObj?.orderAmount);
     //@ts-ignore
     setTokenAmount(itemObj?.tokenAmount);
-    setAlternateNumbers([...itemObj?.alternateNumbers]);
+    if(itemObj?.alternateNumbers && itemObj.alternateNumbers.length > 0) {
+      const filter = itemObj.alternateNumbers.filter(e => e != '');
+      setAlternateNumbers([...filter]);
+    }
+    
     // Billing Info
     if(itemObj.billingBy == 'by Company') {
       initBillingInfoFormValues();
@@ -315,6 +319,7 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
         text2: 'Contact details has been updated successfully',
       });
       dispatch(resetUpdateContactDetailsRequest());
+      dispatch(getEnquiryRequest(enquiryId));
     } else if (!updateContactDetailRequesting && updateContactDetailFailure) {
       Toast.show({
         type: 'error',

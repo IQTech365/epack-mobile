@@ -46,6 +46,7 @@ import shiftingLuggageOptions from '../../../data/shiftingLuggage.json';
 import Spinner from '../../../common/Spinner';
 import Toast from 'react-native-toast-message';
 import {NavigationProp} from '@react-navigation/native';
+import EpackDropdown from '../../../common/DropdownComponent2';
 
 interface IAddEnquiryViewProps {
   navigation: NavigationProp<any, any>;
@@ -188,11 +189,11 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
   );
 
   const handlePickupCity = useCallback(
-    (item: TDropdownItem) => {
+    (item: string) => {
       const {pickupAddress} = state;
       const tempObj = {
         ...pickupAddress,
-        city: item.label,
+        city: item,
       };
       dispatch({
         type: ENQUIRY_FORM_ACTION.PICKUP_ADDRESS,
@@ -203,11 +204,11 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
   );
 
   const handlePickupState = useCallback(
-    (item: TDropdownItem) => {
+    (item: string) => {
       const {pickupAddress} = state;
       const tempObj = {
         ...pickupAddress,
-        state: item.label,
+        state: item,
       };
       dispatch({
         type: ENQUIRY_FORM_ACTION.PICKUP_ADDRESS,
@@ -280,11 +281,11 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
   );
 
   const handleDeliveryCity = useCallback(
-    (item: TDropdownItem) => {
+    (item: string) => {
       const {dropAddress} = state;
       const tempObj = {
         ...dropAddress,
-        city: item.label,
+        city: item,
       };
       dispatch({
         type: ENQUIRY_FORM_ACTION.DROP_ADDRESS,
@@ -295,11 +296,11 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
   );
 
   const handleDeliveryState = useCallback(
-    (item: TDropdownItem) => {
+    (item: string) => {
       const {dropAddress} = state;
       const tempObj = {
         ...dropAddress,
-        state: item.label,
+        state: item,
       };
       dispatch({
         type: ENQUIRY_FORM_ACTION.DROP_ADDRESS,
@@ -379,9 +380,9 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
       pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_ENQUIRY_PICKUP_ADDRESS
     ) {
       //@ts-ignore
-      pickupStateDropwdownRef?.current?.setDefaultValue(pickupStates[0]);
+      pickupStateDropwdownRef?.current?.setValue(pickupStates[0]?.label);
       //@ts-ignore
-      pickupCityDropdownRef?.current?.setDefaultValue(pickupCities[0]);
+      pickupCityDropdownRef?.current?.setValue(pickupCities[0]?.label);
     }
   }, [pickupStates, pickupCities]);
 
@@ -394,9 +395,9 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
       pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_ENQUIRY_DELIVERY_ADDRESS
     ) {
       //@ts-ignore
-      dropStateDropdownRef?.current?.setDefaultValue(deliveryStates[0]);
+      dropStateDropdownRef?.current?.setValue(deliveryStates[0]?.label);
       //@ts-ignore
-      dropCityDropdownRef?.current?.setDefaultValue(deliveryCities[0]);
+      dropCityDropdownRef?.current?.setValue(deliveryCities[0]?.label);
     }
   }, [deliveryStates, deliveryCities]);
 
@@ -439,9 +440,9 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
       alternateNumbers: '',
       shiftingDate: '',
       pickupAddress: {
-        shiftingFrom: state.pickupAddress?.city as string,
-        state: state.pickupAddress?.state as string,
-        city: state.pickupAddress?.city as string,
+        shiftingFrom: state.pickupAddress?.city as string || pickupCities[0]?.label,
+        state: state.pickupAddress?.state as string || pickupStates[0]?.label,
+        city: state.pickupAddress?.city as string || pickupCities[0]?.label,
         address: state.pickupAddress?.address as string,
         pincode: state.pickupAddress?.pincode as string,
         landmark: state.pickupAddress?.landmark as string,
@@ -450,9 +451,9 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
           state.pickupAddress?.isLiftAvailable.toLocaleUpperCase() as string,
       },
       dropAddress: {
-        shiftingTo: state.dropAddress?.city as string,
-        state: state.dropAddress?.state as string,
-        city: state.dropAddress?.city as string,
+        shiftingTo: state.dropAddress?.city as string || deliveryCities[0]?.label,
+        state: state.dropAddress?.state as string || deliveryStates[0]?.label,
+        city: state.dropAddress?.city as string || deliveryCities[0]?.label,
         address: state.dropAddress?.address as string,
         pincode: state.dropAddress?.pincode as string,
         landmark: state.dropAddress?.landmark as string,
@@ -795,9 +796,16 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
               </View>
               <View style={styles.textContainer}>
                 <Label text="State" style={styles.label} />
-                <DropdownComponent
+                {/* <DropdownComponent
                   data={pickupStates}
                   onSelect={handlePickupState}
+                  //@ts-ignore
+                  ref={pickupStateDropwdownRef}
+                /> */}
+                <EpackDropdown
+                  data={pickupStates.map(e => e.label)}
+                  placeholder={'Select State'}
+                  hanldeData={handlePickupState}
                   //@ts-ignore
                   ref={pickupStateDropwdownRef}
                 />
@@ -806,12 +814,19 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
 
             <View style={styles.elementContainer}>
               <Label text="City" style={styles.label} />
-              <DropdownComponent
+              {/* <DropdownComponent
                 data={pickupCities}
                 onSelect={handlePickupCity}
                 //@ts-ignore
                 ref={pickupCityDropdownRef}
-              />
+              /> */}
+              <EpackDropdown
+                  data={pickupCities.map(e => e.label)}
+                  placeholder={'Select City'}
+                  hanldeData={handlePickupCity}
+                  //@ts-ignore
+                  ref={pickupCityDropdownRef}
+                />
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
@@ -858,9 +873,16 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
               </View>
               <View style={styles.textContainer}>
                 <Label text="State" style={styles.label} />
-                <DropdownComponent
+                {/* <DropdownComponent
                   data={deliveryStates}
                   onSelect={handleDeliveryState}
+                  //@ts-ignore
+                  ref={dropStateDropdownRef}
+                /> */}
+                <EpackDropdown
+                  data={deliveryStates.map(e => e.label)}
+                  placeholder={'Select State'}
+                  hanldeData={handleDeliveryState}
                   //@ts-ignore
                   ref={dropStateDropdownRef}
                 />
@@ -868,12 +890,19 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
             </View>
             <View style={styles.elementContainer}>
               <Label text="City" style={styles.label} />
-              <DropdownComponent
+              {/* <DropdownComponent
                 data={deliveryCities}
                 onSelect={handleDeliveryCity}
                 //@ts-ignore
                 ref={dropCityDropdownRef}
-              />
+              /> */}
+              <EpackDropdown
+                  data={deliveryCities.map(e => e.label)}
+                  placeholder={'Select City'}
+                  hanldeData={handleDeliveryCity}
+                  //@ts-ignore
+                  ref={dropCityDropdownRef}
+                />
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
