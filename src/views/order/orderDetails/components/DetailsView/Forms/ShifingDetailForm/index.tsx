@@ -111,8 +111,12 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({
     } else {
       setDeliveredDateError('');
     }
+  };
 
-    if(dateOfMoving && dateOfDelivery && dateOfDelivered) {
+  useEffect(() => {
+    const noErrors = !shiftingDateError && !deliveryDateError && !deliveredDateError;
+    const allValues = dateOfMoving && dateOfDelivery && dateOfDelivered;
+    if(noErrors && allValues) {
       const payload: IUpdateShiftingInfoRequest = {
         shiftingType: shiftingType.toUpperCase(),
         shiftingLuggage: shiftingLuggages,
@@ -122,7 +126,7 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({
       };
       dispatch(updateShiftingInfoRequest({id: enquiryId, requestBody: payload}));
     }
-  };
+  }, [shiftingDateError, deliveryDateError, deliveredDateError]);
 
   const handleShiftingLuggage = (isChecked: boolean, value: string) => {
     let temp = [...shiftingLuggages];
