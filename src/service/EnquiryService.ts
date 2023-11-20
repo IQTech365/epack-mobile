@@ -1,6 +1,6 @@
 import {AxiosResponse} from 'axios';
 import {Api} from '../http/Api';
-import {ADD_ENQUIRY, EDIT_COMPANY, GET_ENQUIRY_LIST, ADD_FOLLOWUP, GET_FOLLOWUP_COMMENTS, ADD_SURVEY, GET_SURVEY_COMMENTS, EDIT_ENQUIRY, GET_ENQUIRY} from '../http/Endpoint';
+import {ADD_ENQUIRY, EDIT_COMPANY, GET_ENQUIRY_LIST, ADD_FOLLOWUP, GET_FOLLOWUP_COMMENTS, ADD_SURVEY, GET_SURVEY_COMMENTS, EDIT_ENQUIRY, GET_ENQUIRY, ADD_SURVEY_ITEM, GET_SURVEY_ITEM} from '../http/Endpoint';
 import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
 import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
 import { IAddEnquiryRequest } from '../interface/enquiry/IAddEnquiryRequest';
@@ -18,6 +18,8 @@ import { IDropAddress, IPickupAddress } from '../interface/order/IUpdateAddressR
 import { IUpdateAddressResponse } from '../interface/order/IUpdateAddressResponse';
 import { IUpdateCompanyContactDetailRequest, IUpdateContactDetailResponse, IUpdateIndividualContactDetailRequest } from '../interface/order/IUpdateContactDetails';
 import { IUpdateShiftingInfoRequest, IUpdateShiftingInfoResponse } from '../interface/enquiry/IUpdateShiftingInfo';
+import { IAddSurveyItemRequest } from '../interface/enquiry/IAddSurveyItemRequest';
+import { IGetSurveyItemListResponse } from '../interface/enquiry/IGetSurveyItemListResponse';
 import { ISingleEnquiryResponse } from '../interface/enquiry/ISingleEnquiryResponse';
 
 export const AddEnquiryService = async (payload: IAddEnquiryRequest): Promise<IAddEnquiryResponse> => {
@@ -59,6 +61,16 @@ export const AddSurveyService = async (payload: IAddSurveyRequest): Promise<IAdd
 export const GetSurveyListService = async (payload: string): Promise<IGetSurveyListResponse> => {
     const api = Api.getInstance();
     return await api.get<IGetSurveyListResponse>(GET_SURVEY_COMMENTS(payload));
+}
+
+export const AddSurveyItemService = async (payload: IAddSurveyItemRequest): Promise<IAddSurveyResponse> => {
+    const api = Api.getInstance();
+    return await api.post<IAddSurveyItemRequest, AxiosResponse<IAddSurveyResponse>>(payload, ADD_SURVEY_ITEM);
+}
+
+export const GetSurveyItemListService = async (payload: string): Promise<IGetSurveyItemListResponse> => {
+    const api = Api.getInstance();
+    return await api.post<string, AxiosResponse<IGetSurveyItemListResponse>>(payload, GET_SURVEY_ITEM);
 }
 
 export const UpdateEnquiryStatusService = async (id:string, requestBody:IUpdateEnquiryStatusRequest ): Promise<IUpdateEnquiryStatusResponse> => {

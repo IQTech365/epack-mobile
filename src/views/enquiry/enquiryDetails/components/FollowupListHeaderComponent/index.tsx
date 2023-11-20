@@ -28,9 +28,10 @@ interface IFollowupListHeaderComponentProps {
   assigneeRole: string;
   enquiryId: string;
   nextFollowupOrSurveyDate?: string;
+  taskNameCallback:(data: string)=>void
 }
 
-const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> = ({ taskName, assigneeRole, enquiryId, nextFollowupOrSurveyDate }) => {
+const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> = ({ taskName, assigneeRole, enquiryId, nextFollowupOrSurveyDate, taskNameCallback }) => {
   const [comment, setComment] = useState<string>('');
   const [date, setDate] = useState<Date>(new Date());
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
@@ -60,6 +61,11 @@ const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> =
 
   const handleTabChange = (index: number) => {
     setActiveTabIndex(index);
+    if(index == 1){
+    taskNameCallback('SURVEY ITEM')
+    }else{
+      taskNameCallback('')
+    }
 
   };
 
@@ -68,7 +74,7 @@ const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> =
       case 0:
         return SurveyRoute();
       case 1:
-        return <SurveyListView />
+        return <SurveyListView enquiryId ={enquiryId}/>
       default:
         return null;
     }
@@ -106,6 +112,11 @@ const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> =
 
 
   useEffect(() => {
+    if(taskName == 'FOLLOW UP'){
+      taskNameCallback('')
+    }else if(taskName == 'SURVEY'){
+      taskNameCallback('')
+    }
     if ((!addFollowupRequesting && addFollowupSuccess) || (!addSurveyRequesting && addSurveySuccess)) {
       Toast.show({
         type: 'success',

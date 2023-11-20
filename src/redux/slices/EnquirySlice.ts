@@ -1,9 +1,9 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {ICompanyRegistrationResponse} from '../../interface/companyRegistration/ICompanyRegistrationResponse';
-import {IAddEnquiryResponse} from '../../interface/enquiry/IAddEnquiryResponse';
-import {IAddEnquiryRequest} from '../../interface/enquiry/IAddEnquiryRequest';
-import {IAddFollowupResponse} from '../../interface/enquiry/IAddFollowupResponse';
-import {IGetEnquiriesResponse} from '../../interface/enquiry/IGetEnquiriesResponse';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { ICompanyRegistrationResponse } from '../../interface/companyRegistration/ICompanyRegistrationResponse';
+import { IAddEnquiryResponse } from '../../interface/enquiry/IAddEnquiryResponse';
+import { IAddEnquiryRequest } from '../../interface/enquiry/IAddEnquiryRequest';
+import { IAddFollowupResponse } from '../../interface/enquiry/IAddFollowupResponse';
+import { IGetEnquiriesResponse } from '../../interface/enquiry/IGetEnquiriesResponse';
 import { IGetFollowupsResponse } from '../../interface/enquiry/IGetFollowupsResponse';
 import { IAddFollowupRequest } from '../../interface/enquiry/IAddFollowupRequest';
 import { IAddSurveyResponse } from '../../interface/enquiry/IAddSurveyResponse';
@@ -16,6 +16,8 @@ import { IDropAddress, IPickupAddress } from '../../interface/order/IUpdateAddre
 import { IUpdateCompanyContactDetailRequest, IUpdateContactDetailResponse, IUpdateIndividualContactDetailRequest } from '../../interface/order/IUpdateContactDetails';
 import { IUpdateShiftingInfoRequest, IUpdateShiftingInfoResponse } from '../../interface/enquiry/IUpdateShiftingInfo';
 import { IUpdateEnquiryStatusRequest } from '../../interface/enquiry/IUpdateEnquiryStatusRequest';
+import { IAddSurveyItemRequest } from '../../interface/enquiry/IAddSurveyItemRequest';
+import { IGetSurveyItemListResponse } from '../../interface/enquiry/IGetSurveyItemListResponse';
 import { ISingleEnquiryResponse } from '../../interface/enquiry/ISingleEnquiryResponse';
 
 interface IEnquiryState {
@@ -73,6 +75,18 @@ interface IEnquiryState {
   getSurveyListSuccess: boolean;
   getSurveyListFailure: boolean;
   getSurveyListError: any;
+  // Add Survey Item
+  addSurveyItemInfo: IAddSurveyResponse | null;
+  addSurveyItemRequesting: boolean;
+  addSurveyItemSuccess: boolean;
+  addSurveyItemFailure: boolean;
+  addSurveyItemError: any;
+  // Get Survey Item List
+  surveyItemList: IGetSurveyItemListResponse | null;
+  getSurveyItemListRequesting: boolean;
+  getSurveyItemListSuccess: boolean;
+  getSurveyItemListFailure: boolean;
+  getSurveyItemListError: any;
   // Update Enquiry Status
   updateEnquiryStatusInfo: IUpdateEnquiryStatusResponse | null,
   updateEnquiryStatusRequesting: boolean,
@@ -154,6 +168,18 @@ const initialState: IEnquiryState = {
   getSurveyListSuccess: false,
   getSurveyListFailure: false,
   getSurveyListError: null,
+  // Add Survey Item
+  addSurveyItemInfo: null,
+  addSurveyItemRequesting: false,
+  addSurveyItemSuccess: false,
+  addSurveyItemFailure: false,
+  addSurveyItemError: null,
+  // Get Survey Item List
+  surveyItemList: null,
+  getSurveyItemListRequesting: false,
+  getSurveyItemListSuccess: false,
+  getSurveyItemListFailure: false,
+  getSurveyItemListError: false,
   // Update Enquiry Status
   updateEnquiryStatusInfo: null,
   updateEnquiryStatusRequesting: false,
@@ -376,10 +402,59 @@ export const EnquirySlice = createSlice({
       state.getSurveyListFailure = true;
       state.getSurveyListError = action.payload;
     },
+    // Add Survey Item
+    addSurveyItemRequest: (
+      state,
+      action: PayloadAction<IAddSurveyItemRequest>,
+    ) => {
+      state.addSurveyItemRequesting = true;
+    },
+    addSurveyItemSuccess: (
+      state,
+      action: PayloadAction<IAddSurveyResponse>,
+    ) => {
+      state.addSurveyItemRequesting = false;
+      state.addSurveyItemSuccess = true;
+      state.addSurveyItemInfo = action.payload;
+    },
+    addSurveyItemFailure: (state, action: PayloadAction<any>) => {
+      state.addSurveyItemRequesting = false;
+      state.addSurveyItemSuccess = false;
+      state.addSurveyItemFailure = true;
+      state.addSurveyItemError = action.payload;
+    },
+    resetAddSurveyItemRequest: (state, action: PayloadAction) => {
+      state.addSurveyRequesting = false;
+      state.addSurveySuccess = false;
+      state.addSurveyFailure = false;
+      state.addSurveyError = null;
+      state.addSurveyInfo = null;
+    },
+    // Get Survey List
+    getSurveyItemListRequest: (
+      state,
+      action: PayloadAction<string>,
+    ) => {
+      state.getSurveyItemListRequesting = true;
+    },
+    getSurveyItemListSuccess: (
+      state,
+      action: PayloadAction<IGetSurveyItemListResponse>,
+    ) => {
+      state.getSurveyItemListRequesting = false;
+      state.getSurveyItemListSuccess = true;
+      state.surveyItemList = action.payload;
+    },
+    getSurveyItemListFailure: (state, action: PayloadAction<any>) => {
+      state.getSurveyItemListRequesting = false;
+      state.getSurveyItemListSuccess = false;
+      state.getSurveyItemListFailure = true;
+      state.getSurveyItemListError = action.payload;
+    },
     // Update Enquiry Status
     updateEnquiryStatusRequest: (
       state,
-      action: PayloadAction<{id:string, requestBody:IUpdateEnquiryStatusRequest}>,
+      action: PayloadAction<{ id: string, requestBody: IUpdateEnquiryStatusRequest }>,
     ) => {
       state.updateEnquiryStatusRequesting = true;
     },
@@ -407,7 +482,7 @@ export const EnquirySlice = createSlice({
     // Update Address
     updateAddressRequest: (
       state,
-      action: PayloadAction<{id:string, requestBody: IPickupAddress | IDropAddress}>,
+      action: PayloadAction<{ id: string, requestBody: IPickupAddress | IDropAddress }>,
     ) => {
       state.updateAddressRequesting = true;
     },
@@ -435,7 +510,7 @@ export const EnquirySlice = createSlice({
     // Update Contact Details
     updateContactDetailsRequest: (
       state,
-      action: PayloadAction<{id:string, requestBody: IUpdateIndividualContactDetailRequest | IUpdateCompanyContactDetailRequest}>,
+      action: PayloadAction<{ id: string, requestBody: IUpdateIndividualContactDetailRequest | IUpdateCompanyContactDetailRequest }>,
     ) => {
       state.updateContactDetailRequesting = true;
     },
@@ -463,7 +538,7 @@ export const EnquirySlice = createSlice({
     // Update Shifting Info
     updateShiftingInfoRequest: (
       state,
-      action: PayloadAction<{id:string, requestBody: IUpdateShiftingInfoRequest}>,
+      action: PayloadAction<{ id: string, requestBody: IUpdateShiftingInfoRequest }>,
     ) => {
       state.updateShiftingInfoRequesting = true;
     },
@@ -534,6 +609,15 @@ export const {
   getSurveyListRequest,
   getSurveyListSuccess,
   getSurveyListFailure,
+  //Add Survey Item
+  addSurveyItemRequest,
+  addSurveyItemSuccess,
+  addSurveyItemFailure,
+  resetAddSurveyItemRequest,
+  // Get Survey Item List
+  getSurveyItemListRequest,
+  getSurveyItemListSuccess,
+  getSurveyItemListFailure,
   // Update Enquiry Status
   updateEnquiryStatusRequest,
   updateEnquiryStatusSuccess,
