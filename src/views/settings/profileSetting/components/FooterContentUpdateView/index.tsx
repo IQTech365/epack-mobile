@@ -27,6 +27,7 @@ import { addFooterContentRequest, resetFooterContentRequest } from '../../../../
 import Toast from 'react-native-toast-message';
 import Spinner from '../../../../../common/Spinner';
 import { ISubmoduleData } from '../../../../../interface/setting/packerProfile/ISubmodule';
+import useCompanyId from '../../../../../hooks/useCompanyId';
 
 interface IContentUpdateProps {}
 
@@ -39,29 +40,10 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({}) => {
   const [content, setContent] = useState<string>('');
   const [modules, setModules] = useState<string[]>(['']);
   const dispatch = useAppDispatch();
-  const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
   const {addFooterContentRequesting, addFooterContentSuccess, addFooterContentFailure, submodules} = useAppSelector(state => state.Setting);
   const richText = React.useRef();
   const {data: submodulesData = []} = submodules || {};
-
-  const getCompanyId = () => {
-    let id;
-    const {data} = addCompanyInfo || {};
-    const {data: companiesData} = companies || {};
-    if (data && Object.keys(data).length > 0) {
-      id = data._id;
-    } else if (
-      companiesData &&
-      Array.isArray(companiesData) &&
-      companiesData.length > 0
-    ) {
-      const firstCompany = companiesData[0];
-      id = firstCompany._id;
-    } else if(companiesData && companiesData.hasOwnProperty('_id')) {
-      id = companiesData._id;
-    }
-    return id;
-  };
+  const companyId = useCompanyId();
 
   const handleAccountType = (item: TDropdownItem) => {
     setAccountType(item.label);
@@ -87,7 +69,7 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({}) => {
 
   const handleSave = () => {
     const payload: IAddFooterContentRequest = {
-      companyId: getCompanyId(),
+      companyId: companyId,
       modulesView: modules,
       accountType: accountType,
       title: title,
@@ -105,7 +87,7 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({}) => {
         text2: 'Footer content has been added successfully',
       });
       dispatch(resetFooterContentRequest());
-      // dispatch(getEnquiriesRequest(getCompanyId()));
+      // dispatch(getEnquiriesRequest(companyId));
       // navigation.goBack();
     } else if (!addFooterContentRequesting && addFooterContentFailure) {
       Toast.show({

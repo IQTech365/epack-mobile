@@ -12,35 +12,16 @@ import { getContactsRequest } from '../../../../../redux/slices/ProfileSettingSl
 import Spinner from '../../../../../common/Spinner';
 import ContactListItem, { IContactListItem } from './components/ContactDetailListItem';
 import { IGetContactDetailsData } from '../../../../../interface/setting/packerProfile/contactDetail/IGetContactDetailsResponse';
+import useCompanyId from '../../../../../hooks/useCompanyId';
 
 const AddContactView = () => {
   const [showContactList, setShowContactList] = useState<boolean>(false);
   const [showAddContact, setShowAddContact] = useState<boolean>(true);
   const dispatch = useAppDispatch();
   const {getContactsRequesting, contacts} = useAppSelector(state => state.Setting);
-  const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
-  console.log('Contacts----', JSON.stringify(contacts));
   const {data: contactsData} = contacts || {};
+  const companyId = useCompanyId();
   
-  const getCompanyId = () => {
-    let id;
-    const {data} = addCompanyInfo || {};
-    const {data: companiesData} = companies || {};
-    if (data && Object.keys(data).length > 0) {
-      id = data._id;
-    } else if (
-      companiesData &&
-      Array.isArray(companiesData) &&
-      companiesData.length > 0
-    ) {
-      const firstCompany = companiesData[0];
-      id = firstCompany._id;
-    } else if(companiesData && companiesData.hasOwnProperty('_id')) {
-      id = companiesData._id;
-    }
-    return id;
-  };
-
   const getTransformedData = () => {
     let _data: IContactListItem[] = [];
     if(contactsData && Array.isArray(contactsData) && contactsData.length > 0) {
@@ -95,7 +76,7 @@ const AddContactView = () => {
   };
 
   useEffect(() => {
-    dispatch(getContactsRequest(getCompanyId()));
+    dispatch(getContactsRequest(companyId));
   }, []);
 
   useEffect(() => {

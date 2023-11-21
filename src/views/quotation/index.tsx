@@ -30,6 +30,7 @@ import {
   IGetQuotationData,
 } from '../../interface/quotation/IGetQuotationsResponse';
 import {IGetEnquiriesData} from '../../interface/enquiry/IGetEnquiriesResponse';
+import useCompanyId from '../../hooks/useCompanyId';
 interface IQuotationPageViewProps {
   navigation: NavigationProp<any, any>;
 }
@@ -41,12 +42,11 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
   const {quotations = [], getQuotationsRequesting} = useAppSelector(
     state => state.Quotation,
   );
-  const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
-  const {verifiedData} = useAppSelector(state => state.OTP);
   const [downloadOption, setDownloadOption] = useState<string>('');
   const bottomSheetRef = useRef<BottomSheet>(null);
   console.log('quotations----', JSON.stringify(quotations));
   const {data: quotationData} = quotations || {};
+  const companyId = useCompanyId();
 
   const getTotalQuotations = () => {
     let _count = 0;
@@ -107,37 +107,13 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
     bottomSheetRef.current?.close();
   };
 
-  const getCompanyId = () => {
-    let id;
-    const {data} = addCompanyInfo || {};
-    const {data: companiesData} = companies || {};
-    if (data && Object.keys(data).length > 0) {
-      id = data._id;
-    } else if (
-      companiesData &&
-      Array.isArray(companiesData) &&
-      companiesData.length > 0
-    ) {
-      const firstCompany = companiesData[0];
-      id = firstCompany._id;
-    } else if(companiesData && companiesData.hasOwnProperty('_id')) {
-      id = companiesData._id;
-    }
-    return id;
-  };
-
-  const getAuthId = () => {
-    const {data} = verifiedData || {};
-    return data?.id;
-  };
-
   const handleAddNew = () => {
     navigation.navigate(QuotationStackRoute.AddQuotation);
   };
 
   const handleOnRefresh = useCallback(() => {
     const payload: IGetQuotationRequest = {
-      companyId: getCompanyId(),
+      companyId: companyId,
     };
     dispatch(getQuotationsRequest(payload));
   }, []);
@@ -145,7 +121,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
   useEffect(() => {
     const payload: IGetQuotationRequest = {
       //Note: we can also pass branchId, authId, or id to get the quotation info.
-      companyId: getCompanyId(),
+      companyId: companyId,
     };
     dispatch(getQuotationsRequest(payload));
   }, []);

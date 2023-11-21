@@ -11,6 +11,7 @@ import styles from './style';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { IGetOrdersRequest } from '../../interface/order/IGetOrdersRequest';
 import { getApprovedOrdersRequest, getOrdersRequest } from '../../redux/slices/OrderSlice';
+import useCompanyId from '../../hooks/useCompanyId';
 
 interface IClientPageViewProps {
   navigation: NavigationProp<any, any>;
@@ -18,7 +19,7 @@ interface IClientPageViewProps {
 
 const ClientPageView: React.FC<IClientPageViewProps> = ({ navigation }) => {
   const { otpData } = useAppSelector(state => state.OTP);
-  const { addCompanyInfo, companies } = useAppSelector(state => state.Company);
+  const companyId = useCompanyId();
   const { approvedOrders, getOrdersRequesting } =
     useAppSelector(state => state.Order);
   const { data: ordersArr } = approvedOrders || {};
@@ -26,28 +27,10 @@ const ClientPageView: React.FC<IClientPageViewProps> = ({ navigation }) => {
   
   const dispatch = useAppDispatch();
 
-
-  const getCompanyId = () => {
-    let id;
-    const { data } = addCompanyInfo || {};
-    const { data: companiesData } = companies || {};
-    if (data && Object.keys(data).length > 0) {
-      id = data._id;
-    } else if (companiesData && Array.isArray(companiesData) && companiesData.length > 0) {
-      const firstCompany = companiesData[0];
-      id = firstCompany._id;
-    } else if(companiesData && companiesData.hasOwnProperty('_id')) {
-      id = companiesData._id;
-    }
-    console.log('company_id-', id);
-    
-    return id;
-  };
-
   const handleOnRefresh = useCallback(() => {
     let orderListReq: IGetOrdersRequest = {
       // authId: otpData?.data.id as string,
-      companyId: getCompanyId(),
+      companyId: companyId,
       status: "COMPLETED"
     }
     dispatch(getApprovedOrdersRequest(orderListReq));
@@ -56,7 +39,7 @@ const ClientPageView: React.FC<IClientPageViewProps> = ({ navigation }) => {
   useEffect(() => {
     let orderListReq: IGetOrdersRequest = {
       authId: otpData?.data.id as string,
-      companyId: getCompanyId(),
+      companyId: companyId,
       status: "COMPLETED"
     }
     dispatch(getApprovedOrdersRequest(orderListReq));

@@ -26,6 +26,7 @@ import { ICreateMoneyReceiptRequest } from '../../../../../interface/order/ICrea
 import { createMoneyReceiptRequest, editMoneyReceiptListRequest } from '../../../../../redux/slices/OrderSlice';
 import Spinner from '../../../../../common/Spinner';
 import Toast from 'react-native-toast-message';
+import useCompanyId from '../../../../../hooks/useCompanyId';
 
 interface IMoneyReceiptFormViewProps {
   orderId: string | undefined;
@@ -49,26 +50,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({ orderId, e
     editMoneyReceiptListFailure,
     editMoneyReceiptListError
   } = useAppSelector(state => state.Order);
-  const { addCompanyInfo, companies } = useAppSelector(state => state.Company);
-
-  const getCompanyId = () => {
-    let id;
-    const { data } = addCompanyInfo || {};
-    const { data: companiesData } = companies || {};
-    if (data && Object.keys(data).length > 0) {
-      id = data._id;
-    } else if (
-      companiesData &&
-      Array.isArray(companiesData) &&
-      companiesData.length > 0
-    ) {
-      const firstCompany = companiesData[0];
-      id = firstCompany._id;
-    } else if(companiesData && companiesData.hasOwnProperty('_id')) {
-      id = companiesData._id;
-    }
-    return id;
-  };
+  const companyId = useCompanyId();
 
   const dispatch2 = useAppDispatch();
   const handleReceiptDate = (date: Date) => {
@@ -155,7 +137,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({ orderId, e
 
   const handleCreate = () => {
     const payload: ICreateMoneyReceiptRequest = {
-      companyId: getCompanyId(),
+      companyId: companyId,
       orderId: orderId as string,
       receiptNumber: reducerState.receiptNumber,
       receiptDate: reducerState.receiptDate,

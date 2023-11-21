@@ -10,6 +10,7 @@ import Spacer from '../../../../common/Spacer';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
 import { getSerialNoRequest } from '../../../../redux/slices/SerialNoSettingSlice';
 import SerialNoListItem from '../SerialNoSettingListItem';
+import useCompanyId from '../../../../hooks/useCompanyId';
 
 interface IInvoiceSNProps {
   moduleId: string;
@@ -20,9 +21,9 @@ const InvoiceSN: React.FC<IInvoiceSNProps> = ({moduleId, moduleName}) => {
   const [showList, setShowList] = useState<boolean>(false);
   const [showForm, setShowForm] = useState<boolean>(true);
   const {getSerialNumberRequesting, paymentMethods} = useAppSelector(state => state.SNSetting);
-  const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
   const {data: PaymentMethodsData = []} = paymentMethods || {};
   const dispatch = useAppDispatch();
+  const companyId = useCompanyId();
 
   const showEmptyView = () => {
     return (
@@ -42,31 +43,12 @@ const InvoiceSN: React.FC<IInvoiceSNProps> = ({moduleId, moduleName}) => {
     setShowForm(false);
   };
 
-  const getCompanyId = () => {
-    let id;
-    const {data} = addCompanyInfo || {};
-    const {data: companiesData} = companies || {};
-    if (data && Object.keys(data).length > 0) {
-      id = data._id;
-    } else if (
-      companiesData &&
-      Array.isArray(companiesData) &&
-      companiesData.length > 0
-    ) {
-      const firstCompany = companiesData[0];
-      id = firstCompany._id;
-    } else if(companiesData && companiesData.hasOwnProperty('_id')) {
-      id = companiesData._id;
-    }
-    return id;
-  };
-
   const handleOnRefresh = useCallback(() => {
-    dispatch(getSerialNoRequest(getCompanyId()));
+    dispatch(getSerialNoRequest(companyId));
   }, []);
 
   useEffect(() => {
-    dispatch(getSerialNoRequest(getCompanyId()));
+    dispatch(getSerialNoRequest(companyId));
   }, []);
   
 

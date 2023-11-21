@@ -27,6 +27,7 @@ import { IAddLorryRequest } from '../../../../interface/vehicle/IAddLorryRequest
 import { addLorryRequest, restAddLorryRequest } from '../../../../redux/slices/VehicleSlice';
 import Spinner from '../../../../common/Spinner';
 import { getBranchsRequest, getFranchiseRequest } from '../../../../redux/slices/MyProfile';
+import useCompanyId from '../../../../hooks/useCompanyId';
 
 const AddLorryView: React.FC<{}> = ({ }) => {
     const [state, dispatch] = useReducer(addAddLorryReducer, initialState);
@@ -58,6 +59,7 @@ const AddLorryView: React.FC<{}> = ({ }) => {
         companies
     } = useAppSelector(state => state.Company);
     const dispatch2 = useAppDispatch();
+    const companyId = useCompanyId();
 
     const options: IOptions = {
         mediaType: 'photo',
@@ -67,25 +69,6 @@ const AddLorryView: React.FC<{}> = ({ }) => {
         cameraType: 'back',
     };
 
-    const getCompanyId = () => {
-        let id;
-        const { data } = addCompanyInfo || {};
-        const { data: companiesData } = companies || {};
-        if (data && Object.keys(data).length > 0) {
-            id = data._id;
-        } else if (
-            companiesData &&
-            Array.isArray(companiesData) &&
-            companiesData.length > 0
-        ) {
-            const firstCompany = companiesData[0];
-            id = firstCompany._id;
-        } else if(companiesData && companiesData.hasOwnProperty('_id')) {
-            id = companiesData._id;
-        }
-        return id;
-    };
-    
     useEffect(() => {
         const fetchData = async () => {
           let data = [];
@@ -107,9 +90,9 @@ const AddLorryView: React.FC<{}> = ({ }) => {
     const handleChooseEntity = (text: string) => {
         setBranchStatus(text)
         if(text='Branch'){
-      dispatch2(getBranchsRequest(getCompanyId()));
+      dispatch2(getBranchsRequest(companyId));
         }else{
-            dispatch2(getFranchiseRequest(getCompanyId()));
+            dispatch2(getFranchiseRequest(companyId));
         }
         dispatch({
             type: ADD_LORRY_FORM_ACTION.CHOOSE_ENTITY,
@@ -203,9 +186,9 @@ const AddLorryView: React.FC<{}> = ({ }) => {
     };
     const handleSubmit = () => {
         const payload: IAddLorryRequest = {
-            companyId: getCompanyId(),
+            companyId: companyId,
             entityType: state.chooseEntity,
-            entityId:  getCompanyId(),
+            entityId:  companyId,
             driverName:  state.branchName,
             branchName: state.branchName,
             lorryCompanyName: state.lorryCompanyName,
@@ -219,7 +202,7 @@ const AddLorryView: React.FC<{}> = ({ }) => {
             vehicleRCNo: state.vehicleRCNo,
             pollutionCertificateNo: state.pollutionCertiNo,
             pollutionRenewalDate: state.renewalPermitDate,
-            createdBy: getCompanyId()
+            createdBy: companyId
         }
         console.log(payload, 'add Lorry..');
         dispatch2(addLorryRequest(payload));

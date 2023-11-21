@@ -20,6 +20,7 @@ import { IAddPaymentMethodRequest } from '../../../../../interface/setting/packe
 import { addPaymentMethodRequest, getBanksRequest, resetAddPaymentMethodRequest } from '../../../../../redux/slices/ProfileSettingSlice';
 import Spinner from '../../../../../common/Spinner';
 import { ISubmoduleData } from '../../../../../interface/setting/packerProfile/ISubmodule';
+import useCompanyId from '../../../../../hooks/useCompanyId';
 interface IAccountDetailsProps {}
 
 interface IAccountOptions {
@@ -38,7 +39,6 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
   const [accountOptions, setAccountOptions] = useState<IAccountOptions[]>(bankNameOptions);
   const [modules, setModules] = useState<string[]>(['']);
   const dispatch = useAppDispatch();
-  const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
   const {
     addPaymentMethodRequesting,
     addPaymentMethodSuccess,
@@ -49,6 +49,7 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
   } = useAppSelector(state => state.Setting);
   const {data: submodulesData = []} = submodules || {};
   const {otpData} = useAppSelector(state => state.OTP);
+  const companyId = useCompanyId();
 
   const handleAccountType = (item: TDropdownItem) => {
     setAccountType(item.label);
@@ -75,25 +76,6 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
     setUPIId(text);
   }
 
-  const getCompanyId = () => {
-    let id;
-    const {data} = addCompanyInfo || {};
-    const {data: companiesData} = companies || {};
-    if (data && Object.keys(data).length > 0) {
-      id = data._id;
-    } else if (
-      companiesData &&
-      Array.isArray(companiesData) &&
-      companiesData.length > 0
-    ) {
-      const firstCompany = companiesData[0];
-      id = firstCompany._id;
-    } else if(companiesData && companiesData.hasOwnProperty('_id')) {
-      id = companiesData._id;
-    }
-    return id;
-  };
-
   const handleModulesApplyFor = (moduleName: string, isChecked: boolean) => {
     const tempArr = [...modules];
     if(isChecked) {
@@ -111,7 +93,7 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
   
   const handleSave = useCallback(() => {
     const payload: IAddPaymentMethodRequest = {
-      companyId: getCompanyId(),
+      companyId: companyId,
       accountType: accountType,
       bankId: selectedUPI,
       accountHolderName: accountHolder,
@@ -145,7 +127,7 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
         text2: 'Account Detail has been added successfully',
       });
       dispatch(resetAddPaymentMethodRequest());
-      // dispatch(getEnquiriesRequest(getCompanyId()));
+      // dispatch(getEnquiriesRequest(companyId));
       // navigation.goBack();
     } else if (!addPaymentMethodRequesting && addPaymentMethodFailure) {
       Toast.show({

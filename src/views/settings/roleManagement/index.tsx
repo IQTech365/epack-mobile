@@ -41,6 +41,7 @@ import {
   ISubmodule,
   ISubmoduleFeature,
 } from '../../../interface/setting/role/IModule';
+import useCompanyId from '../../../hooks/useCompanyId';
 
 const RoleManagementView: React.FC<{}> = ({}) => {
   const [entityType, setEntityType] = useState<string>(entityOptions[0].label);
@@ -52,7 +53,6 @@ const RoleManagementView: React.FC<{}> = ({}) => {
   const [password, setPassword] = useState<string>('');
   const [roleType, setRoleType] = useState<string>('');
   const [permissions, setPermissions] = useState<string[]>([]);
-  const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
   const {
     getRoleTypesRequesting,
     getRoleTypeSuccess,
@@ -77,28 +77,9 @@ const RoleManagementView: React.FC<{}> = ({}) => {
   const {data: roleTypesData} = roleTypes || {};
   const {data: brancheData = []} = Branchs || {};
   const {data: franchiseData = []} = Franchises || {};
-  console.log('Modules----', JSON.stringify(modules));
 
   const dispatch = useAppDispatch();
-
-  const getCompanyId = () => {
-    let id;
-    const {data} = addCompanyInfo || {};
-    const {data: companiesData} = companies || {};
-    if (data && Object.keys(data).length > 0) {
-      id = data._id;
-    } else if (
-      companiesData &&
-      Array.isArray(companiesData) &&
-      companiesData.length > 0
-    ) {
-      const firstCompany = companiesData[0];
-      id = firstCompany._id;
-    } else if(companiesData && companiesData.hasOwnProperty('_id')) {
-      id = companiesData._id;
-    }
-    return id;
-  };
+  const companyId = useCompanyId();
 
   const transformBranchData = () => {
     let _data: TDropdownItem[] = [];
@@ -196,7 +177,7 @@ const RoleManagementView: React.FC<{}> = ({}) => {
 
   const handleSubmit = () => {
     const payload: IAddUserRoleRequest = {
-      companyId: getCompanyId(),
+      companyId: companyId,
       roleTypeId: roleType,
       entityType: entityType,
       entityId: subEntityType,
@@ -344,8 +325,8 @@ const RoleManagementView: React.FC<{}> = ({}) => {
 
   useEffect(() => {
     dispatch(getRoleTypesRequest());
-    dispatch(getBranchsRequest(getCompanyId()));
-    dispatch(getFranchiseRequest(getCompanyId()));
+    dispatch(getBranchsRequest(companyId));
+    dispatch(getFranchiseRequest(companyId));
     dispatch(getModulesRequest());
   }, []);
 

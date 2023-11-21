@@ -18,6 +18,7 @@ import {ICreateSerialNoRequest} from '../../../../interface/setting/serialNo/ICr
 import {createSerialNoRequest, resetCreateSerialNoRequest} from '../../../../redux/slices/SerialNoSettingSlice';
 import Toast from 'react-native-toast-message';
 import Spinner from '../../../../common/Spinner';
+import useCompanyId from '../../../../hooks/useCompanyId';
 
 interface IMoneyReceiptSNProps {
   moduleId: string;
@@ -31,8 +32,6 @@ const SerialNoSettingFormView:React.FC<IMoneyReceiptSNProps> = ({moduleId, modul
   const [suffix, setSuffix] = useState<string>('');
   const dispatch = useAppDispatch();
   const {Franchises, Branchs} = useAppSelector(state => state.Myprofile);
-  const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
-  const {otpData} = useAppSelector(state => state.OTP);
   const {
     createSerialNumberRequesting,
     createSerialNumberSuccess,
@@ -41,25 +40,7 @@ const SerialNoSettingFormView:React.FC<IMoneyReceiptSNProps> = ({moduleId, modul
 
   const {data: brancheData = []} = Branchs || {};
   const {data: franchiseData = []} = Franchises || {};
-
-  const getCompanyId = () => {
-    let id;
-    const {data} = addCompanyInfo || {};
-    const {data: companiesData} = companies || {};
-    if (data && Object.keys(data).length > 0) {
-      id = data._id;
-    } else if (
-      companiesData &&
-      Array.isArray(companiesData) &&
-      companiesData.length > 0
-    ) {
-      const firstCompany = companiesData[0];
-      id = firstCompany._id;
-    } else if(companiesData && companiesData.hasOwnProperty('_id')) {
-      id = companiesData._id;
-    }
-    return id;
-  };
+  const companyId = useCompanyId();
 
   const transformBranchData = () => {
     let _data: TDropdownItem[] = [];
@@ -129,7 +110,7 @@ const SerialNoSettingFormView:React.FC<IMoneyReceiptSNProps> = ({moduleId, modul
 
   const handleSave = () => {
     const payload: ICreateSerialNoRequest = {
-      companyId: getCompanyId(),
+      companyId: companyId,
       companyEntity: entityType,
       branchId: subEntityType,
       moduleId: subEntityType,
@@ -143,8 +124,8 @@ const SerialNoSettingFormView:React.FC<IMoneyReceiptSNProps> = ({moduleId, modul
   };
 
   useEffect(() => {
-    dispatch(getBranchsRequest(getCompanyId()));
-    dispatch(getFranchiseRequest(getCompanyId()));
+    dispatch(getBranchsRequest(companyId));
+    dispatch(getFranchiseRequest(companyId));
   }, []);
 
   useEffect(() => {

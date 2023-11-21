@@ -12,34 +12,17 @@ import AddBranchUpdateView from '../addBranchUpdateView';
 import { getBranchsRequest } from '../../../../redux/slices/MyProfile';
 import Spinner from '../../../../common/Spinner';
 import AddBranchListItem from '../addBranchList';
+import useCompanyId from '../../../../hooks/useCompanyId';
 
 const AddBranchView = () => {
   const [showBranchList, setshowBranchList] = useState<boolean>(false);
   const [showAddBranch, setshowAddBranch] = useState<boolean>(true);
-  const { addCompanyInfo, companies } = useAppSelector(state => state.Company);
   const {Branchs, getBranchsRequesting} = useAppSelector(
     state => state.Myprofile,
   );
   const {data: BranchsData = []} = Branchs || {};
   const dispatch = useAppDispatch();
-  const getCompanyId = () => {
-    let id;
-    const { data } = addCompanyInfo || {};
-    const { data: companiesData } = companies || {};
-    if (data && Object.keys(data).length > 0) {
-        id = data._id;
-    } else if (
-        companiesData &&
-        Array.isArray(companiesData) &&
-        companiesData.length > 0
-    ) {
-        const firstCompany = companiesData[0];
-        id = firstCompany._id;
-    } else if(companiesData && companiesData.hasOwnProperty('_id')) {
-      id = companiesData._id;
-    }
-    return id;
-};
+  const companyId = useCompanyId();
 
   const handleCreateNewContent = () => {
     setshowBranchList(false);
@@ -94,11 +77,11 @@ const AddBranchView = () => {
   };
 
   const handleOnRefresh = useCallback(() => {
-    dispatch(getBranchsRequest(getCompanyId()));
+    dispatch(getBranchsRequest(companyId));
   }, []);
 
   useEffect(() => {
-    dispatch(getBranchsRequest(getCompanyId()))
+    dispatch(getBranchsRequest(companyId))
   }, []);
 
   return (

@@ -17,33 +17,15 @@ import CreateIcon from '../../../../../images/icons/create_icon.svg';
 import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import { getPaymentMethodsRequest } from '../../../../../redux/slices/ProfileSettingSlice';
+import useCompanyId from '../../../../../hooks/useCompanyId';
 
 const AddAccountView = () => {
   const [showPaymentMethodList, setShowPaymentMethodList] =
     useState<boolean>(false);
   const [showAddPaymentMehod, setShowAddPaymentMethod] =
     useState<boolean>(true);
-    const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
     const dispatch = useAppDispatch();
-
-    const getCompanyId = () => {
-      let id;
-      const {data} = addCompanyInfo || {};
-      const {data: companiesData} = companies || {};
-      if (data && Object.keys(data).length > 0) {
-        id = data._id;
-      } else if (
-        companiesData &&
-        Array.isArray(companiesData) &&
-        companiesData.length > 0
-      ) {
-        const firstCompany = companiesData[0];
-        id = firstCompany._id;
-      } else if(companiesData && companiesData.hasOwnProperty('_id')) {
-        id = companiesData._id;
-      }
-      return id;
-    };
+    const companyId = useCompanyId();
 
   const rederItemBankAccount = (index: number) => {
     return (
@@ -140,7 +122,7 @@ const AddAccountView = () => {
   };
 
   useEffect(() => {
-    dispatch(getPaymentMethodsRequest(getCompanyId()))
+    dispatch(getPaymentMethodsRequest(companyId))
   }, []);
 
   const showEmptyView = () => {

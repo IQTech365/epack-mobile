@@ -21,6 +21,7 @@ import { IAddDocumentRequest } from '../../../../../interface/setting/packerProf
 import { addDocumentRequest, resetAddDocumentRequest } from '../../../../../redux/slices/ProfileSettingSlice';
 import Toast from 'react-native-toast-message';
 import Spinner from '../../../../../common/Spinner';
+import useCompanyId from '../../../../../hooks/useCompanyId';
 
 interface IDocumentUpdateProps {}
 
@@ -34,29 +35,10 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
   const [documentTitle, setDocumentTitle] = useState<string>('');
   const [modules, setModules] = useState<string[]>(['']);
   const dispatch = useAppDispatch();
-  const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
   const {otpData} = useAppSelector(state => state.OTP);
   const {submodules, addDocumentRequesting, addDocumentSuccess, addDocumentFailure} = useAppSelector(state => state.Setting);
   const {data: submodulesData = []} = submodules || {};
-
-  const getCompanyId = () => {
-    let id;
-    const {data} = addCompanyInfo || {};
-    const {data: companiesData} = companies || {};
-    if (data && Object.keys(data).length > 0) {
-      id = data._id;
-    } else if (
-      companiesData &&
-      Array.isArray(companiesData) &&
-      companiesData.length > 0
-    ) {
-      const firstCompany = companiesData[0];
-      id = firstCompany._id;
-    } else if(companiesData && companiesData.hasOwnProperty('_id')) {
-      id = companiesData._id;
-    }
-    return id;
-  };
+  const companyId = useCompanyId();
 
   const handleDocumentType = (item: TDropdownItem) => {
     setDocumentType(item.label);
@@ -120,7 +102,7 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
 
   const handleSave = () => {
     const payload:IAddDocumentRequest = {
-      companyId: getCompanyId(),
+      companyId: companyId,
       moduleId: modules,
       documentType: documentType,
       documentTypeValue: getDocumentValue(),
@@ -139,7 +121,7 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
         text2: 'Document Number has been added successfully',
       });
       dispatch(resetAddDocumentRequest());
-      // dispatch(getContactsRequest(getCompanyId()));
+      // dispatch(getContactsRequest(companyId));
     } else if (!addDocumentRequesting && addDocumentFailure) {
       Toast.show({
         type: 'error',

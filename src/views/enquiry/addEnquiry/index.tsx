@@ -47,6 +47,7 @@ import Spinner from '../../../common/Spinner';
 import Toast from 'react-native-toast-message';
 import {NavigationProp} from '@react-navigation/native';
 import EpackDropdown from '../../../common/DropdownComponent2';
+import useCompanyId from '../../../hooks/useCompanyId';
 
 interface IAddEnquiryViewProps {
   navigation: NavigationProp<any, any>;
@@ -70,7 +71,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
     addEnquiryInfo,
   } = useAppSelector(state => state.Enquiry);
   const {otpData} = useAppSelector(state => state.OTP);
-  const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
+  const companyId = useCompanyId();
 
   const pickupCityDropdownRef = useRef(null);
   const pickupStateDropwdownRef = useRef(null);
@@ -78,25 +79,6 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
   const dropCityDropdownRef = useRef(null);
 
   // console.log('AddEnquiry-addEnquiryInfo--', JSON.stringify(addEnquiryInfo));
-
-  const getCompanyId = () => {
-    let id;
-    const {data} = addCompanyInfo || {};
-    const {data: companiesData} = companies || {};
-    if (data && Object.keys(data).length > 0) {
-      id = data._id;
-    } else if (
-      companiesData &&
-      Array.isArray(companiesData) &&
-      companiesData.length > 0
-    ) {
-      const firstCompany = companiesData[0];
-      id = firstCompany._id;
-    } else if(companiesData && companiesData.hasOwnProperty('_id')) {
-      id = companiesData._id;
-    }
-    return id;
-  };
 
   const setPincodeError = () => {
     dispatch({
@@ -409,7 +391,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
         text2: 'Enquiry has been added successfully',
       });
       dispatch2(resetAddEnquiryRequest());
-      dispatch2(getEnquiriesRequest(getCompanyId()));
+      dispatch2(getEnquiriesRequest(companyId));
       navigation.goBack();
     } else if (!addEnquiryRequesting && addEnquiryFailure) {
       Toast.show({
@@ -423,7 +405,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
 
   const handleSubmit = useCallback(() => {
     const payload: IAddEnquiryRequest = {
-      companyId: getCompanyId(),
+      companyId: companyId,
       authId: otpData?.data.id as string,
       // companyId: '6511695bad8a273529a2a59a',
       // authId: '650efb2d7e3968c4c217a34f',

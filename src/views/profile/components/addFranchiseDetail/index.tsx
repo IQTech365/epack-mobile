@@ -12,37 +12,18 @@ import AddFranchiseUpdateView from '../addFranchiseUpdateView';
 import { getFranchiseRequest } from '../../../../redux/slices/MyProfile';
 import AddFranchiseListItem from '../addFranchiseList';
 import Spinner from '../../../../common/Spinner';
+import useCompanyId from '../../../../hooks/useCompanyId';
 // import Spinner from '../../../../../common/Spinner';
 
 const AddFranchiseView = () => {
   const [showFranchiseList, setshowFranchiseList] = useState<boolean>(false);
   const [showAddFranchise, setshowAddFranchise] = useState<boolean>(true);
-  const { addCompanyInfo, companies } = useAppSelector(state => state.Company);
   const {Franchises, getFranchiseRequesting} = useAppSelector(
     state => state.Myprofile,
   );
   const dispatch = useAppDispatch();
   const {data: franchiseData = []} = Franchises || {};
-
-  const getCompanyId = () => {
-    let id;
-    const { data } = addCompanyInfo || {};
-    const { data: companiesData } = companies || {};
-    if (data && Object.keys(data).length > 0) {
-        id = data._id;
-    } else if (
-        companiesData &&
-        Array.isArray(companiesData) &&
-        companiesData.length > 0
-    ) {
-        const firstCompany = companiesData[0];
-        id = firstCompany._id;
-    } else if(companiesData && companiesData.hasOwnProperty('_id')) {
-      id = companiesData._id;
-    }
-    return id;
-};
- 
+  const companyId = useCompanyId();
 
   const handleCreateNewContent = () => {
     setshowFranchiseList(false);
@@ -96,11 +77,11 @@ const AddFranchiseView = () => {
     return null;
   };
   const handleOnRefresh = useCallback(() => {
-    dispatch(getFranchiseRequest(getCompanyId()));
+    dispatch(getFranchiseRequest(companyId));
   }, []);
 
   useEffect(() => {
-    dispatch(getFranchiseRequest(getCompanyId()))
+    dispatch(getFranchiseRequest(companyId))
   }, []);
 
 

@@ -47,6 +47,7 @@ import packingMaterilOptions from '../../../../../data/packingMaterialOptions.js
 import packingMaterilUnitOptions from '../../../../../data/packingMaterialUnitOptions.json';
 import packingOptions from '../../../../../data/packingOptions.json';
 import DeleteIcon from '../../../../../images/icons/delete.svg';
+import useCompanyId from '../../../../../hooks/useCompanyId';
 
 const riskTypeOptions: Array<ICheckboxButton> = [
   {
@@ -190,7 +191,6 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
     createBiltyError,
     createBiltyFailure,
   } = useAppSelector(state => state.Order);
-  const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
   const dispatch2 = useAppDispatch();
   const [consignerStates, setConsignerStates] = useState<TDropdownItem[]>([]);
   const [consignerCities, setConsignerCities] = useState<TDropdownItem[]>([]);
@@ -214,6 +214,8 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
   const consigneeStateDropdownRef = useRef(null);
   const unloadingCityDropdownRef = useRef(null);
   const unloadingStateDropwdownRef = useRef(null);
+
+  const companyId = useCompanyId();
 
   const {result, setPincode} = usePincodeHook(
     () => {},
@@ -758,25 +760,6 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
     });
   };
 
-  const getCompanyId = () => {
-    let id;
-    const {data} = addCompanyInfo || {};
-    const {data: companiesData} = companies || {};
-    if (data && Object.keys(data).length > 0) {
-      id = data._id;
-    } else if (
-      companiesData &&
-      Array.isArray(companiesData) &&
-      companiesData.length > 0
-    ) {
-      const firstCompany = companiesData[0];
-      id = firstCompany._id;
-    } else if(companiesData && companiesData.hasOwnProperty('_id')) {
-      id = companiesData._id;
-    }
-    return id;
-  };
-
   const showMaterialList = () => {
     if (materials.length > 0) {
       return materials.map((item, index) => {
@@ -858,7 +841,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
 
   const handleCreateBilty = useCallback(() => {
     const payload: ICreateBiltyRequest = {
-      companyId: getCompanyId(),
+      companyId: companyId,
       enquiryId: orderId as string,
       templateId: 'fds32131',
       biltyNumber: reducerState.biltyLrCnNo,
@@ -1039,7 +1022,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
         charge: reducerState.loadingChargesAmount,
       },
       remarks: reducerState.remark,
-      addedBy: getCompanyId(),
+      addedBy: companyId,
     };
     console.log(payload, 'payload Bility req');
 

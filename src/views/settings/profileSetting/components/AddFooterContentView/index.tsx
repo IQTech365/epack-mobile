@@ -10,6 +10,7 @@ import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import { getFooterContentsRequest } from '../../../../../redux/slices/ProfileSettingSlice';
 import Spinner from '../../../../../common/Spinner';
+import useCompanyId from '../../../../../hooks/useCompanyId';
 
 const AddFooterContentView = () => {
   const [showContentList, setShowContentList] = useState<boolean>(false);
@@ -21,27 +22,8 @@ const AddFooterContentView = () => {
     getFooterContentsSuccess,
     getFooterContentsFailure,
   } = useAppSelector(state => state.Setting);
-  const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
   console.log('FooterContents-', JSON.stringify(footerContents));
-
-  const getCompanyId = () => {
-    let id;
-    const {data} = addCompanyInfo || {};
-    const {data: companiesData} = companies || {};
-    if (data && Object.keys(data).length > 0) {
-      id = data._id;
-    } else if (
-      companiesData &&
-      Array.isArray(companiesData) &&
-      companiesData.length > 0
-    ) {
-      const firstCompany = companiesData[0];
-      id = firstCompany._id;
-    } else if(companiesData && companiesData.hasOwnProperty('_id')) {
-      id = companiesData._id;
-    }
-    return id;
-  };
+  const companyId = useCompanyId();
 
   const handleCreateNewContent = () => {
     setShowContentList(false);
@@ -82,7 +64,7 @@ const AddFooterContentView = () => {
   };
 
   useEffect(() => {
-    dispatch(getFooterContentsRequest(getCompanyId()))
+    dispatch(getFooterContentsRequest(companyId))
   }, []);
 
   return (

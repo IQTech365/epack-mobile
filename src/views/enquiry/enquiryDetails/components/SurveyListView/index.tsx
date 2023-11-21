@@ -18,6 +18,7 @@ import Spinner from '../../../../../common/Spinner';
 import Toast from 'react-native-toast-message';
 import { IAddSurveyItemRequest } from '../../../../../interface/enquiry/IAddSurveyItemRequest';
 import { addSurveyItemRequest, resetAddSurveyItemRequest } from '../../../../../redux/slices/EnquirySlice';
+import useCompanyId from '../../../../../hooks/useCompanyId';
 
 interface ISurveyListViewProps {
   enquiryId:string
@@ -25,7 +26,6 @@ interface ISurveyListViewProps {
 
 const SurveyListView: React.FC<ISurveyListViewProps> = ({ enquiryId}) => {
 
-  const { addCompanyInfo, companies } = useAppSelector(state => state.Company);
   const {
     addSurveyItemRequesting,
     addSurveyItemSuccess,
@@ -38,25 +38,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({ enquiryId}) => {
   const [quantity, setQuantity] = useState<string>('');
   const [goods, setGoods] = useState<string>('');
   const [remarks, setRemarks] = useState<string>('');
-
-  const getCompanyId = () => {
-    let id;
-    const { data } = addCompanyInfo || {};
-    const { data: companiesData } = companies || {};
-    if (data && Object.keys(data).length > 0) {
-      id = data._id;
-    } else if (
-      companiesData &&
-      Array.isArray(companiesData) &&
-      companiesData.length > 0
-    ) {
-      const firstCompany = companiesData[0];
-      id = firstCompany._id;
-    } else if (companiesData && companiesData.hasOwnProperty('_id')) {
-      id = companiesData._id;
-    }
-    return id;
-  };
+  const companyId = useCompanyId();
 
   const dispatch = useAppDispatch();
 
@@ -87,7 +69,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({ enquiryId}) => {
 
   const handleCreate = () => {
    const payload:IAddSurveyItemRequest = {
-      companyId: getCompanyId(),
+      companyId: companyId,
       enquiryId: enquiryId,
       surveyListNo: surveyList,
       surveyDate:date,

@@ -75,6 +75,7 @@ import {IGetQuotationData} from '../../../interface/quotation/IGetQuotationsResp
 import EpackDropdown from '../../../common/DropdownComponent2';
 import {ISingleQuotationData} from '../../../interface/quotation/IGetSingleQuotationResponse';
 import {GSTOptions, chargeOptions, discountTypeOptions} from '../utils/utils';
+import useCompanyId from '../../../hooks/useCompanyId';
 
 const yesNoOptions: Array<ICheckboxButton> = [
   {
@@ -188,27 +189,8 @@ const AddQuotationView: React.FC<Props> = ({
     getQuotationRequesting,
   } = useAppSelector(state => state.Quotation);
   // console.log('AddQuotation-quotation----', JSON.stringify(quotation));
-  const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
   const {otpData} = useAppSelector(state => state.OTP);
-
-  const getCompanyId = () => {
-    let id;
-    const {data} = addCompanyInfo || {};
-    const {data: companiesData} = companies || {};
-    if (data && Object.keys(data).length > 0) {
-      id = data._id;
-    } else if (
-      companiesData &&
-      Array.isArray(companiesData) &&
-      companiesData.length > 0
-    ) {
-      const firstCompany = companiesData[0];
-      id = firstCompany._id;
-    } else if (companiesData && companiesData.hasOwnProperty('_id')) {
-      id = companiesData._id;
-    }
-    return id;
-  };
+  const companyId = useCompanyId();
 
   const setPincodeError = () => {
     dispatch({
@@ -1581,7 +1563,7 @@ const AddQuotationView: React.FC<Props> = ({
 
   const handleSubmit = useCallback(() => {
     const payload: IAddQuotationRequest = {
-      companyId: getCompanyId(),
+      companyId: companyId,
       authId: otpData?.data.id as string,
       shiftingType: state?.shiftingType.toUpperCase(),
       shiftingLuggage: state?.shiftingLuggage as string,

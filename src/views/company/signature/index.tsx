@@ -35,6 +35,7 @@ import {
 import Spinner from '../../../common/Spinner';
 import Toast from 'react-native-toast-message';
 import { useAuthContext } from '../../../provider/AuthProvider';
+import useCompanyId from '../../../hooks/useCompanyId';
 
 interface IOptions {
   mediaType: MediaType;
@@ -77,29 +78,9 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
     uploadSignatureError,
   } = useAppSelector(state => state.Company);
 
-  const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
-
+  const companyId = useCompanyId();
   const authContext = useAuthContext();
   const {setLoggedIn} = authContext;
-
-  const getCompanyId = () => {
-    let id;
-    const {data} = addCompanyInfo || {};
-    const {data: companiesData} = companies || {};
-    if (data && Object.keys(data).length > 0) {
-      id = data._id;
-    } else if (
-      companiesData &&
-      Array.isArray(companiesData) &&
-      companiesData.length > 0
-    ) {
-      const firstCompany = companiesData[0];
-      id = firstCompany._id;
-    } else if(companiesData && companiesData.hasOwnProperty('_id')) {
-      id = companiesData._id;
-    }
-    return id;
-  };
 
   const _onSaveEvent = (result: any) => {
     console.log(result);
@@ -186,8 +167,7 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
         type: imageFile?.type,
         name: imageFile?.fileName,
       });
-      formData.append('id', getCompanyId());
-      // formData.append('id', '6511695bad8a273529a2a59a');
+      formData.append('id', companyId);
       dispatch(uploadSignatureRequest(formData));
     }
   }, [state]);

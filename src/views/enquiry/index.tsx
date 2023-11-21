@@ -14,6 +14,7 @@ import EnquiryListItem, {
   IEnquiryItem,
 } from './enquiryList/components/EnquiryListItem';
 import styles from './style';
+import useCompanyId from '../../hooks/useCompanyId';
 
 interface IEnquiryPageViewProps {
   navigation: NavigationProp<any, any>;
@@ -24,28 +25,7 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
   const {enquiries, getEnquiriesRequesting} = useAppSelector(
     state => state.Enquiry,
   );
-  const {otpData} = useAppSelector(state => state.OTP);
-  const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
-
-  const getCompanyId = () => {
-    let id;
-    const {data} = addCompanyInfo || {};
-    const {data: companiesData} = companies || {};
-    if (data && Object.keys(data).length > 0) {
-      id = data._id;
-    } else if (
-      companiesData &&
-      Array.isArray(companiesData) &&
-      companiesData.length > 0
-    ) {
-      const firstCompany = companiesData[0];
-      id = firstCompany._id;
-    } else if(companiesData && companiesData.hasOwnProperty('_id')) {
-      id = companiesData._id;
-    }
-    return id;
-  };
-  
+  const companyId = useCompanyId();
   const {data} = enquiries || {};
 
   let transformedData: IEnquiryItem[] = [];
@@ -79,11 +59,11 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
   };
 
   const handleOnRefresh = useCallback(() => {
-    dispatch(getEnquiriesRequest(getCompanyId()));
+    dispatch(getEnquiriesRequest(companyId));
   }, []);
 
   useEffect(() => {
-    dispatch(getEnquiriesRequest(getCompanyId()));
+    dispatch(getEnquiriesRequest(companyId));
   }, []);
 
   return (

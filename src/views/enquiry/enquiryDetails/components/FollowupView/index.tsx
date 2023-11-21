@@ -8,6 +8,7 @@ import FollowupListHeaderComponent from '../FollowupListHeaderComponent';
 import FollowupListItem from '../FollowupListItem';
 import styles from './style';
 import SurveyItemListView from '../SurveyItemListView';
+import useCompanyId from '../../../../../hooks/useCompanyId';
 interface IFollowupViewProps {
   taskName: string;
   assigneeRole: string;
@@ -25,28 +26,9 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
   const {data} = followups || {};
   const {data: surveyItemData} = surveyItemList || {};
   const {surveyList, getSurveyListRequesting} = useAppSelector(state => state.Enquiry);
-  const { addCompanyInfo, companies } = useAppSelector(state => state.Company);
+  const companyId = useCompanyId();
   const {data: surveyData} = surveyList || {};
   const [taskData, setTaskData] = useState<string>('')
-
-  const getCompanyId = () => {
-    let id;
-    const { data } = addCompanyInfo || {};
-    const { data: companiesData } = companies || {};
-    if (data && Object.keys(data).length > 0) {
-      id = data._id;
-    } else if (
-      companiesData &&
-      Array.isArray(companiesData) &&
-      companiesData.length > 0
-    ) {
-      const firstCompany = companiesData[0];
-      id = firstCompany._id;
-    } else if (companiesData && companiesData.hasOwnProperty('_id')) {
-      id = companiesData._id;
-    }
-    return id;
-  };
   
   useEffect(() => {
     if(taskName == 'FOLLOW UP') {
@@ -56,7 +38,7 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
     }
     if(taskData =='SURVEY ITEM'){
       const payload :any= {
-        companyId:getCompanyId()
+        companyId:companyId
       }
       dispatch(getSurveyItemListRequest(payload));
     }

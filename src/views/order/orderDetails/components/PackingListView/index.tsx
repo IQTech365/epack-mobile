@@ -16,34 +16,14 @@ import Button from '../../../../../common/Button';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import Spinner from '../../../../../common/Spinner';
 import Toast from 'react-native-toast-message';
+import useCompanyId from '../../../../../hooks/useCompanyId';
 
 interface IPackingListViewProps {
   
 }
 
 const PackingListView: React.FC<IPackingListViewProps> = ({ }) => {
-
-  const { addCompanyInfo, companies } = useAppSelector(state => state.Company);
-
-  const getCompanyId = () => {
-    let id;
-    const { data } = addCompanyInfo || {};
-    const { data: companiesData } = companies || {};
-    if (data && Object.keys(data).length > 0) {
-      id = data._id;
-    } else if (
-      companiesData &&
-      Array.isArray(companiesData) &&
-      companiesData.length > 0
-    ) {
-      const firstCompany = companiesData[0];
-      id = firstCompany._id;
-    } else if(companiesData && companiesData.hasOwnProperty('_id')) {
-      id = companiesData._id;
-    }
-    return id;
-  };
-
+  const companyId = useCompanyId();
   const dispatch2 = useAppDispatch();
   const handleReceiptDate = (date: Date) => {
     // dispatch({

@@ -19,6 +19,7 @@ import AddDriverView from '../addDriverView';
 import AddDriverListItem from '../addDriverListView';
 import Spinner from '../../../../common/Spinner';
 import { getDriverRequest } from '../../../../redux/slices/VehicleSlice';
+import useCompanyId from '../../../../hooks/useCompanyId';
 
 interface IAddDriverDetailViewProps {
 
@@ -33,6 +34,7 @@ const AddDriverDetailView: React.FC<IAddDriverDetailViewProps> = ({}) => {
     addCompanyInfo,
     companies
 } = useAppSelector(state => state.Company);
+  const companyId = useCompanyId();
 
   const [showAddDriverDetailList, setShowAddDriverDetailList] = useState<boolean>(false);
   const [createNewAddDriverDetail, setCreateNewAddDriverDetail] = useState<boolean>(true);
@@ -47,27 +49,8 @@ const AddDriverDetailView: React.FC<IAddDriverDetailViewProps> = ({}) => {
     setCreateNewAddDriverDetail(false);
   };
 
-  const getCompanyId = () => {
-    let id;
-    const { data } = addCompanyInfo || {};
-    const { data: companiesData } = companies || {};
-    if (data && Object.keys(data).length > 0) {
-        id = data._id;
-    } else if (
-        companiesData &&
-        Array.isArray(companiesData) &&
-        companiesData.length > 0
-    ) {
-        const firstCompany = companiesData[0];
-        id = firstCompany._id;
-    } else if(companiesData && companiesData.hasOwnProperty('_id')) {
-      id = companiesData._id;
-    }
-    return id;
-};
-
   useEffect(() => {
-    dispatch(getDriverRequest(getCompanyId()));
+    dispatch(getDriverRequest(companyId));
   }, []);
 
   const showEmptyView = () => {
@@ -79,7 +62,7 @@ const AddDriverDetailView: React.FC<IAddDriverDetailViewProps> = ({}) => {
   };
 
   const handleOnRefresh = useCallback(() => {
-    dispatch(getDriverRequest(getCompanyId()));
+    dispatch(getDriverRequest(companyId));
   }, []);
 
   const showForm = () => {

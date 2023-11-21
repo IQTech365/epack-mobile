@@ -14,6 +14,7 @@ import OrderListItem, {
   IOrderItem,
 } from './orderDetails/components/OrderListItem';
 import styles from './style';
+import useCompanyId from '../../hooks/useCompanyId';
 
 interface IOrderPageViewProps {
   navigation: NavigationProp<any, any>;
@@ -21,36 +22,11 @@ interface IOrderPageViewProps {
 
 const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
   const dispatch = useAppDispatch();
-  const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
-  const {verifiedData} = useAppSelector(state => state.OTP);
   const {orders, getOrdersRequesting, getOrdersSuccess, getOrdersFailure} =
     useAppSelector(state => state.Order);
   console.log('OrderPageView--orders----', orders);
   const {data: ordersArr} = orders || {};
-
-  const getCompanyId = () => {
-    let id;
-    const {data} = addCompanyInfo || {};
-    const {data: companiesData} = companies || {};
-    if (data && Object.keys(data).length > 0) {
-      id = data._id;
-    } else if (
-      companiesData &&
-      Array.isArray(companiesData) &&
-      companiesData.length > 0
-    ) {
-      const firstCompany = companiesData[0];
-      id = firstCompany._id;
-    } else if(companiesData && companiesData.hasOwnProperty('_id')) {
-      id = companiesData._id;
-    }
-    return id;
-  };
-
-  const getAuthId = () => {
-    const {data} = verifiedData || {};
-    return data?.id;
-  }
+  const companyId = useCompanyId();
 
   const getClientName = (item: IGetOrdersData) => {
     let clientName = '';
@@ -121,14 +97,14 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
 
   const handleOnRefresh = useCallback(() => {
     const payload: Partial<IGetOrdersRequest> = {
-      companyId: getCompanyId(),
+      companyId: companyId,
     }
     dispatch(getOrdersRequest(payload));
   }, []);
 
   useEffect(() => {
     const payload: Partial<IGetOrdersRequest> = {
-      companyId: getCompanyId(),
+      companyId: companyId,
     }
     dispatch(getOrdersRequest(payload));
   }, []);

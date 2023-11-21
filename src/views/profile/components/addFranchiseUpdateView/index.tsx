@@ -23,6 +23,7 @@ import { IAddFranchiseRequest } from '../../../../interface/myProfile/IAddFranch
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
 import { addFranchiseRequest, restAddFranchiseRequest } from '../../../../redux/slices/MyProfile';
 import EpackDropdown from '../../../../common/DropdownComponent2';
+import useCompanyId from '../../../../hooks/useCompanyId';
 
 const AddFranchiseUpdateView: React.FC<{}> = ({ }) => {
     const [state, dispatch] = useReducer(addFranchiseReducer, initialState);
@@ -32,7 +33,6 @@ const AddFranchiseUpdateView: React.FC<{}> = ({ }) => {
   const [cities, setCities] = useState<string[]>([]);
   const [localities, setLocalities] = useState<string[]>([]);
 
-  const { addCompanyInfo, companies } = useAppSelector(state => state.Company);
   const {otpData} = useAppSelector(state => state.OTP);
   const {
     addFranchiseRequesting,
@@ -41,26 +41,7 @@ const AddFranchiseUpdateView: React.FC<{}> = ({ }) => {
     addFranchiseInfo,
   } = useAppSelector(state => state.Myprofile);
   const dispatch2 = useAppDispatch();
-
-  const getCompanyId = () => {
-    let id;
-    const { data } = addCompanyInfo || {};
-    const { data: companiesData } = companies || {};
-    if (data && Object.keys(data).length > 0) {
-        id = data._id;
-    } else if (
-        companiesData &&
-        Array.isArray(companiesData) &&
-        companiesData.length > 0
-    ) {
-        const firstCompany = companiesData[0];
-        id = firstCompany._id;
-    } else if(companiesData && companiesData.hasOwnProperty('_id')) {
-        id = companiesData._id;
-      }
-    return id;
-};
-
+  const companyId = useCompanyId();
 
   const CityDropdownRef = useRef(null);
   const StateDropwdownRef = useRef(null);
@@ -158,7 +139,7 @@ const AddFranchiseUpdateView: React.FC<{}> = ({ }) => {
 
     const handleSubmit = useCallback(() => {
         const payload: IAddFranchiseRequest = {
-            companyId: getCompanyId(),
+            companyId: companyId,
             franchiseName: state.franchiseName,
             franchiseOwnerName: state.franchiseOwner,
             registeredMobile: state.registeredMobile,

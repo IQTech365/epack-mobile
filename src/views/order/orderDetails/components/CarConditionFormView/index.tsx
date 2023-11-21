@@ -30,6 +30,7 @@ import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import { createCarConditionRequest } from '../../../../../redux/slices/OrderSlice';
 import Spinner from '../../../../../common/Spinner';
 import Toast from 'react-native-toast-message';
+import useCompanyId from '../../../../../hooks/useCompanyId';
 
 interface ICarConditionFormViewProps {
   orderId: string | undefined;
@@ -49,27 +50,9 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({ orderId })
     orders
   } = useAppSelector(state => state.Order);
   const dispatch2 = useAppDispatch();
-  const { addCompanyInfo, companies } = useAppSelector(state => state.Company);
   const {otpData} = useAppSelector(state => state.OTP);
+  const companyId = useCompanyId();
 
-  const getCompanyId = () => {
-    let id;
-    const { data } = addCompanyInfo || {};
-    const { data: companiesData } = companies || {};
-    if (data && Object.keys(data).length > 0) {
-      id = data._id;
-    } else if (
-      companiesData &&
-      Array.isArray(companiesData) &&
-      companiesData.length > 0
-    ) {
-      const firstCompany = companiesData[0];
-      id = firstCompany._id;
-    } else if(companiesData && companiesData.hasOwnProperty('_id')) {
-      id = companiesData._id;
-    }
-    return id;
-  };
   const switchWrapperStyle = switchState
     ? styles.switchMainWrapper
     : styles.switchMainWrapper2;
@@ -205,7 +188,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({ orderId })
 
   const handleCreateCarCondition = () => {
     const payload: ICreateCarConditionRequest = {
-      companyId: getCompanyId(),
+      companyId: companyId,
       orderId: orderId as string,
       templateId: '32423erer',
       carConditionNumber: reducerState.carConditionNumber,

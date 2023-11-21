@@ -19,6 +19,7 @@ import { addContactRequest, getContactsRequest, resetAddContactRequest } from '.
 import { IAddContactDetailRequest } from '../../../../../interface/setting/packerProfile/contactDetail/IAddContactDetailRequest';
 import Spinner from '../../../../../common/Spinner';
 import { ISubmoduleData } from '../../../../../interface/setting/packerProfile/ISubmodule';
+import useCompanyId from '../../../../../hooks/useCompanyId';
 
 interface IContactDetailsProps {}
 
@@ -27,7 +28,6 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
   const [contactNumber, setContactNumber] = useState<string>('');
   const [contactNumberError, setContactNumberError] = useState<string>('');
   const [modules, setModules] = useState<string[]>([]);
-  const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
   const {
     addContactRequesting,
     addContactSuccess,
@@ -37,25 +37,7 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
   const {data: submodulesData = []} = submodules || {};
   const {otpData} = useAppSelector(state => state.OTP);
   const dispatch = useAppDispatch();
-
-  const getCompanyId = () => {
-    let id;
-    const {data} = addCompanyInfo || {};
-    const {data: companiesData} = companies || {};
-    if (data && Object.keys(data).length > 0) {
-      id = data._id;
-    } else if (
-      companiesData &&
-      Array.isArray(companiesData) &&
-      companiesData.length > 0
-    ) {
-      const firstCompany = companiesData[0];
-      id = firstCompany._id;
-    } else if(companiesData && companiesData.hasOwnProperty('_id')) {
-      id = companiesData._id;
-    }
-    return id;
-  };
+  const companyId = useCompanyId();
 
   const handleTextInputChange = (text: string) => {
     if(contactNumberError) {
@@ -131,7 +113,7 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
     if(contactNumber && modules.length > 0) {
       setContactNumberError('');
       const payload: IAddContactDetailRequest = {
-        companyId: getCompanyId(),
+        companyId: companyId,
         modulesView: modules,
         contactType: contactType || contactDetail[0].label,
         contactNumber: contactNumber,
@@ -161,7 +143,7 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
       });
       setContactNumber('');
       dispatch(resetAddContactRequest());
-      dispatch(getContactsRequest(getCompanyId()));
+      dispatch(getContactsRequest(companyId));
     } else if (!addContactRequesting && addContactFailure) {
       Toast.show({
         type: 'error',

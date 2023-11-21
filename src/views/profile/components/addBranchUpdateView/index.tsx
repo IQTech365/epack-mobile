@@ -22,10 +22,10 @@ import { addBranchRequest, restAddBranchRequest } from '../../../../redux/slices
 import Spinner from '../../../../common/Spinner';
 import usePincodeHook from '../../../../hooks/usePincodeHook';
 import { getCities, getLocalities, getStates } from '../../../../utils/formatter';
+import useCompanyId from '../../../../hooks/useCompanyId';
 
 const AddBranchUpdateView: React.FC<{}> = ({ }) => {
     const [state, dispatch] = useReducer(addBranchReducer, initialState);
-    const { addCompanyInfo, companies } = useAppSelector(state => state.Company);
     const {otpData} = useAppSelector(state => state.OTP);
     const [states, setStates] = useState<string[]>([]);
     const [cities, setCities] = useState<string[]>([]);
@@ -36,32 +36,13 @@ const AddBranchUpdateView: React.FC<{}> = ({ }) => {
         addBranchSuccess,
         addBranchFailure,
       } = useAppSelector(state => state.Myprofile);
+    const companyId = useCompanyId();
     const dispatch2 = useAppDispatch();
 
     const {result, fetching, setPincode} = usePincodeHook(
         () => {},
         () => {},
       );
-
-    const getCompanyId = () => {
-        let id;
-        const { data } = addCompanyInfo || {};
-        const { data: companiesData } = companies || {};
-        if (data && Object.keys(data).length > 0) {
-            id = data._id;
-        } else if (
-            companiesData &&
-            Array.isArray(companiesData) &&
-            companiesData.length > 0
-        ) {
-            const firstCompany = companiesData[0];
-            id = firstCompany._id;
-        } else if(companiesData && companiesData.hasOwnProperty('_id')) {
-            id = companiesData._id;
-          }
-        return id;
-    };
-    
 
     const handleState = (text: string) => {
         dispatch({
@@ -127,7 +108,7 @@ const AddBranchUpdateView: React.FC<{}> = ({ }) => {
 
     const handleSave = useCallback(() => {
         const payload: IAddBranchRequest = {
-            companyId: getCompanyId(),
+            companyId: companyId,
             branchName: state.branchName,
             registeredMobile: state.registeredMobile,
             pincode: state.pincode,

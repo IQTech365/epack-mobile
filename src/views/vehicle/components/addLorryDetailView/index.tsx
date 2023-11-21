@@ -19,6 +19,7 @@ import Header from '../../../../common/Header';
 import { getLorryRequest } from '../../../../redux/slices/VehicleSlice';
 import AddLorryListItem from '../addLorryListView';
 import Spinner from '../../../../common/Spinner';
+import useCompanyId from '../../../../hooks/useCompanyId';
 
 interface IAddLorryDetailViewProps {
 
@@ -36,25 +37,7 @@ const AddLorryDetailView: React.FC<IAddLorryDetailViewProps> = ({}) => {
   const [showAddLorryDetailList, setShowAddLorryDetailList] = useState<boolean>(false);
   const [createNewAddLorryDetail, setCreateNewAddLorryDetail] = useState<boolean>(true);
   const {data: lorryArray = []} = lorryData || {};
-
-  const getCompanyId = () => {
-    let id;
-    const { data } = addCompanyInfo || {};
-    const { data: companiesData } = companies || {};
-    if (data && Object.keys(data).length > 0) {
-        id = data._id;
-    } else if (
-        companiesData &&
-        Array.isArray(companiesData) &&
-        companiesData.length > 0
-    ) {
-        const firstCompany = companiesData[0];
-        id = firstCompany._id;
-    } else if(companiesData && companiesData.hasOwnProperty('_id')) {
-      id = companiesData._id;
-    }
-    return id;
-};
+  const companyId = useCompanyId();
 
   const handleCreateNewAddLorryDetail = () => {
     setShowAddLorryDetailList(false);
@@ -67,7 +50,7 @@ const AddLorryDetailView: React.FC<IAddLorryDetailViewProps> = ({}) => {
   };
 
   useEffect(() => {
-    dispatch(getLorryRequest(getCompanyId()));
+    dispatch(getLorryRequest(companyId));
   }, []);
 
   const showEmptyView = () => {
@@ -79,7 +62,7 @@ const AddLorryDetailView: React.FC<IAddLorryDetailViewProps> = ({}) => {
   };
 
   const handleOnRefresh = useCallback(() => {
-    dispatch(getLorryRequest(getCompanyId()));
+    dispatch(getLorryRequest(companyId));
   }, []);
 
   const showForm = () => {

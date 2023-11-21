@@ -35,6 +35,7 @@ import { addOrderRequest, getOrdersRequest, resetAddOrderRequest } from '../../.
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import Toast from 'react-native-toast-message';
 import {NavigationProp} from '@react-navigation/native';
+import useCompanyId from '../../../hooks/useCompanyId';
 
 interface IAddOrderViewProps {
   navigation: NavigationProp<any, any>;
@@ -51,33 +52,13 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
   const [pickupCities, setPickupCities] = useState<TDropdownItem[]>([]);
   const [deliveryStates, setDeliveryStates] = useState<TDropdownItem[]>([]);
   const [deliveryCities, setDeliveryCities] = useState<TDropdownItem[]>([]);
-  const { addCompanyInfo, companies } = useAppSelector(state => state.Company);
   const { otpData } = useAppSelector(state => state.OTP);
 
   const pickupCityDropdownRef = useRef(null);
   const pickupStateDropwdownRef = useRef(null);
   const dropStateDropdownRef = useRef(null);
   const dropCityDropdownRef = useRef(null);
-
-  const getCompanyId = () => {
-    let id;
-    const { data } = addCompanyInfo || {};
-    const { data: companiesData } = companies || {};
-    if (data && Object.keys(data).length > 0) {
-      id = data._id;
-    } else if (
-      companiesData &&
-      Array.isArray(companiesData) &&
-      companiesData.length > 0
-    ) {
-      const firstCompany = companiesData[0];
-      id = firstCompany._id;
-    } else if(companiesData && companiesData.hasOwnProperty('_id')) {
-      id = companiesData._id;
-    }
-    return id;
-  };
-  // console.log('AddOrderView--state----', state);
+  const companyId = useCompanyId();
 
   const setPincodeError = () => {
     // setPincodeError2('Invalid Pincode');
@@ -259,7 +240,7 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
 
   const handleAddOrder = () => {
     const data: IAddOrderRequest = {
-      companyId: getCompanyId(),
+      companyId: companyId,
       authId: otpData?.data.id as string,
       enquiryManager: '',
       shiftingType: state.shiftingType.toUpperCase() || 'LOCAL',
@@ -379,7 +360,7 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
         text2: 'Order has been added successfully',
       });
       dispatch2(resetAddOrderRequest());
-      dispatch2(getOrdersRequest(getCompanyId()));
+      dispatch2(getOrdersRequest(companyId));
       navigation?.goBack();
     } else if (!addOrderRequesting && addOrderFailure) {
       Toast.show({

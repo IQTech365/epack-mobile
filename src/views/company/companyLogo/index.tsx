@@ -18,6 +18,7 @@ import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import { resetUploadCompanyLogoRequest, uploadCompanyLogoRequest } from '../../../redux/slices/CompanySlice';
 import Spinner from '../../../common/Spinner';
 import Toast from 'react-native-toast-message';
+import useCompanyId from '../../../hooks/useCompanyId';
 
 interface IOptions {
   mediaType: MediaType;
@@ -53,17 +54,8 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
     uploadLogoRequesting,
     uploadLogoSuccess,
     uploadLogoFailure,
-    addCompanyInfo,
   } = useAppSelector(state => state.Company);
-
-  const getCompanyId = () => {
-    let id;
-    const {data} = addCompanyInfo || {};
-    if(data && Object.keys(data).length > 0) {
-      id = data._id;
-    }
-    return id;
-  }
+  const companyId = useCompanyId();
   
   const dispatch = useAppDispatch();
   const handleLaunchCamera = async () => {
@@ -115,8 +107,7 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
           type: imageFile?.type,
           name: imageFile?.fileName,
         });
-        formData.append('id', getCompanyId());
-        // formData.append('id', '6511695bad8a273529a2a59a');
+        formData.append('id',companyId);
         dispatch(uploadCompanyLogoRequest(formData));
   }, [state]);
 
