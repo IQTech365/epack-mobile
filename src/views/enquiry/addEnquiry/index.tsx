@@ -778,12 +778,6 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
               </View>
               <View style={styles.textContainer}>
                 <Label text="State" style={styles.label} />
-                {/* <DropdownComponent
-                  data={pickupStates}
-                  onSelect={handlePickupState}
-                  //@ts-ignore
-                  ref={pickupStateDropwdownRef}
-                /> */}
                 <EpackDropdown
                   data={pickupStates.map(e => e.label)}
                   placeholder={'Select State'}
@@ -796,12 +790,6 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
 
             <View style={styles.elementContainer}>
               <Label text="City" style={styles.label} />
-              {/* <DropdownComponent
-                data={pickupCities}
-                onSelect={handlePickupCity}
-                //@ts-ignore
-                ref={pickupCityDropdownRef}
-              /> */}
               <EpackDropdown
                   data={pickupCities.map(e => e.label)}
                   placeholder={'Select City'}
@@ -855,12 +843,6 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
               </View>
               <View style={styles.textContainer}>
                 <Label text="State" style={styles.label} />
-                {/* <DropdownComponent
-                  data={deliveryStates}
-                  onSelect={handleDeliveryState}
-                  //@ts-ignore
-                  ref={dropStateDropdownRef}
-                /> */}
                 <EpackDropdown
                   data={deliveryStates.map(e => e.label)}
                   placeholder={'Select State'}
@@ -872,12 +854,6 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
             </View>
             <View style={styles.elementContainer}>
               <Label text="City" style={styles.label} />
-              {/* <DropdownComponent
-                data={deliveryCities}
-                onSelect={handleDeliveryCity}
-                //@ts-ignore
-                ref={dropCityDropdownRef}
-              /> */}
               <EpackDropdown
                   data={deliveryCities.map(e => e.label)}
                   placeholder={'Select City'}

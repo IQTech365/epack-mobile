@@ -37,6 +37,7 @@ import Toast from 'react-native-toast-message';
 import {NavigationProp} from '@react-navigation/native';
 import useCompanyId from '../../../hooks/useCompanyId';
 import { IGetOrdersRequest } from '../../../interface/order/IGetOrdersRequest';
+import EpackDropdown from '../../../common/DropdownComponent2';
 
 interface IAddOrderViewProps {
   navigation: NavigationProp<any, any>;
@@ -141,16 +142,16 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
     },
     [state.pickupPincode],
   );
-  const handlePickupCity = (item: TDropdownItem) => {
+  const handlePickupCity = (item: string) => {
     dispatch({
       type: ADDORDER_FORM_ACTION.PICKUP_CITY,
-      payload: item.label,
+      payload: item,
     });
   };
-  const handlePickupState = (item: TDropdownItem) => {
+  const handlePickupState = (item: string) => {
     dispatch({
       type: ADDORDER_FORM_ACTION.PICKUP_STATE,
-      payload: item.label,
+      payload: item,
     });
   };
 
@@ -188,16 +189,16 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
     },
     [state.deliveryPincode],
   );
-  const handleDeliveryCity = (item: TDropdownItem) => {
+  const handleDeliveryCity = (item: string) => {
     dispatch({
       type: ADDORDER_FORM_ACTION.DELIVERY_CITY,
-      payload: item.label,
+      payload: item,
     });
   };
-  const handleDeliveryState = (item: TDropdownItem) => {
+  const handleDeliveryState = (item: string) => {
     dispatch({
       type: ADDORDER_FORM_ACTION.DELIVERY_STATE,
-      payload: item.label,
+      payload: item,
     });
   };
 
@@ -332,9 +333,9 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
       pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_ORDER_PICKUP_ADDRESS
     ) {
       //@ts-ignore
-      pickupStateDropwdownRef?.current?.setDefaultValue(pickupStates[0]);
+      pickupStateDropwdownRef?.current?.setValue(pickupStates[0]?.label);
       //@ts-ignore
-      pickupCityDropdownRef?.current?.setDefaultValue(pickupCities[0]);
+      pickupCityDropdownRef?.current?.setValue(pickupCities[0]?.label);
     }
   }, [pickupStates, pickupCities]);
 
@@ -347,9 +348,9 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
       pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_ORDER_DELIVERY_ADDRESS
     ) {
       //@ts-ignore
-      dropStateDropdownRef?.current?.setDefaultValue(deliveryStates[0]);
+      dropStateDropdownRef?.current?.setValue(deliveryStates[0]?.label);
       //@ts-ignore
-      dropCityDropdownRef?.current?.setDefaultValue(deliveryCities[0]);
+      dropCityDropdownRef?.current?.setValue(deliveryCities[0]?.label);
     }
   }, [deliveryStates, deliveryCities]);
 
@@ -722,23 +723,25 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
             </View>
             <View style={styles.textContainer}>
               <Label text="State" style={styles.label} />
-              <DropdownComponent
-                data={pickupStates}
-                onSelect={handlePickupState}
-                //@ts-ignore
-                ref={pickupStateDropwdownRef}
-              />
+              <EpackDropdown
+                  data={pickupStates.map(e => e.label)}
+                  placeholder={'Select State'}
+                  hanldeData={handlePickupState}
+                  //@ts-ignore
+                  ref={pickupStateDropwdownRef}
+                />
             </View>
           </View>
             
             <View style={styles.elementContainer}>
               <Label text="City" style={styles.label} />
-              <DropdownComponent
-                data={pickupCities}
-                onSelect={handlePickupCity}
-                //@ts-ignore
-                ref={pickupCityDropdownRef}
-              />
+              <EpackDropdown
+                  data={pickupCities.map(e => e.label)}
+                  placeholder={'Select City'}
+                  hanldeData={handlePickupCity}
+                  //@ts-ignore
+                  ref={pickupCityDropdownRef}
+                />
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
@@ -785,22 +788,24 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
             </View>
             <View style={styles.textContainer}>
               <Label text="State" style={styles.label} />
-              <DropdownComponent
-                data={deliveryStates}
-                onSelect={handleDeliveryState}
-                //@ts-ignore
-                ref={dropStateDropdownRef}
-              />
+              <EpackDropdown
+                  data={deliveryStates.map(e => e.label)}
+                  placeholder={'Select State'}
+                  hanldeData={handleDeliveryState}
+                  //@ts-ignore
+                  ref={dropStateDropdownRef}
+                />
             </View>
           </View>
             <View style={styles.elementContainer}>
               <Label text="City" style={styles.label} />
-              <DropdownComponent
-                data={deliveryCities}
-                onSelect={handleDeliveryCity}
-                //@ts-ignore
-                ref={dropCityDropdownRef}
-              />
+              <EpackDropdown
+                  data={deliveryCities.map(e => e.label)}
+                  placeholder={'Select City'}
+                  hanldeData={handleDeliveryCity}
+                  //@ts-ignore
+                  ref={dropCityDropdownRef}
+                />
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>

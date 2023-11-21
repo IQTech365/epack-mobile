@@ -27,7 +27,7 @@ const AvoidSoftInputViewHOC: React.FC<{children: ReactElement}> = ({children}) =
           contentContainerStyle={commonStyles.scrollContainer}
           contentInsetAdjustmentBehavior="always"
           overScrollMode="always"
-          showsVerticalScrollIndicator={true}
+          showsVerticalScrollIndicator={false}
           style={commonStyles.scroll}>
           {children}
         </ScrollView>
