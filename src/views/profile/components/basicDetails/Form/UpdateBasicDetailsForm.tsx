@@ -110,7 +110,8 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({ }) => 
             onChangeText={handleCompnyPunchLineInput}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
-            selectionColor={COLOR_BLACK} />
+            selectionColor={COLOR_BLACK}
+            value={firstCompany?.punchLine} />
         </View>
         <Spacer height={4} />
         <View style={styles.elementContainer3}>
@@ -119,7 +120,8 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({ }) => 
             onChangeText={handleContactPersonInput}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
-            selectionColor={COLOR_BLACK} />
+            selectionColor={COLOR_BLACK} 
+            value={firstCompany?.contactPerson} />
         </View>
         <Spacer height={4} />
         <View style={styles.elementContainer3}>
@@ -128,7 +130,8 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({ }) => 
             onChangeText={handleWebsiteInput}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
-            selectionColor={COLOR_BLACK} />
+            selectionColor={COLOR_BLACK} 
+            value={firstCompany?.companyWebite}/>
         </View>
         <Spacer height={20} />
         <Button

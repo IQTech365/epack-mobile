@@ -13,7 +13,6 @@ import { getFranchiseRequest } from '../../../../redux/slices/MyProfile';
 import AddFranchiseListItem from '../addFranchiseList';
 import Spinner from '../../../../common/Spinner';
 import useCompanyId from '../../../../hooks/useCompanyId';
-// import Spinner from '../../../../../common/Spinner';
 
 const AddFranchiseView = () => {
   const [showFranchiseList, setshowFranchiseList] = useState<boolean>(false);
@@ -33,6 +32,7 @@ const AddFranchiseView = () => {
   const handleShowContent = () => {
     setshowFranchiseList(true);
     setshowAddFranchise(false);
+    dispatch(getFranchiseRequest(companyId));
   };
 
   const showEmptyView = () => {

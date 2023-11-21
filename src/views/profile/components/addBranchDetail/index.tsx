@@ -32,6 +32,7 @@ const AddBranchView = () => {
   const handleShowContent = () => {
     setshowBranchList(true);
     setshowAddBranch(false);
+    dispatch(getBranchsRequest(companyId))
   };
 
   const showEmptyView = () => {
@@ -82,7 +83,7 @@ const AddBranchView = () => {
 
   useEffect(() => {
     dispatch(getBranchsRequest(companyId))
-  }, []);
+  }, [dispatch]);
 
   return (
     <View style={styles.container}>
