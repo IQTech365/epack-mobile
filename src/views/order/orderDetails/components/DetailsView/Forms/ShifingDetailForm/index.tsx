@@ -29,7 +29,7 @@ import Toast from 'react-native-toast-message';
 import {ISingleEnquiryData} from '../../../../../../../interface/enquiry/ISingleEnquiryResponse';
 interface IShiftingFormProps {
   moduleName: MODULE_NAME;
-  item: IGetOrdersData | ISingleEnquiryData;
+  item: ISingleEnquiryData;
   enquiryId: string;
 }
 
@@ -49,14 +49,9 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({
   const dateOfDeliveryCompRef = useRef();
   const dateOfDeliveredCompRef = useRef();
 
-  const itemObj =
-    moduleName == MODULE_NAME.ORDER
-      ? (item as IGetOrdersData)
-      : (item as ISingleEnquiryData);
-
   const [shiftingLuggages, setShiftingLuggages] = useState<string[]>([]);
   const [shiftingType, setShiftingType] = useState<string>('');
-  const [dateOfMoving, setDateOfMoving] = useState<string>(itemObj.shiftingDate);
+  const [dateOfMoving, setDateOfMoving] = useState<string>(item.shiftingDate);
   const [dateOfDelivery, setDateOfDelivery] = useState<string>('');
   const [dateOfDelivered, setDateOfDelivered] = useState<string>('');
   const [carriageVehicle, setCarriageVehicle] = useState<string>('');
@@ -140,33 +135,33 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({
   };
 
   useEffect(() => {
-    if (itemObj) {
+    if (item) {
       if (shiftingTypeDropdownRef) {
         const findPreviousShiftingTypeItemIndex = shiftingTypeOptions.findIndex(
-          e => e.label.toLowerCase() == itemObj.shiftingType.toLowerCase(),
+          e => e.label.toLowerCase() == item.shiftingType.toLowerCase(),
         );
         //@ts-ignore
         shiftingTypeDropdownRef?.current.setDefaultValue(
           shiftingTypeOptions[findPreviousShiftingTypeItemIndex],
         );
-        setShiftingLuggages([...itemObj.shiftingLuggage]);
-        setShiftingType(itemObj.shiftingType);
-        setDateOfMoving(itemObj.shiftingDate);
-        if(itemObj.shiftingDate) {
+        setShiftingLuggages([...item.shiftingLuggage]);
+        setShiftingType(item.shiftingType);
+        setDateOfMoving(item.shiftingDate);
+        if(item.shiftingDate) {
           //@ts-ignore
-          dateOfMoivingCompRef && dateOfMoivingCompRef.current?.setDefaultValue(new Date(itemObj.shiftingDate))
+          dateOfMoivingCompRef && dateOfMoivingCompRef.current?.setDefaultValue(new Date(item.shiftingDate))
         }
         //@ts-ignore
-        setDateOfDelivery(itemObj.deliveryDate);
-        if(itemObj.deliveryDate) {
+        setDateOfDelivery(item.deliveryDate);
+        if(item.deliveryDate) {
           //@ts-ignore
-          dateOfDeliveryCompRef && dateOfDeliveryCompRef.current?.setDefaultValue(new Date(itemObj.deliveryDate))
+          dateOfDeliveryCompRef && dateOfDeliveryCompRef.current?.setDefaultValue(new Date(item.deliveryDate))
         }
         //@ts-ignore
-        setDateOfDelivered(itemObj.deliveredDate);
-        if(itemObj.deliveredDate) {
+        setDateOfDelivered(item.deliveredDate);
+        if(item.deliveredDate) {
           //@ts-ignore
-          dateOfDeliveredCompRef && dateOfDeliveredCompRef.current?.setDefaultValue(new Date(itemObj.deliveredDate))
+          dateOfDeliveredCompRef && dateOfDeliveredCompRef.current?.setDefaultValue(new Date(item.deliveredDate))
         }
       }
     }
@@ -233,13 +228,13 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({
           <Label text="Shifting Luggage" style={styles.label} />
         </View>
         <View style={styles.elementContainer2}>
-          {shiftingLuggageOptions.map((item, index) => {
+          {shiftingLuggageOptions.map((itm, index) => {
             return (
               <BouncyCheckbox
-                key={item.value}
+                key={itm.value}
                 size={25}
                 unfillColor="#FFFFFF"
-                text={item.label}
+                text={itm.label}
                 fillColor={COLOR_BLUE}
                 iconStyle={{
                   borderColor: 'red',
@@ -260,9 +255,9 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({
                 style={{marginRight: 15, marginBottom: 10}}
                 textContainerStyle={{paddingLeft: 0}}
                 onPress={(isChecked: boolean) => {
-                  handleShiftingLuggage(isChecked, item.label);
+                  handleShiftingLuggage(isChecked, itm.label);
                 }}
-                isChecked={itemObj.shiftingLuggage.some(e => e == item.label)}
+                isChecked={item.shiftingLuggage.some(e => e == itm.label)}
               />
             );
           })}

@@ -1,6 +1,6 @@
-import { IGetOrdersData } from '../../interface/order/IGetOrdersResponse';
+import { ISingleEnquiryData } from '../../interface/enquiry/ISingleEnquiryResponse';
 export type OrderStackParamList = {
     OrderRoot: undefined,
     AddOrder: undefined,
-    OrderDetails: {orderId: string, item: IGetOrdersData} | undefined,
+    OrderDetails: {orderId: string, item: ISingleEnquiryData} | undefined,
 }

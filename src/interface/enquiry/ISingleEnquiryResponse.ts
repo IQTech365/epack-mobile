@@ -69,7 +69,7 @@ export interface ISingleEnquiryData {
 }
 
 export interface ISingleEnquiryResponse {
-    data: ISingleEnquiryData;
+    data: ISingleEnquiryData[];
     status: number;
     error: boolean;
 }

@@ -16,9 +16,10 @@ import {
 import {COLOR_GRAY2, COLOR_WHITE} from '../../../../../utils/colors';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import { IUpdateEnquiryStatusRequest } from '../../../../../interface/enquiry/IUpdateEnquiryStatusRequest';
-import { resetUpdateEnquiryStatusRequest, updateEnquiryStatusRequest } from '../../../../../redux/slices/EnquirySlice';
+import { getEnquiriesRequest, resetUpdateEnquiryStatusRequest, updateEnquiryStatusRequest } from '../../../../../redux/slices/EnquirySlice';
 import Toast from 'react-native-toast-message';
 import enquiryStatusOptions from '../../../../../data/enquiryStatusOptions.json';
+import useCompanyId from '../../../../../hooks/useCompanyId';
 
 interface IEnquiryInfoViewProps {
   item: IGetEnquiriesData | undefined;
@@ -32,6 +33,7 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId}) => 
     updateEnquiryStatusSuccess,
     updateEnquiryStatusFailure,
   } = useAppSelector(state => state.Enquiry);
+  const companyId = useCompanyId();
 
   const [enquiryStatus, setEnquiryStatus] = useState<string>(item?.status as string);
   const getEnquiryDate = () => {
@@ -65,6 +67,7 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId}) => 
         text2: `Enquiry status has been updated to ${enquiryStatus}`,
       });
       dispatch(resetUpdateEnquiryStatusRequest());
+      dispatch(getEnquiriesRequest(companyId));
     } else if(!updateEnquiryStatusRequesting && updateEnquiryStatusFailure) {
       Toast.show({
         type: 'error',

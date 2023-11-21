@@ -3,6 +3,9 @@ import {COLOR_BLUE, COLOR_GRAY, COLOR_GRAY2, COLOR_ORANGE, COLOR_WHITE} from '..
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
+  wrapper: {
+    marginVertical: 8,
+  },
   cardWrapper: {
     borderRadius: 8,
     alignItems: 'center',

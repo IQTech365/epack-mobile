@@ -19,6 +19,10 @@ export interface IClientItem {
   companyName: string;
   email: string;
   mobile: string;
+  partyName: string;
+  createdAt: string;
+  companyId: string;
+  partyCompanyName: string;
 }
 
 interface IClientListItemProps {
@@ -30,67 +34,84 @@ interface IClientListItemProps {
   onMorePress?: () => void;
 }
 
-const ClientListItem: React.FC<IClientListItemProps> = ({item, index, onPress}) => {
-    return (
-    <Shadow style={styles.cardWrapper} distance={4}>
-      <TouchableOpacity style={styles.container} activeOpacity={0.6} onPress={onPress}>
-        <View style={styles.dateAndQuotationNumberContainer}>
-          <View style={styles.nameContainer}>
-            <Text style={styles.nameText}>{item.partyName}</Text>
+const ClientListItem: React.FC<IClientListItemProps> = ({
+  item,
+  index,
+  onPress,
+}) => {
+  return (
+    <View style={styles.wrapper}>
+      <Shadow style={styles.cardWrapper} distance={4}>
+        <TouchableOpacity
+          style={styles.container}
+          activeOpacity={0.6}
+          onPress={onPress}>
+          <View style={styles.dateAndQuotationNumberContainer}>
+            <View style={styles.nameContainer}>
+              <Text style={styles.nameText}>{item?.partyName}</Text>
+            </View>
+            <View style={styles.contactOptionsContainer}>
+              <TouchableOpacity activeOpacity={0.6}>
+                <WhatsappIcon width={24} height={24} />
+              </TouchableOpacity>
+              <Spacer width={20} height={0} />
+              <TouchableOpacity activeOpacity={0.6}>
+                <PhoneBlueIcon width={24} height={24} />
+              </TouchableOpacity>
+            </View>
           </View>
-          <View style={styles.contactOptionsContainer}>
-            <TouchableOpacity activeOpacity={0.6}>
-              <WhatsappIcon width={24} height={24} />
-            </TouchableOpacity>
-            <Spacer width={20} height={0} />
-            <TouchableOpacity activeOpacity={0.6}>
-              <PhoneBlueIcon width={24} height={24} />
-            </TouchableOpacity>
+          <Spacer height={6} />
+          <View style={styles.rowContainer}>
+            <View style={styles.rowItemContainer}>
+              <Text style={styles.labelText}>Customer ID</Text>
+            </View>
+            <View style={styles.colonContainer}>
+              <Text>:</Text>
+            </View>
+            <View style={styles.rowItemContainer2}>
+              <Text style={styles.valueText}>{item.companyId}</Text>
+            </View>
           </View>
-        </View>
-        <Spacer height={6} />
-        <View style={styles.rowContainer}>
-          <View style={styles.rowItemContainer}>
-            <Text style={styles.labelText}>Customer ID</Text>
+          <Spacer height={2} />
+          <View style={styles.rowContainer}>
+            <View style={styles.rowItemContainer}>
+              <Text style={styles.labelText}>Reg. Date</Text>
+            </View>
+            <View style={styles.colonContainer}>
+              <Text>:</Text>
+            </View>
+            <View style={styles.rowItemContainer2}>
+              <Text style={styles.valueText}>{item.createdAt}</Text>
+            </View>
           </View>
-          <View style={styles.colonContainer}><Text>:</Text></View>
-          <View style={styles.rowItemContainer2}>
-            <Text style={styles.valueText}>{item.companyId}</Text>
+          <Spacer height={2} />
+          <View style={styles.rowContainer}>
+            <View style={styles.rowItemContainer}>
+              <Text style={styles.labelText}>Email</Text>
+            </View>
+            <View style={styles.colonContainer}>
+              <Text>:</Text>
+            </View>
+            <View style={styles.rowItemContainer2}>
+              <Text style={styles.valueText}>{item.email}</Text>
+            </View>
           </View>
-        </View>
-        <Spacer height={2} />
-        <View style={styles.rowContainer}>
-          <View style={styles.rowItemContainer}>
-            <Text style={styles.labelText}>Reg. Date</Text>
+          <Spacer height={2} />
+          <View style={styles.rowContainer}>
+            <View style={styles.rowItemContainer}>
+              <Text style={styles.labelText}>Company Name</Text>
+            </View>
+            <View style={styles.colonContainer}>
+              <Text>:</Text>
+            </View>
+            <View style={styles.rowItemContainer2}>
+              <Text style={styles.valueText}>{item.partyCompanyName}</Text>
+            </View>
           </View>
-          <View style={styles.colonContainer}><Text>:</Text></View>
-          <View style={styles.rowItemContainer2}>
-            <Text style={styles.valueText}>{item.createdAt}</Text>
-          </View>
-        </View>
-        <Spacer height={2} />
-        <View style={styles.rowContainer}>
-          <View style={styles.rowItemContainer}>
-            <Text style={styles.labelText}>Email</Text>
-          </View>
-          <View style={styles.colonContainer}><Text>:</Text></View>
-          <View style={styles.rowItemContainer2}>
-            <Text style={styles.valueText}>{item.email}</Text>
-          </View>
-        </View>
-        <Spacer height={2} />
-        <View style={styles.rowContainer}>
-          <View style={styles.rowItemContainer}>
-            <Text style={styles.labelText}>Company Name</Text>
-          </View>
-          <View style={styles.colonContainer}><Text>:</Text></View>
-          <View style={styles.rowItemContainer2}>
-            <Text style={styles.valueText}>{item.partyCompanyName}</Text>
-          </View>
-        </View>
-        <Spacer height={6} />
-      </TouchableOpacity>
-    </Shadow>
+          <Spacer height={6} />
+        </TouchableOpacity>
+      </Shadow>
+    </View>
   );
 };
 

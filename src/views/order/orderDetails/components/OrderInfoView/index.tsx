@@ -28,19 +28,26 @@ import Toast from 'react-native-toast-message';
 import {IGetOrdersData} from '../../../../../interface/order/IGetOrdersResponse';
 import {formatDate} from '../../../../../utils/formatter';
 import { IUpdateEnquiryStatusRequest } from '../../../../../interface/enquiry/IUpdateEnquiryStatusRequest';
+import { ISingleEnquiryData } from '../../../../../interface/enquiry/ISingleEnquiryResponse';
+import useCompanyId from '../../../../../hooks/useCompanyId';
+import { IGetOrdersRequest } from '../../../../../interface/order/IGetOrdersRequest';
+import { getOrdersRequest } from '../../../../../redux/slices/OrderSlice';
 interface IOrderInfoViewProps {
   orderId: string;
-  item: IGetOrdersData | null;
+  item: ISingleEnquiryData | null;
 }
 
 const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item}) => {
+  console.log('OrderInfoView--item--', JSON.stringify(item));
+  
   const dispatch = useAppDispatch();
-  const [orderStatus, setOrderStatus] = useState<string>('New');
+  const [orderStatus, setOrderStatus] = useState<string>(item?.status as string);
   const {
     updateEnquiryStatusRequesting,
     updateEnquiryStatusSuccess,
     updateEnquiryStatusFailure,
   } = useAppSelector(state => state.Enquiry);
+  const companyId = useCompanyId();
 
   const handleOrderStatusChange = (value: string) => {
     setOrderStatus(value);
@@ -58,6 +65,13 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item}) => {
     // Linking.openURL(`whatsapp://send?phone=+91${item?.mobile}`);
   };
 
+  const refetchOrderList = () => {
+    const payload: Partial<IGetOrdersRequest> = {
+      companyId: companyId,
+    }
+    dispatch(getOrdersRequest(payload));
+  }
+
   useEffect(() => {
     if (!updateEnquiryStatusRequesting && updateEnquiryStatusSuccess) {
       Toast.show({
@@ -66,6 +80,7 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item}) => {
         text2: `Order status has been updated to ${orderStatus}`,
       });
       dispatch(resetUpdateEnquiryStatusRequest());
+      refetchOrderList();
     } else if (!updateEnquiryStatusRequesting && updateEnquiryStatusFailure) {
       Toast.show({
         type: 'error',

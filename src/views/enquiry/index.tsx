@@ -31,30 +31,42 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
   let transformedData: IEnquiryItem[] = [];
   if (data) {
     //@ts-ignore
-    transformedData = data.map(enq => {
-      return {
-        clientName: enq.partyName || enq?.billingDetails?.authorityPersonName,
-        pickupAddress: `${enq.pickupAddress.address}, ${enq.pickupAddress.city}, ${enq.pickupAddress.state}, ${enq.pickupAddress.pincode}`,
-        deliveryAddress: `${enq.dropAddress.address}, ${enq.dropAddress.city}, ${enq.dropAddress.state}, ${enq.dropAddress.pincode}`,
-        shiftingType: enq.shiftingType,
-        shiftingLuggage: enq.shiftingLuggage.join(','),
-        phoneNumber: enq.mobile,
-        enquiryId: enq._id,
-        enquiryDate: formatDate(enq.createdAt),
-      } as IEnquiryItem;
-    }).sort((a:IEnquiryItem, b:IEnquiryItem) => sortItemByDate(a.enquiryDate, b.enquiryDate));
+    transformedData = data
+      .map((enq:any) => {
+        return {
+          clientName: enq.partyName || enq?.billingDetails?.authorityPersonName,
+          pickupAddress: `${enq.pickupAddress.address}, ${enq.pickupAddress.city}, ${enq.pickupAddress.state}, ${enq.pickupAddress.pincode}`,
+          deliveryAddress: `${enq.dropAddress.address}, ${enq.dropAddress.city}, ${enq.dropAddress.state}, ${enq.dropAddress.pincode}`,
+          shiftingType: enq.shiftingType,
+          shiftingLuggage: enq.shiftingLuggage.join(','),
+          phoneNumber: enq.mobile,
+          enquiryId: enq._id,
+          enquiryDate: formatDate(enq.createdAt),
+          status: enq.status,
+        } as IEnquiryItem;
+      })
+      .sort((a: IEnquiryItem, b: IEnquiryItem) =>
+        sortItemByDate(a.enquiryDate, b.enquiryDate),
+      )
+      .filter(
+        (e: IEnquiryItem) =>
+          e.status !== 'APPROVED' && e.status !== 'COMPLETED',
+      );
   }
 
-  const getEnquiryDataByIndex = (index: number) => {
-    if(data) return data[index];
-    return [];
+  const getEnquiryDataById = (enquiryId: string) => {
+    let enquiry:IGetEnquiriesData|null = null;
+    if(data && Array.isArray(data) && data.length > 0) {
+      enquiry = data.find(e => e._id == enquiryId);
+    }
+    return enquiry;
   }
 
   const handleAddNew = () => {
     navigation.navigate(EnquiryStackRoute.AddEnquiry);
   };
 
-  const handleEnquiryDetailsClick = (id: string, item: IGetEnquiriesData) => {
+  const handleEnquiryDetailsClick = (id: string, item: IGetEnquiriesData|null) => {
     navigation.navigate(EnquiryStackRoute.EnquiryDetails, {enquiryId: id, item: item});
   };
 
@@ -76,7 +88,7 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
       <Spacer height={4} />
       <AddNew
         countLabel="Total Enquiries"
-        count={data ? data.length.toString() : '0'}
+        count={transformedData.length.toString()}
         onPress={handleAddNew}
       />
       <Spacer height={12} />
@@ -97,7 +109,7 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
               <EnquiryListItem
                 item={item}
                 index={index}
-                onPress={() => handleEnquiryDetailsClick(item.enquiryId, getEnquiryDataByIndex(index))}
+                onPress={() => handleEnquiryDetailsClick(item.enquiryId, getEnquiryDataById(item.enquiryId))}
               />
             </View>
           )}

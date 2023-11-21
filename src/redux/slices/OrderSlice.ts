@@ -15,6 +15,8 @@ import { IGetMoneyReceiptsResponse } from '../../interface/order/IGetMoneyReceip
 import { IGetCarConditionListResponse } from '../../interface/order/IGetCarConditionListResponse';
 import { IGetBiltyListResponse } from '../../interface/order/IGetBiltyListResponse';
 import { IGetOrdersRequest } from '../../interface/order/IGetOrdersRequest';
+import { ISingleEnquiryResponse } from '../../interface/enquiry/ISingleEnquiryResponse';
+import { ISingleOrderRequest } from '../../interface/order/ISingleOrderRequest';
 
 interface IOrderState {
   // Add Order
@@ -29,6 +31,12 @@ interface IOrderState {
   getOrdersSuccess: boolean;
   getOrdersFailure: boolean;
   getOrdersError: any;
+  // Get Order
+  order: ISingleEnquiryResponse | null;
+  getOrderRequesting: boolean;
+  getOrderSuccess: boolean;
+  getOrderFailure: boolean;
+  getOrderError: any;
 
   // Get Approved Order List
   approvedOrders: IGetOrdersResponse | null;
@@ -100,6 +108,12 @@ const initialState: IOrderState = {
   addOrderSuccess: false,
   addOrderFailure: false,
   addOrderError: null,
+  // Get Order
+  order: null,
+  getOrderRequesting: false,
+  getOrderSuccess: false,
+  getOrderFailure: false,
+  getOrderError: null,
   // Get Order List
   orders: null,
   getOrdersRequesting: false,
@@ -209,7 +223,27 @@ export const OrderSlice = createSlice({
       state.getOrdersFailure = true;
       state.getOrdersError = action.payload;
     },
-
+    // Get Order
+    getOrderRequest: (state, action: PayloadAction<ISingleOrderRequest>) => {
+      state.getOrderRequesting = true;
+    },
+    getOrderSuccess: (state, action: PayloadAction<ISingleEnquiryResponse>) => {
+      state.getOrderRequesting = false;
+      state.getOrderSuccess = true;
+      state.order = action.payload;
+    },
+    getOrderFailure: (state, action: PayloadAction<any>) => {
+      state.getOrderRequesting = false;
+      state.getOrderSuccess = false;
+      state.getOrderFailure = true;
+      state.getOrderError = action.payload;
+    },
+    resetOrderRequest: (state) => {
+      state.getOrderRequesting = false;
+      state.getOrderSuccess = false;
+      state.getOrderFailure = false;
+      state.getOrderError = null;
+    },
     // Get Approved Order List
     getApprovedOrdersRequest: (state, action: PayloadAction<IGetOrdersRequest>) => {
       state.getApprovedOrdersRequesting = true;
@@ -423,6 +457,11 @@ export const {
   getOrdersRequest,
   getOrdersSuccess,
   getOrdersFailure,
+  // Get Order
+  getOrderRequest,
+  getOrderSuccess,
+  getOrderFailure,
+  resetOrderRequest,
   // Get Approved Order Lists
   getApprovedOrdersRequest,
   getApprovedOrdersSuccess,

@@ -32,6 +32,8 @@ import { IGetMoneyReceiptsResponse } from '../interface/order/IGetMoneyReceiptsR
 import { IGetBiltyListResponse } from '../interface/order/IGetBiltyListResponse';
 import { IGetCarConditionListResponse } from '../interface/order/IGetCarConditionListResponse';
 import { IGetOrdersRequest } from '../interface/order/IGetOrdersRequest';
+import { ISingleOrderRequest } from '../interface/order/ISingleOrderRequest';
+import { ISingleEnquiryResponse } from '../interface/enquiry/ISingleEnquiryResponse';
 
 export const GetOrderDetailsService = async (payload: string): Promise<IOrderDetailsResponse> => {
     console.log('GetOrderDetailsService--payload--', JSON.stringify(payload));
@@ -109,14 +111,11 @@ export const EditEnquiryService = async (payload: IOtpVerifyRequest): Promise<IO
 export const GetOrdersService = async (payload: Partial<IGetOrdersRequest>): Promise<IGetOrdersResponse> => {
     console.log('GetOrdersService--payload--', JSON.stringify(payload));
     const api = Api.getInstance();
-    // return await api.get<IGetOrdersResponse>(GET_ORDER_LIST(payload));
     return await api.post<Partial<IGetOrdersRequest>, AxiosResponse<IGetOrdersResponse>>(payload, GET_ORDER_LIST);
 }
 
-// TODO: refactor code once in use
-// export const DeleteCompanyService = async (payload: string): Promise<IOtpVerifyResponse> => {
-//     const api = Api.getInstance();
-//     return await api.delete<IOtpVerifyRequest, AxiosResponse<IOtpVerifyResponse>>(DELETE_COMPANY(payload));
-// }
-
-// ** Followup Service
+export const GetOrderService = async (payload: ISingleOrderRequest): Promise<ISingleEnquiryResponse> => {
+    console.log('GetOrderService--payload--', JSON.stringify(payload));
+    const api = Api.getInstance();
+    return await api.post<ISingleOrderRequest, AxiosResponse<ISingleEnquiryResponse>>(payload, GET_ORDER_LIST);
+}

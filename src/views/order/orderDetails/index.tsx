@@ -9,7 +9,6 @@ import OrderInfoView from './components/OrderInfoView';
 import DetailsView from './components/DetailsView';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {OrderStackParamList} from '../../../navigation/params/OrderStackParamList';
-import {IGetOrdersData} from '../../../interface/order/IGetOrdersResponse';
 import BiltyView from './components/BiltyView';
 import MoneyReceiptView from './components/MoneyReceiptView';
 import CarConditionView from './components/CarConditionView';
@@ -18,12 +17,13 @@ import {useAppSelector} from '../../../redux/hooks';
 import usePincodeHook from '../../../hooks/usePincodeHook';
 import Spinner from '../../../common/Spinner';
 import PackingListView from './components/PackingListView';
+import { ISingleEnquiryData } from '../../../interface/enquiry/ISingleEnquiryResponse';
 
 type Props = NativeStackScreenProps<OrderStackParamList, 'OrderDetails'>;
 
 const OrderDetailsView: React.FC<Props> = ({route, navigation}) => {
   const orderId: string = route.params?.orderId as string;
-  const item: IGetOrdersData = route.params?.item as IGetOrdersData;
+  const item: ISingleEnquiryData = route.params?.item as ISingleEnquiryData;
 
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
   const {createBiltyRequesting} = useAppSelector(state => state.Order);

@@ -29,6 +29,9 @@ import {
   getMoneyReceiptListFailure,
   getMoneyReceiptListRequest,
   getMoneyReceiptListSuccess,
+  getOrderFailure,
+  getOrderRequest,
+  getOrderSuccess,
   getOrdersFailure,
   getOrdersRequest,
   getOrdersSuccess,
@@ -45,6 +48,8 @@ import { IGetMoneyReceiptsResponse } from '../interface/order/IGetMoneyReceiptsR
 import { IGetCarConditionListResponse } from '../interface/order/IGetCarConditionListResponse';
 import { IGetBiltyListResponse } from '../interface/order/IGetBiltyListResponse';
 import { IGetOrdersRequest } from '../interface/order/IGetOrdersRequest';
+import { ISingleOrderRequest } from '../interface/order/ISingleOrderRequest';
+import { ISingleEnquiryResponse } from '../interface/enquiry/ISingleEnquiryResponse';
 
 export function* addOrderSaga(action: PayloadAction<IAddOrderRequest>) {
   console.log('addOrderSaga--action--', JSON.stringify(action));
@@ -69,6 +74,17 @@ export function* getOrderListSaga(action: PayloadAction<Partial<IGetOrdersReques
   } catch (error) {
       console.log('getOrderListSaga-error----', JSON.stringify(error));
       yield put(getOrdersFailure(error));
+  }
+}
+
+export function* getOrderSaga(action: PayloadAction<ISingleOrderRequest>) {
+  try {
+      const response: ISingleEnquiryResponse = yield call(OrderService.GetOrderService, action.payload);
+      console.log('getOrderSaga-response----', JSON.stringify(response));
+      yield put(getOrderSuccess(response));
+  } catch (error) {
+      console.log('getOrderSaga-error----', JSON.stringify(error));
+      yield put(getOrderFailure(error));
   }
 }
 
@@ -189,6 +205,7 @@ export function* createCarConditionSaga(
 export function* watcherOrderSaga() {
   yield takeLatest(addOrderRequest.type, addOrderSaga);
   yield takeLatest(getOrdersRequest.type, getOrderListSaga);
+  yield takeLatest(getOrderRequest.type, getOrderSaga);
   yield takeLatest(createMoneyReceiptRequest.type, createMoneyReceiptSaga);
   yield takeLatest(getMoneyReceiptListRequest.type, getMoneyReceiptListSaga);
   yield takeLatest(editMoneyReceiptListRequest.type, editMoneyReceiptSaga);

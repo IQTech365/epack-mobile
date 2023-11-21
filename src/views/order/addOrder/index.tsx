@@ -31,11 +31,12 @@ import usePincodeHook, {
 } from '../../../hooks/usePincodeHook';
 import Spinner from '../../../common/Spinner';
 import { IAddOrderRequest } from '../../../interface/order/IAddOrderRequest';
-import { addOrderRequest, getOrdersRequest, resetAddOrderRequest } from '../../../redux/slices/OrderSlice';
+import { addOrderRequest, getApprovedOrdersRequest, getOrdersRequest, resetAddOrderRequest } from '../../../redux/slices/OrderSlice';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import Toast from 'react-native-toast-message';
 import {NavigationProp} from '@react-navigation/native';
 import useCompanyId from '../../../hooks/useCompanyId';
+import { IGetOrdersRequest } from '../../../interface/order/IGetOrdersRequest';
 
 interface IAddOrderViewProps {
   navigation: NavigationProp<any, any>;
@@ -299,7 +300,7 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
         employeeMobile: state.billingBy?.billing_info
           ?.employee_mobile_number as string,
       } : {},
-      status: 'APPROVED',
+      status: 'NEW',
     };
     console.log('AddOrder-payload----', JSON.stringify(data));
     
@@ -352,6 +353,15 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
     }
   }, [deliveryStates, deliveryCities]);
 
+  const fetchCompletedOrders = () => {
+    let orderListReq: IGetOrdersRequest = {
+      // authId: otpData?.data.id as string,
+      companyId: companyId,
+      status: "COMPLETED"
+    }
+    dispatch2(getApprovedOrdersRequest(orderListReq));
+  }
+
   useEffect(() => {
     if (!addOrderRequesting && addOrderSuccess) {
       Toast.show({
@@ -361,6 +371,7 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
       });
       dispatch2(resetAddOrderRequest());
       dispatch2(getOrdersRequest(companyId));
+      fetchCompletedOrders();
       navigation?.goBack();
     } else if (!addOrderRequesting && addOrderFailure) {
       Toast.show({

@@ -18,6 +18,7 @@ export interface IOrderItem {
   phoneNumber: string;
   orderData: string;
   createdAt: string;
+  status: string;
 }
 
 interface IOrderListItemProps {

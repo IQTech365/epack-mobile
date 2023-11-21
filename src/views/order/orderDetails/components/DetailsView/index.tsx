@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Text, View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
@@ -12,8 +12,13 @@ import ContactDetailForm from './Forms/ContactDetailForm';
 import ShifingDetailForm from './Forms/ShifingDetailForm';
 import styles from './style';
 import Toast from 'react-native-toast-message';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
+import { getOrderRequest } from '../../../../../redux/slices/OrderSlice';
+import { ISingleOrderRequest } from '../../../../../interface/order/ISingleOrderRequest';
+import Spinner from '../../../../../common/Spinner';
+import { ISingleEnquiryData } from '../../../../../interface/enquiry/ISingleEnquiryResponse';
 interface IDetailsViewProps {
-  item: IGetOrdersData | null;
+  item: ISingleEnquiryData | null;
   enquiryId: string;
 }
 
@@ -22,6 +27,16 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
   const [editContactDetail, setEditContactDetail] = useState<boolean>(false);
   const [editPickupAddress, setEditPickupAddress] = useState<boolean>(false);
   const [editDropAddress, setEditDropAddress] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
+  const {getOrderRequesting, order} = useAppSelector(state => state.Order);
+  const {data: orderData} = order || {};
+
+  useEffect(() => {
+    const payload: ISingleOrderRequest = {
+      _id: enquiryId
+    }
+    dispatch(getOrderRequest(payload));
+  }, []);
 
   const handleEditShiftingDetail = () => {
     setEditShifingDetail(true);
@@ -65,7 +80,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
       return (
         <ShifingDetailForm
           moduleName={MODULE_NAME.ORDER}
-          item={item as IGetOrdersData}
+          item={item as ISingleEnquiryData}
           enquiryId={enquiryId}
         />
       );
@@ -73,7 +88,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
       return (
         <ContactDetailForm
           moduleName={MODULE_NAME.ORDER}
-          item={item as IGetOrdersData}
+          item={item as ISingleEnquiryData}
           enquiryId={enquiryId}
         />
       );
@@ -82,7 +97,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
         <AddressForm
           addressType={ADDRESS_TYPE.PICKUP}
           moduleName={MODULE_NAME.ORDER}
-          item={item as IGetOrdersData}
+          item={item as ISingleEnquiryData}
           enquiryId={enquiryId}
         />
       );
@@ -91,7 +106,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
         <AddressForm
           addressType={ADDRESS_TYPE.DROP}
           moduleName={MODULE_NAME.ORDER}
-          item={item as IGetOrdersData}
+          item={item as ISingleEnquiryData}
           enquiryId={enquiryId}
         />
       );
@@ -221,7 +236,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
     );
   };
 
-  const getShiftingLuggages = (item: IGetOrdersData | null) => {
+  const getShiftingLuggages = (item: ISingleEnquiryData | null) => {
     //@ts-ignore
     const {shiftingLuggage} = item;
     if (
@@ -402,6 +417,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
             <Toast />
           </>
         </ModalHOC>
+        <Spinner show={getOrderRequesting} />
       </View>
     </AvoidSoftInputViewHOC>
   );

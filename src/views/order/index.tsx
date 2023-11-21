@@ -15,6 +15,7 @@ import OrderListItem, {
 } from './orderDetails/components/OrderListItem';
 import styles from './style';
 import useCompanyId from '../../hooks/useCompanyId';
+import { ISingleEnquiryData } from '../../interface/enquiry/ISingleEnquiryResponse';
 
 interface IOrderPageViewProps {
   navigation: NavigationProp<any, any>;
@@ -63,9 +64,9 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
 
   const getTransformedData = () => {
     let dataSet: IOrderItem[] = [];
-    if(ordersArr && Array.isArray(ordersArr) && ordersArr.length > 0) {
+    if (ordersArr && Array.isArray(ordersArr) && ordersArr.length > 0) {
       dataSet = ordersArr.map(el => {
-        const item:IOrderItem = {
+        const item: IOrderItem = {
           orderId: el._id,
           clientName: getClientName(el),
           shiftingType: el?.shiftingType,
@@ -75,24 +76,30 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
           deliveryAddress: getAddress('drop', el),
           orderData: formatDate(el.createdAt),
           createdAt: el?.createdAt,
-        }
+          status: el.status,
+        };
         return item;
-      })
+      });
     }
-    return dataSet.sort((a, b) => sortItemByDate(a.orderData, b.orderData));
-  }
+    return dataSet
+      .sort((a, b) => sortItemByDate(a.orderData, b.orderData))
+      .filter(e => e.status !== 'COMPLETED');
+  };
 
   const handleAddNew = () => {
     navigation.navigate(OrderStackRoute.AddOrder);
   };
 
   const handleOrderDetailsClick = (item: IOrderItem, index: number) => {
-    navigation.navigate(OrderStackRoute.OrderDetails, {orderId: item.orderId, item: getOrderDataByIndex(index)});
+    navigation.navigate(OrderStackRoute.OrderDetails, {orderId: item.orderId, item: getOrderDataById(item.orderId)});
   };
 
-  const getOrderDataByIndex = (index: number) => {
-    if(ordersArr) return ordersArr[index];
-    return null;
+  const getOrderDataById = (orderId: string) => {
+    let order:ISingleEnquiryData|null = null;
+    if(ordersArr && Array.isArray(ordersArr) && ordersArr.length > 0) {
+      order = ordersArr.find(e => e._id == orderId)
+    }
+    return order;
   }
 
   const handleOnRefresh = useCallback(() => {
@@ -113,7 +120,11 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
     <View style={styles.container}>
       <Header label="Order Management" canGoBack={true} showDrawerIcon={true} />
       <Spacer height={4} />
-      <AddNew countLabel="Total Orders" count={`${getTransformedData().length}`} onPress={handleAddNew} />
+      <AddNew
+        countLabel="Total Orders"
+        count={`${getTransformedData().length}`}
+        onPress={handleAddNew}
+      />
       <Spacer height={12} />
       <FlatList
         contentContainerStyle={styles.listContent}

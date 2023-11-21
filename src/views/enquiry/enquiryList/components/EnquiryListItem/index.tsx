@@ -7,7 +7,6 @@ import WhatsappIcon from '../../../../../images/icons/whatsapp.svg';
 import MoreIcon from '../../../../../images/icons/dots-vertical.svg';
 
 import Spacer from '../../../../../common/Spacer';
-import { formatDate } from '../../../../../utils/formatter';
 
 export interface IEnquiryItem {
   clientName: string;
@@ -18,6 +17,7 @@ export interface IEnquiryItem {
   phoneNumber: string;
   enquiryId: string;
   enquiryDate?: string;
+  status: string;
 }
 
 interface IEnquiryListItemProps {

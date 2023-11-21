@@ -5,7 +5,7 @@ export interface IGetOrdersData extends IAddOrderRequest {
   createdAt: string;
 }
 export interface IGetOrdersResponse {
-    data: IGetOrdersData;
+    data: IGetOrdersData[];
     status: number;
     error: boolean;
 }
