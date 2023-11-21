@@ -37,6 +37,10 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 0.5,
+    borderRadius: 5,
+    borderColor: COLOR_GRAY,
+    backgroundColor: COLOR_GRAY2,
   },
   dateAndQuotationNumberContainer: {
     width: '100%',
