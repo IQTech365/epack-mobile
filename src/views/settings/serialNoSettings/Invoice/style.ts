@@ -4,18 +4,12 @@ const {width} = Dimensions.get('screen');
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: 'center',
-    // justifyContent: 'center',
-  },
-  container2: {
     width: width * 0.95,
-    paddingVertical: 5,
-    flexDirection: 'row',
     alignSelf: 'center',
-    justifyContent: 'flex-end',
-    marginBottom: 8,
-    backgroundColor: COLOR_GRAY2,
+    alignItems: 'center',
+    borderRadius: 5,
+    borderWidth: 0.5,
+    borderColor: COLOR_GRAY2,
   },
   emptyContainer2: {
     flex: 1,

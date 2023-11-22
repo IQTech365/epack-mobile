@@ -1,14 +1,14 @@
-import React, {useState, useEffect, useCallback} from 'react';
-import {View, Text, TouchableOpacity, FlatList, RefreshControl} from 'react-native';
+import React, {useEffect, useCallback} from 'react';
+import {
+  View,
+  Text,
+  FlatList,
+  RefreshControl,
+} from 'react-native';
 import styles from './style';
 import SerilaNoSettingFormView from '../SerialNoSettingFormView';
-import ListViewIcon from '../../../../images/icons/list_view_icon.svg';
-import ListViewIcon2 from '../../../../images/icons/list_view_icon2.svg';
-import CreateIcon from '../../../../images/icons/create_icon.svg';
-import CreateIcon2 from '../../../../images/icons/create_icon2.svg';
-import Spacer from '../../../../common/Spacer';
-import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
-import { getSerialNoRequest } from '../../../../redux/slices/SerialNoSettingSlice';
+import {useAppDispatch, useAppSelector} from '../../../../redux/hooks';
+import {getSerialNoRequest} from '../../../../redux/slices/SerialNoSettingSlice';
 import SerialNoListItem from '../SerialNoSettingListItem';
 import useCompanyId from '../../../../hooks/useCompanyId';
 
@@ -17,10 +17,10 @@ interface IQuotationSNProps {
   moduleName: string;
 }
 
-const QuotationSN: React.FC<IQuotationSNProps> = ({moduleId,moduleName}) => {
-  const [showList, setShowList] = useState<boolean>(false);
-  const [showForm, setShowForm] = useState<boolean>(true);
-  const {getSerialNumberRequesting, paymentMethods} = useAppSelector(state => state.SNSetting);
+const QuotationSN: React.FC<IQuotationSNProps> = ({moduleId, moduleName}) => {
+  const {getSerialNumberRequesting, paymentMethods} = useAppSelector(
+    state => state.SNSetting,
+  );
   const {data: PaymentMethodsData = []} = paymentMethods || {};
   const dispatch = useAppDispatch();
   const companyId = useCompanyId();
@@ -33,21 +33,10 @@ const QuotationSN: React.FC<IQuotationSNProps> = ({moduleId,moduleName}) => {
     );
   };
 
-  const handleShowForm = () => {
-    setShowList(false);
-    setShowForm(true);
-  };
-
-  const handleShowList = () => {
-    setShowList(true);
-    setShowForm(false);
-  };
-
   const showFormView = () => {
-    if (showForm) {
-      return <SerilaNoSettingFormView  moduleId={moduleId} moduleName={moduleName} />;
-    }
-    return null;
+    return (
+      <SerilaNoSettingFormView moduleId={moduleId} moduleName={moduleName} />
+    );
   };
 
   const handleOnRefresh = useCallback(() => {
@@ -58,54 +47,22 @@ const QuotationSN: React.FC<IQuotationSNProps> = ({moduleId,moduleName}) => {
     dispatch(getSerialNoRequest(companyId));
   }, []);
 
-  const showListView = () => {
-    if (showList) {
-      return (
-        <FlatList
-          data={PaymentMethodsData}
-          refreshControl={
-            <RefreshControl
-              refreshing={getSerialNumberRequesting}
-              onRefresh={handleOnRefresh}
-            />
-          }
-          renderItem={({item, index}) =>
-          item.moduleName == 'QUOTATION'?
-          <SerialNoListItem item={item} index={1}
-            onPress={() => { } }
-            onShare={() => { } }
-            onDownload={()=> {}}
-            onPreview={() => { } }
-            onEdit={() => {}} />:null}
-          ListEmptyComponent={showEmptyView()}
-        />
-      );
-    }
-    return null;
-  };
-
-  return <View style={styles.container}>
-      <View style={styles.container2}>
-        <TouchableOpacity onPress={handleShowList} activeOpacity={0.4}>
-          {showList ? (
-            <ListViewIcon2 width={30} height={30} />
-          ) : (
-            <ListViewIcon width={30} height={30} />
-          )}
-        </TouchableOpacity>
-        <Spacer width={10} />
-        <TouchableOpacity onPress={handleShowForm} activeOpacity={0.4}>
-          {showForm ? (
-            <CreateIcon2 width={30} height={30} />
-          ) : (
-            <CreateIcon width={30} height={30} />
-          )}
-        </TouchableOpacity>
-        <Spacer width={10} />
-      </View>
-      {showFormView()}
-      {showListView()}
-  </View>;
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={PaymentMethodsData}
+        refreshControl={
+          <RefreshControl
+            refreshing={getSerialNumberRequesting}
+            onRefresh={handleOnRefresh}
+          />
+        }
+        renderItem={({item, index}) => <SerialNoListItem item={item} />}
+        ListEmptyComponent={showEmptyView()}
+        ListHeaderComponent={showFormView()}
+      />
+    </View>
+  );
 };
 
 export default QuotationSN;
