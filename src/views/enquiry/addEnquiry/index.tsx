@@ -358,23 +358,18 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
   const validateForm = () => {
     let errors:any = {};
     if(state.billingBy?.billing_by == 'by Company') {
-      console.log('inside--if');
-      
       if(!state.billingBy?.billing_info?.company_name) {
         errors.companyName = "Company name required";
       }
-  
       if(!state.billingBy?.billing_info?.employee_name) {
         errors.employeeName = "Employee name required";
       }
-  
       if(!state.billingBy?.billing_info?.employee_mobile_number) {
         errors.employeeMobile = "Employee mobile number required";
       } else if(!Validator.mobile(state.billingBy?.billing_info?.employee_mobile_number)) {
         errors.employeeMobile = "Mobile number invalid";
       }
     } else if(state.billingBy?.billing_by == 'by Individual') {
-      console.log('inside--else');
       if(!state.partyName) {
         errors.partyName = "Party name required";
       }
