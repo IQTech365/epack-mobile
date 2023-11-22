@@ -16,7 +16,7 @@ import useCompanyId from '../../../../hooks/useCompanyId';
 
 const AddFranchiseView = () => {
   const [showFranchiseList, setshowFranchiseList] = useState<boolean>(false);
-  const [showAddFranchise, setshowAddFranchise] = useState<boolean>(true);
+  const [showAddFranchise, setshowAddFranchise] = useState<boolean>(false);
   const {Franchises, getFranchiseRequesting} = useAppSelector(
     state => state.Myprofile,
   );
@@ -81,7 +81,8 @@ const AddFranchiseView = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(getFranchiseRequest(companyId))
+    dispatch(getFranchiseRequest(companyId));
+    franchiseData?setshowFranchiseList(true):setshowAddFranchise(true);
   }, []);
 
 

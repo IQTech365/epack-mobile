@@ -73,7 +73,7 @@ const BasicDetailsView: React.FC<IBasicDetailsViewProps> = ({}) => {
           onClose={handleModalClose}
           title="Update Company Basic Details">
           <>
-            <UpdateBasicDetailsForm />
+            <UpdateBasicDetailsForm  onClose= {handleModalClose}/>
             <Toast />
           </>
         </ModalHOC>

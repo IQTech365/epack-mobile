@@ -16,7 +16,7 @@ import useCompanyId from '../../../../hooks/useCompanyId';
 
 const AddBranchView = () => {
   const [showBranchList, setshowBranchList] = useState<boolean>(false);
-  const [showAddBranch, setshowAddBranch] = useState<boolean>(true);
+  const [showAddBranch, setshowAddBranch] = useState<boolean>(false);
   const {Branchs, getBranchsRequesting} = useAppSelector(
     state => state.Myprofile,
   );
@@ -82,7 +82,8 @@ const AddBranchView = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(getBranchsRequest(companyId))
+    dispatch(getBranchsRequest(companyId));
+    BranchsData?setshowBranchList(true):setshowAddBranch(true);
   }, [dispatch]);
 
   return (

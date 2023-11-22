@@ -11,14 +11,15 @@ import { COLOR_BLACK } from '../../../../../utils/colors';
 import styles from './style';
 import { ICompanyInfoData } from '../../../../../interface/companyRegistration/IGetCompaniesResponse';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
-import { editCompanyRequest, getCompaniesRequest } from '../../../../../redux/slices/CompanySlice';
+import { editCompanyRequest, getCompaniesRequest, reseteditCompanyRequest } from '../../../../../redux/slices/CompanySlice';
 import { ICompanyEditRequest } from '../../../../../interface/companyRegistration/ICompanyEditRequest';
 
 interface IUpdateBasicDetailsFormProps {
   //
+  onClose:()=>void;
 }
 
-const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({ }) => {
+const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({onClose }) => {
   const [comapnyPunch, setCompanyPunch] = useState<string>('');
   const [contactPerson, setContactPerson] = useState<string>('');
   const [website, setWebsite] = useState<string>('');
@@ -90,14 +91,16 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({ }) => 
           text1: 'Edit Company',
           text2: 'Company has been added successfully',
         });
-       
+       dispatch(reseteditCompanyRequest());
+       onClose();
+
       } else if (!editCompanyRequesting && editCompanyFailure) {
         Toast.show({
           type: 'error',
           text1: 'Edit Company',
           text2: 'Error in Edit Company. Please try again!',
         });
-
+        dispatch(reseteditCompanyRequest());
       }
     }, [editCompanyRequesting, editCompanySuccess, editCompanyFailure]);
  
