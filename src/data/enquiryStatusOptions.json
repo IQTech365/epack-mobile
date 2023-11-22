@@ -1,6 +1,7 @@
 [
-  "Approved",
+  "In Followup",
+  "Survey Done",
   "Pending",
-  "Under Process",
-  "Canceled"
+  "Approved",
+  "Cancelled"
 ]

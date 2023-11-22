@@ -5,11 +5,11 @@ import AddNew from '../../common/AddNew';
 import Header from '../../common/Header';
 import Spacer from '../../common/Spacer';
 import Spinner from '../../common/Spinner';
-import { IGetEnquiriesData } from '../../interface/enquiry/IGetEnquiriesResponse';
+import {IGetEnquiriesData} from '../../interface/enquiry/IGetEnquiriesResponse';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {getEnquiriesRequest} from '../../redux/slices/EnquirySlice';
 import {EnquiryStackRoute} from '../../utils/constants';
-import { formatDate, sortItemByDate } from '../../utils/formatter';
+import {formatDate, sortItemByDate} from '../../utils/formatter';
 import EnquiryListItem, {
   IEnquiryItem,
 } from './enquiryList/components/EnquiryListItem';
@@ -32,7 +32,7 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
   if (data) {
     //@ts-ignore
     transformedData = data
-      .map((enq:any) => {
+      .map((enq: any) => {
         return {
           clientName: enq.partyName || enq?.billingDetails?.authorityPersonName,
           pickupAddress: `${enq.pickupAddress.address}, ${enq.pickupAddress.city}, ${enq.pickupAddress.state}, ${enq.pickupAddress.pincode}`,
@@ -50,24 +50,34 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
       )
       .filter(
         (e: IEnquiryItem) =>
-          e.status !== 'APPROVED' && e.status !== 'COMPLETED',
+          e.status.toLowerCase() == 'new' ||
+          e.status.toLowerCase() == 'in followup' ||
+          e.status.toLowerCase() == 'survey done' ||
+          e.status.toLowerCase() == 'pending' ||
+          e.status.toLowerCase() == 'cancelled',
       );
   }
 
   const getEnquiryDataById = (enquiryId: string) => {
-    let enquiry:IGetEnquiriesData|null = null;
-    if(data && Array.isArray(data) && data.length > 0) {
+    let enquiry: IGetEnquiriesData | null = null;
+    if (data && Array.isArray(data) && data.length > 0) {
       enquiry = data.find(e => e._id == enquiryId);
     }
     return enquiry;
-  }
+  };
 
   const handleAddNew = () => {
     navigation.navigate(EnquiryStackRoute.AddEnquiry);
   };
 
-  const handleEnquiryDetailsClick = (id: string, item: IGetEnquiriesData|null) => {
-    navigation.navigate(EnquiryStackRoute.EnquiryDetails, {enquiryId: id, item: item});
+  const handleEnquiryDetailsClick = (
+    id: string,
+    item: IGetEnquiriesData | null,
+  ) => {
+    navigation.navigate(EnquiryStackRoute.EnquiryDetails, {
+      enquiryId: id,
+      item: item,
+    });
   };
 
   const handleOnRefresh = useCallback(() => {
@@ -109,7 +119,12 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
               <EnquiryListItem
                 item={item}
                 index={index}
-                onPress={() => handleEnquiryDetailsClick(item.enquiryId, getEnquiryDataById(item.enquiryId))}
+                onPress={() =>
+                  handleEnquiryDetailsClick(
+                    item.enquiryId,
+                    getEnquiryDataById(item.enquiryId),
+                  )
+                }
               />
             </View>
           )}

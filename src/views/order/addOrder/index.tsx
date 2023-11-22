@@ -301,7 +301,7 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
         employeeMobile: state.billingBy?.billing_info
           ?.employee_mobile_number as string,
       } : {},
-      status: 'NEW',
+      status: 'NEW ORDER',
     };
     console.log('AddOrder-payload----', JSON.stringify(data));
     

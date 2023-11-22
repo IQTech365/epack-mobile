@@ -1,8 +1,8 @@
 [
-  "Pending",
-  "Under Process",
   "Out for Shifting",
   "Material received at warehouse",
+  "In Transit",
   "Reached at destination city",
-  "Completed"
+  "Completed",
+  "Cancelled Order"
 ]

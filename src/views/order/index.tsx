@@ -4,18 +4,18 @@ import {View, Text, FlatList, RefreshControl} from 'react-native';
 import AddNew from '../../common/AddNew';
 import Header from '../../common/Header';
 import Spacer from '../../common/Spacer';
-import { IGetOrdersRequest } from '../../interface/order/IGetOrdersRequest';
-import { IGetOrdersData } from '../../interface/order/IGetOrdersResponse';
+import {IGetOrdersRequest} from '../../interface/order/IGetOrdersRequest';
+import {IGetOrdersData} from '../../interface/order/IGetOrdersResponse';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {getOrdersRequest} from '../../redux/slices/OrderSlice';
 import {OrderStackRoute} from '../../utils/constants';
-import { formatDate, sortItemByDate } from '../../utils/formatter';
+import {formatDate, sortItemByDate} from '../../utils/formatter';
 import OrderListItem, {
   IOrderItem,
 } from './orderDetails/components/OrderListItem';
 import styles from './style';
 import useCompanyId from '../../hooks/useCompanyId';
-import { ISingleEnquiryData } from '../../interface/enquiry/ISingleEnquiryResponse';
+import {ISingleEnquiryData} from '../../interface/enquiry/ISingleEnquiryResponse';
 
 interface IOrderPageViewProps {
   navigation: NavigationProp<any, any>;
@@ -31,36 +31,35 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
 
   const getClientName = (item: IGetOrdersData) => {
     let clientName = '';
-    if(item.billingBy == 'by Individual') {
+    if (item.billingBy == 'by Individual') {
       clientName = item.partyName;
-    } else if(item.billingBy == 'by Company') {
+    } else if (item.billingBy == 'by Company') {
       //@ts-ignore
-      clientName = item.billingDetails?.authorityPersonName
+      clientName = item.billingDetails?.authorityPersonName;
     }
     return clientName;
-  }
+  };
 
   const getPhoneNumber = (item: IGetOrdersData) => {
     let phoneNumber = '';
-    if(item.billingBy == 'by Individual') {
+    if (item.billingBy == 'by Individual') {
       phoneNumber = item.mobile;
-    } else if(item.billingBy == 'by Company') {
+    } else if (item.billingBy == 'by Company') {
       //@ts-ignore
-      clientName = item.billingDetails?.authorityPersonMobile
+      clientName = item.billingDetails?.authorityPersonMobile;
     }
     return phoneNumber;
-  }
+  };
 
   const getAddress = (type: string, item: IGetOrdersData) => {
     let address = '';
-    if(type == 'pick') {
+    if (type == 'pick') {
       address = `${item.pickupAddress.address}, ${item.pickupAddress.city}, ${item.pickupAddress.state}, ${item.pickupAddress.pincode}`;
-    } else if(type == 'drop') {
+    } else if (type == 'drop') {
       address = `${item.dropAddress.address}, ${item.dropAddress.city}, ${item.dropAddress.state}, ${item.dropAddress.pincode}`;
     }
     return address;
-  }
-
+  };
 
   const getTransformedData = () => {
     let dataSet: IOrderItem[] = [];
@@ -83,7 +82,16 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
     }
     return dataSet
       .sort((a, b) => sortItemByDate(a.orderData, b.orderData))
-      .filter(e => e.status !== 'COMPLETED');
+      .filter(
+        e =>
+          e.status.toLowerCase() == 'new order' ||
+          e.status.toLowerCase() == 'out for shifting' ||
+          e.status.toLowerCase() == 'material received at warehouse' ||
+          e.status.toLowerCase() == 'in transit' ||
+          e.status.toLowerCase() == 'reached at destination city' ||
+          e.status.toLowerCase() == 'completed' ||
+          e.status.toLowerCase() == 'cancelled order',
+      );
   };
 
   const handleAddNew = () => {
@@ -91,28 +99,31 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
   };
 
   const handleOrderDetailsClick = (item: IOrderItem, index: number) => {
-    navigation.navigate(OrderStackRoute.OrderDetails, {orderId: item.orderId, item: getOrderDataById(item.orderId)});
+    navigation.navigate(OrderStackRoute.OrderDetails, {
+      orderId: item.orderId,
+      item: getOrderDataById(item.orderId),
+    });
   };
 
   const getOrderDataById = (orderId: string) => {
-    let order:ISingleEnquiryData|null = null;
-    if(ordersArr && Array.isArray(ordersArr) && ordersArr.length > 0) {
-      order = ordersArr.find(e => e._id == orderId)
+    let order: ISingleEnquiryData | null = null;
+    if (ordersArr && Array.isArray(ordersArr) && ordersArr.length > 0) {
+      order = ordersArr.find(e => e._id == orderId);
     }
     return order;
-  }
+  };
 
   const handleOnRefresh = useCallback(() => {
     const payload: Partial<IGetOrdersRequest> = {
       companyId: companyId,
-    }
+    };
     dispatch(getOrdersRequest(payload));
   }, []);
 
   useEffect(() => {
     const payload: Partial<IGetOrdersRequest> = {
       companyId: companyId,
-    }
+    };
     dispatch(getOrdersRequest(payload));
   }, []);
 
