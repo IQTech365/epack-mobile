@@ -48,6 +48,7 @@ import Toast from 'react-native-toast-message';
 import {NavigationProp} from '@react-navigation/native';
 import EpackDropdown from '../../../common/DropdownComponent2';
 import useCompanyId from '../../../hooks/useCompanyId';
+import { Validator } from '../../../utils/validation';
 
 interface IAddEnquiryViewProps {
   navigation: NavigationProp<any, any>;
@@ -68,7 +69,6 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
     addEnquiryRequesting,
     addEnquirySuccess,
     addEnquiryFailure,
-    addEnquiryInfo,
   } = useAppSelector(state => state.Enquiry);
   const {otpData} = useAppSelector(state => state.OTP);
   const companyId = useCompanyId();
@@ -78,7 +78,9 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
   const dropStateDropdownRef = useRef(null);
   const dropCityDropdownRef = useRef(null);
 
-  // console.log('AddEnquiry-addEnquiryInfo--', JSON.stringify(addEnquiryInfo));
+  const [errors, setErrors] = useState();
+  const [isFormValid, setIsFormValid] = useState<boolean>(true);
+  const [showErrors, setShowErrors] = useState<boolean>(false);
 
   const setPincodeError = () => {
     dispatch({
@@ -353,6 +355,51 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
     }
   }, [result]);
 
+  const validateForm = () => {
+    let errors:any = {};
+    if(state.billingBy?.billing_by == 'by Company') {
+      console.log('inside--if');
+      
+      if(!state.billingBy?.billing_info?.company_name) {
+        errors.companyName = "Company name required";
+      }
+  
+      if(!state.billingBy?.billing_info?.employee_name) {
+        errors.employeeName = "Employee name required";
+      }
+  
+      if(!state.billingBy?.billing_info?.employee_mobile_number) {
+        errors.employeeMobile = "Employee mobile number required";
+      } else if(!Validator.mobile(state.billingBy?.billing_info?.employee_mobile_number)) {
+        errors.employeeMobile = "Mobile number invalid";
+      }
+    } else if(state.billingBy?.billing_by == 'by Individual') {
+      console.log('inside--else');
+      if(!state.partyName) {
+        errors.partyName = "Party name required";
+      }
+      if(!state.mobile) {
+        errors.mobile = "Mobile number required";
+      } else if(!Validator.mobile(state.mobile)) {
+        errors.mobile = "Mobile number invalid";
+      }
+    }
+    setErrors(errors);
+    setIsFormValid(Object.keys(errors).length === 0);
+  }
+
+  useEffect(() => {
+    setShowErrors(false);
+    validateForm();
+  }, [
+    state.billingBy?.billing_by,
+    state.partyName,
+    state.mobile,
+    state.billingBy?.billing_info?.company_name,
+    state.billingBy?.billing_info?.employee_name,
+    state.billingBy?.billing_info?.employee_mobile_number,
+  ]);
+
   useEffect(() => {
     if (
       pickupStates &&
@@ -404,11 +451,21 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
   }, [addEnquiryRequesting, addEnquirySuccess, addEnquiryFailure]);
 
   const handleSubmit = useCallback(() => {
+    setShowErrors(true);
+    console.log('Enquiry-Form-errors--', JSON.stringify(errors));
+    
+    if(!isFormValid) {
+      Toast.show({
+        type: 'error',
+        text1: 'Form',
+        text2: 'Form data is not valid. Please correct!',
+      });
+      return;
+    }
+    
     const payload: IAddEnquiryRequest = {
       companyId: companyId,
       authId: otpData?.data.id as string,
-      // companyId: '6511695bad8a273529a2a59a',
-      // authId: '650efb2d7e3968c4c217a34f',
       enquiryManager: '',
       shiftingType: state.shiftingType.toUpperCase(),
       partyCompanyName: '',
@@ -447,7 +504,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
       billingDetails: {
         companyName: state.billingBy?.billing_info?.company_name as string,
         approvalAuthority: state.billingBy?.billing_info
-          ?.approval_authority as string,
+          ?.approval_authority as string || approvalAuthorityOptions[0].label,
         authorityPersonName: state.billingBy?.billing_info
           ?.authority_person_name as string,
         authorityPersonMobile: state.billingBy?.billing_info
@@ -472,23 +529,31 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
       <>
         <Spacer height={4} />
         <View style={styles.elementContainer}>
-          <Label text="Party Name" style={styles.label} />
+          <Label text="Party Name" style={styles.label} required={true} />
           <Input
             onChangeText={handlePartyNameInputTextChange}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
+            //@ts-ignore
+            error={showErrors ? errors?.partyName : ''}
+            type='text'
+            required={true}
           />
         </View>
         <Spacer height={4} />
         <View style={styles.elementContainer}>
-          <Label text="Mobile Number *" style={styles.label} />
+          <Label text="Mobile Number" style={styles.label} required={true} />
           <Input
             onChangeText={handleMobileNumInputTextChange}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             inputType='numeric'
             selectionColor={COLOR_BLACK}
+            //@ts-ignore
+            error={showErrors ? errors?.mobile : ''}
+            required={true}
+            type='mobile'
           />
         </View>
       </>
@@ -501,7 +566,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
       <>
         <Spacer height={4} />
         <View style={styles.elementContainer}>
-          <Label text="Company Name" style={styles.label} />
+          <Label text="Company Name" style={styles.label} required={true} />
           <Input
             onChangeText={(text: string) => {
               const {billingBy} = state;
@@ -517,6 +582,10 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
+            required={true}
+            type='text'
+            //@ts-ignore
+            error={showErrors ? errors?.companyName : ''}
           />
         </View>
         <Spacer height={4} />
@@ -584,6 +653,8 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
+            inputType='numeric'
+            type='mobile'
           />
         </View>
         <Spacer height={4} />
@@ -594,7 +665,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
               const {billingBy} = state;
               const tempObj = {
                 ...billingBy,
-                billing_info: {...billingBy?.billing_info, company_gst: text},
+                billing_info: {...billingBy?.billing_info, company_gst: text.toUpperCase()},
               };
               dispatch({
                 type: ENQUIRY_FORM_ACTION.BILLING_BY,
@@ -604,11 +675,12 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
+            autoCapitalize="characters"
           />
         </View>
         <Spacer height={4} />
         <View style={styles.elementContainer}>
-          <Label text="Employee Name" style={styles.label} />
+          <Label text="Employee Name" style={styles.label} required={true} />
           <Input
             onChangeText={(text: string) => {
               const {billingBy} = state;
@@ -624,6 +696,10 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
+            //@ts-ignore
+            error={showErrors ? errors?.employeeName : ''}
+            type='text'
+            required={true}
           />
         </View>
         <Spacer height={4} />
@@ -651,7 +727,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
         </View>
         <Spacer height={4} />
         <View style={styles.elementContainer}>
-          <Label text="Employee Mobile Number" style={styles.label} />
+          <Label text="Employee Mobile Number" style={styles.label} required={true} />
           <Input
             onChangeText={(text: string) => {
               const {billingBy} = state;
@@ -671,6 +747,10 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
+            type='mobile'
+            required={true}
+            //@ts-ignore
+            error={showErrors ? errors?.employeeMobile : ''}
           />
         </View>
         <Spacer height={4} />

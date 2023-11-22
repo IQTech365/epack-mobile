@@ -37,6 +37,7 @@ const SerialNoSettingFormView:React.FC<IMoneyReceiptSNProps> = ({moduleId, modul
     createSerialNumberSuccess,
     createSerialNumberFailure,
   } = useAppSelector(state => state.SNSetting);
+  const { otpData } = useAppSelector(state => state.OTP);
 
   const {data: brancheData = []} = Branchs || {};
   const {data: franchiseData = []} = Franchises || {};
@@ -113,7 +114,7 @@ const SerialNoSettingFormView:React.FC<IMoneyReceiptSNProps> = ({moduleId, modul
       companyId: companyId,
       companyEntity: entityType,
       branchId: subEntityType,
-      moduleId: subEntityType,
+      moduleId: moduleId,
       moduleName: moduleName,
       prefix: prefix,
       initialValue: suffix,

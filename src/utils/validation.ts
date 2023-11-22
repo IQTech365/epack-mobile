@@ -8,4 +8,9 @@ export class Validator {
         const emailRegex = new RegExp(/^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$/, "gm");
         return emailRegex.test(text);
     }
+
+    static mobile = (text:string): boolean => {
+        const expr = /^[6-9][0-9]{9}$/;
+        return expr.test(text);
+    }
 }

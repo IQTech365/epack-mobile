@@ -157,9 +157,7 @@ const AddQuotationView: React.FC<Props> = ({
   const [fullLoadAmount, setFullLoadAmount] = useState<string>('');
   const [isStorageRequired, setIsStorageRequired] = useState<boolean>(false);
 
-  // Below states will be used in 'Edit' case
   const [quotationserialNo, setQuotationserialNo] = useState<string>('');
-
   const surchargePercentDropdownRef = useRef(null);
   const surchargeDropdownRef = useRef(null);
   const shiftingTypeDropdownRef = useRef(null);
@@ -177,6 +175,10 @@ const AddQuotationView: React.FC<Props> = ({
   const storageFromdateDropdownRef = useRef(null);
   const storageTodateDropdownRef = useRef(null);
   const loryTypeDropdownRef = useRef(null);
+  const pickupCityDropdownRef = useRef(null);
+  const pickupStateDropwdownRef = useRef(null);
+  const dropStateDropdownRef = useRef(null);
+  const dropCityDropdownRef = useRef(null);
 
   const dispatch2 = useAppDispatch();
 
@@ -1516,6 +1518,36 @@ const AddQuotationView: React.FC<Props> = ({
   }, [result]);
 
   useEffect(() => {
+    if (
+      pickupStates &&
+      pickupCities &&
+      pickupCityDropdownRef &&
+      pickupStateDropwdownRef &&
+      pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_ENQUIRY_PICKUP_ADDRESS
+    ) {
+      //@ts-ignore
+      pickupStateDropwdownRef?.current?.setValue(pickupStates[0]?.label);
+      //@ts-ignore
+      pickupCityDropdownRef?.current?.setValue(pickupCities[0]?.label);
+    }
+  }, [pickupStates, pickupCities]);
+
+  useEffect(() => {
+    if (
+      deliveryStates &&
+      deliveryCities &&
+      dropStateDropdownRef &&
+      dropCityDropdownRef &&
+      pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_ENQUIRY_DELIVERY_ADDRESS
+    ) {
+      //@ts-ignore
+      dropStateDropdownRef?.current?.setValue(deliveryStates[0]?.label);
+      //@ts-ignore
+      dropCityDropdownRef?.current?.setValue(deliveryCities[0]?.label);
+    }
+  }, [deliveryStates, deliveryCities]);
+
+  useEffect(() => {
     if (!addQuotationRequesting && addQuotationSuccess) {
       Toast.show({
         type: 'success',
@@ -1785,6 +1817,8 @@ const AddQuotationView: React.FC<Props> = ({
                     data={pickupStates.map(e => e.label)}
                     placeholder={'Select State'}
                     hanldeData={handlePickupState}
+                    //@ts-ignore
+                    ref={pickupStateDropwdownRef}
                   />
                 </View>
               </View>
@@ -1794,6 +1828,8 @@ const AddQuotationView: React.FC<Props> = ({
                   data={pickupCities.map(e => e.label)}
                   placeholder={'Select City'}
                   hanldeData={handlePickupCity}
+                  //@ts-ignore
+                  ref={pickupCityDropdownRef}
                 />
               </View>
               <Spacer height={4} />
@@ -1846,6 +1882,8 @@ const AddQuotationView: React.FC<Props> = ({
                     data={deliveryStates.map(e => e.label)}
                     placeholder={'Select State'}
                     hanldeData={handleDeliveryState}
+                    //@ts-ignore
+                    ref={dropStateDropdownRef}
                   />
                 </View>
               </View>
@@ -1855,6 +1893,8 @@ const AddQuotationView: React.FC<Props> = ({
                   data={deliveryCities.map(e => e.label)}
                   placeholder={'Select City'}
                   hanldeData={handleDeliveryCity}
+                  //@ts-ignore
+                  ref={dropCityDropdownRef}
                 />
               </View>
               <Spacer height={4} />

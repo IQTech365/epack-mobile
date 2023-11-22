@@ -91,7 +91,7 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
   }
 
   
-  const handleSave = useCallback(() => {
+  const handleSave = () => {
     const payload: IAddPaymentMethodRequest = {
       companyId: companyId,
       accountType: accountType,
@@ -105,7 +105,7 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
     }
     console.log('payment method-payload--', JSON.stringify(payload));
     dispatch(addPaymentMethodRequest(payload));
-  },[dispatch]);
+  };
 
   useEffect(() => {
     dispatch(getBanksRequest());
@@ -127,8 +127,6 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
         text2: 'Account Detail has been added successfully',
       });
       dispatch(resetAddPaymentMethodRequest());
-      // dispatch(getEnquiriesRequest(companyId));
-      // navigation.goBack();
     } else if (!addPaymentMethodRequesting && addPaymentMethodFailure) {
       Toast.show({
         type: 'error',

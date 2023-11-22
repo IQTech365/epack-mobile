@@ -14,5 +14,13 @@
   {
     "label": "Vehicle",
     "value": "4"
+  },
+  {
+    "label": "Pet",
+    "value": "5"
+  },
+  {
+    "label": "Others",
+    "value": "6"
   }
 ]
