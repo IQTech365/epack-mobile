@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useReducer, useRef, useState } from 'react';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import AvoidSoftInputViewHOC from '../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../common/Spacer';
 import styles from './style';
@@ -38,6 +38,7 @@ import {NavigationProp} from '@react-navigation/native';
 import useCompanyId from '../../../hooks/useCompanyId';
 import { IGetOrdersRequest } from '../../../interface/order/IGetOrdersRequest';
 import EpackDropdown from '../../../common/DropdownComponent2';
+import { Validator } from '../../../utils/validation';
 
 interface IAddOrderViewProps {
   navigation: NavigationProp<any, any>;
@@ -61,6 +62,9 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
   const dropStateDropdownRef = useRef(null);
   const dropCityDropdownRef = useRef(null);
   const companyId = useCompanyId();
+  const [errors, setErrors] = useState();
+  const [isFormValid, setIsFormValid] = useState<boolean>(true);
+  const [showErrors, setShowErrors] = useState<boolean>(false);
 
   const setPincodeError = () => {
     // setPincodeError2('Invalid Pincode');
@@ -225,13 +229,13 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
     });
   };
 
-  const handleShiftingLuggage = (isChecked: boolean, value: string) => {
+  const handleShiftingLuggage = (value: string) => {
     const { shiftingLuggage } = state;
     let temp = [...shiftingLuggage];
     const itemIndex = temp.findIndex(itm => itm == value);
-    if (itemIndex == -1 && isChecked) {
+    if (itemIndex == -1) {
       temp.push(value);
-    } else if (itemIndex != -1 && !isChecked) {
+    } else if (itemIndex != -1) {
       temp = temp.filter(itm => itm != value);
     }
     dispatch({
@@ -241,6 +245,15 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
   };
 
   const handleAddOrder = () => {
+    setShowErrors(true);
+    if(!isFormValid) {
+      Toast.show({
+        type: 'error',
+        text1: 'Form',
+        text2: 'Form data is not valid. Please correct!',
+      });
+      return;
+    }
     const data: IAddOrderRequest = {
       companyId: companyId,
       authId: otpData?.data.id as string,
@@ -287,7 +300,7 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
       billingDetails: state.billingBy?.billing_by == 'by Company' ? {
         companyName: state.billingBy?.billing_info?.company_name as string,
         approvalAuthority: state.billingBy?.billing_info
-          ?.approval_authority as string || 'HR Manager',
+          ?.approval_authority as string || approvalAuthorityOptions[0].label,
         authorityPersonName: state.billingBy?.billing_info
           ?.authority_person_name as string,
         authorityPersonMobile: state.billingBy?.billing_info
@@ -363,6 +376,59 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
     dispatch2(getApprovedOrdersRequest(orderListReq));
   }
 
+  const showShiftingLuggageErrorView = () => {
+    //@ts-ignore
+    const {shiftingLuggage} = errors || {};
+    if(shiftingLuggage) {
+      return <View style={styles.errorContainer}><Text style={styles.error}>{shiftingLuggage}</Text></View>
+    }
+    return null;
+  }
+
+  const validateForm = () => {
+    let errors:any = {};
+    if(state.billingBy?.billing_by == 'by Company') {
+      if(!state.billingBy?.billing_info?.company_name) {
+        errors.companyName = "Company name required";
+      }
+      if(!state.billingBy?.billing_info?.employee_name) {
+        errors.employeeName = "Employee name required";
+      }
+      if(!state.billingBy?.billing_info?.employee_mobile_number) {
+        errors.employeeMobile = "Employee mobile number required";
+      } else if(!Validator.mobile(state.billingBy?.billing_info?.employee_mobile_number)) {
+        errors.employeeMobile = "Mobile number invalid";
+      }
+    } else if(state.billingBy?.billing_by == 'by Individual') {
+      if(!state.partyName) {
+        errors.partyName = "Party name required";
+      }
+      if(!state.mobile) {
+        errors.mobile = "Mobile number required";
+      } else if(!Validator.mobile(state.mobile)) {
+        errors.mobile = "Mobile number invalid";
+      }
+    }
+    if(state.shiftingLuggage.length == 0) {
+      errors.shiftingLuggage = "Shifting luggage required"
+    }
+    setErrors(errors);
+    setIsFormValid(Object.keys(errors).length === 0);
+  }
+
+  useEffect(() => {
+    setShowErrors(false);
+    validateForm();
+  }, [
+    state.billingBy?.billing_by,
+    state.partyName,
+    state.mobile,
+    state.billingBy?.billing_info?.company_name,
+    state.billingBy?.billing_info?.employee_name,
+    state.billingBy?.billing_info?.employee_mobile_number,
+    state.shiftingLuggage,
+  ]);
+
   useEffect(() => {
     if (!addOrderRequesting && addOrderSuccess) {
       Toast.show({
@@ -390,22 +456,30 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
       <>
         <Spacer height={4} />
         <View style={styles.elementContainer}>
-          <Label text="Party Name" style={styles.label} />
+          <Label text="Party Name" style={styles.label} required={true} />
           <Input
             onChangeText={handlePartyNameInputTextChange}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
+            //@ts-ignore
+            error={showErrors ? errors?.partyName : ''}
+            type='text'
+            required={true}
           />
         </View>
         <Spacer height={4} />
         <View style={styles.elementContainer}>
-          <Label text="Mobile Number *" style={styles.label} />
+          <Label text="Mobile Number" style={styles.label} required={true} />
           <Input
             onChangeText={handleMobileNumInputTextChange}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
+            //@ts-ignore
+            error={showErrors ? errors?.mobile : ''}
+            type='mobile'
+            required={true}
           />
         </View>
       </>
@@ -418,7 +492,7 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
       <>
         <Spacer height={4} />
         <View style={styles.elementContainer}>
-          <Label text="Company Name" style={styles.label} />
+          <Label text="Company Name" style={styles.label} required={true} />
           <Input
             onChangeText={(text: string) => {
               const { billingBy } = state;
@@ -434,6 +508,10 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
+            required={true}
+            type='text'
+            //@ts-ignore
+            error={showErrors ? errors?.companyName : ''}
           />
         </View>
         <Spacer height={4} />
@@ -501,6 +579,7 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
+            type='mobile'
           />
         </View>
         <Spacer height={4} />
@@ -525,7 +604,7 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
         </View>
         <Spacer height={4} />
         <View style={styles.elementContainer}>
-          <Label text="Employee Name" style={styles.label} />
+          <Label text="Employee Name" style={styles.label} required={true} />
           <Input
             onChangeText={(text: string) => {
               const { billingBy } = state;
@@ -541,6 +620,10 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
+            //@ts-ignore
+            error={showErrors ? errors?.employeeName : ''}
+            type='text'
+            required={true}
           />
         </View>
         <Spacer height={4} />
@@ -568,7 +651,7 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
         </View>
         <Spacer height={4} />
         <View style={styles.elementContainer}>
-          <Label text="Employee Mobile Number" style={styles.label} />
+          <Label text="Employee Mobile Number" style={styles.label} required={true} />
           <Input
             onChangeText={(text: string) => {
               const { billingBy } = state;
@@ -587,6 +670,10 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
+            type='mobile'
+            required={true}
+            //@ts-ignore
+            error={showErrors ? errors?.employeeMobile : ''}
           />
         </View>
         <Spacer height={4} />
@@ -700,12 +787,15 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
                     style={{ marginRight: 15, marginBottom: 10 }}
                     textContainerStyle={{ paddingLeft: 0 }}
                     onPress={(isChecked: boolean) => {
-                      handleShiftingLuggage(isChecked, item.label);
+                      handleShiftingLuggage(item.label);
                     }}
+                    isChecked={state.shiftingLuggage.findIndex(e => e == item.label) !== -1}
+                    disableBuiltInState={true}
                   />
                 );
               })}
             </View>
+            {showShiftingLuggageErrorView()}
           </View>
         </CollapsibleView>
         <Spacer height={4} />

@@ -36,7 +36,7 @@ const EnquiryDetailsView: React.FC<Props> = ({ route, navigation }) => {
       case 0:
         return <DetailsView item={item} enquiryId={enquiryId as string} />
       case 1:
-        return <FollowupView taskName='FOLLOW UP' assigneeRole='Enequiry' enquiryId={enquiryId as string} />
+        return <FollowupView taskName='FOLLOW UP' assigneeRole='Enquiry' enquiryId={enquiryId as string} />
       case 2:
         return <SurveyView taskName='SURVEY' assigneeRole='Survey' enquiryId={enquiryId as string} />
       case 3:

@@ -2,6 +2,7 @@ import {StyleSheet, Dimensions} from 'react-native';
 import {
   COLOR_BLACK,
   COLOR_BLUE,
+  COLOR_ERROR,
   COLOR_GRAY,
   COLOR_GRAY2,
   COLOR_WHITE,
@@ -73,7 +74,15 @@ const styles = StyleSheet.create({
   },
   datePickerContainer: {
     width: width * 0.9,
-  }
+  },
+  errorContainer: {
+    width: width * 0.9,
+    paddingHorizontal: 20,
+  },
+  error: {
+    color: COLOR_ERROR,
+    fontSize: 14,
+  },
 });
 
 export default styles;

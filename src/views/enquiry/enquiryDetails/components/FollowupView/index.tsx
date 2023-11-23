@@ -61,14 +61,10 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
     return [...listData].reverse();
   }
 
-  console.log('getDataSet---', JSON.stringify(getDataSet()));
-
   const getNextFollowupOrSurveyDate = () => {
     let date = 'NA';
     if(getDataSet().length > 0) {
       const firstItem = getDataSet()[0];
-      console.log('firstItem---', JSON.stringify(firstItem));
-      
       if(taskName == 'FOLLOW UP') {
         date = formatDate3(firstItem.followUpDate)
       } else if(taskName == 'SURVEY') {
@@ -96,6 +92,7 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
               comment={item?.comment}
               date={new Date(item?.followUpDate || item?.surveyDate)}
               enquiryManager=""
+              assigneeRole={assigneeRole}
             />
           )}
           ListEmptyComponent={() => (

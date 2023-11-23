@@ -10,9 +10,21 @@ interface IFollowupListItemProps {
   comment: string;
   date: Date;
   enquiryManager: string;
+  assigneeRole: string;
 }
 
-const FollowupListItem: React.FC<IFollowupListItemProps> = ({comment, date, enquiryManager}) => {
+const FollowupListItem: React.FC<IFollowupListItemProps> = ({comment, date, enquiryManager, assigneeRole}) => {
+
+  const _getRole = () => {
+    let role:string = '';
+    if(assigneeRole == 'Enquiry') {
+      role = 'Enquiry Manager';
+    } else if(assigneeRole == 'Survey') {
+      role = 'Surveyor';
+    }
+    return role;
+  }
+
   return (
     <>
       <View style={styles.container}>
@@ -24,7 +36,7 @@ const FollowupListItem: React.FC<IFollowupListItemProps> = ({comment, date, enqu
         <View style={styles.rightContentContainer}>
           <View style={styles.contentContainer}>
             <Text style={styles.contentLabelText}>
-              Enquiry Manager - <Text style={styles.nameText}>Ramesh</Text>
+              {_getRole()} - <Text style={styles.nameText}>{enquiryManager ? enquiryManager : 'Admin'}</Text>
             </Text>
           </View>
           <View style={styles.contentContainer}>

@@ -98,7 +98,7 @@ export const initialState: IAddOrderFormState = {
   partyCompanyName: '',
   orderAmount: '',
   tokenAmount: '',
-  shiftingLuggage: [],
+  shiftingLuggage: ['Household'],
   dateOfQuotation: '',
   pickupPincode: '',
   pickupCity: '',

@@ -80,10 +80,20 @@ const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> =
     }
   };
 
+  const _getRole = () => {
+    let role:string = '';
+    if(assigneeRole == 'Enquiry') {
+      role = 'Enquiry Manager';
+    } else if(assigneeRole == 'Survey') {
+      role = 'Surveyor';
+    }
+    return role;
+  }
+
   const SurveyRoute = () => (
     <><Spacer height={8} /><View style={styles.contentContainer}>
       <Text style={styles.contentLabelText}>
-        {assigneeRole} Manager - <Text style={styles.nameText}>Ramesh</Text>
+        {_getRole()} - <Text style={styles.nameText}>Admin</Text>
       </Text>
     </View><Spacer height={8} /><View style={styles.contentContainer}>
         <Text style={styles.contentLabelText}>

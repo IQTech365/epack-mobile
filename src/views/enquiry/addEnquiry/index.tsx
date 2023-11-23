@@ -451,8 +451,6 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
 
   const handleSubmit = useCallback(() => {
     setShowErrors(true);
-    console.log('Enquiry-Form-errors--', JSON.stringify(errors));
-    
     if(!isFormValid) {
       Toast.show({
         type: 'error',
