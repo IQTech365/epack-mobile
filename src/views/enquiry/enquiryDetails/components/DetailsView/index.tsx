@@ -92,7 +92,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
       return (
         <ShifingDetailForm
           moduleName={MODULE_NAME.ENQUIRY}
-          item={getSingleEnquiry() as ISingleEnquiryData}
+          item={singleEnquiry as ISingleEnquiryData}
           enquiryId={enquiryId}
           onClose={handleModalClose}
         />
@@ -101,7 +101,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
       return (
         <ContactDetailForm
           moduleName={MODULE_NAME.ENQUIRY}
-          item={getSingleEnquiry() as ISingleEnquiryData}
+          item={singleEnquiry as ISingleEnquiryData}
           enquiryId={enquiryId}
           onClose={handleModalClose}
         />
@@ -111,7 +111,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
         <AddressForm
           addressType={ADDRESS_TYPE.PICKUP}
           moduleName={MODULE_NAME.ENQUIRY}
-          item={getSingleEnquiry() as ISingleEnquiryData}
+          item={singleEnquiry as ISingleEnquiryData}
           enquiryId={enquiryId}
           onClose={handleModalClose}
         />
@@ -198,6 +198,44 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
       </>
     );
   };
+
+  const _shiftingFromAddress = (item: ISingleEnquiryData | null) => {
+    let _address:string = '';
+    const {pickupAddress} = item || {};
+    const {address, city, state, pincode} = pickupAddress || {};
+    if(address) {
+      _address += `${address},`;
+    }
+    if(city) {
+      _address += `${city},`;
+    }
+    if(state) {
+      _address += `${state},`;
+    }
+    if(pincode) {
+      _address += `${pincode}`;
+    }
+    return _address;
+  }
+
+  const _shiftingToAddress = (item: ISingleEnquiryData | null) => {
+    let _address:string = '';
+    const {dropAddress} = item || {};
+    const {address, city, state, pincode} = dropAddress || {};
+    if(address) {
+      _address += `${address},`;
+    }
+    if(city) {
+      _address += `${city},`;
+    }
+    if(state) {
+      _address += `${state},`;
+    }
+    if(pincode) {
+      _address += `${pincode}`;
+    }
+    return _address;
+  }
   return (
     <AvoidSoftInputViewHOC>
       <View style={styles.container}>
@@ -215,15 +253,11 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
               />
               <EnquiryDetailListItem
                 label="Shifting From"
-                value={
-                  `${singleEnquiry?.pickupAddress.address}, ${singleEnquiry?.pickupAddress.city}, ${singleEnquiry?.pickupAddress.state}, ${singleEnquiry?.pickupAddress.pincode}` as string
-                }
+                value={_shiftingFromAddress(singleEnquiry)}
               />
               <EnquiryDetailListItem
                 label="Shifting To"
-                value={
-                  `${singleEnquiry?.dropAddress.address}, ${singleEnquiry?.dropAddress.city}, ${singleEnquiry?.dropAddress.state}, ${singleEnquiry?.dropAddress.pincode}` as string
-                }
+                value={_shiftingToAddress(singleEnquiry)}
               />
               <EnquiryDetailListItem
                 label="Shifting Luggage"

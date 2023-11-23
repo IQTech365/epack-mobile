@@ -47,8 +47,6 @@ const AddressForm: React.FC<IAddressFormProps> = ({
   enquiryId,
   onClose,
 }) => {
-  console.log('AddressForm-enquiryId-', enquiryId);
-  
   const dispatch = useAppDispatch();
   const {updateAddressRequesting, updateAddressSuccess, updateAddressFailure} = useAppSelector(state => state.Enquiry);
   const [states, setStates] = useState<TDropdownItem[]>([]);
@@ -118,7 +116,7 @@ const AddressForm: React.FC<IAddressFormProps> = ({
       setPin(item.pickupAddress.pincode);
       setCity(item.pickupAddress.city);
       setState(item.pickupAddress.state);
-      setAddress(item.pickupAddress.locality as string);
+      setAddress(item.pickupAddress.locality as string || item.pickupAddress.address);
       setLandmark(item.pickupAddress.landmark as string);
       //@ts-ignore
       setLocality(item.pickupAddress?.locality as string);
@@ -129,7 +127,7 @@ const AddressForm: React.FC<IAddressFormProps> = ({
       setPin(item.dropAddress.pincode);
       setCity(item.dropAddress.city);
       setState(item.dropAddress.state);
-      setAddress(item.dropAddress.locality as string);
+      setAddress(item.dropAddress.locality as string || item.dropAddress.address);
       setLandmark(item.dropAddress.landmark as string);
       //@ts-ignore
       setLocality(item.dropAddress?.locality as string);
@@ -185,8 +183,10 @@ const AddressForm: React.FC<IAddressFormProps> = ({
       } else {
         //@ts-ignore
         stateDropwdownRef?.current?.setDefaultValue(states[0]);
+        setState(states[0].label);
         //@ts-ignore
         cityDropdownRef?.current?.setDefaultValue(cities[0]);
+        setCity(cities[0].label);
       }
     }
   }, [states, cities]);

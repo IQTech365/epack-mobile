@@ -36,7 +36,7 @@ export const getCities = (arr: any): TDropdownItem[] => {
     let cities: TDropdownItem[] = [{label: '', value: ''}];
     const {PostOffice} = arr || {};
     if (PostOffice && Array.isArray(PostOffice)) {
-      const cityArr = PostOffice.map(e => `${e.District}-${e.Name}`);
+      const cityArr = PostOffice.map(e => `${e.District}`);
       const nonDuplicateCityArr = new Set(cityArr);
       cities = Array.from(nonDuplicateCityArr).map(e => {
         return {label: e, value: e}
