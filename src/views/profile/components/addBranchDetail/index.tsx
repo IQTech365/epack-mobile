@@ -83,7 +83,7 @@ const AddBranchView = () => {
 
   useEffect(() => {
     dispatch(getBranchsRequest(companyId));
-    BranchsData?setshowBranchList(true):setshowAddBranch(true);
+    BranchsData.length > 0?setshowBranchList(true):setshowAddBranch(true);
   }, [dispatch]);
 
   return (

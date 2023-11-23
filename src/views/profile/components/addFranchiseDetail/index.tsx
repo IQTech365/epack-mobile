@@ -82,7 +82,7 @@ const AddFranchiseView = () => {
 
   useEffect(() => {
     dispatch(getFranchiseRequest(companyId));
-    franchiseData?setshowFranchiseList(true):setshowAddFranchise(true);
+    franchiseData.length > 0?setshowFranchiseList(true):setshowAddFranchise(true);
   }, []);
 
 
