@@ -39,7 +39,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
     return order;
   }
 
-  const item = getSingleOrder();
+  const item = getSingleOrder() || {};
 
   useEffect(() => {
     const payload: ISingleOrderRequest = {
@@ -87,7 +87,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
 
   const _orderAmount = () => {
     let amount:string|undefined = undefined;
-    if(item.orderAmount) {
+    if(item?.orderAmount) {
       amount = parseFloat(item?.orderAmount).toFixed(2);
     }
     return amount ? `₹ ${amount}` : amount;
@@ -95,7 +95,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
 
   const _tokenAmount = () => {
     let amount:string|undefined = undefined;
-    if(item.tokenAmount) {
+    if(item?.tokenAmount) {
       amount = parseFloat(item?.tokenAmount).toFixed(2);
     }
     return amount ? `₹ ${amount}` : amount;
@@ -256,10 +256,10 @@ const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
           //@ts-ignore
           value={item?.billingDetails?.employeeMobile}
         />
-        <OrderDetailListItem label="Order Amount" value={`₹ ${parseFloat(item?.orderAmount).toFixed(2)}`} />
+        <OrderDetailListItem label="Order Amount" value={_orderAmount()} />
         <OrderDetailListItem
           label="Token Amount"
-          value={`₹ ${parseFloat(item?.tokenAmount).toFixed(2)}`}
+          value={_tokenAmount()}
           isLast={true}
         />
       </>
