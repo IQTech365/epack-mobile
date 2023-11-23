@@ -268,7 +268,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
 
   const getShiftingLuggages = (item: ISingleEnquiryData | null) => {
     //@ts-ignore
-    const {shiftingLuggage} = item;
+    const {shiftingLuggage} = item || {};
     if (
       shiftingLuggage &&
       Array.isArray(shiftingLuggage) &&
