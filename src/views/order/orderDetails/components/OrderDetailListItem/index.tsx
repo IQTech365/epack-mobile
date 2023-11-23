@@ -16,7 +16,7 @@ const OrderDetailListItem:React.FC<IOrderDetailListItemProps> = ({label, value, 
                 <Text>{label}</Text>
             </View>
             <View style={[styles.valueContainer, lastItemStyle]}>
-                <Text>{value}</Text>
+                <Text>{value ? value : 'Not Available'}</Text>
             </View>
         </View>
     );

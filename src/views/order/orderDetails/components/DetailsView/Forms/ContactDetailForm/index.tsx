@@ -10,35 +10,38 @@ import {TDropdownItem} from '../../../../../../../type/TDropdownItem';
 import Spacer from '../../../../../../../common/Spacer';
 import Button from '../../../../../../../common/Button';
 import {MODULE_NAME} from '../../enum/EModuleName';
-import {IGetEnquiriesData} from '../../../../../../../interface/enquiry/IGetEnquiriesResponse';
 import {IGetOrdersData} from '../../../../../../../interface/order/IGetOrdersResponse';
 import DeleteIcon from '../../../../../../../images/icons/delete.svg';
 import approvalAuthorityOptions from '../../../../../../../data/ApprovalAuthorityOptions.json';
-import { IUpdateCompanyContactDetailRequest, IUpdateIndividualContactDetailRequest } from '../../../../../../../interface/order/IUpdateContactDetails';
-import { useAppDispatch, useAppSelector } from '../../../../../../../redux/hooks';
-import { getEnquiryRequest, resetUpdateContactDetailsRequest, updateContactDetailsRequest } from '../../../../../../../redux/slices/EnquirySlice';
+import {
+  IUpdateCompanyContactDetailRequest,
+  IUpdateIndividualContactDetailRequest,
+} from '../../../../../../../interface/order/IUpdateContactDetails';
+import {useAppDispatch, useAppSelector} from '../../../../../../../redux/hooks';
+import {
+  getEnquiryRequest,
+  resetUpdateContactDetailsRequest,
+  updateContactDetailsRequest,
+} from '../../../../../../../redux/slices/EnquirySlice';
 import Toast from 'react-native-toast-message';
-import { ISingleEnquiryData } from '../../../../../../../interface/enquiry/ISingleEnquiryResponse';
+import {ISingleEnquiryData} from '../../../../../../../interface/enquiry/ISingleEnquiryResponse';
+import { getOrderRequest } from '../../../../../../../redux/slices/OrderSlice';
+import { ISingleOrderRequest } from '../../../../../../../interface/order/ISingleOrderRequest';
 interface IContactDetailFormProps {
   moduleName: MODULE_NAME;
-  item: IGetOrdersData | ISingleEnquiryData;
+  item: ISingleEnquiryData;
   enquiryId: string;
+  onClose: () => void;
 }
 
 const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
   moduleName,
   item,
   enquiryId,
+  onClose,
 }) => {
-  let itemObj =
-    moduleName == MODULE_NAME.ORDER
-      ? (item as IGetOrdersData)
-      : (item as ISingleEnquiryData);
-  if (moduleName == MODULE_NAME.ORDER) {
-    itemObj = item as IGetOrdersData;
-  } else if (moduleName == MODULE_NAME.ENQUIRY) {
-    itemObj = item as ISingleEnquiryData;
-  }
+  console.log('ContactDetailForm--item--', JSON.stringify(item));
+  
   const [contactPersonName, setContactPersonName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [landline, setLandline] = useState<string>('');
@@ -67,39 +70,51 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
   } = useAppSelector(state => state.Enquiry);
 
   const approvalAuthDropdownRef = useRef(null);
-  
+
   const getContactPersonName = () => {
     let name: string = '';
-    if (itemObj.billingBy == 'by Individual') {
-      name = itemObj.partyName;
+    if (item.billingBy == 'by Individual') {
+      name = item.partyName as string;
     } else {
       //@ts-ignore
-      const {authorityPersonName} = itemObj.billingDetails || {};
-      name = authorityPersonName;
+      const {authorityPersonName} = item.billingDetails || {};
+      name = authorityPersonName as string;
     }
     return name;
   };
 
+  const setApprovalAuthorityDropdownItem = () => {
+    if(approvalAuthDropdownRef) {
+      const {billingDetails} = item || {};
+      //@ts-ignore
+      const {approvalAuthority} = billingDetails || {};
+      const itemIndex = approvalAuthorityOptions.findIndex(e => e.label == approvalAuthority);
+      //@ts-ignore
+      approvalAuthDropdownRef?.current.setDefaultValue(approvalAuthorityOptions[itemIndex]);
+    }
+  }
+
   const initBillingInfoFormValues = () => {
     //@ts-ignore
-    setCompanyName(itemObj.billingDetails.companyName);
+    setCompanyName(item.billingDetails.companyName);
     //@ts-ignore
-    setApprovalAuthority(itemObj.billingDetails.approvalAuthority);
+    setApprovalAuthority(item.billingDetails.approvalAuthority);
+    setApprovalAuthorityDropdownItem();
     //@ts-ignore
-    setAuthorityPersonName(itemObj.billingDetails.authorityPersonName);
+    setAuthorityPersonName(item.billingDetails.authorityPersonName);
     //@ts-ignore
-    setAuthorityMobileNumber(itemObj.billingDetails.authorityPersonMobile);
+    setAuthorityMobileNumber(item.billingDetails.authorityPersonMobile);
     //@ts-ignore
-    setCompanyGST(itemObj.billingDetails.companyGST);
+    setCompanyGST(item.billingDetails.companyGST);
     //@ts-ignore
-    setEmployeeName(itemObj.billingDetails.employeeName);
+    setEmployeeName(item.billingDetails.employeeName);
     //@ts-ignore
-    setEmployeeDesignation(itemObj.billingDetails.employeeDesignation);
+    setEmployeeDesignation(item.billingDetails.employeeDesignation);
     //@ts-ignore
-    setEmployeeMobileNumber(itemObj.billingDetails.employeeMobile);
+    setEmployeeMobileNumber(item.billingDetails.employeeMobile);
     //@ts-ignore
-    setCompanyAddress(itemObj.billingDetails.companyAddress);
-  }
+    setCompanyAddress(item.billingDetails.companyAddress);
+  };
 
   const handleContactPersonName = useCallback(
     (text: string) => {
@@ -228,65 +243,73 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
 
   const showAlternateNumbers = () => {
     if (alternateNumbers.length > 0) {
-      return alternateNumbers.filter(e => e != '').map((e, i) => {
-        return (
-          <View key={`{${i}}`}>
-            <Spacer height={20} />
-            <View style={styles.alternateContactsContainer}>
-              <View style={styles.numberContainer}>
-                <Text style={styles.numberText}>{e}</Text>
-              </View>
-              <View style={styles.actionContainer}>
-                <TouchableOpacity onPress={() => handleDelteAlternateNumber(e)}>
-                  <DeleteIcon width={30} height={30} />
-                </TouchableOpacity>
+      return alternateNumbers
+        .filter(e => e != '')
+        .map((e, i) => {
+          return (
+            <View key={`{${i}}`}>
+              <Spacer height={20} />
+              <View style={styles.alternateContactsContainer}>
+                <View style={styles.numberContainer}>
+                  <Text style={styles.numberText}>{e}</Text>
+                </View>
+                <View style={styles.actionContainer}>
+                  <TouchableOpacity
+                    onPress={() => handleDelteAlternateNumber(e)}>
+                    <DeleteIcon width={30} height={30} />
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
-          </View>
-        );
-      });
+          );
+        });
     }
     return null;
   };
 
   const initFormValues = () => {
     setContactPersonName(getContactPersonName());
-    setEmail(itemObj.email);
+    setEmail(item.email);
     //@ts-ignore
-    setLandline(itemObj?.landline);
-    setMobile(itemObj.mobile);
+    setLandline(item?.landline);
+    setMobile(item.mobile);
     //@ts-ignore
-    setOrderAmount(itemObj?.orderAmount);
+    setOrderAmount(item?.orderAmount);
     //@ts-ignore
-    setTokenAmount(itemObj?.tokenAmount);
-    if(itemObj?.alternateNumbers && itemObj.alternateNumbers.length > 0) {
-      const filter = itemObj.alternateNumbers.filter(e => e != '');
+    setTokenAmount(item?.tokenAmount);
+    if (item?.alternateNumbers && item.alternateNumbers.length > 0) {
+      const filter = item.alternateNumbers.filter(e => e != '');
       setAlternateNumbers([...filter]);
     }
-    
+
     // Billing Info
-    if(itemObj.billingBy == 'by Company') {
+    if (item.billingBy == 'by Company') {
       initBillingInfoFormValues();
     }
-  }
+  };
 
   const handleUpdate = () => {
-    if(itemObj.billingBy == 'by Individual') {
-      const payload:IUpdateIndividualContactDetailRequest = {
+    if (item.billingBy == 'by Individual') {
+      const payload: IUpdateIndividualContactDetailRequest = {
         email: email,
         landline: landline,
         mobile: mobile,
         orderAmount: orderAmount,
         tokenAmount: tokenAmount,
         alternateNumbers: alternateNumbers,
-      }
-      console.log('Update-Individual-Contact-Detail--', JSON.stringify(payload));
-      dispatch(updateContactDetailsRequest({id: enquiryId, requestBody: payload}));
-    } else if(itemObj.billingBy == 'by Company') {
-      const payload:IUpdateCompanyContactDetailRequest = {
+      };
+      console.log(
+        'Update-Individual-Contact-Detail--',
+        JSON.stringify(payload),
+      );
+      dispatch(
+        updateContactDetailsRequest({id: enquiryId, requestBody: payload}),
+      );
+    } else if (item.billingBy == 'by Company') {
+      const payload: IUpdateCompanyContactDetailRequest = {
         billingDetails: {
           companyName: companyName,
-          approvalAuthority:approvalAuthority,
+          approvalAuthority: approvalAuthority,
           authorityPersonName: authorityPersonName,
           authorityPersonMobile: authorityMobileNumber,
           companyGST: companyGST,
@@ -300,10 +323,12 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
         orderAmount: orderAmount,
         tokenAmount: tokenAmount,
         alternateNumbers: alternateNumbers,
-      }
+      };
       console.log('Update-Company-Contact-Detail--', JSON.stringify(payload));
-      
-      dispatch(updateContactDetailsRequest({id: enquiryId, requestBody: payload}));
+
+      dispatch(
+        updateContactDetailsRequest({id: enquiryId, requestBody: payload}),
+      );
     }
   };
 
@@ -319,7 +344,15 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
         text2: 'Contact details has been updated successfully',
       });
       dispatch(resetUpdateContactDetailsRequest());
-      dispatch(getEnquiryRequest(enquiryId));
+      if(moduleName == MODULE_NAME.ENQUIRY) {
+        dispatch(getEnquiryRequest(enquiryId));
+      } else if(moduleName == MODULE_NAME.ORDER) {
+        const payload: ISingleOrderRequest = {
+          _id: enquiryId
+        }
+        dispatch(getOrderRequest(payload));
+      }
+      onClose();
     } else if (!updateContactDetailRequesting && updateContactDetailFailure) {
       Toast.show({
         type: 'error',
@@ -328,12 +361,16 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
       });
       dispatch(resetUpdateContactDetailsRequest());
     }
-  }, [updateContactDetailRequesting, updateContactDetailSuccess, updateContactDetailFailure]);
+  }, [
+    updateContactDetailRequesting,
+    updateContactDetailSuccess,
+    updateContactDetailFailure,
+  ]);
 
   return (
     <AvoidSoftInputViewHOC>
       <View style={styles.container}>
-        {itemObj.billingBy == 'by Individual' ? (
+        {item?.billingBy == 'by Individual' ? (
           <>
             <Spacer height={4} />
             <View style={styles.elementContainer3}>
@@ -348,7 +385,7 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
             </View>
           </>
         ) : null}
-        {itemObj.billingBy == 'by Company' ? (
+        {item?.billingBy == 'by Company' ? (
           <>
             <Spacer height={4} />
             <View style={styles.elementContainer3}>
@@ -363,7 +400,7 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
             </View>
           </>
         ) : null}
-        {itemObj.billingBy == 'by Company' ? (
+        {item?.billingBy == 'by Company' ? (
           <>
             <Spacer height={4} />
             <View style={styles.elementContainer3}>
@@ -379,7 +416,7 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
             </View>
           </>
         ) : null}
-        {itemObj.billingBy == 'by Company' ? (
+        {item?.billingBy == 'by Company' ? (
           <>
             <Spacer height={4} />
             <View style={styles.elementContainer3}>
@@ -394,7 +431,7 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
             </View>
           </>
         ) : null}
-        {itemObj.billingBy == 'by Company' ? (
+        {item?.billingBy == 'by Company' ? (
           <>
             <Spacer height={4} />
             <View style={styles.elementContainer3}>
@@ -409,7 +446,7 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
             </View>
           </>
         ) : null}
-        {itemObj.billingBy == 'by Company' ? (
+        {item?.billingBy == 'by Company' ? (
           <>
             <Spacer height={4} />
             <View style={styles.elementContainer3}>
@@ -424,7 +461,7 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
             </View>
           </>
         ) : null}
-        {itemObj.billingBy == 'by Company' ? (
+        {item?.billingBy == 'by Company' ? (
           <>
             <Spacer height={4} />
             <View style={styles.elementContainer3}>
@@ -439,7 +476,7 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
             </View>
           </>
         ) : null}
-        {itemObj.billingBy == 'by Company' ? (
+        {item?.billingBy == 'by Company' ? (
           <>
             <Spacer height={4} />
             <View style={styles.elementContainer3}>
@@ -454,7 +491,7 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
             </View>
           </>
         ) : null}
-        {itemObj.billingBy == 'by Company' ? (
+        {item?.billingBy == 'by Company' ? (
           <>
             <Spacer height={4} />
             <View style={styles.elementContainer3}>
@@ -469,7 +506,7 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
             </View>
           </>
         ) : null}
-        {itemObj.billingBy == 'by Company' ? (
+        {item?.billingBy == 'by Company' ? (
           <>
             <Spacer height={4} />
             <View style={styles.elementContainer3}>
@@ -515,33 +552,37 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
               value={mobile}
-              editable={itemObj.billingBy == 'by Individual'}
+              editable={item.billingBy == 'by Individual'}
             />
           </View>
         </View>
         <Spacer height={4} />
-        <View style={styles.elementContainer}>
-          <View style={styles.itemContainer}>
-            <Label text="Order Amount" style={styles.label} />
-            <Input
-              onChangeText={handleOrderAmount}
-              containerStyle={styles.inputContainer}
-              inputStyle={styles.input}
-              selectionColor={COLOR_BLACK}
-              value={orderAmount}
-            />
-          </View>
-          <View style={styles.itemContainer}>
-            <Label text="Token Amount" style={styles.label} />
-            <Input
-              onChangeText={handleTokenAmount}
-              containerStyle={styles.inputContainer}
-              inputStyle={styles.input}
-              selectionColor={COLOR_BLACK}
-              value={tokenAmount}
-            />
-          </View>
-        </View>
+        {moduleName == MODULE_NAME.ORDER ? (
+          <>
+            <View style={styles.elementContainer}>
+              <View style={styles.itemContainer}>
+                <Label text="Order Amount" style={styles.label} />
+                <Input
+                  onChangeText={handleOrderAmount}
+                  containerStyle={styles.inputContainer}
+                  inputStyle={styles.input}
+                  selectionColor={COLOR_BLACK}
+                  value={orderAmount}
+                />
+              </View>
+              <View style={styles.itemContainer}>
+                <Label text="Token Amount" style={styles.label} />
+                <Input
+                  onChangeText={handleTokenAmount}
+                  containerStyle={styles.inputContainer}
+                  inputStyle={styles.input}
+                  selectionColor={COLOR_BLACK}
+                  value={tokenAmount}
+                />
+              </View>
+            </View>
+          </>
+        ) : null}
         <View style={styles.elementContainer}>
           <View style={styles.itemContainer}>
             <Label text="Alternate Mob. Numbers" style={styles.label} />

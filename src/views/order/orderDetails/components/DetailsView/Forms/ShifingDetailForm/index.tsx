@@ -1,9 +1,8 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {View, Text} from 'react-native';
+import {View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../../../common/AvoidSoftInputViewHOC';
-import Input from '../../../../../../../common/Input';
 import Label from '../../../../../../../common/Label';
-import {COLOR_BLACK, COLOR_BLUE} from '../../../../../../../utils/colors';
+import {COLOR_BLUE} from '../../../../../../../utils/colors';
 import styles from './style';
 import shiftingTypeOptions from '../../../../../../../data/shiftingType.json';
 import DropdownComponent from '../../../../../../../common/DropdownComponent';
@@ -14,8 +13,6 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import DatePickerComponent from '../../../../../../../common/DatePickerComponent';
 import Button from '../../../../../../../common/Button';
 import {MODULE_NAME} from '../../enum/EModuleName';
-import {IGetEnquiriesData} from '../../../../../../../interface/enquiry/IGetEnquiriesResponse';
-import {IGetOrdersData} from '../../../../../../../interface/order/IGetOrdersResponse';
 import {formatDate4} from '../../../../../../../utils/formatter';
 import {useAppDispatch, useAppSelector} from '../../../../../../../redux/hooks';
 import {
@@ -27,10 +24,13 @@ import Spinner from '../../../../../../../common/Spinner';
 import {IUpdateShiftingInfoRequest} from '../../../../../../../interface/enquiry/IUpdateShiftingInfo';
 import Toast from 'react-native-toast-message';
 import {ISingleEnquiryData} from '../../../../../../../interface/enquiry/ISingleEnquiryResponse';
+import { getOrderRequest } from '../../../../../../../redux/slices/OrderSlice';
+import { ISingleOrderRequest } from '../../../../../../../interface/order/ISingleOrderRequest';
 interface IShiftingFormProps {
   moduleName: MODULE_NAME;
   item: ISingleEnquiryData;
   enquiryId: string;
+  onClose: () => void;
 }
 
 interface IErrors {
@@ -43,6 +43,7 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({
   moduleName,
   item,
   enquiryId,
+  onClose,
 }) => {
   const shiftingTypeDropdownRef = useRef();
   const dateOfMoivingCompRef = useRef();
@@ -51,7 +52,7 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({
 
   const [shiftingLuggages, setShiftingLuggages] = useState<string[]>([]);
   const [shiftingType, setShiftingType] = useState<string>('');
-  const [dateOfMoving, setDateOfMoving] = useState<string>(item.shiftingDate);
+  const [dateOfMoving, setDateOfMoving] = useState<string>(item?.shiftingDate);
   const [dateOfDelivery, setDateOfDelivery] = useState<string>('');
   const [dateOfDelivered, setDateOfDelivered] = useState<string>('');
   const [carriageVehicle, setCarriageVehicle] = useState<string>('');
@@ -68,7 +69,6 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({
   } = useAppSelector(state => state.Enquiry);
 
   const dispatch = useAppDispatch();
-
   const handleShiftingType = (item: TDropdownItem) => {
     setShiftingType(item.label);
   };
@@ -123,12 +123,12 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({
     }
   }, [shiftingDateError, deliveryDateError, deliveredDateError]);
 
-  const handleShiftingLuggage = (isChecked: boolean, value: string) => {
+  const handleShiftingLuggage = (value: string) => {
     let temp = [...shiftingLuggages];
     const itemIndex = temp.findIndex(itm => itm == value);
-    if (itemIndex == -1 && isChecked) {
+    if (itemIndex == -1) {
       temp.push(value);
-    } else if (itemIndex != -1 && !isChecked) {
+    } else if (itemIndex != -1) {
       temp = temp.filter(itm => itm != value);
     }
     setShiftingLuggages(temp);
@@ -175,7 +175,15 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({
         text2: 'Shifting Info has been updated successfully',
       });
       dispatch(resetUpdateShiftingInfoRequest());
-      dispatch(getEnquiryRequest(enquiryId));
+      if(moduleName == MODULE_NAME.ENQUIRY) {
+        dispatch(getEnquiryRequest(enquiryId));
+      } else if(moduleName == MODULE_NAME.ORDER) {
+        const payload: ISingleOrderRequest = {
+          _id: enquiryId
+        }
+        dispatch(getOrderRequest(payload));
+      }
+      onClose();
     } else if (!updateShiftingInfoRequesting && updateShiftingInfoFailure) {
       Toast.show({
         type: 'error',
@@ -255,9 +263,10 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({
                 style={{marginRight: 15, marginBottom: 10}}
                 textContainerStyle={{paddingLeft: 0}}
                 onPress={(isChecked: boolean) => {
-                  handleShiftingLuggage(isChecked, itm.label);
+                  handleShiftingLuggage(itm.label);
                 }}
-                isChecked={item.shiftingLuggage.some(e => e == itm.label)}
+                isChecked={shiftingLuggages.findIndex(e => e == itm.label) != -1}
+                disableBuiltInState={true}
               />
             );
           })}

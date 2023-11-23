@@ -32,14 +32,14 @@ import { ISingleEnquiryData } from '../../../../../interface/enquiry/ISingleEnqu
 import useCompanyId from '../../../../../hooks/useCompanyId';
 import { IGetOrdersRequest } from '../../../../../interface/order/IGetOrdersRequest';
 import { getOrdersRequest } from '../../../../../redux/slices/OrderSlice';
+import { NavigationProp } from '@react-navigation/native';
 interface IOrderInfoViewProps {
   orderId: string;
   item: ISingleEnquiryData | null;
+  navigation: NavigationProp<any, any>;
 }
 
-const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item}) => {
-  console.log('OrderInfoView--item--', JSON.stringify(item));
-  
+const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item, navigation}) => {
   const dispatch = useAppDispatch();
   const [orderStatus, setOrderStatus] = useState<string>(item?.status as string);
   const {
@@ -80,7 +80,10 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item}) => {
         text2: `Order status has been updated to ${orderStatus}`,
       });
       dispatch(resetUpdateEnquiryStatusRequest());
-      refetchOrderList();
+      if(orderStatus == 'Completed') {
+        refetchOrderList();
+        navigation.goBack();
+      }
     } else if (!updateEnquiryStatusRequesting && updateEnquiryStatusFailure) {
       Toast.show({
         type: 'error',
@@ -154,7 +157,7 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item}) => {
                 </View>
                 <View style={styles.valueContainer}>
                   <Text style={styles.valueText}>
-                    {item?.pickupAddress.state}
+                    {item?.pickupAddress?.city?.split('-')[0]}
                   </Text>
                 </View>
               </View>
@@ -180,7 +183,7 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item}) => {
                 </View>
                 <View style={styles.valueContainer}>
                   <Text style={styles.valueText}>
-                    {item?.dropAddress.state}
+                    {item?.dropAddress?.city?.split('-')[0]}
                   </Text>
                 </View>
               </View>

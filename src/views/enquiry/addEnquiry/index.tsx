@@ -137,14 +137,14 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
     [state.mobile],
   );
 
-  const handleShiftingLugInputTextChange = useCallback(
-    (isChecked: boolean, value: string) => {
+  const handleShiftingLuggagesSelection = useCallback(
+    (value: string) => {
       const {shiftingLuggage} = state;
       let tempObj = [...shiftingLuggage];
       const itemIndex = tempObj.findIndex(e => e == value);
-      if (itemIndex == -1 && isChecked) {
+      if (itemIndex == -1) {
         tempObj.push(value);
-      } else if (itemIndex != -1 && !isChecked) {
+      } else {
         tempObj = tempObj.filter(e => e != value);
       }
       dispatch({
@@ -379,6 +379,9 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
         errors.mobile = "Mobile number invalid";
       }
     }
+    if(state.shiftingLuggage.length == 0) {
+      errors.shiftingLuggage = "Shifting luggage required"
+    }
     setErrors(errors);
     setIsFormValid(Object.keys(errors).length === 0);
   }
@@ -393,6 +396,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
     state.billingBy?.billing_info?.company_name,
     state.billingBy?.billing_info?.employee_name,
     state.billingBy?.billing_info?.employee_mobile_number,
+    state.shiftingLuggage,
   ]);
 
   useEffect(() => {
@@ -496,7 +500,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
           state.dropAddress?.isLiftAvailable.toLocaleUpperCase() as string,
       },
       billingBy: state.billingBy?.billing_by as string,
-      billingDetails: {
+      billingDetails: state.billingBy?.billing_by == 'by Company' ? {
         companyName: state.billingBy?.billing_info?.company_name as string,
         approvalAuthority: state.billingBy?.billing_info
           ?.approval_authority as string || approvalAuthorityOptions[0].label,
@@ -512,7 +516,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
           ?.employee_designation as string,
         employeeMobile: state.billingBy?.billing_info
           ?.employee_mobile_number as string,
-      },
+      } : {},
       status: 'NEW',
     };
     dispatch2(addEnquiryRequest(payload));
@@ -775,6 +779,15 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
     );
   };
 
+  const showShiftingLuggageErrorView = () => {
+    //@ts-ignore
+    const {shiftingLuggage} = errors || {};
+    if(shiftingLuggage) {
+      return <View style={styles.errorContainer}><Text style={styles.error}>{shiftingLuggage}</Text></View>
+    }
+    return null;
+  }
+
   return (
     <AvoidSoftInputViewHOC>
       <View style={styles.container}>
@@ -802,7 +815,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
             {showBillingByCompanyView()}
             <Spacer height={4} />
             <View style={styles.labelContainer}>
-              <Label text="Shifting Luggage" style={styles.label} />
+              <Label text="Shifting Luggage" style={styles.label} required={true} />
             </View>
             <View style={styles.elementContainer2}>
               {shiftingLuggageOptions.map((item, index) => {
@@ -830,12 +843,15 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
                     style={{marginRight: 15, marginBottom: 10}}
                     textContainerStyle={{paddingLeft: 0}}
                     onPress={(isChecked: boolean) => {
-                      handleShiftingLugInputTextChange(isChecked, item.label);
+                      handleShiftingLuggagesSelection(item.label);
                     }}
+                    isChecked={state.shiftingLuggage.findIndex(e => e == item.label) !== -1}
+                    disableBuiltInState={true}
                   />
                 );
               })}
             </View>
+            {showShiftingLuggageErrorView()}
           </View>
         </CollapsibleView>
         <Spacer height={4} />

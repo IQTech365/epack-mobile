@@ -51,7 +51,7 @@ const EnquiryDetailsView: React.FC<Props> = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <Header label="ENQUIRY DETAILS" canGoBack={true} />
-      <EnquiryInfoView item={item} enquiryId={enquiryId} />
+      <EnquiryInfoView item={item} enquiryId={enquiryId} navigation={navigation} />
       <Spacer height={10} />
       <View style={styles.tabsContainer}>
         <FlatList

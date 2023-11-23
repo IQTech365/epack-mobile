@@ -11,7 +11,6 @@ import Spacer from '../../../../../../../common/Spacer';
 import Button from '../../../../../../../common/Button';
 import {MODULE_NAME} from '../../enum/EModuleName';
 import {IGetOrdersData} from '../../../../../../../interface/order/IGetOrdersResponse';
-import {IGetEnquiriesData} from '../../../../../../../interface/enquiry/IGetEnquiriesResponse';
 import usePincodeHook from '../../../../../../../hooks/usePincodeHook';
 import {getCities, getStates} from '../../../../../../../utils/formatter';
 import liftStatusOptions from '../../../../../../../data/liftStatusOptions.json';
@@ -25,6 +24,8 @@ import {useAppDispatch, useAppSelector} from '../../../../../../../redux/hooks';
 import { getEnquiryRequest, resetUpdateAddressRequest, updateAddressRequest } from '../../../../../../../redux/slices/EnquirySlice';
 import Toast from 'react-native-toast-message';
 import { ISingleEnquiryData } from '../../../../../../../interface/enquiry/ISingleEnquiryResponse';
+import { getOrderRequest } from '../../../../../../../redux/slices/OrderSlice';
+import { ISingleOrderRequest } from '../../../../../../../interface/order/ISingleOrderRequest';
 
 export enum ADDRESS_TYPE {
   PICKUP,
@@ -36,13 +37,15 @@ interface IAddressFormProps {
   moduleName: MODULE_NAME;
   item: IGetOrdersData | ISingleEnquiryData;
   enquiryId: string;
+  onClose: () => void;
 }
 
 const AddressForm: React.FC<IAddressFormProps> = ({
   addressType,
   moduleName,
   item,
-  enquiryId
+  enquiryId,
+  onClose,
 }) => {
   console.log('AddressForm-enquiryId-', enquiryId);
   
@@ -230,7 +233,15 @@ const AddressForm: React.FC<IAddressFormProps> = ({
         text2: 'Address has been updated successfully',
       });
       dispatch(resetUpdateAddressRequest());
-      dispatch(getEnquiryRequest(enquiryId));
+      if(moduleName == MODULE_NAME.ENQUIRY) {
+        dispatch(getEnquiryRequest(enquiryId));
+      } else if(moduleName == MODULE_NAME.ORDER) {
+        const payload: ISingleOrderRequest = {
+          _id: enquiryId
+        }
+        dispatch(getOrderRequest(payload));
+      }
+      onClose();
     } else if (!updateAddressRequesting && updateAddressFailure) {
       Toast.show({
         type: 'error',

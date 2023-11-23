@@ -127,7 +127,7 @@ export const initialState: EnquiryFormState = {
   shiftingType: 'Local',
   billingBy: defaultBillingBy,
   partyCompanyName: '',
-  shiftingLuggage: [],
+  shiftingLuggage: ['Household'],
   partyName: '',
   mobile: '',
   pickupAddress: defaultPickupAddress,

@@ -5,6 +5,8 @@ import AvoidSoftInputViewHOC from '../../common/AvoidSoftInputViewHOC';
 import styles from './styles';
 import LogoIcon from '../../images/icons/epack-logo.svg';
 import MobileIcon from '../../images/icons/mobile-icon.svg';
+import LockIcon from '../../images/icons/lock.svg';
+import UserIcon from '../../images/icons/user.svg';
 
 import Button from '../../common/Button';
 import Input from '../../common/Input';
@@ -128,11 +130,11 @@ const SignInPageView = (props: any) => {
           <LogoIcon width={232} height={56} />
         </View>
         <Spacer height={30} />
-        <Label text="Signin OR Register" style={{fontSize: 18}} />
+        <Label text="Login or Register" style={{fontSize: 18}} />
         <Spacer height={20} />
         <Label text={topLabel} />
         <Input
-          icon={<MobileIcon width={22} height={22} />}
+          icon={isStaffLogin ? <UserIcon width={22} height={22} /> : <MobileIcon width={22} height={22} />}
           placeholder={inputLabel}
           //@ts-ignore
           inputType={inputKeyboardType}
@@ -143,7 +145,7 @@ const SignInPageView = (props: any) => {
         <Spacer />
         {isStaffLogin && (
           <Input
-            icon={<MobileIcon width={22} height={22} />}
+            icon={<LockIcon width={22} height={22} />}
             placeholder="Password"
             inputType="default"
             onChangeText={onChangePasswordText}
@@ -155,7 +157,7 @@ const SignInPageView = (props: any) => {
           size={25}
           fillColor={COLOR_BLUE}
           unfillColor="#FFFFFF"
-          text="SignIn as Staff OR Member"
+          text="Login as Staff or Member"
           iconStyle={{borderColor: 'white', borderRadius: 0}}
           innerIconStyle={{borderWidth: 1, borderRadius: 0}}
           textStyle={{

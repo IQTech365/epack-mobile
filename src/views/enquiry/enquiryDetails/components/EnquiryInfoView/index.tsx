@@ -20,13 +20,17 @@ import { getEnquiriesRequest, resetUpdateEnquiryStatusRequest, updateEnquiryStat
 import Toast from 'react-native-toast-message';
 import enquiryStatusOptions from '../../../../../data/enquiryStatusOptions.json';
 import useCompanyId from '../../../../../hooks/useCompanyId';
+import { NavigationProp } from '@react-navigation/native';
+import { IGetOrdersRequest } from '../../../../../interface/order/IGetOrdersRequest';
+import { getOrdersRequest } from '../../../../../redux/slices/OrderSlice';
 
 interface IEnquiryInfoViewProps {
   item: IGetEnquiriesData | undefined;
   enquiryId: string | undefined;
+  navigation: NavigationProp<any, any>
 }
 
-const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId}) => {
+const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId, navigation}) => {
   const dispatch = useAppDispatch();
   const {
     updateEnquiryStatusRequesting,
@@ -59,15 +63,46 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId}) => 
     Linking.openURL(`whatsapp://send?phone=+91${item?.mobile}`);
   }
 
+  const _getName = (item:any) => {
+    let name:string = '';
+    if(item?.partyName){
+      name = item?.partyName;
+    } else if (item?.billingDetails?.authorityPersonName) {
+      name = item?.billingDetails?.authorityPersonName;
+    }
+    return name;
+  }
+
+  const _getMobile = (item:any) => {
+    let mobile:string = '';
+    if(item?.mobile) {
+      mobile = item?.mobile;
+    } else if(item?.billingDetails?.authorityPersonMobile) {
+      mobile = item?.billingDetails?.authorityPersonMobile;
+    }
+    return mobile;
+  }
+
+  const refreshOrders = () => {
+    const payload: Partial<IGetOrdersRequest> = {
+      companyId: companyId,
+    };
+    dispatch(getOrdersRequest(payload));
+  }
+
   useEffect(() => {
     if(!updateEnquiryStatusRequesting && updateEnquiryStatusSuccess) {
       Toast.show({
         type: 'success',
         text1: 'Enquiry Status',
-        text2: `Enquiry status has been updated to ${enquiryStatus}`,
+        text2: `Enquiry status has been updated to ${enquiryStatus.toUpperCase()}`,
       });
       dispatch(resetUpdateEnquiryStatusRequest());
       dispatch(getEnquiriesRequest(companyId));
+      if(enquiryStatus == 'Approved') {
+        refreshOrders();
+        navigation.goBack();
+      }
     } else if(!updateEnquiryStatusRequesting && updateEnquiryStatusFailure) {
       Toast.show({
         type: 'error',
@@ -88,12 +123,12 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId}) => 
             <View style={styles.infoContainer}>
               <View style={[styles.itemContainer]}>
                 <Text style={styles.nameText}>
-                  {item?.partyName || item?.billingDetails?.authorityPersonName}
+                  {_getName(item)}
                 </Text>
               </View>
               <View style={[styles.itemContainer]}>
                 <Text style={styles.normalText}>
-                  {item?.mobile || item?.billingDetails?.authorityPersonMobile}
+                  {_getMobile(item)}
                 </Text>
               </View>
             </View>
@@ -107,7 +142,7 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId}) => 
                 </View>
                 <View style={styles.valueContainer}>
                   <Text style={styles.valueText}>
-                    {item?.pickupAddress.state}
+                    {item?.pickupAddress?.city?.split('-')[0]}
                   </Text>
                 </View>
               </View>
@@ -133,7 +168,7 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId}) => 
                 </View>
                 <View style={styles.valueContainer}>
                   <Text style={styles.valueText}>
-                    {item?.dropAddress.state}
+                    {item?.dropAddress?.city?.split('-')[0]}
                   </Text>
                 </View>
               </View>
@@ -148,7 +183,7 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId}) => 
                   <Menu>
                     <MenuTrigger customStyles={{
                       triggerText: {color: COLOR_WHITE}
-                    }} text={enquiryStatus} />
+                    }} text={enquiryStatus.toUpperCase()} />
                     <MenuOptions
                       customStyles={{
                         optionsContainer: {borderRadius: 5},

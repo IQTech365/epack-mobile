@@ -68,15 +68,16 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
       quotationData.length > 0
     ) {
       _data = quotationData.map((quotation: IGetQuotationData) => {
+        const {quotationNumber, enquiries, quotationData, quotationAmount} = quotation;
         const item: IQuotationItem = {
-          quotationNo: quotation.quotationNumber,
-          clientName: quotation.enquiries[0].partyName,
-          fromDestination: quotation.enquiries[0].pickupAddress.city,
-          toDestination: quotation.enquiries[0].dropAddress.city,
-          shiftingType: quotation.enquiries[0].shiftingType,
-          quotationAmount: quotation.quotationAmount,
-          quotationDate: quotation.quotationData,
-          phoneNumber: quotation.enquiries[0].mobile,
+          quotationNo: quotationNumber,
+          clientName: enquiries.length !== 0 ? enquiries[0].partyName : '',
+          fromDestination: enquiries.length !== 0 ? enquiries[0].pickupAddress.city : '',
+          toDestination: enquiries.length !== 0 ? enquiries[0].dropAddress.city : '',
+          shiftingType: enquiries.length !== 0 ? enquiries[0].shiftingType : '',
+          quotationAmount: quotationAmount,
+          quotationDate: quotationData,
+          phoneNumber: enquiries.length !== 0 ? enquiries[0].mobile : '',
         };
         return item;
       });

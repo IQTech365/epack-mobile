@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {Text, View} from 'react-native';
+import {View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
 import ModalHOC from '../../../../../common/ModalHOC';
 import Spacer from '../../../../../common/Spacer';
-import {IGetOrdersData} from '../../../../../interface/order/IGetOrdersResponse';
 import OrderDetailListItem from '../OrderDetailListItem';
 import {MODULE_NAME} from './enum/EModuleName';
 import AddressForm, {ADDRESS_TYPE} from './Forms/AddressForm';
@@ -18,11 +17,10 @@ import { ISingleOrderRequest } from '../../../../../interface/order/ISingleOrder
 import Spinner from '../../../../../common/Spinner';
 import { ISingleEnquiryData } from '../../../../../interface/enquiry/ISingleEnquiryResponse';
 interface IDetailsViewProps {
-  item: ISingleEnquiryData | null;
   enquiryId: string;
 }
 
-const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
+const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
   const [editShiftingDetail, setEditShifingDetail] = useState<boolean>(false);
   const [editContactDetail, setEditContactDetail] = useState<boolean>(false);
   const [editPickupAddress, setEditPickupAddress] = useState<boolean>(false);
@@ -30,6 +28,18 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
   const dispatch = useAppDispatch();
   const {getOrderRequesting, order} = useAppSelector(state => state.Order);
   const {data: orderData} = order || {};
+  console.log('ORDER-DetailsView--', JSON.stringify(orderData));
+
+  const getSingleOrder = () => {
+    let order:ISingleEnquiryData;
+    if(orderData && Array.isArray(orderData) && orderData.length > 0) {
+      order = orderData[0];
+    }
+    //@ts-ignore
+    return order;
+  }
+
+  const item = getSingleOrder();
 
   useEffect(() => {
     const payload: ISingleOrderRequest = {
@@ -75,6 +85,22 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
     return title;
   };
 
+  const _orderAmount = () => {
+    let amount:string|undefined = undefined;
+    if(item.orderAmount) {
+      amount = parseFloat(item?.orderAmount).toFixed(2);
+    }
+    return amount ? `₹ ${amount}` : amount;
+  }
+
+  const _tokenAmount = () => {
+    let amount:string|undefined = undefined;
+    if(item.tokenAmount) {
+      amount = parseFloat(item?.tokenAmount).toFixed(2);
+    }
+    return amount ? `₹ ${amount}` : amount;
+  };
+
   const getForm = () => {
     if (editShiftingDetail) {
       return (
@@ -82,6 +108,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
           moduleName={MODULE_NAME.ORDER}
           item={item as ISingleEnquiryData}
           enquiryId={enquiryId}
+          onClose={handleModalClose}
         />
       );
     } else if (editContactDetail) {
@@ -90,6 +117,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
           moduleName={MODULE_NAME.ORDER}
           item={item as ISingleEnquiryData}
           enquiryId={enquiryId}
+          onClose={handleModalClose}
         />
       );
     } else if (editPickupAddress) {
@@ -99,6 +127,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
           moduleName={MODULE_NAME.ORDER}
           item={item as ISingleEnquiryData}
           enquiryId={enquiryId}
+          onClose={handleModalClose}
         />
       );
     } else if (editDropAddress) {
@@ -108,6 +137,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
           moduleName={MODULE_NAME.ORDER}
           item={item as ISingleEnquiryData}
           enquiryId={enquiryId}
+          onClose={handleModalClose}
         />
       );
     }
@@ -128,17 +158,17 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
         <OrderDetailListItem
           label="Landline Number"
           //@ts-ignore
-          value={item?.landline || 'Not Available'}
+          value={item?.landline}
         />
         <OrderDetailListItem
           label="Email"
           //@ts-ignore
-          value={item?.email || 'Not Available'}
+          value={item?.email}
         />
-        <OrderDetailListItem label="Order Amount" value={item?.orderAmount} />
+        <OrderDetailListItem label="Order Amount" value={_orderAmount()} />
         <OrderDetailListItem
           label="Token Amount"
-          value={item?.tokenAmount}
+          value={_tokenAmount()}
           isLast={true}
         />
       </>
@@ -219,17 +249,17 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
         <OrderDetailListItem
           label="Email"
           //@ts-ignore
-          value={item?.email || 'Not Available'}
+          value={item?.email}
         />
         <OrderDetailListItem
           label="Employee Mobile"
           //@ts-ignore
           value={item?.billingDetails?.employeeMobile}
         />
-        <OrderDetailListItem label="Order Amount" value={item?.orderAmount} />
+        <OrderDetailListItem label="Order Amount" value={`₹ ${parseFloat(item?.orderAmount).toFixed(2)}`} />
         <OrderDetailListItem
           label="Token Amount"
-          value={item?.tokenAmount}
+          value={`₹ ${parseFloat(item?.tokenAmount).toFixed(2)}`}
           isLast={true}
         />
       </>

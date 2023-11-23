@@ -50,6 +50,6 @@ export interface IAddEnquiryRequest {
   pickupAddress: IPickupAddress;
   dropAddress: IDropAddress;
   billingBy: string;
-  billingDetails: IBillingInfo;
+  billingDetails: IBillingInfo | {};
   status: string;
 }

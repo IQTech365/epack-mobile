@@ -94,6 +94,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
           moduleName={MODULE_NAME.ENQUIRY}
           item={getSingleEnquiry() as ISingleEnquiryData}
           enquiryId={enquiryId}
+          onClose={handleModalClose}
         />
       );
     } else if (editContactDetail) {
@@ -102,6 +103,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
           moduleName={MODULE_NAME.ENQUIRY}
           item={getSingleEnquiry() as ISingleEnquiryData}
           enquiryId={enquiryId}
+          onClose={handleModalClose}
         />
       );
     } else if (editPickupAddress) {
@@ -111,6 +113,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
           moduleName={MODULE_NAME.ENQUIRY}
           item={getSingleEnquiry() as ISingleEnquiryData}
           enquiryId={enquiryId}
+          onClose={handleModalClose}
         />
       );
     } else if (editDropAddress) {
@@ -120,6 +123,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
           moduleName={MODULE_NAME.ENQUIRY}
           item={getSingleEnquiry() as ISingleEnquiryData}
           enquiryId={enquiryId}
+          onClose={handleModalClose}
         />
       );
     }
@@ -141,14 +145,6 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
         <EnquiryDetailListItem
           label="Landline"
           value={singleEnquiry?.landline}
-        />
-        <EnquiryDetailListItem
-          label="Order Amount"
-          value={singleEnquiry?.orderAmount}
-        />
-         <EnquiryDetailListItem
-          label="Token Amount"
-          value={singleEnquiry?.tokenAmount}
         />
         <EnquiryDetailListItem
           label="Alternate Numbers"

@@ -89,7 +89,6 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
           e.status.toLowerCase() == 'material received at warehouse' ||
           e.status.toLowerCase() == 'in transit' ||
           e.status.toLowerCase() == 'reached at destination city' ||
-          e.status.toLowerCase() == 'completed' ||
           e.status.toLowerCase() == 'cancelled order',
       );
   };
