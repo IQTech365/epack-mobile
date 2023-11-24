@@ -19,7 +19,7 @@ interface InputProps {
   autoCapitalize?: 'characters' | 'words' | 'sentences' | 'none';
   type?: 'mobile' | 'email' | 'none' | 'text';
   required?: boolean;
-  onValidation?: (value: boolean) => void;
+  secureTextEntry?:boolean;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -37,7 +37,7 @@ const Input: React.FC<InputProps> = ({
   autoCapitalize = 'none',
   type = 'none',
   required = false,
-  onValidation,
+  secureTextEntry,
 }) => {
   const disableStyle = !editable ? {backgroundColor: COLOR_GRAY3} : null;
   const [text, setText] = useState<string>('');
@@ -57,10 +57,19 @@ const Input: React.FC<InputProps> = ({
   const _handleValidation = () => {
     switch (type) {
       case 'mobile':
-        if(!required && Validator.isEmpty(text)) {
+        if (!required && Validator.isEmpty(text)) {
           setValidationError('');
         } else if (!Validator.mobile(text)) {
           setValidationError('Invalid mobile number');
+        } else {
+          setValidationError('');
+        }
+        break;
+      case 'email':
+        if (!required && Validator.isEmpty(text)) {
+          setValidationError('');
+        } else if (!Validator.mobile(text)) {
+          setValidationError('Invalid email');
         } else {
           setValidationError('');
         }
@@ -85,7 +94,6 @@ const Input: React.FC<InputProps> = ({
     } else {
       setValidationError('');
     }
-    onValidation && onValidation(validationError ? false: true);
   };
 
   return (
@@ -106,6 +114,7 @@ const Input: React.FC<InputProps> = ({
             value={text}
             autoCapitalize={autoCapitalize}
             onBlur={validateOnBlur}
+            secureTextEntry={secureTextEntry}
           />
         </View>
       </View>

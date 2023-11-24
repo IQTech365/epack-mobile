@@ -424,10 +424,10 @@ export const EnquirySlice = createSlice({
       state.addSurveyItemError = action.payload;
     },
     resetAddSurveyItemRequest: (state, action: PayloadAction) => {
-      state.addSurveyRequesting = false;
-      state.addSurveySuccess = false;
-      state.addSurveyFailure = false;
-      state.addSurveyError = null;
+      state.addSurveyItemRequesting = false;
+      state.addSurveyItemSuccess = false;
+      state.addSurveyItemFailure = false;
+      state.addSurveyItemError = null;
       state.addSurveyInfo = null;
     },
     // Get Survey List

@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import { COLOR_GRAY, COLOR_GRAY2 } from '../../utils/colors';
+import { COLOR_BLACK, COLOR_GRAY, COLOR_GRAY2 } from '../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
   },
   placeholderStyle: {
     fontSize: 16,
+    color: COLOR_BLACK,
   },
   selectedTextStyle: {
     fontSize: 16,
@@ -50,6 +51,9 @@ const styles = StyleSheet.create({
   errorText: {
     color: 'red',
     fontSize: 12,
+  },
+  itemText: {
+    color: COLOR_BLACK,
   }
 });
 

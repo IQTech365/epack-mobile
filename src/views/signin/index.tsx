@@ -98,7 +98,6 @@ const SignInPageView = (props: any) => {
 
   useEffect(() => {
     if (!requesting && success) {
-      console.log('otpData--------', JSON.stringify(otpData));
       if(isStaffLogin) {
         setAuthToken(otpData?.data?.jwtToken);
         dispatch(restGetOtpRequest());
@@ -114,8 +113,15 @@ const SignInPageView = (props: any) => {
   }, [requesting, success, failure]);
 
   useEffect(() => {
-    if(!getCompaniesRequesting && getCompaniesSuccess) {
-      completeRegistrationAndLoggedIn();
+    if(!getCompaniesRequesting && getCompaniesSuccess && isStaffLogin) {
+      const {data} = companies || {};
+      if(data && Array.isArray(data) && data.length > 0) {
+        completeRegistrationAndLoggedIn();
+      } else {
+        Alert.alert(
+          'You are not associated with any company. Please contact your Administrator!',
+        );
+      }
     } else if(!getCompaniesRequesting && getCompaniesFailure) {
       Alert.alert('Error in Getting companies details.');
     }
@@ -150,6 +156,7 @@ const SignInPageView = (props: any) => {
             inputType="default"
             onChangeText={onChangePasswordText}
             error={null}
+            secureTextEntry={true}
           />
         )}
         <Spacer />
@@ -170,6 +177,8 @@ const SignInPageView = (props: any) => {
           onPress={(isChecked: boolean) => {
             setIsStaffLogin(!isStaffLogin);
           }}
+          isChecked={isStaffLogin}
+          disableBuiltInState={true}
         />
         <Spacer height={50} />
         <Button

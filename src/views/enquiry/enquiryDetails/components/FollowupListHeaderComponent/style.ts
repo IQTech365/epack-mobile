@@ -54,7 +54,8 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: '100%',
-    borderColor: COLOR_GRAY2,
+    borderColor: COLOR_BLACK,
+    borderWidth: 0.5,
     // paddingLeft: 4,
   },
   input: {

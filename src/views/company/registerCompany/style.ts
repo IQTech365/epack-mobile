@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   elementContainer: {
     width: width * 0.9,
     justifyContent: 'center',
-    alignItems: 'flex-start',
+    // alignItems: 'flex-start',
     alignSelf: 'center',
   },
   elementContainer2: {

@@ -21,14 +21,13 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
   enquiryId,
 }) => {
   const dispatch = useAppDispatch();
-  const {followups, getFollowupsRequesting,
-    surveyItemList} = useAppSelector(state => state.Enquiry,);
+  const {followups, getFollowupsRequesting, surveyItemList} = useAppSelector(state => state.Enquiry,);
   const {data} = followups || {};
   const {data: surveyItemData} = surveyItemList || {};
   const {surveyList, getSurveyListRequesting} = useAppSelector(state => state.Enquiry);
   const companyId = useCompanyId();
   const {data: surveyData} = surveyList || {};
-  const [taskData, setTaskData] = useState<string>('')
+  const [taskData, setTaskData] = useState<string>('');
   
   useEffect(() => {
     if(taskName == 'FOLLOW UP') {
@@ -53,7 +52,7 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
     let listData = [];
     if(taskName == 'FOLLOW UP' && data && Array.isArray(data) && data.length > 0) {
       listData = data;
-    } else if(taskName == 'SURVEY'&& taskData=='' && surveyData && Array.isArray(surveyData) && surveyData.length > 0) {
+    } else if(taskName == 'SURVEY' && taskData == '' && surveyData && Array.isArray(surveyData) && surveyData.length > 0) {
       listData = surveyData;
     }else if(taskData == 'SURVEY ITEM' && surveyItemData && Array.isArray(surveyItemData) && surveyItemData.length > 0){
       listData = surveyItemData;

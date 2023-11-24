@@ -91,37 +91,45 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({
 
 
   const handleUpdate = () => {
-    if(!dateOfMoving) {
-      setShiftingDateError('Shifting date required');
-    } else {
-      setShiftingDateError('');
-    }
-    if(!dateOfDelivery) {
-      setDeliveryDateError('Delivery date required');
-    } else {
-      setDeliveryDateError('');
-    }
-    if(!dateOfDelivered) {
-      setDeliveredDateError('Delivered date required');
-    } else {
-      setDeliveredDateError('');
-    }
+    // if(!dateOfMoving) {
+    //   setShiftingDateError('Shifting date required');
+    // } else {
+    //   setShiftingDateError('');
+    // }
+    // if(!dateOfDelivery) {
+    //   setDeliveryDateError('Delivery date required');
+    // } else {
+    //   setDeliveryDateError('');
+    // }
+    // if(!dateOfDelivered) {
+    //   setDeliveredDateError('Delivered date required');
+    // } else {
+    //   setDeliveredDateError('');
+    // }
+    const payload: IUpdateShiftingInfoRequest = {
+      shiftingType: shiftingType.toUpperCase(),
+      shiftingLuggage: shiftingLuggages,
+      shiftingDate: dateOfMoving,
+      deliveryDate: dateOfDelivery,
+      deliveredDate: dateOfDelivered,
+    };
+    dispatch(updateShiftingInfoRequest({id: enquiryId, requestBody: payload}));
   };
 
-  useEffect(() => {
-    const noErrors = !shiftingDateError && !deliveryDateError && !deliveredDateError;
-    const allValues = dateOfMoving && dateOfDelivery && dateOfDelivered;
-    if(noErrors && allValues) {
-      const payload: IUpdateShiftingInfoRequest = {
-        shiftingType: shiftingType.toUpperCase(),
-        shiftingLuggage: shiftingLuggages,
-        shiftingDate: dateOfMoving,
-        deliveryDate: dateOfDelivery,
-        deliveredDate: dateOfDelivered,
-      };
-      dispatch(updateShiftingInfoRequest({id: enquiryId, requestBody: payload}));
-    }
-  }, [shiftingDateError, deliveryDateError, deliveredDateError]);
+  // useEffect(() => {
+  //   const noErrors = !shiftingDateError && !deliveryDateError && !deliveredDateError;
+  //   const allValues = dateOfMoving && dateOfDelivery && dateOfDelivered;
+  //   if(noErrors && allValues) {
+  //     const payload: IUpdateShiftingInfoRequest = {
+  //       shiftingType: shiftingType.toUpperCase(),
+  //       shiftingLuggage: shiftingLuggages,
+  //       shiftingDate: dateOfMoving,
+  //       deliveryDate: dateOfDelivery,
+  //       deliveredDate: dateOfDelivered,
+  //     };
+  //     dispatch(updateShiftingInfoRequest({id: enquiryId, requestBody: payload}));
+  //   }
+  // }, [shiftingDateError, deliveryDateError, deliveredDateError]);
 
   const handleShiftingLuggage = (value: string) => {
     let temp = [...shiftingLuggages];
@@ -271,7 +279,8 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({
             );
           })}
         </View>
-        <View style={styles.elementContainer}>
+        {moduleName == MODULE_NAME.ORDER ? <>
+          <View style={styles.elementContainer}>
           <View style={styles.itemContainer}>
             <Label text="Date of Delivery" style={styles.label} />
             <DatePickerComponent
@@ -291,6 +300,7 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({
              />
           </View>
         </View>
+        </> : null}
         <Spacer height={20} />
         <Button
           text="UPDATE"

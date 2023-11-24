@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState, useRef} from 'react';
 import {View, Text, Alert} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../common/Spacer';
@@ -11,49 +11,17 @@ import {COLOR_BLACK, COLOR_BLUE} from '../../../utils/colors';
 import companyTypeOptions from '../../../data/companyType.json';
 import {formatDate2, getCities, getStates} from '../../../utils/formatter';
 import DatePickerComponent from '../../../common/DatePickerComponent';
-import BouncyCheckboxGroup, {
-  ICheckboxButton,
-} from 'react-native-bouncy-checkbox-group';
 import usePincodeHook from '../../../hooks/usePincodeHook';
 import Spinner from '../../../common/Spinner';
 import {useCompanyRegistrationContextHook} from '../../../provider/CompanyRegistrationContextProvider';
 import {Validator} from '../../../utils/validation';
 import Button from '../../../common/Button';
-import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
-import { addCompanyRequest } from '../../../redux/slices/CompanySlice';
-import { ICompanyRegistrationRequest } from '../../../interface/companyRegistration/ICompanyRegistrationRequest';
-//Ram Naresh Bhardwaj
-const ibaApprovalOptions: Array<ICheckboxButton> = [
-  {
-    id: '1',
-    text: 'Not Approved',
-    fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', width: 16, height: 16},
-    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
-    textStyle: {
-      fontFamily: 'JosefinSans-Regular',
-      textDecorationLine: 'none',
-      fontSize: 14,
-    },
-    isChecked: true,
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
-    style: {paddingRight: 10},
-  },
-  {
-    id: '2',
-    text: 'Approved',
-    fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', width: 16, height: 16},
-    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
-    textStyle: {
-      fontFamily: 'JosefinSans-Regular',
-      textDecorationLine: 'none',
-      fontSize: 14,
-    },
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
-    style: {paddingRight: 10},
-  },
-];
+import {useAppDispatch, useAppSelector} from '../../../redux/hooks';
+import {addCompanyRequest} from '../../../redux/slices/CompanySlice';
+import {ICompanyRegistrationRequest} from '../../../interface/companyRegistration/ICompanyRegistrationRequest';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import EpackDropdown from '../../../common/DropdownComponent2';
+const ibaApprovalOptions: string[] = ['Not Approved', 'Approved'];
 
 interface IRegisterCompanyViewProps {
   currentStep: number;
@@ -64,10 +32,6 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
   currentStep,
   setCurrentStep,
 }) => {
-  // const [state, dispatch] = useReducer(
-  //   companyRegistrationReducer,
-  //   initialState,
-  // );
   const {
     state,
     setCompanyName,
@@ -95,20 +59,18 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
     setCompanyTypeError,
     setDocumentError,
   } = useCompanyRegistrationContextHook();
-  const [ibaApproval, setIbaApproval] = useState<boolean>(false);
+  const [ibaApproval, setIbaApproval] = useState<string>(ibaApprovalOptions[0]);
   const [companyType, setCompanyType] = useState<string>('1');
   const [documentTypeLabel, setDocumentTypeLabel] = useState<string>('PAN');
   const [states, setStates] = useState<TDropdownItem[]>([]);
   const [cities, setCities] = useState<TDropdownItem[]>([]);
-  // console.log('RegisterCompanyView-state--', JSON.stringify(state, null, ' '));
-
   const dispatch = useAppDispatch();
   const {requesting, success, error, failure, addCompanyInfo} = useAppSelector(
     state => state.Company,
   );
-  // console.log('RegisterCompanyView-companyInfo--', JSON.stringify(addCompanyInfo, null, ' '));
-
   const {otpData} = useAppSelector(state => state.OTP);
+  const cityDropdownRef = useRef(null);
+  const stateDropwdownRef = useRef(null);
 
   const setPincodeError = () => {
     setPincodeError2('Invalid Pincode');
@@ -150,12 +112,12 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
     setMobile(text);
   };
 
-  const handleCitySelectChange = (item: TDropdownItem) => {
-    setCity(item.label);
+  const handleCitySelectChange = (item: string) => {
+    setCity(item);
   };
 
-  const handleStateSelectChange = (item: TDropdownItem) => {
-    setState(item.label);
+  const handleStateSelectChange = (item: string) => {
+    setState(item);
   };
 
   const handleAddressInputTextChange = (text: string) => {
@@ -263,14 +225,14 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
       setAddressError('');
     }
 
-    if(ibaApproval) {
+    if (ibaApproval == 'Approved') {
       if (Validator.isEmpty(state.ibaApprovalCode)) {
         setIbaApprovalCodeError('IBA Approval code required');
       } else {
         ibaApprovalCodeFilled = true;
         setIbaApprovalCodeError('');
       }
-  
+
       if (Validator.isEmpty(state.ibaApprovalValidTill)) {
         setIbaApprovalTillDateError('IBA Approval Date required');
       } else {
@@ -287,12 +249,13 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
     }
 
     if (Validator.isEmpty(state.document)) {
-      setDocumentError('Document required');
+      setDocumentError('Document number required');
     } else {
       documentFilled = true;
       setDocumentError('');
     }
-    const isRequiredFieldsFilled =
+    let areFieldsValid: boolean = false;
+    let isRequiredFieldsFilled =
       companyNameFilled &&
       contactPersonNameFilled &&
       mobileFilled &&
@@ -301,12 +264,17 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
       stateFilled &&
       cityFilled &&
       addressFilled &&
-      ibaApprovalCodeFilled &&
-      ibaApprovalValidTillFilled &&
       companyTypeFilled &&
       documentFilled;
-    console.log('isRequiredFieldsFilled----', isRequiredFieldsFilled);
-    return isRequiredFieldsFilled;
+    if (ibaApproval == ibaApprovalOptions[0]) {
+      areFieldsValid = isRequiredFieldsFilled;
+    } else if (ibaApproval == ibaApprovalOptions[1]) {
+      areFieldsValid =
+        isRequiredFieldsFilled &&
+        ibaApprovalCodeFilled &&
+        ibaApprovalValidTillFilled;
+    }
+    return areFieldsValid;
   };
 
   const handleNextClick = useCallback(() => {
@@ -323,8 +291,6 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
           companyAddress: state.address,
           state: state.state,
           city: state.city,
-          // state: 'Haryana',
-          // city: 'Grugaon',
           pincode: state.pinCode,
           ibaApprovalCode: state.ibaApprovalCode,
           ibaValidDate: state.ibaApprovalValidTill,
@@ -344,7 +310,13 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
         dispatch(addCompanyRequest(data));
       }
     }
-  }, [state]);
+  }, [state, ibaApproval, companyType]);
+
+  useEffect(() => {
+    if (otpData?.data?.mobile) {
+      handleMobileInputTextChange(otpData?.data?.mobile);
+    }
+  }, []);
 
   useEffect(() => {
     if (!requesting && success && !error) {
@@ -370,6 +342,15 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
     }
   }, [result]);
 
+  useEffect(() => {
+    if (states && cities && cityDropdownRef && stateDropwdownRef) {
+      //@ts-ignore
+      stateDropwdownRef?.current?.setValue(states[0]?.label);
+      //@ts-ignore
+      cityDropdownRef?.current?.setValue(cities[0]?.label);
+    }
+  }, [states, cities]);
+
   return (
     <View style={styles.container}>
       <AvoidSoftInputViewHOC>
@@ -381,7 +362,7 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
-              <Label text="Company Name" style={styles.label} />
+              <Label text="Company Name" style={styles.label} required={true} />
               <Input
                 onChangeText={handleCompanyNameInputTextChange}
                 containerStyle={styles.inputContainer}
@@ -390,11 +371,17 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
                 value={state.companyName}
                 error={state.errors.companyName}
                 placeholder="Enter your company name"
+                type="text"
+                required={true}
               />
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
-              <Label text="Contact Person" style={styles.label} />
+              <Label
+                text="Contact Person"
+                style={styles.label}
+                required={true}
+              />
               <Input
                 onChangeText={handleContactPersonInputTextChange}
                 containerStyle={styles.inputContainer}
@@ -403,11 +390,13 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
                 value={state.contactPerson}
                 error={state.errors.contactPerson}
                 placeholder="Enter contact person name"
+                type="text"
+                required={true}
               />
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
-              <Label text="Mobile" style={styles.label} />
+              <Label text="Mobile" style={styles.label} required={true} />
               <Input
                 onChangeText={handleMobileInputTextChange}
                 containerStyle={styles.inputContainer}
@@ -416,11 +405,14 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
                 value={state.mobile}
                 error={state.errors.mobile}
                 placeholder="Enter mobile number"
+                type="mobile"
+                required={true}
+                editable={false}
               />
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
-              <Label text="Email" style={styles.label} />
+              <Label text="Email" style={styles.label} required={true} />
               <Input
                 onChangeText={handleEmailInputTextChange}
                 containerStyle={styles.inputContainer}
@@ -429,11 +421,13 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
                 value={state.email}
                 error={state.errors.email}
                 placeholder="Enter email"
+                type="email"
+                required={true}
               />
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
-              <Label text="Pin code" style={styles.label} />
+              <Label text="Pin code" style={styles.label} required={true} />
               <Input
                 onChangeText={handlePickupPinCode}
                 containerStyle={styles.inputContainer}
@@ -447,23 +441,27 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
             <Spacer height={4} />
             <View style={styles.elementContainer}>
               <Label text="State" style={styles.label} />
-              <DropdownComponent
-                data={states}
-                onSelect={handleStateSelectChange}
-                error={state.errors.state}
+              <EpackDropdown
+                data={states.map(e => e.label)}
+                placeholder={'Select State'}
+                hanldeData={handleStateSelectChange}
+                //@ts-ignore
+                ref={stateDropwdownRef}
               />
             </View>
             <View style={styles.elementContainer}>
               <Label text="City" style={styles.label} />
-              <DropdownComponent
-                data={cities}
-                onSelect={handleCitySelectChange}
-                error={state.errors.city}
+              <EpackDropdown
+                data={cities.map(e => e.label)}
+                placeholder={'Select City'}
+                hanldeData={handleCitySelectChange}
+                //@ts-ignore
+                ref={cityDropdownRef}
               />
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
-              <Label text="Address" style={styles.label} />
+              <Label text="Address" style={styles.label} required={true} />
               <Input
                 onChangeText={handleAddressInputTextChange}
                 containerStyle={styles.inputContainer}
@@ -472,6 +470,8 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
                 value={state.address}
                 error={state.errors.address}
                 placeholder="Enter your address"
+                type="text"
+                required={true}
               />
             </View>
             <Spacer height={4} />
@@ -479,23 +479,54 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
               <Label text="IBA Approval" style={styles.label} />
             </View>
             <View style={styles.elementContainer2}>
-              <BouncyCheckboxGroup
-                data={ibaApprovalOptions}
-                onChange={(selectedItem: ICheckboxButton) => {
-                  const key = selectedItem.id as string;
-                  if (key == '1') {
-                    setIbaApproval(false);
-                  } else if (key == '2') {
-                    setIbaApproval(true);
-                  }
-                }}
-              />
+              {ibaApprovalOptions.map((itm, index) => {
+                return (
+                  <BouncyCheckbox
+                    key={itm}
+                    size={25}
+                    unfillColor="#FFFFFF"
+                    text={itm}
+                    fillColor={COLOR_BLUE}
+                    iconStyle={{
+                      borderColor: 'red',
+                      borderRadius: 12,
+                      width: 22,
+                      height: 22,
+                    }}
+                    innerIconStyle={{
+                      borderWidth: 1,
+                      borderRadius: 12,
+                      width: 22,
+                      height: 22,
+                    }}
+                    textStyle={{
+                      fontFamily: 'JosefinSans-Regular',
+                      textDecorationLine: 'none',
+                    }}
+                    style={{marginRight: 15, marginBottom: 10}}
+                    textContainerStyle={{paddingLeft: 0}}
+                    onPress={(isChecked: boolean) => {
+                      if (itm == ibaApprovalOptions[0]) {
+                        setIbaApprovalCodeError('');
+                        setIbaApprovalTillDateError('');
+                      }
+                      setIbaApproval(itm);
+                    }}
+                    isChecked={ibaApproval == itm}
+                    disableBuiltInState={true}
+                  />
+                );
+              })}
             </View>
-            {ibaApproval && (
+            {ibaApproval == 'Approved' && (
               <>
                 <Spacer height={4} />
                 <View style={styles.elementContainer}>
-                  <Label text="IBA Approval Code" style={styles.label} />
+                  <Label
+                    text="IBA Approval Code"
+                    style={styles.label}
+                    required={true}
+                  />
                   <Input
                     onChangeText={handleIbaApprovalCodeInputTextChange}
                     containerStyle={styles.inputContainer}
@@ -504,11 +535,17 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
                     value={state.ibaApprovalCode}
                     error={state.errors.ibaApprovalCode}
                     placeholder="Ener IBA approval code"
+                    type="text"
+                    required={true}
                   />
                 </View>
                 <Spacer height={4} />
                 <View style={styles.elementContainer}>
-                  <Label text="IBA Code Valid Till" style={styles.label} />
+                  <Label
+                    text="IBA Code Valid Till"
+                    style={styles.label}
+                    required={true}
+                  />
                   <DatePickerComponent
                     onDateSelect={handleIbaCodeValidTillDate}
                     style={{width: '100%'}}
@@ -519,7 +556,7 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
             )}
             <Spacer height={4} />
             <View style={styles.elementContainer}>
-              <Label text="Company Type" style={styles.label} />
+              <Label text="Company Type" style={styles.label} required={true} />
               <DropdownComponent
                 data={companyTypeOptions}
                 onSelect={handleCompanyTypeSelectChange}
@@ -528,7 +565,11 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
-              <Label text={documentTypeLabel} style={styles.label} />
+              <Label
+                text={documentTypeLabel}
+                style={styles.label}
+                required={true}
+              />
               <Input
                 onChangeText={handleDocumentChange}
                 containerStyle={styles.inputContainer}
@@ -537,6 +578,8 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
                 value={state.document}
                 error={state.errors.document}
                 placeholder="Enter document number"
+                type="text"
+                required={true}
               />
             </View>
           </View>
@@ -557,7 +600,7 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
         </View>
         <View style={styles.nextButtonContainer}>
           <Button
-            text='Submit'
+            text="Submit"
             onPress={handleNextClick}
             style={styles.buttonStyle}
             textStyle={styles.buttonTextStyle}
