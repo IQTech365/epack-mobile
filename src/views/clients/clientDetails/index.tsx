@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {View, Text, FlatList} from 'react-native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Header from '../../../common/Header';
 import Spacer from '../../../common/Spacer';
 import styles from './style';
@@ -8,8 +9,11 @@ import Tab from '../../../common/Tab';
 import ClientInfoView from './components/ClientInfoView';
 import ContactDetailsView from './components/ContactDetailsView';
 import ShiftingDetailsView from './components/ShiftingDetailsView';
+import { ClientStackParamList } from '../../../navigation/params/CientDtackParamList';
 
-const ClientDetailsView: React.FC<{}> = ({}) => {
+type Props = NativeStackScreenProps<ClientStackParamList, 'ClientDetails'>;
+const ClientDetailsView: React.FC<Props> = ({route}) => {
+    const item: any  = route.params?.item;
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
 
   const handleTabChange = (index: number) => {
@@ -19,7 +23,7 @@ const ClientDetailsView: React.FC<{}> = ({}) => {
   const showTabItem = () => {
     switch (activeTabIndex) {
       case 0:
-        return <ContactDetailsView />
+        return <ContactDetailsView  item = {item}/>
       case 1:
         return <ShiftingDetailsView />
       default:
