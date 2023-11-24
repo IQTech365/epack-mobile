@@ -68,7 +68,7 @@ const Input: React.FC<InputProps> = ({
       case 'email':
         if (!required && Validator.isEmpty(text)) {
           setValidationError('');
-        } else if (!Validator.mobile(text)) {
+        } else if (!Validator.email(text)) {
           setValidationError('Invalid email');
         } else {
           setValidationError('');

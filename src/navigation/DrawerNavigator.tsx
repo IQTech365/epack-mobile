@@ -46,19 +46,13 @@ import { ICompanyInfoData } from '../interface/companyRegistration/IGetCompanies
 
 const Drawer = createDrawerNavigator();
 
-// const appUser: IAppUser = {
-//   companyName: 'Gayatri Packers',
-//   usesrId: '1159',
-//   mobile: '+91 9876543210',
-//   email: 'gayatri@gmail.com',
-// };
-
 const DrawerContent = (props: any) => {
   const dispatch = useAppDispatch();
   const authContext = useAuthContext();
   const {setLoggedIn} = authContext;
-  const {companies, getCompaniesRequesting} = useAppSelector(state => state.Company);
+  const {companies} = useAppSelector(state => state.Company);
   const {data: companiesData} = companies || {};
+  const {otpData} = useAppSelector(state => state.OTP);
 
   const getFirstCompany = () => {
     let company:ICompanyInfoData | null  = null;
@@ -77,7 +71,7 @@ const DrawerContent = (props: any) => {
   const firstCompany = getFirstCompany();
 
   useEffect(() => {
-    dispatch(getCompaniesRequest(firstCompany?.authId as string));
+    dispatch(getCompaniesRequest(otpData?.data?.id as string));
   }, [dispatch]);
   
   return (
