@@ -71,7 +71,10 @@ const DrawerContent = (props: any) => {
   const firstCompany = getFirstCompany();
 
   useEffect(() => {
-    dispatch(getCompaniesRequest(otpData?.data?.id as string));
+    if(otpData) {
+      const {data = {}} = otpData || {};
+      dispatch(getCompaniesRequest(data?.id as string));
+    }
   }, [dispatch]);
   
   return (
@@ -86,7 +89,8 @@ const DrawerContent = (props: any) => {
             <View style={styles.avatarContainer}>
               {/* <View style={styles.avatar} /> */}
               <Image 
-                 source={{ uri: firstCompany?.companyLogo }}
+                //  source={{ uri: firstCompany?.companyLogo }}
+                source={{uri: 'https://fastly.picsum.photos/id/14/200/200.jpg?hmac=bwQwH7-0RPCqUVkFzd3hFhc6yDfC6_e7vgaKXZ7vFOA'}}
                  resizeMode="center"
                  style={styles.avatar}
                />

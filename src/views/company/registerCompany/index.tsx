@@ -371,10 +371,10 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
     if (states && cities && cityDropdownRef && stateDropwdownRef) {
       //@ts-ignore
       stateDropwdownRef?.current?.setValue(states[0]?.label);
-      handleStateSelectChange(states[0].label);
+      handleStateSelectChange(states[0]?.label);
       //@ts-ignore
       cityDropdownRef?.current?.setValue(cities[0]?.label);
-      handleCitySelectChange(cities[0].label);
+      handleCitySelectChange(cities[0]?.label);
     }
   }, [states, cities]);
 

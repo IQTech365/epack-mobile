@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import { COLOR_BLACK, COLOR_BLUE, COLOR_GRAY, COLOR_GRAY2, COLOR_GRAY3, COLOR_GRAY4, COLOR_WHITE } from '../../../utils/colors';
+import { COLOR_BLACK, COLOR_BLUE, COLOR_ERROR, COLOR_GRAY, COLOR_GRAY2, COLOR_GRAY3, COLOR_GRAY4, COLOR_WHITE } from '../../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -152,6 +152,15 @@ const styles = StyleSheet.create({
         paddingHorizontal: 5,
         marginBottom: 5,
     },
+    loadTypeErrorContainer: {
+        width: width * 0.9,
+        alignSelf: 'center',
+        marginTop: 5,
+    },
+    loadTypeErrorText: {
+        color: COLOR_ERROR,
+        fontSize: 14,
+    }
 });
 
 export default styles;

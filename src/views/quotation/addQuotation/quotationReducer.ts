@@ -315,7 +315,10 @@ export const initialState: IQuotationFormState = {
   insuranceDetails: null,
   storageCharges: null,
   otherCharges: null,
-  otherDetails: null,
+  otherDetails: {easy_access_for_loading_unloading: 'Yes',
+    any_restrcition_for_loading_unloading: 'No',
+    items_got_down_from_balcony: '',
+    any_needs_or_concern: '',},
   errors: {
     shiftingType: '',
     dateOfQuotation: '',
