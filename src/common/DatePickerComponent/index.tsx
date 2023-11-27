@@ -11,6 +11,7 @@ interface IDatePickerProps {
   error?: string | undefined | null;
   showTime?: boolean;
   defaultValue?: Date;
+  mode?: 'date' | 'time' | 'datetime';
 }
 
 const DatePickerComponent: React.FC<IDatePickerProps> = forwardRef(({
@@ -18,7 +19,8 @@ const DatePickerComponent: React.FC<IDatePickerProps> = forwardRef(({
   style,
   error,
   showTime = false,
-  defaultValue
+  defaultValue,
+  mode = 'datetime'
 }, ref) => {
   const [date, setDate] = useState<Date>(new Date());
   const [open, setOpen] = useState<boolean>(false);
@@ -59,6 +61,7 @@ const DatePickerComponent: React.FC<IDatePickerProps> = forwardRef(({
           modal
           open={open}
           date={date}
+          mode={mode}
           onConfirm={date => {
             setOpen(false);
             setDate(date);

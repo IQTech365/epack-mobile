@@ -84,36 +84,6 @@ import {
 import useCompanyId from '../../../hooks/useCompanyId';
 import {Validator} from '../../../utils/validation';
 
-const yesNoOptions1: Array<ICheckboxButton> = [
-  {
-    id: '1',
-    text: 'Yes',
-    fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', width: 16, height: 16},
-    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
-    textStyle: {
-      fontFamily: 'JosefinSans-Regular',
-      textDecorationLine: 'none',
-      fontSize: 14,
-    },
-    style: {paddingRight: 20},
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
-  },
-  {
-    id: '2',
-    text: 'No',
-    fillColor: COLOR_BLUE,
-    iconStyle: {borderColor: 'red', width: 16, height: 16},
-    innerIconStyle: {borderWidth: 1, width: 16, height: 16},
-    textStyle: {
-      fontFamily: 'JosefinSans-Regular',
-      textDecorationLine: 'none',
-      fontSize: 14,
-    },
-    textContainerStyle: {marginLeft: 4, marginRight: 4},
-  },
-];
-
 interface Props
   extends NativeStackScreenProps<QuotationStackParamList, 'AddQuotation'> {
   showHeader?: boolean;
@@ -126,35 +96,20 @@ const AddQuotationView: React.FC<Props> = ({
 }) => {
   const item: IGetQuotationData | undefined = route?.params?.item;
   const isEdit: boolean | undefined = route?.params?.isEdit;
-  // console.log('AddQuotation-Edit-Item----', JSON.stringify(item));
 
   const [switchState, setSwitchState] = useState<boolean>(true);
   const [state, dispatch] = useReducer(quotationReducer, initialState);
-  console.log('QuotationReducer-State--', JSON.stringify(state));
-
-  const [isPartLoad, setIsPartLoad] = useState<boolean>(true);
-  const [isFullLoad, setIsFullLoad] = useState<boolean>(false);
   const [loadTypes, setLoadTypes] = useState<string[]>([loadTypeOptions[0]]);
-  const [isSurchargeApplicable, setIsSurchargeApplicable] =
-    useState<boolean>(false);
-  const [isInsuranceRequired, setIsInsuranceRequired] =
-    useState<boolean>(false);
-  const [discountType, setDiscountType] = useState<string>(
-    discountTypeOptions[2],
-  );
+  const [isSurchargeApplicable, setIsSurchargeApplicable] = useState<boolean>(false);
+  const [isInsuranceRequired, setIsInsuranceRequired] = useState<boolean>(false);
+  const [discountType, setDiscountType] = useState<string>(discountTypeOptions[2]);
   const [packingCharges, setPackingCharges] = useState<string>('Additional');
-  const [packingMaterialCharges, setPackingMaterialCharges] =
-    useState<string>('Additional');
-  const [unpackingCharges, setUnpackingCharges] =
-    useState<string>('Additional');
+  const [packingMaterialCharges, setPackingMaterialCharges] = useState<string>('Additional');
+  const [unpackingCharges, setUnpackingCharges] = useState<string>('Additional');
   const [loadingCharges, setLoadingCharges] = useState<string>('Additional');
-  const [unloadingCharges, setUnloadingCharges] =
-    useState<string>('Additional');
+  const [unloadingCharges, setUnloadingCharges] = useState<string>('Additional');
   const [gstInQuotation, setGstInQuotation] = useState<string>(GSTOptions[3]);
-  const [pincodeRequestKey, setPincodeRequestKey] =
-    useState<PINCODE_REQUEST_KEY>(
-      PINCODE_REQUEST_KEY.ADD_QUOTATION_PICKUP_ADDRESS,
-    );
+  const [pincodeRequestKey, setPincodeRequestKey] = useState<PINCODE_REQUEST_KEY>(PINCODE_REQUEST_KEY.ADD_QUOTATION_PICKUP_ADDRESS);
   const [pickupStates, setPickupStates] = useState<TDropdownItem[]>([]);
   const [pickupCities, setPickupCities] = useState<TDropdownItem[]>([]);
   const [deliveryStates, setDeliveryStates] = useState<TDropdownItem[]>([]);
@@ -234,9 +189,7 @@ const AddQuotationView: React.FC<Props> = ({
     resetPincodeError,
   );
 
-  const switchWrapperStyle = switchState
-    ? styles.switchMainWrapper
-    : styles.switchMainWrapper2;
+  const switchWrapperStyle = switchState ? styles.switchMainWrapper : styles.switchMainWrapper2;
 
   const getFreightInputsStyle = () => {
     if (
@@ -310,13 +263,6 @@ const AddQuotationView: React.FC<Props> = ({
   const handleSerialNumberInputTextChange = (text: string) => {
     dispatch({
       type: QUOTATION_FORM_ACTION.SERIAL_NUMBER,
-      payload: text,
-    });
-  };
-
-  const handleCompanyNameInputTextChange = (text: string) => {
-    dispatch({
-      type: QUOTATION_FORM_ACTION.COMPANY_NAME,
       payload: text,
     });
   };
@@ -927,7 +873,6 @@ const AddQuotationView: React.FC<Props> = ({
         payload: otherCharges as unknown as [TOtherCharges],
       });
 
-      setIsPartLoad(isPartLoad == 'true');
       handleFreightPartChargeTextChange(partLoadCharge);
       dispatch({
         type: QUOTATION_FORM_ACTION.PART_LOAD,
@@ -950,7 +895,6 @@ const AddQuotationView: React.FC<Props> = ({
         packagingFullLoadCharges,
       );
 
-      setIsFullLoad(isFullLoad == 'true');
       dispatch({
         type: QUOTATION_FORM_ACTION.FULL_LOAD,
         payload: isFullLoad == 'true',
@@ -1574,11 +1518,11 @@ const AddQuotationView: React.FC<Props> = ({
   useEffect(() => {
     dispatch({
       type: QUOTATION_FORM_ACTION.DATE_OF_QUOTATION,
-      payload: formatDate(new Date()),
+      payload: formatDate4(new Date()),
     });
     dispatch({
-      type: QUOTATION_FORM_ACTION.DATE_OF_QUOTATION,
-      payload: formatDate(new Date()),
+      type: QUOTATION_FORM_ACTION.DATE_OF_MOVING,
+      payload: '',
     });
   }, []);
 
@@ -1586,12 +1530,12 @@ const AddQuotationView: React.FC<Props> = ({
   useEffect(() => {
     if (result && result.Status != 'Error') {
       if (
-        pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_QUOTATION_PICKUP_ADDRESS
+        pincodeRequestKey == PINCODE_REQUEST_KEY.ADD_QUOTATION_PICKUP_ADDRESS
       ) {
         setPickupStates(getStates(result));
         setPickupCities(getCities(result));
       } else if (
-        pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_QUOTATION_DELIVERY_ADDRESS
+        pincodeRequestKey == PINCODE_REQUEST_KEY.ADD_QUOTATION_DELIVERY_ADDRESS
       ) {
         setDeliveryStates(getStates(result));
         setDeliveryCities(getCities(result));
@@ -1601,11 +1545,11 @@ const AddQuotationView: React.FC<Props> = ({
 
   useEffect(() => {
     if (
-      pickupStates &&
-      pickupCities &&
-      pickupCityDropdownRef &&
+      pickupStates.length > 0 &&
+      pickupCities.length > 0 &&
       pickupStateDropwdownRef &&
-      pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_ENQUIRY_PICKUP_ADDRESS
+      pickupCityDropdownRef &&
+      pincodeRequestKey == PINCODE_REQUEST_KEY.ADD_QUOTATION_PICKUP_ADDRESS
     ) {
       //@ts-ignore
       pickupStateDropwdownRef?.current?.setValue(pickupStates[0]?.label);
@@ -1616,11 +1560,11 @@ const AddQuotationView: React.FC<Props> = ({
 
   useEffect(() => {
     if (
-      deliveryStates &&
-      deliveryCities &&
+      deliveryStates.length > 0 &&
+      deliveryCities.length > 0 &&
       dropStateDropdownRef &&
       dropCityDropdownRef &&
-      pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_ENQUIRY_DELIVERY_ADDRESS
+      pincodeRequestKey == PINCODE_REQUEST_KEY.ADD_QUOTATION_DELIVERY_ADDRESS
     ) {
       //@ts-ignore
       dropStateDropdownRef?.current?.setValue(deliveryStates[0]?.label);
@@ -1948,6 +1892,9 @@ const AddQuotationView: React.FC<Props> = ({
     if (!state.deliveryPincode) {
       errors.dropPincode = 'Drop Pincode required';
     }
+    // if(!state.serialNumber) {
+    //   errors.quotationNumber = 'Quotation number required';
+    // }
     setErrors(errors);
     setIsFormValid(Object.keys(errors).length === 0);
   };
@@ -2320,7 +2267,7 @@ const AddQuotationView: React.FC<Props> = ({
                       <Label text="Part Load" style={styles.label} />
                       <Input
                         onChangeText={(text: string) => {
-                          handlePackingChargeChange(text, '0');
+                          handlePackingChargeChange(text, state.packingCharges?.full_load_charge);
                         }}
                         containerStyle={styles.inputContainer}
                         inputStyle={styles.input}
@@ -2337,7 +2284,7 @@ const AddQuotationView: React.FC<Props> = ({
                       <Label text="Full Load" style={styles.label} />
                       <Input
                         onChangeText={(text: string) => {
-                          handlePackingChargeChange('0', text);
+                          handlePackingChargeChange(state.packingCharges?.part_load_charge, text);
                         }}
                         containerStyle={styles.inputContainer}
                         inputStyle={styles.input}
@@ -2402,7 +2349,7 @@ const AddQuotationView: React.FC<Props> = ({
                       <Label text="Part Load" style={styles.label} />
                       <Input
                         onChangeText={(text: string) => {
-                          handlePackingMaterialChargeChange(text, '0');
+                          handlePackingMaterialChargeChange(text, state.packingMaterialCharges?.full_load_charge);
                         }}
                         containerStyle={styles.inputContainer}
                         inputStyle={styles.input}
@@ -2419,7 +2366,7 @@ const AddQuotationView: React.FC<Props> = ({
                       <Label text="Full Load" style={styles.label} />
                       <Input
                         onChangeText={(text: string) => {
-                          handlePackingMaterialChargeChange('0', text);
+                          handlePackingMaterialChargeChange(state.packingMaterialCharges?.part_load_charge, text);
                         }}
                         containerStyle={styles.inputContainer}
                         inputStyle={styles.input}
@@ -2485,7 +2432,7 @@ const AddQuotationView: React.FC<Props> = ({
                           <Label text="Part Load" style={styles.label} />
                           <Input
                             onChangeText={(text: string) => {
-                              handleLoadingCharges(text, '0');
+                              handleLoadingCharges(text, state.loadingCharges?.full_load_charge);
                             }}
                             containerStyle={styles.inputContainer}
                             inputStyle={styles.input}
@@ -2505,7 +2452,7 @@ const AddQuotationView: React.FC<Props> = ({
                           <Label text="Full Load" style={styles.label} />
                           <Input
                             onChangeText={(text: string) => {
-                              handleLoadingCharges('0', text);
+                              handleLoadingCharges(state.loadingCharges?.part_load_charge, text);
                             }}
                             containerStyle={styles.inputContainer}
                             inputStyle={styles.input}
@@ -2575,7 +2522,7 @@ const AddQuotationView: React.FC<Props> = ({
                           <Label text="Part Load" style={styles.label} />
                           <Input
                             onChangeText={(text: string) => {
-                              handleUnLoadingCharges(text, '0');
+                              handleUnLoadingCharges(text, state.unLoadingCharges?.full_load_charge);
                             }}
                             containerStyle={styles.inputContainer}
                             inputStyle={styles.input}
@@ -2595,7 +2542,7 @@ const AddQuotationView: React.FC<Props> = ({
                           <Label text="Full Load" style={styles.label} />
                           <Input
                             onChangeText={(text: string) => {
-                              handleUnLoadingCharges('0', text);
+                              handleUnLoadingCharges(state.unLoadingCharges?.part_load_charge, text);
                             }}
                             containerStyle={styles.inputContainer}
                             inputStyle={styles.input}
@@ -2658,7 +2605,7 @@ const AddQuotationView: React.FC<Props> = ({
                       <Label text="Part Load" style={styles.label} />
                       <Input
                         onChangeText={(text: string) => {
-                          handleUnPackingCharges(text, '0');
+                          handleUnPackingCharges(text, state.unPackingCharges?.full_load_charge);
                         }}
                         containerStyle={styles.inputContainer}
                         inputStyle={styles.input}
@@ -2675,7 +2622,7 @@ const AddQuotationView: React.FC<Props> = ({
                       <Label text="Full Load" style={styles.label} />
                       <Input
                         onChangeText={(text: string) => {
-                          handleUnPackingCharges('0', text);
+                          handleUnPackingCharges(state.unPackingCharges?.part_load_charge, text);
                         }}
                         containerStyle={styles.inputContainer}
                         inputStyle={styles.input}
