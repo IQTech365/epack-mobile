@@ -1,12 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import {
-  COLOR_BLACK,
-  COLOR_BLUE,
-  COLOR_GRAY,
-  COLOR_GRAY2,
-  COLOR_ORANGE,
-  COLOR_WHITE,
-} from '../../../utils/colors';
+import {COLOR_BLUE, COLOR_WHITE} from '../../../utils/colors';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
@@ -14,11 +7,11 @@ const styles = StyleSheet.create({
   cardWrapper: {
     borderRadius: 8,
     alignItems: 'center',
-    
+    backgroundColor: COLOR_WHITE,
   },
   container: {
-    width: width * 0.42,
-    height:height*0.2,
+    width: width * 0.46,
+    height: width * 0.46,
     padding: 5,
     alignSelf: 'center',
     alignItems: 'center',
@@ -29,20 +22,21 @@ const styles = StyleSheet.create({
     width: 72,
     height: 72,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   cardTitleText: {
     fontSize: 16,
-    fontWeight: '500',
-    color: COLOR_BLACK,
+    fontWeight: '600',
+    color: COLOR_BLUE,
     zIndex: 999,
+    marginTop: 10,
   },
   gearContainer: {
     position: 'absolute',
     width: 72,
     height: 72,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
 });
 

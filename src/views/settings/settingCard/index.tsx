@@ -1,10 +1,10 @@
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import {Shadow} from 'react-native-shadow-2';
-import { COLOR_ORANGE2, COLOR_PINK, COLOR_PURPLE, COLOR_YELLOW } from '../../../utils/colors';
+import { COLOR_WHITE } from '../../../utils/colors';
 import styles from './style';
 import ProfileIcon from '../../../images/icons/card_user_icon.svg';
-import SerialNoIcon from '../../../images/icons/card_role_icon.svg';
+import SerialNoIcon from '../../../images/icons/card_serial_no_icon.svg';
 import TemplateIcon from '../../../images/icons/card_template_icon.svg';
 import RoleIcon from '../../../images/icons/card_role_icon.svg';
 
@@ -29,16 +29,16 @@ const SettingCard: React.FC<ISettingCardProps> = ({
     let bgColor = {};
     switch (cardName) {
       case 'Profile':
-        bgColor = {backgroundColor: COLOR_PURPLE};
+        bgColor = {backgroundColor: COLOR_WHITE};
         break;
       case 'SerialNo':
-        bgColor = {backgroundColor: COLOR_PINK};
+        bgColor = {backgroundColor: COLOR_WHITE};
         break;
       case 'Template':
-        bgColor = {backgroundColor: COLOR_ORANGE2};
+        bgColor = {backgroundColor: COLOR_WHITE};
         break;
       case 'Role':
-        bgColor = {backgroundColor: COLOR_YELLOW};
+        bgColor = {backgroundColor: COLOR_WHITE};
         break;
       default:
         break;
@@ -105,7 +105,7 @@ const SettingCard: React.FC<ISettingCardProps> = ({
   };
 
   return (
-    <Shadow style={[styles.cardWrapper, getCardBackgroundColor()]} distance={4} startColor="#D9D9D9">
+    <Shadow style={[styles.cardWrapper, getCardBackgroundColor()]} distance={1} startColor="#D9D9D9">
       <TouchableOpacity
         style={styles.container}
         activeOpacity={0.6}
