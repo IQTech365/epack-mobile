@@ -23,10 +23,11 @@ import { formatDate, formatDate3 } from '../../../../../utils/formatter';
 import Button from '../../../../../common/Button';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import { ICreateMoneyReceiptRequest } from '../../../../../interface/order/ICreateMoneyReceiptRequest';
-import { createMoneyReceiptRequest, editMoneyReceiptListRequest } from '../../../../../redux/slices/OrderSlice';
+import { createMoneyReceiptRequest, editMoneyReceiptListRequest, resetCreateMoneyReceiptRequest } from '../../../../../redux/slices/OrderSlice';
 import Spinner from '../../../../../common/Spinner';
 import Toast from 'react-native-toast-message';
 import useCompanyId from '../../../../../hooks/useCompanyId';
+import useAuthId from '../../../../../hooks/useAuthId';
 
 interface IMoneyReceiptFormViewProps {
   orderId: string | undefined;
@@ -51,12 +52,14 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({ orderId, e
     editMoneyReceiptListError
   } = useAppSelector(state => state.Order);
   const companyId = useCompanyId();
+  const authId = useAuthId();
 
   const dispatch2 = useAppDispatch();
   const handleReceiptDate = (date: Date) => {
+    console.log('receipt-date---', date.toISOString());
     dispatch({
       type: MONEYRECEIPT_FORM_ACTION.RECEIPT_DATE,
-      payload: formatDate(date),
+      payload: date.toISOString(),
     });
   };
 
@@ -125,7 +128,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({ orderId, e
   const handleArivalDate = (date: Date) => {
     dispatch({
       type: MONEYRECEIPT_FORM_ACTION.DATE_OF_ARRIVAL,
-      payload: formatDate3(date),
+      payload: formatDate(date),
     });
   };
   const handleTemplate = (item: TDropdownItem) => {
@@ -143,17 +146,17 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({ orderId, e
       receiptDate: reducerState.receiptDate,
       arivalDate: reducerState.arivalDate,
       templateId: '12121124232323',
-      receiptAgainst: reducerState.receiptAgainst,
+      receiptAgainst: reducerState.receiptAgainst || receiptAgainstOptions[0].label,
       billNumber: reducerState.billQuotationNo,
       quotationNumber: reducerState.billQuotationNo,
       consignmentNumber: '',
       numbersOfArticles: reducerState.numbersOfArticles,
-      paymentMode: reducerState.paymentMode,
-      paymentType: reducerState.paymentType,
+      paymentMode: reducerState.paymentMode || modeOfPaymentOptions[0].label,
+      paymentType: reducerState.paymentType || paymentTypeOptions[0].label,
       paymentAmount: reducerState.paymentAmount,
       referenceNumber: reducerState.referenceNumber,
       status: 'NEW',
-      addedBy: '12121131131121',
+      addedBy: authId,
     };
 
     const editPayload: any = {
@@ -189,6 +192,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({ orderId, e
         text1: `${isEdit ? 'Updated Money Receipt' : 'Money Receipt'}`,
         text2: 'Money Receipt has been added successfully',
       });
+      dispatch2(resetCreateMoneyReceiptRequest());
     } else if ((!createMoneyReceiptRequesting && createMoneyReceiptError)||
     (!editMoneyReceiptListRequesting && editMoneyReceiptListSuccess)) {
       Toast.show({
@@ -196,6 +200,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({ orderId, e
         text1: `${isEdit ? 'Updated Money Receipt' : 'Money Receipt'}`,
         text2: 'Error in adding Money Receipt. Please try again!',
       });
+      dispatch2(resetCreateMoneyReceiptRequest());
     }
   }, [
     createMoneyReceiptRequesting,

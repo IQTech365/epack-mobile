@@ -4,7 +4,7 @@ import Collapsible from 'react-native-collapsible';
 import style from './style';
 import DownArrowIcon from '../../images/icons/down-arrow.svg';
 import UpArrowIcon from '../../images/icons/up-arrow.svg';
-import CreateIcon from '../../images/icons/create_icon2.svg';
+import EditIcon from '../../images/icons/edit_icon.svg';
 import Spacer from '../Spacer';
 
 
@@ -33,7 +33,7 @@ const CollapsibleView: React.FC<IContactDetailsVProps> = ({children, title, coll
             <Text style={style.headerText}>{title}</Text>
             <Spacer width={10} />
             {isEdit ? <TouchableOpacity onPress={onEditPress}>
-              <CreateIcon width={30} height={30} />
+              <EditIcon width={22} height={22} />
             </TouchableOpacity> : null}
           </View>
           {isCollapsed ? <DownArrowIcon width={22} height={22} /> : <UpArrowIcon width={22} height={22} />}

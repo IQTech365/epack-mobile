@@ -7,6 +7,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     alignSelf: 'center',
+    width: width * 0.94
   },
   badgeWrapper: {
     flexDirection: 'row',
@@ -33,7 +34,7 @@ const styles = StyleSheet.create({
     marginLeft: 8
   },
   container: {
-    width: width * 0.90,
+    width: '90%',
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',
@@ -75,8 +76,6 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       justifyContent: 'space-between',
       paddingVertical: 4,
-      paddingHorizontal: 8,
-      padding: 6,
   },
   rowItemContainer: {
     width: '40%',

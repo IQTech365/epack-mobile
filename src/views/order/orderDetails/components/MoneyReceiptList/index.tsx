@@ -54,7 +54,7 @@ const AddMoneyReceiptListItem: React.FC<IAddMoneyReceiptListItemProps> = ({
     return (
         <Shadow style={styles.cardWrapper} distance={8}>
             <TouchableOpacity
-                styles={styles.container}
+                style={styles.container}
                 activeOpacity={0.6}
             >
                 <Spacer height={6} />
