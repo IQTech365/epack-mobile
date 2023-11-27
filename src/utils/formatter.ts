@@ -19,6 +19,10 @@ export const formatDate4 = (date: Date): string => {
   return moment(date).format('MM-DD-YYYY');
 };
 
+export const formatDate5 = (date: Date): string => {
+  return moment(date).format('MMMM D YYYY, h:mm a');
+};
+
 export const getStates = (arr: any): TDropdownItem[] => {
   let states: TDropdownItem[] = [{label: '', value: ''}];
   const {PostOffice} = arr || {};
@@ -80,4 +84,12 @@ export const getLocalities = (arr: any): string[] => {
     const date1:any = new Date(a)
     const date2:any = new Date(b)
     return date2 - date1;
+  }
+
+  export const formatPrice = (price:string) => {
+    let amount:string|undefined = undefined;
+    if(price) {
+      amount = parseFloat(price).toFixed(2);
+    }
+    return amount ? `₹ ${amount}` : amount;
   }

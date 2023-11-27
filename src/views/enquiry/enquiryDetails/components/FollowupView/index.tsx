@@ -82,9 +82,11 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
           <FlatList
           //@ts-ignore
           data={getDataSet()}
+          showsVerticalScrollIndicator={false}
           renderItem={({item, index}) => taskData == 'SURVEY ITEM'?(
             <SurveyItemListView
             item={item}
+            index={index}
           />
           ): (
             <FollowupListItem

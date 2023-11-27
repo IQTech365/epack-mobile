@@ -24,16 +24,16 @@ const styles = StyleSheet.create({
   avatarContainer: {
     width: '10%',
   },
-  avatar: {
-    width: 30,
-    height: 30,
-    backgroundColor: COLOR_GRAY,
-    borderRadius: 15,
+  surveyDateAndNumberContainer: {
+    width: width * 0.9,
+    paddingVertical: 9,
+    paddingHorizontal: 12,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    alignSelf: 'center',
   },
   rightContentContainer: {
-    width: '90%',
+    width: '100%',
     paddingLeft: 10,
   },
   labelContainer: {
@@ -63,6 +63,11 @@ const styles = StyleSheet.create({
   contentLabelText: {
     color: COLOR_GRAY,
     fontSize: 14,
+  },
+  contentLabelText2: {
+    color: COLOR_GRAY,
+    fontSize: 14,
+    fontWeight: '500',
   },
   nameText: {
     color: COLOR_BLUE,
