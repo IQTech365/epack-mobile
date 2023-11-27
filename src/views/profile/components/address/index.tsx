@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {Text, View, TouchableOpacity} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../../common/Spacer';
@@ -9,16 +9,19 @@ import Header from '../../../../common/Header';
 import ModalHOC from '../../../../common/ModalHOC';
 import Toast from 'react-native-toast-message';
 import UpdateComanyAddressForm from './Form/UpdateComanyAddressForm';
-import { useAppSelector } from '../../../../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
 import { ICompanyInfoData } from '../../../../interface/companyRegistration/IGetCompaniesResponse';
+import Spinner from '../../../../common/Spinner';
+import { getCompaniesRequest } from '../../../../redux/slices/CompanySlice';
 interface IAddressViewProps {
   showEditIcon?: boolean;
 }
 
 const AddressView: React.FC<IAddressViewProps> = ({showEditIcon = true}) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const {companies} = useAppSelector(state => state.Company);
+  const {companies, getCompaniesRequesting} = useAppSelector(state => state.Company);
   const {data: companiesData} = companies || {};
+  const dispatch = useAppDispatch();
 
   const getFirstCompany = () => {
     let company:ICompanyInfoData | null  = null;
@@ -36,7 +39,11 @@ const AddressView: React.FC<IAddressViewProps> = ({showEditIcon = true}) => {
 
   const handleModalClose = () => {
     setOpenModal(false);
+    dispatch(getCompaniesRequest(firstCompany?.authId as string));
   };
+  useEffect(() => {
+    dispatch(getCompaniesRequest(firstCompany?.authId as string));
+  }, [dispatch]);
 
   return (
     <AvoidSoftInputViewHOC>
@@ -69,6 +76,7 @@ const AddressView: React.FC<IAddressViewProps> = ({showEditIcon = true}) => {
             <Toast />
           </>
         </ModalHOC>
+        <Spinner show={getCompaniesRequesting} />
       </View>
     </AvoidSoftInputViewHOC>
   );
