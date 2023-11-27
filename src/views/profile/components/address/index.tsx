@@ -4,7 +4,7 @@ import AvoidSoftInputViewHOC from '../../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../../common/Spacer';
 import EnquiryDetailListItem from '../../../enquiry/enquiryDetails/components/EnquiryDetailListItem';
 import styles from './style';
-import EditIcon from '../../../../images/icons/edit.svg';
+import EditIcon from '../../../../images/icons/edit_icon.svg';
 import Header from '../../../../common/Header';
 import ModalHOC from '../../../../common/ModalHOC';
 import Toast from 'react-native-toast-message';
@@ -70,7 +70,7 @@ const AddressView: React.FC<IAddressViewProps> = ({showEditIcon = true}) => {
         <ModalHOC
           visible={openModal}
           onClose={handleModalClose}
-          title="Update Company Address">
+          title="UPDATE COMPANY ADDRESS">
           <>
             <UpdateComanyAddressForm />
             <Toast />

@@ -4,7 +4,7 @@ import AvoidSoftInputViewHOC from '../../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../../common/Spacer';
 import EnquiryDetailListItem from '../../../enquiry/enquiryDetails/components/EnquiryDetailListItem';
 import styles from './style';
-import EditIcon from '../../../../images/icons/edit.svg';
+import EditIcon from '../../../../images/icons/edit_icon.svg';
 import Header from '../../../../common/Header';
 import {useAppDispatch, useAppSelector} from '../../../../redux/hooks';
 import ModalHOC from '../../../../common/ModalHOC';
@@ -71,7 +71,7 @@ const BasicDetailsView: React.FC<IBasicDetailsViewProps> = ({}) => {
         <ModalHOC
           visible={openModal}
           onClose={handleModalClose}
-          title="Update Company Basic Details">
+          title="UPDATE COMPANY BASIC DETAILS">
           <>
             <UpdateBasicDetailsForm  onClose= {handleModalClose}/>
             <Toast />
