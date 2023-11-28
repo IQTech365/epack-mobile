@@ -98,3 +98,6 @@ export const GET_SERIAL_NO = (company_id) => `/setting/app-setting/company/${com
 
 // Modules
 export const MODULES = `/content-management/module/getAll`;
+
+//Unit Type
+export const GET_UNIT_TYPES = `/setting/unit-type/all`;

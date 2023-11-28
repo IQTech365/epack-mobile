@@ -17,6 +17,8 @@ import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import { addPackingMaterialRequest, resetPackingMaterialRequest } from '../../../../../redux/slices/EnquirySlice';
 import { PACKING_MATERIAL_FORM_ACTION, initialState, packingMaterialReducer } from './packingMaterialReducer';
 import Spinner from '../../../../../common/Spinner';
+import { getUnitTypeRequest } from '../../../../../redux/slices/ProfileSettingSlice';
+import EpackDropdown from '../../../../../common/DropdownComponent2';
 
 interface packingitems {
     name: string,
@@ -34,12 +36,19 @@ const PackingMaterialsView: React.FC<packingMaterialprop> = ({ enquiryId }) => {
     const [items, setItems] = useState<packingitems[]>([]);
     const [itemIndex, setItemIndex] = useState<number>(0);
     const { addPackingMaterialsRequesting, addPackingMaterialsSuccess, addPackingMaterialsFailure } = useAppSelector(state => state.Enquiry);
+    const { unitType } = useAppSelector(state => state.Setting);
+    const { data: UnitypeData } = unitType;
 
+ const unityTypeArray = ()=>{
+  return  UnitypeData.map((item: { unitType: any; }) => item.unitType)
+ }
 
+ 
 
     const dispatch2 = useAppDispatch();
     /** Effects */
     useEffect(() => {
+        dispatch2(getUnitTypeRequest());
         if (!addPackingMaterialsRequesting && addPackingMaterialsSuccess) {
             Toast.show({
                 type: 'success',
@@ -55,106 +64,106 @@ const PackingMaterialsView: React.FC<packingMaterialprop> = ({ enquiryId }) => {
             });
             dispatch2(resetPackingMaterialRequest());
         }
-    }, [addPackingMaterialsRequesting, addPackingMaterialsSuccess, addPackingMaterialsFailure]);
+    }, [addPackingMaterialsRequesting, addPackingMaterialsSuccess, addPackingMaterialsFailure, dispatch2]);
 
     const handleLorryType = (item: TDropdownItem) => { };
 
-    const handlOtherType = (item: TDropdownItem) => {
+    const handlOtherType = (item: string) => {
         const updatedItems = [...items];
-        updatedItems[itemIndex].type = item.label;
+        updatedItems[itemIndex].type = item;
         setItems(updatedItems);
 
     };
-    const handleLabourType = (item: TDropdownItem) => {
-        state.Labour.type = item.label;
+    const handleLabourType = (item: string) => {
+        state.Labour.type = item;
         dispatch({
             type: PACKING_MATERIAL_FORM_ACTION.LABOUR,
             payload: state.Labour,
         });
     };
 
-    const handlePackingTapeType = (item: TDropdownItem) => {
-        state.packingTape.type = item.label;
+    const handlePackingTapeType = (item: string) => {
+        state.packingTape.type = item;
         dispatch({
             type: PACKING_MATERIAL_FORM_ACTION.PAKING_TAPES,
             payload: state.packingTape,
         });
 
     };
-    const handleBubbleWrapesType = (item: TDropdownItem) => {
-        state.BubbleWrapes.type = item.label;
+    const handleBubbleWrapesType = (item:string) => {
+        state.BubbleWrapes.type = item;
         dispatch({
             type: PACKING_MATERIAL_FORM_ACTION.BUBBLE_WRAPES,
             payload: state.BubbleWrapes,
         });
 
     };
-    const handleCorrugateSheetType = (item: TDropdownItem) => {
-        state.CorrugateSheet.type = item.label;
+    const handleCorrugateSheetType = (item:string) => {
+        state.CorrugateSheet.type = item;
         dispatch({
             type: PACKING_MATERIAL_FORM_ACTION.CORRUGATE_SHEET,
             payload: state.CorrugateSheet,
         });
 
     };
-    const handleWaterproofLaminationType = (item: TDropdownItem) => {
-        state.WaterproofLamination.type = item.label;
+    const handleWaterproofLaminationType = (item: string) => {
+        state.WaterproofLamination.type = item;
         dispatch({
             type: PACKING_MATERIAL_FORM_ACTION.WATERPROOF_LAMINATION,
             payload: state.WaterproofLamination,
         });
 
     };
-    const handleThermocolType = (item: TDropdownItem) => {
-        state.Thermocol.type = item.label;
+    const handleThermocolType = (item: string) => {
+        state.Thermocol.type = item;
         dispatch({
             type: PACKING_MATERIAL_FORM_ACTION.THERMOCOL,
             payload: state.Thermocol,
         });
 
     };
-    const handleCartonBoxesType = (item: TDropdownItem) => {
-        state.CartonBoxes.type = item.label;
+    const handleCartonBoxesType = (item: string) => {
+        state.CartonBoxes.type = item;
         dispatch({
             type: PACKING_MATERIAL_FORM_ACTION.CARTON_BOXES,
             payload: state.CartonBoxes,
         });
 
     };
-    const handleAirBubbleType = (item: TDropdownItem) => {
-        state.AirBubble.type = item.label;
+    const handleAirBubbleType = (item: string) => {
+        state.AirBubble.type = item;
         dispatch({
             type: PACKING_MATERIAL_FORM_ACTION.AIR_BUBBLE,
             payload: state.AirBubble,
         });
 
     };
-    const handleNewPaperType = (item: TDropdownItem) => {
-        state.NewPaper.type = item.label;
+    const handleNewPaperType = (item: string) => {
+        state.NewPaper.type = item;
         dispatch({
             type: PACKING_MATERIAL_FORM_ACTION.NEW_PAPER,
             payload: state.NewPaper,
         });
 
     };
-    const handleFoamsheetType = (item: TDropdownItem) => {
-        state.Foamsheet.type = item.label;
+    const handleFoamsheetType = (item: string) => {
+        state.Foamsheet.type = item;
         dispatch({
             type: PACKING_MATERIAL_FORM_ACTION.FOAM_SHEET,
             payload: state.Foamsheet,
         });
 
     };
-    const handlePlasticCarateType = (item: TDropdownItem) => {
-        state.PlasticCarate.type = item.label;
+    const handlePlasticCarateType = (item: string) => {
+        state.PlasticCarate.type = item;
         dispatch({
             type: PACKING_MATERIAL_FORM_ACTION.PLASTIC_CARATE,
             payload: state.PlasticCarate,
         });
 
     };
-    const handleWoodenFrameType = (item: TDropdownItem) => {
-        state.WoodenFrame.type = item.label;
+    const handleWoodenFrameType = (item: string) => {
+        state.WoodenFrame.type = item;
         dispatch({
             type: PACKING_MATERIAL_FORM_ACTION.WOODEN_FRAME,
             payload: state.WoodenFrame,
@@ -164,179 +173,179 @@ const PackingMaterialsView: React.FC<packingMaterialprop> = ({ enquiryId }) => {
 
 
 
-    const handleCounter = (event: string, count:string) => {
+    const handleCounter = (event: string, count: string) => {
         switch (event) {
             case 'Labour':
                 let quantityLabourAsNumber = parseInt(state.Labour.quantity);
-                    let labour: packingitems = {
-                        name: event,
-                        quantity: (quantityLabourAsNumber > 0) && count=='decrement'?(quantityLabourAsNumber - 1).toString():
-                        count=='increment'?(quantityLabourAsNumber + 1).toString():quantityLabourAsNumber.toString(),
-                        type: '1'
-                    }         
-                    dispatch({
-                        type: PACKING_MATERIAL_FORM_ACTION.LABOUR,
-                        payload: labour,
-                    });
-                
+                let labour: packingitems = {
+                    name: event,
+                    quantity: (quantityLabourAsNumber > 0) && count == 'decrement' ? (quantityLabourAsNumber - 1).toString() :
+                        count == 'increment' ? (quantityLabourAsNumber + 1).toString() : quantityLabourAsNumber.toString(),
+                    type: '1'
+                }
+                dispatch({
+                    type: PACKING_MATERIAL_FORM_ACTION.LABOUR,
+                    payload: labour,
+                });
+
                 break;
             case 'Packing Tapes':
                 let quantityPackingAsNumber = parseInt(state.packingTape.quantity);
-               
-                    let packingTape: packingitems = {
-                        name: event,
-                        quantity: (quantityPackingAsNumber > 0) && count=='decrement'?(quantityPackingAsNumber - 1).toString():
-                        count=='increment'?(quantityPackingAsNumber + 1).toString():quantityPackingAsNumber.toString(),
-                        type: '1'
-                    }
-                    dispatch({
-                        type: PACKING_MATERIAL_FORM_ACTION.PAKING_TAPES,
-                        payload: packingTape,
-                    });
-               
+
+                let packingTape: packingitems = {
+                    name: event,
+                    quantity: (quantityPackingAsNumber > 0) && count == 'decrement' ? (quantityPackingAsNumber - 1).toString() :
+                        count == 'increment' ? (quantityPackingAsNumber + 1).toString() : quantityPackingAsNumber.toString(),
+                    type: '1'
+                }
+                dispatch({
+                    type: PACKING_MATERIAL_FORM_ACTION.PAKING_TAPES,
+                    payload: packingTape,
+                });
+
                 break;
             case 'BubbleWrapes':
                 let quantityBubbleWrapesAsNumber = parseInt(state.BubbleWrapes.quantity);
-                    let bubbleWrapes: packingitems = {
-                        name: event,
-                        quantity: (quantityBubbleWrapesAsNumber > 0) && count=='decrement'?(quantityBubbleWrapesAsNumber - 1).toString():
-                        count=='increment'?(quantityBubbleWrapesAsNumber + 1).toString():quantityBubbleWrapesAsNumber.toString(),
-                        type: '1'
-                    }
-                    dispatch({
-                        type: PACKING_MATERIAL_FORM_ACTION.BUBBLE_WRAPES,
-                        payload: bubbleWrapes,
-                    });
-                
+                let bubbleWrapes: packingitems = {
+                    name: event,
+                    quantity: (quantityBubbleWrapesAsNumber > 0) && count == 'decrement' ? (quantityBubbleWrapesAsNumber - 1).toString() :
+                        count == 'increment' ? (quantityBubbleWrapesAsNumber + 1).toString() : quantityBubbleWrapesAsNumber.toString(),
+                    type: '1'
+                }
+                dispatch({
+                    type: PACKING_MATERIAL_FORM_ACTION.BUBBLE_WRAPES,
+                    payload: bubbleWrapes,
+                });
+
                 break;
             case 'CorrugateSheet':
                 let quantityCorrugateSheetAsNumber = parseInt(state.CorrugateSheet.quantity);
-                    let corrugateSheet: packingitems = {
-                        name: event,
-                        quantity: (quantityCorrugateSheetAsNumber > 0) && count=='decrement'?(quantityCorrugateSheetAsNumber - 1).toString():
-                        count=='increment'?(quantityCorrugateSheetAsNumber + 1).toString():quantityCorrugateSheetAsNumber.toString(),
-                        type: '1'
-                    }
-                    dispatch({
-                        type: PACKING_MATERIAL_FORM_ACTION.CORRUGATE_SHEET,
-                        payload: corrugateSheet,
-                    });
-                
+                let corrugateSheet: packingitems = {
+                    name: event,
+                    quantity: (quantityCorrugateSheetAsNumber > 0) && count == 'decrement' ? (quantityCorrugateSheetAsNumber - 1).toString() :
+                        count == 'increment' ? (quantityCorrugateSheetAsNumber + 1).toString() : quantityCorrugateSheetAsNumber.toString(),
+                    type: '1'
+                }
+                dispatch({
+                    type: PACKING_MATERIAL_FORM_ACTION.CORRUGATE_SHEET,
+                    payload: corrugateSheet,
+                });
+
                 break;
             case 'WaterproofLamination':
                 let quantityWaterproofLaminationAsNumber = parseInt(state.WaterproofLamination.quantity);
-                    let waterproofLamination: packingitems = {
-                        name: event,
-                        quantity: (quantityWaterproofLaminationAsNumber > 0) && count=='decrement'?(quantityWaterproofLaminationAsNumber - 1).toString():
-                        count=='increment'?(quantityWaterproofLaminationAsNumber + 1).toString():quantityWaterproofLaminationAsNumber.toString(),
-                        type: '1'
-                    }
-                    dispatch({
-                        type: PACKING_MATERIAL_FORM_ACTION.WATERPROOF_LAMINATION,
-                        payload: waterproofLamination,
-                    });
-                
+                let waterproofLamination: packingitems = {
+                    name: event,
+                    quantity: (quantityWaterproofLaminationAsNumber > 0) && count == 'decrement' ? (quantityWaterproofLaminationAsNumber - 1).toString() :
+                        count == 'increment' ? (quantityWaterproofLaminationAsNumber + 1).toString() : quantityWaterproofLaminationAsNumber.toString(),
+                    type: '1'
+                }
+                dispatch({
+                    type: PACKING_MATERIAL_FORM_ACTION.WATERPROOF_LAMINATION,
+                    payload: waterproofLamination,
+                });
+
                 break;
             case 'Thermocol':
                 let quantityThermocolAsNumber = parseInt(state.Thermocol.quantity);
-                    let thermocol: packingitems = {
-                        name: event,
-                        quantity: (quantityThermocolAsNumber > 0) && count=='decrement'?(quantityThermocolAsNumber - 1).toString():
-                        count=='increment'?(quantityThermocolAsNumber + 1).toString():quantityThermocolAsNumber.toString(),
-                        type: '1'
-                    }
-                    dispatch({
-                        type: PACKING_MATERIAL_FORM_ACTION.THERMOCOL,
-                        payload: thermocol,
-                    });
-                
+                let thermocol: packingitems = {
+                    name: event,
+                    quantity: (quantityThermocolAsNumber > 0) && count == 'decrement' ? (quantityThermocolAsNumber - 1).toString() :
+                        count == 'increment' ? (quantityThermocolAsNumber + 1).toString() : quantityThermocolAsNumber.toString(),
+                    type: '1'
+                }
+                dispatch({
+                    type: PACKING_MATERIAL_FORM_ACTION.THERMOCOL,
+                    payload: thermocol,
+                });
+
                 break;
             case 'CartonBoxes':
                 let quantityCartonBoxesAsNumber = parseInt(state.CartonBoxes.quantity);
-              
-                    let cartonBoxes: packingitems = {
-                        name: event,
-                        quantity: (quantityCartonBoxesAsNumber > 0) && count=='decrement'?(quantityCartonBoxesAsNumber - 1).toString():
-                        count=='increment'?(quantityCartonBoxesAsNumber + 1).toString():quantityCartonBoxesAsNumber.toString(),
-                        type: '1'
-                    }
-                    dispatch({
-                        type: PACKING_MATERIAL_FORM_ACTION.CARTON_BOXES,
-                        payload: cartonBoxes,
-                    });
-                
+
+                let cartonBoxes: packingitems = {
+                    name: event,
+                    quantity: (quantityCartonBoxesAsNumber > 0) && count == 'decrement' ? (quantityCartonBoxesAsNumber - 1).toString() :
+                        count == 'increment' ? (quantityCartonBoxesAsNumber + 1).toString() : quantityCartonBoxesAsNumber.toString(),
+                    type: '1'
+                }
+                dispatch({
+                    type: PACKING_MATERIAL_FORM_ACTION.CARTON_BOXES,
+                    payload: cartonBoxes,
+                });
+
                 break;
             case 'AirBubble':
                 let quantityAirBubbleAsNumber = parseInt(state.AirBubble.quantity);
-                    let airBubble: packingitems = {
-                        name: event,
-                        quantity: (quantityAirBubbleAsNumber > 0) && count=='decrement'?(quantityAirBubbleAsNumber - 1).toString():
-                        count=='increment'?(quantityAirBubbleAsNumber + 1).toString():quantityAirBubbleAsNumber.toString(),
-                        type: '1'
-                    }
-                    dispatch({
-                        type: PACKING_MATERIAL_FORM_ACTION.AIR_BUBBLE,
-                        payload: airBubble,
-                    });
-                
+                let airBubble: packingitems = {
+                    name: event,
+                    quantity: (quantityAirBubbleAsNumber > 0) && count == 'decrement' ? (quantityAirBubbleAsNumber - 1).toString() :
+                        count == 'increment' ? (quantityAirBubbleAsNumber + 1).toString() : quantityAirBubbleAsNumber.toString(),
+                    type: '1'
+                }
+                dispatch({
+                    type: PACKING_MATERIAL_FORM_ACTION.AIR_BUBBLE,
+                    payload: airBubble,
+                });
+
                 break;
             case 'NewPaper':
                 let quantityNewPaperAsNumber = parseInt(state.NewPaper.quantity);
-                    let newPaper: packingitems = {
-                        name: event,
-                        quantity: (quantityNewPaperAsNumber > 0) && count=='decrement'?(quantityNewPaperAsNumber - 1).toString():
-                        count=='increment'?(quantityNewPaperAsNumber + 1).toString():quantityNewPaperAsNumber.toString(),
-                        type: '1'
-                    }
-                    dispatch({
-                        type: PACKING_MATERIAL_FORM_ACTION.NEW_PAPER,
-                        payload: newPaper,
-                    });
-                
+                let newPaper: packingitems = {
+                    name: event,
+                    quantity: (quantityNewPaperAsNumber > 0) && count == 'decrement' ? (quantityNewPaperAsNumber - 1).toString() :
+                        count == 'increment' ? (quantityNewPaperAsNumber + 1).toString() : quantityNewPaperAsNumber.toString(),
+                    type: '1'
+                }
+                dispatch({
+                    type: PACKING_MATERIAL_FORM_ACTION.NEW_PAPER,
+                    payload: newPaper,
+                });
+
                 break;
             case 'Foamsheet':
                 let quantityFoamsheetAsNumber = parseInt(state.Foamsheet.quantity);
-               
-                    let foamSheet: packingitems = {
-                        name: event,
-                        quantity: (quantityFoamsheetAsNumber > 0) && count=='decrement'?(quantityFoamsheetAsNumber - 1).toString():
-                        count=='increment'?(quantityFoamsheetAsNumber + 1).toString():quantityFoamsheetAsNumber.toString(),
-                        type: '1'
-                    }
-                    dispatch({
-                        type: PACKING_MATERIAL_FORM_ACTION.FOAM_SHEET,
-                        payload: foamSheet,
-                    });
-                
+
+                let foamSheet: packingitems = {
+                    name: event,
+                    quantity: (quantityFoamsheetAsNumber > 0) && count == 'decrement' ? (quantityFoamsheetAsNumber - 1).toString() :
+                        count == 'increment' ? (quantityFoamsheetAsNumber + 1).toString() : quantityFoamsheetAsNumber.toString(),
+                    type: '1'
+                }
+                dispatch({
+                    type: PACKING_MATERIAL_FORM_ACTION.FOAM_SHEET,
+                    payload: foamSheet,
+                });
+
                 break;
             case 'PlasticCarate':
                 let quantityPlasticCarateAsNumber = parseInt(state.PlasticCarate.quantity);
-                    let plasticCarate: packingitems = {
-                        name: event,
-                        quantity: (quantityPlasticCarateAsNumber > 0) && count=='decrement'?(quantityPlasticCarateAsNumber - 1).toString():
-                        count=='increment'?(quantityPlasticCarateAsNumber + 1).toString():quantityPlasticCarateAsNumber.toString(),
-                        type: '1'
-                    }
-                    dispatch({
-                        type: PACKING_MATERIAL_FORM_ACTION.PLASTIC_CARATE,
-                        payload: plasticCarate,
-                    });
-                
+                let plasticCarate: packingitems = {
+                    name: event,
+                    quantity: (quantityPlasticCarateAsNumber > 0) && count == 'decrement' ? (quantityPlasticCarateAsNumber - 1).toString() :
+                        count == 'increment' ? (quantityPlasticCarateAsNumber + 1).toString() : quantityPlasticCarateAsNumber.toString(),
+                    type: '1'
+                }
+                dispatch({
+                    type: PACKING_MATERIAL_FORM_ACTION.PLASTIC_CARATE,
+                    payload: plasticCarate,
+                });
+
                 break;
             case 'WoodenFrame':
                 let quantityWoodenFrameAsNumber = parseInt(state.WoodenFrame.quantity);
-          
-                    let woodenFrame: packingitems = {
-                        name: event,
-                        quantity: (quantityWoodenFrameAsNumber > 0) && count=='decrement'?(quantityWoodenFrameAsNumber - 1).toString():
-                        count=='increment'?(quantityWoodenFrameAsNumber + 1).toString():quantityWoodenFrameAsNumber.toString(),
-                        type: '1'
-                    }
-                    dispatch({
-                        type: PACKING_MATERIAL_FORM_ACTION.WOODEN_FRAME,
-                        payload: woodenFrame,
-                    });
-                
+
+                let woodenFrame: packingitems = {
+                    name: event,
+                    quantity: (quantityWoodenFrameAsNumber > 0) && count == 'decrement' ? (quantityWoodenFrameAsNumber - 1).toString() :
+                        count == 'increment' ? (quantityWoodenFrameAsNumber + 1).toString() : quantityWoodenFrameAsNumber.toString(),
+                    type: '1'
+                }
+                dispatch({
+                    type: PACKING_MATERIAL_FORM_ACTION.WOODEN_FRAME,
+                    payload: woodenFrame,
+                });
+
                 break;
 
             default:
@@ -379,18 +388,18 @@ const PackingMaterialsView: React.FC<packingMaterialprop> = ({ enquiryId }) => {
             enquiryId: enquiryId,
             vehicleLoadSize: "2533433345353534534",
             packingMaterial: [state.Labour,
-                state.packingTape,
-                state.BubbleWrapes,
-                state.CorrugateSheet,
-                state.WaterproofLamination,
-                state.Thermocol,
-                state.CartonBoxes,
-                state.AirBubble,
-                state.NewPaper,
-                state.Foamsheet,
-                state.PlasticCarate,
-                state.WoodenFrame,
-                 ...items]
+            state.packingTape,
+            state.BubbleWrapes,
+            state.CorrugateSheet,
+            state.WaterproofLamination,
+            state.Thermocol,
+            state.CartonBoxes,
+            state.AirBubble,
+            state.NewPaper,
+            state.Foamsheet,
+            state.PlasticCarate,
+            state.WoodenFrame,
+            ...items]
         }
         console.log(payload, 'data...payload');
 
@@ -400,7 +409,7 @@ const PackingMaterialsView: React.FC<packingMaterialprop> = ({ enquiryId }) => {
 
     return (
         <AvoidSoftInputViewHOC>
-           <View style={styles.container}>
+            <View style={styles.container}>
                 <Spacer height={4} />
                 <View style={styles.labelContainer}>
                     <Text style={styles.labelText}>Material List Form</Text>
@@ -428,10 +437,10 @@ const PackingMaterialsView: React.FC<packingMaterialprop> = ({ enquiryId }) => {
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.dropDownStyle}>
-                                <DropdownComponent
-                                    data={billingByOptions}
-                                    onSelect={handleLabourType}
-                                />
+                                  <EpackDropdown
+                                data={unityTypeArray()}
+                                placeholder={'Select unit Type'}
+                                hanldeData={handleLabourType} />
                             </View>
                         </View>
                     </View>
@@ -455,10 +464,10 @@ const PackingMaterialsView: React.FC<packingMaterialprop> = ({ enquiryId }) => {
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.dropDownStyle}>
-                                <DropdownComponent
-                                    data={billingByOptions}
-                                    onSelect={handlePackingTapeType}
-                                />
+                            <EpackDropdown
+                                data={unityTypeArray()}
+                                placeholder={'Select Unit Type'}
+                                hanldeData={handlePackingTapeType} />
                             </View>
                         </View>
                     </View>
@@ -482,10 +491,14 @@ const PackingMaterialsView: React.FC<packingMaterialprop> = ({ enquiryId }) => {
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.dropDownStyle}>
-                                <DropdownComponent
+                                {/* <DropdownComponent
                                     data={billingByOptions}
                                     onSelect={handleBubbleWrapesType}
-                                />
+                                /> */}
+                                  <EpackDropdown
+                                data={unityTypeArray()}
+                                placeholder={'Select Unit Type'}
+                                hanldeData={handleBubbleWrapesType} />
                             </View>
                         </View>
                     </View>
@@ -504,15 +517,15 @@ const PackingMaterialsView: React.FC<packingMaterialprop> = ({ enquiryId }) => {
                                 <Text style={styles.labelText}>{state.CorrugateSheet.quantity}</Text>
                                 <TouchableOpacity
                                     style={styles.touchableContainer}
-                                    onPress={() => handleCounter('CorrugateSheet','increment')}>
+                                    onPress={() => handleCounter('CorrugateSheet', 'increment')}>
                                     <Text style={styles.opratorTextStyle}>+</Text>
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.dropDownStyle}>
-                                <DropdownComponent
-                                    data={billingByOptions}
-                                    onSelect={handleCorrugateSheetType}
-                                />
+                                 <EpackDropdown
+                                data={unityTypeArray()}
+                                placeholder={'Select Unit Type'}
+                                hanldeData={handleCorrugateSheetType} />
                             </View>
                         </View>
                     </View>
@@ -536,10 +549,10 @@ const PackingMaterialsView: React.FC<packingMaterialprop> = ({ enquiryId }) => {
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.dropDownStyle}>
-                                <DropdownComponent
-                                    data={billingByOptions}
-                                    onSelect={handleWaterproofLaminationType}
-                                />
+                                  <EpackDropdown
+                                data={unityTypeArray()}
+                                placeholder={'Select Unit Type'}
+                                hanldeData={handleWaterproofLaminationType} />
                             </View>
                         </View>
                     </View>
@@ -563,10 +576,10 @@ const PackingMaterialsView: React.FC<packingMaterialprop> = ({ enquiryId }) => {
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.dropDownStyle}>
-                                <DropdownComponent
-                                    data={billingByOptions}
-                                    onSelect={handleThermocolType}
-                                />
+                                  <EpackDropdown
+                                data={unityTypeArray()}
+                                placeholder={'Select Unit Type'}
+                                hanldeData={handleThermocolType} />
                             </View>
                         </View>
                     </View>
@@ -590,10 +603,10 @@ const PackingMaterialsView: React.FC<packingMaterialprop> = ({ enquiryId }) => {
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.dropDownStyle}>
-                                <DropdownComponent
-                                    data={billingByOptions}
-                                    onSelect={handleCartonBoxesType}
-                                />
+                                <EpackDropdown
+                                data={unityTypeArray()}
+                                placeholder={'Select Unit Type'}
+                                hanldeData={handleCartonBoxesType} />
                             </View>
                         </View>
                     </View>
@@ -617,10 +630,10 @@ const PackingMaterialsView: React.FC<packingMaterialprop> = ({ enquiryId }) => {
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.dropDownStyle}>
-                                <DropdownComponent
-                                    data={billingByOptions}
-                                    onSelect={handleAirBubbleType}
-                                />
+                                 <EpackDropdown
+                                data={unityTypeArray()}
+                                placeholder={'Select Unit Type'}
+                                hanldeData={handleAirBubbleType} />
                             </View>
                         </View>
                     </View>
@@ -644,10 +657,10 @@ const PackingMaterialsView: React.FC<packingMaterialprop> = ({ enquiryId }) => {
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.dropDownStyle}>
-                                <DropdownComponent
-                                    data={billingByOptions}
-                                    onSelect={handleNewPaperType}
-                                />
+                                    <EpackDropdown
+                                data={unityTypeArray()}
+                                placeholder={'Select Unit Type'}
+                                hanldeData={handleNewPaperType} />
                             </View>
                         </View>
                     </View>
@@ -671,10 +684,10 @@ const PackingMaterialsView: React.FC<packingMaterialprop> = ({ enquiryId }) => {
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.dropDownStyle}>
-                                <DropdownComponent
-                                    data={billingByOptions}
-                                    onSelect={handleFoamsheetType}
-                                />
+                                <EpackDropdown
+                                data={unityTypeArray()}
+                                placeholder={'Select Unit Type'}
+                                hanldeData={handleFoamsheetType} />
                             </View>
                         </View>
                     </View>
@@ -698,10 +711,10 @@ const PackingMaterialsView: React.FC<packingMaterialprop> = ({ enquiryId }) => {
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.dropDownStyle}>
-                                <DropdownComponent
-                                    data={billingByOptions}
-                                    onSelect={handlePlasticCarateType}
-                                />
+                                  <EpackDropdown
+                                data={unityTypeArray()}
+                                placeholder={'Select Unit Type'}
+                                hanldeData={handlePlasticCarateType} />
                             </View>
                         </View>
                     </View>
@@ -725,10 +738,10 @@ const PackingMaterialsView: React.FC<packingMaterialprop> = ({ enquiryId }) => {
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.dropDownStyle}>
-                                <DropdownComponent
-                                    data={billingByOptions}
-                                    onSelect={handleWoodenFrameType}
-                                />
+                                  <EpackDropdown
+                                data={unityTypeArray()}
+                                placeholder={'Select Unit Type'}
+                                hanldeData={handleWoodenFrameType} />
                             </View>
                         </View>
                     </View>
@@ -779,10 +792,10 @@ const PackingMaterialsView: React.FC<packingMaterialprop> = ({ enquiryId }) => {
                                         </TouchableOpacity>
                                     </View>
                                     <View style={styles.dropDownStyle}>
-                                        <DropdownComponent
-                                            data={billingByOptions}
-                                            onSelect={handlOtherType}
-                                        />
+                                        <EpackDropdown
+                                data={unityTypeArray()}
+                                placeholder={'Select Unit Type'}
+                                hanldeData={handlOtherType} />
                                     </View>
                                 </View>
                             </View>

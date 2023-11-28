@@ -1,4 +1,4 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IAddContactDetailRequest } from '../../interface/setting/packerProfile/contactDetail/IAddContactDetailRequest';
 import { IAddContactDetailResponse } from '../../interface/setting/packerProfile/contactDetail/IAddContactDetailResponse';
 import { IGetContactDetailsResponse } from '../../interface/setting/packerProfile/contactDetail/IGetContactDetailsResponse';
@@ -13,6 +13,7 @@ import { ISubmoduleResponse } from '../../interface/setting/packerProfile/ISubmo
 import { IAddPaymentMethodRequest } from '../../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodRequest';
 import { IAddPaymentMethodResponse } from '../../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodResponse';
 import { IGetPaymentMethodsResponse } from '../../interface/setting/packerProfile/paymentMethod/IGetPaymentMethodsResponse';
+import { IGetUnitTypeResponse } from '../../interface/setting/unitType/IGetunitTypeResponse';
 
 interface ISettingState {
     // Add Payment Method
@@ -153,6 +154,13 @@ interface ISettingState {
     getBanksSuccess: boolean;
     getBanksFailure: boolean;
     getBanksError: any;
+
+    // Get unit Type
+    unitType: IGetUnitTypeResponse | null;
+    getunitTypeRequesting: boolean;
+    getunitTypeSuccess: boolean;
+    getunitTypeFailure: boolean;
+    getunitTypeError: any;
 }
 
 const initialState: ISettingState = {
@@ -294,6 +302,13 @@ const initialState: ISettingState = {
     getBanksSuccess: false,
     getBanksFailure: false,
     getBanksError: null,
+
+    // Get unit Type
+    unitType: null,
+    getunitTypeRequesting: false,
+    getunitTypeSuccess: false,
+    getunitTypeFailure: false,
+    getunitTypeError: false,
 }
 
 export const SettingSlice = createSlice({
@@ -720,6 +735,22 @@ export const SettingSlice = createSlice({
             state.getBanksFailure = true;
             state.getBanksError = action.payload;
         },
+        // ***** Get Unit *****
+        // ******************************
+        getUnitTypeRequest: (state) => {
+            state.getunitTypeRequesting = true;
+        },
+        getUnitTypeSuccess: (state, action: PayloadAction<IGetUnitTypeResponse>) => {
+            state.getunitTypeRequesting = false;
+            state.getunitTypeSuccess = true;
+            state.unitType = action.payload;
+        },
+        getUnitTypeFailure: (state, action: PayloadAction<any>) => {
+            state.getunitTypeRequesting = false;
+            state.getunitTypeSuccess = false;
+            state.getunitTypeFailure = true;
+            state.getunitTypeError = action.payload;
+        },
     }
 });
 
@@ -828,5 +859,10 @@ export const {
     getBanksRequest,
     getBanksSuccess,
     getBanksFailure,
+     // Get Unit Types
+     getUnitTypeRequest,
+     getUnitTypeSuccess,
+     getUnitTypeFailure,
+     
 
 } = SettingSlice.actions;

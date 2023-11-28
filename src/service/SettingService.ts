@@ -1,6 +1,6 @@
 import {AxiosResponse} from 'axios';
 import {Api} from '../http/Api';
-import {ADD_CONTACT_DETAIL, ADD_DOCUMENT, ADD_FOOTER_CONTENT, ADD_PAYMENT_METHOD, ADD_USER_ROLE, CHECK_USERNAME_AVAILABLITY, GET_BANKS, GET_CONTACTS, GET_DOCUMENTS, GET_FOOTER_CONTENTS, GET_OTP, GET_PAYMENT_METHODS, GET_ROLE_TYPES, GET_SERIAL_NO, GET_SUBMODULES, MODULES, SERIAL_NO, VERIFY_OTP} from '../http/Endpoint';
+import {ADD_CONTACT_DETAIL, ADD_DOCUMENT, ADD_FOOTER_CONTENT, ADD_PAYMENT_METHOD, ADD_USER_ROLE, CHECK_USERNAME_AVAILABLITY, GET_BANKS, GET_CONTACTS, GET_DOCUMENTS, GET_FOOTER_CONTENTS, GET_OTP, GET_PAYMENT_METHODS, GET_ROLE_TYPES, GET_SERIAL_NO, GET_SUBMODULES, GET_UNIT_TYPES, MODULES, SERIAL_NO, VERIFY_OTP} from '../http/Endpoint';
 import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
 import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
 import { IAddContactDetailRequest } from '../interface/setting/packerProfile/contactDetail/IAddContactDetailRequest';
@@ -22,6 +22,7 @@ import { IAddUserRoleRequest, IAddUserRoleResponse, IRoleTypeResponse } from '..
 import { ICreateSerialNoRequest } from '../interface/setting/serialNo/ICreateSerialNoRequest';
 import { ICreateSerialNoResponse } from '../interface/setting/serialNo/ICreateSerialNoResponse';
 import { IGetPaymentMethodsResponse } from '../interface/setting/packerProfile/paymentMethod/IGetPaymentMethodsResponse';
+import { IGetUnitTypeResponse } from '../interface/setting/unitType/IGetunitTypeResponse';
 
 // PAYMENT
 export const AddPaymentMethodService = async (payload: IAddPaymentMethodRequest): Promise<IAddPaymentMethodResponse> => {
@@ -112,4 +113,10 @@ export const GetSerialNoService = async (payload: string): Promise<IGetPaymentMe
 export const GetModulesService = async (): Promise<IGetModulesResponse> => {
     const api = Api.getInstance();
     return await api.get<IGetModulesResponse>(MODULES);
+}
+
+// UNIT TYPE
+export const GetUnitTypeService = async (): Promise<IGetUnitTypeResponse> => {
+    const api = Api.getInstance();
+    return await api.get<IGetUnitTypeResponse>(GET_UNIT_TYPES);
 }
