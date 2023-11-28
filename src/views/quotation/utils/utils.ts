@@ -24,3 +24,7 @@ export const discountTypeOptions: string[] = [
 ];
 
 export const GSTOptions:string[] = ['With GST', 'Without GST', 'Exempted', 'Extra'];
+
+export const loadTypeOptions:string[] = ['Part Load', 'Full Load'];
+
+export const yesNoOptions:string[] = ['Yes', 'No'];

@@ -6,7 +6,6 @@ import Input from '../../../../../common/Input';
 import Spacer from '../../../../../common/Spacer';
 import { COLOR_BLACK } from '../../../../../utils/colors';
 import styles from './style';
-import { formatDate, formatDate2 } from '../../../../../utils/formatter';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import { IAddFollowupRequest } from '../../../../../interface/enquiry/IAddFollowupRequest';
 import {

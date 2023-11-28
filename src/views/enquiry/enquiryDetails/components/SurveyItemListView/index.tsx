@@ -2,48 +2,73 @@ import React from 'react';
 import {View, Text} from 'react-native';
 import Spacer from '../../../../../common/Spacer';
 import styles from './style';
-import ClockIcon from '../../../../../images/icons/clock.svg';
-import UserIcon from '../../../../../images/icons/user.svg';
-import { formatDate3 } from '../../../../../utils/formatter';
+import {formatDate5, formatPrice} from '../../../../../utils/formatter';
 
 interface ISurveyItemListViewProps {
- item:any
+  item: any;
+  index: number;
 }
 
-const SurveyItemListView: React.FC<ISurveyItemListViewProps> = ({item}) => {
-  return (
-    <>
-      <View style={styles.container}>
-        <View style={styles.avatarContainer}>
-          <View style={styles.avatar}>
-            <UserIcon width={22} height={22} />
+const SurveyItemListView: React.FC<ISurveyItemListViewProps> = ({
+  item,
+  index,
+}) => {
+  const showSurveyDateAndNumber = () => {
+    if (index == 0) {
+      return (
+        <View style={styles.surveyDateAndNumberContainer}>
+          <View style={styles.contentContainer}>
+            <Text style={styles.contentLabelText2}>SURVEY DATE: </Text>
+            {/* <ClockIcon width={22} height={22} /> */}
+            <Spacer width={4} />
+            <Text style={styles.contentLabelText}>
+              {formatDate5(item.surveyDate)}
+            </Text>
+          </View>
+          <View style={styles.contentContainer}>
+            <Text style={styles.contentLabelText2}>
+              {`SURVEY NO#: `}
+            </Text>
+            <Text style={styles.contentLabelText}>
+              {item.surveyListNo}
+            </Text>
           </View>
         </View>
+      );
+    }
+    return null;
+  };
+
+  
+
+  return (
+    <>
+      {showSurveyDateAndNumber()}
+      <View style={styles.container}>
         <View style={styles.rightContentContainer}>
           <View style={styles.contentContainer}>
-            <Text  style={styles.contentLabelText}>Survey Date: </Text>
-            <ClockIcon width={22} height={22} />
-            <Spacer width={4} />
-            <Text style={styles.contentLabelText}>{formatDate3(item.surveyDate)}</Text>
-          </View>
-          <View style={styles.contentContainer}>
+            <Text style={styles.contentLabelText2}>
+              {`Item Name: `} 
+            </Text>
             <Text style={styles.contentLabelText}>
-            Item Name: {item.itemName}
+              {item.itemName}
             </Text>
           </View>
           <View style={styles.contentContainer}>
+            <Text style={styles.contentLabelText2}>
+              {`Quantity: `}
+            </Text>
             <Text style={styles.contentLabelText}>
-            Quantity: {item.quantity}
+              {item.quantity}
             </Text>
           </View>
+         
           <View style={styles.contentContainer}>
-            <Text style={styles.contentLabelText}>
-            Survey List No: {item.surveyListNo}
+            <Text style={styles.contentLabelText2}>
+              {`Value Of Goods: `}
             </Text>
-          </View>
-          <View style={styles.contentContainer}>
             <Text style={styles.contentLabelText}>
-            Value Of Goods: {item.valueOfGoods}
+              {formatPrice(item.valueOfGoods)}
             </Text>
           </View>
         </View>

@@ -1,4 +1,4 @@
-import React, {ReactElement, useEffect, useState} from 'react';
+import React, {ReactElement, useEffect, useState, forwardRef} from 'react';
 import {View, TextInput, Text, ViewStyle, TextStyle} from 'react-native';
 import {COLOR_GRAY3, COLOR_WHITE, OFF_WHITE} from '../../utils/colors';
 import styles from './styles';
@@ -22,7 +22,7 @@ interface InputProps {
   secureTextEntry?:boolean;
 }
 
-const Input: React.FC<InputProps> = ({
+const Input: React.FC<InputProps> = forwardRef(({
   icon,
   placeholder,
   onChangeText,
@@ -38,7 +38,7 @@ const Input: React.FC<InputProps> = ({
   type = 'none',
   required = false,
   secureTextEntry,
-}) => {
+}, ref) => {
   const disableStyle = !editable ? {backgroundColor: COLOR_GRAY3} : null;
   const [text, setText] = useState<string>('');
   const [validationError, setValidationError] = useState<string>('');
@@ -48,6 +48,14 @@ const Input: React.FC<InputProps> = ({
       setText(value);
     }
   }, [value]);
+
+  React.useImperativeHandle(ref, () => ({
+    reset
+}));
+
+  const reset = () => {
+    _handleTextChange('');
+  };
 
   const _handleTextChange = (text: string) => {
     setText(text);
@@ -68,7 +76,7 @@ const Input: React.FC<InputProps> = ({
       case 'email':
         if (!required && Validator.isEmpty(text)) {
           setValidationError('');
-        } else if (!Validator.mobile(text)) {
+        } else if (!Validator.email(text)) {
           setValidationError('Invalid email');
         } else {
           setValidationError('');
@@ -123,6 +131,6 @@ const Input: React.FC<InputProps> = ({
       ) : null}
     </>
   );
-};
+});
 
 export default Input;

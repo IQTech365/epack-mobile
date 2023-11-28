@@ -10,7 +10,8 @@ export class Validator {
     }
 
     static mobile = (text:string): boolean => {
-        const expr = /^[6-9][0-9]{9}$/;
-        return expr.test(text);
+        // const expr = /[6-9][0-9]{9}$/;
+        // return expr.test(text);
+        return true;
     }
 }

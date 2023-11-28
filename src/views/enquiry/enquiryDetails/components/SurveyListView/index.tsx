@@ -1,24 +1,22 @@
-import React, { useReducer, useCallback, useEffect, useState } from 'react';
-import { View, Text, Alert } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View } from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import DatePickerComponent from '../../../../../common/DatePickerComponent';
-import DropdownComponent from '../../../../../common/DropdownComponent';
 import Input from '../../../../../common/Input';
 import Label from '../../../../../common/Label';
 import Spacer from '../../../../../common/Spacer';
-import { TDropdownItem } from '../../../../../type/TDropdownItem';
 import { COLOR_BLACK } from '../../../../../utils/colors';
 import styles from './style';
-import receiptAgainstOptions from '../../../../../data/receiptAgainstOptions.json';
 
-import { formatDate, formatDate2, formatDate3 } from '../../../../../utils/formatter';
+import {formatDate2} from '../../../../../utils/formatter';
 import Button from '../../../../../common/Button';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import Spinner from '../../../../../common/Spinner';
 import Toast from 'react-native-toast-message';
 import { IAddSurveyItemRequest } from '../../../../../interface/enquiry/IAddSurveyItemRequest';
-import { addSurveyItemRequest, resetAddSurveyItemRequest } from '../../../../../redux/slices/EnquirySlice';
+import { addSurveyItemRequest, getSurveyItemListRequest, resetAddSurveyItemRequest } from '../../../../../redux/slices/EnquirySlice';
 import useCompanyId from '../../../../../hooks/useCompanyId';
+import useAuthId from '../../../../../hooks/useAuthId';
 
 interface ISurveyListViewProps {
   enquiryId:string
@@ -39,6 +37,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({ enquiryId}) => {
   const [goods, setGoods] = useState<string>('');
   const [remarks, setRemarks] = useState<string>('');
   const companyId = useCompanyId();
+  const authId = useAuthId();
 
   const dispatch = useAppDispatch();
 
@@ -77,7 +76,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({ enquiryId}) => {
       quantity:quantity,
       valueOfGoods: goods,
       remarks: remarks,
-      addedBy:"650efb2d7e3968c4c217a34f"
+      addedBy:authId,
   }
   dispatch(addSurveyItemRequest(payload))
   };
@@ -90,6 +89,10 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({ enquiryId}) => {
         text2: 'Survey Item List has been added successfully',
       });
       dispatch(resetAddSurveyItemRequest());
+      const payload :any= {
+        companyId:companyId
+      }
+      dispatch(getSurveyItemListRequest(payload));
     } else if (!addSurveyItemRequesting && addSurveyItemFailure) {
       Toast.show({
         type: 'error',

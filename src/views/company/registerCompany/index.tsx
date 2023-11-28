@@ -21,6 +21,7 @@ import {addCompanyRequest} from '../../../redux/slices/CompanySlice';
 import {ICompanyRegistrationRequest} from '../../../interface/companyRegistration/ICompanyRegistrationRequest';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import EpackDropdown from '../../../common/DropdownComponent2';
+import { use } from 'i18next';
 const ibaApprovalOptions: string[] = ['Not Approved', 'Approved'];
 
 interface IRegisterCompanyViewProps {
@@ -71,6 +72,8 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
   const {otpData} = useAppSelector(state => state.OTP);
   const cityDropdownRef = useRef(null);
   const stateDropwdownRef = useRef(null);
+  const documentInputRef = useRef(null);
+  const companyTypeDropdownRef = useRef(null);
 
   const setPincodeError = () => {
     setPincodeError2('Invalid Pincode');
@@ -144,6 +147,10 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
   const handleCompanyTypeSelectChange = (item: TDropdownItem) => {
     setCompanyType(item.value);
     setCompanyType2(item.label);
+    setDocument('');
+    // if(documentInputRef) {
+    //   documentInputRef?.current.setValue('');
+    // }
   };
 
   const handleIbaCodeValidTillDate = (date: Date) => {
@@ -156,6 +163,8 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
   }, []);
 
   const validateRegistrationForm = () => {
+    console.log('mystate----', JSON.stringify(state));
+    
     let companyNameFilled = false;
     let contactPersonNameFilled = false;
     let mobileFilled = false;
@@ -266,14 +275,20 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
       addressFilled &&
       companyTypeFilled &&
       documentFilled;
+      console.log('isRequiredFieldsFilled-------', isRequiredFieldsFilled);
     if (ibaApproval == ibaApprovalOptions[0]) {
+      console.log('inside-if');
+      
       areFieldsValid = isRequiredFieldsFilled;
     } else if (ibaApproval == ibaApprovalOptions[1]) {
+      console.log('inside-else');
       areFieldsValid =
         isRequiredFieldsFilled &&
         ibaApprovalCodeFilled &&
         ibaApprovalValidTillFilled;
     }
+    console.log('areFieldsValid-------', areFieldsValid);
+    
     return areFieldsValid;
   };
 
@@ -301,7 +316,11 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
           companyProfile: '',
           district: '',
           postOffice: '',
-          govRegdDetails: {},
+          govRegdDetails: {
+            companyType: state.companyType || companyTypeOptions[0].label,
+            companyPAN: state.companyType == ('Propritorship' || 'Partnership') ? state.document : '',
+            incorporationNumber: state.companyType == ('Pvt. Ltd. Company' || 'LLP') ? state.document : '',
+          },
           accountDetails: [],
           packerSignature: '',
           termsconditions: 'NA',
@@ -315,6 +334,12 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
   useEffect(() => {
     if (otpData?.data?.mobile) {
       handleMobileInputTextChange(otpData?.data?.mobile);
+    }
+    if(companyTypeDropdownRef) {
+      //@ts-ignore
+      companyTypeDropdownRef?.current?.setDefaultValue(companyTypeOptions[0]);
+      setCompanyType2(companyTypeOptions[0].label);
+      setCompanyTypeError('');
     }
   }, []);
 
@@ -346,8 +371,10 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
     if (states && cities && cityDropdownRef && stateDropwdownRef) {
       //@ts-ignore
       stateDropwdownRef?.current?.setValue(states[0]?.label);
+      handleStateSelectChange(states[0]?.label);
       //@ts-ignore
       cityDropdownRef?.current?.setValue(cities[0]?.label);
+      handleCitySelectChange(cities[0]?.label);
     }
   }, [states, cities]);
 
@@ -580,6 +607,7 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
                 placeholder="Enter document number"
                 type="text"
                 required={true}
+                autoCapitalize="characters"
               />
             </View>
           </View>

@@ -88,10 +88,12 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
 
   const handleCardClick = (index: number) => {
     const item: IGetEnquiriesData = quotationData[index]?.enquiries[0];
-    navigation.navigate(TabRoute.EnquiryStack, {
-      screen: EnquiryStackRoute.EnquiryDetails,
-      params: {enquiryId: item._id, item: item},
-    });
+    // navigation.navigate(TabRoute.EnquiryStack, {
+    //   screen: EnquiryStackRoute.EnquiryDetails,
+    //   params: {enquiryId: item._id, item: item},
+    // });
+    //@ts-ignore
+    navigation.jumpTo(TabRoute.EnquiryStack, {screen: EnquiryStackRoute.EnquiryDetails, params: {enquiryId: item._id, item: item},});
   };
 
   const handleEditClick = (index: number) => {

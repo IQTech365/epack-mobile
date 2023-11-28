@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import { COLOR_BLUE, COLOR_GRAY, COLOR_WHITE } from '../../utils/colors';
+import { COLOR_BLUE, COLOR_BLUE2, COLOR_GRAY, COLOR_WHITE } from '../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         paddingVertical: 12,
         paddingHorizontal: 8,
-        backgroundColor: COLOR_BLUE,
+        backgroundColor: COLOR_BLUE2,
         justifyContent: 'space-between',
         alignItems: 'center',
     },

@@ -16,6 +16,9 @@ import { COLOR_BLACK } from '../../../../../utils/colors';
 import { getCities, getStates } from '../../../../../utils/formatter';
 import styles from './style';
 import DropdownComponent from '../../../../../common/DropdownComponent';
+import { ICompanyInfoData } from '../../../../../interface/companyRegistration/IGetCompaniesResponse';
+import { ICompanyEditRequest } from '../../../../../interface/companyRegistration/ICompanyEditRequest';
+import { editCompanyRequest } from '../../../../../redux/slices/CompanySlice';
 
 export enum ADDRESS_TYPE {
   PICKUP,
@@ -43,6 +46,11 @@ const UpdateComanyAddressForm: React.FC<IUpdateComanyAddressFormProps> = ({
   const [locality, setLocality] = useState<string>('');
   const [liftStatus, setLiftStatus] = useState<string>('');
   const [floorNumber, setFloorNumber] = useState<string>('');
+  const { companies,
+    editCompanyRequesting,
+    editCompanySuccess,
+    editCompanyFailure
+  } = useAppSelector(state => state.Company);
 
   const cityDropdownRef = useRef(null);
   const stateDropwdownRef = useRef(null);
@@ -53,6 +61,17 @@ const UpdateComanyAddressForm: React.FC<IUpdateComanyAddressFormProps> = ({
     () => {},
     () => {},
   );
+  const { data: companiesData } = companies || {};
+
+  const getFirstCompany = () => {
+    let company: ICompanyInfoData | null = null;
+    if (companiesData && Array.isArray(companiesData) && companiesData.length > 0) {
+      company = companiesData[0];
+    }
+    return company;
+  }
+
+  const firstCompany = getFirstCompany();
 
   const handleAddressTextChange = useCallback(
     (text: string) => {
@@ -173,39 +192,63 @@ const UpdateComanyAddressForm: React.FC<IUpdateComanyAddressFormProps> = ({
   }, [states, cities]);
 
   const handleUpdate = () => {
-    const payload: IPickupAddress = {
-      pickupAddress: {
-        shiftingFrom: city,
-        city: city,
-        isLiftAvailable: liftStatus,
-        locality: locality || 'Not Available',
-        landmark: landmark || 'Not Available',
-        pincode: pin,
-        state: state,
-        address: address,
-        floor: floorNumber,
-      },
+    // const payload: IPickupAddress = {
+    //   pickupAddress: {
+    //     shiftingFrom: city,
+    //     city: city,
+    //     isLiftAvailable: liftStatus,
+    //     locality: locality || 'Not Available',
+    //     landmark: landmark || 'Not Available',
+    //     pincode: pin,
+    //     state: state,
+    //     address: address,
+    //     floor: floorNumber,
+    //   },
+    // };
+
+    const payload: ICompanyEditRequest = {
+      _id: firstCompany?._id as string,
+      authId: firstCompany?.authId as string,
+      companyName: firstCompany?.companyName as string,
+      contactPerson: firstCompany?.contactPerson as string,
+      email: firstCompany?.email as string,
+      companyMobile: firstCompany?.companyMobile as string,
+      companyAddress: address,
+      state: state,
+      city:city,
+      pincode: pin,
+      ibaApprovalCode: firstCompany?.ibaApprovalCode as string,
+      ibaValidDate: "2023-10-25",
+      companyWebite: firstCompany?.companyWebite as string,
+      CINNumber: firstCompany?.CINNumber as string,
+      companyLogo: "",
+      punchLine: firstCompany?.punchLine as string,
+      companyProfile: "",
+      district: "",
+      postOffice: "",
+      companySignature: firstCompany?.companySignature as string
     };
+    dispatch(editCompanyRequest(payload));
     // dispatch(updateAddressRequest({id: enquiryId, requestBody: payload}));
   };
 
   useEffect(() => {
-    if (!updateAddressRequesting && updateAddressSuccess) {
+    if (!editCompanyRequesting &&editCompanySuccess) {
       Toast.show({
         type: 'success',
         text1: 'Address Update',
         text2: 'Address has been updated successfully',
       });
-      dispatch(resetUpdateAddressRequest());
-    } else if (!updateAddressRequesting && updateAddressFailure) {
+      // dispatch(resetUpdateAddressRequest());
+    } else if (!editCompanyRequesting && editCompanyFailure) {
       Toast.show({
         type: 'error',
         text1: 'Address Update',
         text2: 'Error in updating address. Please try again!',
       });
-      dispatch(resetUpdateAddressRequest());
+      // dispatch(resetUpdateAddressRequest());
     }
-  }, [updateAddressRequesting, updateAddressSuccess, updateAddressFailure]);
+  }, [editCompanyRequesting, editCompanySuccess, editCompanyFailure]);
 
   return (
     <AvoidSoftInputViewHOC>
@@ -219,7 +262,7 @@ const UpdateComanyAddressForm: React.FC<IUpdateComanyAddressFormProps> = ({
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
-              value={pin}
+              value={firstCompany?.pincode}
             />
           </View>
           <View style={styles.itemContainer}>
@@ -250,7 +293,7 @@ const UpdateComanyAddressForm: React.FC<IUpdateComanyAddressFormProps> = ({
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
-            value={address}
+            value={firstCompany?.companyAddress}
           />
         </View>
         <Spacer height={4} />
@@ -261,7 +304,7 @@ const UpdateComanyAddressForm: React.FC<IUpdateComanyAddressFormProps> = ({
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
-            value={landmark}
+            value={firstCompany?.companyAddress}
           />
         </View>
         <Spacer height={4} />
@@ -272,7 +315,7 @@ const UpdateComanyAddressForm: React.FC<IUpdateComanyAddressFormProps> = ({
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
-            value={locality}
+            value={firstCompany?.companyAddress}
           />
         </View>
         <Spacer height={20} />
@@ -283,7 +326,7 @@ const UpdateComanyAddressForm: React.FC<IUpdateComanyAddressFormProps> = ({
           style={styles.previewButtonStyle}
           textStyle={styles.textStyle}
         />
-        <Spinner show={fetching || updateAddressRequesting} />
+        <Spinner show={fetching || editCompanyRequesting} />
       </View>
     </AvoidSoftInputViewHOC>
   );

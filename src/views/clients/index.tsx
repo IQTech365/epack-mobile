@@ -46,8 +46,8 @@ const ClientPageView: React.FC<IClientPageViewProps> = ({ navigation }) => {
 
   }, [dispatch])
 
-  const handleEnquiryDetailsClick = () => {
-    navigation.navigate(ClientStackRoute.ClientDetails);
+  const handleEnquiryDetailsClick = (item:any) => { 
+    navigation.navigate(ClientStackRoute.ClientDetails, {item:item});
   };
 
   return (
@@ -69,7 +69,7 @@ const ClientPageView: React.FC<IClientPageViewProps> = ({ navigation }) => {
           <ClientListItem
             item={item}
             index={index}
-            onPress={handleEnquiryDetailsClick}
+            onPress={()=>handleEnquiryDetailsClick(item)}
           />
         )}
         ListEmptyComponent={() => <Text>No Orders available</Text>}

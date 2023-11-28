@@ -46,19 +46,13 @@ import { ICompanyInfoData } from '../interface/companyRegistration/IGetCompanies
 
 const Drawer = createDrawerNavigator();
 
-// const appUser: IAppUser = {
-//   companyName: 'Gayatri Packers',
-//   usesrId: '1159',
-//   mobile: '+91 9876543210',
-//   email: 'gayatri@gmail.com',
-// };
-
 const DrawerContent = (props: any) => {
   const dispatch = useAppDispatch();
   const authContext = useAuthContext();
   const {setLoggedIn} = authContext;
-  const {companies, getCompaniesRequesting} = useAppSelector(state => state.Company);
+  const {companies} = useAppSelector(state => state.Company);
   const {data: companiesData} = companies || {};
+  const {otpData} = useAppSelector(state => state.OTP);
 
   const getFirstCompany = () => {
     let company:ICompanyInfoData | null  = null;
@@ -77,7 +71,10 @@ const DrawerContent = (props: any) => {
   const firstCompany = getFirstCompany();
 
   useEffect(() => {
-    dispatch(getCompaniesRequest(firstCompany?.authId as string));
+    if(otpData) {
+      const {data = {}} = otpData || {};
+      dispatch(getCompaniesRequest(data?.id as string));
+    }
   }, [dispatch]);
   
   return (
@@ -92,7 +89,8 @@ const DrawerContent = (props: any) => {
             <View style={styles.avatarContainer}>
               {/* <View style={styles.avatar} /> */}
               <Image 
-                 source={{ uri: firstCompany?.companyLogo }}
+                //  source={{ uri: firstCompany?.companyLogo }}
+                source={{uri: 'https://fastly.picsum.photos/id/14/200/200.jpg?hmac=bwQwH7-0RPCqUVkFzd3hFhc6yDfC6_e7vgaKXZ7vFOA'}}
                  resizeMode="center"
                  style={styles.avatar}
                />

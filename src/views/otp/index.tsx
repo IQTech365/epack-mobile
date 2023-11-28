@@ -130,7 +130,6 @@ const OTPPageView = (props: any) => {
     if(!getCompaniesRequesting && getCompaniesSuccess) {
       const {data} = companies || {};
       console.log('data-data----', JSON.stringify(data));
-      
       if(data && Array.isArray(data) && data.length > 0) {
         const firstCompany = data[0];
         if(firstCompany.companySignature) {

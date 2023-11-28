@@ -13,11 +13,10 @@ import { getFranchiseRequest } from '../../../../redux/slices/MyProfile';
 import AddFranchiseListItem from '../addFranchiseList';
 import Spinner from '../../../../common/Spinner';
 import useCompanyId from '../../../../hooks/useCompanyId';
-// import Spinner from '../../../../../common/Spinner';
 
 const AddFranchiseView = () => {
   const [showFranchiseList, setshowFranchiseList] = useState<boolean>(false);
-  const [showAddFranchise, setshowAddFranchise] = useState<boolean>(true);
+  const [showAddFranchise, setshowAddFranchise] = useState<boolean>(false);
   const {Franchises, getFranchiseRequesting} = useAppSelector(
     state => state.Myprofile,
   );
@@ -33,6 +32,7 @@ const AddFranchiseView = () => {
   const handleShowContent = () => {
     setshowFranchiseList(true);
     setshowAddFranchise(false);
+    dispatch(getFranchiseRequest(companyId));
   };
 
   const showEmptyView = () => {
@@ -81,7 +81,8 @@ const AddFranchiseView = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(getFranchiseRequest(companyId))
+    dispatch(getFranchiseRequest(companyId));
+    franchiseData.length > 0?setshowFranchiseList(true):setshowAddFranchise(true);
   }, []);
 
 

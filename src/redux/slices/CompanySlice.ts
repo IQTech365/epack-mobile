@@ -146,9 +146,17 @@ export const CompanySlice = createSlice({
     },
     editCompanyFailure: (state, action: PayloadAction<any>) => {
       state.editCompanyRequesting = false;
-      state.deleteCompanySuccess = false;
+      state.editCompanySuccess = false;
       state.editCompanyFailure = true;
       state.editCompanyError = action.payload;
+    },
+    reseteditCompanyRequest:(
+      state
+    )=>{
+      state.editCompanyRequesting = false;
+      state.editCompanySuccess = false;
+      state.editCompanyFailure = false;
+      state.editCompanyError = null;
     },
     // Delete Company
     deleteCompanyRequest: (
@@ -243,6 +251,7 @@ export const {
   editCompanyRequest,
   editCompanySuccess,
   editCompanyFailure,
+  reseteditCompanyRequest,
   // Delete Company
   deleteCompanyRequest,
   deleteCompanySuccess,

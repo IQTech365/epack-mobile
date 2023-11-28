@@ -11,14 +11,15 @@ import { COLOR_BLACK } from '../../../../../utils/colors';
 import styles from './style';
 import { ICompanyInfoData } from '../../../../../interface/companyRegistration/IGetCompaniesResponse';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
-import { editCompanyRequest, getCompaniesRequest } from '../../../../../redux/slices/CompanySlice';
+import { editCompanyRequest, getCompaniesRequest, reseteditCompanyRequest } from '../../../../../redux/slices/CompanySlice';
 import { ICompanyEditRequest } from '../../../../../interface/companyRegistration/ICompanyEditRequest';
 
 interface IUpdateBasicDetailsFormProps {
   //
+  onClose:()=>void;
 }
 
-const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({ }) => {
+const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({onClose }) => {
   const [comapnyPunch, setCompanyPunch] = useState<string>('');
   const [contactPerson, setContactPerson] = useState<string>('');
   const [website, setWebsite] = useState<string>('');
@@ -90,14 +91,16 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({ }) => 
           text1: 'Edit Company',
           text2: 'Company has been added successfully',
         });
-       
+       dispatch(reseteditCompanyRequest());
+       onClose();
+
       } else if (!editCompanyRequesting && editCompanyFailure) {
         Toast.show({
           type: 'error',
           text1: 'Edit Company',
           text2: 'Error in Edit Company. Please try again!',
         });
-
+        dispatch(reseteditCompanyRequest());
       }
     }, [editCompanyRequesting, editCompanySuccess, editCompanyFailure]);
  
@@ -110,7 +113,8 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({ }) => 
             onChangeText={handleCompnyPunchLineInput}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
-            selectionColor={COLOR_BLACK} />
+            selectionColor={COLOR_BLACK}
+            value={firstCompany?.punchLine} />
         </View>
         <Spacer height={4} />
         <View style={styles.elementContainer3}>
@@ -119,7 +123,8 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({ }) => 
             onChangeText={handleContactPersonInput}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
-            selectionColor={COLOR_BLACK} />
+            selectionColor={COLOR_BLACK} 
+            value={firstCompany?.contactPerson} />
         </View>
         <Spacer height={4} />
         <View style={styles.elementContainer3}>
@@ -128,7 +133,8 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({ }) => 
             onChangeText={handleWebsiteInput}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
-            selectionColor={COLOR_BLACK} />
+            selectionColor={COLOR_BLACK} 
+            value={firstCompany?.companyWebite}/>
         </View>
         <Spacer height={20} />
         <Button

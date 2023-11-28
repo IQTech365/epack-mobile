@@ -358,6 +358,8 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
   const validateForm = () => {
     let errors:any = {};
     if(state.billingBy?.billing_by == 'by Company') {
+      delete errors.partyName;
+      delete errors.mobile;
       if(!state.billingBy?.billing_info?.company_name) {
         errors.companyName = "Company name required";
       }
@@ -370,14 +372,18 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
         errors.employeeMobile = "Mobile number invalid";
       }
     } else if(state.billingBy?.billing_by == 'by Individual') {
+      delete errors?.companyName;
+      delete errors?.employeeName;
+      delete errors?.employeeMobile
       if(!state.partyName) {
         errors.partyName = "Party name required";
       }
       if(!state.mobile) {
         errors.mobile = "Mobile number required";
-      } else if(!Validator.mobile(state.mobile)) {
-        errors.mobile = "Mobile number invalid";
       }
+      //  else if(!Validator.mobile(state.mobile)) {
+      //   errors.mobile = "Mobile number invalid";
+      // }
     }
     if(state.shiftingLuggage.length == 0) {
       errors.shiftingLuggage = "Shifting luggage required"
