@@ -112,7 +112,7 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item, navigation
       name = item.partyName;
     } else {
       // @ts-ignore
-      name = item?.billingDetails.authorityPersonName;
+      name = item?.billingDetails.companyName;
     }
     return name;
   }
@@ -123,7 +123,7 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item, navigation
       number = item.mobile;
     } else {
       // @ts-ignore
-      number = item?.billingDetails.authorityPersonMobile;
+      number = item?.billingDetails.authorityPersonMobile || item?.billingDetails.employeeMobile;
     }
     return number;
   }

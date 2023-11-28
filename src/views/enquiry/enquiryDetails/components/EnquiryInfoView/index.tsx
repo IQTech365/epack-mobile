@@ -67,8 +67,8 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId, navi
     let name:string = '';
     if(item?.partyName){
       name = item?.partyName;
-    } else if (item?.billingDetails?.authorityPersonName) {
-      name = item?.billingDetails?.authorityPersonName;
+    } else if (item?.billingDetails?.companyName) {
+      name = item?.billingDetails?.companyName;
     }
     return name;
   }

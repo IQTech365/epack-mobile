@@ -63,6 +63,7 @@ import {
 } from '../../../interface/quotation/IAddQuotationRequest';
 import {
   addQuotationRequest,
+  getQuotationsRequest,
   getSingleQuotationRequest,
   resetaddQuotationRequest,
 } from '../../../redux/slices/QuotationSlice';
@@ -83,9 +84,10 @@ import {
 } from '../utils/utils';
 import useCompanyId from '../../../hooks/useCompanyId';
 import {Validator} from '../../../utils/validation';
+import { IGetQuotationRequest } from '../../../interface/quotation/IGetQuotationRequest';
+import { NavigationProp } from '@react-navigation/native';
 
-interface Props
-  extends NativeStackScreenProps<QuotationStackParamList, 'AddQuotation'> {
+interface Props extends NativeStackScreenProps<QuotationStackParamList, 'AddQuotation'> {
   showHeader?: boolean;
 }
 
@@ -1553,8 +1555,10 @@ const AddQuotationView: React.FC<Props> = ({
     ) {
       //@ts-ignore
       pickupStateDropwdownRef?.current?.setValue(pickupStates[0]?.label);
+      handlePickupState(pickupStates[0]?.label);
       //@ts-ignore
       pickupCityDropdownRef?.current?.setValue(pickupCities[0]?.label);
+      handlePickupCity(pickupCities[0]?.label);
     }
   }, [pickupStates, pickupCities]);
 
@@ -1568,8 +1572,10 @@ const AddQuotationView: React.FC<Props> = ({
     ) {
       //@ts-ignore
       dropStateDropdownRef?.current?.setValue(deliveryStates[0]?.label);
+      handleDeliveryState(deliveryStates[0]?.label);
       //@ts-ignore
       dropCityDropdownRef?.current?.setValue(deliveryCities[0]?.label);
+      handleDeliveryCity(deliveryCities[0]?.label);
     }
   }, [deliveryStates, deliveryCities]);
 
@@ -1581,6 +1587,11 @@ const AddQuotationView: React.FC<Props> = ({
         text2: 'Quotation has been added successfully',
       });
       dispatch2(resetaddQuotationRequest());
+      const payload: IGetQuotationRequest = {
+        //Note: we can also pass branchId, authId, or id to get the quotation info.
+        companyId: companyId,
+      };
+      dispatch2(getQuotationsRequest(payload));
       navigation?.goBack();
     } else if (!addQuotationRequesting && addQuotationFailure) {
       Toast.show({

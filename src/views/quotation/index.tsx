@@ -27,6 +27,7 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {COLOR_BLACK, COLOR_BLUE} from '../../utils/colors';
 import {IGetQuotationRequest} from '../../interface/quotation/IGetQuotationRequest';
 import {
+  IEnquiry,
   IGetQuotationData,
 } from '../../interface/quotation/IGetQuotationsResponse';
 import {IGetEnquiriesData} from '../../interface/enquiry/IGetEnquiriesResponse';
@@ -44,7 +45,6 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
   );
   const [downloadOption, setDownloadOption] = useState<string>('');
   const bottomSheetRef = useRef<BottomSheet>(null);
-  console.log('quotations----', JSON.stringify(quotations));
   const {data: quotationData} = quotations || {};
   const companyId = useCompanyId();
 
@@ -60,6 +60,88 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
     return _count;
   };
 
+  const _getClientName = (item:IGetQuotationData) => {
+    let name:string = 'NA';
+    //@ts-ignore
+    const {enquiries} = item;
+    if(enquiries && Array.isArray(enquiries) && enquiries.length > 0) {
+      const enquiry:IEnquiry = enquiries[0];
+      if(enquiry?.partyName) {
+        name = enquiry?.partyName;
+        //@ts-ignore
+      } else if(enquiry.billingDetails?.companyName) {
+        //@ts-ignore
+        name = enquiry.billingDetails?.companyName;
+        //@ts-ignore
+      } else if(enquiry.billingDetails?.authorityPersonName) {
+        //@ts-ignore
+        name = enquiry.billingDetails?.authorityPersonName;
+        //@ts-ignore
+      } else if(enquiry.billingDetails?.employeeName) {
+        //@ts-ignore
+        name = enquiry.billingDetails?.employeeName;
+      }
+    }
+    return name;
+  }
+
+  const _getFromDestination = (item:IGetQuotationData) => {
+    let destination:string = 'NA';
+    const {enquiries} = item;
+    if(enquiries && Array.isArray(enquiries) && enquiries.length > 0) {
+      const enquiry:IEnquiry = enquiries[0];
+      if(enquiry?.pickupAddress.city) {
+        destination = enquiry?.pickupAddress.city;
+      }
+    }
+    return destination;
+  }
+
+  const _getToDestination = (item:IGetQuotationData) => {
+    let destination:string = 'NA';
+    const {enquiries} = item;
+    if(enquiries && Array.isArray(enquiries) && enquiries.length > 0) {
+      const enquiry:IEnquiry = enquiries[0];
+      if(enquiry?.dropAddress.city) {
+        destination = enquiry?.dropAddress.city;
+      }
+    }
+    return destination;
+  }
+
+  const _getShiftingType = (item:IGetQuotationData) => {
+    let shiftingType:string = 'NA';
+    const {enquiries} = item;
+    if(enquiries && Array.isArray(enquiries) && enquiries.length > 0) {
+      const enquiry:IEnquiry = enquiries[0];
+      if(enquiry?.shiftingType) {
+        shiftingType = enquiry?.shiftingType;
+      }
+    }
+    return shiftingType;
+  }
+
+  const _getMobile = (item:IGetQuotationData) => {
+    let mobile:string = 'NA';
+    //@ts-ignore
+    const {enquiries} = item;
+    if(enquiries && Array.isArray(enquiries) && enquiries.length > 0) {
+      const enquiry:IEnquiry = enquiries[0];
+      if(enquiry?.mobile) {
+        mobile = enquiry?.mobile;
+        //@ts-ignore
+      } else if(enquiry.billingDetails?.authority_mobile_number) {
+        //@ts-ignore
+        mobile = enquiry.billingDetails?.authority_mobile_number;
+        //@ts-ignore
+      } else if(enquiry.billingDetails?.employee_mobile_number) {
+        //@ts-ignore
+        mobile = enquiry.billingDetails?.employee_mobile_number;
+      }
+    }
+    return mobile;
+  }
+
   const transformQuotationData = () => {
     let _data: IQuotationItem[] = [];
     if (
@@ -71,13 +153,13 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
         const {quotationNumber, enquiries, quotationData, quotationAmount} = quotation;
         const item: IQuotationItem = {
           quotationNo: quotationNumber,
-          clientName: enquiries.length !== 0 ? enquiries[0].partyName : '',
-          fromDestination: enquiries.length !== 0 ? enquiries[0].pickupAddress.city : '',
-          toDestination: enquiries.length !== 0 ? enquiries[0].dropAddress.city : '',
-          shiftingType: enquiries.length !== 0 ? enquiries[0].shiftingType : '',
+          clientName: _getClientName(quotation),
+          fromDestination: _getFromDestination(quotation),
+          toDestination: _getToDestination(quotation),
+          shiftingType: _getShiftingType(quotation),
           quotationAmount: quotationAmount,
           quotationDate: quotationData,
-          phoneNumber: enquiries.length !== 0 ? enquiries[0].mobile : '',
+          phoneNumber: _getMobile(quotation),
         };
         return item;
       });

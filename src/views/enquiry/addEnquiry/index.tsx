@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, Alert} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../common/Spacer';
 import styles from './style';
@@ -81,6 +81,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
   const [errors, setErrors] = useState();
   const [isFormValid, setIsFormValid] = useState<boolean>(true);
   const [showErrors, setShowErrors] = useState<boolean>(false);
+  const [showMobileNumberError, setShowMobileNumberError] = useState<boolean>(false);
 
   const setPincodeError = () => {
     dispatch({
@@ -366,12 +367,40 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
       if(!state.billingBy?.billing_info?.employee_name) {
         errors.employeeName = "Employee name required";
       }
-      if(!state.billingBy?.billing_info?.employee_mobile_number) {
-        errors.employeeMobile = "Employee mobile number required";
-      } else if(!Validator.mobile(state.billingBy?.billing_info?.employee_mobile_number)) {
-        errors.employeeMobile = "Mobile number invalid";
+      if (
+        !state.billingBy.billing_info?.authority_mobile_number &&
+        !state.billingBy?.billing_info?.employee_mobile_number
+      ) {
+        setShowMobileNumberError(true);
+        errors.employeeMobile =
+          'Enter either Authority mobile number or Employee mobile number';
+      } else if (
+        state.billingBy.billing_info?.authority_mobile_number ||
+        state.billingBy?.billing_info?.employee_mobile_number
+      ) {
+        if (
+          state.billingBy.billing_info?.authority_mobile_number &&
+          !Validator.mobile(
+            state.billingBy?.billing_info?.authority_mobile_number,
+          )
+        ) {
+          errors.employeeMobile = 'Mobile number invalid';
+        } else if (
+          state.billingBy.billing_info?.employee_mobile_number &&
+          !Validator.mobile(
+            state.billingBy?.billing_info?.employee_mobile_number,
+          )
+        ) {
+          errors.employeeMobile = 'Mobile number invalid';
+        }
       }
+      // if(!state.billingBy?.billing_info?.employee_mobile_number) {
+      //   errors.employeeMobile = "Employee mobile number required";
+      // } else if(!Validator.mobile(state.billingBy?.billing_info?.employee_mobile_number)) {
+      //   errors.employeeMobile = "Mobile number invalid";
+      // }
     } else if(state.billingBy?.billing_by == 'by Individual') {
+      setShowMobileNumberError(false);
       delete errors?.companyName;
       delete errors?.employeeName;
       delete errors?.employeeMobile
@@ -388,12 +417,15 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
     if(state.shiftingLuggage.length == 0) {
       errors.shiftingLuggage = "Shifting luggage required"
     }
+    console.log('addEnquiry--errors--', JSON.stringify(errors));
+    
     setErrors(errors);
     setIsFormValid(Object.keys(errors).length === 0);
   }
 
   useEffect(() => {
     setShowErrors(false);
+    setShowMobileNumberError(false);
     validateForm();
   }, [
     state.billingBy?.billing_by,
@@ -457,12 +489,19 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
 
   const handleSubmit = useCallback(() => {
     setShowErrors(true);
-    if(!isFormValid) {
-      Toast.show({
-        type: 'error',
-        text1: 'Form',
-        text2: 'Form data is not valid. Please correct!',
-      });
+    if (!isFormValid) {
+      if (showMobileNumberError) {
+        Alert.alert(
+          'Message',
+          'Enter either Authority Mobile number or Employee Mobile number',
+        );
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Form',
+          text2: 'Form data is not valid. Please correct!',
+        });
+      }
       return;
     }
     
@@ -658,6 +697,8 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
             selectionColor={COLOR_BLACK}
             inputType='numeric'
             type='mobile'
+            //@ts-ignore
+            error={showErrors ? errors?.employeeMobile : ''}
           />
         </View>
         <Spacer height={4} />
@@ -730,7 +771,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
         </View>
         <Spacer height={4} />
         <View style={styles.elementContainer}>
-          <Label text="Employee Mobile Number" style={styles.label} required={true} />
+          <Label text="Employee Mobile Number" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
               const {billingBy} = state;
@@ -751,7 +792,6 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
             type='mobile'
-            required={true}
             //@ts-ignore
             error={showErrors ? errors?.employeeMobile : ''}
           />

@@ -34,7 +34,7 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
     transformedData = data
       .map((enq: any) => {
         return {
-          clientName: enq.partyName || enq?.billingDetails?.authorityPersonName,
+          clientName: enq.partyName || enq?.billingDetails?.companyName,
           pickupAddress: `${enq.pickupAddress.address}, ${enq.pickupAddress.city}, ${enq.pickupAddress.state}, ${enq.pickupAddress.pincode}`,
           deliveryAddress: `${enq.dropAddress.address}, ${enq.dropAddress.city}, ${enq.dropAddress.state}, ${enq.dropAddress.pincode}`,
           shiftingType: enq.shiftingType,

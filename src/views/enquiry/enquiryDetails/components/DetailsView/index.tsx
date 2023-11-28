@@ -32,7 +32,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
   const dispatch = useAppDispatch();
   const {enquiry, getEnquiryRequesting} = useAppSelector(state => state.Enquiry);
   const {data} = enquiry || {};
-  console.log('Single Enquiry-data--', JSON.stringify(data));
+  // console.log('Single Enquiry-data--', JSON.stringify(data));
 
   const getSingleEnquiry = () => {
     let enquiry:ISingleEnquiryData;

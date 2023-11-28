@@ -1,5 +1,5 @@
 export interface IGetQuotationRequest {
-  companyId: string;
+  companyId?: string;
   branchId?: string;
   authId?: string;
   id?: string;
