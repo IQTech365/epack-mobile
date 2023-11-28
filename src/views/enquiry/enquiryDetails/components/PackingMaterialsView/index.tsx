@@ -19,6 +19,7 @@ import { PACKING_MATERIAL_FORM_ACTION, initialState, packingMaterialReducer } fr
 import Spinner from '../../../../../common/Spinner';
 import { getUnitTypeRequest } from '../../../../../redux/slices/ProfileSettingSlice';
 import EpackDropdown from '../../../../../common/DropdownComponent2';
+import { getVehicleSizeRequest } from '../../../../../redux/slices/VehicleSlice';
 
 interface packingitems {
     name: string,
@@ -33,22 +34,30 @@ const PackingMaterialsView: React.FC<packingMaterialprop> = ({ enquiryId }) => {
 
     const [state, dispatch] = useReducer(packingMaterialReducer, initialState);
     const [inputText, setInputText] = useState('');
+    const [vehicleLoadSize, setVehicleLoadSize] = useState('');
     const [items, setItems] = useState<packingitems[]>([]);
     const [itemIndex, setItemIndex] = useState<number>(0);
     const { addPackingMaterialsRequesting, addPackingMaterialsSuccess, addPackingMaterialsFailure } = useAppSelector(state => state.Enquiry);
     const { unitType } = useAppSelector(state => state.Setting);
+    const { vehicleSizeData } = useAppSelector(state => state.Vehicle);
+    
     const { data: UnitypeData } = unitType;
+    const { data: VehicleSize } = vehicleSizeData;
 
  const unityTypeArray = ()=>{
   return  UnitypeData.map((item: { unitType: any; }) => item.unitType)
  }
 
- 
+ const vehicleSizeArray = () => {
+    return VehicleSize.map((item: any) => ({ value: item._id, label: item.vehicleSize }));
+}
+
 
     const dispatch2 = useAppDispatch();
     /** Effects */
     useEffect(() => {
         dispatch2(getUnitTypeRequest());
+        dispatch2(getVehicleSizeRequest());
         if (!addPackingMaterialsRequesting && addPackingMaterialsSuccess) {
             Toast.show({
                 type: 'success',
@@ -66,7 +75,9 @@ const PackingMaterialsView: React.FC<packingMaterialprop> = ({ enquiryId }) => {
         }
     }, [addPackingMaterialsRequesting, addPackingMaterialsSuccess, addPackingMaterialsFailure, dispatch2]);
 
-    const handleLorryType = (item: TDropdownItem) => { };
+    const handleLorryType = (item: TDropdownItem) => {
+        setVehicleLoadSize(item.value)
+     };
 
     const handlOtherType = (item: string) => {
         const updatedItems = [...items];
@@ -383,10 +394,10 @@ const PackingMaterialsView: React.FC<packingMaterialprop> = ({ enquiryId }) => {
         }
     };
 
-    const onSubmit = () => {
+    const onSubmit = () => {       
         const payload: IAddPackingMaterialRequest = {
             enquiryId: enquiryId,
-            vehicleLoadSize: "2533433345353534534",
+            vehicleLoadSize: vehicleLoadSize,
             packingMaterial: [state.Labour,
             state.packingTape,
             state.BubbleWrapes,
@@ -416,7 +427,7 @@ const PackingMaterialsView: React.FC<packingMaterialprop> = ({ enquiryId }) => {
                 </View>
                 <View style={styles.textContainer2}>
                     <Label text="Lorry Type" style={styles.label} />
-                    <DropdownComponent data={lorryType} onSelect={handleLorryType} />
+                    <DropdownComponent data={vehicleSizeArray()} onSelect={handleLorryType} />
                 </View>
                 <Spacer height={4} />
                 <View style={styles.mainWrapper}>

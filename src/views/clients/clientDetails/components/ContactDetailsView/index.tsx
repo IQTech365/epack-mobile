@@ -17,7 +17,7 @@ const ContactDetailsView: React.FC<IContactDetailsViewProps> = ({item}) => {
         <Spacer height={4} />
         <CollapsibleView title="CONTACT DETAILS" collapsed={false}>
           <View>
-            {item.billingDetails?.companyName ==''?
+            {item.billingDetails ==''?
             <View style={styles.elementContainer}>
             <EnquiryDetailListItem label='Billing Type:' value='individual'/>
               <EnquiryDetailListItem label='Contact Person:' value={item.partyName}/>
@@ -44,7 +44,7 @@ const ContactDetailsView: React.FC<IContactDetailsViewProps> = ({item}) => {
         <CollapsibleView title="REGISTERED ADDRESS" collapsed={true}>
           <View>
             <View style={styles.elementContainer}>
-              {item.billingDetails?.companyName ==''?
+              {item.billingDetails ==''?
             <>
             <EnquiryDetailListItem label='Individual:' value='pickup address ' />
             <EnquiryDetailListItem

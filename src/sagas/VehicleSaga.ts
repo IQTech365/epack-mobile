@@ -1,7 +1,7 @@
 import {takeLatest, put, call} from 'redux-saga/effects';
 import {PayloadAction} from '@reduxjs/toolkit';
 import * as VehicleService from '../service/VehicleService';
-import { addDriverFailure, addDriverRequest, addDriverSuccess, addLorryFailure, addLorryRequest, addLorrySuccess, getDriverFailure, getDriverRequest, getDriverSuccess, getLorryFailure, getLorryRequest, getLorrySuccess } from '../redux/slices/VehicleSlice';
+import { addDriverFailure, addDriverRequest, addDriverSuccess, addLorryFailure, addLorryRequest, addLorrySuccess, getDriverFailure, getDriverRequest, getDriverSuccess, getLorryFailure, getLorryRequest, getLorrySuccess, getVehicleSizeFailure, getVehicleSizeRequest, getVehicleSizeSuccess } from '../redux/slices/VehicleSlice';
 import { IAddLorryRequest } from '../interface/vehicle/IAddLorryRequest';
 import { IAddLorryResponse } from '../interface/vehicle/IAddLorryResponse';
 import { IAddDriverRequest } from '../interface/vehicle/IAddDriverRequest';
@@ -57,9 +57,21 @@ export function* getDriverSaga(action: PayloadAction<string>) {
     }
 }
 
+export function* getVehicleSizeSaga(action: PayloadAction<string>) {
+    try {
+        const response: IGetDriverResponse = yield call(VehicleService.GetVehicleSizeService);
+        console.log('getVehicleSizeSaga-response----', JSON.stringify(response));
+        yield put(getVehicleSizeSuccess(response));
+    } catch (error) {
+        console.log('getVehicleSizeSaga-error----', error);
+        yield put(getVehicleSizeFailure(JSON.stringify(error)));
+    }
+}
+
 export function* watcherVehicleSaga() {
     yield takeLatest(addLorryRequest.type, addLorrySaga);
     yield takeLatest(getLorryRequest.type, getLorrySaga);
     yield takeLatest(addDriverRequest.type, addDriverSaga);
     yield takeLatest(getDriverRequest.type, getDriverSaga);
+    yield takeLatest(getVehicleSizeRequest.type, getVehicleSizeSaga);
 }
