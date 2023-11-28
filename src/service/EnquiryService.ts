@@ -1,6 +1,6 @@
 import {AxiosResponse} from 'axios';
 import {Api} from '../http/Api';
-import {ADD_ENQUIRY, EDIT_COMPANY, GET_ENQUIRY_LIST, ADD_FOLLOWUP, GET_FOLLOWUP_COMMENTS, ADD_SURVEY, GET_SURVEY_COMMENTS, EDIT_ENQUIRY, GET_ENQUIRY, ADD_SURVEY_ITEM, GET_SURVEY_ITEM} from '../http/Endpoint';
+import {ADD_ENQUIRY, EDIT_COMPANY, GET_ENQUIRY_LIST, ADD_FOLLOWUP, GET_FOLLOWUP_COMMENTS, ADD_SURVEY, GET_SURVEY_COMMENTS, EDIT_ENQUIRY, GET_ENQUIRY, ADD_SURVEY_ITEM, GET_SURVEY_ITEM, ADD_PACKING_MATERIAL} from '../http/Endpoint';
 import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
 import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
 import { IAddEnquiryRequest } from '../interface/enquiry/IAddEnquiryRequest';
@@ -21,6 +21,8 @@ import { IUpdateShiftingInfoRequest, IUpdateShiftingInfoResponse } from '../inte
 import { IAddSurveyItemRequest } from '../interface/enquiry/IAddSurveyItemRequest';
 import { IGetSurveyItemListResponse } from '../interface/enquiry/IGetSurveyItemListResponse';
 import { ISingleEnquiryResponse } from '../interface/enquiry/ISingleEnquiryResponse';
+import { IAddPackingMaterialRequest } from '../interface/enquiry/IAddPackingMaterialRequest';
+import { IAddPackingMaterialResponse } from '../interface/enquiry/IAddPackingMaterialResponse';
 
 export const AddEnquiryService = async (payload: IAddEnquiryRequest): Promise<IAddEnquiryResponse> => {
     const api = Api.getInstance();
@@ -91,5 +93,10 @@ export const UpdateContactDetailsService = async (id:string, requestBody: IUpdat
 export const UpdateShiftingInfoService = async (id:string, requestBody: IUpdateShiftingInfoRequest): Promise<IUpdateShiftingInfoResponse> => {
     const api = Api.getInstance();
     return await api.update<IUpdateShiftingInfoRequest, AxiosResponse<IUpdateShiftingInfoResponse>>(requestBody, EDIT_ENQUIRY(id));
+}
+
+export const AddPackingMaterialService = async (payload: IAddPackingMaterialRequest): Promise<IAddPackingMaterialResponse> => {
+    const api = Api.getInstance();
+    return await api.post<IAddPackingMaterialRequest, AxiosResponse<IAddPackingMaterialResponse>>(payload, ADD_PACKING_MATERIAL);
 }
 

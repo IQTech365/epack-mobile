@@ -6,7 +6,7 @@ import {
   COLOR_GRAY2,
   COLOR_WHITE,
 } from '../../../../../utils/colors';
-const {width} = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -52,14 +52,12 @@ textContainer: {
 },
 wrapConatiner:{
     justifyContent: 'space-between',
-    // alignItems: 'flex-start',
-    // alignSelf: 'center',
     flexDirection: 'row',
 },
 counterContainer: {
     width: width * 0.40,
     paddingVertical: 9,
-    // paddingHorizontal: 19,
+
     borderRadius: 5,
     borderWidth: 0.7,
     borderColor: COLOR_GRAY,
@@ -103,6 +101,7 @@ counterContainer: {
     textAlign: 'center', 
     fontWeight: '500', 
     fontSize: 22,
+    bottom:height*0.005
   },
   inputContainer: {
     width: '100%',

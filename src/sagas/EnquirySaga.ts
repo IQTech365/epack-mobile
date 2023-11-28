@@ -8,6 +8,9 @@ import {
     addFollowupFailure,
     addFollowupRequest,
     addFollowupSuccess,
+    addPackingMaterialFailure,
+    addPackingMaterialRequest,
+    addPackingMaterialSuccess,
     addSurveyFailure,
     addSurveyItemFailure,
     addSurveyItemRequest,
@@ -59,6 +62,8 @@ import { IUpdateEnquiryStatusRequest } from '../interface/enquiry/IUpdateEnquiry
 import { IAddSurveyItemRequest } from '../interface/enquiry/IAddSurveyItemRequest';
 import { IGetSurveyItemListResponse } from '../interface/enquiry/IGetSurveyItemListResponse';
 import { ISingleEnquiryResponse } from '../interface/enquiry/ISingleEnquiryResponse';
+import { IAddPackingMaterialRequest } from '../interface/enquiry/IAddPackingMaterialRequest';
+import { IAddPackingMaterialResponse } from '../interface/enquiry/IAddPackingMaterialResponse';
 
 export function* addEnquirySaga(action: PayloadAction<IAddEnquiryRequest>) {
     try {
@@ -206,6 +211,17 @@ export function* updateShiftingInfoSaga(action: PayloadAction<{ id: string, requ
     }
 }
 
+export function* addPackingMaterialSaga(action: PayloadAction<IAddPackingMaterialRequest>) {
+    try {
+        const response: IAddPackingMaterialResponse = yield call(EnquiryService.AddPackingMaterialService, action.payload);
+        console.log('PackingMaterial-response----', JSON.stringify(response));
+        yield put(addPackingMaterialSuccess(response));
+    } catch (error) {
+        console.log('PackingMaterial-error----', JSON.stringify(error));
+        yield put(addPackingMaterialFailure(error));
+    }
+}
+
 export function* watcherEnquirySaga() {
     yield takeLatest(addEnquiryRequest.type, addEnquirySaga);
     yield takeLatest(getEnquiriesRequest.type, getEnquiriesSaga);
@@ -220,4 +236,5 @@ export function* watcherEnquirySaga() {
     yield takeLatest(updateAddressRequest.type, updateAddressSaga);
     yield takeLatest(updateContactDetailsRequest.type, updateContactDetailsSaga);
     yield takeLatest(updateShiftingInfoRequest.type, updateShiftingInfoSaga);
+    yield takeLatest(addPackingMaterialRequest.type, addPackingMaterialSaga);
 }

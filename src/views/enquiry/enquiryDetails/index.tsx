@@ -42,7 +42,7 @@ const EnquiryDetailsView: React.FC<Props> = ({ route, navigation }) => {
       case 3:
         return <QuotationView enquiryId={enquiryId as string} />
       case 4:
-        return <PackingMaterialsView />
+        return <PackingMaterialsView enquiryId ={enquiryId as string}/>
       default:
         return null;
     }
