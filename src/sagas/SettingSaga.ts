@@ -9,7 +9,7 @@ import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
 import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
 import { IAddFooterContentRequest } from '../interface/setting/packerProfile/footerContent/IAddFooterContentRequest';
 import { IAddFooterContentResponse } from '../interface/setting/packerProfile/footerContent/IAddFooterContentResponse';
-import { addContactFailure, addContactRequest, addContactSuccess, addDocumentFailure, addDocumentRequest, addDocumentSuccess, addFooterContentFailure, addFooterContentRequest, addFooterContentSuccess, addPaymentMethodFailure, addPaymentMethodRequest, addPaymentMethodSuccess, getContactsFailure, getContactsRequest, getContactsSuccess, getDocumentsFailure, getDocumentsRequest, getDocumentsSuccess, getFooterContentsFailure, getFooterContentsRequest, getFooterContentsSuccess, getPaymentMethodsFailure, getPaymentMethodsRequest, getPaymentMethodsSuccess, getSubmodulesFailure, getSubmodulesRequest, getSubmodulesSuccess } from '../redux/slices/ProfileSettingSlice';
+import { addContactFailure, addContactRequest, addContactSuccess, addDocumentFailure, addDocumentRequest, addDocumentSuccess, addFooterContentFailure, addFooterContentRequest, addFooterContentSuccess, addPaymentMethodFailure, addPaymentMethodRequest, addPaymentMethodSuccess, getContactsFailure, getContactsRequest, getContactsSuccess, getDocumentsFailure, getDocumentsRequest, getDocumentsSuccess, getFooterContentsFailure, getFooterContentsRequest, getFooterContentsSuccess, getPaymentMethodsFailure, getPaymentMethodsRequest, getPaymentMethodsSuccess, getSubmodulesFailure, getSubmodulesRequest, getSubmodulesSuccess, getUnitTypeFailure, getUnitTypeRequest, getUnitTypeSuccess } from '../redux/slices/ProfileSettingSlice';
 import { IGetFooterContentsResponse } from '../interface/setting/packerProfile/footerContent/IGetFooterContentsResponse';
 import { IAddPaymentMethodRequest } from '../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodRequest';
 import { IAddPaymentMethodResponse } from '../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodResponse';
@@ -28,6 +28,7 @@ import { ICreateSerialNoRequest } from '../interface/setting/serialNo/ICreateSer
 import { ICreateSerialNoResponse } from '../interface/setting/serialNo/ICreateSerialNoResponse';
 import { createSerialNoFailure, createSerialNoRequest, createSerialNoSuccess, getSerialNoFailure, getSerialNoRequest, getSerialNoSuccess } from '../redux/slices/SerialNoSettingSlice';
 import { IGetModulesResponse } from '../interface/setting/role/IModule';
+import { IGetUnitTypeResponse } from '../interface/setting/unitType/IGetunitTypeResponse';
 
 export function* addFooterContentSaga(action: PayloadAction<IAddFooterContentRequest>) {
     console.log('addFooterContentSaga--action--', JSON.stringify(action));
@@ -216,6 +217,17 @@ export function* getModulesSaga(action: PayloadAction) {
     }
 }
 
+export function* getUnitTypeSaga(action: PayloadAction) {
+    try {
+        const response: IGetUnitTypeResponse = yield call(SettingService.GetUnitTypeService);
+        console.log('getUnitTypeSaga-response----', JSON.stringify(response));
+        yield put(getUnitTypeSuccess(response));
+    } catch (error) {
+        console.log('getUnitTypeSaga-error----', error);
+        yield put(getUnitTypeFailure(JSON.stringify(error)));
+    }
+}
+
 export function* watcherSettingSaga() {
     yield takeLatest(addFooterContentRequest.type, addFooterContentSaga);
     yield takeLatest(getFooterContentsRequest.type, getFooterContentsSaga);
@@ -232,4 +244,5 @@ export function* watcherSettingSaga() {
     yield takeLatest(createSerialNoRequest.type, createSerialNoSaga);
     yield takeLatest(getModulesRequest.type, getModulesSaga);
     yield takeLatest(getSerialNoRequest.type, getSerialNoSaga);
+    yield takeLatest(getUnitTypeRequest.type, getUnitTypeSaga);
 }

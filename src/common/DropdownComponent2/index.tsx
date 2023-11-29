@@ -7,6 +7,7 @@ import {
   Modal,
   Dimensions,
   TouchableWithoutFeedback,
+  ScrollView,
 } from 'react-native';
 import styles from './style';
 import CloseIcon from '../../images/icons/close_icon.svg';
@@ -113,6 +114,7 @@ const EpackDropdown: React.FC<IEpackDropdownProps> = forwardRef(
                 <CloseIcon width={20} height={20} />
               </TouchableOpacity>
             </View>
+            <ScrollView  style={{ maxHeight: 200 }}>
             <View>
               {data &&
                 data.map(option => (
@@ -124,6 +126,7 @@ const EpackDropdown: React.FC<IEpackDropdownProps> = forwardRef(
                   </TouchableOpacity>
                 ))}
             </View>
+            </ScrollView>
           </View>
         </Modal>
       </View>

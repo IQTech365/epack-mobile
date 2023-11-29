@@ -25,6 +25,7 @@ export const GET_SURVEY_ITEM =  `/survey/get-survey-item`;
 export const ADD_FOLLOWUP = `/followup/add`;
 export const GET_FOLLOWUP_COMMENTS = (enquiry_id) => `/followup/${enquiry_id}`;
 export const ADD_QUOTATION = `/quotation/add`;
+export const ADD_PACKING_MATERIAL = `/enquiry/add-packing-material`;
 //README:- id = `company_id` or `enquiry_id`
 export const GET_QUOTATION_LIST = `/quotation/getquotation`;
 export const GET_QUOTATION = (quotation_id) => `/quotation/${quotation_id}`;
@@ -82,6 +83,7 @@ export const  ADD_LORRY = `/vehicle-management/vehicle-lorry/add`;
 export const GET_LORRY = (company_id) => `/vehicle-management/vehicle-lorry/all/${company_id}`;
 export const  ADD_DRIVER = `/vehicle-management/vehicle-driver/add`;
 export const GET_DRIVER = (company_id) => `/vehicle-management/vehicle-driver/all/${company_id}`;
+export const  GET_VEHICLE_SIZE = `/vehicle-management/vehicle-size/getAll`;
 
 export const GET_ROLE_TYPES = `/setting/role-type/getAll`;
 export const CHECK_USERNAME_AVAILABLITY = `/auth/lookup`;
@@ -97,3 +99,6 @@ export const GET_SERIAL_NO = (company_id) => `/setting/app-setting/company/${com
 
 // Modules
 export const MODULES = `/content-management/module/getAll`;
+
+//Unit Type
+export const GET_UNIT_TYPES = `/setting/unit-type/all`;

@@ -1,12 +1,13 @@
 import {AxiosResponse} from 'axios';
 import {Api} from '../http/Api';
-import { ADD_DRIVER, ADD_LORRY, GET_DRIVER, GET_LORRY} from '../http/Endpoint';
+import { ADD_DRIVER, ADD_LORRY, GET_DRIVER, GET_LORRY, GET_VEHICLE_SIZE} from '../http/Endpoint';
 import { IAddLorryRequest } from '../interface/vehicle/IAddLorryRequest';
 import { IAddLorryResponse } from '../interface/vehicle/IAddLorryResponse';
 import { IAddDriverRequest } from '../interface/vehicle/IAddDriverRequest';
 import { IAddDriverResponse } from '../interface/vehicle/IAddDriverResponse';
 import { IGetLorryResponse } from '../interface/vehicle/IGetLorryResponse';
 import { IGetDriverResponse } from '../interface/vehicle/IGetDriverReuest';
+import { IGetVehicleSizeResponse } from '../interface/vehicle/IGetVehicleSizeResponse';
 
 export const AddLorryService = async (payload: IAddLorryRequest): Promise<IAddLorryResponse> => {
     console.log('AddLorryService--payload--', JSON.stringify(payload));
@@ -28,4 +29,9 @@ export const addDriverService = async (payload: IAddDriverRequest): Promise<IAdd
 export const GetDriverService = async (payload: string): Promise<IGetDriverResponse> => {
     const api = Api.getInstance();
     return await api.get<IGetDriverResponse>(GET_DRIVER(payload));
+}
+
+export const GetVehicleSizeService = async (): Promise<IGetVehicleSizeResponse> => {
+    const api = Api.getInstance();
+    return await api.get<IGetVehicleSizeResponse>(GET_VEHICLE_SIZE);
 }

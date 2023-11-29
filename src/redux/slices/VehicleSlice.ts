@@ -6,6 +6,7 @@ import { IAddDriverRequest } from '../../interface/vehicle/IAddDriverRequest';
 import { IAddBranchResponse } from '../../interface/myProfile/IAddbranchResponse';
 import { IGetLorryResponse } from '../../interface/vehicle/IGetLorryResponse';
 import { IGetDriverResponse } from '../../interface/vehicle/IGetDriverReuest';
+import { IGetVehicleSizeResponse } from '../../interface/vehicle/IGetVehicleSizeResponse';
 
 
 interface IVehicleState {
@@ -36,6 +37,13 @@ interface IVehicleState {
     addDriveruccess: boolean;
     addDriverFailure: boolean;
     addDriverError: any;
+
+    // Get Vehicle size
+    vehicleSizeData: IGetVehicleSizeResponse | null;
+    getVehicleSizeRequesting: boolean;
+    getVehicleSizeSuccess: boolean;
+    getVehicleSizeFailure: boolean;
+    getVehicleSizeError: any;
 }
 
 const initialState: IVehicleState = {
@@ -54,19 +62,26 @@ const initialState: IVehicleState = {
     addLorryFailure: false,
     addLorryError: null,
 
-     // Get Driver
-     Drivers: null,
-     getDriversRequesting: false,
-     getDriversSuccess: false,
-     getDriversFailure: false,
-     getDriversError: null,
+    // Get Driver
+    Drivers: null,
+    getDriversRequesting: false,
+    getDriversSuccess: false,
+    getDriversFailure: false,
+    getDriversError: null,
 
-     // Add Driver
-     addDriverInfo:  null,
-     addDriverRequesting: false,
-     addDriveruccess: false,
-     addDriverFailure: false,
-     addDriverError: null,
+    // Add Driver
+    addDriverInfo: null,
+    addDriverRequesting: false,
+    addDriveruccess: false,
+    addDriverFailure: false,
+    addDriverError: null,
+
+    // Get Vehicle size
+    vehicleSizeData: null,
+    getVehicleSizeRequesting: false,
+    getVehicleSizeSuccess: false,
+    getVehicleSizeFailure: false,
+    getVehicleSizeError: null,
 };
 
 export const VehicleSlice = createSlice({
@@ -110,8 +125,8 @@ export const VehicleSlice = createSlice({
             state.addLorryFailure = false;
             state.addLorryError = null;
         },
-         // Get Drivers
-         getDriverRequest: (state, action: PayloadAction<string>) => {
+        // Get Drivers
+        getDriverRequest: (state, action: PayloadAction<string>) => {
             state.getDriversRequesting = true;
         },
         getDriverSuccess: (state, action: PayloadAction<IGetDriverResponse>) => {
@@ -147,6 +162,21 @@ export const VehicleSlice = createSlice({
             state.addDriverFailure = false;
             state.addDriverError = null;
         },
+        // Get Vehicle Size
+        getVehicleSizeRequest: (state) => {
+            state.getVehicleSizeRequesting = true;
+        },
+        getVehicleSizeSuccess: (state, action: PayloadAction<IGetVehicleSizeResponse>) => {
+            state.getVehicleSizeRequesting = false;
+            state.getVehicleSizeSuccess = true;
+            state.vehicleSizeData = action.payload;
+        },
+        getVehicleSizeFailure: (state, action: PayloadAction<any>) => {
+            state.getVehicleSizeRequesting = false;
+            state.getVehicleSizeSuccess = false;
+            state.getVehicleSizeFailure = true;
+            state.getVehicleSizeError = action.payload;
+        },
     },
 });
 
@@ -172,5 +202,11 @@ export const {
     addDriverRequest,
     addDriverSuccess,
     addDriverFailure,
-    restaddDriverRequest
+    restaddDriverRequest,
+
+    //Get Vehicle Size
+    getVehicleSizeRequest,
+    getVehicleSizeSuccess,
+    getVehicleSizeFailure
+
 } = VehicleSlice.actions;
