@@ -40,7 +40,7 @@ const EnquiryDetailsView: React.FC<Props> = ({ route, navigation }) => {
       case 2:
         return <SurveyView taskName='SURVEY' assigneeRole='Survey' enquiryId={enquiryId as string} />
       case 3:
-        return <QuotationView enquiryId={enquiryId as string} navigation={navigation}/>
+        return <QuotationView enquiryId={enquiryId as string} navigation={navigation} onItemClick={handleTabChange}/>
       case 4:
         return <PackingMaterialsView enquiryId ={enquiryId as string}/>
       default:

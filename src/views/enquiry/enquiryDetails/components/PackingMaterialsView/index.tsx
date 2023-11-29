@@ -37,19 +37,31 @@ const PackingMaterialsView: React.FC<packingMaterialprop> = ({ enquiryId }) => {
     const [vehicleLoadSize, setVehicleLoadSize] = useState('');
     const [items, setItems] = useState<packingitems[]>([]);
     const [itemIndex, setItemIndex] = useState<number>(0);
-    const { addPackingMaterialsRequesting, addPackingMaterialsSuccess, addPackingMaterialsFailure } = useAppSelector(state => state.Enquiry);
+    const {
+      addPackingMaterialsRequesting,
+      addPackingMaterialsSuccess,
+      addPackingMaterialsFailure,
+    } = useAppSelector(state => state.Enquiry);
     const { unitType } = useAppSelector(state => state.Setting);
     const { vehicleSizeData } = useAppSelector(state => state.Vehicle);
     
-    const { data: UnitypeData } = unitType;
-    const { data: VehicleSize } = vehicleSizeData;
+    const { data: UnitypeData } = unitType || {};
+    const { data: VehicleSize } = vehicleSizeData || {};
 
  const unityTypeArray = ()=>{
-  return  UnitypeData.map((item: { unitType: any; }) => item.unitType)
+    let _data: any[] = [];
+    if(UnitypeData && Array.isArray(UnitypeData) && UnitypeData.length > 0) {
+        _data = UnitypeData.map((item: { unitType: any; }) => item.unitType);
+    }
+  return  _data
  }
 
  const vehicleSizeArray = () => {
-    return VehicleSize.map((item: any) => ({ value: item._id, label: item.vehicleSize }));
+    let _data: any[] = [];
+    if(VehicleSize && Array.isArray(VehicleSize) && VehicleSize.length > 0) {
+        _data = VehicleSize.map((item: any) => ({ value: item._id, label: item.vehicleSize }));
+    }
+    return _data
 }
 
 
@@ -426,7 +438,7 @@ const PackingMaterialsView: React.FC<packingMaterialprop> = ({ enquiryId }) => {
                     <Text style={styles.labelText}>Material List Form</Text>
                 </View>
                 <View style={styles.textContainer2}>
-                    <Label text="Lorry Type" style={styles.label} />
+                    <Label text="Vehicle Load Size" style={styles.label} />
                     <DropdownComponent data={vehicleSizeArray()} onSelect={handleLorryType} />
                 </View>
                 <Spacer height={4} />

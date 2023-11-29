@@ -19,7 +19,7 @@ import { IUpdateEnquiryStatusRequest } from '../../interface/enquiry/IUpdateEnqu
 import { IAddSurveyItemRequest } from '../../interface/enquiry/IAddSurveyItemRequest';
 import { IGetSurveyItemListResponse } from '../../interface/enquiry/IGetSurveyItemListResponse';
 import { ISingleEnquiryResponse } from '../../interface/enquiry/ISingleEnquiryResponse';
-import { IAddMaterialPackingResponse, IAddPackingMaterialResponse } from '../../interface/enquiry/IAddPackingMaterialResponse';
+import { IAddPackingMaterialResponse } from '../../interface/enquiry/IAddPackingMaterialResponse';
 import { IAddPackingMaterialRequest } from '../../interface/enquiry/IAddPackingMaterialRequest';
 
 interface IEnquiryState {
@@ -114,7 +114,7 @@ interface IEnquiryState {
   updateShiftingInfoFailure: boolean;
   updateShiftingInfoError: any;
    // Add Packing Materials
-   addPackingMaterialsInfo: IAddMaterialPackingResponse | null;
+   addPackingMaterialsInfo: IAddPackingMaterialResponse | null;
    addPackingMaterialsRequesting: boolean;
    addPackingMaterialsSuccess: boolean;
    addPackingMaterialsFailure: boolean;

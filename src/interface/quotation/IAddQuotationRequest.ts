@@ -22,6 +22,7 @@ export interface IStorageCharges {
 }
 export interface IAddQuotationRequest {
   companyId: string;
+  enquiryId?:string;
   authId: string;
   shiftingType: string;
   shiftingLuggage: string;

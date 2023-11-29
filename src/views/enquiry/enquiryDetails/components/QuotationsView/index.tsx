@@ -26,11 +26,13 @@ import useCompanyId from '../../../../../hooks/useCompanyId';
 interface IQuotationViewProps {
   enquiryId: string;
   navigation: any;
+  onItemClick: (tabIndex: number) => void;
 }
 
 const QuotationView: React.FC<IQuotationViewProps> = ({
   enquiryId,
   navigation,
+  onItemClick,
 }) => {
   const {quotations, getQuotationsRequesting} = useAppSelector(
     state => state.Quotation,
@@ -41,18 +43,6 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
 
   const [showQuotationList, setShowQuotationList] = useState<boolean>(false);
   const [createNewQuotation, setCreateNewQuotation] = useState<boolean>(true);
-
-  // Temp Data
-  const tempItem: IQuotationItem = {
-    quotationNo: '#9877654',
-    clientName: 'Ms. Vanshika',
-    fromDestination: 'Delhi',
-    toDestination: 'Gurgaon',
-    shiftingType: 'Home',
-    quotationAmount: '12000.00',
-    quotationDate: '14-07-2023',
-    phoneNumber: '9898989898',
-  };
 
   const _getClientName = (item:IGetQuotationData) => {
     let name:string = 'NA';
@@ -143,20 +133,22 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
       Array.isArray(quotationData) &&
       quotationData.length > 0
     ) {
-      _data = quotationData.map((quotation: IGetQuotationData) => {
-        const {quotationNumber, enquiries, quotationData, quotationAmount} = quotation;
-        const item: IQuotationItem = {
-          quotationNo: quotationNumber,
-          clientName: _getClientName(quotation),
-          fromDestination: _getFromDestination(quotation),
-          toDestination: _getToDestination(quotation),
-          shiftingType: _getShiftingType(quotation),
-          quotationAmount: quotationAmount,
-          quotationDate: quotationData,
-          phoneNumber: _getMobile(quotation),
-        };
-        return item;
-      });
+      _data = quotationData
+        .filter((e: IGetQuotationData) => e.enquiryId == enquiryId)
+        .map((quotation: IGetQuotationData) => {
+          const {quotationNumber, quotationData, quotationAmount} = quotation;
+          const item: IQuotationItem = {
+            quotationNo: quotationNumber,
+            clientName: _getClientName(quotation),
+            fromDestination: _getFromDestination(quotation),
+            toDestination: _getToDestination(quotation),
+            shiftingType: _getShiftingType(quotation),
+            quotationAmount: quotationAmount,
+            quotationDate: quotationData,
+            phoneNumber: _getMobile(quotation),
+          };
+          return item;
+        });
       return _data;
     }
     return _data;
@@ -191,7 +183,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
   const showForm = () => {
     if (createNewQuotation) {
       //@ts-ignore
-      return <AddQuotationView showHeader={false} />;
+      return <AddQuotationView showHeader={false} fromEnquiry={true} enquiryId={enquiryId} />;
     }
     return null;
   };
@@ -212,7 +204,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
             <QuotationListItem
               item={item}
               index={1}
-              onPress={() => {}}
+              onPress={() => {onItemClick(0)}}
               onDownload={() => {}}
               onEdit={() => {}}
               onPreview={() => {}}

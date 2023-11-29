@@ -89,10 +89,14 @@ import { NavigationProp } from '@react-navigation/native';
 
 interface Props extends NativeStackScreenProps<QuotationStackParamList, 'AddQuotation'> {
   showHeader?: boolean;
+  fromEnquiry?:boolean;
+  enquiryId?: string;
 }
 
 const AddQuotationView: React.FC<Props> = ({
   showHeader = true,
+  fromEnquiry = false,
+  enquiryId,
   navigation,
   route,
 }) => {
@@ -1649,6 +1653,7 @@ const AddQuotationView: React.FC<Props> = ({
     }
     const payload: IAddQuotationRequest = {
       companyId: companyId,
+      enquiryId: enquiryId || '',
       authId: otpData?.data.id as string,
       shiftingType: state?.shiftingType.toUpperCase(),
       shiftingLuggage: state?.shiftingLuggage as string,

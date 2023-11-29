@@ -25,7 +25,6 @@ export abstract class HttpClient {
 
   private _handleRequest = async (config: AxiosRequestConfig) => {
     const authToken = await getAuthToken();
-    // const authToken = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NTBlZmIyZDdlMzk2OGM0YzIxN2EzNGYiLCJpZCI6IjY1MGVmYjJkN2UzOTY4YzRjMjE3YTM0ZiIsImlhdCI6MTY5NTg4MTg2MiwiZXhwIjoxNjk1OTY4MjYyfQ.mLJFzj0gM1tR_7dr0o0XPXODGH5mA5KCGLGvDyw6QnQ`;
     console.log('authToken----', authToken);
     if(authToken) {
       //@ts-ignore
@@ -38,7 +37,11 @@ export abstract class HttpClient {
     return config;
   } 
 
-  private _handleResponse = ({data}: AxiosResponse) => data; 
+  private _handleResponse = ({data}: AxiosResponse) => {
+    return data
+  }; 
 
-  private _handleError = (error: any) => Promise.reject(error);
+  private _handleError = (error: any) => {
+    return Promise.reject(error);
+  };
 }
