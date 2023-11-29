@@ -534,12 +534,12 @@ const PackingMaterialsView: React.FC<packingMaterialprop> = ({enquiryId}) => {
                   <PlusIcon width={32} height={32} />
                 </TouchableOpacity>
               </View>
-              {/* <View style={styles.dropDownStyle}>
+              <View style={styles.dropDownStyle}>
                                   <EpackDropdown
                                 data={unityTypeArray()}
                                 placeholder={'Select unit Type'}
                                 hanldeData={handleLabourType} />
-                            </View> */}
+                            </View>
             </View>
           </View>
         </View>

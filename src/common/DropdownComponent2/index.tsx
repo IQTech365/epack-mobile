@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState, forwardRef} from 'react';
+import React, {useEffect, useRef, useState, forwardRef, useDeferredValue} from 'react';
 import {
   View,
   Text,
@@ -24,7 +24,8 @@ const EpackDropdown: React.FC<IEpackDropdownProps> = forwardRef(
   ({placeholder, data, hanldeData, inputDefaultValue}, ref) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedValue, setSelectedValue] = useState<string | null>(null);
-    const [inputValue, setInputValue] = useState(data && data[0]);
+    const deferredValue = useDeferredValue(data && data[0]); 
+    const [inputValue, setInputValue] = useState(deferredValue);
     const [options, setOptions] = useState(data);
     const inputRef = useRef<TextInput | null>(null);
     const {width: windowWidth} = Dimensions.get('window');

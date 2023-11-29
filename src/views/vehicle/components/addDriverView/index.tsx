@@ -37,12 +37,13 @@ import usePincodeHook, {
   PINCODE_REQUEST_KEY,
 } from '../../../../hooks/usePincodeHook';
 import {TDropdownItem} from '../../../../type/TDropdownItem';
-import {getCities, getStates} from '../../../../utils/formatter';
+import {getCities, getLocalities, getStates} from '../../../../utils/formatter';
 import {
   getBranchsRequest,
   getFranchiseRequest,
 } from '../../../../redux/slices/MyProfile';
 import useCompanyId from '../../../../hooks/useCompanyId';
+import DropdownComponent from '../../../../common/DropdownComponent';
 
 const AddDriverView: React.FC<{}> = ({}) => {
   const [state, dispatch] = useReducer(addAddDriverReducer, initialState);
@@ -77,12 +78,14 @@ const AddDriverView: React.FC<{}> = ({}) => {
     );
   const [permanentStates, setpermanentStates] = useState<string[]>([]);
   const [permanentCities, setpermanentCities] = useState<string[]>([]);
+  const [permanentLocalities, setpermanentLocalities] = useState<string[]>([]);
   const [currentStates, setCurrentStates] = useState<string[]>([]);
   const [currentCities, setCurrentCities] = useState<string[]>([]);
-  const [branchStatus, setBranchStatus] = useState<any>('');
-  const [branchData, setBranchData] = useState([]);
+  const [currentLocalities, setCurrentLocalities] = useState<string[]>([]);
+  const [branchStatus, setBranchStatus] = useState<any>(chooseEntity1[0]);
   const {Branchs, getBranchsRequesting, Franchises, getFranchiseRequesting} =
     useAppSelector(state => state.Myprofile);
+    const [branchData, setBranchData] = useState([]);
   const dispatch2 = useAppDispatch();
   const companyId = useCompanyId();
 
@@ -99,15 +102,15 @@ const AddDriverView: React.FC<{}> = ({}) => {
       let data = [];
       if (branchStatus === 'Branch') {
         data =
-          Branchs &&
+          Branchs.data &&
           Branchs.data.map((data: any) => {
-            return data.branchName;
+            return {label:data.branchName, value:data._id};
           });
       } else {
         data =
-          Franchises &&
+          Franchises.data &&
           Franchises.data.map((data: any) => {
-            return data.branchName;
+            return {label:data.branchName, value:data._id};
           });
       }
       setBranchData(data);
@@ -129,10 +132,15 @@ const AddDriverView: React.FC<{}> = ({}) => {
     });
   };
 
-  const handleBranchName = (text: string) => {
+  const handleBranchName = (item: TDropdownItem) => {
     dispatch({
       type: ADD_Driver_FORM_ACTION.BRANCH_NAME,
-      payload: text,
+      payload: item.label,
+    });
+
+    dispatch({
+      type: ADD_Driver_FORM_ACTION.ENTITY_ID,
+      payload: item.value,
     });
   };
 
@@ -156,6 +164,13 @@ const AddDriverView: React.FC<{}> = ({}) => {
     });
   };
 
+  const handleAdharNumberInputTextChange = (text: string) => {
+    dispatch({
+      type: ADD_Driver_FORM_ACTION.AADHAR_NO,
+      payload: text,
+    });
+  };
+  
   const handlePermanentPincodeInputTextChange = (text: string) => {
     setPincodeRequestKey(PINCODE_REQUEST_KEY.ADD_DRIVER_PERMANENT_ADDRESS);
     setPincode(text);
@@ -288,7 +303,7 @@ const AddDriverView: React.FC<{}> = ({}) => {
     const payload: IAddDriverRequest = {
       companyId: companyId,
       entityType: state.chooseEntity,
-      entityId: state.chooseEntity,
+      entityId: state.entityId,
       driverName: state.driverName,
       mobile: state.mobile,
       licenceNo: state.licenceNo,
@@ -315,7 +330,6 @@ const AddDriverView: React.FC<{}> = ({}) => {
             state: state.currentAddress?.state,
             locality: state.currentAddress?.locality,
           },
-      addedBy: '',
     };
     console.log(payload, 'add Driver..');
     dispatch2(addDriverRequest(payload));
@@ -363,13 +377,39 @@ const AddDriverView: React.FC<{}> = ({}) => {
       ) {
         const _states = getStates(result).map(e => e.label);
         const _cities = getCities(result).map(e => e.label);
+        const _localities = getLocalities(result);
         setpermanentStates(_states);
         setpermanentCities(_cities);
+        setpermanentLocalities(_localities);
+        const {permanentAddress} = state;
+        const tempObj = {
+          ...permanentAddress,
+          state: _states[0],
+          city:_cities[0],
+          locality:_localities[0]
+        };
+        dispatch({
+          type: ADD_Driver_FORM_ACTION.PERMANENT_ADDRESS,
+          payload: tempObj as TAddressInfo,
+        });
       } else {
         const _states = getStates(result).map(e => e.label);
         const _cities = getCities(result).map(e => e.label);
+        const _localities = getLocalities(result);
         setCurrentStates(_states);
         setCurrentCities(_cities);
+        setCurrentLocalities(_localities);
+        const {currentAddress} = state;
+        const tempObj = {
+          ...currentAddress,
+          state: _states[0],
+          city:_cities[0],
+          locality:_localities[0]
+        };
+        dispatch({
+          type: ADD_Driver_FORM_ACTION.CURRENT_ADDRESS,
+          payload: tempObj as TAddressInfo,
+        });
       }
     }
   }, [result, pincodeRequestKey]);
@@ -414,12 +454,16 @@ const AddDriverView: React.FC<{}> = ({}) => {
                 />
               </View>
               <View style={styles.textContainer}>
-                <Label text="Branch Name" style={styles.label} />
-                <EpackDropdown
+                <Label text={branchStatus} style={styles.label} />
+                {/* <EpackDropdown
                   data={branchData}
                   placeholder={'please select or enter'}
                   hanldeData={handleBranchName}
-                />
+                /> */}
+                 <DropdownComponent
+                data={branchData}
+                onSelect={handleBranchName}
+              />
               </View>
             </View>
             <Spacer height={4} />
@@ -548,6 +592,16 @@ const AddDriverView: React.FC<{}> = ({}) => {
           </View>
           <Spacer height={4} />
           <View style={styles.elementContainer}>
+            <Label text="Adhar Number" style={styles.label} />
+            <Input
+              onChangeText={handleAdharNumberInputTextChange}
+              containerStyle={styles.inputContainer}
+              inputStyle={styles.input}
+              selectionColor={COLOR_BLACK}
+            />
+          </View>
+          <Spacer height={4} />
+          <View style={styles.elementContainer}>
             <Label
               text="Permanent Address"
               style={[styles.label, {fontWeight: '600'}]}
@@ -571,6 +625,7 @@ const AddDriverView: React.FC<{}> = ({}) => {
                 data={permanentStates}
                 placeholder={'please select or enter'}
                 hanldeData={handlePermanentState}
+                inputDefaultValue ={permanentStates[0]}
               />
             </View>
           </View>
@@ -582,14 +637,16 @@ const AddDriverView: React.FC<{}> = ({}) => {
                 data={permanentCities}
                 placeholder={'please select or enter'}
                 hanldeData={handlePermanentCity}
+                inputDefaultValue ={permanentCities[0]}
               />
             </View>
             <View style={styles.textContainer}>
               <Label text="Locality" style={styles.label} />
               <EpackDropdown
-                data={stateData}
+                data={permanentLocalities}
                 placeholder={'please select or enter'}
                 hanldeData={handlePermanentLocality}
+                inputDefaultValue ={permanentLocalities[0]}
               />
             </View>
           </View>
@@ -649,6 +706,7 @@ const AddDriverView: React.FC<{}> = ({}) => {
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
+                value={checkAddress?state.permanentAddress?.pincode:''}
               />
             </View>
             <View style={styles.textContainer}>
@@ -657,6 +715,7 @@ const AddDriverView: React.FC<{}> = ({}) => {
                 data={currentStates}
                 placeholder={'please select or enter'}
                 hanldeData={handleCurrentState}
+                inputDefaultValue ={checkAddress?state.permanentAddress?.state:currentStates[0]}
               />
             </View>
           </View>
@@ -668,14 +727,16 @@ const AddDriverView: React.FC<{}> = ({}) => {
                 data={currentCities}
                 placeholder={'please select or enter'}
                 hanldeData={handleCurrentCity}
+                inputDefaultValue ={checkAddress?state.permanentAddress?.city:currentCities[0]}
               />
             </View>
             <View style={styles.textContainer}>
               <Label text="Locality" style={styles.label} />
               <EpackDropdown
-                data={stateData}
+                data={currentLocalities}
                 placeholder={'please select or enter'}
                 hanldeData={handleCurrentLocality}
+                inputDefaultValue ={checkAddress?state.permanentAddress?.locality:currentLocalities[0]}
               />
             </View>
           </View>

@@ -3,10 +3,11 @@ import { Reducer } from 'react';
 //** ALL ACTIONS */
 export enum ADD_Driver_FORM_ACTION {
     CHOOSE_ENTITY = 'CHOOSE_ENTITY',
+    ENTITY_ID = 'ENTITY_ID',
     BRANCH_NAME = 'BRANCH_NAME',
     DRIVER_NAME = 'DRIVER_NAME',
     MOBILE = 'MOBILE',
-    LICENCE_NO= 'LICENCE_NO',
+    LICENCE_NO = 'LICENCE_NO',
     AADHAR_NO = 'AADHAR_NO',
     PERMANENT_ADDRESS = 'PERMANENT_ADDRESS',
     CURRENT_ADDRESS = 'CURRENT_ADDRESS',
@@ -20,26 +21,27 @@ export type TAddressInfo = {
     address: string;
     pincode: string;
     locality: string;
-  };
+};
 
-  const defaultAddress: TAddressInfo = {
+const defaultAddress: TAddressInfo = {
     state: '',
     city: '',
     address: '',
     pincode: '',
     locality: '',
-  };
+};
 
 /** ADD DRIVER FORM STATE */
 export interface IAddDriverFormState {
     chooseEntity: string;
+    entityId: string;
     branchName: string;
-    driverName:string;
-    mobile:string;
-    licenceNo:string;
-    aadharNo:string;
-    permanentAddress:TAddressInfo | null;
-    currentAddress:TAddressInfo | null;
+    driverName: string;
+    mobile: string;
+    licenceNo: string;
+    aadharNo: string;
+    permanentAddress: TAddressInfo | null;
+    currentAddress: TAddressInfo | null;
     createdBy: string;
 }
 
@@ -52,13 +54,14 @@ export interface IAddDriverAction {
 /** INITIAL STATE */
 export const initialState: IAddDriverFormState = {
     chooseEntity: '',
+    entityId: '',
     branchName: '',
-    driverName:'',
-    mobile:'',
-    licenceNo:'',
-    aadharNo:'',
-    permanentAddress:defaultAddress,
-    currentAddress:defaultAddress,
+    driverName: '',
+    mobile: '',
+    licenceNo: '',
+    aadharNo: '',
+    permanentAddress: defaultAddress,
+    currentAddress: defaultAddress,
     createdBy: ''
 };
 
@@ -71,6 +74,8 @@ export const addAddDriverReducer: Reducer<
     switch (type) {
         case ADD_Driver_FORM_ACTION.CHOOSE_ENTITY:
             return { ...state, chooseEntity: payload as string };
+        case ADD_Driver_FORM_ACTION.ENTITY_ID:
+            return { ...state, entityId: payload as string };
         case ADD_Driver_FORM_ACTION.BRANCH_NAME:
             return { ...state, branchName: payload as string };
         case ADD_Driver_FORM_ACTION.DRIVER_NAME:

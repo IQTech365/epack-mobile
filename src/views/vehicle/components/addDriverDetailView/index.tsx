@@ -37,7 +37,7 @@ const AddDriverDetailView: React.FC<IAddDriverDetailViewProps> = ({}) => {
   const companyId = useCompanyId();
 
   const [showAddDriverDetailList, setShowAddDriverDetailList] = useState<boolean>(false);
-  const [createNewAddDriverDetail, setCreateNewAddDriverDetail] = useState<boolean>(true);
+  const [createNewAddDriverDetail, setCreateNewAddDriverDetail] = useState<boolean>(false);
 
   const handleCreateNewAddDriverDetail = () => {
     setShowAddDriverDetailList(false);
@@ -47,10 +47,12 @@ const AddDriverDetailView: React.FC<IAddDriverDetailViewProps> = ({}) => {
   const handleShowAddDriverDetailList = () => {
     setShowAddDriverDetailList(true);
     setCreateNewAddDriverDetail(false);
+    dispatch(getDriverRequest(companyId));
   };
 
   useEffect(() => {
     dispatch(getDriverRequest(companyId));
+    DriversData.length > 0?setShowAddDriverDetailList(true):setCreateNewAddDriverDetail(true);
   }, []);
 
   const showEmptyView = () => {
