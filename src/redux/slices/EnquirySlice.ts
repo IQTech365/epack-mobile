@@ -21,6 +21,7 @@ import { IGetSurveyItemListResponse } from '../../interface/enquiry/IGetSurveyIt
 import { ISingleEnquiryResponse } from '../../interface/enquiry/ISingleEnquiryResponse';
 import { IAddPackingMaterialResponse } from '../../interface/enquiry/IAddPackingMaterialResponse';
 import { IAddPackingMaterialRequest } from '../../interface/enquiry/IAddPackingMaterialRequest';
+import { IGetPackingMaterialsRequest, IPackingMaterialsResponse } from '../../interface/enquiry/IPackingMaterialsResponse';
 
 interface IEnquiryState {
   // Get Enquiries
@@ -119,6 +120,12 @@ interface IEnquiryState {
    addPackingMaterialsSuccess: boolean;
    addPackingMaterialsFailure: boolean;
    addPackingMaterialsError: any;
+   // Get Packing Materials
+   packingMaterials: IPackingMaterialsResponse | null;
+   getPackingMaterialsRequesting: boolean;
+   getPackingMaterialsSuccess: boolean;
+   getPackingMaterialsFailure: boolean;
+   getPackingMaterialsError: any;
 }
 
 const initialState: IEnquiryState = {
@@ -217,7 +224,13 @@ const initialState: IEnquiryState = {
   addPackingMaterialsRequesting: false,
   addPackingMaterialsSuccess: false,
   addPackingMaterialsFailure: false,
-  addPackingMaterialsError: null
+  addPackingMaterialsError: null,
+   // Get Packing Materials
+   packingMaterials: null,
+   getPackingMaterialsRequesting: false,
+   getPackingMaterialsSuccess: false,
+   getPackingMaterialsFailure: false,
+   getPackingMaterialsError: null,
 };
 
 export const EnquirySlice = createSlice({
@@ -599,6 +612,26 @@ export const EnquirySlice = createSlice({
         state.addPackingMaterialsInfo = null;
         state.addPackingMaterialsError = null;
       },
+      // Get Packing Materials
+      getPackingMaterialsRequest: (state, action: PayloadAction<IGetPackingMaterialsRequest>) => {
+        state.getPackingMaterialsRequesting = true;
+      },
+      getPackingMaterialsSuccess: (state, action: PayloadAction<IPackingMaterialsResponse>) => {
+        state.getPackingMaterialsRequesting = false;
+        state.getPackingMaterialsSuccess = true;
+        state.packingMaterials = action.payload;
+      },
+      getPackingMaterialsFailure: (state, action: PayloadAction<any>) => {
+        state.getPackingMaterialsRequesting = false;
+        state.getPackingMaterialsFailure = true;
+        state.getPackingMaterialsError = action.payload;
+      },
+      resetGetPackingMaterialsRequest: (state) => {
+        state.getPackingMaterialsRequesting = false;
+        state.getPackingMaterialsSuccess = false;
+        state.getPackingMaterialsFailure = false;
+        state.getPackingMaterialsError = null;
+      }
   },
 });
 
@@ -674,9 +707,14 @@ export const {
   updateShiftingInfoSuccess,
   updateShiftingInfoFailure,
   resetUpdateShiftingInfoRequest,
-   // Packing Material
+   // Add Packing Material
    addPackingMaterialRequest,
    addPackingMaterialSuccess,
    addPackingMaterialFailure,
    resetPackingMaterialRequest,
+   // Get Packing Materials
+   getPackingMaterialsRequest,
+   getPackingMaterialsSuccess,
+   getPackingMaterialsFailure,
+   resetGetPackingMaterialsRequest,
 } = EnquirySlice.actions;

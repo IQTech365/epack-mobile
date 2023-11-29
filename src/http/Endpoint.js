@@ -102,3 +102,6 @@ export const MODULES = `/content-management/module/getAll`;
 
 //Unit Type
 export const GET_UNIT_TYPES = `/setting/unit-type/all`;
+
+// Packing Materials
+export const GET_PACKING_MATERIALS = `/enquiry/get-packing-material`;

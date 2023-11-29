@@ -1,6 +1,6 @@
 import {AxiosResponse} from 'axios';
 import {Api} from '../http/Api';
-import {ADD_ENQUIRY, EDIT_COMPANY, GET_ENQUIRY_LIST, ADD_FOLLOWUP, GET_FOLLOWUP_COMMENTS, ADD_SURVEY, GET_SURVEY_COMMENTS, EDIT_ENQUIRY, GET_ENQUIRY, ADD_SURVEY_ITEM, GET_SURVEY_ITEM, ADD_PACKING_MATERIAL} from '../http/Endpoint';
+import {ADD_ENQUIRY, EDIT_COMPANY, GET_ENQUIRY_LIST, ADD_FOLLOWUP, GET_FOLLOWUP_COMMENTS, ADD_SURVEY, GET_SURVEY_COMMENTS, EDIT_ENQUIRY, GET_ENQUIRY, ADD_SURVEY_ITEM, GET_SURVEY_ITEM, ADD_PACKING_MATERIAL, GET_PACKING_MATERIALS} from '../http/Endpoint';
 import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
 import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
 import { IAddEnquiryRequest } from '../interface/enquiry/IAddEnquiryRequest';
@@ -23,6 +23,7 @@ import { IGetSurveyItemListResponse } from '../interface/enquiry/IGetSurveyItemL
 import { ISingleEnquiryResponse } from '../interface/enquiry/ISingleEnquiryResponse';
 import { IAddPackingMaterialRequest } from '../interface/enquiry/IAddPackingMaterialRequest';
 import { IAddPackingMaterialResponse } from '../interface/enquiry/IAddPackingMaterialResponse';
+import { IGetPackingMaterialsRequest, IPackingMaterialsResponse } from '../interface/enquiry/IPackingMaterialsResponse';
 
 export const AddEnquiryService = async (payload: IAddEnquiryRequest): Promise<IAddEnquiryResponse> => {
     const api = Api.getInstance();
@@ -98,5 +99,10 @@ export const UpdateShiftingInfoService = async (id:string, requestBody: IUpdateS
 export const AddPackingMaterialService = async (payload: IAddPackingMaterialRequest): Promise<IAddPackingMaterialResponse> => {
     const api = Api.getInstance();
     return await api.post<IAddPackingMaterialRequest, AxiosResponse<IAddPackingMaterialResponse>>(payload, ADD_PACKING_MATERIAL);
+}
+
+export const GetPackingMaterialsService = async (payload: IGetPackingMaterialsRequest): Promise<IPackingMaterialsResponse> => {
+    const api = Api.getInstance();
+    return await api.post<IGetPackingMaterialsRequest, AxiosResponse<IPackingMaterialsResponse>>(payload, GET_PACKING_MATERIALS);
 }
 

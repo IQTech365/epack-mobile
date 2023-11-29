@@ -26,6 +26,9 @@ import {
     getFollowupsFailure,
     getFollowupsRequest,
     getFollowupsSuccess,
+    getPackingMaterialsFailure,
+    getPackingMaterialsRequest,
+    getPackingMaterialsSuccess,
     getSurveyItemListFailure,
     getSurveyItemListRequest,
     getSurveyItemListSuccess,
@@ -64,6 +67,7 @@ import { IGetSurveyItemListResponse } from '../interface/enquiry/IGetSurveyItemL
 import { ISingleEnquiryResponse } from '../interface/enquiry/ISingleEnquiryResponse';
 import { IAddPackingMaterialRequest } from '../interface/enquiry/IAddPackingMaterialRequest';
 import { IAddPackingMaterialResponse } from '../interface/enquiry/IAddPackingMaterialResponse';
+import { IGetPackingMaterialsRequest, IPackingMaterialsResponse } from '../interface/enquiry/IPackingMaterialsResponse';
 
 export function* addEnquirySaga(action: PayloadAction<IAddEnquiryRequest>) {
     try {
@@ -222,6 +226,17 @@ export function* addPackingMaterialSaga(action: PayloadAction<IAddPackingMateria
     }
 }
 
+export function* getPackingMaterialsSaga(action: PayloadAction<IGetPackingMaterialsRequest>) {
+    try {
+        const response: IPackingMaterialsResponse = yield call(EnquiryService.GetPackingMaterialsService, action.payload);
+        console.log('getPackingMaterialSaga-response----', JSON.stringify(response));
+        yield put(getPackingMaterialsSuccess(response));
+    } catch (error) {
+        console.log('getPackingMaterialSaga-error----', JSON.stringify(error));
+        yield put(getPackingMaterialsFailure(error));
+    }
+}
+
 export function* watcherEnquirySaga() {
     yield takeLatest(addEnquiryRequest.type, addEnquirySaga);
     yield takeLatest(getEnquiriesRequest.type, getEnquiriesSaga);
@@ -237,4 +252,5 @@ export function* watcherEnquirySaga() {
     yield takeLatest(updateContactDetailsRequest.type, updateContactDetailsSaga);
     yield takeLatest(updateShiftingInfoRequest.type, updateShiftingInfoSaga);
     yield takeLatest(addPackingMaterialRequest.type, addPackingMaterialSaga);
+    yield takeLatest(getPackingMaterialsRequest.type, getPackingMaterialsSaga);
 }

@@ -4,6 +4,7 @@ import {
   COLOR_BLUE,
   COLOR_GRAY,
   COLOR_GRAY2,
+  COLOR_GRAY3,
   COLOR_WHITE,
 } from '../../../../../utils/colors';
 const {width, height} = Dimensions.get('window');
@@ -14,12 +15,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   labelContainer: {
-    width: width * 0.9,
+    width: width * 0.98,
     paddingVertical: 9,
     paddingHorizontal: 12,
-    alignItems: 'flex-start',
-    justifyContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     alignSelf: 'center',
+    flexDirection: 'row',
   },
   labelText: {
     color: COLOR_GRAY,
@@ -70,8 +72,8 @@ counterContainer: {
   touchableContainer: {
     width: 30,
     height: 30,
-    borderRadius: 15,
-    borderWidth: 1,
+    // borderRadius: 15,
+    // borderWidth: 1,
     borderColor: COLOR_GRAY,
     justifyContent: 'center',
     alignSelf: 'center',
@@ -112,6 +114,20 @@ counterContainer: {
     color: COLOR_BLACK,
     fontSize: 14,
   },
+  showListButtonContainer: {
+    paddingVertical: 6,
+    paddingHorizontal: 20,
+    borderWidth: 0.5,
+    borderColor: COLOR_GRAY,
+    borderRadius: 20,
+    alignItems: 'center',
+    backgroundColor: COLOR_GRAY3,
+  },
+  buttonText: {
+    color: COLOR_BLACK,
+    fontSize: 14,
+    fontWeight: '400',
+  }
 });
 
 export default styles;
