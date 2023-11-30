@@ -17,13 +17,14 @@ import { useAppSelector } from '../../../redux/hooks';
 import Spinner from '../../../common/Spinner';
 import QuotationView from './components/QuotationsView';
 import SurveyListView from './components/SurveyListView';
+import { IEnquiry } from '../../../interface/quotation/IGetQuotationsResponse';
 
 type Props = NativeStackScreenProps<EnquiryStackParamList, 'EnquiryDetails'>;
 
 
 const EnquiryDetailsView: React.FC<Props> = ({ route, navigation }) => {
   const enquiryId: string | undefined = route.params?.enquiryId;
-  const item: IGetEnquiriesData | undefined = route.params?.item;
+  const item: IEnquiry | undefined = route.params?.item;
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
   const { updateEnquiryStatusRequesting } = useAppSelector(state => state.Enquiry);
 
@@ -34,7 +35,7 @@ const EnquiryDetailsView: React.FC<Props> = ({ route, navigation }) => {
   const showTabItem = () => {
     switch (activeTabIndex) {
       case 0:
-        return <DetailsView item={item} enquiryId={enquiryId as string} />
+        return <DetailsView enquiryId={enquiryId as string} />
       case 1:
         return <FollowupView taskName='FOLLOW UP' assigneeRole='Enquiry' enquiryId={enquiryId as string} />
       case 2:

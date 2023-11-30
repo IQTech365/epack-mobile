@@ -4,7 +4,6 @@ import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
 import ModalHOC from '../../../../../common/ModalHOC';
 import Spacer from '../../../../../common/Spacer';
-import {IGetEnquiriesData} from '../../../../../interface/enquiry/IGetEnquiriesResponse';
 import {MODULE_NAME} from '../../../../order/orderDetails/components/DetailsView/enum/EModuleName';
 import AddressForm, {
   ADDRESS_TYPE,
@@ -20,11 +19,10 @@ import Spinner from '../../../../../common/Spinner';
 import { ISingleEnquiryData } from '../../../../../interface/enquiry/ISingleEnquiryResponse';
 
 interface IDetailsViewProps {
-  item: IGetEnquiriesData | undefined;
   enquiryId: string;
 }
 
-const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
+const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
   const [editShiftingDetail, setEditShifingDetail] = useState<boolean>(false);
   const [editContactDetail, setEditContactDetail] = useState<boolean>(false);
   const [editPickupAddress, setEditPickupAddress] = useState<boolean>(false);
@@ -32,7 +30,8 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
   const dispatch = useAppDispatch();
   const {enquiry, getEnquiryRequesting} = useAppSelector(state => state.Enquiry);
   const {data} = enquiry || {};
-  // console.log('Single Enquiry-data--', JSON.stringify(data));
+  console.log('Single Enquiry-enquiryId--', enquiryId);
+  console.log('Single Enquiry-data--', JSON.stringify(data));
 
   const getSingleEnquiry = () => {
     let enquiry:ISingleEnquiryData;
@@ -48,7 +47,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({item, enquiryId}) => {
 
   useEffect(() => {
     dispatch(getEnquiryRequest(enquiryId));
-  }, []);
+  }, [enquiryId]);
 
   const handleEditShiftingDetail = () => {
     setEditShifingDetail(true);

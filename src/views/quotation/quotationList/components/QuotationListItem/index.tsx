@@ -47,8 +47,6 @@ const QuotationListItem: React.FC<IQuotationListItemProps> = ({
 }) => {
   const [show, setShow] = useState<boolean>(false);
   const [label, setLabel] = useState<string>('VIEW DETAILS');
-  console.log('QuotationListItem---', JSON.stringify(item));
-  
 
   const handleShowDetail = () => {
     setShow(!show);

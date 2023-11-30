@@ -32,6 +32,7 @@ import {
 } from '../../interface/quotation/IGetQuotationsResponse';
 import {IGetEnquiriesData} from '../../interface/enquiry/IGetEnquiriesResponse';
 import useCompanyId from '../../hooks/useCompanyId';
+import { sortItemByDate } from '../../utils/formatter';
 interface IQuotationPageViewProps {
   navigation: NavigationProp<any, any>;
 }
@@ -150,7 +151,8 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
       quotationData.length > 0
     ) {
       _data = quotationData.map((quotation: IGetQuotationData) => {
-        const {quotationNumber, enquiries, quotationData, quotationAmount} = quotation;
+        const {quotationNumber, enquiries, quotationData, quotationAmount} =
+          quotation;
         const item: IQuotationItem = {
           quotationNo: quotationNumber,
           clientName: _getClientName(quotation),
@@ -163,23 +165,32 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
         };
         return item;
       });
-      return _data;
+      // return _data;
     }
-    return _data;
+    return [..._data].sort((a: IQuotationItem, b: IQuotationItem) =>
+      sortItemByDate(a.quotationDate, b.quotationDate),
+    );
   };
 
-  const handleCardClick = (index: number) => {
-    const item: IGetEnquiriesData = quotationData[index]?.enquiries[0];
+  const handleCardClick = (quotation: IQuotationItem) => {
+    const item: IGetQuotationData = quotationData?.find((e:IGetQuotationData) => e.quotationNumber == quotation.quotationNo);
+    if(item !== undefined && item.enquiries.length > 0) {
+      const enquiry:IEnquiry = item.enquiries[0];
+      console.log('handleCardClick--enquiry--', JSON.stringify(enquiry));
+      //@ts-ignore
+      navigation.jumpTo(TabRoute.EnquiryStack, {screen: EnquiryStackRoute.EnquiryDetails, params: {enquiryId: enquiry._id, item: enquiry},});
+    }
+    
+    // const item: IGetEnquiriesData = quotationData[index]?.enquiries[0];
     // navigation.navigate(TabRoute.EnquiryStack, {
     //   screen: EnquiryStackRoute.EnquiryDetails,
     //   params: {enquiryId: item._id, item: item},
     // });
-    //@ts-ignore
-    navigation.jumpTo(TabRoute.EnquiryStack, {screen: EnquiryStackRoute.EnquiryDetails, params: {enquiryId: item._id, item: item},});
+    
   };
 
-  const handleEditClick = (index: number) => {
-    const item: IGetQuotationData = quotationData[index];
+  const handleEditClick = (quotation: IQuotationItem) => {
+    const item: IGetQuotationData = quotationData?.find((e:IGetQuotationData) => e.quotationNumber == quotation.quotationNo);
     navigation.navigate(QuotationStackRoute.AddQuotation, {item: item, isEdit: true});
   };
 
@@ -244,11 +255,11 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
           <QuotationListItem
             item={item}
             index={index}
-            onPress={() => handleCardClick(index)}
+            onPress={() => handleCardClick(item)}
             onShare={() => {}}
             onDownload={presentModal}
             onPreview={() => {}}
-            onEdit={() => handleEditClick(index)}
+            onEdit={() => handleEditClick(item)}
           />
         )}
       />

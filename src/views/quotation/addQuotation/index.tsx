@@ -34,9 +34,6 @@ import {
   getCities,
   getStates,
 } from '../../../utils/formatter';
-import BouncyCheckboxGroup, {
-  ICheckboxButton,
-} from 'react-native-bouncy-checkbox-group';
 import Button from '../../../common/Button';
 import surchargeOptions from '../../../data/surchargeOptions.json';
 import gstPercentOptions from '../../../data/gstPercentOptions.json';
@@ -85,7 +82,6 @@ import {
 import useCompanyId from '../../../hooks/useCompanyId';
 import {Validator} from '../../../utils/validation';
 import { IGetQuotationRequest } from '../../../interface/quotation/IGetQuotationRequest';
-import { NavigationProp } from '@react-navigation/native';
 
 interface Props extends NativeStackScreenProps<QuotationStackParamList, 'AddQuotation'> {
   showHeader?: boolean;
@@ -156,6 +152,7 @@ const AddQuotationView: React.FC<Props> = ({
   const fullRateInputCompRef = useRef(null);
   const partAmountCompRef = useRef(null);
   const fullAmountCompRef = useRef(null);
+  const insuranceShiftingDropdownCompRef = useRef(null);
 
   const [errors, setErrors] = useState();
   const [isFormValid, setIsFormValid] = useState<boolean>(true);
@@ -520,6 +517,22 @@ const AddQuotationView: React.FC<Props> = ({
     });
   };
 
+  //README: Using this function seprately to fill the drop address input (dropdowns) for edit case
+  const _fillDropAddress = () => {
+    const {enquiries} = item as IGetQuotationData;
+    if (enquiries.length > 0) {
+      const enquiry = enquiries[0];
+      const {dropAddress} = enquiry;
+      const {pincode} = dropAddress || {};
+      setPincodeRequestKey(PINCODE_REQUEST_KEY.ADD_QUOTATION_DELIVERY_ADDRESS);
+      setPincode(pincode);
+      dispatch({
+        type: QUOTATION_FORM_ACTION.DELIVERY_PINCODE,
+        payload: pincode,
+      });
+    }
+  }
+
   // README: This function we are using to populate the form with previous quotation values
   const initFormValues = () => {
     const {enquiries} = item as IGetQuotationData;
@@ -542,14 +555,19 @@ const AddQuotationView: React.FC<Props> = ({
         type: QUOTATION_FORM_ACTION.PICKUP_PINCODE,
         payload: pincode,
       });
-      dispatch({
-        type: QUOTATION_FORM_ACTION.DELIVERY_PINCODE,
-        payload: dropAddress.pincode,
-      });
-      //@ts-ignore
-      dateOfMovingCompRef?.current?.setDefaultValue(new Date(shiftingDate));
+      setPincodeRequestKey(PINCODE_REQUEST_KEY.ADD_QUOTATION_PICKUP_ADDRESS);
+      setPincode(pincode);
+      // dispatch({
+      //   type: QUOTATION_FORM_ACTION.DELIVERY_PINCODE,
+      //   payload: dropAddress.pincode,
+      // });
+      if(shiftingDate) {
+        //@ts-ignore
+        dateOfMovingCompRef?.current?.setDefaultValue(new Date(shiftingDate));
+      }
+      
       const billingByItemIndex = billingByOptions.findIndex(
-        e => e.label.toLowerCase() == billingBy.toLowerCase(),
+        e => e.label?.toLowerCase() == billingBy?.toLowerCase(),
       );
       if (billingByItemIndex != -1 && billingByDropdwonRef) {
         //@ts-ignore
@@ -558,7 +576,7 @@ const AddQuotationView: React.FC<Props> = ({
         );
       }
       const itemIndex = shiftingTypes.findIndex(
-        e => e.label.toLowerCase() == shiftingType.toLowerCase(),
+        e => e.label?.toLowerCase() == shiftingType?.toLowerCase(),
       );
       if (itemIndex != -1 && shiftingTypeDropdownRef) {
         //@ts-ignore
@@ -574,6 +592,8 @@ const AddQuotationView: React.FC<Props> = ({
       quotationfreights,
       advanceAmount,
     } = (singleQuotationData as ISingleQuotationData) || {};
+    console.log('');
+    
     setQuotationserialNo(quotationNumber);
     handleAdvanceAmountInputTextChange(advanceAmount);
     if (
@@ -632,7 +652,7 @@ const AddQuotationView: React.FC<Props> = ({
       });
 
       const loryTypeItemIndex = loaryTypeOptions.findIndex(
-        e => e.label.toLowerCase() == lorryType.toLowerCase(),
+        e => e.label?.toLowerCase() == lorryType?.toLowerCase(),
       );
       if (loryTypeItemIndex != -1) {
         //@ts-ignore
@@ -678,7 +698,7 @@ const AddQuotationView: React.FC<Props> = ({
       });
 
       const discountPercentItemIndex = discountPercentOptions.findIndex(
-        e => e.label.toLowerCase() == discountAmount.toLowerCase(),
+        e => e.label?.toLowerCase() == discountAmount?.toLowerCase(),
       );
       if (discountPercentItemIndex != -1) {
         //@ts-ignore
@@ -699,7 +719,7 @@ const AddQuotationView: React.FC<Props> = ({
       });
 
       const gstPercentItemIndex = gstPercentOptions.findIndex(
-        e => e.label.toLowerCase() == gstPercentage.toLowerCase(),
+        e => e.label?.toLowerCase() == gstPercentage?.toLowerCase(),
       );
       if (gstPercentItemIndex != -1) {
         //@ts-ignore
@@ -709,7 +729,7 @@ const AddQuotationView: React.FC<Props> = ({
       }
 
       const gstTypeItemIndex = gstTypeOptions.findIndex(
-        e => e.label.toLowerCase() == gstType.toLowerCase(),
+        e => e.label?.toLowerCase() == gstType?.toLowerCase(),
       );
       if (gstTypeItemIndex != -1) {
         //@ts-ignore
@@ -719,7 +739,7 @@ const AddQuotationView: React.FC<Props> = ({
       }
 
       const itmIndex = surchargeOptions.findIndex(
-        e => e.label.toLowerCase() == surchargeIsRequired.toLowerCase(),
+        e => e.label?.toLowerCase() == surchargeIsRequired?.toLowerCase(),
       );
       if (itmIndex != -1) {
         //@ts-ignore
@@ -729,7 +749,7 @@ const AddQuotationView: React.FC<Props> = ({
       }
 
       const surchargeItemIndex = surchargePercentOptions.findIndex(
-        e => e.label.toLowerCase() == surchargeCharges.toLowerCase(),
+        e => e.label?.toLowerCase() == surchargeCharges?.toLowerCase(),
       );
       if (surchargeItemIndex != -1) {
         //@ts-ignore
@@ -742,18 +762,27 @@ const AddQuotationView: React.FC<Props> = ({
       if (charges && Array.isArray(charges) && charges.length > 0) {
         const firstItem = charges[0];
         const {luggageType, insurancePerc, gst, value} = firstItem || {};
+        if(insuranceShiftingDropdownCompRef) {
+          //@ts-ignore
+          insuranceShiftingDropdownCompRef?.current?.setValue(luggageType);
+        }
         setIsInsuranceRequired(isRequired == 'required');
         const {insuranceDetails} = state;
         const tempObj = {
           ...insuranceDetails,
-          status: isRequired,
+          status: isRequired == 'required' ? 'required' : 'not required',
+          shifting_luggage: luggageType,
+          insurance_type: transitType,
+          insurance_charge_percent: insurancePerc,
+          insurance_gst_percent: gst,
+          insurance_goods_value: value,
         };
         dispatch({
           type: QUOTATION_FORM_ACTION.INSURANCE_DETAILS,
           payload: tempObj as TInsuranceDetails,
         });
         const insuranceTypeItemIndex = insuranceTypeOptions.findIndex(
-          e => e.label.toLowerCase() == transitType.toLowerCase(),
+          e => e.label?.toLowerCase() == transitType?.toLowerCase(),
         );
         if (insuranceTypeItemIndex != -1) {
           //@ts-ignore
@@ -763,7 +792,7 @@ const AddQuotationView: React.FC<Props> = ({
         }
 
         const insurancePercentItemIndex = insurancePercentOptions.findIndex(
-          e => e.label.toLowerCase() == insurancePerc.toLowerCase(),
+          e => e.label?.toLowerCase() == insurancePerc?.toLowerCase(),
         );
         if (insurancePercentItemIndex != -1) {
           //@ts-ignore
@@ -773,7 +802,7 @@ const AddQuotationView: React.FC<Props> = ({
         }
 
         const insuranceGSTPercentItemIndex = gstPercentOptions.findIndex(
-          e => e.label.toLowerCase() == gst.toLowerCase(),
+          e => e.label?.toLowerCase() == gst?.toLowerCase(),
         );
         if (insuranceGSTPercentItemIndex != -1) {
           //@ts-ignore
@@ -805,7 +834,7 @@ const AddQuotationView: React.FC<Props> = ({
       });
 
       const storageChargeTypeItemIndex = storageDurationOptions.findIndex(
-        e => e.label.toLowerCase() == storageChargesType.toLowerCase(),
+        e => e.label?.toLowerCase() == storageChargesType?.toLowerCase(),
       );
       if (storageChargeTypeItemIndex != -1) {
         //@ts-ignore
@@ -908,11 +937,14 @@ const AddQuotationView: React.FC<Props> = ({
       handleFreightFullChargeTextChange(fullLoadCharge);
     }
 
-    //@ts-ignore
-    dateOfQuotationCompRef?.current?.setDefaultValue(new Date(quotationData));
+    if(quotationData) {
+      //@ts-ignore
+      dateOfQuotationCompRef?.current?.setDefaultValue(new Date(quotationData));
+    }
     const itmIndex = shiftingLuggages.findIndex(
-      e => e.label.toLowerCase() == shiftingLuggage.toLowerCase(),
+      e => e.label?.toLowerCase() == shiftingLuggage?.toLowerCase(),
     );
+    
     if (itmIndex != -1) {
       //@ts-ignore
       shiftingLuggageDropdownRef?.current?.setDefaultValue(
@@ -1563,6 +1595,9 @@ const AddQuotationView: React.FC<Props> = ({
       //@ts-ignore
       pickupCityDropdownRef?.current?.setValue(pickupCities[0]?.label);
       handlePickupCity(pickupCities[0]?.label);
+      // if(isEdit) {
+      //   _fillDropAddress();
+      // }
     }
   }, [pickupStates, pickupCities]);
 
@@ -1698,28 +1733,28 @@ const AddQuotationView: React.FC<Props> = ({
       freightChargesStatus: 'NOT_REQUIRED',
       partLoadCharge: state.freightPartCharge,
       fullLoadCharge: state.freightFullCharge,
-      packagingChargesStatus: state?.packingCharges?.status as string,
+      packagingChargesStatus: state?.packingCharges?.status as string || packingCharges,
       packagingPartLoadCharges: state?.packingCharges
         ?.part_load_charge as string,
       packagingFullLoadCharges: state?.packingCharges
         ?.full_load_charge as string,
-      unPackagingChargesStatus: state?.unPackingCharges?.status as string,
+      unPackagingChargesStatus: state?.unPackingCharges?.status as string || unpackingCharges,
       unPackagingPartLoadCharges: state?.unPackingCharges
         ?.part_load_charge as string,
       unPackagingFullLoadCharges: state?.unPackingCharges
         ?.full_load_charge as string,
-      unLoadingChargesStatus: state?.unLoadingCharges?.status as string,
+      unLoadingChargesStatus: state?.unLoadingCharges?.status as string || unloadingCharges,
       unLoadingPartLoadCharges: state?.unLoadingCharges
         ?.part_load_charge as string,
       unLoadingFullLoadCharges: state?.unLoadingCharges
         ?.full_load_charge as string,
       packingMaterialChargesStatus: state?.packingMaterialCharges
-        ?.status as string,
+        ?.status as string || packingMaterialCharges,
       packingMaterialPartLoadCharges: state?.packingMaterialCharges
         ?.part_load_charge as string,
       packingMaterialFullLoadCharges: state?.packingMaterialCharges
         ?.full_load_charge as string,
-      loadingChargesStatus: state?.loadingCharges?.status as string,
+      loadingChargesStatus: state?.loadingCharges?.status as string || loadingCharges,
       loadingPartLoadCharges: state?.loadingCharges?.part_load_charge as string,
       loadingFullLoadCharges: state?.loadingCharges?.full_load_charge as string,
       gstStatus: state?.gstInQuotation?.status as string,
@@ -1755,10 +1790,7 @@ const AddQuotationView: React.FC<Props> = ({
       otherDetail1: state.otherDetails?.items_got_down_from_balcony as string,
       otherDetail2: state.otherDetails?.any_needs_or_concern as string,
     };
-    console.log(
-      'add-quotation-payload----',
-      JSON.stringify(payload, null, ' '),
-    );
+    console.log('PAYLOAD', JSON.stringify(payload));
     dispatch2(addQuotationRequest(payload));
   }, [state, showMobileNumberError, showErrors]);
 
@@ -1937,7 +1969,7 @@ const AddQuotationView: React.FC<Props> = ({
       <AvoidSoftInputViewHOC>
         <View style={styles.container}>
           {showHeader ? (
-            <Header label="CREATE QUOTATION" canGoBack={true} />
+            <Header label={isEdit ? "UPDATE QUOTATION" : "CREATE QUOTATION"} canGoBack={true} />
           ) : null}
           <Spacer height={4} />
           <CollapsibleView title="BASIC DETAILS" collapsed={false}>
@@ -2996,10 +3028,12 @@ const AddQuotationView: React.FC<Props> = ({
                           shifting_luggage: item,
                         };
                         dispatch({
-                          type: QUOTATION_FORM_ACTION.STORAGE_CHARGES,
+                          type: QUOTATION_FORM_ACTION.INSURANCE_DETAILS,
                           payload: tempObj as TInsuranceDetails,
                         });
                       }}
+                      //@ts-ignore
+                      ref={insuranceShiftingDropdownCompRef}
                     />
                   </View>
                   <Spacer height={4} />
