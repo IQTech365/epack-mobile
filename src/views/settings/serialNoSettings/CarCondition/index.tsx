@@ -55,7 +55,9 @@ const CarConditionSN: React.FC<ICarConditionSNProps> = ({
             onRefresh={handleOnRefresh}
           />
         }
-        renderItem={({item, index}) => <SerialNoListItem item={item} />}
+        renderItem={({item, index}) => { return item.moduleName === 'CAR CONDITION' ? (
+          <SerialNoListItem item={item} />
+        ) : null}}
         ListEmptyComponent={showEmptyView()}
         ListHeaderComponent={showFormView()}
       />

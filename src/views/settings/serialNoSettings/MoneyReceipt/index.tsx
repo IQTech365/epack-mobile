@@ -60,7 +60,9 @@ const MoneyReceiptSN: React.FC<IMoneyReceiptSNProps> = ({
             onRefresh={handleOnRefresh}
           />
         }
-        renderItem={({item, index}) => <SerialNoListItem item={item} />}
+        renderItem={({item, index}) =>{ return item.moduleName === 'MONEY RECEIPT' ? (
+          <SerialNoListItem item={item} />
+        ) : null}}
         ListEmptyComponent={showEmptyView()}
         ListHeaderComponent={showFormView()}
       />

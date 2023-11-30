@@ -57,7 +57,9 @@ const QuotationSN: React.FC<IQuotationSNProps> = ({moduleId, moduleName}) => {
             onRefresh={handleOnRefresh}
           />
         }
-        renderItem={({item, index}) => <SerialNoListItem item={item} />}
+        renderItem={({item, index}) => { return item.moduleName === 'QUOTATION' ? (
+          <SerialNoListItem item={item} />
+        ) : null;}}
         ListEmptyComponent={showEmptyView()}
         ListHeaderComponent={showFormView()}
       />

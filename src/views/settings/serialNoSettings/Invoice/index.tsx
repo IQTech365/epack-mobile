@@ -40,7 +40,7 @@ const InvoiceSN: React.FC<IInvoiceSNProps> = ({moduleId, moduleName}) => {
 
   useEffect(() => {
     dispatch(getSerialNoRequest(companyId));
-  }, []);
+  }, [dispatch]);
 
   const showFormView = () => {
     return (
@@ -58,7 +58,9 @@ const InvoiceSN: React.FC<IInvoiceSNProps> = ({moduleId, moduleName}) => {
             onRefresh={handleOnRefresh}
           />
         }
-        renderItem={({item, index}) => <SerialNoListItem item={item} />}
+        renderItem={({item, index}) =>{ return item.moduleName === 'INVOICE' ? (
+          <SerialNoListItem item={item} />
+        ) : null}}
         ListEmptyComponent={showEmptyView()}
         ListHeaderComponent={showFormView()}
       />

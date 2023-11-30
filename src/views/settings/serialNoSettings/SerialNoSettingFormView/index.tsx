@@ -15,7 +15,7 @@ import {
   getFranchiseRequest,
 } from '../../../../redux/slices/MyProfile';
 import {ICreateSerialNoRequest} from '../../../../interface/setting/serialNo/ICreateSerialNoRequest';
-import {createSerialNoRequest, resetCreateSerialNoRequest} from '../../../../redux/slices/SerialNoSettingSlice';
+import {createSerialNoRequest, getSerialNoRequest, resetCreateSerialNoRequest} from '../../../../redux/slices/SerialNoSettingSlice';
 import Toast from 'react-native-toast-message';
 import Spinner from '../../../../common/Spinner';
 import useCompanyId from '../../../../hooks/useCompanyId';
@@ -113,7 +113,7 @@ const SerialNoSettingFormView:React.FC<IMoneyReceiptSNProps> = ({moduleId, modul
     const payload: ICreateSerialNoRequest = {
       companyId: companyId,
       companyEntity: entityType,
-      branchId: subEntityType,
+      // branchId: subEntityType,
       moduleId: moduleId,
       moduleName: moduleName,
       prefix: prefix,
@@ -122,6 +122,7 @@ const SerialNoSettingFormView:React.FC<IMoneyReceiptSNProps> = ({moduleId, modul
     };
     console.log('SerialNO-Payload--', JSON.stringify(payload));
     dispatch(createSerialNoRequest(payload));
+    dispatch(getSerialNoRequest(companyId));
   };
 
   useEffect(() => {

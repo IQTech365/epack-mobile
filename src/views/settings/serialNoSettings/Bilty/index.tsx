@@ -40,7 +40,7 @@ const BiltySN: React.FC<IBiltySNProps> = ({moduleId, moduleName}) => {
 
   useEffect(() => {
     dispatch(getSerialNoRequest(companyId));
-  }, []);
+  }, [dispatch, getSerialNoRequest]);
 
   return (
     <View style={styles.container}>
@@ -52,7 +52,9 @@ const BiltySN: React.FC<IBiltySNProps> = ({moduleId, moduleName}) => {
             onRefresh={handleOnRefresh}
           />
         }
-        renderItem={({item, index}) => <SerialNoListItem item={item} />}
+        renderItem={({item, index}) => { return item.moduleName === 'BILTY' ? (
+          <SerialNoListItem item={item} />
+        ) : null}}
         ListEmptyComponent={showEmptyView()}
         ListHeaderComponent={showFormView()}
       />
