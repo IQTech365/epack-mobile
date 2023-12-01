@@ -20,6 +20,7 @@ import {billingByOptions} from './utils';
 import { ACTION, initialState, invoiceReducer } from './InvoiceReducer2';
 import InvoiceToIndividualView from './components/InvoiceToIndividualView';
 import InvoiceToCompanyView from './components/InvoiceToCompanyView';
+import FreightDetailsView from './components/FreightDetailsView';
 
 const payTypeOptions: Array<ICheckboxButton> = [
   {
@@ -453,13 +454,7 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({}) => {
         <CollapsibleView title="FREIGHT DETAILS" collapsed={true}>
           <View>
             <View style={styles.elementContainer}>
-              <BouncyCheckboxGroup
-                data={payTypeOptions}
-                onChange={(selectedItem: ICheckboxButton) => {
-                  console.log('SelectedItem: ', JSON.stringify(selectedItem));
-                  handleFreightDetailsTemplate(selectedItem);
-                }}
-              />
+              <FreightDetailsView />
             </View>
           </View>
         </CollapsibleView>

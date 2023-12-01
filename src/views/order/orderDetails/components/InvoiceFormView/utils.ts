@@ -1,4 +1,4 @@
-export const billingByOptions = ['By Individual', 'By Company'];
+export const billingByOptions:string[] = ['By Individual', 'By Company'];
 export const approvalAuthorityOptions = [
   {
     label: 'HR Manager',
@@ -13,3 +13,16 @@ export const approvalAuthorityOptions = [
     value: '3',
   },
 ];
+
+export enum FREIGHT_TYPE {
+  LOAD_TYPE,
+  PICKUP_CHARGES,
+  DOOR_DELIVERY_CHARGE,
+  PACKING_CHARGES,
+  PACKING_MATERIAL_CHARGES,
+  LOADING_CHARGES,
+  UNLOADING_CHARGES,
+  UNPACKING_CHARGES,
+}
+
+export const loadTypeOptions:string[] = ['Part Load', 'Full Load'];
