@@ -4,13 +4,13 @@ const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
-    width: width * 0.30,
-    height: width * 0.30,
+    width: width * 0.28,
+    height: width * 0.28,
     borderRadius: 12,
     backgroundColor: COLOR_WHITE,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 10,
+    marginBottom: 20,
   },
   iconContainer: {
     width: width * 0.12,
@@ -24,8 +24,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 5,
     top: 5,
-    width: 30,
-    height: 30,
+    width: 28,
+    height: 28,
     backgroundColor: COLOR_BLUE,
     borderRadius: 20,
     alignItems: 'center',
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   },
   countText: {
     color: COLOR_WHITE,
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: '400'
   },
   taskNameContainer: {

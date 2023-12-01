@@ -5,7 +5,7 @@ import {Shadow} from 'react-native-shadow-2';
 
 const ClientInfoView = () => {
   return (
-    <Shadow style={styles.cardWrapper}>
+    <Shadow style={styles.cardWrapper} distance={6}>
       <View style={styles.clientInfoContainer}>
         <View style={styles.clientLogoContainer}>
           <Image

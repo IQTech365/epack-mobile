@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   clientInfoContainer: {
-    width: width * 0.95,
+    width: width * 0.92,
     borderRadius: 12,
     paddingVertical: 8,
     flexDirection: 'row',
@@ -47,13 +47,13 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   taskContainer: {
-    width: width * 0.95,
+    width: width * 0.92,
     flexDirection: 'row',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
   },
   featureContainer: {
-    width: width * 0.95,
+    width: width * 0.92,
     flexDirection: 'row',
     justifyContent: 'space-between',
     flexWrap: 'wrap',

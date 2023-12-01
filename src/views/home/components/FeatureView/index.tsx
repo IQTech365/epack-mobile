@@ -28,7 +28,7 @@ const FeatureView: React.FC<Props> = ({featureName, featureType}) => {
   };
 
   return (
-    <Shadow distance={2} startColor='#FFFFFF'>
+    <Shadow distance={4} startColor='#FFFFFF'>
       <TouchableOpacity style={styles.container} activeOpacity={0.6}>
         <View style={styles.iconContainer}>{_getTaskIcon()}</View>
         <View style={styles.taskNameContainer}>

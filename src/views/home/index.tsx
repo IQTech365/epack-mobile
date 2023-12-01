@@ -27,7 +27,7 @@ const HomePageView = () => {
         </View>
         <Spacer height={5} />
         <BannerView />
-        <Spacer height={15} />
+        <Spacer height={20} />
         <View style={styles.featureContainer}>
           <FeatureView
             featureName="Branches"

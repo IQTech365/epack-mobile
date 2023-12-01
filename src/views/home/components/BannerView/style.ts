@@ -4,8 +4,8 @@ const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
-    width: width * 0.95,
-    height: width * 0.30,
+    width: width * 0.92,
+    height: width * 0.28,
     borderRadius: 12,
     backgroundColor: COLOR_WHITE,
     alignItems: 'center',

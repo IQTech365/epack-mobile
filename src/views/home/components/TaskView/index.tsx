@@ -21,7 +21,7 @@ const RADIUS = CIRCLE_LENGTH / (2 * Math.PI);
 const BACKGROUND_STROKE_COLOR = COLOR_GRAY2;
 const STROKE_COLOR = COLOR_BLUE;
 const {width} = Dimensions.get('window');
-const cx = (width * 0.3) / 2;
+const cx = (width * 0.28) / 2;
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
@@ -88,7 +88,7 @@ const TaskView: React.FC<Props> = ({taskName, count}) => {
   };
 
   return (
-    <Shadow>
+    <Shadow distance={6}>
       <View style={styles.container}>
         <View style={styles.countContainer}>
           <Text style={styles.countText}>{count}</Text>

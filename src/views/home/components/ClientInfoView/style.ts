@@ -4,7 +4,7 @@ const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   clientInfoContainer: {
-    width: width * 0.95,
+    width: width * 0.92,
     borderRadius: 12,
     paddingVertical: 8,
     flexDirection: 'row',
