@@ -50,7 +50,7 @@ const EnquiryListItem: React.FC<IEnquiryListItemProps> = ({
         </View>
         <Text style={styles.enquiryDateText}>{item.enquiryDate}</Text>
       </View>
-      <Shadow style={styles.cardWrapper} distance={8}>
+      <Shadow style={styles.cardWrapper}>
         <TouchableOpacity
           style={styles.container}
           activeOpacity={0.6}
