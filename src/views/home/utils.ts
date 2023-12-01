@@ -6,3 +6,9 @@ export enum TASK_NAME {
     DELIVERED_ORDERS,
     TOTAL_CUSTOMERS,
 }
+
+export enum FEATURE_TYPE {
+    BRANCHES,
+    FRANCHIES,
+    VEHICLE_MANAGEMENT,
+}

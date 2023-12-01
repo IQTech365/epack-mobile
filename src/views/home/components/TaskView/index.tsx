@@ -1,5 +1,5 @@
-import React, {ReactElement, useEffect} from 'react';
-import {View, Text, Dimensions} from 'react-native';
+import React, {useEffect} from 'react';
+import {View, Text, Dimensions, TouchableOpacity} from 'react-native';
 import styles from './style';
 import Animated, {
   useAnimatedProps,

@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import { COLOR_BLUE, COLOR_WHITE } from '../../utils/colors';
+import { COLOR_BLUE, COLOR_BLUE2, COLOR_WHITE } from '../../utils/colors';
 
 const {width} = Dimensions.get('window');
 const styles = StyleSheet.create({
@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         paddingHorizontal: 10,
-        backgroundColor: COLOR_BLUE
+        backgroundColor: COLOR_BLUE2
     },
     tab: {
         alignItems: 'center',
