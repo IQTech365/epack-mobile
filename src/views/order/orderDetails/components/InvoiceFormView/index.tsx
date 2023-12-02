@@ -20,6 +20,7 @@ import FreightDetailsView from './components/FreightDetailsView';
 import { useInvoiceFormContextHook } from '../../../../../provider/InvoiceFormContextProvider';
 import TransitInsuranceView from './components/TransitInsuranceView';
 import StorageChargeView from './components/StorageChargeView';
+import Button from '../../../../../common/Button';
 
 interface IInvoiceFormViewProps {
   orderId: string | undefined;
@@ -187,7 +188,15 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({}) => {
                 <StorageChargeView />
             </View>
           </CollapsibleView>
-          <Spacer height={8} />
+          <Spacer height={12} />
+          <Button
+            text="PREVIEW"
+            onPress={() => {}}
+            disabled={false}
+            style={styles.previewButtonStyle}
+            textStyle={styles.textStyle2}
+          />
+          <Spacer height={12} />
         </View>
     </AvoidSoftInputViewHOC>
   );

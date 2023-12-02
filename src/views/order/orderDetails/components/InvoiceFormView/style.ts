@@ -1,6 +1,7 @@
 import {StyleSheet, Dimensions} from 'react-native';
 import {
   COLOR_BLACK,
+  COLOR_BLUE,
   COLOR_GRAY2,
   COLOR_WHITE,
 } from '../../../../../utils/colors';
@@ -113,19 +114,26 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   textContainerStyle: {
-    paddingLeft: 0, 
-    marginLeft: 10
+    paddingLeft: 0,
+    marginLeft: 10,
   },
   style: {
     marginRight: 45,
   },
   checkboxContainer: {
-    width: width * 0.90,
+    width: width * 0.9,
     alignSelf: 'center',
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
+  textStyle2: {
+    color: COLOR_WHITE,
+  },
+  previewButtonStyle: {
+    backgroundColor: COLOR_BLUE,
+    borderRadius: 5,
+  },
 });
 
 export default styles;

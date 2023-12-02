@@ -43,7 +43,7 @@ const StorageChargeView: React.FC<Props> = () => {
             onPress={(isChecked: boolean) => {
               setStorage(option);
             }}
-            isChecked={state.transit_insurance == option}
+            isChecked={state.storage == option}
             disableBuiltInState={true}
           />
         ))}
