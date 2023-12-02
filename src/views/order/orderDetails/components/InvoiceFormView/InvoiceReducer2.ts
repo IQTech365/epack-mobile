@@ -4,12 +4,16 @@ export enum ACTION {
   BILING_TYPE = 'BILING_TYPE',
   SAME_AS_CLIENT_ADDRESS = 'SAME_AS_CLIENT_ADDRESS',
   FREIGHT_LOAD_TYPE = 'FREIGHT_LOAD_TYPE',
+  FREIGHT_CHARGES = 'FREIGHT_CHARGES',
+  FREIGHT_CHARGES_HSN = 'FREIGHT_CHARGES_HSN',
 }
 
 interface State {
   billing_type: string;
   same_as_client_address: boolean;
   freight_load_type: string;
+  freight_charges: string;
+  freight_charges_hsn: string;
 }
 
 interface Action {
@@ -21,6 +25,8 @@ export const initialState: State = {
   billing_type: billingByOptions[0],
   same_as_client_address: true,
   freight_load_type: loadTypeOptions[0],
+  freight_charges: '',
+  freight_charges_hsn: '',
 };
 
 export const invoiceReducer = (state: State, action: Action) => {
@@ -32,6 +38,10 @@ export const invoiceReducer = (state: State, action: Action) => {
       return {...state, same_as_client_address: payload as boolean};
     case ACTION.FREIGHT_LOAD_TYPE:
       return {...state, freight_load_type: payload as string};
+    case ACTION.FREIGHT_CHARGES:
+      return {...state, freight_charges: payload as string};
+    case ACTION.FREIGHT_CHARGES_HSN:
+      return {...state, freight_charges_hsn: payload as string};
     default:
       return state;
   }

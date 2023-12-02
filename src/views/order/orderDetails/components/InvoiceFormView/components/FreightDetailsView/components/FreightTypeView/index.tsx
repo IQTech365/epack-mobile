@@ -1,11 +1,16 @@
-import React, { useReducer } from 'react';
+import React, {useReducer} from 'react';
 import {View, Text} from 'react-native';
 import styles from './style';
 import {FREIGHT_TYPE} from '../../../../utils';
 import {COLOR_BLUE} from '../../../../../../../../../utils/colors';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import { ACTION, initialState, invoiceReducer } from '../../../../InvoiceReducer2';
+import {
+  ACTION,
+  initialState,
+  invoiceReducer,
+} from '../../../../InvoiceReducer2';
 import Spacer from '../../../../../../../../../common/Spacer';
+import FreightInputView from '../FreightInputView';
 
 interface Props {
   freightType: FREIGHT_TYPE;
@@ -14,7 +19,7 @@ interface Props {
 
 const FreightTypeView: React.FC<Props> = ({freightType, options}) => {
   const [state, dispatch] = useReducer(invoiceReducer, initialState);
-  
+
   const _getFreightTypeText = () => {
     let text: string = '';
     switch (freightType) {
@@ -37,10 +42,10 @@ const FreightTypeView: React.FC<Props> = ({freightType, options}) => {
         break;
     }
     return option;
-  }
+  };
 
   return (
-    <>
+    <View style={styles.mainWrapper}>
       <View style={styles.container}>
         <Text style={styles.labelText}>{_getFreightTypeText()}</Text>
       </View>
@@ -48,6 +53,7 @@ const FreightTypeView: React.FC<Props> = ({freightType, options}) => {
       <View style={styles.optionContainer}>
         {options.map((option: string, index: number) => (
           <BouncyCheckbox
+            key={`${index}`}
             size={25}
             unfillColor="#FFFFFF"
             text={option}
@@ -63,12 +69,18 @@ const FreightTypeView: React.FC<Props> = ({freightType, options}) => {
                 payload: option,
               });
             }}
-              isChecked={_getCheckedCompareToOption() == option}
+            isChecked={_getCheckedCompareToOption() == option}
             disableBuiltInState={true}
           />
         ))}
       </View>
-    </>
+      <Spacer height={10} />
+      <FreightInputView
+        freightType={freightType}
+        label1="Freight Charges"
+        label2="HSN"
+      />
+    </View>
   );
 };
 

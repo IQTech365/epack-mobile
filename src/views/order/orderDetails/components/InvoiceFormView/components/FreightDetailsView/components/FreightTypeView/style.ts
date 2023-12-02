@@ -3,15 +3,18 @@ import { COLOR_BLACK } from '../../../../../../../../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
+  mainWrapper: {
+    width: width * 0.98,
+  },
   container: {
-    width: width * 0.9,
+    width: width * 0.98,
     justifyContent: 'flex-start',
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'center',
   },
   optionContainer: {
-    width: width * 0.9,
+    width: width * 0.98,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'flex-start',
