@@ -1,16 +1,12 @@
-import React, {useReducer} from 'react';
-import {View, Text} from 'react-native';
+import React from 'react';
+import {View} from 'react-native';
 import styles from './style';
 import Label from '../../../../../../../../../common/Label';
 import Input from '../../../../../../../../../common/Input';
 import {COLOR_BLACK} from '../../../../../../../../../utils/colors';
 import {FREIGHT_TYPE} from '../../../../utils';
-import {
-  ACTION,
-  initialState,
-  invoiceReducer,
-} from '../../../../InvoiceReducer2';
 import Spacer from '../../../../../../../../../common/Spacer';
+import {useInvoiceFormContextHook} from '../../../../../../../../../provider/InvoiceFormContextProvider';
 
 interface Props {
   label1: string;
@@ -19,35 +15,33 @@ interface Props {
 }
 
 const FreightInputView: React.FC<Props> = ({label1, label2, freightType}) => {
-  const [state, dispatch] = useReducer(invoiceReducer, initialState);
-  console.log('FreightInputView--', JSON.stringify(state, null, ' '));
+  const {
+    state,
+    setFreightCharges,
+    setFreightHSN,
+    setPickupChargeAmount,
+    setPickupChargeHSN,
+  } = useInvoiceFormContextHook();
 
   const handleStateUpdate = (text: string, inputAt: number) => {
     switch (freightType) {
       case FREIGHT_TYPE.LOAD_TYPE:
         if (inputAt == 1) {
-          dispatchLoadTypeCharge(text);
+          setFreightCharges(text);
         } else if (inputAt == 2) {
-          dispatchLoadTypeHSNCode(text);
+          setFreightHSN(text);
+        }
+        break;
+      case FREIGHT_TYPE.PICKUP_CHARGES:
+        if (inputAt == 1) {
+          setPickupChargeAmount(text);
+        } else if (inputAt == 2) {
+          setPickupChargeHSN(text);
         }
         break;
       default:
         break;
     }
-  };
-
-  const dispatchLoadTypeCharge = (charge: string) => {
-    dispatch({
-      type: ACTION.FREIGHT_CHARGES,
-      payload: charge,
-    });
-  };
-
-  const dispatchLoadTypeHSNCode = (hsnCode: string) => {
-    dispatch({
-      type: ACTION.FREIGHT_CHARGES_HSN,
-      payload: hsnCode,
-    });
   };
 
   return (

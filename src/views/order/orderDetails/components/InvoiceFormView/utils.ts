@@ -26,3 +26,14 @@ export enum FREIGHT_TYPE {
 }
 
 export const loadTypeOptions:string[] = ['Part Load', 'Full Load'];
+
+const chargeOptions: string[] = [
+  'Included',
+  'Additional',
+  'Not Required',
+  'Loading By Party',
+  'Unloading By Party',
+];
+
+export const pickupChargeOptions = chargeOptions.slice(0,3);
+export const doorDeliveryChargeOptions = chargeOptions.slice(0,3);

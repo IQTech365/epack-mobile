@@ -1,20 +1,39 @@
-import React, { useReducer } from 'react';
-import {View, Text} from 'react-native';
+import React from 'react';
+import {View} from 'react-native';
 import styles from './style';
 import FreightTypeView from './components/FreightTypeView';
-import {FREIGHT_TYPE, loadTypeOptions} from '../../utils';
+import {
+  FREIGHT_TYPE,
+  doorDeliveryChargeOptions,
+  loadTypeOptions,
+  pickupChargeOptions,
+} from '../../utils';
 import Spacer from '../../../../../../../common/Spacer';
-import { initialState, invoiceReducer } from '../../InvoiceReducer2';
 
 interface Props {}
 
 const FreightDetailsView: React.FC<Props> = () => {
-  const [state, dispatch] = useReducer(invoiceReducer, initialState);  
   return (
     <View style={styles.container}>
       <FreightTypeView
         freightType={FREIGHT_TYPE.LOAD_TYPE}
         options={loadTypeOptions}
+        label1='Freight Charges'
+        label2='HSN Code'
+      />
+      <Spacer height={20} />
+      <FreightTypeView
+        freightType={FREIGHT_TYPE.PICKUP_CHARGES}
+        options={pickupChargeOptions}
+        label1='Amount'
+        label2='HSN Code'
+      />
+      <Spacer height={20} />
+      <FreightTypeView
+        freightType={FREIGHT_TYPE.DOOR_DELIVERY_CHARGE}
+        options={doorDeliveryChargeOptions}
+        label1='Amount'
+        label2='HSN Code'
       />
     </View>
   );
