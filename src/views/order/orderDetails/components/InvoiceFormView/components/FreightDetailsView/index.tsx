@@ -14,6 +14,7 @@ import Spacer from '../../../../../../../common/Spacer';
 import FreightOtherChargesView from './components/FreightOtherChargesView';
 import FreightSurchargeView from './components/FreightSurchargeView';
 import FreightDiscountView from './components/FreightDiscountView';
+import FreightGSTView from './components/FreightGSTView';
 
 interface Props {}
 
@@ -81,6 +82,8 @@ const FreightDetailsView: React.FC<Props> = () => {
       <FreightSurchargeView />
       <Spacer height={20} />
       <FreightDiscountView />
+      <Spacer height={20} />
+      <FreightGSTView />
     </View>
   );
 };

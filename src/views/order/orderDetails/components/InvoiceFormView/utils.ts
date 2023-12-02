@@ -104,3 +104,35 @@ export const discountPercentOptions = [
 ];
 
 export const gstOptions:string[] = ['With GST', 'Without GST', 'Exempted', 'Extra'];
+
+export const gstPercentOptions = [
+  {
+    label: '0%',
+    value: '1',
+  },
+  {
+    label: '5%',
+    value: '2',
+  },
+  {
+    label: '12%',
+    value: '3',
+  },
+  {
+    label: '18%',
+    value: '4',
+  },
+];
+
+export const gstTypeOptions = [
+  {
+    label: 'CGST/SGST',
+    value: '1',
+  },
+  {
+    label: 'IGST',
+    value: '2',
+  },
+];
+
+export const gstPaidByOptions:string[] = ['Consignee', 'Consigner', 'Moving Company'];

@@ -107,7 +107,6 @@ const FreightInputView: React.FC<Props> = ({label1, label2, freightType}) => {
           selectionColor={COLOR_BLACK}
         />
       </View>
-      {/* <Spacer width={8} /> */}
       <View style={styles.compContainer}>
         <Label text={label2} style={styles.label} />
         <Input
