@@ -21,7 +21,17 @@ const FreightTypeView: React.FC<Props> = ({
   label1,
   label2,
 }) => {
-  const {state, setLoadType, setPickupCharge} = useInvoiceFormContextHook();
+  const {
+    state,
+    setLoadType,
+    setPickupCharge,
+    setDoorDeliveryCharge,
+    setPackingCharge,
+    setPackingMaterialCharge,
+    setLoadingCharge,
+    setUnloadingCharge,
+    setUnpackingCharge,
+  } = useInvoiceFormContextHook();
 
   const _getFreightTypeText = () => {
     let text: string = '';
@@ -34,6 +44,21 @@ const FreightTypeView: React.FC<Props> = ({
         break;
       case FREIGHT_TYPE.DOOR_DELIVERY_CHARGE:
         text = 'Door Delivery Charges';
+        break;
+      case FREIGHT_TYPE.PACKING_CHARGES:
+        text = 'Packing Charges';
+        break;
+      case FREIGHT_TYPE.PACKING_MATERIAL_CHARGES:
+        text = 'Packing Material Charges';
+        break;
+      case FREIGHT_TYPE.LOADING_CHARGES:
+        text = 'Loading Charges';
+        break;
+      case FREIGHT_TYPE.UNLOADING_CHARGES:
+        text = 'Unloading Charges';
+        break;
+      case FREIGHT_TYPE.UNPACKING_CHARGES:
+        text = 'Unpacking Charges';
         break;
       default:
         break;
@@ -50,19 +75,58 @@ const FreightTypeView: React.FC<Props> = ({
       case FREIGHT_TYPE.PICKUP_CHARGES:
         option = state.pickup_charge;
         break;
+      case FREIGHT_TYPE.DOOR_DELIVERY_CHARGE:
+        option = state.door_delivery_charge;
+        break;
+      case FREIGHT_TYPE.PACKING_CHARGES:
+        option = state.packing_charge;
+        break;
+      case FREIGHT_TYPE.PACKING_MATERIAL_CHARGES:
+        option = state.packing_material_charge;
+        break;
+      case FREIGHT_TYPE.LOADING_CHARGES:
+        option = state.loading_charge;
+        break;
+      case FREIGHT_TYPE.UNLOADING_CHARGES:
+        option = state.unloading_charge;
+        break;
+      case FREIGHT_TYPE.UNPACKING_CHARGES:
+        option = state.unpacking_charge;
+        break;
       default:
         break;
     }
     return option;
   };
 
-  const _handleOptionChange = (option: string) => {
+  const _handleOption = (option: string) => {
     switch (freightType) {
       case FREIGHT_TYPE.LOAD_TYPE:
         setLoadType(option);
         break;
       case FREIGHT_TYPE.PICKUP_CHARGES:
         setPickupCharge(option);
+        break;
+      case FREIGHT_TYPE.PICKUP_CHARGES:
+        setPickupCharge(option);
+        break;
+      case FREIGHT_TYPE.PACKING_CHARGES:
+        setPackingCharge(option);
+        break;
+      case FREIGHT_TYPE.DOOR_DELIVERY_CHARGE:
+        setDoorDeliveryCharge(option);
+        break;
+      case FREIGHT_TYPE.PACKING_MATERIAL_CHARGES:
+        setPackingMaterialCharge(option);
+        break;
+      case FREIGHT_TYPE.LOADING_CHARGES:
+        setLoadingCharge(option);
+        break;
+      case FREIGHT_TYPE.UNLOADING_CHARGES:
+        setUnloadingCharge(option);
+        break;
+      case FREIGHT_TYPE.UNPACKING_CHARGES:
+        setUnpackingCharge(option);
         break;
       default:
         break;
@@ -89,7 +153,7 @@ const FreightTypeView: React.FC<Props> = ({
             style={styles.style}
             textContainerStyle={styles.textContainerStyle}
             onPress={(isChecked: boolean) => {
-              _handleOptionChange(option);
+              _handleOption(option);
             }}
             isChecked={_getCheckedCompareToOption() == option}
             disableBuiltInState={true}

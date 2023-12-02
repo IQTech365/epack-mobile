@@ -9,6 +9,7 @@ import {
   invoiceReducer,
   initialState,
   ACTION,
+  IOtherCharge,
 } from '../views/order/orderDetails/components/InvoiceFormView/InvoiceReducer2';
 
 const useInvoiceFormContext = () => {
@@ -126,6 +127,357 @@ const useInvoiceFormContext = () => {
     [state.door_delivery_hsn],
   );
 
+  // ****** Packing Charge *********
+  const setPackingCharge = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.PACKING_CHARGE,
+        payload: text,
+      });
+    },
+    [state.packing_charge],
+  );
+
+  const setPackingAmount = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.PACKING_AMOUNT,
+        payload: text,
+      });
+    },
+    [state.packing_amount],
+  );
+
+  const setPackingHSN = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.PACKING_HSN,
+        payload: text,
+      });
+    },
+    [state.packing_hsn],
+  );
+
+  // ****** Packing Material Charge *********
+  const setPackingMaterialCharge = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.PACKING_MATERIAL_CHARGE,
+        payload: text,
+      });
+    },
+    [state.packing_material_charge],
+  );
+
+  const setPackingMaterialAmount = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.PACKING_MATERIAL_AMOUNT,
+        payload: text,
+      });
+    },
+    [state.packing_material_amount],
+  );
+
+  const setPackingMaterialHSN = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.PACKING_MATERIAL_HSN,
+        payload: text,
+      });
+    },
+    [state.packing_material_hsn],
+  );
+
+  // ****** Loading Charge *********
+  const setLoadingCharge = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.LOADING_CHARGE,
+        payload: text,
+      });
+    },
+    [state.loading_charge],
+  );
+
+  const setLoadingAmount = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.LOADING_AMOUNT,
+        payload: text,
+      });
+    },
+    [state.loading_amount],
+  );
+
+  const setLoadingHSN = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.LOADING_HSN,
+        payload: text,
+      });
+    },
+    [state.loading_hsn],
+  );
+
+  // ****** Unloading Charge *********
+  const setUnloadingCharge = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.UNLOADING_CHARGE,
+        payload: text,
+      });
+    },
+    [state.unloading_charge],
+  );
+
+  const setUnloadingAmount = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.UNLOADING_AMOUNT,
+        payload: text,
+      });
+    },
+    [state.unloading_amount],
+  );
+
+  const setUnloadingHSN = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.UNLOADING_HSN,
+        payload: text,
+      });
+    },
+    [state.unloading_hsn],
+  );
+
+  // ****** Unpacking Charge *********
+  const setUnpackingCharge = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.UNPACKING_CHARGE,
+        payload: text,
+      });
+    },
+    [state.unpacking_charge],
+  );
+
+  const setUnpackingAmount = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.UNPACKING_AMOUNT,
+        payload: text,
+      });
+    },
+    [state.unpacking_amount],
+  );
+
+  const setUnpackingHSN = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.UNPACKING_HSN,
+        payload: text,
+      });
+    },
+    [state.unpakcing_hsn],
+  );
+
+  // **** Other Charges ****
+  const setOtherCharges = useCallback(
+    (items: IOtherCharge[]) => {
+      dispatch({
+        type: ACTION.OTHER_CHARGES,
+        payload: items,
+      });
+    },
+    [state.other_charges],
+  );
+
+  // **** Surcharge ****
+  const setSurcharge = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.SURCHARGE,
+        payload: text,
+      });
+    },
+    [state.surcharge],
+  );
+
+  const setSurchargePercent = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.SURCHARGE_PERCENT,
+        payload: text,
+      });
+    },
+    [state.surcharge_percent],
+  );
+
+  // **** Discount in Invoice ****
+  const setDiscountInInvoice = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.DISCOUNT_IN_INVOICE,
+        payload: text,
+      });
+    },
+    [state.discount_in_invoice],
+  );
+
+  const setDiscountValueOrPercent = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.DISCOUNT_VALUE_OR_PERCENT,
+        payload: text,
+      });
+    },
+    [state.discount_value_or_percent],
+  );
+
+   // **** GST on Invoice ****
+   const setGSTOnInvoice = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.GST_ON_INVOICE,
+        payload: text,
+      });
+    },
+    [state.gst_on_invoice],
+  );
+
+  const setGSTPercent = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.GST_PERCENT,
+        payload: text,
+      });
+    },
+    [state.gst_percent],
+  );
+
+  const setGSTType = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.GST_TYPE,
+        payload: text,
+      });
+    },
+    [state.gst_type],
+  );
+
+  const setGSTPaidBy = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.GST_PAID_BY,
+        payload: text,
+      });
+    },
+    [state.gst_paid_by],
+  );
+
+  // **** Transit Insurance ****
+  const setTransitInsurance = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.TRANSIT_INSURANCE,
+        payload: text,
+      });
+    },
+    [state.transit_insurance],
+  );
+
+  const setTransitLuggage = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.TRANSIT_LUGGAGE,
+        payload: text,
+      });
+    },
+    [state.transit_luggage],
+  );
+
+  const setTransitInsuranceType = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.TRANSIT_INSURANCE_TYPE,
+        payload: text,
+      });
+    },
+    [state.transit_insurance_type],
+  );
+
+  const setTransitInsuranceCharge = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.TRANSIT_INSURANCE_CHARGE,
+        payload: text,
+      });
+    },
+    [state.transit_insurance_charge],
+  );
+
+  const setTransitInsuranceGST = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.TRANSIT_INSURANCE_GST,
+        payload: text,
+      });
+    },
+    [state.transit_insurance_gst],
+  );
+
+  const setTransitGoodsValue = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.TRANSIT_GOODS_VALUE,
+        payload: text,
+      });
+    },
+    [state.transit_goods_value],
+  );
+
+  // **** Storage Charge ****
+  const setStorageDuration = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.STORAGE_DURATION,
+        payload: text,
+      });
+    },
+    [state.storage_duration],
+  );
+
+  const setStorageFromDate = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.STORAGE_FROM_DATE,
+        payload: text,
+      });
+    },
+    [state.storage_from_date],
+  );
+
+  const setStorageToDate = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.STORAGE_TO_DATE,
+        payload: text,
+      });
+    },
+    [state.storage_to_date],
+  );
+
+  const setStorageAmount = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.STORAGE_AMOUNT,
+        payload: text,
+      });
+    },
+    [state.storage_amount],
+  );
+
   return {
     state,
     setBillingType,
@@ -141,6 +493,52 @@ const useInvoiceFormContext = () => {
     setDoorDeliveryCharge,
     setDoorDeliveryAmount,
     setDoorDeliveryHSN,
+    // Packing Charge
+    setPackingCharge,
+    setPackingAmount,
+    setPackingHSN,
+    // Packing Material Charge
+    setPackingMaterialCharge,
+    setPackingMaterialAmount,
+    setPackingMaterialHSN,
+    // Loading Charge
+    setLoadingCharge,
+    setLoadingAmount,
+    setLoadingHSN,
+    // Unloading Charge
+    setUnloadingCharge,
+    setUnloadingAmount,
+    setUnloadingHSN,
+    // Unpacking Charge
+    setUnpackingCharge,
+    setUnpackingAmount,
+    setUnpackingHSN,
+    // Other Charges
+    setOtherCharges,
+    // Surcharge
+    setSurcharge,
+    setSurchargePercent,
+    // Discount in Invoice
+    setDiscountInInvoice,
+    setDiscountValueOrPercent,
+    // GST on Invoice
+    setGSTOnInvoice,
+    setGSTPercent,
+    setGSTType,
+    setGSTPaidBy,
+    // Transit Insurance
+    setTransitInsurance,
+    setTransitLuggage,
+    setTransitInsuranceType,
+    setTransitInsuranceCharge,
+    setTransitInsuranceGST,
+    setTransitGoodsValue,
+    // Storage
+    setStorageDuration,
+    setStorageFromDate,
+    setStorageToDate,
+    setStorageAmount,
+
   };
 };
 
@@ -161,6 +559,51 @@ const initInvoiceFormContextState: UseInvoiceFormContextType = {
   setDoorDeliveryCharge: (text: string) => {},
   setDoorDeliveryAmount: (text: string) => {},
   setDoorDeliveryHSN: (text: string) => {},
+  // Packing
+  setPackingCharge: (text: string) => {},
+  setPackingAmount: (text: string) => {},
+  setPackingHSN: (text: string) => {},
+  // Packing Material Charge
+  setPackingMaterialCharge: (text: string) => {},
+  setPackingMaterialAmount: (text: string) => {},
+  setPackingMaterialHSN: (text: string) => {},
+  // Loading Charge
+  setLoadingCharge: (text: string) => {},
+  setLoadingAmount: (text: string) => {},
+  setLoadingHSN: (text: string) => {},
+  // Unloading Charge
+  setUnloadingCharge: (text: string) => {},
+  setUnloadingAmount: (text: string) => {},
+  setUnloadingHSN: (text: string) => {},
+  // Unpacking Charge
+  setUnpackingCharge: (text: string) => {},
+  setUnpackingAmount: (text: string) => {},
+  setUnpackingHSN: (text: string) => {},
+  // Other Charges
+  setOtherCharges: (items: IOtherCharge[]) => {},
+  // Surcharge
+  setSurcharge: (text: string) => {},
+  setSurchargePercent: (text: string) => {},
+  // Discount in Invoice
+  setDiscountInInvoice: (text: string) => {},
+  setDiscountValueOrPercent: (text: string) => {},
+  // GST on Invoice
+  setGSTOnInvoice: (text: string) => {},
+  setGSTPercent: (text: string) => {},
+  setGSTType: (text: string) => {},
+  setGSTPaidBy: (text: string) => {},
+  // Transit Insurance
+  setTransitInsurance: (text: string) => {},
+  setTransitLuggage: (text: string) => {},
+  setTransitInsuranceType: (text: string) => {},
+  setTransitInsuranceCharge: (text: string) => {},
+  setTransitInsuranceGST: (text: string) => {},
+  setTransitGoodsValue: (text: string) => {},
+  // Storage
+  setStorageDuration: (text: string) => {},
+  setStorageFromDate: (text: string) => {},
+  setStorageToDate: (text: string) => {},
+  setStorageAmount: (text: string) => {},
 };
 
 const InvoiceFormContext = createContext<UseInvoiceFormContextType>(

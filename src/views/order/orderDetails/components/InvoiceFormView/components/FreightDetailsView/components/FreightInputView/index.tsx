@@ -16,11 +16,22 @@ interface Props {
 
 const FreightInputView: React.FC<Props> = ({label1, label2, freightType}) => {
   const {
-    state,
     setFreightCharges,
     setFreightHSN,
     setPickupChargeAmount,
     setPickupChargeHSN,
+    setDoorDeliveryAmount,
+    setDoorDeliveryHSN,
+    setPackingAmount,
+    setPackingHSN,
+    setPackingMaterialAmount,
+    setPackingMaterialHSN,
+    setLoadingAmount,
+    setLoadingHSN,
+    setUnloadingAmount,
+    setUnloadingHSN,
+    setUnpackingAmount,
+    setUnpackingHSN,
   } = useInvoiceFormContextHook();
 
   const handleStateUpdate = (text: string, inputAt: number) => {
@@ -37,6 +48,48 @@ const FreightInputView: React.FC<Props> = ({label1, label2, freightType}) => {
           setPickupChargeAmount(text);
         } else if (inputAt == 2) {
           setPickupChargeHSN(text);
+        }
+        break;
+      case FREIGHT_TYPE.DOOR_DELIVERY_CHARGE:
+        if (inputAt == 1) {
+          setDoorDeliveryAmount(text);
+        } else if (inputAt == 2) {
+          setDoorDeliveryHSN(text);
+        }
+        break;
+      case FREIGHT_TYPE.PACKING_CHARGES:
+        if (inputAt == 1) {
+          setPackingAmount(text);
+        } else if (inputAt == 2) {
+          setPackingHSN(text);
+        }
+        break;
+      case FREIGHT_TYPE.PACKING_MATERIAL_CHARGES:
+        if (inputAt == 1) {
+          setPackingMaterialAmount(text);
+        } else if (inputAt == 2) {
+          setPackingMaterialHSN(text);
+        }
+        break;
+      case FREIGHT_TYPE.LOADING_CHARGES:
+        if (inputAt == 1) {
+          setLoadingAmount(text);
+        } else if (inputAt == 2) {
+          setLoadingHSN(text);
+        }
+        break;
+      case FREIGHT_TYPE.UNLOADING_CHARGES:
+        if (inputAt == 1) {
+          setUnloadingAmount(text);
+        } else if (inputAt == 2) {
+          setUnloadingHSN(text);
+        }
+        break;
+      case FREIGHT_TYPE.UNPACKING_CHARGES:
+        if (inputAt == 1) {
+          setUnpackingAmount(text);
+        } else if (inputAt == 2) {
+          setUnpackingHSN(text);
         }
         break;
       default:

@@ -37,3 +37,5 @@ const chargeOptions: string[] = [
 
 export const pickupChargeOptions = chargeOptions.slice(0,3);
 export const doorDeliveryChargeOptions = chargeOptions.slice(0,3);
+export const loadingChargeOptions = chargeOptions.slice(0,4);
+export const unloadingChargeOptions = chargeOptions.filter(e => e !== 'Loading By Party');

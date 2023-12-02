@@ -1,14 +1,24 @@
-import {billingByOptions, doorDeliveryChargeOptions, loadTypeOptions, pickupChargeOptions} from './utils';
+import {
+  billingByOptions,
+  doorDeliveryChargeOptions,
+  loadTypeOptions,
+  loadingChargeOptions,
+  pickupChargeOptions,
+  unloadingChargeOptions,
+} from './utils';
 
 export enum ACTION {
   BILING_TYPE = 'BILING_TYPE',
   SAME_AS_CLIENT_ADDRESS = 'SAME_AS_CLIENT_ADDRESS',
+  //
   FREIGHT_LOAD_TYPE = 'FREIGHT_LOAD_TYPE',
   FREIGHT_CHARGES = 'FREIGHT_CHARGES',
   FREIGHT_HSN = 'FREIGHT_HSN',
+  //
   PICKUP_CHARGE = 'PICKUP_CHARGE',
   PICKUP_CHARGE_AMOUNT = 'PICKUP_CHARGE_AMOUNT',
   PICKUP_CHARGE_HSN = 'PICKUP_CHARGE_HSN',
+  //
   DOOR_DELIVERY_CHARGE = 'DOOR_DELIVERY_CHARGE',
   DOOR_DELIVERY_AMOUNT = 'DOOR_DELIVERY_AMOUNT',
   DOOR_DELIVERY_HSN = 'DOOR_DELIVERY_HSN',
@@ -57,15 +67,15 @@ export enum ACTION {
   STORAGE_FROM_DATE = 'STORAGE_FROM_DATE',
   STORAGE_TO_DATE = 'STORAGE_TO_DATE',
   STORAGE_AMOUNT = 'STORAGE_AMOUNT',
- }
+}
 
- export interface IOtherCharge {
-  particular_name:string;
-  quantity:string;
-  rate_per_item:string;
-  amount:string;
-  hsn_code:string;
- }
+export interface IOtherCharge {
+  particular_name: string;
+  quantity: string;
+  rate_per_item: string;
+  amount: string;
+  hsn_code: string;
+}
 
 interface State {
   billing_type: string;
@@ -79,60 +89,59 @@ interface State {
   pickup_charge_amount: string;
   pickup_charge_hsn: string;
   // **** Door Delivery Charge ****
-  door_delivery_charge:string;
-  door_delivery_amount:string;
-  door_delivery_hsn:string;
+  door_delivery_charge: string;
+  door_delivery_amount: string;
+  door_delivery_hsn: string;
   // **** Packing Charge ****
-  packing_charge:string;
-  packing_amount:string;
+  packing_charge: string;
+  packing_amount: string;
   packing_hsn: string;
   // **** Packing Material Charge ****
-  packing_material_charge:string;
-  packing_material_amount:string;
+  packing_material_charge: string;
+  packing_material_amount: string;
   packing_material_hsn: string;
   // **** Loading Charge ****
-  loading_charge:string;
-  loading_amount:string;
+  loading_charge: string;
+  loading_amount: string;
   loading_hsn: string;
   // **** Unloading Charge ****
-  unloading_charge:string;
-  unloading_amount:string;
-  unloading_hsn:string;
+  unloading_charge: string;
+  unloading_amount: string;
+  unloading_hsn: string;
   // **** Unpacking Charge ****
-  unpacking_charge:string;
-  unpacking_amount:string;
-  unpakcing_hsn:string;
+  unpacking_charge: string;
+  unpacking_amount: string;
+  unpakcing_hsn: string;
   // **** Other Charges ****
-  other_charge:IOtherCharge[];
+  other_charges: IOtherCharge[];
   // **** Surcharge ****
-  surcharge:string;
-  surcharge_percent:string;
+  surcharge: string;
+  surcharge_percent: string;
   // **** Discount in Invoice ****
-  discount_in_invoice:string;
-  discount_value_or_percent:string;
+  discount_in_invoice: string;
+  discount_value_or_percent: string;
   // **** GST on Invoice
-  gst_on_invoice:string;
-  gst_percent:string;
+  gst_on_invoice: string;
+  gst_percent: string;
   gst_type: string;
-  gst_paid_by:string;
+  gst_paid_by: string;
   // **** Insurace ****
-  transit_insurance:string;
-  transit_luggage:string;
-  transit_insurance_type:string;
-  transit_insurance_charge:string;
-  transit_insurance_gst:string;
-  transit_goods_value:string;
+  transit_insurance: string;
+  transit_luggage: string;
+  transit_insurance_type: string;
+  transit_insurance_charge: string;
+  transit_insurance_gst: string;
+  transit_goods_value: string;
   // **** Storage ****
-  storage_duration:string;
-  storage_from_date:string;
-  storage_to_date:string;
-  storage_amount:string;
-
+  storage_duration: string;
+  storage_from_date: string;
+  storage_to_date: string;
+  storage_amount: string;
 }
 
 interface Action {
   type: ACTION;
-  payload: string | boolean;
+  payload: string | boolean | IOtherCharge[];
 }
 
 export const initialState: State = {
@@ -150,50 +159,50 @@ export const initialState: State = {
   door_delivery_amount: '',
   door_delivery_hsn: '',
   // **** Packing Charge ****
-  packing_charge:'',
-  packing_amount:'',
+  packing_charge: pickupChargeOptions[1],
+  packing_amount: '',
   packing_hsn: '',
   // **** Packing Material Charge ****
-  packing_material_charge:'',
-  packing_material_amount:'',
+  packing_material_charge: pickupChargeOptions[1],
+  packing_material_amount: '',
   packing_material_hsn: '',
   // **** Loading Charge ****
-  loading_charge:'',
-  loading_amount:'',
+  loading_charge: loadingChargeOptions[1],
+  loading_amount: '',
   loading_hsn: '',
   // **** Unloading Charge ****
-  unloading_charge:'',
-  unloading_amount:'',
-  unloading_hsn:'',
+  unloading_charge: unloadingChargeOptions[1],
+  unloading_amount: '',
+  unloading_hsn: '',
   // **** Unpacking Charge ****
-  unpacking_charge:'',
-  unpacking_amount:'',
-  unpakcing_hsn:'',
+  unpacking_charge: '',
+  unpacking_amount: '',
+  unpakcing_hsn: '',
   // **** Other Charges ****
-  other_charge:[],
+  other_charges: [],
   // **** Surcharge ****
-  surcharge:'',
-  surcharge_percent:'',
+  surcharge: '',
+  surcharge_percent: '',
   // **** Discount in Invoice ****
-  discount_in_invoice:'',
-  discount_value_or_percent:'',
-  // **** GST on Invoice
-  gst_on_invoice:'',
-  gst_percent:'',
+  discount_in_invoice: '',
+  discount_value_or_percent: '',
+  // **** GST on Invoice ****
+  gst_on_invoice: '',
+  gst_percent: '',
   gst_type: '',
-  gst_paid_by:'',
+  gst_paid_by: '',
   // **** Insurace ****
-  transit_insurance:'',
-  transit_luggage:'',
-  transit_insurance_type:'',
-  transit_insurance_charge:'',
-  transit_insurance_gst:'',
-  transit_goods_value:'',
+  transit_insurance: '',
+  transit_luggage: '',
+  transit_insurance_type: '',
+  transit_insurance_charge: '',
+  transit_insurance_gst: '',
+  transit_goods_value: '',
   // **** Storage ****
-  storage_duration:'',
-  storage_from_date:'',
-  storage_to_date:'',
-  storage_amount:'',
+  storage_duration: '',
+  storage_from_date: '',
+  storage_to_date: '',
+  storage_amount: '',
 };
 
 export const invoiceReducer = (state: State, action: Action) => {
@@ -223,6 +232,85 @@ export const invoiceReducer = (state: State, action: Action) => {
       return {...state, door_delivery_amount: payload as string};
     case ACTION.DOOR_DELIVERY_HSN:
       return {...state, door_delivery_hsn: payload as string};
+    // **** Packing Charges ****
+    case ACTION.PACKING_CHARGE:
+      return {...state, packing_charge: payload as string};
+    case ACTION.PACKING_AMOUNT:
+      return {...state, packing_amount: payload as string};
+    case ACTION.PACKING_HSN:
+      return {...state, packing_hsn: payload as string};
+    // **** Packing Material Charges ****
+    case ACTION.PACKING_MATERIAL_CHARGE:
+      return {...state, packing_material_charge: payload as string};
+    case ACTION.PACKING_MATERIAL_AMOUNT:
+      return {...state, packing_material_amount: payload as string};
+    case ACTION.PACKING_MATERIAL_HSN:
+      return {...state, packing_material_hsn: payload as string};
+    // **** Loading Charge ****
+    case ACTION.LOADING_CHARGE:
+      return {...state, loading_charge: payload as string};
+    case ACTION.LOADING_AMOUNT:
+      return {...state, loading_amount: payload as string};
+    case ACTION.LOADING_HSN:
+      return {...state, loading_hsn: payload as string};
+    // **** Unloading Charge ****
+    case ACTION.UNLOADING_CHARGE:
+      return {...state, unloading_charge: payload as string};
+    case ACTION.UNLOADING_AMOUNT:
+      return {...state, unloading_amount: payload as string};
+    case ACTION.UNLOADING_HSN:
+      return {...state, unloading_hsn: payload as string};
+    // **** Unpacking Charge ****
+    case ACTION.UNPACKING_CHARGE:
+      return {...state, unpacking_charge: payload as string};
+    case ACTION.UNPACKING_AMOUNT:
+      return {...state, unpacking_amount: payload as string};
+    case ACTION.UNPACKING_HSN:
+      return {...state, unpakcing_hsn: payload as string};
+    // **** Other Charges ****
+    case ACTION.OTHER_CHARGES:
+      return {...state, other_charges: payload as IOtherCharge[]};
+    // **** Surcharge ****
+    case ACTION.SURCHARGE:
+      return {...state, surcharge: payload as string};
+    case ACTION.SURCHARGE_PERCENT:
+      return {...state, surcharge_percent: payload as string};
+    // **** Discount in Invoice ****
+    case ACTION.DISCOUNT_IN_INVOICE:
+      return {...state, discount_in_invoice: payload as string};
+    case ACTION.DISCOUNT_VALUE_OR_PERCENT:
+      return {...state, discount_value_or_percent: payload as string};
+    // **** GST on Invoice ****
+    case ACTION.GST_ON_INVOICE:
+      return {...state, gst_on_invoice: payload as string};
+    case ACTION.GST_PERCENT:
+      return {...state, gst_percent: payload as string};
+    case ACTION.GST_TYPE:
+      return {...state, gst_type: payload as string};
+    case ACTION.GST_PAID_BY:
+      return {...state, gst_paid_by: payload as string};
+    // **** Insurace ****
+    case ACTION.TRANSIT_INSURANCE:
+      return {...state, transit_insurance: payload as string};
+    case ACTION.TRANSIT_LUGGAGE:
+      return {...state, transit_luggage: payload as string};
+    case ACTION.TRANSIT_INSURANCE_TYPE:
+      return {...state, transit_insurance_type: payload as string};
+    case ACTION.TRANSIT_INSURANCE_CHARGE:
+      return {...state, transit_insurance_charge: payload as string};
+    case ACTION.TRANSIT_INSURANCE_GST:
+      return {...state, transit_insurance_gst: payload as string};
+    case ACTION.TRANSIT_GOODS_VALUE:
+      return {...state, transit_goods_value: payload as string};
+    // **** Storage ****
+    case ACTION.STORAGE_DURATION:
+      return {...state, storage_duration: payload as string};
+    case ACTION.STORAGE_FROM_DATE:
+      return {...state, storage_from_date: payload as string};
+    case ACTION.STORAGE_TO_DATE:
+      return {...state, storage_to_date: payload as string};
+    case ACTION.STORAGE_AMOUNT:
+      return {...state, storage_amount: payload as string};
     default:
       return state;
   }

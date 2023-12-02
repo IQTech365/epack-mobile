@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     marginLeft: 10
   },
   style: {
-    marginRight: 45,
+    marginRight: 25,
     marginBottom: 15,
   },
   checkboxContainer: {
