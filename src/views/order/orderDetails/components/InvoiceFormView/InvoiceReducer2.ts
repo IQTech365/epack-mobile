@@ -63,6 +63,7 @@ export enum ACTION {
   TRANSIT_INSURANCE_GST = 'TRANSIT_INSURANCE_GST',
   TRANSIT_GOODS_VALUE = 'TRANSIT_GOODS_VALUE',
   //
+  STORAGE = 'STORAGE',
   STORAGE_DURATION = 'STORAGE_DURATION',
   STORAGE_FROM_DATE = 'STORAGE_FROM_DATE',
   STORAGE_TO_DATE = 'STORAGE_TO_DATE',
@@ -133,6 +134,7 @@ interface State {
   transit_insurance_gst: string;
   transit_goods_value: string;
   // **** Storage ****
+  storage:string;
   storage_duration: string;
   storage_from_date: string;
   storage_to_date: string;
@@ -199,6 +201,7 @@ export const initialState: State = {
   transit_insurance_gst: '',
   transit_goods_value: '',
   // **** Storage ****
+  storage:'',
   storage_duration: '',
   storage_from_date: '',
   storage_to_date: '',
@@ -303,6 +306,8 @@ export const invoiceReducer = (state: State, action: Action) => {
     case ACTION.TRANSIT_GOODS_VALUE:
       return {...state, transit_goods_value: payload as string};
     // **** Storage ****
+    case ACTION.STORAGE:
+      return {...state, storage: payload as string};
     case ACTION.STORAGE_DURATION:
       return {...state, storage_duration: payload as string};
     case ACTION.STORAGE_FROM_DATE:

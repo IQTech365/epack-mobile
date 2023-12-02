@@ -18,6 +18,8 @@ import InvoiceToIndividualView from './components/InvoiceToIndividualView';
 import InvoiceToCompanyView from './components/InvoiceToCompanyView';
 import FreightDetailsView from './components/FreightDetailsView';
 import { useInvoiceFormContextHook } from '../../../../../provider/InvoiceFormContextProvider';
+import TransitInsuranceView from './components/TransitInsuranceView';
+import StorageChargeView from './components/StorageChargeView';
 
 interface IInvoiceFormViewProps {
   orderId: string | undefined;
@@ -174,17 +176,15 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({}) => {
             </View>
           </CollapsibleView>
           <Spacer height={4} />
-          <CollapsibleView title="OTHER DETAILS" collapsed={true}>
-            <View>
-              <View style={styles.elementContainer2}>
-                <Label text="Remark" style={styles.label} />
-                {/* <Input
-                onChangeText={handleRemarkInputTextChange}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-              /> */}
-              </View>
+          <CollapsibleView title="TRANSIT INSURANCE" collapsed={true}>
+            <View style={styles.elementContainer3}>
+                <TransitInsuranceView />
+            </View>
+          </CollapsibleView>
+          <Spacer height={4} />
+          <CollapsibleView title="STORAGE CHARGE" collapsed={true}>
+            <View style={styles.elementContainer3}>
+                <StorageChargeView />
             </View>
           </CollapsibleView>
           <Spacer height={8} />

@@ -438,6 +438,16 @@ const useInvoiceFormContext = () => {
   );
 
   // **** Storage Charge ****
+  const setStorage = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.STORAGE,
+        payload: text,
+      });
+    },
+    [state.storage],
+  );
+
   const setStorageDuration = useCallback(
     (text: string) => {
       dispatch({
@@ -534,6 +544,7 @@ const useInvoiceFormContext = () => {
     setTransitInsuranceGST,
     setTransitGoodsValue,
     // Storage
+    setStorage,
     setStorageDuration,
     setStorageFromDate,
     setStorageToDate,
@@ -600,6 +611,7 @@ const initInvoiceFormContextState: UseInvoiceFormContextType = {
   setTransitInsuranceGST: (text: string) => {},
   setTransitGoodsValue: (text: string) => {},
   // Storage
+  setStorage: (text:string) => {},
   setStorageDuration: (text: string) => {},
   setStorageFromDate: (text: string) => {},
   setStorageToDate: (text: string) => {},
