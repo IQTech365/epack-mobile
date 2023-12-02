@@ -1,0 +1,37 @@
+import React from 'react';
+import {View} from 'react-native';
+import styles from './style';
+import Label from '../../../../../../../../../common/Label';
+import Input from '../../../../../../../../../common/Input';
+import {COLOR_BLACK} from '../../../../../../../../../utils/colors';
+import Spacer from '../../../../../../../../../common/Spacer';
+import {useInvoiceFormContextHook} from '../../../../../../../../../provider/InvoiceFormContextProvider';
+import DropdownComponent from '../../../../../../../../../common/DropdownComponent';
+import {surchargeOptions, surchargePercentOptions} from '../../../../utils';
+interface Props {}
+
+const FreightSurchargeView: React.FC<Props> = ({}) => {
+  const {setSurcharge, setSurchargePercent} = useInvoiceFormContextHook();
+
+  return (
+    <>
+      <View style={styles.fullWidhCompContainer2}>
+        <Label text="Surcharge" style={styles.label} />
+      </View>
+      <View style={styles.container}>
+        <View style={styles.compContainer}>
+          <DropdownComponent data={surchargeOptions} onSelect={() => {}} />
+        </View>
+        <Spacer width={8} />
+        <View style={styles.compContainer}>
+          <DropdownComponent
+            data={surchargePercentOptions}
+            onSelect={() => {}}
+          />
+        </View>
+      </View>
+    </>
+  );
+};
+
+export default FreightSurchargeView;

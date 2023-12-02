@@ -39,3 +39,68 @@ export const pickupChargeOptions = chargeOptions.slice(0,3);
 export const doorDeliveryChargeOptions = chargeOptions.slice(0,3);
 export const loadingChargeOptions = chargeOptions.slice(0,4);
 export const unloadingChargeOptions = chargeOptions.filter(e => e !== 'Loading By Party');
+
+export const surchargeOptions = [
+  {
+    label: 'Not Applicable',
+    value: '1',
+  },
+  {
+    label: 'Applicable',
+    value: '2',
+  },
+  {
+    label: 'Extra',
+    value: '3',
+  },
+];
+
+export const surchargePercentOptions = [
+  {
+    label: '0%',
+    value: '1',
+  },
+  {
+    label: '10%',
+    value: '2',
+  },
+  {
+    label: '12%',
+    value: '3',
+  },
+];
+
+export const discountOptions:string[] = ['Discount @%', 'Flat Discount', 'Not Required'];
+
+export const discountPercentOptions = [
+  {
+    label: '1%',
+    value: '1',
+  },
+  {
+    label: '2%',
+    value: '2',
+  },
+  {
+    label: '3%',
+    value: '3',
+  },
+  {
+    label: '4%',
+    value: '4',
+  },
+  {
+    label: '5%',
+    value: '5',
+  },
+  {
+    label: '6%',
+    value: '6',
+  },
+  {
+    label: '7%',
+    value: '7',
+  },
+];
+
+export const gstOptions:string[] = ['With GST', 'Without GST', 'Exempted', 'Extra'];
