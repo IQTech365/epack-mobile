@@ -5,7 +5,6 @@ import Label from '../../../../../../../../../common/Label';
 import Input from '../../../../../../../../../common/Input';
 import {COLOR_BLACK} from '../../../../../../../../../utils/colors';
 import {FREIGHT_TYPE} from '../../../../utils';
-import Spacer from '../../../../../../../../../common/Spacer';
 import {useInvoiceFormContextHook} from '../../../../../../../../../provider/InvoiceFormContextProvider';
 
 interface Props {
@@ -108,7 +107,7 @@ const FreightInputView: React.FC<Props> = ({label1, label2, freightType}) => {
           selectionColor={COLOR_BLACK}
         />
       </View>
-      <Spacer width={8} />
+      {/* <Spacer width={8} /> */}
       <View style={styles.compContainer}>
         <Label text={label2} style={styles.label} />
         <Input

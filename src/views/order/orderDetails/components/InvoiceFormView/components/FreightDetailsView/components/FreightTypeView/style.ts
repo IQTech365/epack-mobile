@@ -4,17 +4,17 @@ const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   mainWrapper: {
-    width: width * 0.98,
+    width: width * 0.9,
   },
   container: {
-    width: width * 0.98,
+    width: width * 0.9,
     justifyContent: 'flex-start',
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'center',
   },
   optionContainer: {
-    width: width * 0.98,
+    width: width * 0.9,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'flex-start',

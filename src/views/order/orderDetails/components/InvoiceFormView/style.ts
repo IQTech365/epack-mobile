@@ -19,6 +19,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  elementContainer3: {
+    width: width * 0.9,
+    alignSelf: 'center',
+  },
   elementContainer2: {
     width: width * 0.9,
     alignSelf: 'center',

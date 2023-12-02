@@ -14,7 +14,6 @@ import shiftingLuggages from '../../../../../data/shiftingLuggage.json';
 import {Switch} from 'react-native-switch';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {billingByOptions} from './utils';
-import {ACTION, initialState, invoiceReducer} from './InvoiceReducer2';
 import InvoiceToIndividualView from './components/InvoiceToIndividualView';
 import InvoiceToCompanyView from './components/InvoiceToCompanyView';
 import FreightDetailsView from './components/FreightDetailsView';
@@ -170,10 +169,8 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({}) => {
           <Spacer height={4} />
           <Spacer height={4} />
           <CollapsibleView title="FREIGHT DETAILS" collapsed={true}>
-            <View>
-              <View style={styles.elementContainer}>
+            <View style={styles.elementContainer3}>
                 <FreightDetailsView />
-              </View>
             </View>
           </CollapsibleView>
           <Spacer height={4} />

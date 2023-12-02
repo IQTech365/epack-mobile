@@ -11,6 +11,7 @@ import {
   unloadingChargeOptions,
 } from '../../utils';
 import Spacer from '../../../../../../../common/Spacer';
+import FreightOtherChargesView from './components/FreightOtherChargesView';
 
 interface Props {}
 
@@ -72,6 +73,8 @@ const FreightDetailsView: React.FC<Props> = () => {
         label1='Amount'
         label2='HSN Code'
       />
+      <Spacer height={20} />
+      <FreightOtherChargesView />
     </View>
   );
 };
