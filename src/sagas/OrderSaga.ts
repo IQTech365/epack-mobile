@@ -26,6 +26,9 @@ import {
   getCarConditionListFailure,
   getCarConditionListRequest,
   getCarConditionListSuccess,
+  getMoneyReceiptHtmlFailure,
+  getMoneyReceiptHtmlRequest,
+  getMoneyReceiptHtmlSuccess,
   getMoneyReceiptListFailure,
   getMoneyReceiptListRequest,
   getMoneyReceiptListSuccess,
@@ -50,6 +53,7 @@ import { IGetBiltyListResponse } from '../interface/order/IGetBiltyListResponse'
 import { IGetOrdersRequest } from '../interface/order/IGetOrdersRequest';
 import { ISingleOrderRequest } from '../interface/order/ISingleOrderRequest';
 import { ISingleEnquiryResponse } from '../interface/enquiry/ISingleEnquiryResponse';
+import { IMoneyReceiptTempHtmlRequest, IMoneyReceiptTempHtmlResponse } from '../interface/order/templates/ITemplateResponse';
 
 export function* addOrderSaga(action: PayloadAction<IAddOrderRequest>) {
   console.log('addOrderSaga--action--', JSON.stringify(action));
@@ -200,6 +204,18 @@ export function* createCarConditionSaga(
         yield put(getBiltyListFailure(error));
     }
   }
+
+  export function* getMoneyReceiptTemplateHtmlSaga(action: PayloadAction<IMoneyReceiptTempHtmlRequest>) {
+    try {
+        const {templateId, moneyReceiptId} = action.payload;
+        const response: IMoneyReceiptTempHtmlResponse = yield call(OrderService.GetMoneyReceiptTemplateHtmlService, templateId, moneyReceiptId);
+        console.log('getMoneyReceiptTemplateHtmlSaga-response----', JSON.stringify(response));
+        yield put(getMoneyReceiptHtmlSuccess(response));
+    } catch (error) {
+        console.log('getMoneyReceiptTemplateHtmlSaga-error----', JSON.stringify(error));
+        yield put(getMoneyReceiptHtmlFailure(error));
+    }
+  }
   
 
 export function* watcherOrderSaga() {
@@ -214,4 +230,5 @@ export function* watcherOrderSaga() {
   yield takeLatest(createBiltyRequest.type, createBiltySaga);
   yield takeLatest(getBiltyListRequest.type, getBiltyListSaga);
   yield takeLatest(getApprovedOrdersRequest.type, getApprovedOrderListSaga);
+  yield takeLatest(getMoneyReceiptHtmlRequest.type, getMoneyReceiptTemplateHtmlSaga);
 }

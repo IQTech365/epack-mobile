@@ -56,7 +56,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({ orderId, e
 
   const dispatch2 = useAppDispatch();
   const handleReceiptDate = (date: Date) => {
-    console.log('receipt-date---', date.toISOString());
+    // console.log('receipt-date---', date.toISOString());
     dispatch({
       type: MONEYRECEIPT_FORM_ACTION.RECEIPT_DATE,
       payload: date.toISOString(),

@@ -5,7 +5,6 @@ import HeaderGridBackgroundImage from '../../../../../images/header-grid.png';
 import PhoneIcon from '../../../../../images/icons/phone.svg';
 import WhatsappIcon from '../../../../../images/icons/whatsapp.svg';
 import Spacer from '../../../../../common/Spacer';
-import {IGetEnquiriesData} from '../../../../../interface/enquiry/IGetEnquiriesResponse';
 import {formatDate} from '../../../../../utils/formatter';
 import {
   Menu,
@@ -23,9 +22,10 @@ import useCompanyId from '../../../../../hooks/useCompanyId';
 import { NavigationProp } from '@react-navigation/native';
 import { IGetOrdersRequest } from '../../../../../interface/order/IGetOrdersRequest';
 import { getOrdersRequest } from '../../../../../redux/slices/OrderSlice';
+import { IEnquiry } from '../../../../../interface/quotation/IGetQuotationsResponse';
 
 interface IEnquiryInfoViewProps {
-  item: IGetEnquiriesData | undefined;
+  item: IEnquiry|undefined;
   enquiryId: string | undefined;
   navigation: NavigationProp<any, any>
 }

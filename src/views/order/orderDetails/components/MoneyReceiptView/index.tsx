@@ -15,12 +15,22 @@ import ListViewIcon2 from '../../../../../images/icons/list_view_icon2.svg';
 import CreateIcon from '../../../../../images/icons/create_icon.svg';
 import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
 import MoneyReceiptFormView from '../MoneyReceiptFormView';
-import {getMoneyReceiptListRequest} from '../../../../../redux/slices/OrderSlice';
+import {
+  clearMoneyReceiptHtmlDocument,
+  getMoneyReceiptHtmlRequest,
+  getMoneyReceiptListRequest,
+  resetGetMoneyReceiptHtmlRequest,
+} from '../../../../../redux/slices/OrderSlice';
 import Spinner from '../../../../../common/Spinner';
 import AddMoneyReceiptListItem from '../MoneyReceiptList';
 import FormModal from '../../../../settings/formModal';
 import {COLOR_BLACK, COLOR_BLUE} from '../../../../../utils/colors';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import {IMoneyReceiptTempHtmlRequest} from '../../../../../interface/order/templates/ITemplateResponse';
+import ModalHOC from '../../../../../common/ModalHOC';
+import MoneyReceiptTemplate from './MoneyReceiptTemplate';
+import RNHTMLtoPDF from 'react-native-html-to-pdf';
+import Share from 'react-native-share';
 
 interface IMoneyReceiptViewProps {
   orderId: string;
@@ -31,14 +41,18 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
   orderId,
 }) => {
   const dispatch = useAppDispatch();
-  const {getMoneyReceiptListRequesting, moneyReceiptList} = useAppSelector(
-    state => state.Order,
-  );
+  const {
+    getMoneyReceiptListRequesting,
+    moneyReceiptList,
+    moneyReceiptTemplateHtml,
+    getMoneyReceiptTemplateHtmlRequesting,
+    getMoneyReceiptTemplateHtmlSuccess,
+    getMoneyReceiptTemplateHtmlFailure,
+  } = useAppSelector(state => state.Order);
   const bottomSheetRef = useRef<BottomSheet>(null);
   console.log('MoneyReceiptList--', JSON.stringify(moneyReceiptList));
   const {data: MoneyReceiptData = []} = moneyReceiptList || {};
   const downloadOptions = ['With Sign. & Stamp', 'Without Sign. & Stamp'];
-
   const [showMoneyReceiptList, setShowMoneyReceiptList] =
     useState<boolean>(false);
   const [createNewBiltyMoneyReceipt, setCreateNewMoneyReceipt] =
@@ -46,6 +60,10 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
   const [downloadOption, setDownloadOption] = useState<string>('');
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [editData, setEditData] = useState<any>([]);
+  const [showPreview, setShowPreview] = useState<boolean>(false);
+  const [showShareModal, setShowShareModal] = useState<boolean>(false);
+  const [shouldDownload, setShouldDownload] = useState<boolean>(false);
+  const [moneyReceiptId, setMoneyReceiptId] = useState<string>('');
 
   const handleCreateNewMoneyReceipt = () => {
     setShowMoneyReceiptList(false);
@@ -57,12 +75,14 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
     setShowMoneyReceiptList(true);
     setCreateNewMoneyReceipt(false);
   };
-  const presentModal = () => {
+  const presentModal = (moneyReceiptId:string) => {
+    setMoneyReceiptId(moneyReceiptId);
     bottomSheetRef.current?.snapToIndex(0);
   };
 
   const dismissModal = () => {
     setDownloadOption('');
+    setShouldDownload(false);
     bottomSheetRef.current?.close();
   };
 
@@ -75,9 +95,109 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
     setIsEdit(true);
   };
 
+  const handleShowPreviewModalClose = () => {
+    dispatch(clearMoneyReceiptHtmlDocument());
+    setShowPreview(false);
+    
+  };
+
+  const handleShareClick = async (moneyReceiptId: string) => {
+    setShowShareModal(true);
+    setShouldDownload(false);
+    const payload: IMoneyReceiptTempHtmlRequest = {
+      templateId: '6561d45bec79daeb0af1b793',
+      moneyReceiptId: moneyReceiptId,
+    };
+    dispatch(getMoneyReceiptHtmlRequest(payload));
+  }
+
+  const handleDownloadClick = async () => {
+    setShowShareModal(false);
+    setShouldDownload(true);
+    const payload: IMoneyReceiptTempHtmlRequest = {
+      templateId: '6561d45bec79daeb0af1b793',
+      moneyReceiptId: moneyReceiptId,
+    };
+    dispatch(getMoneyReceiptHtmlRequest(payload));
+  }
+
+  const startDownload = async () => {
+    let options = {
+      html: moneyReceiptTemplateHtml,
+      fileName: 'MoneyReceipt',
+      directory: 'Documents',
+    };
+    let file = await RNHTMLtoPDF.convert(options);
+    console.log('file--', JSON.stringify(file));
+  };
+
+  const startShare = async () => {
+    let options = {
+      html: moneyReceiptTemplateHtml,
+      fileName: 'MoneyReceipt',
+      directory: 'Documents',
+    };
+    let file = await RNHTMLtoPDF.convert(options);
+    console.log('file--', JSON.stringify(file));
+    const shareOptions = {
+      file: 'pdf',
+      message: 'Money Receipt Document',
+      url: `"file://${file.filePath}"`,
+    }
+    Share.open(shareOptions)
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((err) => {
+      dispatch(clearMoneyReceiptHtmlDocument());
+      console.log(err);
+    });
+  }
+
+  const handlePreviewClick = (moneyReceiptId: string) => {
+    setShowShareModal(false);
+    const payload: IMoneyReceiptTempHtmlRequest = {
+      templateId: '6561d45bec79daeb0af1b793',
+      moneyReceiptId: moneyReceiptId,
+    };
+    dispatch(getMoneyReceiptHtmlRequest(payload));
+  };
+
   useEffect(() => {
     dispatch(getMoneyReceiptListRequest(orderId));
   }, []);
+
+  useEffect(() => {
+    if (
+      !getMoneyReceiptTemplateHtmlRequesting &&
+      getMoneyReceiptTemplateHtmlSuccess
+    ) {
+      if (!showShareModal && !shouldDownload) {
+        setShowPreview(true);
+      }
+      dispatch(resetGetMoneyReceiptHtmlRequest());
+    } else if (
+      !getMoneyReceiptTemplateHtmlRequesting &&
+      getMoneyReceiptTemplateHtmlFailure
+    ) {
+      if (!showShareModal && !shouldDownload) {
+        setShowPreview(false);
+      }
+      dispatch(resetGetMoneyReceiptHtmlRequest());
+    }
+  }, [
+    getMoneyReceiptTemplateHtmlRequesting,
+    getMoneyReceiptTemplateHtmlSuccess,
+    getMoneyReceiptTemplateHtmlFailure,
+  ]);
+
+  useEffect(() => {
+    if(showShareModal) {
+      startShare();
+    } else if(shouldDownload) {
+      startDownload();
+    }
+  }, [moneyReceiptTemplateHtml]);
 
   const showEmptyView = () => {
     return (
@@ -131,9 +251,11 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
                 item={item}
                 index={1}
                 onPress={() => {}}
-                onShare={() => {}}
-                onDownload={presentModal}
-                onPreview={() => {}}
+                onShare={() => {handleShareClick(item._id)}}
+                onDownload={() => {presentModal(item._id)}}
+                onPreview={() => {
+                  handlePreviewClick(item._id);
+                }}
                 onEdit={() => handleEditClick(index)}
               />
             )}
@@ -170,6 +292,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
                 })}
               </View>
               <TouchableOpacity
+                onPress={handleDownloadClick}
                 style={downloadButtonStyle}
                 activeOpacity={0.6}
                 disabled={downloadOption == ''}>
@@ -177,6 +300,14 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
               </TouchableOpacity>
             </>
           </FormModal>
+          <ModalHOC
+            visible={showPreview}
+            onClose={handleShowPreviewModalClose}
+            title="Preview">
+            <View style={{flex: 1}}>
+              <MoneyReceiptTemplate />
+            </View>
+          </ModalHOC>
         </View>
       );
     }
@@ -207,7 +338,11 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
       </View>
       {showForm()}
       {showList()}
-      <Spinner show={getMoneyReceiptListRequesting} />
+      <Spinner
+        show={
+          getMoneyReceiptListRequesting || getMoneyReceiptTemplateHtmlRequesting
+        }
+      />
     </>
   );
 };

@@ -54,9 +54,31 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
   const getAddress = (type: string, item: IGetOrdersData) => {
     let address = '';
     if (type == 'pick') {
-      address = `${item.pickupAddress.address}, ${item.pickupAddress.city}, ${item.pickupAddress.state}, ${item.pickupAddress.pincode}`;
+      if(item?.pickupAddress?.address) {
+        address += `${item.pickupAddress.address}, `;
+      }
+      if(item?.pickupAddress?.city) {
+        address += `${item.pickupAddress.city}, `;
+      }
+      if(item?.pickupAddress?.state) {
+        address += `${item.pickupAddress.state}, `;
+      }
+      if(item?.pickupAddress?.pincode) {
+        address += `${item.pickupAddress.pincode}`;
+      }
     } else if (type == 'drop') {
-      address = `${item.dropAddress.address}, ${item.dropAddress.city}, ${item.dropAddress.state}, ${item.dropAddress.pincode}`;
+      if(item?.dropAddress?.address) {
+        address += `${item.dropAddress.address}, `;
+      }
+      if(item?.dropAddress?.city) {
+        address += `${item.dropAddress.city}, `;
+      }
+      if(item?.dropAddress?.state) {
+        address += `${item.dropAddress.state}, `;
+      }
+      if(item?.dropAddress?.pincode) {
+        address += `${item.dropAddress.pincode}`;
+      }
     }
     return address;
   };

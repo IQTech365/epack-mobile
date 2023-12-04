@@ -105,3 +105,6 @@ export const GET_UNIT_TYPES = `/setting/unit-type/all`;
 
 // Packing Materials
 export const GET_PACKING_MATERIALS = `/enquiry/get-packing-material`;
+
+// Templates
+export const GET_MONEY_RECEIPT_TEMPLATE_HTML = (templateId, receiptId) => `template/money-receipt-template/create/${templateId}/${receiptId}`;

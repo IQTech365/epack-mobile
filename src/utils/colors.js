@@ -1,5 +1,6 @@
 export const COLOR_BLUE = '#00A1E5';
 export const COLOR_BLUE2 = '#0E8EDC';
+export const COLOR_BLUE3 = '#5BC8F6';
 export const COLOR_WHITE = '#FFFFFF';
 export const OFF_WHITE = '#CBCBCB';
 export const COLOR_ERROR = '#FF5733';

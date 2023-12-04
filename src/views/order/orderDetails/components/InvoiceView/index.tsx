@@ -14,6 +14,7 @@ import ListViewIcon2 from '../../../../../images/icons/list_view_icon2.svg';
 import CreateIcon from '../../../../../images/icons/create_icon.svg';
 import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
 import InvoiceFormView from '../InvoiceFormView';
+import {InvoiceFormContextProvider} from '../../../../../provider/InvoiceFormContextProvider';
 
 interface IInvoiceViewProps {
   orderId: string;
@@ -50,7 +51,11 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId}) => {
 
   const showForm = () => {
     if (createNewInvoice) {
-      return <InvoiceFormView orderId={orderId} />;
+      return (
+        <InvoiceFormContextProvider>
+          <InvoiceFormView orderId={orderId} />
+        </InvoiceFormContextProvider>
+      );
     }
     return null;
   };
