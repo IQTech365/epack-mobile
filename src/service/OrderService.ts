@@ -11,6 +11,7 @@ import {
   GET_CAR_CONDITION_LIST,
   GET_INVOICE_LIST,
   GET_MONEY_RECEIPT_LIST,
+  GET_MONEY_RECEIPT_TEMPLATE_HTML,
   GET_ORDER_DETAILS,
   GET_ORDER_LIST
 } from '../http/Endpoint';
@@ -34,6 +35,7 @@ import { IGetCarConditionListResponse } from '../interface/order/IGetCarConditio
 import { IGetOrdersRequest } from '../interface/order/IGetOrdersRequest';
 import { ISingleOrderRequest } from '../interface/order/ISingleOrderRequest';
 import { ISingleEnquiryResponse } from '../interface/enquiry/ISingleEnquiryResponse';
+import { IMoneyReceiptTempHtmlRequest, IMoneyReceiptTempHtmlResponse } from '../interface/order/templates/ITemplateResponse';
 
 export const GetOrderDetailsService = async (payload: string): Promise<IOrderDetailsResponse> => {
     console.log('GetOrderDetailsService--payload--', JSON.stringify(payload));
@@ -118,4 +120,11 @@ export const GetOrderService = async (payload: ISingleOrderRequest): Promise<ISi
     console.log('GetOrderService--payload--', JSON.stringify(payload));
     const api = Api.getInstance();
     return await api.post<ISingleOrderRequest, AxiosResponse<ISingleEnquiryResponse>>(payload, GET_ORDER_LIST);
+}
+
+// Template
+export const GetMoneyReceiptTemplateHtmlService = async (templateId:string, moneyReceiptId:string): Promise<IMoneyReceiptTempHtmlResponse> => {
+    console.log('GetMoneyReceiptTemplateHtmlService--payload--', JSON.stringify(templateId));
+    const api = Api.getInstance();
+    return await api.get<IMoneyReceiptTempHtmlResponse>(GET_MONEY_RECEIPT_TEMPLATE_HTML(templateId, moneyReceiptId));
 }

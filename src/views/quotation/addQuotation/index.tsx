@@ -1789,6 +1789,8 @@ const AddQuotationView: React.FC<Props> = ({
       },
       otherDetail1: state.otherDetails?.items_got_down_from_balcony as string,
       otherDetail2: state.otherDetails?.any_needs_or_concern as string,
+      easy_access_for_loading_unloading: state.otherDetails?.easy_access_for_loading_unloading as string,
+      any_restrcition_for_loading_unloading: state.otherDetails?.any_restrcition_for_loading_unloading as string,
     };
     console.log('PAYLOAD', JSON.stringify(payload));
     dispatch2(addQuotationRequest(payload));
