@@ -11,6 +11,32 @@ export enum ACTION {
   BILING_TYPE = 'BILING_TYPE',
   SAME_AS_CLIENT_ADDRESS = 'SAME_AS_CLIENT_ADDRESS',
   //
+  INVOICE_NO = 'INVOICE_NO',
+  DATE_OF_INVOICE = 'DATE_OF_INVOICE',
+  DATE_OF_DELIVERY = 'DATE_OF_DELIVERY',
+  SHIFTING_LUGGAGE = 'SHIFTING_LUGGAGE',
+  MODE_OF_MOVING = 'MODE_OF_MOVING',
+  VEHICLE_NO = 'VEHICLE_NO',
+  CONSIGNMENT_NO = 'CONSIGNMENT_NO',
+  //
+  PARTY_NAME = 'PARTY_NAME',
+  PARTY_MOBILE_NO = 'PARTY_MOBILE_NO',
+  //
+  COMPANY_NAME = 'COMPANY_NAME',
+  APPROVAL_AUTHORITY = 'APPROVAL_AUTHORITY',
+  AUTHORITY_PERSON_NAME = 'AUTHORITY_PERSON_NAME',
+  AUTHORITY_MOBILE_NO = 'AUTHORITY_MOBILE_NO',
+  COMPANY_GST = 'COMPANY_GST',
+  EMPLOYEE_NAME = 'EMPLOYEE_NAME',
+  EMPLOYEE_DESIGNATION = 'EMPLOYEE_DESIGNATION',
+  EMPLOYEE_MOBILE_NO = 'EMPLOYEE_MOBILE_NO',
+  COMPANY_ADDRESS = 'COMPANY_ADDRESS',
+  //
+  PINCODE = 'PINCODE',
+  STATE = 'STATE',
+  CITY = 'CITY',
+  ADDRESS = 'ADDRESS',
+  //
   FREIGHT_LOAD_TYPE = 'FREIGHT_LOAD_TYPE',
   FREIGHT_CHARGES = 'FREIGHT_CHARGES',
   FREIGHT_HSN = 'FREIGHT_HSN',
@@ -81,6 +107,32 @@ export interface IOtherCharge {
 interface State {
   billing_type: string;
   same_as_client_address: boolean;
+  // **** Basic Details ****
+  invoice_no:string;
+  date_of_invoice: string;
+  date_of_delivery: string;
+  shifting_luggage: string;
+  mode_of_moving: string;
+  vehicle_no: string;
+  consignment_no: string;
+  // **** Billing Details Individual ****
+  party_name: string;
+  party_mobile_no: string;
+  // **** Billing Details Company ****
+  company_name: string;
+  approval_authority: string;
+  authority_person_name: string;
+  authority_mobile_no: string;
+  company_gst: string;
+  employee_name: string;
+  employee_designation: string;
+  employee_mobile_no: string;
+  company_address: string;
+  // **** Address ****
+  pincode: string;
+  state: string;
+  city: string;
+  address: string;
   // **** Freight Charge ****
   freight_load_type: string;
   freight_charges: string;
@@ -134,7 +186,7 @@ interface State {
   transit_insurance_gst: string;
   transit_goods_value: string;
   // **** Storage ****
-  storage:string;
+  storage: string;
   storage_duration: string;
   storage_from_date: string;
   storage_to_date: string;
@@ -149,6 +201,32 @@ interface Action {
 export const initialState: State = {
   billing_type: billingByOptions[0],
   same_as_client_address: true,
+  // **** Basic Details ****
+  invoice_no: '',
+  date_of_invoice: '',
+  date_of_delivery: '',
+  shifting_luggage: '',
+  mode_of_moving: '',
+  vehicle_no: '',
+  consignment_no: '',
+  // **** Billing Details Individual ****
+  party_name: '',
+  party_mobile_no: '',
+  // **** Billing Details Company ****
+  company_name: '',
+  approval_authority: '',
+  authority_person_name: '',
+  authority_mobile_no: '',
+  company_gst: '',
+  employee_name: '',
+  employee_designation: '',
+  employee_mobile_no: '',
+  company_address: '',
+  // **** Address ****
+  pincode: '',
+  state: '',
+  city: '',
+  address: '',
   freight_load_type: loadTypeOptions[0],
   freight_charges: '',
   freight_hsn: '',
@@ -201,7 +279,7 @@ export const initialState: State = {
   transit_insurance_gst: '',
   transit_goods_value: '',
   // **** Storage ****
-  storage:'',
+  storage: '',
   storage_duration: '',
   storage_from_date: '',
   storage_to_date: '',
@@ -215,6 +293,55 @@ export const invoiceReducer = (state: State, action: Action) => {
       return {...state, billing_type: payload as string};
     case ACTION.SAME_AS_CLIENT_ADDRESS:
       return {...state, same_as_client_address: payload as boolean};
+    // // **** Basic Details ****
+    case ACTION.INVOICE_NO:
+      return {...state, invoice_no: payload as string};
+    case ACTION.DATE_OF_INVOICE:
+      return {...state, date_of_invoice: payload as string};
+    case ACTION.DATE_OF_DELIVERY:
+      return {...state, date_of_delivery: payload as string};
+    case ACTION.SHIFTING_LUGGAGE:
+      return {...state, shifting_luggage: payload as string};
+    case ACTION.MODE_OF_MOVING:
+      return {...state, mode_of_moving: payload as string};
+    case ACTION.VEHICLE_NO:
+      return {...state, vehicle_no: payload as string};
+    case ACTION.CONSIGNMENT_NO:
+      return {...state, consignment_no: payload as string};
+    // // *** Billing Details Individual ****
+    case ACTION.PARTY_NAME:
+      return {...state, party_name: payload as string};
+    case ACTION.PARTY_MOBILE_NO:
+      return {...state, party_mobile_no: payload as string};
+    // // **** Billing Details Company ****
+    case ACTION.COMPANY_NAME:
+      return {...state, company_name: payload as string};
+    case ACTION.APPROVAL_AUTHORITY:
+      return {...state, approval_authority: payload as string};
+    case ACTION.AUTHORITY_PERSON_NAME:
+      return {...state, authority_person_name: payload as string};
+    case ACTION.AUTHORITY_MOBILE_NO:
+      return {...state, authority_mobile_no: payload as string};
+    case ACTION.COMPANY_GST:
+      return {...state, company_gst: payload as string};
+    case ACTION.EMPLOYEE_NAME:
+      return {...state, employee_name: payload as string};
+    case ACTION.EMPLOYEE_DESIGNATION:
+      return {...state, employee_designation: payload as string};
+    case ACTION.EMPLOYEE_MOBILE_NO:
+      return {...state, employee_mobile_no: payload as string};
+    case ACTION.COMPANY_ADDRESS:
+      return {...state, company_address: payload as string};
+    // **** Address ****
+    case ACTION.PINCODE:
+      return {...state, pincode: payload as string};
+    case ACTION.STATE:
+      return {...state, state: payload as string};
+    case ACTION.CITY:
+      return {...state, city: payload as string};
+    case ACTION.ADDRESS:
+      return {...state, address: payload as string};
+    // *** Freight Load ****
     case ACTION.FREIGHT_LOAD_TYPE:
       return {...state, freight_load_type: payload as string};
     case ACTION.FREIGHT_CHARGES:

@@ -488,6 +488,165 @@ const useInvoiceFormContext = () => {
     [state.storage_amount],
   );
 
+  // **** Basic Details ****
+  const setInvoiceNo = useCallback((text:string) => {
+    dispatch({
+      type: ACTION.INVOICE_NO,
+      payload: text
+    });
+  }, [state.invoice_no]);
+
+  const setDateOfInvoice = useCallback((text:string) => {
+    dispatch({
+      type: ACTION.DATE_OF_INVOICE,
+      payload: text
+    });
+  }, [state.date_of_invoice]);
+
+  const setDateOfDelivery = useCallback((text:string) => {
+    dispatch({
+      type: ACTION.DATE_OF_DELIVERY,
+      payload: text
+    });
+  }, [state.date_of_delivery]);
+
+  const setShiftingLuggage = useCallback((text:string) => {
+    dispatch({
+      type: ACTION.SHIFTING_LUGGAGE,
+      payload: text
+    });
+  }, [state.shifting_luggage]);
+
+  const setModeOfMoving = useCallback((text:string) => {
+    dispatch({
+      type: ACTION.MODE_OF_MOVING,
+      payload: text
+    });
+  }, [state.mode_of_moving]);
+
+  const setVehicleNo = useCallback((text:string) => {
+    dispatch({
+      type: ACTION.VEHICLE_NO,
+      payload: text
+    });
+  }, [state.vehicle_no]);
+
+  const setConsignmentNo = useCallback((text:string) => {
+    dispatch({
+      type: ACTION.CONSIGNMENT_NO,
+      payload: text
+    });
+  }, [state.consignment_no]);
+
+  // **** Billing Details Individual ****
+  const setPartyName = useCallback((text:string) => {
+    dispatch({
+      type: ACTION.PARTY_NAME,
+      payload: text
+    });
+  }, [state.party_name]);
+
+  const setPartyMobileNo = useCallback((text:string) => {
+    dispatch({
+      type: ACTION.PARTY_MOBILE_NO,
+      payload: text
+    });
+  }, [state.party_mobile_no]);
+
+  // **** Billing Details Company ****
+  const setCompanyName = useCallback((text:string) => {
+    dispatch({
+      type: ACTION.COMPANY_NAME,
+      payload: text
+    });
+  }, [state.company_name]);
+
+  const setApprovalAuthority = useCallback((text:string) => {
+    dispatch({
+      type: ACTION.APPROVAL_AUTHORITY,
+      payload: text
+    });
+  }, [state.approval_authority]);
+
+  const setAuthorityPersonName = useCallback((text:string) => {
+    dispatch({
+      type: ACTION.AUTHORITY_PERSON_NAME,
+      payload: text
+    });
+  }, [state.authority_person_name]);
+
+  const setAuthorityMobileNo = useCallback((text:string) => {
+    dispatch({
+      type: ACTION.AUTHORITY_MOBILE_NO,
+      payload: text
+    });
+  }, [state.authority_mobile_no]);
+
+  const setCompanyGST = useCallback((text:string) => {
+    dispatch({
+      type: ACTION.COMPANY_GST,
+      payload: text
+    });
+  }, [state.company_gst]);
+
+  const setEmployeeName = useCallback((text:string) => {
+    dispatch({
+      type: ACTION.EMPLOYEE_NAME,
+      payload: text
+    });
+  }, [state.employee_name]);
+
+  const setEmployeeDesignation = useCallback((text:string) => {
+    dispatch({
+      type: ACTION.EMPLOYEE_DESIGNATION,
+      payload: text
+    });
+  }, [state.employee_designation]);
+
+  const setEmployeeMobileNo = useCallback((text:string) => {
+    dispatch({
+      type: ACTION.EMPLOYEE_MOBILE_NO,
+      payload: text
+    });
+  }, [state.employee_mobile_no]);
+
+  const setCompanyAddress = useCallback((text:string) => {
+    dispatch({
+      type: ACTION.COMPANY_ADDRESS,
+      payload: text
+    });
+  }, [state.company_address]);
+
+  // **** Address ****
+  const setPincode = useCallback((text:string) => {
+    dispatch({
+      type: ACTION.PINCODE,
+      payload: text
+    });
+  }, [state.pincode]);
+
+  const setState = useCallback((text:string) => {
+    dispatch({
+      type: ACTION.STATE,
+      payload: text
+    });
+  }, [state.state]);
+
+  const setCity = useCallback((text:string) => {
+    dispatch({
+      type: ACTION.CITY,
+      payload: text
+    });
+  }, [state.city]);
+
+  const setAddress = useCallback((text:string) => {
+    dispatch({
+      type: ACTION.ADDRESS,
+      payload: text
+    });
+  }, [state.address]);
+
+
   return {
     state,
     setBillingType,
@@ -549,7 +708,32 @@ const useInvoiceFormContext = () => {
     setStorageFromDate,
     setStorageToDate,
     setStorageAmount,
-
+    // Basic Details
+    setInvoiceNo,
+    setDateOfInvoice,
+    setDateOfDelivery,
+    setShiftingLuggage,
+    setModeOfMoving,
+    setVehicleNo,
+    setConsignmentNo,
+    // Billing Individual
+    setPartyName,
+    setPartyMobileNo,
+    // Billing Company
+    setCompanyName,
+    setApprovalAuthority,
+    setAuthorityPersonName,
+    setAuthorityMobileNo,
+    setCompanyGST,
+    setEmployeeName,
+    setEmployeeDesignation,
+    setEmployeeMobileNo,
+    setCompanyAddress,
+    // Address
+    setPincode,
+    setState,
+    setCity,
+    setAddress,
   };
 };
 
@@ -611,11 +795,37 @@ const initInvoiceFormContextState: UseInvoiceFormContextType = {
   setTransitInsuranceGST: (text: string) => {},
   setTransitGoodsValue: (text: string) => {},
   // Storage
-  setStorage: (text:string) => {},
+  setStorage: (text: string) => {},
   setStorageDuration: (text: string) => {},
   setStorageFromDate: (text: string) => {},
   setStorageToDate: (text: string) => {},
   setStorageAmount: (text: string) => {},
+  // Basic Details
+  setInvoiceNo: (text: string) => {},
+  setDateOfInvoice: (text: string) => {},
+  setDateOfDelivery: (text: string) => {},
+  setShiftingLuggage: (text: string) => {},
+  setModeOfMoving: (text: string) => {},
+  setVehicleNo: (text: string) => {},
+  setConsignmentNo: (text: string) => {},
+  // Billing Individual
+  setPartyName: (text: string) => {},
+  setPartyMobileNo: (text: string) => {},
+  // Billing Company
+  setCompanyName: (text: string) => {},
+  setApprovalAuthority: (text: string) => {},
+  setAuthorityPersonName: (text: string) => {},
+  setAuthorityMobileNo: (text: string) => {},
+  setCompanyGST: (text: string) => {},
+  setEmployeeName: (text: string) => {},
+  setEmployeeDesignation: (text: string) => {},
+  setEmployeeMobileNo: (text: string) => {},
+  setCompanyAddress: (text: string) => {},
+  // Address
+  setPincode: (text: string) => {},
+  setState: (text: string) => {},
+  setCity: (text: string) => {},
+  setAddress: (text: string) => {},
 };
 
 const InvoiceFormContext = createContext<UseInvoiceFormContextType>(
