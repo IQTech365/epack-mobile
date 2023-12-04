@@ -16,7 +16,7 @@ interface IFormModalProps {
 
 const FormModal = forwardRef<BottomSheet, IFormModalProps>(
   ({children, onClose}, ref) => {
-    const snapPoints = useMemo(() => ['30%'], []);
+    const snapPoints = useMemo(() => ['50%'], []);
 
     const handleSheetChanges = useCallback((index: number) => {
       console.log('handleSheetChanges', index);

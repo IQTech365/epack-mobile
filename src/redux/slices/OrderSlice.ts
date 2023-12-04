@@ -370,6 +370,9 @@ export const OrderSlice = createSlice({
       state.getMoneyReceiptTemplateHtmlFailure = false;
       state.getMoneyReceiptTemplateHtmlError = null;
     },
+    clearMoneyReceiptHtmlDocument: (state) => {
+      state.moneyReceiptTemplateHtml = null;
+    },
     // Create Car Condition
     createCarConditionRequest: (
       state,
@@ -524,6 +527,7 @@ export const {
   getMoneyReceiptHtmlSuccess,
   getMoneyReceiptHtmlFailure,
   resetGetMoneyReceiptHtmlRequest,
+  clearMoneyReceiptHtmlDocument,
   // Create Car Condition
   createCarConditionRequest,
   createCarConditionSuccess,
