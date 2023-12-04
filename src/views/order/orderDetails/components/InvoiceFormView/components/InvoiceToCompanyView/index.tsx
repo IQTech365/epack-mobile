@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import {View, Text} from 'react-native';
+import {View} from 'react-native';
 import styles from './style';
 import Label from '../../../../../../../common/Label';
 import Input from '../../../../../../../common/Input';
@@ -8,12 +8,29 @@ import Spacer from '../../../../../../../common/Spacer';
 import EpackDropdown from '../../../../../../../common/DropdownComponent2';
 import DropdownComponent from '../../../../../../../common/DropdownComponent';
 import {approvalAuthorityOptions} from '../../utils';
+import { useInvoiceFormContextHook } from '../../../../../../../provider/InvoiceFormContextProvider';
+import { TDropdownItem } from '../../../../../../../type/TDropdownItem';
 
 interface Props {}
 
 const InvoiceToCompanyView: React.FC<Props> = () => {
   const stateDropdownCompRef = useRef(null);
   const cityDropdownCompRef = useRef(null);
+  const {
+    setCompanyName,
+    setApprovalAuthority,
+    setAuthorityPersonName,
+    setAuthorityMobileNo,
+    setCompanyGST,
+    setEmployeeName,
+    setEmployeeDesignation,
+    setEmployeeMobileNo,
+    setCompanyAddress,
+    setPincode,
+    setState,
+    setCity,
+    setAddress,
+  } = useInvoiceFormContextHook();
 
   return (
     <>
@@ -21,7 +38,7 @@ const InvoiceToCompanyView: React.FC<Props> = () => {
       <View style={styles.fullWidthCompContainer}>
         <Label text="Company Name" style={styles.label} />
         <Input
-          onChangeText={() => {}}
+          onChangeText={setCompanyName}
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
@@ -32,14 +49,16 @@ const InvoiceToCompanyView: React.FC<Props> = () => {
         <Label text="Approval Authority" style={styles.label} />
         <DropdownComponent
           data={approvalAuthorityOptions}
-          onSelect={() => {}}
+          onSelect={(item:TDropdownItem) => {
+            setApprovalAuthority(item.label);
+          }}
         />
       </View>
       <Spacer height={4} />
       <View style={styles.fullWidthCompContainer}>
         <Label text="Authority Person Name" style={styles.label} />
         <Input
-          onChangeText={() => {}}
+          onChangeText={setAuthorityPersonName}
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
@@ -49,7 +68,7 @@ const InvoiceToCompanyView: React.FC<Props> = () => {
       <View style={styles.fullWidthCompContainer}>
         <Label text="Authority Mobile No." style={styles.label} />
         <Input
-          onChangeText={() => {}}
+          onChangeText={setAuthorityMobileNo}
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
@@ -59,7 +78,7 @@ const InvoiceToCompanyView: React.FC<Props> = () => {
       <View style={styles.fullWidthCompContainer}>
         <Label text="Company GST" style={styles.label} />
         <Input
-          onChangeText={() => {}}
+          onChangeText={setCompanyGST}
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
@@ -69,7 +88,7 @@ const InvoiceToCompanyView: React.FC<Props> = () => {
       <View style={styles.fullWidthCompContainer}>
         <Label text="Employee Name" style={styles.label} />
         <Input
-          onChangeText={() => {}}
+          onChangeText={setEmployeeName}
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
@@ -79,7 +98,7 @@ const InvoiceToCompanyView: React.FC<Props> = () => {
       <View style={styles.fullWidthCompContainer}>
         <Label text="Employee Designation" style={styles.label} />
         <Input
-          onChangeText={() => {}}
+          onChangeText={setEmployeeDesignation}
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
@@ -89,7 +108,7 @@ const InvoiceToCompanyView: React.FC<Props> = () => {
       <View style={styles.fullWidthCompContainer}>
         <Label text="Employee Mobile No." style={styles.label} />
         <Input
-          onChangeText={() => {}}
+          onChangeText={setEmployeeMobileNo}
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
@@ -99,7 +118,7 @@ const InvoiceToCompanyView: React.FC<Props> = () => {
       <View style={styles.fullWidthCompContainer}>
         <Label text="Company Address" style={styles.label} />
         <Input
-          onChangeText={() => {}}
+          onChangeText={setCompanyAddress}
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
@@ -110,7 +129,7 @@ const InvoiceToCompanyView: React.FC<Props> = () => {
         <View style={styles.compContainer}>
           <Label text="Pincode" style={styles.label} />
           <Input
-            onChangeText={() => {}}
+            onChangeText={setPincode}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
@@ -121,7 +140,7 @@ const InvoiceToCompanyView: React.FC<Props> = () => {
           <EpackDropdown
             data={[]}
             placeholder={'Select State'}
-            hanldeData={() => {}}
+            hanldeData={setState}
             //@ts-ignore
             ref={stateDropdownCompRef}
           />
@@ -133,7 +152,7 @@ const InvoiceToCompanyView: React.FC<Props> = () => {
         <EpackDropdown
           data={[]}
           placeholder={'Select City'}
-          hanldeData={() => {}}
+          hanldeData={setCity}
           //@ts-ignore
           ref={cityDropdownCompRef}
         />
@@ -142,7 +161,7 @@ const InvoiceToCompanyView: React.FC<Props> = () => {
       <View style={styles.fullWidthCompContainer}>
         <Label text="Address" style={styles.label} />
         <Input
-          onChangeText={() => {}}
+          onChangeText={setAddress}
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}

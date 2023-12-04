@@ -6,12 +6,21 @@ import Input from '../../../../../../../common/Input';
 import {COLOR_BLACK} from '../../../../../../../utils/colors';
 import Spacer from '../../../../../../../common/Spacer';
 import EpackDropdown from '../../../../../../../common/DropdownComponent2';
+import { useInvoiceFormContextHook } from '../../../../../../../provider/InvoiceFormContextProvider';
 
 interface Props {}
 
 const InvoiceToIndividualView: React.FC<Props> = () => {
   const stateDropdownCompRef = useRef(null);
   const cityDropdownCompRef = useRef(null);
+  const {
+    setPartyName,
+    setPartyMobileNo,
+    setPincode,
+    setState,
+    setCity,
+    setAddress,
+  } = useInvoiceFormContextHook();
 
   return (
     <>
@@ -19,7 +28,7 @@ const InvoiceToIndividualView: React.FC<Props> = () => {
       <View style={styles.fullWidthCompContainer}>
         <Label text="Party Name" style={styles.label} />
         <Input
-          onChangeText={() => {}}
+          onChangeText={setPartyName}
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
@@ -29,7 +38,7 @@ const InvoiceToIndividualView: React.FC<Props> = () => {
       <View style={styles.fullWidthCompContainer}>
         <Label text="Mobile No." style={styles.label} />
         <Input
-          onChangeText={() => {}}
+          onChangeText={setPartyMobileNo}
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
@@ -40,7 +49,7 @@ const InvoiceToIndividualView: React.FC<Props> = () => {
         <View style={styles.compContainer}>
           <Label text="Pincode" style={styles.label} />
           <Input
-            onChangeText={() => {}}
+            onChangeText={setPincode}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
@@ -51,7 +60,7 @@ const InvoiceToIndividualView: React.FC<Props> = () => {
           <EpackDropdown
             data={[]}
             placeholder={'Select State'}
-            hanldeData={() => {}}
+            hanldeData={setState}
             //@ts-ignore
             ref={stateDropdownCompRef}
           />
@@ -63,7 +72,7 @@ const InvoiceToIndividualView: React.FC<Props> = () => {
         <EpackDropdown
           data={[]}
           placeholder={'Select City'}
-          hanldeData={() => {}}
+          hanldeData={setCity}
           //@ts-ignore
           ref={cityDropdownCompRef}
         />
@@ -72,7 +81,7 @@ const InvoiceToIndividualView: React.FC<Props> = () => {
       <View style={styles.fullWidthCompContainer}>
         <Label text="Address" style={styles.label} />
         <Input
-          onChangeText={() => {}}
+          onChangeText={setAddress}
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
