@@ -15,12 +15,20 @@ import ListViewIcon2 from '../../../../../images/icons/list_view_icon2.svg';
 import CreateIcon from '../../../../../images/icons/create_icon.svg';
 import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
 import MoneyReceiptFormView from '../MoneyReceiptFormView';
-import {getMoneyReceiptListRequest} from '../../../../../redux/slices/OrderSlice';
+import {
+  getMoneyReceiptHtmlRequest,
+  getMoneyReceiptListRequest,
+  resetGetMoneyReceiptHtmlRequest,
+} from '../../../../../redux/slices/OrderSlice';
 import Spinner from '../../../../../common/Spinner';
 import AddMoneyReceiptListItem from '../MoneyReceiptList';
 import FormModal from '../../../../settings/formModal';
 import {COLOR_BLACK, COLOR_BLUE} from '../../../../../utils/colors';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import {IMoneyReceiptTempHtmlRequest} from '../../../../../interface/order/templates/ITemplateResponse';
+import ModalHOC from '../../../../../common/ModalHOC';
+import MoneyReceiptTemplate from './MoneyReceiptTemplate';
+import WebView from 'react-native-webview';
 
 interface IMoneyReceiptViewProps {
   orderId: string;
@@ -31,14 +39,18 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
   orderId,
 }) => {
   const dispatch = useAppDispatch();
-  const {getMoneyReceiptListRequesting, moneyReceiptList} = useAppSelector(
-    state => state.Order,
-  );
+  const {
+    getMoneyReceiptListRequesting,
+    moneyReceiptList,
+    moneyReceiptTemplateHtml,
+    getMoneyReceiptTemplateHtmlRequesting,
+    getMoneyReceiptTemplateHtmlSuccess,
+    getMoneyReceiptTemplateHtmlFailure,
+  } = useAppSelector(state => state.Order);
   const bottomSheetRef = useRef<BottomSheet>(null);
   console.log('MoneyReceiptList--', JSON.stringify(moneyReceiptList));
   const {data: MoneyReceiptData = []} = moneyReceiptList || {};
   const downloadOptions = ['With Sign. & Stamp', 'Without Sign. & Stamp'];
-
   const [showMoneyReceiptList, setShowMoneyReceiptList] =
     useState<boolean>(false);
   const [createNewBiltyMoneyReceipt, setCreateNewMoneyReceipt] =
@@ -46,6 +58,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
   const [downloadOption, setDownloadOption] = useState<string>('');
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [editData, setEditData] = useState<any>([]);
+  const [showPreview, setShowPreview] = useState<boolean>(false);
 
   const handleCreateNewMoneyReceipt = () => {
     setShowMoneyReceiptList(false);
@@ -75,9 +88,41 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
     setIsEdit(true);
   };
 
+  const handleShowPreviewModalClose = () => {
+    setShowPreview(false);
+  };
+
+  const handlePreviewClick = (moneyReceiptId: string) => {
+    const payload: IMoneyReceiptTempHtmlRequest = {
+      templateId: '6561d45bec79daeb0af1b793',
+      moneyReceiptId: moneyReceiptId,
+    };
+    dispatch(getMoneyReceiptHtmlRequest(payload));
+  };
+
   useEffect(() => {
     dispatch(getMoneyReceiptListRequest(orderId));
   }, []);
+
+  useEffect(() => {
+    if (
+      !getMoneyReceiptTemplateHtmlRequesting &&
+      getMoneyReceiptTemplateHtmlSuccess
+    ) {
+      setShowPreview(true);
+      dispatch(resetGetMoneyReceiptHtmlRequest());
+    } else if (
+      !getMoneyReceiptTemplateHtmlRequesting &&
+      getMoneyReceiptTemplateHtmlFailure
+    ) {
+      setShowPreview(false);
+      dispatch(resetGetMoneyReceiptHtmlRequest());
+    }
+  }, [
+    getMoneyReceiptTemplateHtmlRequesting,
+    getMoneyReceiptTemplateHtmlSuccess,
+    getMoneyReceiptTemplateHtmlFailure,
+  ]);
 
   const showEmptyView = () => {
     return (
@@ -133,7 +178,9 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
                 onPress={() => {}}
                 onShare={() => {}}
                 onDownload={presentModal}
-                onPreview={() => {}}
+                onPreview={() => {
+                  handlePreviewClick(item._id);
+                }}
                 onEdit={() => handleEditClick(index)}
               />
             )}
@@ -177,6 +224,14 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
               </TouchableOpacity>
             </>
           </FormModal>
+          <ModalHOC
+            visible={showPreview}
+            onClose={handleShowPreviewModalClose}
+            title="Preview">
+            <View style={{flex: 1}}>
+              <MoneyReceiptTemplate />
+            </View>
+          </ModalHOC>
         </View>
       );
     }
@@ -207,7 +262,11 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
       </View>
       {showForm()}
       {showList()}
-      <Spinner show={getMoneyReceiptListRequesting} />
+      <Spinner
+        show={
+          getMoneyReceiptListRequesting || getMoneyReceiptTemplateHtmlRequesting
+        }
+      />
     </>
   );
 };

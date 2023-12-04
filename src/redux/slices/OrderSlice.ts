@@ -17,6 +17,7 @@ import { IGetBiltyListResponse } from '../../interface/order/IGetBiltyListRespon
 import { IGetOrdersRequest } from '../../interface/order/IGetOrdersRequest';
 import { ISingleEnquiryResponse } from '../../interface/enquiry/ISingleEnquiryResponse';
 import { ISingleOrderRequest } from '../../interface/order/ISingleOrderRequest';
+import { IMoneyReceiptTempHtmlRequest, IMoneyReceiptTempHtmlResponse } from '../../interface/order/templates/ITemplateResponse';
 
 interface IOrderState {
   // Add Order
@@ -69,6 +70,12 @@ interface IOrderState {
   editMoneyReceiptListSuccess: boolean;
   editMoneyReceiptListFailure: boolean;
   editMoneyReceiptListError: any;
+  // Money Receipt Template Html
+  moneyReceiptTemplateHtml: IMoneyReceiptTempHtmlResponse | null;
+  getMoneyReceiptTemplateHtmlRequesting:boolean;
+  getMoneyReceiptTemplateHtmlSuccess:boolean;
+  getMoneyReceiptTemplateHtmlFailure:boolean;
+  getMoneyReceiptTemplateHtmlError:any;
   // Create Car Condition
   createCarConditionInfo: ICreateCarConditionResponse | null;
   createCarConditionRequesting: boolean;
@@ -151,6 +158,12 @@ const initialState: IOrderState = {
   editMoneyReceiptListSuccess: false,
   editMoneyReceiptListFailure: false,
   editMoneyReceiptListError: false,
+  // Money Receipt Template Html
+  moneyReceiptTemplateHtml: null,
+  getMoneyReceiptTemplateHtmlRequesting:false,
+  getMoneyReceiptTemplateHtmlSuccess:false,
+  getMoneyReceiptTemplateHtmlFailure:false,
+  getMoneyReceiptTemplateHtmlError:null,
   // Create Car Condition
   createCarConditionInfo: null,
   createCarConditionRequesting: false,
@@ -334,6 +347,29 @@ export const OrderSlice = createSlice({
       state.editMoneyReceiptListFailure = true;
       state.editMoneyReceiptListError = action.payload;
     },
+    // Money Receipt Template Html
+    getMoneyReceiptHtmlRequest: (state, action:PayloadAction<IMoneyReceiptTempHtmlRequest>) => {
+      state.getMoneyReceiptTemplateHtmlRequesting = true;
+    },
+    getMoneyReceiptHtmlSuccess: (state, action:PayloadAction<IMoneyReceiptTempHtmlResponse>) => {
+      state.getMoneyReceiptTemplateHtmlRequesting = false;
+      state.getMoneyReceiptTemplateHtmlSuccess = true;
+      state.getMoneyReceiptTemplateHtmlFailure = false;
+      state.getMoneyReceiptTemplateHtmlError = null;
+      state.moneyReceiptTemplateHtml = action.payload;
+    },
+    getMoneyReceiptHtmlFailure: (state, action:PayloadAction<any>) => {
+      state.getMoneyReceiptTemplateHtmlRequesting = false;
+      state.getMoneyReceiptTemplateHtmlSuccess = false;
+      state.getMoneyReceiptTemplateHtmlFailure = true;
+      state.getMoneyReceiptTemplateHtmlError = action.payload;
+    },
+    resetGetMoneyReceiptHtmlRequest: (state) => {
+      state.getMoneyReceiptTemplateHtmlRequesting = false;
+      state.getMoneyReceiptTemplateHtmlSuccess = false;
+      state.getMoneyReceiptTemplateHtmlFailure = false;
+      state.getMoneyReceiptTemplateHtmlError = null;
+    },
     // Create Car Condition
     createCarConditionRequest: (
       state,
@@ -483,6 +519,11 @@ export const {
   editMoneyReceiptListRequest,
   editMoneyReceiptListSuccess,
   editMoneyReceiptListFailure,
+  // Money Receipt Template Html
+  getMoneyReceiptHtmlRequest,
+  getMoneyReceiptHtmlSuccess,
+  getMoneyReceiptHtmlFailure,
+  resetGetMoneyReceiptHtmlRequest,
   // Create Car Condition
   createCarConditionRequest,
   createCarConditionSuccess,
