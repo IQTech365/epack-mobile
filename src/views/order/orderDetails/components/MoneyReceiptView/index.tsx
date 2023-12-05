@@ -51,7 +51,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
     getMoneyReceiptTemplateHtmlFailure,
   } = useAppSelector(state => state.Order);
   const bottomSheetRef = useRef<BottomSheet>(null);
-  console.log('MoneyReceiptList--', JSON.stringify(moneyReceiptList));
+  // console.log('MoneyReceiptList--', JSON.stringify(moneyReceiptList));
   const {data: MoneyReceiptData = []} = moneyReceiptList || {};
   const downloadOptions = ['With Sign. & Stamp', 'Without Sign. & Stamp'];
   const [showMoneyReceiptList, setShowMoneyReceiptList] =
