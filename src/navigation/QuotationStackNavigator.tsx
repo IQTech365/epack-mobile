@@ -2,7 +2,7 @@ import React from "react";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { QuotationStackRoute } from "../utils/constants";
 import QuotationPageView from "../views/quotation";
-import AddQuotationView from "../views/quotation/addQuotation";
+import AddQuotationView from "../views/quotation/addQuotation/index2";
 import EnquiryDetailsView from "../views/enquiry/enquiryDetails";
 import { QuotationStackParamList } from "./params/QuotationStackParamList";
 

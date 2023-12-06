@@ -7,7 +7,7 @@ import {
   RefreshControl,
 } from 'react-native';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
-import AddQuotationView from '../../../../quotation/addQuotation';
+import AddQuotationView from '../../../../quotation/addQuotation/index2';
 import QuotationListItem, {
   IQuotationItem,
 } from '../../../../quotation/quotationList/components/QuotationListItem';

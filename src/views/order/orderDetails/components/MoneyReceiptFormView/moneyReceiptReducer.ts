@@ -1,3 +1,7 @@
+import modeOfPaymentOptions from '../../../../../data/modeOfPaymentOptions.json';
+import receiptAgainstOptions from '../../../../../data/receiptAgainstOptions.json';
+import paymentTypeOptions from '../../../../../data/paymentTypeOptions.json';
+import moment from 'moment';
 //** ALL ACTIONS*/
 
 export enum MONEYRECEIPT_FORM_ACTION {
@@ -43,12 +47,12 @@ interface IMoneyReceiptFormAction {
 
 export const initialState: IMoneyReceiptFormState = {
   receiptNumber: '',
-  receiptDate: '',
+  receiptDate: moment().toISOString(),
   moneyReceiptDesigns: '',
-  paymentType: '',
-  receiptAgainst: '',
+  paymentType: paymentTypeOptions[0].label,
+  receiptAgainst: receiptAgainstOptions[0].label,
   billQuotationNo: '',
-  paymentMode: '',
+  paymentMode: modeOfPaymentOptions[0].label,
   referenceNumber: '',
   paymentAmount: '',
   cnBiltyLrNo: '',

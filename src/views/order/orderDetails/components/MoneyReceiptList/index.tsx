@@ -25,7 +25,6 @@ interface IAddMoneyReceiptListItemProps {
     onShare: () => void;
     onEdit: () => void;
     onPreview: () => void;
-
 }
 
 const AddMoneyReceiptListItem: React.FC<IAddMoneyReceiptListItemProps> = ({

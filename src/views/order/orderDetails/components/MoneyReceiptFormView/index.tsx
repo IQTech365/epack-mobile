@@ -1,5 +1,5 @@
-import React, { useReducer, useCallback, useEffect } from 'react';
-import { View, Text, Alert } from 'react-native';
+import React, {useReducer, useCallback, useEffect} from 'react';
+import {View, Text, Alert} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
 import DatePickerComponent from '../../../../../common/DatePickerComponent';
@@ -7,8 +7,8 @@ import DropdownComponent from '../../../../../common/DropdownComponent';
 import Input from '../../../../../common/Input';
 import Label from '../../../../../common/Label';
 import Spacer from '../../../../../common/Spacer';
-import { TDropdownItem } from '../../../../../type/TDropdownItem';
-import { COLOR_BLACK } from '../../../../../utils/colors';
+import {TDropdownItem} from '../../../../../type/TDropdownItem';
+import {COLOR_BLACK} from '../../../../../utils/colors';
 import styles from './style';
 import shiftingLuggages from '../../../../../data/shiftingLuggage.json';
 import paymentTypeOptions from '../../../../../data/paymentTypeOptions.json';
@@ -19,15 +19,24 @@ import {
   initialState,
   moneyReceiptReducer,
 } from './moneyReceiptReducer';
-import { formatDate, formatDate3 } from '../../../../../utils/formatter';
+import {formatDate, formatDate3} from '../../../../../utils/formatter';
 import Button from '../../../../../common/Button';
-import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
-import { ICreateMoneyReceiptRequest } from '../../../../../interface/order/ICreateMoneyReceiptRequest';
-import { createMoneyReceiptRequest, editMoneyReceiptListRequest, resetCreateMoneyReceiptRequest } from '../../../../../redux/slices/OrderSlice';
+import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
+import {ICreateMoneyReceiptRequest} from '../../../../../interface/order/ICreateMoneyReceiptRequest';
+import {
+  createMoneyReceiptRequest,
+  editMoneyReceiptListRequest,
+  resetCreateMoneyReceiptRequest,
+} from '../../../../../redux/slices/OrderSlice';
 import Spinner from '../../../../../common/Spinner';
 import Toast from 'react-native-toast-message';
 import useCompanyId from '../../../../../hooks/useCompanyId';
 import useAuthId from '../../../../../hooks/useAuthId';
+import { getQuotationsRequest } from '../../../../../redux/slices/QuotationSlice';
+import { IGetQuotationRequest } from '../../../../../interface/quotation/IGetQuotationRequest';
+import { IQuotationItem } from '../../../../quotation/quotationList/components/QuotationListItem';
+import { IGetQuotationData } from '../../../../../interface/quotation/IGetQuotationsResponse';
+import EpackDropdown from '../../../../../common/DropdownComponent2';
 
 interface IMoneyReceiptFormViewProps {
   orderId: string | undefined;
@@ -35,8 +44,11 @@ interface IMoneyReceiptFormViewProps {
   isEdit: boolean;
 }
 
-const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({ orderId, editData, isEdit }) => {
-
+const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
+  orderId,
+  editData,
+  isEdit,
+}) => {
   const [reducerState, dispatch] = useReducer(
     moneyReceiptReducer,
     initialState,
@@ -48,12 +60,13 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({ orderId, e
     createMoneyReceiptFailure,
     editMoneyReceiptListRequesting,
     editMoneyReceiptListSuccess,
-    editMoneyReceiptListFailure,
-    editMoneyReceiptListError
   } = useAppSelector(state => state.Order);
   const companyId = useCompanyId();
   const authId = useAuthId();
-
+  const {quotations, getQuotationsRequesting} = useAppSelector(
+    state => state.Quotation,
+  );
+  const {data: quotationData} = quotations || {};
   const dispatch2 = useAppDispatch();
   const handleReceiptDate = (date: Date) => {
     // console.log('receipt-date---', date.toISOString());
@@ -93,7 +106,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({ orderId, e
       type: MONEYRECEIPT_FORM_ACTION.RECEIPT_AGAINST,
       payload: item.label,
     });
-      };
+  };
 
   const handlePaymentMode = (item: TDropdownItem) => {
     dispatch({
@@ -138,6 +151,33 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({ orderId, e
     // });
   };
 
+  const _getLabelText = () => {
+    let label:string = 'Quotation No#.';
+    if(reducerState.receiptAgainst == receiptAgainstOptions[0].label) {
+      label = 'Quotation No#.';
+    } else if(reducerState.receiptAgainst == receiptAgainstOptions[1].label) {
+      label = 'Bill No#.';
+    } else if(reducerState.receiptAgainst == receiptAgainstOptions[2].label) {
+      label = 'Other Doc. No#.';
+    } 
+    return label;
+  }
+
+  const transformQuotationData = () => {
+    let _data: string[] = [];
+    if (
+      quotationData &&
+      Array.isArray(quotationData) &&
+      quotationData.length > 0
+    ) {
+      _data = quotationData
+        .filter((e: IGetQuotationData) => e.enquiryId == orderId)
+        .map((quotation: IGetQuotationData) => quotation?.quotationNumber);
+      return _data;
+    }
+    return _data;
+  };
+
   const handleCreate = () => {
     const payload: ICreateMoneyReceiptRequest = {
       companyId: companyId,
@@ -146,7 +186,8 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({ orderId, e
       receiptDate: reducerState.receiptDate,
       arivalDate: reducerState.arivalDate,
       templateId: '12121124232323',
-      receiptAgainst: reducerState.receiptAgainst || receiptAgainstOptions[0].label,
+      receiptAgainst:
+        reducerState.receiptAgainst || receiptAgainstOptions[0].label,
       billNumber: reducerState.billQuotationNo,
       quotationNumber: reducerState.billQuotationNo,
       consignmentNumber: '',
@@ -163,29 +204,41 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({ orderId, e
       receiptNumber: reducerState.receiptNumber,
       receiptDate: reducerState.receiptDate,
       arivalDate: reducerState.arivalDate,
-      templateId: "1112222",
+      templateId: '1112222',
       receiptAgainst: reducerState.receiptAgainst,
       billNumber: reducerState.billQuotationNo,
       quotationNumber: reducerState.billQuotationNo,
-      consignmentNumber: "",
+      consignmentNumber: '',
       numbersOfArticles: reducerState.numbersOfArticles,
       paymentMode: reducerState.paymentMode,
       paymentType: reducerState.paymentType,
-      paymentAmount: reducerState.paymentAmount
-    }
+      paymentAmount: reducerState.paymentAmount,
+    };
     console.log(payload, 'payload create money', isEdit);
     if (isEdit == true) {
-      dispatch2(editMoneyReceiptListRequest({ id: editData._id, requestBody: editPayload }));
+      dispatch2(
+        editMoneyReceiptListRequest({
+          id: editData._id,
+          requestBody: editPayload,
+        }),
+      );
     } else {
       dispatch2(createMoneyReceiptRequest(payload));
     }
-
-
   };
 
   useEffect(() => {
-    if ((!createMoneyReceiptRequesting && createMoneyReceiptSuccess) ||
-      (!editMoneyReceiptListRequesting && editMoneyReceiptListSuccess)) {
+    const payload: IGetQuotationRequest = {
+      companyId:companyId
+    };
+    dispatch2(getQuotationsRequest(payload));
+  }, []);
+
+  useEffect(() => {
+    if (
+      (!createMoneyReceiptRequesting && createMoneyReceiptSuccess) ||
+      (!editMoneyReceiptListRequesting && editMoneyReceiptListSuccess)
+    ) {
       //pdf  stuff here
       Toast.show({
         type: 'success',
@@ -193,8 +246,10 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({ orderId, e
         text2: 'Money Receipt has been added successfully',
       });
       dispatch2(resetCreateMoneyReceiptRequest());
-    } else if ((!createMoneyReceiptRequesting && createMoneyReceiptError)||
-    (!editMoneyReceiptListRequesting && editMoneyReceiptListSuccess)) {
+    } else if (
+      (!createMoneyReceiptRequesting && createMoneyReceiptError) ||
+      (!editMoneyReceiptListRequesting && editMoneyReceiptListSuccess)
+    ) {
       Toast.show({
         type: 'error',
         text1: `${isEdit ? 'Updated Money Receipt' : 'Money Receipt'}`,
@@ -230,14 +285,14 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({ orderId, e
                 <DatePickerComponent onDateSelect={handleReceiptDate} />
               </View>
             </View>
-            <Spacer height={4} />
+            {/* <Spacer height={4} />
             <View style={styles.elementContainer2}>
               <Label text="Money Receipt Designs" style={styles.label} />
               <DropdownComponent
                 data={shiftingLuggages}
                 onSelect={handleTemplateDesign}
               />
-            </View>
+            </View> */}
             <Spacer height={4} />
             <View style={styles.elementContainer2}>
               <Label text="Payment Type" style={styles.label} />
@@ -257,13 +312,13 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({ orderId, e
                 />
               </View>
               <View style={styles.itemContainer}>
-                <Label text="Bill/Quotation" style={styles.label} />
-                <Input
-                  onChangeText={handleBillQuotation}
-                  containerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
-                  selectionColor={COLOR_BLACK}
-                  value={isEdit ? editData.quotationNumber : ''}
+                <Label text={_getLabelText()} style={styles.label} />
+                <EpackDropdown
+                  data={transformQuotationData()}
+                  placeholder={'Select or Enter'}
+                  hanldeData={handleBillQuotation}
+                  //@ts-ignore
+                  // ref={pickupStateDropwdownRef}
                 />
               </View>
             </View>
@@ -275,18 +330,22 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({ orderId, e
                 onSelect={handlePaymentMode}
               />
             </View>
-            <Spacer height={4} />
-            <View style={styles.elementContainer2}>
-              <Label text="Ref. No" style={styles.label} />
-              <Input
-                onChangeText={handleRefNo}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-                value={isEdit ? editData.referenceNumber : ''}
+            {reducerState.paymentMode !== modeOfPaymentOptions[0].label ? (
+              <>
+                <Spacer height={4} />
+                <View style={styles.elementContainer2}>
+                  <Label text="Ref. No" style={styles.label} />
+                  <Input
+                    onChangeText={handleRefNo}
+                    containerStyle={styles.inputContainer}
+                    inputStyle={styles.input}
+                    selectionColor={COLOR_BLACK}
+                    value={isEdit ? editData.referenceNumber : ''}
+                  />
+                </View>
+              </>
+            ) : null}
 
-              />
-            </View>
             <Spacer height={4} />
             <View style={styles.elementContainer2}>
               <Label text="Enter Amount" style={styles.label} />
@@ -340,7 +399,9 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({ orderId, e
           textStyle={styles.textStyle}
         />
         <Spacer height={8} />
-        <Spinner show={createMoneyReceiptRequesting || editMoneyReceiptListRequesting} />
+        <Spinner
+          show={createMoneyReceiptRequesting || editMoneyReceiptListRequesting}
+        />
       </View>
     </AvoidSoftInputViewHOC>
   );

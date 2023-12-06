@@ -31,6 +31,7 @@ import ModalHOC from '../../../../../common/ModalHOC';
 import MoneyReceiptTemplate from './MoneyReceiptTemplate';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import Share from 'react-native-share';
+import RNFS from 'react-native-fs';
 
 interface IMoneyReceiptViewProps {
   orderId: string;
@@ -50,7 +51,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
     getMoneyReceiptTemplateHtmlFailure,
   } = useAppSelector(state => state.Order);
   const bottomSheetRef = useRef<BottomSheet>(null);
-  console.log('MoneyReceiptList--', JSON.stringify(moneyReceiptList));
+  // console.log('MoneyReceiptList--', JSON.stringify(moneyReceiptList));
   const {data: MoneyReceiptData = []} = moneyReceiptList || {};
   const downloadOptions = ['With Sign. & Stamp', 'Without Sign. & Stamp'];
   const [showMoneyReceiptList, setShowMoneyReceiptList] =
@@ -82,6 +83,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
 
   const dismissModal = () => {
     setDownloadOption('');
+    setShowShareModal(false);
     setShouldDownload(false);
     bottomSheetRef.current?.close();
   };
@@ -139,10 +141,16 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
     };
     let file = await RNHTMLtoPDF.convert(options);
     console.log('file--', JSON.stringify(file));
+    // const fileExists = await RNFS.exists(file.filePath);
+    // if(!fileExists) {
+    //   console.log('Filed does not exists');
+    //   return;
+    // }
+
     const shareOptions = {
       file: 'pdf',
       message: 'Money Receipt Document',
-      url: `"file://${file.filePath}"`,
+      url: `file://${file.filePath}`,
     }
     Share.open(shareOptions)
     .then((res) => {
@@ -195,6 +203,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
     if(showShareModal) {
       startShare();
     } else if(shouldDownload) {
+      console.log('shouldDownload--- called');
       startDownload();
     }
   }, [moneyReceiptTemplateHtml]);
