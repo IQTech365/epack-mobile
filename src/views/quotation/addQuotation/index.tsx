@@ -87,6 +87,8 @@ interface Props extends NativeStackScreenProps<QuotationStackParamList, 'AddQuot
   showHeader?: boolean;
   fromEnquiry?:boolean;
   enquiryId?: string;
+  itemtab:any;
+  isEdittab:boolean;
 }
 
 const AddQuotationView: React.FC<Props> = ({
@@ -95,6 +97,8 @@ const AddQuotationView: React.FC<Props> = ({
   enquiryId,
   navigation,
   route,
+  itemtab,
+  isEdittab,
 }) => {
   const item: IGetQuotationData | undefined = route?.params?.item;
   const isEdit: boolean | undefined = route?.params?.isEdit;
@@ -535,7 +539,7 @@ const AddQuotationView: React.FC<Props> = ({
 
   // README: This function we are using to populate the form with previous quotation values
   const initFormValues = () => {
-    const {enquiries} = item as IGetQuotationData;
+    const {enquiries} = item || itemtab as IGetQuotationData;
     const {data: singleQuotationData} = quotation || {};
     if (enquiries.length > 0) {
       const enquiry = enquiries[0];
@@ -954,13 +958,13 @@ const AddQuotationView: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    if (isEdit) {
+    if (isEdit || isEdittab) {
       dispatch2(getSingleQuotationRequest(item?._id as string));
     }
   }, []);
 
   useEffect(() => {
-    if (isEdit) {
+    if (isEdit || isEdittab) {
       initFormValues();
     }
   }, [quotation, isEdit]);

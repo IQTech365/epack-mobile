@@ -23,15 +23,15 @@ import { IGetQuotationRequest } from '../../../../../interface/quotation/IGetQuo
 import { IEnquiry, IGetQuotationData } from '../../../../../interface/quotation/IGetQuotationsResponse';
 import useCompanyId from '../../../../../hooks/useCompanyId';
 
-interface IQuotationViewProps {
+interface IQuotationViewProps  {
   enquiryId: string;
-  navigation: any;
+navigation: any;
   onItemClick: (tabIndex: number) => void;
 }
 
 const QuotationView: React.FC<IQuotationViewProps> = ({
   enquiryId,
-  navigation,
+navigation,
   onItemClick,
 }) => {
   const {quotations, getQuotationsRequesting} = useAppSelector(
@@ -43,6 +43,8 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
 
   const [showQuotationList, setShowQuotationList] = useState<boolean>(false);
   const [createNewQuotation, setCreateNewQuotation] = useState<boolean>(true);
+  const [editItem, setEditItem] = useState<any>(null);
+  const [isEdit, setIsEdit] = useState<any>(false);
 
   const _getClientName = (item:IGetQuotationData) => {
     let name:string = 'NA';
@@ -157,6 +159,8 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
   const handleCreateNewQuotation = () => {
     setShowQuotationList(false);
     setCreateNewQuotation(true);
+    setIsEdit(false);
+    setEditItem(null)
   };
 
   const handleShowQuotationList = () => {
@@ -172,6 +176,14 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
     dispatch(getQuotationsRequest(payload));
   }, []);
 
+  const handleEditClick = (quotation: IQuotationItem) => {
+    const item: IGetQuotationData = quotationData?.find((e:IGetQuotationData) => e.quotationNumber == quotation.quotationNo);
+    setEditItem(item);
+    setIsEdit(true);
+    setShowQuotationList(false);
+    setCreateNewQuotation(true);
+  };
+
   const showEmptyView = () => {
     return (
       <View style={styles.emptyContainer}>
@@ -180,10 +192,10 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
     );
   };
 
-  const showForm = () => {
+  const showForm = (item:any, isEdit:boolean) => {
     if (createNewQuotation) {
       //@ts-ignore
-      return <AddQuotationView showHeader={false} fromEnquiry={true} enquiryId={enquiryId} />;
+      return <AddQuotationView showHeader={false} fromEnquiry={true} enquiryId={enquiryId} itemtab={item} isEdittab ={isEdit}/>;
     }
     return null;
   };
@@ -206,7 +218,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
               index={1}
               onPress={() => {onItemClick(0)}}
               onDownload={() => {}}
-              onEdit={() => {}}
+              onEdit={() => handleEditClick(item)}
               onPreview={() => {}}
               onShare={() => {}}
             />
@@ -240,7 +252,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
         </TouchableOpacity>
         <Spacer width={10} />
       </View>
-      {showForm()}
+      {showForm(editItem, isEdit)}
       {showList()}
     </>
   );
