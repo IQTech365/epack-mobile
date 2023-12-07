@@ -11,16 +11,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignSelf: 'center',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
     },
     compContainer: {
         width: width * 0.44,
-        alignItems: 'center',
+        alignItems: 'flex-start',
     },
     fullWidthContainer:{
         width: width * 0.9,
         alignSelf: 'center',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         justifyContent: 'center',
     },
     label: {

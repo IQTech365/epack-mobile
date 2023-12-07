@@ -1,4 +1,7 @@
 import {Reducer} from 'react';
+import billingByOptions from '../../../data/billingByOptions.json';
+import shiftingTypes from '../../../data/shiftingType.json';
+import shiftingLuggages from '../../../data/shiftingLuggage.json';
 
 export enum ACTION {
   SHIFTING_TYPE = 'SHIFTING_TYPE',
@@ -214,8 +217,8 @@ export interface IAction {
 }
 
 export const initialState: IState = {
-  shifting_type: '',
-  shifting_luggage: '',
+  shifting_type: shiftingTypes[0].label,
+  shifting_luggage: shiftingLuggages[0].label,
   quotation_no: '',
   date_of_quotation: '',
   date_of_moving: '',
@@ -224,7 +227,7 @@ export const initialState: IState = {
   vehicle_manufacturer: '',
   vehicle_model: '',
   // **** Billing ****
-  billing_by: '',
+  billing_by: billingByOptions[0].label,
   // **** Billing Individual ****
   party_name: '',
   party_mobile_no: '',

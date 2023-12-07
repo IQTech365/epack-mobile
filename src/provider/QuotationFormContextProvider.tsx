@@ -748,6 +748,27 @@ const useQuotationFormContext = () => {
     [state.other_detail_4],
   );
 
+  // **** Reset Dispatch ****
+  const resetAllPartLoad = useCallback(
+    () => {
+      dispatch({
+        type: ACTION.RESET_ALL_PART_LOAD,
+        payload: '',
+      });
+    },
+    [state.freight_part_load],
+  );
+
+  const resetAllFullLoad = useCallback(
+    () => {
+      dispatch({
+        type: ACTION.RESET_ALL_FULL_LOAD,
+        payload: '',
+      });
+    },
+    [state.freight_full_load],
+  );
+
   return {
     state,
     // **** Basic Details ****
@@ -845,6 +866,9 @@ const useQuotationFormContext = () => {
     setOtherDetail2,
     setOtherDetail3,
     setOtherDetail4,
+    // *** Reset ****
+    resetAllPartLoad,
+    resetAllFullLoad,
   };
 };
 
@@ -947,6 +971,9 @@ const initQuotationFormContextState: UseQuotationFormContextType = {
   setOtherDetail2: (text: string) => {},
   setOtherDetail3: (text: string) => {},
   setOtherDetail4: (text: string) => {},
+  // **** Reset ****
+  resetAllPartLoad:() => {},
+  resetAllFullLoad:() => {},
 };
 
 const QuotationFormContext = createContext<UseQuotationFormContextType>(
