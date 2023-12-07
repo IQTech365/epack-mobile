@@ -2,6 +2,7 @@ import {Reducer} from 'react';
 import billingByOptions from '../../../data/billingByOptions.json';
 import shiftingTypes from '../../../data/shiftingType.json';
 import shiftingLuggages from '../../../data/shiftingLuggage.json';
+import {discountInQuotationOptions, gstInQuotationOptions, options, options2} from './components/FreightDetailsView/components/utils';
 
 export enum ACTION {
   SHIFTING_TYPE = 'SHIFTING_TYPE',
@@ -262,23 +263,23 @@ export const initialState: IState = {
   freight_part_charge: '',
   freight_full_charge: '',
   // **** Packing Charge ****
-  packing_charge: '',
+  packing_charge: options[1],
   packing_charge_part_load: '',
   packing_charge_full_load: '',
   // **** Packing Material Charge ****
-  packing_material_charge: '',
+  packing_material_charge: options[1],
   packing_material_charge_part_load: '',
   packing_material_charge_full_load: '',
   // **** Loading Charge ****
-  loading_charge: '',
+  loading_charge: options[1],
   loading_charge_part_load: '',
   loading_charge_full_load: '',
   // **** Unloading Charge ****
-  unloading_charge: '',
+  unloading_charge: options[1],
   unloading_charge_part_load: '',
   unloading_charge_full_load: '',
   // **** Unpacking Charge ****
-  unpacking_charge: '',
+  unpacking_charge: options[1],
   unpacking_charge_part_load: '',
   unpacking_charge_full_load: '',
   // **** Other Charges ****
@@ -288,21 +289,21 @@ export const initialState: IState = {
   surcharge: '',
   surcharge_percent: '',
   // **** Discount In Quotation
-  discount_in_quotation: '',
+  discount_in_quotation: discountInQuotationOptions[2],
   discount_percent_or_value: '',
   // **** GST in Quotation
-  gst_in_quotation: '',
+  gst_in_quotation: gstInQuotationOptions[3],
   gst_percent: '',
   gst_type: '',
   // **** Transit Insurance ****
-  transit_insurance: '',
+  transit_insurance: options2[1],
   transit_shifting_luggage: '',
   transit_insurance_type: '',
   transit_insurance_charge: '',
   transit_insurance_gst: '',
   transit_goods_value: '',
   // **** Storage Charge ****
-  storage: '',
+  storage: options2[1],
   storage_duration: '',
   storage_from_date: '',
   storage_to_date: '',

@@ -2,6 +2,10 @@ import React from 'react';
 import {View, Text} from 'react-native';
 import BasicDetails from './BasicDetails';
 import {useQuotationFormContextHook} from '../../../../provider/QuotationFormContextProvider';
+import PickupAddressView from './PickupAddressView';
+import Spacer from '../../../../common/Spacer';
+import DropAddressView from './DropAddressView';
+import FreightDetailsView from './FreightDetailsView';
 
 interface Props {
   fromEnquiry?: boolean;
@@ -15,6 +19,12 @@ const AddQuotationForm: React.FC<Props> = ({fromEnquiry, enquiryId}) => {
   return (
     <>
       <BasicDetails />
+      <Spacer height={4} />
+      <PickupAddressView />
+      <Spacer height={4} />
+      <DropAddressView />
+      <Spacer height={4} />
+      <FreightDetailsView />
     </>
   );
 };

@@ -1,0 +1,103 @@
+import React, { useEffect } from 'react';
+import {View} from 'react-native';
+import styles from './style';
+import Label from '../../../../../../../common/Label';
+import Input from '../../../../../../../common/Input';
+import {COLOR_BLACK} from '../../../../../../../utils/colors';
+import {useQuotationFormContextHook} from '../../../../../../../provider/QuotationFormContextProvider';
+import {FREIGHT_TYPE} from '../utils';
+
+interface Props {
+  freightType: FREIGHT_TYPE;
+}
+
+const SingleChargeInputView: React.FC<Props> = ({freightType}) => {
+  const {
+    state,
+    setFreightPartCharge,
+    setFreightFullCharge,
+    setPackingChargePartLoad,
+    setPackingChargeFullLoad,
+    setPackingMaterialChargePartLoad,
+    setPackingMaterialChargeFullLoad,
+    setLoadingChargePartLoad,
+    setLoadingChargeFullLoad,
+    setUnloadingChargePartLoad,
+    setUnloadingChargeFullLoad,
+    setUnpackingChargePartLoad,
+    setUnpackingChargeFullLoad,
+  } = useQuotationFormContextHook();
+
+  const _getLabelText = () => {
+    let text: string = state.freight_part_load ? 'Part Load' : 'Full Load';
+    if (freightType == FREIGHT_TYPE.LOAD_TYPE) {
+      if (state.freight_part_load && !state.freight_full_load) {
+        text = 'Freight Part';
+      } else if (state.freight_full_load && !state.freight_part_load) {
+        text = 'Freight Full';
+      }
+    }
+
+    return text;
+  };
+
+  const _inputChangeHandler = () => {
+    let handler:(text:string) => void = (text:string) => {};
+    if(freightType == FREIGHT_TYPE.LOAD_TYPE) {
+        if(state.freight_part_load) {
+            handler = setFreightPartCharge;
+        } else if(state.freight_full_load) {
+            handler = setFreightFullCharge;
+        }
+    } else if(freightType == FREIGHT_TYPE.PACKING_CHARGE) {
+        if(state.freight_part_load) {
+            handler = setPackingChargePartLoad;
+        } else if(state.freight_full_load) {
+            handler = setPackingChargeFullLoad;
+        }
+    } else if(freightType == FREIGHT_TYPE.PACKING_MATERIAL_CHARGE) {
+        if(state.freight_part_load) {
+            handler = setPackingMaterialChargePartLoad;
+        } else if(state.freight_full_load) {
+            handler = setPackingMaterialChargeFullLoad;
+        }
+    } else if(freightType == FREIGHT_TYPE.LOADING_CHARGE) {
+        if(state.freight_part_load) {
+            handler = setLoadingChargePartLoad;
+        } else if(state.freight_full_load) {
+            handler = setLoadingChargeFullLoad;
+        }
+    } else if(freightType == FREIGHT_TYPE.UNLOADING_CHARGE) {
+        if(state.freight_part_load) {
+            handler = setUnloadingChargePartLoad;
+        } else if(state.freight_full_load) {
+            handler = setUnloadingChargeFullLoad;
+        }
+    } else if(freightType == FREIGHT_TYPE.UNPACKING_CHARGE) {
+        if(state.freight_part_load) {
+            handler = setUnpackingChargePartLoad;
+        } else if(state.freight_full_load) {
+            handler = setUnpackingChargeFullLoad;
+        }
+    }
+    return handler;
+  }
+
+  return (
+    <View style={styles.fullWidthContainer}>
+      <Label text={_getLabelText()} style={styles.label} />
+      <Input
+        onChangeText={_inputChangeHandler()}
+        containerStyle={styles.inputContainer}
+        inputStyle={styles.input}
+        selectionColor={COLOR_BLACK}
+        // value={state.authority_person_name}
+        //@ts-ignore
+        //error={showErrors && errors.dropPincode}
+        inputType="numeric"
+      />
+    </View>
+  );
+};
+
+export default SingleChargeInputView;
