@@ -105,6 +105,15 @@ export enum ACTION {
   RESET_ALL_FULL_LOAD = 'RESET_ALL_FULL_LOAD',
 }
 
+export type TInsuranceDetails = {
+  status: string,
+  shifting_luggage: string,
+  insurance_type: string,
+  insurance_charge_percent: string,
+  insurance_gst_percent: string,
+  insurance_goods_value: string,
+}
+
 export interface IOtherCharge {
   particular_name: string;
   quantity: string;

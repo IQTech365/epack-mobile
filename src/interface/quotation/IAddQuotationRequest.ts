@@ -1,4 +1,4 @@
-import { TOtherCharge } from "../../views/quotation/addQuotation/quotationReducer";
+// import { TOtherCharge } from "../../views/quotation/addQuotation/quotationReducer";
 
 export interface ITransitInsurance {
   isRequired: string;
@@ -19,6 +19,18 @@ export interface IStorageCharges {
   fromDate: string;
   toDate: string;
   amount: string;
+}
+
+export interface IOtherCharge {
+  ratePerItem: string;
+  amount: string;
+}
+
+export interface IOtherCharges {
+  jobType: string;
+  qty: string;
+  partLoad: IOtherCharge | null;
+  fullLoad: IOtherCharge | null;
 }
 export interface IAddQuotationRequest {
   companyId: string;
@@ -91,14 +103,7 @@ export interface IAddQuotationRequest {
   discountAmount: string;
   transitInsurance: ITransitInsurance | null;
   storageCharges: IStorageCharges | null;
-  otherCharges: [
-    {
-      jobType: string;
-      qty: string;
-      partLoad: TOtherCharge | null;
-      fullLoad: TOtherCharge | null;
-    },
-  ];
+  otherCharges: IOtherCharges[] | null;
   quotationAmount: string;
   advanceAmount: string;
   billingBy: string;

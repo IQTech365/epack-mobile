@@ -22,11 +22,11 @@ interface Props {
 const StorageChargesView: React.FC<Props> = ({}) => {
   const {
     state,
-    setTransitGoodsValue,
     setStorage,
     setStorageDuration,
     setStorageFromDate,
     setStorageToDate,
+    setStorageAmount,
   } = useQuotationFormContextHook();
   const storageDurationDropdownCompRef = useRef(null);
   const fromDateDropdownCompRef = useRef(null);
@@ -102,7 +102,7 @@ const StorageChargesView: React.FC<Props> = ({}) => {
             <View style={styles.fullWidthContainer}>
               <Label text="Amount" style={styles.labelText} />
               <Input
-                onChangeText={setTransitGoodsValue}
+                onChangeText={setStorageAmount}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}

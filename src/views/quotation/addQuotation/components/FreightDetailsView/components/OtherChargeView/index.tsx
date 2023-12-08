@@ -8,11 +8,13 @@ import Spacer from '../../../../../../../common/Spacer';
 import {useQuotationFormContextHook} from '../../../../../../../provider/QuotationFormContextProvider';
 import Button from '../../../../../../../common/Button';
 import PlusIcon from '../../../../../../../images/icons/plus_icon.svg';
+import OtherChargeListItem from './OtherChargeListItem';
+import { IOtherCharge } from '../../../../quotationReducer2';
 
 interface Props {}
 
 const OtherChargeView: React.FC<Props> = ({}) => {
-  const {state} = useQuotationFormContextHook();
+  const {state, setOtherCharges} = useQuotationFormContextHook();
   const [shouldAdd, setShouldAdd] = useState<boolean>(false);
   const particularsInputCompRef = useRef(null);
   const quantityInputCompRef = useRef(null);
@@ -20,6 +22,69 @@ const OtherChargeView: React.FC<Props> = ({}) => {
   const partLoadAmountInputCompRef = useRef(null);
   const fullLoadRatePerItemInputCompRef = useRef(null);
   const fullLoadAmountInputCompRef = useRef(null);
+
+  const [particularName, setParticularName] = useState<string>('');
+  const [quantity, setQuantity] = useState<string>('');
+  const [partLoadRatePerItem, setPartLoadRatePerItem] = useState<string>('');
+  const [partLoadAmount, setPartLoadAmount] = useState<string>('');
+  const [fullLoadRatePerItem, setFullLoadRatePerItem] = useState<string>('');
+  const [fullLoadAmount, setFullLoadAmount] = useState<string>('');
+  const [items, setItems] = useState<IOtherCharge[]>([]);
+
+  const handleAddItem = () => {
+    const item: IOtherCharge = {
+      particular_name: particularName,
+      quantity: quantity,
+      part_load_rate_per_item: partLoadRatePerItem,
+      part_load_amount: partLoadAmount,
+      full_load_rate_per_item: fullLoadRatePerItem,
+      full_load_amount: fullLoadAmount,
+    };
+    const copy = [...items];
+    copy.push(item);
+    setItems(copy);
+    setOtherCharges(copy);
+    resetInputs();
+  };
+
+  const handleDeleteItem = (index: number) => {
+    const copy = [...items];
+    copy.splice(index, 1);
+    setItems(copy);
+  };
+
+  const resetInputs = () => {
+    if(particularsInputCompRef) {
+      //@ts-ignore
+      particularsInputCompRef?.current.reset('');
+      setParticularName('');
+    }
+    if(quantityInputCompRef) {
+      //@ts-ignore
+      quantityInputCompRef?.current.reset('');
+      setQuantity('');
+    }
+    if(state.freight_part_load && partLoadRatePerItemInputCompRef) {
+      //@ts-ignore
+      partLoadRatePerItemInputCompRef?.current.reset('');
+      setPartLoadRatePerItem('');
+    }
+    if(state.freight_part_load && partLoadAmountInputCompRef) {
+      //@ts-ignore
+      partLoadAmountInputCompRef?.current.reset('');
+      setPartLoadAmount('');
+    }
+    if(state.freight_full_load && fullLoadRatePerItemInputCompRef) {
+      //@ts-ignore
+      fullLoadRatePerItemInputCompRef?.current.reset('');
+      setFullLoadRatePerItem('');
+    }
+    if(state.freight_full_load && fullLoadAmountInputCompRef) {
+      //@ts-ignore
+      fullLoadAmountInputCompRef?.current.reset('');
+      setFullLoadAmount('')
+    }
+  }
 
   const _renderOtherChargePartLoadView = () => {
     if (state.freight_part_load) {
@@ -30,29 +95,27 @@ const OtherChargeView: React.FC<Props> = ({}) => {
             <View style={styles.compContainer}>
               <Label text="Part Load (Rate/Item)" style={styles.label} />
               <Input
-                onChangeText={(text: string) => {
-                  // setJobType(text);
-                }}
+                onChangeText={setPartLoadRatePerItem}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
-                //   value={jobType}
+                value={partLoadRatePerItem}
                 //@ts-ignore
                 ref={partLoadRatePerItemInputCompRef}
+                inputType="numeric"
               />
             </View>
             <View style={styles.compContainer}>
               <Label text="Part Load Amount" style={styles.label} />
               <Input
-                onChangeText={(text: string) => {
-                  // setJobType(text);
-                }}
+                onChangeText={setPartLoadAmount}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
-                //   value={jobType}
+                value={partLoadAmount}
                 //@ts-ignore
                 ref={partLoadAmountInputCompRef}
+                inputType="numeric"
               />
             </View>
           </View>
@@ -71,29 +134,27 @@ const OtherChargeView: React.FC<Props> = ({}) => {
             <View style={styles.compContainer}>
               <Label text="Full Load (Rate/Item)" style={styles.label} />
               <Input
-                onChangeText={(text: string) => {
-                  // setJobType(text);
-                }}
+                onChangeText={setFullLoadRatePerItem}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
-                //   value={jobType}
+                value={fullLoadRatePerItem}
                 //@ts-ignore
-                  ref={fullLoadRatePerItemInputCompRef}
+                ref={fullLoadRatePerItemInputCompRef}
+                inputType="numeric"
               />
             </View>
             <View style={styles.compContainer}>
               <Label text="Full Load Amount" style={styles.label} />
               <Input
-                onChangeText={(text: string) => {
-                  // setJobType(text);
-                }}
+                onChangeText={setFullLoadAmount}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
-                //   value={jobType}
+                value={fullLoadAmount}
                 //@ts-ignore
                 ref={fullLoadAmountInputCompRef}
+                inputType="numeric"
               />
             </View>
           </View>
@@ -122,13 +183,11 @@ const OtherChargeView: React.FC<Props> = ({}) => {
             <View style={styles.fullWidthContainer}>
               <Label text="Particulars/Items" style={styles.label} />
               <Input
-                onChangeText={(text: string) => {
-                  // setJobType(text);
-                }}
+                onChangeText={setParticularName}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
-                //   value={jobType}
+                value={particularName}
                 //@ts-ignore
                 ref={particularsInputCompRef}
               />
@@ -137,15 +196,14 @@ const OtherChargeView: React.FC<Props> = ({}) => {
             <View style={styles.fullWidthContainer}>
               <Label text="Quantity" style={styles.label} />
               <Input
-                onChangeText={(text: string) => {
-                  // setJobType(text);
-                }}
+                onChangeText={setQuantity}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
-                //   value={jobType}
+                value={quantity}
                 //@ts-ignore
                 ref={quantityInputCompRef}
+                inputType="numeric"
               />
             </View>
             {_renderOtherChargePartLoadView()}
@@ -154,13 +212,16 @@ const OtherChargeView: React.FC<Props> = ({}) => {
             <View style={styles.fullWidthContainer}>
               <Button
                 text="Add"
-                onPress={() => {}}
+                onPress={handleAddItem}
                 disabled={false}
                 style={styles.buttonStyle}
                 textStyle={styles.textStyle}
               />
             </View>
-            <Spacer height={4} />
+            <Spacer height={12} />
+            {items.map((item: IOtherCharge, index) => (
+              <OtherChargeListItem data={item} index={index} onDelete={handleDeleteItem} />
+            ))}
           </View>
         </>
       ) : null}
