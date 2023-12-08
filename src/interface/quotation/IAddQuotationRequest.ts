@@ -117,7 +117,7 @@ export interface IAddQuotationRequest {
     employeeName: string;
     employeeDesignation: string;
     employeeMobile: string;
-  };
+  } | {};
   otherDetail1: string;
   otherDetail2: string;
   easy_access_for_loading_unloading: string;

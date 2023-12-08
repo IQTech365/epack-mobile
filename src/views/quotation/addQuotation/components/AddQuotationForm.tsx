@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {View, Text} from 'react-native';
 import BasicDetails from './BasicDetails';
 import {useQuotationFormContextHook} from '../../../../provider/QuotationFormContextProvider';
@@ -21,10 +21,15 @@ import {
 import useCompanyId from '../../../../hooks/useCompanyId';
 import useAuthId from '../../../../hooks/useAuthId';
 import {options2} from './FreightDetailsView/components/utils';
-import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
-import { addQuotationRequest, getQuotationsRequest, resetaddQuotationRequest } from '../../../../redux/slices/QuotationSlice';
-import { IGetQuotationRequest } from '../../../../interface/quotation/IGetQuotationRequest';
+import {useAppDispatch, useAppSelector} from '../../../../redux/hooks';
+import {
+  addQuotationRequest,
+  getQuotationsRequest,
+  resetaddQuotationRequest,
+} from '../../../../redux/slices/QuotationSlice';
+import {IGetQuotationRequest} from '../../../../interface/quotation/IGetQuotationRequest';
 import Toast from 'react-native-toast-message';
+import billingByOptions from '../../../../data/billingByOptions.json';
 
 interface Props {
   fromEnquiry?: boolean;
@@ -32,7 +37,11 @@ interface Props {
   navigation: any;
 }
 
-const AddQuotationForm: React.FC<Props> = ({fromEnquiry, enquiryId, navigation}) => {
+const AddQuotationForm: React.FC<Props> = ({
+  fromEnquiry,
+  enquiryId,
+  navigation,
+}) => {
   const {state} = useQuotationFormContextHook();
   const companyId = useCompanyId();
   const authId = useAuthId();
@@ -61,32 +70,50 @@ const AddQuotationForm: React.FC<Props> = ({fromEnquiry, enquiryId, navigation})
     ],
   };
 
-  const storage:IStorageCharges = {
+  const storage: IStorageCharges = {
     isRequired: state.storage,
     storageChargesType: state.storage_duration,
     fromDate: state.storage_from_date,
     toDate: state.storage_to_date,
     amount: state.storage_amount,
-  }
+  };
 
   const prepareOtherCharges = (): IOtherCharges[] | null => {
-    let otherCharges:IOtherCharges[] = [];
-    if(state.other_charges.length > 0) {
+    let otherCharges: IOtherCharges[] = [];
+    if (state.other_charges.length > 0) {
       otherCharges = state.other_charges.map(e => {
-        const partLoad:IOtherCharge = {ratePerItem: e.part_load_rate_per_item, amount: e.part_load_amount}
-        const fullLoad:IOtherCharge = {ratePerItem: e.full_load_rate_per_item, amount: e.full_load_amount}
-        const otherCharge:IOtherCharges = {
+        const partLoad: IOtherCharge = {
+          ratePerItem: e.part_load_rate_per_item,
+          amount: e.part_load_amount,
+        };
+        const fullLoad: IOtherCharge = {
+          ratePerItem: e.full_load_rate_per_item,
+          amount: e.full_load_amount,
+        };
+        const otherCharge: IOtherCharges = {
           jobType: e.particular_name,
           qty: e.quantity,
           partLoad: partLoad,
           fullLoad: fullLoad,
-        }
-        return otherCharge
+        };
+        return otherCharge;
       });
       return otherCharges;
     }
     return null;
-  }
+  };
+
+  const billingDetails = {
+    companyName: state.company_name,
+    approvalAuthority: state.approval_authority,
+    authorityPersonName: state.authority_person_name,
+    authorityPersonMobile: state.authority_mobile_no,
+    companyAddress: state.company_address,
+    companyGST: state.company_gst,
+    employeeName: state.employee_name,
+    employeeDesignation: state.employee_designation,
+    employeeMobile: state.employee_mobile_no,
+  };
 
   const payload: IAddQuotationRequest = {
     companyId: companyId,
@@ -157,22 +184,12 @@ const AddQuotationForm: React.FC<Props> = ({fromEnquiry, enquiryId, navigation})
     discountType: state.discount_in_quotation,
     discountAmount: state.discount_percent_or_value,
     transitInsurance: state.transit_insurance == options2[0] ? transitInsurance : null,
-    storageCharges: state.storage == options2[0]? storage : null,
+    storageCharges: state.storage == options2[0] ? storage : null,
     otherCharges: prepareOtherCharges(),
     quotationAmount: '',
     advanceAmount: state.advance_amount,
     billingBy: state.billing_by,
-    billingDetails: {
-      companyName: state.company_name,
-      approvalAuthority: state.approval_authority,
-      authorityPersonName: state.authority_person_name,
-      authorityPersonMobile: state.authority_mobile_no,
-      companyAddress: state.company_address,
-      companyGST: state.company_gst,
-      employeeName: state.employee_name,
-      employeeDesignation: state.employee_designation,
-      employeeMobile: state.employee_mobile_no,
-    },
+    billingDetails: state.billing_by == billingByOptions[1].label ? billingDetails : {},
     otherDetail1: state.other_detail_1,
     otherDetail2: state.other_detail_2,
     easy_access_for_loading_unloading: state.other_detail_3,
@@ -180,7 +197,10 @@ const AddQuotationForm: React.FC<Props> = ({fromEnquiry, enquiryId, navigation})
   };
 
   const hanldeSubmit = () => {
-    console.log('AddQuotationForm--payload--', JSON.stringify(payload, null, ' '))
+    console.log(
+      'AddQuotationForm--payload--',
+      JSON.stringify(payload, null, ' '),
+    );
     dispatch(addQuotationRequest(payload));
   };
 
