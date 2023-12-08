@@ -4,6 +4,7 @@ import {IAddQuotationResponse} from '../../interface/quotation/IAddQuotationResp
 import { IGetQuotationRequest } from '../../interface/quotation/IGetQuotationRequest';
 import { IGetQuotationsResponse } from '../../interface/quotation/IGetQuotationsResponse';
 import { IGetSingleQuotationResponse } from '../../interface/quotation/IGetSingleQuotationResponse';
+import { IHtmlTemplateRequest, IHtmlTemplateResponse } from '../../interface/order/templates/ITemplateResponse';
 
 interface IQuotationState {
   // Add Quotation
@@ -24,6 +25,12 @@ interface IQuotationState {
   getQuotationSuccess: boolean;
   getQuotationFailure: boolean;
   getQuotationError: any;
+  // Quotation Template
+  quotationTemplateHtml: IHtmlTemplateResponse | null,
+  getQuotationTemplateHtmlRequesting: boolean,
+  getQuotationTemplateHtmlSuccess: boolean,
+  getQuotationTemplateHtmlFailure: boolean,
+  getQuotatiionTemplateHtmlError: any,
 }
 
 const initialState: IQuotationState = {
@@ -45,6 +52,12 @@ const initialState: IQuotationState = {
   getQuotationSuccess: false,
   getQuotationFailure: false,
   getQuotationError: null,
+  // Quotation Template
+  quotationTemplateHtml: null,
+  getQuotationTemplateHtmlRequesting: false,
+  getQuotationTemplateHtmlSuccess: false,
+  getQuotationTemplateHtmlFailure: false,
+  getQuotatiionTemplateHtmlError: null,
 };
 
 export const QuotationSlice = createSlice({
@@ -128,6 +141,32 @@ export const QuotationSlice = createSlice({
       state.getQuotationFailure = false;
       state.getQuotationError = null;
     },
+    // Quotation Tempalte Html
+    getQuotationHtmlRequest: (state, action:PayloadAction<IHtmlTemplateRequest>) => {
+      state.getQuotationTemplateHtmlRequesting = true;
+    },
+    getQuotationHtmlSuccess: (state, action:PayloadAction<IHtmlTemplateResponse>) => {
+      state.getQuotationTemplateHtmlRequesting = false;
+      state.getQuotationTemplateHtmlSuccess = true;
+      state.getQuotationTemplateHtmlFailure = false;
+      state.getQuotatiionTemplateHtmlError = null;
+      state.quotationTemplateHtml = action.payload;
+    },
+    getQuotationHtmlFailure: (state, action:PayloadAction<any>) => {
+      state.getQuotationTemplateHtmlRequesting = false;
+      state.getQuotationTemplateHtmlSuccess = false;
+      state.getQuotationTemplateHtmlFailure = true;
+      state.getQuotatiionTemplateHtmlError = action.payload;
+    },
+    resetGetQuotationHtmlRequest: (state) => {
+      state.getQuotationTemplateHtmlRequesting = false;
+      state.getQuotationTemplateHtmlSuccess = false;
+      state.getQuotationTemplateHtmlFailure = false;
+      state.getQuotatiionTemplateHtmlError = null;
+    },
+    clearQuotationHtmlDocument: (state) => {
+      state.quotationTemplateHtml = null;
+    },
    },
 });
 
@@ -150,5 +189,11 @@ export const {
   getSingleQuotationSuccess,
   getSingleQuotationFailure,
   resetGetSingleQuotationRequest,
+  // Quotation Template Html
+  getQuotationHtmlRequest,
+  getQuotationHtmlSuccess,
+  getQuotationHtmlFailure,
+  resetGetQuotationHtmlRequest,
+  clearQuotationHtmlDocument,
 
 } = QuotationSlice.actions;

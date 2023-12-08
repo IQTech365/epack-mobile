@@ -1,9 +1,9 @@
 // Money Receipt
-export interface IMoneyReceiptTempHtmlRequest {
+export interface IHtmlTemplateRequest {
     templateId:string;
-    moneyReceiptId:string;
+    docId:string;
 }
 
-export interface IMoneyReceiptTempHtmlResponse {
+export interface IHtmlTemplateResponse {
     html: any;
 }

@@ -17,7 +17,7 @@ import { IGetBiltyListResponse } from '../../interface/order/IGetBiltyListRespon
 import { IGetOrdersRequest } from '../../interface/order/IGetOrdersRequest';
 import { ISingleEnquiryResponse } from '../../interface/enquiry/ISingleEnquiryResponse';
 import { ISingleOrderRequest } from '../../interface/order/ISingleOrderRequest';
-import { IMoneyReceiptTempHtmlRequest, IMoneyReceiptTempHtmlResponse } from '../../interface/order/templates/ITemplateResponse';
+import { IHtmlTemplateRequest, IHtmlTemplateResponse } from '../../interface/order/templates/ITemplateResponse';
 
 interface IOrderState {
   // Add Order
@@ -71,7 +71,7 @@ interface IOrderState {
   editMoneyReceiptListFailure: boolean;
   editMoneyReceiptListError: any;
   // Money Receipt Template Html
-  moneyReceiptTemplateHtml: IMoneyReceiptTempHtmlResponse | null;
+  moneyReceiptTemplateHtml: IHtmlTemplateResponse | null;
   getMoneyReceiptTemplateHtmlRequesting:boolean;
   getMoneyReceiptTemplateHtmlSuccess:boolean;
   getMoneyReceiptTemplateHtmlFailure:boolean;
@@ -348,10 +348,10 @@ export const OrderSlice = createSlice({
       state.editMoneyReceiptListError = action.payload;
     },
     // Money Receipt Template Html
-    getMoneyReceiptHtmlRequest: (state, action:PayloadAction<IMoneyReceiptTempHtmlRequest>) => {
+    getMoneyReceiptHtmlRequest: (state, action:PayloadAction<IHtmlTemplateRequest>) => {
       state.getMoneyReceiptTemplateHtmlRequesting = true;
     },
-    getMoneyReceiptHtmlSuccess: (state, action:PayloadAction<IMoneyReceiptTempHtmlResponse>) => {
+    getMoneyReceiptHtmlSuccess: (state, action:PayloadAction<IHtmlTemplateResponse>) => {
       state.getMoneyReceiptTemplateHtmlRequesting = false;
       state.getMoneyReceiptTemplateHtmlSuccess = true;
       state.getMoneyReceiptTemplateHtmlFailure = false;

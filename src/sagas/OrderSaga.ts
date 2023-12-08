@@ -53,7 +53,8 @@ import { IGetBiltyListResponse } from '../interface/order/IGetBiltyListResponse'
 import { IGetOrdersRequest } from '../interface/order/IGetOrdersRequest';
 import { ISingleOrderRequest } from '../interface/order/ISingleOrderRequest';
 import { ISingleEnquiryResponse } from '../interface/enquiry/ISingleEnquiryResponse';
-import { IMoneyReceiptTempHtmlRequest, IMoneyReceiptTempHtmlResponse } from '../interface/order/templates/ITemplateResponse';
+import { IHtmlTemplateRequest, IHtmlTemplateResponse } from '../interface/order/templates/ITemplateResponse';
+import { getQuotationHtmlFailure, getQuotationHtmlRequest, getQuotationHtmlSuccess } from '../redux/slices/QuotationSlice';
 
 export function* addOrderSaga(action: PayloadAction<IAddOrderRequest>) {
   console.log('addOrderSaga--action--', JSON.stringify(action));
@@ -205,15 +206,27 @@ export function* createCarConditionSaga(
     }
   }
 
-  export function* getMoneyReceiptTemplateHtmlSaga(action: PayloadAction<IMoneyReceiptTempHtmlRequest>) {
+  export function* getMoneyReceiptTemplateHtmlSaga(action: PayloadAction<IHtmlTemplateRequest>) {
     try {
-        const {templateId, moneyReceiptId} = action.payload;
-        const response: IMoneyReceiptTempHtmlResponse = yield call(OrderService.GetMoneyReceiptTemplateHtmlService, templateId, moneyReceiptId);
+        const {templateId, docId} = action.payload;
+        const response: IHtmlTemplateResponse = yield call(OrderService.GetMoneyReceiptTemplateHtmlService, templateId, docId);
         console.log('getMoneyReceiptTemplateHtmlSaga-response----', JSON.stringify(response));
         yield put(getMoneyReceiptHtmlSuccess(response));
     } catch (error) {
         console.log('getMoneyReceiptTemplateHtmlSaga-error----', JSON.stringify(error));
         yield put(getMoneyReceiptHtmlFailure(error));
+    }
+  }
+
+  export function* getQuotationTemplateHtmlSaga(action: PayloadAction<IHtmlTemplateRequest>) {
+    try {
+        const {templateId, docId} = action.payload;
+        const response: IHtmlTemplateResponse = yield call(OrderService.GetQuotationTemplateHtmlService, templateId, docId);
+        console.log('getQuotationTemplateHtmlSaga-response----', JSON.stringify(response));
+        yield put(getQuotationHtmlSuccess(response));
+    } catch (error) {
+        console.log('getQuotationTemplateHtmlSaga-error----', JSON.stringify(error));
+        yield put(getQuotationHtmlFailure(error));
     }
   }
   
@@ -231,4 +244,5 @@ export function* watcherOrderSaga() {
   yield takeLatest(getBiltyListRequest.type, getBiltyListSaga);
   yield takeLatest(getApprovedOrdersRequest.type, getApprovedOrderListSaga);
   yield takeLatest(getMoneyReceiptHtmlRequest.type, getMoneyReceiptTemplateHtmlSaga);
+  yield takeLatest(getQuotationHtmlRequest.type, getQuotationTemplateHtmlSaga);
 }

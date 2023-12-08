@@ -1,5 +1,4 @@
 import React, {useEffect} from 'react';
-import {View, Text} from 'react-native';
 import BasicDetails from './BasicDetails';
 import {useQuotationFormContextHook} from '../../../../provider/QuotationFormContextProvider';
 import PickupAddressView from './PickupAddressView';
@@ -118,7 +117,7 @@ const AddQuotationForm: React.FC<Props> = ({
     companyId: companyId,
     enquiryId: enquiryId || '',
     authId: authId,
-    shiftingType: state.shifting_type,
+    shiftingType: state.shifting_type.toUpperCase(),
     shiftingLuggage: state.shifting_luggage,
     vehicleType: state.vehicle_type,
     manufacture: state.vehicle_manufacturer,
@@ -185,7 +184,7 @@ const AddQuotationForm: React.FC<Props> = ({
     transitInsurance: state.transit_insurance == options2[0] ? transitInsurance : null,
     storageCharges: state.storage == options2[0] ? storage : null,
     otherCharges: prepareOtherCharges(),
-    quotationAmount: '',
+    quotationAmount: '1000',// README: Mock quotation amount
     advanceAmount: state.advance_amount,
     billingBy: state.billing_by,
     billingDetails: state.billing_by == billingByOptions[1].label ? billingDetails : {},
@@ -196,10 +195,7 @@ const AddQuotationForm: React.FC<Props> = ({
   };
 
   const hanldeSubmit = () => {
-    console.log(
-      'AddQuotationForm--payload--',
-      JSON.stringify(payload, null, ' '),
-    );
+    console.log('AddQuotationForm--payload--',JSON.stringify(payload, null, ' '),);
     dispatch(addQuotationRequest(payload));
   };
 

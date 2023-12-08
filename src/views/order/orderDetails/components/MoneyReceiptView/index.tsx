@@ -26,7 +26,7 @@ import AddMoneyReceiptListItem from '../MoneyReceiptList';
 import FormModal from '../../../../settings/formModal';
 import {COLOR_BLACK, COLOR_BLUE} from '../../../../../utils/colors';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import {IMoneyReceiptTempHtmlRequest} from '../../../../../interface/order/templates/ITemplateResponse';
+import {IHtmlTemplateRequest} from '../../../../../interface/order/templates/ITemplateResponse';
 import ModalHOC from '../../../../../common/ModalHOC';
 import MoneyReceiptTemplate from './MoneyReceiptTemplate';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
@@ -106,9 +106,9 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
   const handleShareClick = async (moneyReceiptId: string) => {
     setShowShareModal(true);
     setShouldDownload(false);
-    const payload: IMoneyReceiptTempHtmlRequest = {
+    const payload: IHtmlTemplateRequest = {
       templateId: '6561d45bec79daeb0af1b793',
-      moneyReceiptId: moneyReceiptId,
+      docId: moneyReceiptId,
     };
     dispatch(getMoneyReceiptHtmlRequest(payload));
   }
@@ -116,9 +116,9 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
   const handleDownloadClick = async () => {
     setShowShareModal(false);
     setShouldDownload(true);
-    const payload: IMoneyReceiptTempHtmlRequest = {
+    const payload: IHtmlTemplateRequest = {
       templateId: '6561d45bec79daeb0af1b793',
-      moneyReceiptId: moneyReceiptId,
+      docId: moneyReceiptId,
     };
     dispatch(getMoneyReceiptHtmlRequest(payload));
   }
@@ -164,9 +164,9 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
 
   const handlePreviewClick = (moneyReceiptId: string) => {
     setShowShareModal(false);
-    const payload: IMoneyReceiptTempHtmlRequest = {
+    const payload: IHtmlTemplateRequest = {
       templateId: '6561d45bec79daeb0af1b793',
-      moneyReceiptId: moneyReceiptId,
+      docId: moneyReceiptId,
     };
     dispatch(getMoneyReceiptHtmlRequest(payload));
   };

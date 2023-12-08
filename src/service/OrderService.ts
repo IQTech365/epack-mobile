@@ -13,7 +13,8 @@ import {
   GET_MONEY_RECEIPT_LIST,
   GET_MONEY_RECEIPT_TEMPLATE_HTML,
   GET_ORDER_DETAILS,
-  GET_ORDER_LIST
+  GET_ORDER_LIST,
+  GET_QUOTATION_TEMPLATE_HTML
 } from '../http/Endpoint';
 import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
 import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
@@ -35,7 +36,7 @@ import { IGetCarConditionListResponse } from '../interface/order/IGetCarConditio
 import { IGetOrdersRequest } from '../interface/order/IGetOrdersRequest';
 import { ISingleOrderRequest } from '../interface/order/ISingleOrderRequest';
 import { ISingleEnquiryResponse } from '../interface/enquiry/ISingleEnquiryResponse';
-import { IMoneyReceiptTempHtmlRequest, IMoneyReceiptTempHtmlResponse } from '../interface/order/templates/ITemplateResponse';
+import { IHtmlTemplateRequest, IHtmlTemplateResponse } from '../interface/order/templates/ITemplateResponse';
 
 export const GetOrderDetailsService = async (payload: string): Promise<IOrderDetailsResponse> => {
     console.log('GetOrderDetailsService--payload--', JSON.stringify(payload));
@@ -123,8 +124,14 @@ export const GetOrderService = async (payload: ISingleOrderRequest): Promise<ISi
 }
 
 // Template
-export const GetMoneyReceiptTemplateHtmlService = async (templateId:string, moneyReceiptId:string): Promise<IMoneyReceiptTempHtmlResponse> => {
+export const GetMoneyReceiptTemplateHtmlService = async (templateId:string, moneyReceiptId:string): Promise<IHtmlTemplateResponse> => {
     console.log('GetMoneyReceiptTemplateHtmlService--payload--', JSON.stringify(templateId));
     const api = Api.getInstance();
-    return await api.get<IMoneyReceiptTempHtmlResponse>(GET_MONEY_RECEIPT_TEMPLATE_HTML(templateId, moneyReceiptId));
+    return await api.get<IHtmlTemplateResponse>(GET_MONEY_RECEIPT_TEMPLATE_HTML(templateId, moneyReceiptId));
+}
+
+export const GetQuotationTemplateHtmlService = async (templateId:string, docId:string): Promise<IHtmlTemplateResponse> => {
+    console.log('GetQuotationTemplateHtmlService--payload--', JSON.stringify(templateId));
+    const api = Api.getInstance();
+    return await api.get<IHtmlTemplateResponse>(GET_QUOTATION_TEMPLATE_HTML(templateId, docId));
 }
