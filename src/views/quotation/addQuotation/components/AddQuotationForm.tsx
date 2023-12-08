@@ -30,6 +30,7 @@ import {
 import {IGetQuotationRequest} from '../../../../interface/quotation/IGetQuotationRequest';
 import Toast from 'react-native-toast-message';
 import billingByOptions from '../../../../data/billingByOptions.json';
+import Spinner from '../../../../common/Spinner';
 
 interface Props {
   fromEnquiry?: boolean;
@@ -54,8 +55,6 @@ const AddQuotationForm: React.FC<Props> = ({
     quotation,
     getQuotationRequesting,
   } = useAppSelector(state => state.Quotation);
-
-  // console.log('AddQuotationForm--state--', JSON.stringify(state, null, ' '));
 
   const transitInsurance: ITransitInsurance = {
     isRequired: state.transit_insurance,
@@ -252,6 +251,7 @@ const AddQuotationForm: React.FC<Props> = ({
         textStyle={styles.textStyle}
       />
       <Spacer height={12} />
+      <Spinner show={addQuotationRequesting || getQuotationRequesting} />
     </>
   );
 };
