@@ -162,8 +162,8 @@ const FreightTypeView: React.FC<Props> = ({freightType, options}) => {
             unfillColor="#FFFFFF"
             text={option}
             fillColor={COLOR_BLUE}
-            iconStyle={styles.iconStyle}
-            innerIconStyle={styles.innerIconStyle}
+            iconStyle={freightType == FREIGHT_TYPE.LOAD_TYPE ? styles.iconStyle : styles.iconStyle2}
+            innerIconStyle={freightType == FREIGHT_TYPE.LOAD_TYPE ? styles.innerIconStyle : styles.innerIconStyle2}
             textStyle={styles.textStyle}
             style={styles.style}
             textContainerStyle={styles.textContainerStyle}

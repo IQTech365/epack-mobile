@@ -5,7 +5,7 @@ import Label from '../../../../../../../common/Label';
 import Input from '../../../../../../../common/Input';
 import {COLOR_BLACK} from '../../../../../../../utils/colors';
 import {useQuotationFormContextHook} from '../../../../../../../provider/QuotationFormContextProvider';
-import {FREIGHT_TYPE} from '../utils';
+import {FREIGHT_TYPE, options} from '../utils';
 
 interface Props {
   freightType: FREIGHT_TYPE;
@@ -81,6 +81,26 @@ const SingleChargeInputView: React.FC<Props> = ({freightType}) => {
         }
     }
     return handler;
+  }
+
+  const _shouldHideView = () => {
+    let hideView:boolean = false;
+    if(freightType == FREIGHT_TYPE.PACKING_CHARGE && state.packing_charge !== options[1]) {
+        hideView = true;
+    } else if(freightType == FREIGHT_TYPE.PACKING_MATERIAL_CHARGE && state.packing_material_charge !== options[1]) {
+        hideView = true;
+    } else if(freightType == FREIGHT_TYPE.LOADING_CHARGE && state.loading_charge !== options[1]) {
+        hideView = true;
+    } else if(freightType == FREIGHT_TYPE.UNLOADING_CHARGE && state.unloading_charge !== options[1]) {
+        hideView = true;
+    } else if(freightType == FREIGHT_TYPE.UNPACKING_CHARGE && state.unpacking_charge !== options[1]) {
+        hideView = true;
+    }
+    return hideView;
+  }
+
+  if(_shouldHideView()) {
+    return null;
   }
 
   return (

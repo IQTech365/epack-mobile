@@ -23,14 +23,25 @@ const styles = StyleSheet.create({
   },
   iconStyle: {
     borderRadius: 0,
-    width: 16,
-    height: 16,
+    width: 18,
+    height: 18,
   },
   innerIconStyle: {
     borderWidth: 1,
     borderRadius: 0,
-    width: 16,
-    height: 16,
+    width: 18,
+    height: 18,
+  },
+  iconStyle2: {
+    borderRadius: 12,
+    width: 22,
+    height: 22,
+  },
+  innerIconStyle2: {
+    borderWidth: 1,
+    borderRadius: 12,
+    width: 22,
+    height: 22,
   },
   textStyle: {
     fontFamily: 'JosefinSans-Regular',
@@ -39,10 +50,10 @@ const styles = StyleSheet.create({
   },
   textContainerStyle: {
     paddingLeft: 0,
-    marginLeft: 10,
+    marginLeft: 6,
   },
   style: {
-    marginRight: 25,
+    marginRight: 15,
     marginBottom: 15,
   },
   checkboxContainer: {

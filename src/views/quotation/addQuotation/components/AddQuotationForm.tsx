@@ -6,6 +6,7 @@ import PickupAddressView from './PickupAddressView';
 import Spacer from '../../../../common/Spacer';
 import DropAddressView from './DropAddressView';
 import FreightDetailsView from './FreightDetailsView';
+import InsuranceDetailsView from './InsuranceDetailsView';
 
 interface Props {
   fromEnquiry?: boolean;
@@ -25,6 +26,9 @@ const AddQuotationForm: React.FC<Props> = ({fromEnquiry, enquiryId}) => {
       <DropAddressView />
       <Spacer height={4} />
       <FreightDetailsView />
+      <Spacer height={4} />
+      <InsuranceDetailsView />
+      <Spacer height={4} />
     </>
   );
 };
