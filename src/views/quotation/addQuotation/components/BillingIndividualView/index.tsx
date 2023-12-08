@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {View} from 'react-native';
 import styles from './style';
 import {useQuotationFormContextHook} from '../../../../../provider/QuotationFormContextProvider';
@@ -13,6 +13,8 @@ interface Props {
 
 const BillingIndividualView: React.FC<Props> = ({}) => {
   const {state, setPartyName, setPartyMobileNo} = useQuotationFormContextHook();
+  const partyNameInputCompRef = useRef(null);
+  const partyMobileNoInputCompRef = useRef(null);
 
   return (
     <>
@@ -24,6 +26,8 @@ const BillingIndividualView: React.FC<Props> = ({}) => {
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
           value={state.party_name}
+          //@ts-ignore
+          ref={partyNameInputCompRef}
           //@ts-ignore
           //error={showErrors && errors.dropPincode}
           type="text"
@@ -39,6 +43,8 @@ const BillingIndividualView: React.FC<Props> = ({}) => {
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
           value={state.party_mobile_no}
+          //@ts-ignore
+          ref={partyMobileNoInputCompRef}
           //@ts-ignore
           //error={showErrors && errors.dropPincode}
           type="text"

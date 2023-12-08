@@ -22,10 +22,6 @@ interface Props {
 const StorageChargesView: React.FC<Props> = ({}) => {
   const {
     state,
-    setTransitShiftingLuggage,
-    setTransitInsuranceType,
-    setTransitInsuranceCharge,
-    setTransitInsuranceGst,
     setTransitGoodsValue,
     setStorage,
     setStorageDuration,

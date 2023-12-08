@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {View, Text} from 'react-native';
 import styles from './style';
 import CollapsibleView from '../../../../../common/CollapsibleView';
@@ -23,9 +23,7 @@ interface Props {
 
 const BasicDetails: React.FC<Props> = ({}) => {
   const [switchState, setSwitchState] = useState<boolean>(true);
-  const switchWrapperStyle = switchState
-    ? styles.switchMainWrapper
-    : styles.switchMainWrapper2;
+  const switchWrapperStyle = switchState ? styles.switchMainWrapper : styles.switchMainWrapper2;
   const {
     state,
     setShiftingType,
@@ -35,6 +33,13 @@ const BasicDetails: React.FC<Props> = ({}) => {
     setDateOfQuotation,
     setDateOfMoving,
   } = useQuotationFormContextHook();
+
+  const shiftingTypeDropdownCompRef = useRef(null);
+  const shiftingLuggageDropdownCompRef = useRef(null);
+  const quotationNoInputCompRef = useRef(null);
+  const dateOfQuotationCompRef = useRef(null);
+  const dateOfMovingCompRef = useRef(null);
+  const billingByDropdownCompRef = useRef(null);
 
   return (
     <CollapsibleView title="BASIC DETAILS" collapsed={false}>
@@ -49,7 +54,7 @@ const BasicDetails: React.FC<Props> = ({}) => {
                 setShiftingType(item.label);
               }}
               //@ts-ignore
-              // ref={shiftingTypeDropdownRef}
+              ref={shiftingTypeDropdownCompRef}
             />
           </View>
           <View style={styles.compContainer}>
@@ -60,7 +65,7 @@ const BasicDetails: React.FC<Props> = ({}) => {
                 setShiftingLuggage(item.label);
               }}
               //@ts-ignore
-              // ref={shiftingTypeDropdownRef}
+              ref={shiftingLuggageDropdownCompRef}
             />
           </View>
         </View>
@@ -90,6 +95,8 @@ const BasicDetails: React.FC<Props> = ({}) => {
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
               editable={!switchState}
+              //@ts-ignore
+              ref={quotationNoInputCompRef}
               // value={isEdit ? quotationserialNo : ''}
             />
           </View>
@@ -102,7 +109,7 @@ const BasicDetails: React.FC<Props> = ({}) => {
                 setDateOfQuotation(formatDate4(date));
               }}
               //@ts-ignore
-              // ref={dateOfQuotationCompRef}
+              ref={dateOfQuotationCompRef}
             />
           </View>
           <View style={styles.compContainer}>
@@ -112,7 +119,7 @@ const BasicDetails: React.FC<Props> = ({}) => {
                 setDateOfMoving(formatDate4(date));
               }}
               //@ts-ignore
-              // ref={dateOfMovingCompRef}
+              ref={dateOfMovingCompRef}
             />
           </View>
         </View>
@@ -123,6 +130,8 @@ const BasicDetails: React.FC<Props> = ({}) => {
             onSelect={(item: TDropdownItem) => {
               setBillingBy(item.label);
             }}
+            //@ts-ignore
+            ref={billingByDropdownCompRef}
           />
         </View>
         <Spacer height={4} />

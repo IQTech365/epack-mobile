@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {View, Text} from 'react-native';
 import styles from './style';
 import CollapsibleView from '../../../../../common/CollapsibleView';
@@ -27,6 +27,13 @@ const PickupAddressView: React.FC<Props> = ({}) => {
     setPickupLiftStatus,
   } = useQuotationFormContextHook();
 
+  const pincodeInputCompRef = useRef(null);
+  const addressInputCompRef = useRef(null);
+  const stateDropdownCompRef = useRef(null);
+  const cityDropdownCompRef = useRef(null);
+  const floorDropdownCompRef = useRef(null);
+  const liftDropdownCompRef = useRef(null);
+
   return (
     <CollapsibleView title="PICKUP ADDRESS" collapsed={true}>
       <View>
@@ -39,6 +46,8 @@ const PickupAddressView: React.FC<Props> = ({}) => {
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
               placeholder="pincode"
+              //@ts-ignore
+              ref={pincodeInputCompRef}
               //@ts-ignore
               // error={showErrors && errors.pickupPincode}
               value={state?.pickup_pincode}
@@ -53,7 +62,7 @@ const PickupAddressView: React.FC<Props> = ({}) => {
               placeholder={'Select State'}
               hanldeData={setPickupState}
               //@ts-ignore
-              // ref={pickupStateDropwdownRef}
+              ref={stateDropdownCompRef}
             />
           </View>
         </View>
@@ -65,7 +74,7 @@ const PickupAddressView: React.FC<Props> = ({}) => {
             placeholder={'Select City'}
             hanldeData={setPickupCity}
             //@ts-ignore
-            //   ref={pickupCityDropdownRef}
+            ref={cityDropdownCompRef}
           />
         </View>
         <Spacer height={4} />
@@ -76,6 +85,8 @@ const PickupAddressView: React.FC<Props> = ({}) => {
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
+            //@ts-ignore
+            ref={addressInputCompRef}
             //@ts-ignore
             // error={showErrors && errors.pickupPincode}
             value={state?.pickup_address}
@@ -92,6 +103,8 @@ const PickupAddressView: React.FC<Props> = ({}) => {
                 setPickupCurrentFloor(item.label);
               }}
               defaultValue={floorOptions[3]}
+              //@ts-ignore
+              ref={floorDropdownCompRef}
             />
           </View>
           <View style={styles.compContainer}>
@@ -101,6 +114,8 @@ const PickupAddressView: React.FC<Props> = ({}) => {
               onSelect={(item: TDropdownItem) => {
                 setPickupLiftStatus(item.label);
               }}
+              //@ts-ignore
+              ref={liftDropdownCompRef}
             />
           </View>
         </View>

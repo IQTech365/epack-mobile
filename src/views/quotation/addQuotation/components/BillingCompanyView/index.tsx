@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import {View, Text} from 'react-native';
 import styles from './style';
 import { useQuotationFormContextHook } from "../../../../../provider/QuotationFormContextProvider";
@@ -27,6 +27,16 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
       setEmployeeMobileNo,
       setCompanyAddress,
     } = useQuotationFormContextHook();
+    
+    const companyNameInputCompRef = useRef(null);
+    const approvalAuthorityDropdownCompRef = useRef(null);
+    const authorityPersonNameInputCompRef = useRef(null);
+    const authorityMobileNoInputCompRef = useRef(null);
+    const companyGstInputCompRef = useRef(null);
+    const employeeNameInputCompRef = useRef(null);
+    const employeeDesignationInputCompRef = useRef(null);
+    const employeeMobileNoInputCompRef = useRef(null);
+    const companyAddressInputCompRef = useRef(null);
   
     return (
       <>
@@ -38,6 +48,8 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
             value={state.company_name}
+            //@ts-ignore
+            ref={companyNameInputCompRef}
             //@ts-ignore
             //error={showErrors && errors.dropPincode}
             type="text"
@@ -52,6 +64,8 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
             onSelect={(item: TDropdownItem) => {
                 setApprovalAuthority(item.label);
             }}
+            //@ts-ignore
+            ref={approvalAuthorityDropdownCompRef}
           />
         </View>
         <Spacer height={4} />
@@ -63,6 +77,8 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
             value={state.authority_person_name}
+            //@ts-ignore
+            ref={authorityPersonNameInputCompRef}
             //@ts-ignore
             //error={showErrors && errors.dropPincode}
             type="text"
@@ -79,6 +95,8 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
             selectionColor={COLOR_BLACK}
             value={state.authority_mobile_no}
             //@ts-ignore
+            ref={authorityMobileNoInputCompRef}
+            //@ts-ignore
             //error={showErrors && errors.dropPincode}
             type="text"
             required={true}
@@ -94,6 +112,8 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
             selectionColor={COLOR_BLACK}
             value={state.company_gst}
             //@ts-ignore
+            ref={companyGstInputCompRef}
+            //@ts-ignore
             //error={showErrors && errors.dropPincode}
             type="text"
           />
@@ -108,6 +128,8 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
             selectionColor={COLOR_BLACK}
             value={state.employee_name}
             //@ts-ignore
+            ref={employeeNameInputCompRef}
+            //@ts-ignore
             //error={showErrors && errors.dropPincode}
             type="text"
             required={true}
@@ -115,13 +137,15 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
         </View>
         <Spacer height={4} />
         <View style={styles.fullWidthContainer}>
-          <Label text="Employee Designation" style={styles.label} required={true} />
+          <Label text="Employee Designation" style={styles.label} />
           <Input
             onChangeText={setEmployeeDesignation}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
             value={state.employee_designation}
+            //@ts-ignore
+            ref={employeeDesignationInputCompRef}
             //@ts-ignore
             //error={showErrors && errors.dropPincode}
             type="text"
@@ -138,6 +162,8 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
             selectionColor={COLOR_BLACK}
             value={state.employee_mobile_no}
             //@ts-ignore
+            ref={employeeMobileNoInputCompRef}
+            //@ts-ignore
             //error={showErrors && errors.dropPincode}
             type="text"
             required={true}
@@ -153,7 +179,7 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
             selectionColor={COLOR_BLACK}
             value={state.company_address}
             //@ts-ignore
-            //error={showErrors && errors.dropPincode}
+            ref={companyAddressInputCompRef}
             type="text"
           />
         </View>

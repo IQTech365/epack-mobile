@@ -24,16 +24,12 @@ const AddQuotationView: React.FC<Props> = ({
   route,
 }) => {
   const isEdit: boolean | undefined = route?.params?.isEdit;
+  const headerText = isEdit ? 'UPDATE QUOTATION' : 'CREATE QUOTATION';
   return (
     <QuotationFormContextProvider>
       <AvoidSoftInputViewHOC>
         <View style={styles.container}>
-          {showHeader ? (
-            <Header
-              label={isEdit ? 'UPDATE QUOTATION' : 'CREATE QUOTATION'}
-              canGoBack={true}
-            />
-          ) : null}
+          {showHeader ? <Header label={headerText} canGoBack={true} /> : null}
           <Spacer height={4} />
           <AddQuotationForm fromEnquiry={fromEnquiry} enquiryId={enquiryId} />
         </View>
