@@ -14,6 +14,7 @@ import floorOptions from '../../../../../data/floorOptions.json';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import usePincodeHook from '../../../../../hooks/usePincodeHook';
 import { getCities2, getStates2 } from '../../../../../utils/formatter';
+import Spinner from '../../../../../common/Spinner';
 
 interface Props {
   //
@@ -161,6 +162,7 @@ const DropAddressView: React.FC<Props> = ({}) => {
             />
           </View>
         </View>
+        <Spinner show={fetching} />
       </View>
     </CollapsibleView>
   );
