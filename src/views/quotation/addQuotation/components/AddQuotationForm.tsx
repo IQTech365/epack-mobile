@@ -30,7 +30,6 @@ import {IGetQuotationRequest} from '../../../../interface/quotation/IGetQuotatio
 import Toast from 'react-native-toast-message';
 import billingByOptions from '../../../../data/billingByOptions.json';
 import Spinner from '../../../../common/Spinner';
-import { Alert } from 'react-native';
 import { Validator } from '../../../../utils/validation';
 
 interface Props {
@@ -267,7 +266,11 @@ const AddQuotationForm: React.FC<Props> = ({
     if(doValidation()) {
       dispatch(addQuotationRequest(payload));
     } else {
-      Alert.alert('Error in form');
+      Toast.show({
+        type: 'error',
+        text1: 'Invalid From',
+        text2: 'All fileds are not provided. Please check the incorrect fields.!!',
+      });
     }
   };
 
