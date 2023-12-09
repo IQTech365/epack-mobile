@@ -46,8 +46,6 @@ const AddQuotationForm: React.FC<Props> = ({
 }) => {
   const {
     state,
-    validateForm,
-    validForm,
     resetError,
     setPartyNameError,
     setPartyMobileNoError,
@@ -280,7 +278,6 @@ const AddQuotationForm: React.FC<Props> = ({
         text1: 'Quotation',
         text2: 'Quotation has been added successfully',
       });
-      validateForm(false);
       dispatch(resetaddQuotationRequest());
       const payload: IGetQuotationRequest = {
         companyId: companyId,
@@ -288,7 +285,6 @@ const AddQuotationForm: React.FC<Props> = ({
       dispatch(getQuotationsRequest(payload));
       navigation?.goBack();
     } else if (!addQuotationRequesting && addQuotationFailure) {
-      validateForm(false);
       Toast.show({
         type: 'error',
         text1: 'Quotation',
