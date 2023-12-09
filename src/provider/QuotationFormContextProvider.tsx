@@ -830,6 +830,26 @@ const useQuotationFormContext = () => {
     [state.errors.authority_mobile_no],
   );
 
+  const setPickupPincodeError = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.PICKUP_PINCODE_ERROR,
+        payload: text,
+      });
+    },
+    [state.errors.pickup_pincode],
+  );
+
+  const setDropPincodeError = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.DROP_PINCODE_ERROR,
+        payload: text,
+      });
+    },
+    [state.errors.drop_pincode],
+  );
+
   const resetError = useCallback(() => {
     dispatch({
       type: ACTION.RESET_ERROR,
@@ -842,6 +862,8 @@ const useQuotationFormContext = () => {
     state.employee_name,
     state.authority_mobile_no,
     state.employee_mobile_no,
+    state.pickup_pincode,
+    state.drop_pincode,
   ]);
 
   const validateForm = useCallback(
@@ -971,6 +993,8 @@ const useQuotationFormContext = () => {
     setEmployeeNameError,
     setAuthorityMobileNoError,
     setEmployeeMobileNoError,
+    setPickupPincodeError,
+    setDropPincodeError,
     // **** Reset Errors ****
     resetError,
     validateForm,
@@ -1087,6 +1111,8 @@ const initQuotationFormContextState: UseQuotationFormContextType = {
   setEmployeeNameError: (text: string) => {},
   setAuthorityMobileNoError: (text: string) => {},
   setEmployeeMobileNoError: (text: string) => {},
+  setPickupPincodeError: (text: string) => {},
+  setDropPincodeError: (text: string) => {},
   // **** Reset Errors ****
   resetError: () => {},
   validateForm: (validate:boolean) => {},

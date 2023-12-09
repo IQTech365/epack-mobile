@@ -36,6 +36,22 @@ export const getStates = (arr: any): TDropdownItem[] => {
   return states;
 };
 
+/**
+ * 
+ * @param arr 
+ * @returns Array<string> with state options
+ */
+export const getStates2 = (arr: any): string[] => {
+  let states: string[] = [];
+  const {PostOffice} = arr || {};
+  if (PostOffice && Array.isArray(PostOffice)) {
+    const stateArr = PostOffice.map(e => e.State);
+    const nonDuplicateStateArr = new Set(stateArr);
+    states = Array.from(nonDuplicateStateArr);
+  }
+  return states;
+};
+
 export const getCities = (arr: any): TDropdownItem[] => {
     let cities: TDropdownItem[] = [{label: '', value: ''}];
     const {PostOffice} = arr || {};
@@ -47,6 +63,22 @@ export const getCities = (arr: any): TDropdownItem[] => {
     });
     }
     return cities;
+};
+
+/**
+ * 
+ * @param arr 
+ * @returns Array<string> with city options
+ */
+export const getCities2 = (arr: any): string[] => {
+  let cities: string[] = [];
+  const {PostOffice} = arr || {};
+  if (PostOffice && Array.isArray(PostOffice)) {
+    const cityArr = PostOffice.map(e => `${e.District}`);
+    const nonDuplicateCityArr = new Set(cityArr);
+    cities = Array.from(nonDuplicateCityArr);
+  }
+  return cities;
 };
 
 export const getLocalities = (arr: any): string[] => {

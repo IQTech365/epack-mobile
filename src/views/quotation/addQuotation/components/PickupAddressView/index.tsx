@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {View, Text} from 'react-native';
 import styles from './style';
 import CollapsibleView from '../../../../../common/CollapsibleView';
@@ -12,6 +12,9 @@ import DropdownComponent from '../../../../../common/DropdownComponent';
 import liftStatusOptions from '../../../../../data/liftStatusOptions.json';
 import floorOptions from '../../../../../data/floorOptions.json';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
+import usePincodeHook from '../../../../../hooks/usePincodeHook';
+import {getCities2, getStates2} from '../../../../../utils/formatter';
+import { Validator } from '../../../../../utils/validation';
 interface Props {
   //
 }
@@ -25,7 +28,17 @@ const PickupAddressView: React.FC<Props> = ({}) => {
     setPickupAddress,
     setPickupCurrentFloor,
     setPickupLiftStatus,
+    resetError,
+    validateForm,
+    validForm,
+    setPickupPincodeError,
+    setDropPincodeError,
   } = useQuotationFormContextHook();
+
+  const {result, fetching, setPincode} = usePincodeHook(
+    () => {},
+    () => {},
+  );
 
   const pincodeInputCompRef = useRef(null);
   const addressInputCompRef = useRef(null);
@@ -34,6 +47,66 @@ const PickupAddressView: React.FC<Props> = ({}) => {
   const floorDropdownCompRef = useRef(null);
   const liftDropdownCompRef = useRef(null);
 
+  const [states, setStates] = useState<string[]>([]);
+  const [cities, setCities] = useState<string[]>([]);
+
+  const handlePincodeChange = useCallback(
+    (text: string) => {
+      setPickupPincode(text);
+      setPincode(text);
+    },
+    [state.pickup_pincode],
+  );
+
+  useEffect(() => {
+    if (result && result.Status != 'Error') {
+      setStates(getStates2(result));
+      setCities(getCities2(result));
+    }
+  }, [result]);
+
+  useEffect(() => {
+    if (
+      states.length > 0 &&
+      cities.length > 0 &&
+      stateDropdownCompRef &&
+      cityDropdownCompRef
+    ) {
+      //@ts-ignore
+      stateDropdownCompRef?.current?.setValue(states[0]);
+      setPickupState(states[0]);
+      //@ts-ignore
+      cityDropdownCompRef?.current?.setValue(cities[0]);
+      setPickupCity(cities[0]);
+    }
+  }, [states, cities]);
+
+  const validate = () => {
+    resetError();
+    if(Validator.isEmpty(state.pickup_pincode)) {
+      setPickupPincodeError('Pincode required')
+    }
+    if(Validator.isEmpty(state.drop_pincode)) {
+      setDropPincodeError('Pincode required')
+    }
+    validateForm(false);
+  }
+
+  useEffect(() => {
+    if(state.validate_form) {
+      validate();
+    }
+  }, [state.validate_form]);
+
+  useEffect(() => {
+    const hasErrors = Object.values(state.errors).some(e => e != '');
+    if(hasErrors) {
+      validForm(false);
+    } else {
+      validForm(true);
+    }
+  }, [state.errors.pickup_pincode, state.errors.drop_pincode]);
+
   return (
     <CollapsibleView title="PICKUP ADDRESS" collapsed={true}>
       <View>
@@ -41,7 +114,7 @@ const PickupAddressView: React.FC<Props> = ({}) => {
           <View style={styles.compContainer}>
             <Label text="Pincode" style={styles.label} required={true} />
             <Input
-              onChangeText={setPickupPincode}
+              onChangeText={handlePincodeChange}
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
@@ -49,16 +122,16 @@ const PickupAddressView: React.FC<Props> = ({}) => {
               //@ts-ignore
               ref={pincodeInputCompRef}
               //@ts-ignore
-              // error={showErrors && errors.pickupPincode}
+              error={state.errors.pickup_pincode}
               value={state?.pickup_pincode}
-              type="text"
+              inputType="numeric"
               required={true}
             />
           </View>
           <View style={styles.compContainer}>
             <Label text="State" style={styles.label} />
             <EpackDropdown
-              data={[]}
+              data={states}
               placeholder={'Select State'}
               hanldeData={setPickupState}
               //@ts-ignore
@@ -70,7 +143,7 @@ const PickupAddressView: React.FC<Props> = ({}) => {
         <View style={styles.fullWidthContainer}>
           <Label text="City" style={styles.label} />
           <EpackDropdown
-            data={[]}
+            data={cities}
             placeholder={'Select City'}
             hanldeData={setPickupCity}
             //@ts-ignore

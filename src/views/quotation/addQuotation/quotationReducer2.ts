@@ -2,6 +2,8 @@ import {Reducer} from 'react';
 import billingByOptions from '../../../data/billingByOptions.json';
 import shiftingTypes from '../../../data/shiftingType.json';
 import shiftingLuggages from '../../../data/shiftingLuggage.json';
+import liftStatusOptions from '../../../data/liftStatusOptions.json';
+import floorOptions from '../../../data/floorOptions.json';
 import {
   discountInQuotationOptions,
   gstInQuotationOptions,
@@ -115,6 +117,8 @@ export enum ACTION {
   EMPLOYEE_NAME_ERROR = 'EMPLOYEE_NAME_ERROR',
   AUTHORITY_MOBILE_NO_ERROR = 'AUTHORITY_MOBILE_NO_ERROR',
   EMPLOYEE_MOBILE_NO_ERROR = 'EMPLOYEE_MOBILE_NO_ERROR',
+  PICKUP_PINCODE_ERROR = 'PICKUP_PINCODE_ERROR',
+  DROP_PINCODE_ERROR = 'DROP_PINCODE_ERROR',
   //
   RESET_ERROR = 'RESET_ERROR',
   VALIDATE_FORM = 'VALIDATE_FORM',
@@ -243,6 +247,8 @@ export interface IState {
     authority_mobile_no: string;
     employee_name: string;
     employee_mobile_no: string;
+    pickup_pincode: string;
+    drop_pincode: string;
   };
   validate_form: boolean;
   valid_form: boolean;
@@ -283,15 +289,15 @@ export const initialState: IState = {
   pickup_state: '',
   pickup_city: '',
   pickup_address: '',
-  pickup_current_floor: '',
-  pickup_lift_status: '',
+  pickup_current_floor: floorOptions[3].label,
+  pickup_lift_status: liftStatusOptions[0].label,
   // **** Drop Address ****
   drop_pincode: '',
   drop_state: '',
   drop_city: '',
   drop_address: '',
-  drop_current_floor: '',
-  drop_lift_status: '',
+  drop_current_floor: floorOptions[3].label,
+  drop_lift_status: liftStatusOptions[0].label,
   // **** Freight Details ****
   freight_part_load: true,
   freight_full_load: false,
@@ -357,6 +363,8 @@ export const initialState: IState = {
     authority_mobile_no: '',
     employee_name: '',
     employee_mobile_no: '',
+    pickup_pincode: '',
+    drop_pincode: '',
   },
   validate_form: false,
   valid_form: false,
@@ -592,6 +600,16 @@ export const quotationReducer: Reducer<IState, IAction> = (
         ...state,
         errors: {...state.errors, employee_mobile_no: payload as string},
       };
+    case ACTION.PICKUP_PINCODE_ERROR:
+      return {
+        ...state,
+        errors: {...state.errors, pickup_pincode: payload as string},
+      };
+    case ACTION.DROP_PINCODE_ERROR:
+      return {
+        ...state,
+        errors: {...state.errors, drop_pincode: payload as string},
+      };
     case ACTION.RESET_ERROR:
       return {
         ...state,
@@ -603,6 +621,8 @@ export const quotationReducer: Reducer<IState, IAction> = (
           employee_name: '',
           authority_mobile_no: '',
           employee_mobile_no: '',
+          pickup_pincode: '',
+          drop_pincode: '',
         },
       };
     case ACTION.VALIDATE_FORM:
