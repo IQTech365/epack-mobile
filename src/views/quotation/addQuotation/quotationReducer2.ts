@@ -595,7 +595,7 @@ export const quotationReducer: Reducer<IState, IAction> = (
         ...state,
         errors: {...state.errors, authority_mobile_no: payload as string},
       };
-    case ACTION.AUTHORITY_MOBILE_NO_ERROR:
+    case ACTION.EMPLOYEE_MOBILE_NO_ERROR:
       return {
         ...state,
         errors: {...state.errors, employee_mobile_no: payload as string},

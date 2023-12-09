@@ -30,6 +30,8 @@ import {IGetQuotationRequest} from '../../../../interface/quotation/IGetQuotatio
 import Toast from 'react-native-toast-message';
 import billingByOptions from '../../../../data/billingByOptions.json';
 import Spinner from '../../../../common/Spinner';
+import { Alert } from 'react-native';
+import { Validator } from '../../../../utils/validation';
 
 interface Props {
   fromEnquiry?: boolean;
@@ -42,7 +44,20 @@ const AddQuotationForm: React.FC<Props> = ({
   enquiryId,
   navigation,
 }) => {
-  const {state, validateForm, validForm} = useQuotationFormContextHook();
+  const {
+    state,
+    validateForm,
+    validForm,
+    resetError,
+    setPartyNameError,
+    setPartyMobileNoError,
+    setCompanyNameError,
+    setEmployeeNameError,
+    setAuthorityMobileNoError,
+    setEmployeeMobileNoError,
+    setPickupPincodeError,
+    setDropPincodeError,
+  } = useQuotationFormContextHook();
   const companyId = useCompanyId();
   const authId = useAuthId();
   const dispatch = useAppDispatch();
@@ -194,21 +209,69 @@ const AddQuotationForm: React.FC<Props> = ({
     any_restrcition_for_loading_unloading: state.other_detail_4,
   };
 
-  const hanldeSubmit = () => {
-    validateForm(true);
-  };
-
-  useEffect(() => {
-    validateForm(false);
-    validForm(false);
-  }, []);
-
-  useEffect(() => {
-    if(state.valid_form) {
-      console.log('Quotation--payload--',JSON.stringify(payload, null, ' '),);
-      dispatch(addQuotationRequest(payload));
+  const doValidation = () => {
+    let valid:boolean = true;
+    const {
+      party_name,
+      party_mobile_no,
+      company_name,
+      employee_name,
+      authority_mobile_no,
+      employee_mobile_no,
+      pickup_pincode,
+      drop_pincode,
+      billing_by
+    } = state;
+    if(billing_by == billingByOptions[0].label) {
+      setCompanyNameError('');
+      setAuthorityMobileNoError('');
+      setEmployeeMobileNoError('');
+      setEmployeeNameError('');
+      if(Validator.isEmpty(party_name)) {
+        setPartyNameError('Party name required');
+        valid = false;
+      }
+      if(Validator.isEmpty(party_mobile_no)) {
+        setPartyMobileNoError('Mobile required');
+        valid = false;
+      }
     }
-  }, [state.valid_form]);
+    if(billing_by == billingByOptions[1].label) {
+      setPartyNameError('');
+      setPartyMobileNoError('');
+      if(Validator.isEmpty(company_name)) {
+        setCompanyNameError('Company name required');
+        valid = false;
+      }
+      if(Validator.isEmpty(authority_mobile_no) && Validator.isEmpty(employee_mobile_no)) {
+        setEmployeeMobileNoError('Either enter this Mobile No. or Authority Mobile No.');
+        setAuthorityMobileNoError('Either enter this Mobile No. or Employee Mobile No.');
+        valid = false;
+      }
+      if(Validator.isEmpty(employee_name)) {
+        setEmployeeNameError('Employee name required');
+        valid = false;
+      }
+    }
+    if(Validator.isEmpty(pickup_pincode)) {
+      setPickupPincodeError('Pincode required');
+      valid = false;
+    }
+    if(Validator.isEmpty(drop_pincode)) {
+      setDropPincodeError('Pincode required');
+      valid = false;
+    }
+    return valid;
+  }
+
+  const hanldeSubmit = () => {
+    resetError();
+    if(doValidation()) {
+      dispatch(addQuotationRequest(payload));
+    } else {
+      Alert.alert('Error in form');
+    }
+  };
 
   useEffect(() => {
     if (!addQuotationRequesting && addQuotationSuccess) {
@@ -217,6 +280,7 @@ const AddQuotationForm: React.FC<Props> = ({
         text1: 'Quotation',
         text2: 'Quotation has been added successfully',
       });
+      validateForm(false);
       dispatch(resetaddQuotationRequest());
       const payload: IGetQuotationRequest = {
         companyId: companyId,
@@ -224,6 +288,7 @@ const AddQuotationForm: React.FC<Props> = ({
       dispatch(getQuotationsRequest(payload));
       navigation?.goBack();
     } else if (!addQuotationRequesting && addQuotationFailure) {
+      validateForm(false);
       Toast.show({
         type: 'error',
         text1: 'Quotation',

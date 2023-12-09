@@ -6,16 +6,9 @@ import Label from '../../../../../common/Label';
 import Input from '../../../../../common/Input';
 import { COLOR_BLACK } from '../../../../../utils/colors';
 import Spacer from '../../../../../common/Spacer';
-import billingByOptions from '../../../../../data/billingByOptions.json';
-import { Validator } from '../../../../../utils/validation';
 
 interface Props {
   //
-}
-
-const enum Error {
-  PARTY_NAME = 'Party name required',
-  PARTY_MOB_NO = 'Mobile number required',
 }
 
 const BillingIndividualView: React.FC<Props> = ({}) => {
@@ -23,40 +16,9 @@ const BillingIndividualView: React.FC<Props> = ({}) => {
     state,
     setPartyName,
     setPartyMobileNo,
-    setPartyNameError,
-    setPartyMobileNoError,
-    resetError,
-    validateForm,
-    validForm,
   } = useQuotationFormContextHook();
   const partyNameInputCompRef = useRef(null);
   const partyMobileNoInputCompRef = useRef(null);
-
-  const validate = () => {
-    resetError();
-    if(Validator.isEmpty(state.party_name)) {
-      setPartyNameError(Error.PARTY_NAME)
-    }
-    if(Validator.isEmpty(state.party_mobile_no)) {
-      setPartyMobileNoError(Error.PARTY_MOB_NO);
-    }
-    validateForm(false);
-  }
-
-  useEffect(() => {
-    if(state.billing_by == billingByOptions[0].label && state.validate_form) {
-      validate();
-    }
-  }, [state.validate_form]);
-
-  useEffect(() => {
-    const hasErrors = Object.values(state.errors).some(e => e != '');
-    if(hasErrors) {
-      validForm(false);
-    } else {
-      validForm(true);
-    }
-  }, [state.errors.party_name, state.errors.party_mobile_no]);
 
   return (
     <>

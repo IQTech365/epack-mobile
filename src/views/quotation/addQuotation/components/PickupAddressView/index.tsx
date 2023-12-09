@@ -14,7 +14,7 @@ import floorOptions from '../../../../../data/floorOptions.json';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import usePincodeHook from '../../../../../hooks/usePincodeHook';
 import {getCities2, getStates2} from '../../../../../utils/formatter';
-import { Validator } from '../../../../../utils/validation';
+
 interface Props {
   //
 }
@@ -28,11 +28,6 @@ const PickupAddressView: React.FC<Props> = ({}) => {
     setPickupAddress,
     setPickupCurrentFloor,
     setPickupLiftStatus,
-    resetError,
-    validateForm,
-    validForm,
-    setPickupPincodeError,
-    setDropPincodeError,
   } = useQuotationFormContextHook();
 
   const {result, fetching, setPincode} = usePincodeHook(
@@ -80,32 +75,6 @@ const PickupAddressView: React.FC<Props> = ({}) => {
       setPickupCity(cities[0]);
     }
   }, [states, cities]);
-
-  const validate = () => {
-    resetError();
-    if(Validator.isEmpty(state.pickup_pincode)) {
-      setPickupPincodeError('Pincode required')
-    }
-    if(Validator.isEmpty(state.drop_pincode)) {
-      setDropPincodeError('Pincode required')
-    }
-    validateForm(false);
-  }
-
-  useEffect(() => {
-    if(state.validate_form) {
-      validate();
-    }
-  }, [state.validate_form]);
-
-  useEffect(() => {
-    const hasErrors = Object.values(state.errors).some(e => e != '');
-    if(hasErrors) {
-      validForm(false);
-    } else {
-      validForm(true);
-    }
-  }, [state.errors.pickup_pincode, state.errors.drop_pincode]);
 
   return (
     <CollapsibleView title="PICKUP ADDRESS" collapsed={true}>

@@ -9,18 +9,9 @@ import Spacer from "../../../../../common/Spacer";
 import DropdownComponent from "../../../../../common/DropdownComponent";
 import { TDropdownItem } from "../../../../../type/TDropdownItem";
 import approvalAuthorityOptions from '../../../../../data/ApprovalAuthorityOptions.json';
-import { Validator } from "../../../../../utils/validation";
-import billingByOptions from '../../../../../data/billingByOptions.json';
 
 interface Props {
     //
-}
-
-const enum Error {
-  COMPANY_NAME = 'Company name required',
-  EMPLOYEE_NAME = 'Employee name required',
-  AUTHORITY_MOB_NO = 'Either enter this mobile no. or employee mobile no.',
-  EMPLOYEE_MOB_NO = 'Either enter this mobile no. or authority mobile no.',
 }
 
 const BillingCompanyView: React.FC<Props> = ({}) => {
@@ -35,13 +26,6 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
       setEmployeeDesignation,
       setEmployeeMobileNo,
       setCompanyAddress,
-      resetError,
-      validateForm,
-      validForm,
-      setCompanyNameError,
-      setEmployeeNameError,
-      setAuthorityMobileNoError,
-      setEmployeeMobileNoError,
     } = useQuotationFormContextHook();
     
     const companyNameInputCompRef = useRef(null);
@@ -54,40 +38,6 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
     const employeeMobileNoInputCompRef = useRef(null);
     const companyAddressInputCompRef = useRef(null);
 
-    const validate = () => {
-      resetError();
-      if(Validator.isEmpty(state.company_name)) {
-        setCompanyNameError(Error.COMPANY_NAME)
-      }
-      if(Validator.isEmpty(state.employee_name)) {
-        setEmployeeNameError(Error.EMPLOYEE_NAME)
-      }
-      if(Validator.isEmpty(state.authority_mobile_no) && Validator.isEmpty(state.employee_mobile_no)) {
-        setAuthorityMobileNoError(Error.AUTHORITY_MOB_NO);
-        setEmployeeMobileNoError(Error.EMPLOYEE_MOB_NO);
-      }
-    }
-  
-    useEffect(() => {
-      if(state.billing_by == billingByOptions[1].label && state.validate_form) {
-        validate();
-      }
-    }, [state.validate_form]);
-  
-    useEffect(() => {
-      const hasErrors = Object.values(state.errors).some(e => e != '');
-      if (hasErrors) {
-        validForm(false);
-      } else {
-        validForm(true);
-      }
-    }, [
-      state.errors.company_name,
-      state.errors.employee_name,
-      state.errors.authority_mobile_no,
-      state.errors.employee_mobile_no,
-    ]);
-  
     return (
       <>
         <View style={styles.fullWidthContainer}>
@@ -134,7 +84,7 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
         </View>
         <Spacer height={4} />
         <View style={styles.fullWidthContainer}>
-          <Label text="Authority Mobile Number" style={styles.label} required={true} />
+          <Label text="Authority Mobile Number" style={styles.label} />
           <Input
             onChangeText={setAuthorityMobileNo}
             containerStyle={styles.inputContainer}
@@ -146,7 +96,6 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
             //@ts-ignore
             error={state.errors.authority_mobile_no}
             inputType="numeric"
-            required={true}
           />
         </View>
         <Spacer height={4} />
@@ -197,7 +146,7 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
         </View>
         <Spacer height={4} />
         <View style={styles.fullWidthContainer}>
-          <Label text="Employee Mobile Number" style={styles.label} required={true} />
+          <Label text="Employee Mobile Number" style={styles.label} />
           <Input
             onChangeText={setEmployeeMobileNo}
             containerStyle={styles.inputContainer}
@@ -209,7 +158,6 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
             //@ts-ignore
             error={state.errors.employee_mobile_no}
             inputType="numeric"
-            required={true}
           />
         </View>
         <Spacer height={4} />
