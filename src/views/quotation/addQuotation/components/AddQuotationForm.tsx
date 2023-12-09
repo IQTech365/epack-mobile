@@ -42,7 +42,7 @@ const AddQuotationForm: React.FC<Props> = ({
   enquiryId,
   navigation,
 }) => {
-  const {state, validateForm} = useQuotationFormContextHook();
+  const {state, validateForm, validForm} = useQuotationFormContextHook();
   const companyId = useCompanyId();
   const authId = useAuthId();
   const dispatch = useAppDispatch();
@@ -199,6 +199,11 @@ const AddQuotationForm: React.FC<Props> = ({
   };
 
   useEffect(() => {
+    validateForm(false);
+    validForm(false);
+  }, []);
+
+  useEffect(() => {
     console.log('Quotation--payload--',JSON.stringify(payload, null, ' '),);
     if(state.valid_form) {
       dispatch(addQuotationRequest(payload));
@@ -214,7 +219,6 @@ const AddQuotationForm: React.FC<Props> = ({
       });
       dispatch(resetaddQuotationRequest());
       const payload: IGetQuotationRequest = {
-        //Note: we can also pass branchId, authId, or id to get the quotation info.
         companyId: companyId,
       };
       dispatch(getQuotationsRequest(payload));
