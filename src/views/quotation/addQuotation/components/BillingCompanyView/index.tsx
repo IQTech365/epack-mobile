@@ -66,7 +66,6 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
         setAuthorityMobileNoError(Error.AUTHORITY_MOB_NO);
         setEmployeeMobileNoError(Error.EMPLOYEE_MOB_NO);
       }
-      validateForm(false);
     }
   
     useEffect(() => {

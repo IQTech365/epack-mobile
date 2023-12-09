@@ -108,4 +108,4 @@ export const GET_PACKING_MATERIALS = `/enquiry/get-packing-material`;
 
 // Templates
 export const GET_MONEY_RECEIPT_TEMPLATE_HTML = (templateId, receiptId) => `template/money-receipt-template/create/${templateId}/${receiptId}`;
-export const GET_QUOTATION_TEMPLATE_HTML = (templateId, receiptId) => `template/quotation/create/${templateId}/${receiptId}`;
+export const GET_QUOTATION_TEMPLATE_HTML = (templateId, receiptId) => `template/quotation-template/create/${templateId}/${receiptId}`;

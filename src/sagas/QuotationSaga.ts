@@ -2,11 +2,12 @@ import {takeLatest, put, call} from 'redux-saga/effects';
 import {PayloadAction} from '@reduxjs/toolkit';
 import * as QuotationService from '../service/QuotationService';
 import { IAddQuotationRequest } from '../interface/quotation/IAddQuotationRequest';
-import { aaddQuotationSuccess, addQuotationFailure, addQuotationRequest, getQuotationsFailure, getQuotationsRequest, getQuotationsSuccess, getSingleQuotationFailure, getSingleQuotationRequest, getSingleQuotationSuccess } from '../redux/slices/QuotationSlice';
+import { aaddQuotationSuccess, addQuotationFailure, addQuotationRequest, getQuotationHtmlFailure, getQuotationHtmlRequest, getQuotationHtmlSuccess, getQuotationsFailure, getQuotationsRequest, getQuotationsSuccess, getSingleQuotationFailure, getSingleQuotationRequest, getSingleQuotationSuccess } from '../redux/slices/QuotationSlice';
 import { IAddQuotationResponse } from '../interface/quotation/IAddQuotationResponse';
 import { IGetQuotationsResponse } from '../interface/quotation/IGetQuotationsResponse';
 import { IGetQuotationRequest } from '../interface/quotation/IGetQuotationRequest';
 import { IGetSingleQuotationResponse } from '../interface/quotation/IGetSingleQuotationResponse';
+import { IHtmlTemplateRequest, IHtmlTemplateResponse } from '../interface/order/templates/ITemplateResponse';
 
 export function* addQuotationSaga(action: PayloadAction<IAddQuotationRequest>) {
     try {
@@ -41,10 +42,22 @@ export function* getSingleQuotationSaga(action: PayloadAction<string>) {
     }
 }
 
+export function* getQuotationTemplateHtmlSaga(action: PayloadAction<IHtmlTemplateRequest>) {
+    try {
+        const {templateId, docId} = action.payload;
+        const response: IHtmlTemplateResponse = yield call(QuotationService.GetQuotationTemplateHtmlService, templateId, docId);
+        console.log('getQuotationTemplateHtmlSaga-response----', JSON.stringify(response));
+        yield put(getQuotationHtmlSuccess(response));
+    } catch (error) {
+        console.log('getQuotationTemplateHtmlSaga-error----', JSON.stringify(error));
+        yield put(getQuotationHtmlFailure(error));
+    }
+  }
+
 
 export function* watcherQuotationSaga() {
     yield takeLatest(addQuotationRequest.type, addQuotationSaga);
     yield takeLatest(getQuotationsRequest.type, getQuotationsSaga);
     yield takeLatest(getSingleQuotationRequest.type, getSingleQuotationSaga);
- 
+    yield takeLatest(getQuotationHtmlRequest.type, getQuotationTemplateHtmlSaga);
 }

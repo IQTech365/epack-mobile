@@ -11,7 +11,7 @@ import AddNew from '../../common/AddNew';
 import Header from '../../common/Header';
 import Spacer from '../../common/Spacer';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
-import {getQuotationsRequest} from '../../redux/slices/QuotationSlice';
+import {getQuotationHtmlRequest, getQuotationsRequest, resetGetQuotationHtmlRequest} from '../../redux/slices/QuotationSlice';
 import {
   EnquiryStackRoute,
   QuotationStackRoute,
@@ -33,6 +33,9 @@ import {
 import {IGetEnquiriesData} from '../../interface/enquiry/IGetEnquiriesResponse';
 import useCompanyId from '../../hooks/useCompanyId';
 import { sortItemByDate } from '../../utils/formatter';
+import { IHtmlTemplateRequest } from '../../interface/order/templates/ITemplateResponse';
+import ModalHOC from '../../common/ModalHOC';
+import TemplateViewer from '../../common/TemplateViewer';
 interface IQuotationPageViewProps {
   navigation: NavigationProp<any, any>;
 }
@@ -41,13 +44,19 @@ const downloadOptions = ['With Sign. & Stamp', 'Without Sign. & Stamp'];
 
 const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
   const dispatch = useAppDispatch();
-  const {quotations = [], getQuotationsRequesting} = useAppSelector(
-    state => state.Quotation,
-  );
+  const {
+    quotations = [],
+    getQuotationsRequesting,
+    quotationTemplateHtml,
+    getQuotationTemplateHtmlRequesting,
+    getQuotationTemplateHtmlSuccess,
+    getQuotationTemplateHtmlFailure,
+  } = useAppSelector(state => state.Quotation);
   const [downloadOption, setDownloadOption] = useState<string>('');
   const bottomSheetRef = useRef<BottomSheet>(null);
   const {data: quotationData} = quotations || {};
   const companyId = useCompanyId();
+  const [showPreview, setShowPreview] = useState<boolean>(false);
 
   const getTotalQuotations = () => {
     let _count = 0;
@@ -222,10 +231,49 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
     dispatch(getQuotationsRequest(payload));
   }, []);
 
+  useEffect(() => {
+    if (
+      !getQuotationTemplateHtmlRequesting &&
+      getQuotationTemplateHtmlSuccess
+    ) {
+      // if (!showShareModal && !shouldDownload) {
+      //   setShowPreview(true);
+      // }
+      setShowPreview(true);
+      dispatch(resetGetQuotationHtmlRequest());
+    } else if (
+      !getQuotationTemplateHtmlRequesting &&
+      getQuotationTemplateHtmlFailure
+    ) {
+      // if (!showShareModal && !shouldDownload) {
+      //   setShowPreview(false);
+      // }
+      setShowPreview(false);
+      dispatch(resetGetQuotationHtmlRequest());
+    }
+  }, [
+    getQuotationTemplateHtmlRequesting,
+    getQuotationTemplateHtmlSuccess,
+    getQuotationTemplateHtmlFailure,
+  ]);
+
   const downloadButtonStyle =
     downloadOption == ''
       ? styles.downloadDisabledButton
       : styles.downloadButton;
+
+  const _handleShowPreview = (docId:string) => {
+    const payload: IHtmlTemplateRequest = {
+      templateId: '656ef2cd9fe87039dbe3b040',
+      // docId: docId,
+      docId: '656f2dbafcf76d29998f1fae'
+    };
+    dispatch(getQuotationHtmlRequest(payload));
+  }
+
+  const _hanldeCloseShowPreviewModal = () => {
+    setShowPreview(false);
+  }
 
   return (
     <View style={styles.container}>
@@ -258,7 +306,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
             onPress={() => handleCardClick(item)}
             onShare={() => {}}
             onDownload={presentModal}
-            onPreview={() => {}}
+            onPreview={() => {_handleShowPreview(item.clientName)}}
             onEdit={() => handleEditClick(item)}
           />
         )}
@@ -301,6 +349,14 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
           </TouchableOpacity>
         </>
       </FormModal>
+      <ModalHOC
+            visible={showPreview}
+            onClose={_hanldeCloseShowPreviewModal}
+            title="Preview">
+            <View style={{flex: 1}}>
+              <TemplateViewer html={quotationTemplateHtml} />
+            </View>
+          </ModalHOC>
     </View>
   );
 };

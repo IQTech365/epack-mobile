@@ -204,8 +204,8 @@ const AddQuotationForm: React.FC<Props> = ({
   }, []);
 
   useEffect(() => {
-    console.log('Quotation--payload--',JSON.stringify(payload, null, ' '),);
     if(state.valid_form) {
+      console.log('Quotation--payload--',JSON.stringify(payload, null, ' '),);
       dispatch(addQuotationRequest(payload));
     }
   }, [state.valid_form]);
@@ -250,7 +250,7 @@ const AddQuotationForm: React.FC<Props> = ({
       <OtherDetailsView />
       <Spacer height={12} />
       <Button
-        text="PREVIEW"
+        text="CREATE"
         onPress={hanldeSubmit}
         disabled={false}
         style={styles.previewButtonStyle}

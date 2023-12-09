@@ -54,7 +54,6 @@ import { IGetOrdersRequest } from '../interface/order/IGetOrdersRequest';
 import { ISingleOrderRequest } from '../interface/order/ISingleOrderRequest';
 import { ISingleEnquiryResponse } from '../interface/enquiry/ISingleEnquiryResponse';
 import { IHtmlTemplateRequest, IHtmlTemplateResponse } from '../interface/order/templates/ITemplateResponse';
-import { getQuotationHtmlFailure, getQuotationHtmlRequest, getQuotationHtmlSuccess } from '../redux/slices/QuotationSlice';
 
 export function* addOrderSaga(action: PayloadAction<IAddOrderRequest>) {
   console.log('addOrderSaga--action--', JSON.stringify(action));
@@ -218,19 +217,6 @@ export function* createCarConditionSaga(
     }
   }
 
-  export function* getQuotationTemplateHtmlSaga(action: PayloadAction<IHtmlTemplateRequest>) {
-    try {
-        const {templateId, docId} = action.payload;
-        const response: IHtmlTemplateResponse = yield call(OrderService.GetQuotationTemplateHtmlService, templateId, docId);
-        console.log('getQuotationTemplateHtmlSaga-response----', JSON.stringify(response));
-        yield put(getQuotationHtmlSuccess(response));
-    } catch (error) {
-        console.log('getQuotationTemplateHtmlSaga-error----', JSON.stringify(error));
-        yield put(getQuotationHtmlFailure(error));
-    }
-  }
-  
-
 export function* watcherOrderSaga() {
   yield takeLatest(addOrderRequest.type, addOrderSaga);
   yield takeLatest(getOrdersRequest.type, getOrderListSaga);
@@ -244,5 +230,4 @@ export function* watcherOrderSaga() {
   yield takeLatest(getBiltyListRequest.type, getBiltyListSaga);
   yield takeLatest(getApprovedOrdersRequest.type, getApprovedOrderListSaga);
   yield takeLatest(getMoneyReceiptHtmlRequest.type, getMoneyReceiptTemplateHtmlSaga);
-  yield takeLatest(getQuotationHtmlRequest.type, getQuotationTemplateHtmlSaga);
 }

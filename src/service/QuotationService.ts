@@ -1,11 +1,12 @@
 import {AxiosResponse} from 'axios';
 import {Api} from '../http/Api';
-import {ADD_QUOTATION, GET_QUOTATION, GET_QUOTATION_LIST} from '../http/Endpoint';
+import {ADD_QUOTATION, GET_QUOTATION, GET_QUOTATION_LIST, GET_QUOTATION_TEMPLATE_HTML} from '../http/Endpoint';
 import {IAddQuotationRequest} from '../interface/quotation/IAddQuotationRequest';
 import {IAddQuotationResponse} from '../interface/quotation/IAddQuotationResponse';
 import { IGetQuotationRequest } from '../interface/quotation/IGetQuotationRequest';
 import { IGetQuotationsResponse } from '../interface/quotation/IGetQuotationsResponse';
 import { IGetSingleQuotationResponse } from '../interface/quotation/IGetSingleQuotationResponse';
+import { IHtmlTemplateResponse } from '../interface/order/templates/ITemplateResponse';
 
 export const AddQuotationService = async (payload: IAddQuotationRequest,): Promise<IAddQuotationResponse> => {
   const api = Api.getInstance();
@@ -25,4 +26,10 @@ export const GetSingleQuotationService = async (payload: string): Promise<IGetSi
   
   const api = Api.getInstance();
   return await api.get<IGetSingleQuotationResponse>(GET_QUOTATION(payload));
+}
+
+export const GetQuotationTemplateHtmlService = async (templateId:string, docId:string): Promise<IHtmlTemplateResponse> => {
+  console.log('GetQuotationTemplateHtmlService--payload--', JSON.stringify(templateId));
+  const api = Api.getInstance();
+  return await api.get<IHtmlTemplateResponse>(GET_QUOTATION_TEMPLATE_HTML(templateId, docId));
 }
