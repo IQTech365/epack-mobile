@@ -769,6 +769,101 @@ const useQuotationFormContext = () => {
     [state.freight_full_load],
   );
 
+  // **** Errors ****
+  const setPartyNameError = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.PARTY_NAME_ERROR,
+        payload: text,
+      });
+    },
+    [state.errors.party_name],
+  );
+
+  const setPartyMobileNoError = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.PARTY_MOBILE_NO_ERROR,
+        payload: text,
+      });
+    },
+    [state.errors.party_mobile_no],
+  );
+
+  const setCompanyNameError = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.COMPANY_NAME_ERROR,
+        payload: text,
+      });
+    },
+    [state.errors.company_name],
+  );
+
+  const setEmployeeNameError = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.EMPLOYEE_NAME_ERROR,
+        payload: text,
+      });
+    },
+    [state.errors.employee_name],
+  );
+
+  const setEmployeeMobileNoError = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.EMPLOYEE_MOBILE_NO_ERROR,
+        payload: text,
+      });
+    },
+    [state.errors.employee_mobile_no],
+  );
+
+  const setAuthorityMobileNoError = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.AUTHORITY_MOBILE_NO_ERROR,
+        payload: text,
+      });
+    },
+    [state.errors.authority_mobile_no],
+  );
+
+  const resetError = useCallback(() => {
+    dispatch({
+      type: ACTION.RESET_ERROR,
+      payload: '',
+    });
+  }, [
+    state.party_name,
+    state.party_mobile_no,
+    state.company_name,
+    state.employee_name,
+    state.authority_mobile_no,
+    state.employee_mobile_no,
+  ]);
+
+  const validateForm = useCallback(
+    (validate:boolean) => {
+      dispatch({
+        type: ACTION.VALIDATE_FORM,
+        payload: validate,
+      });
+    },
+    [state.validate_form],
+  );
+
+  const validForm = useCallback(
+    (valid:boolean) => {
+      dispatch({
+        type: ACTION.VALID_FORM,
+        payload: valid,
+      });
+    },
+    [state.valid_form],
+  );
+
   return {
     state,
     // **** Basic Details ****
@@ -869,6 +964,17 @@ const useQuotationFormContext = () => {
     // *** Reset ****
     resetAllPartLoad,
     resetAllFullLoad,
+    // *** Errors ****
+    setPartyNameError,
+    setPartyMobileNoError,
+    setCompanyNameError,
+    setEmployeeNameError,
+    setAuthorityMobileNoError,
+    setEmployeeMobileNoError,
+    // **** Reset Errors ****
+    resetError,
+    validateForm,
+    validForm,
   };
 };
 
@@ -974,6 +1080,17 @@ const initQuotationFormContextState: UseQuotationFormContextType = {
   // **** Reset ****
   resetAllPartLoad:() => {},
   resetAllFullLoad:() => {},
+  // *** Errors ****
+  setPartyNameError: (text: string) => {},
+  setPartyMobileNoError: (text: string) => {},
+  setCompanyNameError: (text: string) => {},
+  setEmployeeNameError: (text: string) => {},
+  setAuthorityMobileNoError: (text: string) => {},
+  setEmployeeMobileNoError: (text: string) => {},
+  // **** Reset Errors ****
+  resetError: () => {},
+  validateForm: (validate:boolean) => {},
+  validForm: (valid: boolean) => {},
 };
 
 const QuotationFormContext = createContext<UseQuotationFormContextType>(

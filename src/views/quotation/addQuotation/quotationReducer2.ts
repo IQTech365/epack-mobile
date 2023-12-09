@@ -2,7 +2,12 @@ import {Reducer} from 'react';
 import billingByOptions from '../../../data/billingByOptions.json';
 import shiftingTypes from '../../../data/shiftingType.json';
 import shiftingLuggages from '../../../data/shiftingLuggage.json';
-import {discountInQuotationOptions, gstInQuotationOptions, options, options2} from './components/FreightDetailsView/components/utils';
+import {
+  discountInQuotationOptions,
+  gstInQuotationOptions,
+  options,
+  options2,
+} from './components/FreightDetailsView/components/utils';
 
 export enum ACTION {
   SHIFTING_TYPE = 'SHIFTING_TYPE',
@@ -103,16 +108,27 @@ export enum ACTION {
   //
   RESET_ALL_PART_LOAD = 'RESET_ALL_PART_LOAD',
   RESET_ALL_FULL_LOAD = 'RESET_ALL_FULL_LOAD',
+  //
+  PARTY_NAME_ERROR = 'PARTY_NAME_ERROR',
+  PARTY_MOBILE_NO_ERROR = 'PARTY_MOBILE_NO_ERROR',
+  COMPANY_NAME_ERROR = 'COMPANY_NAME_ERROR',
+  EMPLOYEE_NAME_ERROR = 'EMPLOYEE_NAME_ERROR',
+  AUTHORITY_MOBILE_NO_ERROR = 'AUTHORITY_MOBILE_NO_ERROR',
+  EMPLOYEE_MOBILE_NO_ERROR = 'EMPLOYEE_MOBILE_NO_ERROR',
+  //
+  RESET_ERROR = 'RESET_ERROR',
+  VALIDATE_FORM = 'VALIDATE_FORM',
+  VALID_FORM = 'VALID_FORM',
 }
 
 export type TInsuranceDetails = {
-  status: string,
-  shifting_luggage: string,
-  insurance_type: string,
-  insurance_charge_percent: string,
-  insurance_gst_percent: string,
-  insurance_goods_value: string,
-}
+  status: string;
+  shifting_luggage: string;
+  insurance_type: string;
+  insurance_charge_percent: string;
+  insurance_gst_percent: string;
+  insurance_goods_value: string;
+};
 
 export interface IOtherCharge {
   particular_name: string;
@@ -219,6 +235,17 @@ export interface IState {
   other_detail_2: string;
   other_detail_3: string;
   other_detail_4: string;
+  // **** ERRORS ****
+  errors: {
+    party_name: string;
+    party_mobile_no: string;
+    company_name: string;
+    authority_mobile_no: string;
+    employee_name: string;
+    employee_mobile_no: string;
+  };
+  validate_form: boolean;
+  valid_form: boolean;
 }
 
 export interface IAction {
@@ -322,6 +349,17 @@ export const initialState: IState = {
   other_detail_2: '',
   other_detail_3: '',
   other_detail_4: '',
+  // **** Errors ****
+  errors: {
+    party_name: '',
+    party_mobile_no: '',
+    company_name: '',
+    authority_mobile_no: '',
+    employee_name: '',
+    employee_mobile_no: '',
+  },
+  validate_form: false,
+  valid_form: false,
 };
 
 export const quotationReducer: Reducer<IState, IAction> = (
@@ -523,6 +561,59 @@ export const quotationReducer: Reducer<IState, IAction> = (
         loading_charge_full_load: '',
         unloading_charge_full_load: '',
         unpacking_charge_full_load: '',
+      };
+    case ACTION.PARTY_NAME_ERROR:
+      return {
+        ...state,
+        errors: {...state.errors, party_name: payload as string},
+      };
+    case ACTION.PARTY_MOBILE_NO_ERROR:
+      return {
+        ...state,
+        errors: {...state.errors, party_mobile_no: payload as string},
+      };
+    case ACTION.COMPANY_NAME_ERROR:
+      return {
+        ...state,
+        errors: {...state.errors, company_name: payload as string},
+      };
+    case ACTION.EMPLOYEE_NAME_ERROR:
+      return {
+        ...state,
+        errors: {...state.errors, employee_name: payload as string},
+      };
+    case ACTION.AUTHORITY_MOBILE_NO_ERROR:
+      return {
+        ...state,
+        errors: {...state.errors, authority_mobile_no: payload as string},
+      };
+    case ACTION.AUTHORITY_MOBILE_NO_ERROR:
+      return {
+        ...state,
+        errors: {...state.errors, employee_mobile_no: payload as string},
+      };
+    case ACTION.RESET_ERROR:
+      return {
+        ...state,
+        errors: {
+          ...state.errors,
+          party_name: '',
+          party_mobile_no: '',
+          company_name: '',
+          employee_name: '',
+          authority_mobile_no: '',
+          employee_mobile_no: '',
+        },
+      };
+    case ACTION.VALIDATE_FORM:
+      return {
+        ...state,
+        validate_form: payload as boolean,
+      };
+    case ACTION.VALID_FORM:
+      return {
+        ...state,
+        valid_form: payload as boolean,
       };
     default:
       return state;

@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {View, Text} from 'react-native';
 import styles from './style';
 import CollapsibleView from '../../../../../common/CollapsibleView';
@@ -32,6 +32,8 @@ const BasicDetails: React.FC<Props> = ({}) => {
     setQuotationNo,
     setDateOfQuotation,
     setDateOfMoving,
+    setPartyName,
+    setPartyMobileNo,
   } = useQuotationFormContextHook();
 
   const shiftingTypeDropdownCompRef = useRef(null);
@@ -40,6 +42,13 @@ const BasicDetails: React.FC<Props> = ({}) => {
   const dateOfQuotationCompRef = useRef(null);
   const dateOfMovingCompRef = useRef(null);
   const billingByDropdownCompRef = useRef(null);
+
+  useEffect(() => {
+    if(state.billing_by == billingByOptions[1].label) {
+      setPartyName('');
+      setPartyMobileNo('');
+    }
+  }, [state.billing_by]);
 
   return (
     <CollapsibleView title="BASIC DETAILS" collapsed={false}>

@@ -42,7 +42,7 @@ const AddQuotationForm: React.FC<Props> = ({
   enquiryId,
   navigation,
 }) => {
-  const {state} = useQuotationFormContextHook();
+  const {state, validateForm} = useQuotationFormContextHook();
   const companyId = useCompanyId();
   const authId = useAuthId();
   const dispatch = useAppDispatch();
@@ -195,9 +195,15 @@ const AddQuotationForm: React.FC<Props> = ({
   };
 
   const hanldeSubmit = () => {
-    console.log('AddQuotationForm--payload--',JSON.stringify(payload, null, ' '),);
-    dispatch(addQuotationRequest(payload));
+    validateForm(true);
   };
+
+  useEffect(() => {
+    console.log('Quotation--payload--',JSON.stringify(payload, null, ' '),);
+    if(state.valid_form) {
+      dispatch(addQuotationRequest(payload));
+    }
+  }, [state.valid_form]);
 
   useEffect(() => {
     if (!addQuotationRequesting && addQuotationSuccess) {
