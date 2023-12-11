@@ -14,8 +14,9 @@ import ListViewIcon from '../../../../../images/icons/list_view_icon.svg';
 import ListViewIcon2 from '../../../../../images/icons/list_view_icon2.svg';
 import CreateIcon from '../../../../../images/icons/create_icon.svg';
 import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
-import { getBiltyListRequest } from '../../../../../redux/slices/OrderSlice';
+import {getBiltyListRequest} from '../../../../../redux/slices/OrderSlice';
 import Spinner from '../../../../../common/Spinner';
+import {BiltyFormContextProvider} from '../../../../../provider/BiltyFormContextProvider';
 
 interface IBiltyViewProps {
   orderId: string;
@@ -23,7 +24,9 @@ interface IBiltyViewProps {
 
 const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
   const dispatch = useAppDispatch();
-  const {biltyList, getBiltyListRequesting} = useAppSelector(state => state.Order);
+  const {biltyList, getBiltyListRequesting} = useAppSelector(
+    state => state.Order,
+  );
 
   const [showBiltyList, setShowBiltyList] = useState<boolean>(false);
   const [createNewBilty, setCreateNewBilty] = useState<boolean>(true);
@@ -56,7 +59,11 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
 
   const showForm = () => {
     if (createNewBilty) {
-      return <BiltyFormView orderId={orderId} />;
+      return (
+        <BiltyFormContextProvider>
+          <BiltyFormView orderId={orderId} />
+        </BiltyFormContextProvider>
+      );
     }
     return null;
   };
@@ -68,7 +75,10 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
           contentContainerStyle={{alignItems: 'center', paddingVertical: 10}}
           data={[]}
           refreshControl={
-            <RefreshControl refreshing={getBiltyListRequesting} onRefresh={handleOnRefresh} />
+            <RefreshControl
+              refreshing={getBiltyListRequesting}
+              onRefresh={handleOnRefresh}
+            />
           }
           //   renderItem={({item, index}) => (
           //     <QuotationListItem item={item} index={1} onPress={() => {}} />
