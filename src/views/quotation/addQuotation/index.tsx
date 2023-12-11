@@ -31,7 +31,11 @@ const AddQuotationView: React.FC<Props> = ({
         <View style={styles.container}>
           {showHeader ? <Header label={headerText} canGoBack={true} /> : null}
           <Spacer height={4} />
-          <AddQuotationForm fromEnquiry={fromEnquiry} enquiryId={enquiryId} navigation={navigation} />
+          <AddQuotationForm
+            fromEnquiry={fromEnquiry}
+            enquiryId={enquiryId}
+            navigation={navigation}
+          />
         </View>
       </AvoidSoftInputViewHOC>
     </QuotationFormContextProvider>
