@@ -7,15 +7,6 @@ import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../../../common/Spacer';
 import styles from './style';
 import Toast from 'react-native-toast-message';
-
-import {
-  formatDate,
-  formatDate2,
-  formatDate3,
-  formatDate4,
-  getCities,
-  getStates,
-} from '../../../../../utils/formatter';
 import {ICreateBiltyRequest} from '../../../../../interface/order/ICreateBiltyRequest';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import Button from '../../../../../common/Button';
@@ -33,7 +24,6 @@ import MaterialDetails from './components/MaterialDetails';
 import FreightDetails from './components/FreightDetails';
 import InsuranceDetails from './components/InsuranceDetails';
 import DemurageDetails from './components/DemurrageDetails';
-import OtherDetails from './components/OtherDetails';
 import {useBiltyFormContextHook} from '../../../../../provider/BiltyFormContextProvider';
 import useAuthId from '../../../../../hooks/useAuthId';
 import {IMaterial} from './biltyReducer2';
@@ -44,13 +34,13 @@ interface IBiltyFormViewProps {
 
 const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
   const {state} = useBiltyFormContextHook();
+  const dispatch = useAppDispatch();
   const {
     createBiltyRequesting,
     createBiltySuccess,
     createBiltyError,
     createBiltyFailure,
   } = useAppSelector(state => state.Order);
-  const dispatch2 = useAppDispatch();
 
   const companyId = useCompanyId();
   const authId = useAuthId();
@@ -215,7 +205,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
       addedBy: authId,
     };
     console.log(payload, 'payload Bility req');
-    // dispatch2(createBiltyRequest(payload));
+    dispatch(createBiltyRequest(payload));
   }, []);
 
   useEffect(() => {
@@ -225,14 +215,14 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
         text1: 'Create Bilty',
         text2: 'Bilty has been created successfully',
       });
-      dispatch2(resetCreateBiltyRequest());
+      dispatch(resetCreateBiltyRequest());
     } else if (!createBiltyRequesting && createBiltyError) {
       Toast.show({
         type: 'error',
         text1: 'Create Bilty',
         text2: 'Error in creating Bilty. Please try again!',
       });
-      dispatch2(resetCreateBiltyRequest());
+      dispatch(resetCreateBiltyRequest());
     }
   }, [createBiltyRequesting, createBiltySuccess, createBiltyFailure]);
 
