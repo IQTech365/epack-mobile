@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   itemContainer: {
     width: width * 0.44,
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    // alignItems: 'flex-start',
     alignSelf: 'center',
   },
   label: {
@@ -120,6 +120,22 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '400',
   },
+  iconStyle: {
+    borderColor: 'red',
+    borderRadius: 0,
+    width: 18,
+    height: 18,
+  },
+  innerIconStyle: {
+    borderWidth: 1,
+    borderRadius: 0,
+    width: 18,
+    height: 18,
+  },
+  textStyle2:{
+    fontFamily: 'JosefinSans-Regular',
+    textDecorationLine: 'none',
+  }
 });
 
 export default styles;

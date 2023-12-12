@@ -24,6 +24,7 @@ export interface IQuotationItem {
   quotationAmount: string;
   quotationDate: string;
   phoneNumber: string;
+  id:string;
 }
 
 interface IQuotationListItemProps {

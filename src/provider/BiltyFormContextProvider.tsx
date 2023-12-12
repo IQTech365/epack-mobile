@@ -409,6 +409,15 @@ const useBiltyFormContext = () => {
     },
     [state.type_of_moving],
   );
+  const setAddMaterial = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.ADD_MATERIAL,
+        payload: text,
+      });
+    },
+    [state.remark],
+  );
   const setMaterials = useCallback(
     (materials: IMaterial[]) => {
       dispatch({
@@ -742,6 +751,7 @@ const useBiltyFormContext = () => {
     // **** Material Details ****
     setTypeOfMoving,
     setMaterials,
+    setAddMaterial,
     setRiskType,
     // **** Freight Details ****
     setFreightType,
@@ -833,6 +843,7 @@ const initBiltyFormContextState: UseBiltyFormContextType = {
   // **** Material Details ****
   setTypeOfMoving: (text: string) => {},
   setMaterials: (materials: IMaterial[]) => {},
+  setAddMaterial: (text: string) => {},
   setRiskType: (text: string) => {},
   // **** Freight Details ****
   setFreightType: (text: string) => {},

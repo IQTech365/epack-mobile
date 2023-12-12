@@ -53,6 +53,7 @@ export enum ACTION {
   // Material Details
   TYPE_OF_MOVING = 'TYPE_OF_MOVING',
   MATERIALS = 'MATERIALS',
+  ADD_MATERIAL = 'ADD_MATERIAL',
   // Risk Type
   RISK_TYPE = 'RISK_TYPE',
   // Freight Details
@@ -168,6 +169,7 @@ export interface IState {
   // **** Material Details ****
   type_of_moving: string;
   materials: IMaterial[];
+  add_material:string,
   risk_type: string;
 
   // **** Freight Details ****
@@ -278,6 +280,7 @@ export const initialState: IState = {
   // **** Material Details ****
   type_of_moving: '',
   materials: [],
+  add_material: 'NO',
   risk_type: '',
 
   // **** Freight Details ****
@@ -434,6 +437,8 @@ export const biltyReducer: Reducer<IState, IAction> = (
       return {...state, type_of_moving: payload as string};
     case ACTION.MATERIALS:
       return {...state, materials: payload as IMaterial[]};
+      case ACTION.ADD_MATERIAL:
+      return {...state, add_material: payload as string};
     case ACTION.RISK_TYPE:
       return {...state, risk_type: payload as string};
 

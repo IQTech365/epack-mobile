@@ -1,3 +1,15 @@
+export interface IMaterial {
+  name: string;
+  noOfArticles: string;
+  packingType: string;
+  HSNCode: string;
+  billNumber: string;
+  actualWeight: string;
+  applicableWeight: string;
+  unit: string;
+  valueOfGoods: string;
+}
+
 export interface ICreateBiltyRequest {
   companyId: string;
   enquiryId: string;
@@ -77,19 +89,7 @@ export interface ICreateBiltyRequest {
   };
   materialsType: string;
   addMaterialsStatus: string;
-  materials: [
-    {
-      name: string;
-      noOfArticles: string;
-      packingType: string;
-      HSNCode: string;
-      billNumber: string;
-      actualWeight: string;
-      applicableWeight: string;
-      unit: string;
-      valueOfGoods: string;
-    },
-  ];
+  materials: IMaterial[];
   riskType: string;
   liabilityOfTax: string;
   insuranceStatus: string;

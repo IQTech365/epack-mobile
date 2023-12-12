@@ -171,6 +171,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
           quotationAmount: quotationAmount,
           quotationDate: quotationData,
           phoneNumber: _getMobile(quotation),
+          id: quotation._id,
         };
         return item;
       });
@@ -263,8 +264,10 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
       : styles.downloadButton;
 
   const _handleShowPreview = (docId:string) => {
+    console.log('docId----', docId);
+    
     const payload: IHtmlTemplateRequest = {
-      templateId: '656ef2cd9fe87039dbe3b040',
+      templateId: '657716243e3f2f19e00f4db4',//657716243e3f2f19e00f4db4
       // docId: docId,
       docId: '656f2dbafcf76d29998f1fae'
     };
@@ -306,7 +309,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
             onPress={() => handleCardClick(item)}
             onShare={() => {}}
             onDownload={presentModal}
-            onPreview={() => {_handleShowPreview(item.clientName)}}
+            onPreview={() => {_handleShowPreview(item.id)}}
             onEdit={() => handleEditClick(item)}
           />
         )}
