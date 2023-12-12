@@ -46,6 +46,8 @@ export enum ACTION {
   SEAL_NO = 'SEAL_NO',
   IN_DATE = 'IN_DATE',
   OUT_DATE = 'OUT_DATE',
+  TRANSIT_DAYS = 'TRANSIT_DAYS',
+  EXPECTED_DATE_OF_DELIVERY = 'EXPECTED_DATE_OF_DELIVERY',
   // E-Way Bill Details
   E_WAY_BILL_NO = 'E_WAY_BILL_NO',
   GENERATED_ON = 'GENERATED_ON',
@@ -54,6 +56,7 @@ export enum ACTION {
   TYPE_OF_MOVING = 'TYPE_OF_MOVING',
   MATERIALS = 'MATERIALS',
   ADD_MATERIAL = 'ADD_MATERIAL',
+  LIABILITY_OF_TAX = 'LIABILITY_OF_TAX',
   // Risk Type
   RISK_TYPE = 'RISK_TYPE',
   // Freight Details
@@ -160,6 +163,8 @@ export interface IState {
   seal_no: string;
   in_date: string;
   out_date: string;
+  transit_days: string;
+  expected_date_of_delivery: string;
 
   // **** E-Way Bill Details ****
   e_way_bill_no: string;
@@ -169,8 +174,9 @@ export interface IState {
   // **** Material Details ****
   type_of_moving: string;
   materials: IMaterial[];
-  add_material:string,
+  add_material: string;
   risk_type: string;
+  liability_of_tax:string,
 
   // **** Freight Details ****
   freight_type: string;
@@ -271,6 +277,8 @@ export const initialState: IState = {
   seal_no: '',
   in_date: '',
   out_date: '',
+  transit_days: '',
+  expected_date_of_delivery: '',
 
   // **** E-Way Bill Details ****
   e_way_bill_no: '',
@@ -282,6 +290,7 @@ export const initialState: IState = {
   materials: [],
   add_material: 'NO',
   risk_type: '',
+  liability_of_tax:'',
 
   // **** Freight Details ****
   freight_type: '',
@@ -423,6 +432,10 @@ export const biltyReducer: Reducer<IState, IAction> = (
       return {...state, in_date: payload as string};
     case ACTION.OUT_DATE:
       return {...state, out_date: payload as string};
+    case ACTION.TRANSIT_DAYS:
+      return {...state, transit_days: payload as string};
+    case ACTION.EXPECTED_DATE_OF_DELIVERY:
+      return {...state, expected_date_of_delivery: payload as string};
 
     // **** E-Way Bill Details ****
     case ACTION.E_WAY_BILL_NO:
@@ -437,11 +450,12 @@ export const biltyReducer: Reducer<IState, IAction> = (
       return {...state, type_of_moving: payload as string};
     case ACTION.MATERIALS:
       return {...state, materials: payload as IMaterial[]};
-      case ACTION.ADD_MATERIAL:
+    case ACTION.ADD_MATERIAL:
       return {...state, add_material: payload as string};
     case ACTION.RISK_TYPE:
       return {...state, risk_type: payload as string};
-
+    case ACTION.LIABILITY_OF_TAX:
+        return {...state, liability_of_tax: payload as string};
     // **** Freight Details ****
     case ACTION.FREIGHT_TYPE:
       return {...state, freight_type: payload as string};

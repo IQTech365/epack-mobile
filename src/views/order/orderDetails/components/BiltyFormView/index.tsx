@@ -1,18 +1,13 @@
 import React, {
   useCallback,
   useEffect,
-  useReducer,
-  useRef,
-  useState,
 } from 'react';
 import {View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../../../common/Spacer';
-import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import styles from './style';
 import Toast from 'react-native-toast-message';
 
-import {initialState, biltyReducer} from './biltyReducer';
 import {
   formatDate,
   formatDate2,
@@ -28,10 +23,6 @@ import {
   createBiltyRequest,
   resetCreateBiltyRequest,
 } from '../../../../../redux/slices/OrderSlice';
-import usePincodeHook, {
-  PINCODE_REQUEST_KEY,
-} from '../../../../../hooks/usePincodeHook';
-
 import useCompanyId from '../../../../../hooks/useCompanyId';
 import BasicDetails from './components/BasicDetails';
 import ConsignerDetails from './components/ConsignerDetails';
@@ -52,10 +43,7 @@ interface IBiltyFormViewProps {
 }
 
 const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
-  const [reducerState, dispatch] = useReducer(biltyReducer, initialState);
   const {state} = useBiltyFormContextHook();
-  const [pincodeRequestKey, setPincodeRequestKey] =
-    useState<PINCODE_REQUEST_KEY>(PINCODE_REQUEST_KEY.BILTY_CONSIGNER_ADDRESS);
   const {
     createBiltyRequesting,
     createBiltySuccess,
@@ -227,9 +215,8 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
       addedBy: authId,
     };
     console.log(payload, 'payload Bility req');
-
-    dispatch2(createBiltyRequest(payload));
-  }, [dispatch2, reducerState]);
+    // dispatch2(createBiltyRequest(payload));
+  }, []);
 
   useEffect(() => {
     if (!createBiltyRequesting && createBiltySuccess) {
@@ -270,8 +257,6 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
         <InsuranceDetails />
         <Spacer height={4} />
         <DemurageDetails />
-        <Spacer height={4} />
-        <OtherDetails />
         <Spacer height={8} />
         <Button
           text="CREATE"

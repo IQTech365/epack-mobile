@@ -93,7 +93,8 @@ const styles = StyleSheet.create({
     width: width * 0.9,
   },
   textStyle: {
-    color: COLOR_WHITE,
+    color: COLOR_BLACK,
+    textDecorationLine: 'none',
   },
   previewButtonStyle: {
     backgroundColor: COLOR_BLUE,
@@ -119,6 +120,48 @@ const styles = StyleSheet.create({
     color: COLOR_BLACK,
     fontSize: 14,
     fontWeight: '400',
+  },
+  iconStyle:{
+    borderRadius: 12,
+    width: 22,
+    height: 22,
+  },
+  innerIconStyle:{
+    borderWidth: 1,
+    borderRadius: 12,
+    width: 22,
+    height: 22,
+  },
+  iconStyle2:{
+    borderRadius: 0,
+    width: 22,
+    height: 22,
+  },
+  innerIconStyle2:{
+    borderWidth: 1,
+    borderRadius: 0,
+    width: 22,
+    height: 22,
+  },
+  textStyle2: {
+    fontFamily: 'JosefinSans-Regular',
+    textDecorationLine: 'none',
+  },
+  optionContainer: {
+    width: width * 0.9,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    alignSelf: 'center',
+  },
+  textContainerStyle: {
+    paddingLeft: 0,
+    marginLeft: 6,
+  },
+  style: {
+    marginRight: 8,
+    marginBottom: 15,
   },
 });
 

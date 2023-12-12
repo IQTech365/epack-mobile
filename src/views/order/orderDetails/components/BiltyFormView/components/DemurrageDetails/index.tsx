@@ -6,9 +6,10 @@ import Label from '../../../../../../../common/Label';
 import Input from '../../../../../../../common/Input';
 import Spacer from '../../../../../../../common/Spacer';
 import {COLOR_BLACK} from '../../../../../../../utils/colors';
-import DatePickerComponent from '../../../../../../../common/DatePickerComponent';
 import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
-import {formatDate4} from '../../../../../../../utils/formatter';
+import DropdownComponent from '../../../../../../../common/DropdownComponent';
+import {TDropdownItem} from '../../../../../../../type/TDropdownItem';
+import {demurrageChargeRateOptions, perDayOptions, perHourOptions} from './utils';
 
 const DemurageDetails: React.FC<{}> = ({}) => {
   const {state, setDemurrageCharge, setRate, setChargeApplicableAfter} =
@@ -30,18 +31,19 @@ const DemurageDetails: React.FC<{}> = ({}) => {
         <View style={styles.elementContainer}>
           <View style={styles.itemContainer}>
             <Label text="Rate" style={styles.label} />
-            <Input
-              onChangeText={setRate}
-              containerStyle={styles.inputContainer}
-              inputStyle={styles.input}
-              selectionColor={COLOR_BLACK}
+            <DropdownComponent
+              data={demurrageChargeRateOptions}
+              onSelect={(item: TDropdownItem) => {
+                setRate(item.label);
+              }}
             />
           </View>
           <View style={styles.itemContainer}>
             <Label text="Charge Applicable After" style={styles.label} />
-            <DatePickerComponent
-              onDateSelect={(date: Date) => {
-                setChargeApplicableAfter(formatDate4(date));
+            <DropdownComponent
+              data={state.rate == demurrageChargeRateOptions[0].label ? perHourOptions : perDayOptions}
+              onSelect={(item: TDropdownItem) => {
+                setChargeApplicableAfter(item.label);
               }}
             />
           </View>

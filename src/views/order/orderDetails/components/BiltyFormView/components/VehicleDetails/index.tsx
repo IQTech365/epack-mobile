@@ -27,6 +27,8 @@ const VehicleDetails: React.FC<{}> = ({}) => {
     setSealNo,
     setInDate,
     setOutDate,
+    setTransitDays,
+    setExpectedDateOfDelivery,
   } = useBiltyFormContextHook();
 
   return (
@@ -44,7 +46,7 @@ const VehicleDetails: React.FC<{}> = ({}) => {
         <Spacer height={4} />
         <View style={styles.elementContainer}>
           <View style={styles.itemContainer}>
-            <Label text="Vehicle Type" style={styles.label} />
+            <Label text="Vehicle Load Size" style={styles.label} />
             <DropdownComponent
               data={vehicleTypeOptions}
               onSelect={(item: TDropdownItem) => {
@@ -139,6 +141,26 @@ const VehicleDetails: React.FC<{}> = ({}) => {
             <DatePickerComponent
               onDateSelect={(date: Date) => {
                 setOutDate(formatDate4(date));
+              }}
+            />
+          </View>
+        </View>
+        <Spacer height={4} />
+        <View style={styles.elementContainer}>
+          <View style={styles.itemContainer}>
+            <Label text="Transit Days" style={styles.label} />
+            <Input
+              onChangeText={setTransitDays}
+              containerStyle={styles.inputContainer}
+              inputStyle={styles.input}
+              selectionColor={COLOR_BLACK}
+            />
+          </View>
+          <View style={styles.itemContainer}>
+            <Label text="Expected Date of Delivery" style={styles.label} />
+            <DatePickerComponent
+              onDateSelect={(date: Date) => {
+                setExpectedDateOfDelivery(formatDate4(date));
               }}
             />
           </View>

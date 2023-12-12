@@ -369,6 +369,24 @@ const useBiltyFormContext = () => {
     },
     [state.out_date],
   );
+  const setTransitDays = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.TRANSIT_DAYS,
+        payload: text,
+      });
+    },
+    [state.transit_days],
+  );
+  const setExpectedDateOfDelivery = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.EXPECTED_DATE_OF_DELIVERY,
+        payload: text,
+      });
+    },
+    [state.expected_date_of_delivery],
+  );
 
   // **** E-Way Bill Details ****
   const setEWayBillNo = useCallback(
@@ -436,6 +454,16 @@ const useBiltyFormContext = () => {
       });
     },
     [state.risk_type],
+  );
+
+  const setLiabilityOfTax = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.LIABILITY_OF_TAX,
+        payload: text,
+      });
+    },
+    [state.liability_of_tax],
   );
 
   // **** Freight Details ****
@@ -744,6 +772,8 @@ const useBiltyFormContext = () => {
     setSealNo,
     setInDate,
     setOutDate,
+    setTransitDays,
+    setExpectedDateOfDelivery,
     // **** E-Way Bill Details ****
     setEWayBillNo,
     setGeneratedOn,
@@ -753,6 +783,7 @@ const useBiltyFormContext = () => {
     setMaterials,
     setAddMaterial,
     setRiskType,
+    setLiabilityOfTax,
     // **** Freight Details ****
     setFreightType,
     setFreightCharge,
@@ -836,6 +867,8 @@ const initBiltyFormContextState: UseBiltyFormContextType = {
   setSealNo: (text: string) => {},
   setInDate: (text: string) => {},
   setOutDate: (text: string) => {},
+  setTransitDays: (text: string) => {},
+  setExpectedDateOfDelivery: (text: string) => {},
   // **** E-Way Bill Details ****
   setEWayBillNo: (text: string) => {},
   setGeneratedOn: (text: string) => {},
@@ -845,6 +878,7 @@ const initBiltyFormContextState: UseBiltyFormContextType = {
   setMaterials: (materials: IMaterial[]) => {},
   setAddMaterial: (text: string) => {},
   setRiskType: (text: string) => {},
+  setLiabilityOfTax: (text: string) => {},
   // **** Freight Details ****
   setFreightType: (text: string) => {},
   setFreightCharge: (text: string) => {},

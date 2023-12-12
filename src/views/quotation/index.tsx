@@ -268,8 +268,8 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
     
     const payload: IHtmlTemplateRequest = {
       templateId: '657716243e3f2f19e00f4db4',//657716243e3f2f19e00f4db4
-      // docId: docId,
-      docId: '656f2dbafcf76d29998f1fae'
+      docId: docId,
+      // docId: '656f2dbafcf76d29998f1fae'
     };
     dispatch(getQuotationHtmlRequest(payload));
   }
