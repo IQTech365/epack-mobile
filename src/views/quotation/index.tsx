@@ -11,7 +11,11 @@ import AddNew from '../../common/AddNew';
 import Header from '../../common/Header';
 import Spacer from '../../common/Spacer';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
-import {getQuotationHtmlRequest, getQuotationsRequest, resetGetQuotationHtmlRequest} from '../../redux/slices/QuotationSlice';
+import {
+  getQuotationHtmlRequest,
+  getQuotationsRequest,
+  resetGetQuotationHtmlRequest,
+} from '../../redux/slices/QuotationSlice';
 import {
   EnquiryStackRoute,
   QuotationStackRoute,
@@ -30,12 +34,12 @@ import {
   IEnquiry,
   IGetQuotationData,
 } from '../../interface/quotation/IGetQuotationsResponse';
-import {IGetEnquiriesData} from '../../interface/enquiry/IGetEnquiriesResponse';
 import useCompanyId from '../../hooks/useCompanyId';
-import { sortItemByDate } from '../../utils/formatter';
-import { IHtmlTemplateRequest } from '../../interface/order/templates/ITemplateResponse';
+import {sortItemByDate} from '../../utils/formatter';
+import {IHtmlTemplateRequest} from '../../interface/order/templates/ITemplateResponse';
 import ModalHOC from '../../common/ModalHOC';
 import TemplateViewer from '../../common/TemplateViewer';
+import {startShare} from '../../utils/utility';
 interface IQuotationPageViewProps {
   navigation: NavigationProp<any, any>;
 }
@@ -56,7 +60,9 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const {data: quotationData} = quotations || {};
   const companyId = useCompanyId();
-  const [showPreview, setShowPreview] = useState<boolean>(false);
+  const [openPreview, setOpenPreview] = useState<boolean>(false);
+  const [openShare, setOpenShare] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   const getTotalQuotations = () => {
     let _count = 0;
@@ -70,87 +76,87 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
     return _count;
   };
 
-  const _getClientName = (item:IGetQuotationData) => {
-    let name:string = 'NA';
+  const _getClientName = (item: IGetQuotationData) => {
+    let name: string = 'NA';
     //@ts-ignore
     const {enquiries} = item;
-    if(enquiries && Array.isArray(enquiries) && enquiries.length > 0) {
-      const enquiry:IEnquiry = enquiries[0];
-      if(enquiry?.partyName) {
+    if (enquiries && Array.isArray(enquiries) && enquiries.length > 0) {
+      const enquiry: IEnquiry = enquiries[0];
+      if (enquiry?.partyName) {
         name = enquiry?.partyName;
         //@ts-ignore
-      } else if(enquiry.billingDetails?.companyName) {
+      } else if (enquiry.billingDetails?.companyName) {
         //@ts-ignore
         name = enquiry.billingDetails?.companyName;
         //@ts-ignore
-      } else if(enquiry.billingDetails?.authorityPersonName) {
+      } else if (enquiry.billingDetails?.authorityPersonName) {
         //@ts-ignore
         name = enquiry.billingDetails?.authorityPersonName;
         //@ts-ignore
-      } else if(enquiry.billingDetails?.employeeName) {
+      } else if (enquiry.billingDetails?.employeeName) {
         //@ts-ignore
         name = enquiry.billingDetails?.employeeName;
       }
     }
     return name;
-  }
+  };
 
-  const _getFromDestination = (item:IGetQuotationData) => {
-    let destination:string = 'NA';
+  const _getFromDestination = (item: IGetQuotationData) => {
+    let destination: string = 'NA';
     const {enquiries} = item;
-    if(enquiries && Array.isArray(enquiries) && enquiries.length > 0) {
-      const enquiry:IEnquiry = enquiries[0];
-      if(enquiry?.pickupAddress.city) {
+    if (enquiries && Array.isArray(enquiries) && enquiries.length > 0) {
+      const enquiry: IEnquiry = enquiries[0];
+      if (enquiry?.pickupAddress.city) {
         destination = enquiry?.pickupAddress.city;
       }
     }
     return destination;
-  }
+  };
 
-  const _getToDestination = (item:IGetQuotationData) => {
-    let destination:string = 'NA';
+  const _getToDestination = (item: IGetQuotationData) => {
+    let destination: string = 'NA';
     const {enquiries} = item;
-    if(enquiries && Array.isArray(enquiries) && enquiries.length > 0) {
-      const enquiry:IEnquiry = enquiries[0];
-      if(enquiry?.dropAddress.city) {
+    if (enquiries && Array.isArray(enquiries) && enquiries.length > 0) {
+      const enquiry: IEnquiry = enquiries[0];
+      if (enquiry?.dropAddress.city) {
         destination = enquiry?.dropAddress.city;
       }
     }
     return destination;
-  }
+  };
 
-  const _getShiftingType = (item:IGetQuotationData) => {
-    let shiftingType:string = 'NA';
+  const _getShiftingType = (item: IGetQuotationData) => {
+    let shiftingType: string = 'NA';
     const {enquiries} = item;
-    if(enquiries && Array.isArray(enquiries) && enquiries.length > 0) {
-      const enquiry:IEnquiry = enquiries[0];
-      if(enquiry?.shiftingType) {
+    if (enquiries && Array.isArray(enquiries) && enquiries.length > 0) {
+      const enquiry: IEnquiry = enquiries[0];
+      if (enquiry?.shiftingType) {
         shiftingType = enquiry?.shiftingType;
       }
     }
     return shiftingType;
-  }
+  };
 
-  const _getMobile = (item:IGetQuotationData) => {
-    let mobile:string = 'NA';
+  const _getMobile = (item: IGetQuotationData) => {
+    let mobile: string = 'NA';
     //@ts-ignore
     const {enquiries} = item;
-    if(enquiries && Array.isArray(enquiries) && enquiries.length > 0) {
-      const enquiry:IEnquiry = enquiries[0];
-      if(enquiry?.mobile) {
+    if (enquiries && Array.isArray(enquiries) && enquiries.length > 0) {
+      const enquiry: IEnquiry = enquiries[0];
+      if (enquiry?.mobile) {
         mobile = enquiry?.mobile;
         //@ts-ignore
-      } else if(enquiry.billingDetails?.authority_mobile_number) {
+      } else if (enquiry.billingDetails?.authority_mobile_number) {
         //@ts-ignore
         mobile = enquiry.billingDetails?.authority_mobile_number;
         //@ts-ignore
-      } else if(enquiry.billingDetails?.employee_mobile_number) {
+      } else if (enquiry.billingDetails?.employee_mobile_number) {
         //@ts-ignore
         mobile = enquiry.billingDetails?.employee_mobile_number;
       }
     }
     return mobile;
-  }
+  };
 
   const transformQuotationData = () => {
     let _data: IQuotationItem[] = [];
@@ -183,25 +189,32 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
   };
 
   const handleCardClick = (quotation: IQuotationItem) => {
-    const item: IGetQuotationData = quotationData?.find((e:IGetQuotationData) => e.quotationNumber == quotation.quotationNo);
-    if(item !== undefined && item.enquiries.length > 0) {
-      const enquiry:IEnquiry = item.enquiries[0];
-      console.log('handleCardClick--enquiry--', JSON.stringify(enquiry));
+    const item: IGetQuotationData = quotationData?.find(
+      (e: IGetQuotationData) => e.quotationNumber == quotation.quotationNo,
+    );
+    if (item !== undefined && item.enquiries.length > 0) {
+      const enquiry: IEnquiry = item.enquiries[0];
       //@ts-ignore
-      navigation.jumpTo(TabRoute.EnquiryStack, {screen: EnquiryStackRoute.EnquiryDetails, params: {enquiryId: enquiry._id, item: enquiry},});
+      navigation.jumpTo(TabRoute.EnquiryStack, {
+        screen: EnquiryStackRoute.EnquiryDetails,
+        params: {enquiryId: enquiry._id, item: enquiry},
+      });
     }
-    
     // const item: IGetEnquiriesData = quotationData[index]?.enquiries[0];
     // navigation.navigate(TabRoute.EnquiryStack, {
     //   screen: EnquiryStackRoute.EnquiryDetails,
     //   params: {enquiryId: item._id, item: item},
     // });
-    
   };
 
   const handleEditClick = (quotation: IQuotationItem) => {
-    const item: IGetQuotationData = quotationData?.find((e:IGetQuotationData) => e.quotationNumber == quotation.quotationNo);
-    navigation.navigate(QuotationStackRoute.AddQuotation, {item: item, isEdit: true});
+    const item: IGetQuotationData = quotationData?.find(
+      (e: IGetQuotationData) => e.quotationNumber == quotation.quotationNo,
+    );
+    navigation.navigate(QuotationStackRoute.AddQuotation, {
+      item: item,
+      isEdit: true,
+    });
   };
 
   const presentModal = () => {
@@ -226,7 +239,6 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
 
   useEffect(() => {
     const payload: IGetQuotationRequest = {
-      //Note: we can also pass branchId, authId, or id to get the quotation info.
       companyId: companyId,
     };
     dispatch(getQuotationsRequest(payload));
@@ -237,19 +249,23 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
       !getQuotationTemplateHtmlRequesting &&
       getQuotationTemplateHtmlSuccess
     ) {
-      // if (!showShareModal && !shouldDownload) {
-      //   setShowPreview(true);
-      // }
-      setShowPreview(true);
+      if (openPreview) {
+        setShowModal(true);
+      } else if (openShare) {
+        startShare(
+          quotationTemplateHtml,
+          'QuotationDocument',
+          dispatch(resetGetQuotationHtmlRequest()),
+        );
+      }
       dispatch(resetGetQuotationHtmlRequest());
     } else if (
       !getQuotationTemplateHtmlRequesting &&
       getQuotationTemplateHtmlFailure
     ) {
-      // if (!showShareModal && !shouldDownload) {
-      //   setShowPreview(false);
-      // }
-      setShowPreview(false);
+      setShowModal(false);
+      setOpenPreview(false);
+      setOpenShare(false);
       dispatch(resetGetQuotationHtmlRequest());
     }
   }, [
@@ -263,20 +279,32 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
       ? styles.downloadDisabledButton
       : styles.downloadButton;
 
-  const _handleShowPreview = (docId:string) => {
-    console.log('docId----', docId);
-    
+  const _handleShowPreview = (docId: string) => {
+    setOpenPreview(true);
+    setOpenShare(false);
     const payload: IHtmlTemplateRequest = {
-      templateId: '657716243e3f2f19e00f4db4',//657716243e3f2f19e00f4db4
+      templateId: '657716243e3f2f19e00f4db4',
       docId: docId,
-      // docId: '656f2dbafcf76d29998f1fae'
     };
     dispatch(getQuotationHtmlRequest(payload));
-  }
+  };
+
+  const handleShareClick = async (docId: string) => {
+    setOpenPreview(false);
+    setOpenShare(true);
+    const payload: IHtmlTemplateRequest = {
+      templateId: '657716243e3f2f19e00f4db4',
+      docId: docId,
+    };
+    dispatch(getQuotationHtmlRequest(payload));
+  };
 
   const _hanldeCloseShowPreviewModal = () => {
-    setShowPreview(false);
-  }
+    dispatch(resetGetQuotationHtmlRequest());
+    setShowModal(false);
+    setOpenPreview(false);
+    setOpenShare(false);
+  };
 
   return (
     <View style={styles.container}>
@@ -307,9 +335,13 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
             item={item}
             index={index}
             onPress={() => handleCardClick(item)}
-            onShare={() => {}}
+            onShare={() => {
+              handleShareClick(item.id);
+            }}
             onDownload={presentModal}
-            onPreview={() => {_handleShowPreview(item.id)}}
+            onPreview={() => {
+              _handleShowPreview(item.id);
+            }}
             onEdit={() => handleEditClick(item)}
           />
         )}
@@ -353,13 +385,13 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
         </>
       </FormModal>
       <ModalHOC
-            visible={showPreview}
-            onClose={_hanldeCloseShowPreviewModal}
-            title="Preview">
-            <View style={{flex: 1}}>
-              <TemplateViewer html={quotationTemplateHtml} />
-            </View>
-          </ModalHOC>
+        visible={showModal}
+        onClose={_hanldeCloseShowPreviewModal}
+        title="Preview">
+        <View style={{flex: 1}}>
+          <TemplateViewer html={quotationTemplateHtml} />
+        </View>
+      </ModalHOC>
     </View>
   );
 };

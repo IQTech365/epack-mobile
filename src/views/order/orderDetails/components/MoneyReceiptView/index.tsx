@@ -30,8 +30,8 @@ import {IHtmlTemplateRequest} from '../../../../../interface/order/templates/ITe
 import ModalHOC from '../../../../../common/ModalHOC';
 import MoneyReceiptTemplate from './MoneyReceiptTemplate';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
-import Share from 'react-native-share';
-import RNFS from 'react-native-fs';
+import { startShare } from '../../../../../utils/utility';
+import TemplateViewer from '../../../../../common/TemplateViewer';
 
 interface IMoneyReceiptViewProps {
   orderId: string;
@@ -51,7 +51,6 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
     getMoneyReceiptTemplateHtmlFailure,
   } = useAppSelector(state => state.Order);
   const bottomSheetRef = useRef<BottomSheet>(null);
-  // console.log('MoneyReceiptList--', JSON.stringify(moneyReceiptList));
   const {data: MoneyReceiptData = []} = moneyReceiptList || {};
   const downloadOptions = ['With Sign. & Stamp', 'Without Sign. & Stamp'];
   const [showMoneyReceiptList, setShowMoneyReceiptList] =
@@ -61,8 +60,9 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
   const [downloadOption, setDownloadOption] = useState<string>('');
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [editData, setEditData] = useState<any>([]);
-  const [showPreview, setShowPreview] = useState<boolean>(false);
-  const [showShareModal, setShowShareModal] = useState<boolean>(false);
+  const [openPreview, setOpenPreview] = useState<boolean>(false);
+  const [openShare, setOpenShare] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState<boolean>(false);
   const [shouldDownload, setShouldDownload] = useState<boolean>(false);
   const [moneyReceiptId, setMoneyReceiptId] = useState<string>('');
 
@@ -83,7 +83,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
 
   const dismissModal = () => {
     setDownloadOption('');
-    setShowShareModal(false);
+    setOpenShare(false);
     setShouldDownload(false);
     bottomSheetRef.current?.close();
   };
@@ -99,13 +99,14 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
 
   const handleShowPreviewModalClose = () => {
     dispatch(clearMoneyReceiptHtmlDocument());
-    setShowPreview(false);
+    setOpenPreview(false);
     
   };
 
   const handleShareClick = async (moneyReceiptId: string) => {
-    setShowShareModal(true);
+    setOpenPreview(false);
     setShouldDownload(false);
+    setOpenShare(true);
     const payload: IHtmlTemplateRequest = {
       templateId: '6561d45bec79daeb0af1b793',
       docId: moneyReceiptId,
@@ -114,7 +115,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
   }
 
   const handleDownloadClick = async () => {
-    setShowShareModal(false);
+    setOpenShare(false);
     setShouldDownload(true);
     const payload: IHtmlTemplateRequest = {
       templateId: '6561d45bec79daeb0af1b793',
@@ -133,37 +134,10 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
     console.log('file--', JSON.stringify(file));
   };
 
-  const startShare = async () => {
-    let options = {
-      html: moneyReceiptTemplateHtml,
-      fileName: 'MoneyReceipt',
-      directory: 'Documents',
-    };
-    let file = await RNHTMLtoPDF.convert(options);
-    console.log('file--', JSON.stringify(file));
-    // const fileExists = await RNFS.exists(file.filePath);
-    // if(!fileExists) {
-    //   console.log('Filed does not exists');
-    //   return;
-    // }
-
-    const shareOptions = {
-      file: 'pdf',
-      message: 'Money Receipt Document',
-      url: `file://${file.filePath}`,
-    }
-    Share.open(shareOptions)
-    .then((res) => {
-      console.log(res);
-    })
-    .catch((err) => {
-      dispatch(clearMoneyReceiptHtmlDocument());
-      console.log(err);
-    });
-  }
-
   const handlePreviewClick = (moneyReceiptId: string) => {
-    setShowShareModal(false);
+    setOpenShare(false);
+    setShouldDownload(false);
+    setOpenPreview(true);
     const payload: IHtmlTemplateRequest = {
       templateId: '6561d45bec79daeb0af1b793',
       docId: moneyReceiptId,
@@ -180,17 +154,18 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
       !getMoneyReceiptTemplateHtmlRequesting &&
       getMoneyReceiptTemplateHtmlSuccess
     ) {
-      if (!showShareModal && !shouldDownload) {
-        setShowPreview(true);
+      if (openPreview) {
+        setShowModal(true);
+      } else if(openShare) {
+        startShare(moneyReceiptTemplateHtml, 'MoneyReceipt', dispatch(resetGetMoneyReceiptHtmlRequest()));
       }
-      dispatch(resetGetMoneyReceiptHtmlRequest());
     } else if (
       !getMoneyReceiptTemplateHtmlRequesting &&
       getMoneyReceiptTemplateHtmlFailure
     ) {
-      if (!showShareModal && !shouldDownload) {
-        setShowPreview(false);
-      }
+      setOpenPreview(false);
+      setOpenShare(false);
+      setShouldDownload(false);
       dispatch(resetGetMoneyReceiptHtmlRequest());
     }
   }, [
@@ -198,15 +173,6 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
     getMoneyReceiptTemplateHtmlSuccess,
     getMoneyReceiptTemplateHtmlFailure,
   ]);
-
-  useEffect(() => {
-    if(showShareModal) {
-      startShare();
-    } else if(shouldDownload) {
-      console.log('shouldDownload--- called');
-      startDownload();
-    }
-  }, [moneyReceiptTemplateHtml]);
 
   const showEmptyView = () => {
     return (
@@ -233,10 +199,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
     return null;
   };
 
-  const downloadButtonStyle =
-    downloadOption == ''
-      ? styles.downloadDisabledButton
-      : styles.downloadButton;
+  const downloadButtonStyle = downloadOption == '' ? styles.downloadDisabledButton : styles.downloadButton;
 
   const showList = () => {
     if (showMoneyReceiptList) {
@@ -310,11 +273,11 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
             </>
           </FormModal>
           <ModalHOC
-            visible={showPreview}
+            visible={showModal}
             onClose={handleShowPreviewModalClose}
             title="Preview">
             <View style={{flex: 1}}>
-              <MoneyReceiptTemplate />
+              <TemplateViewer html={moneyReceiptTemplateHtml} />
             </View>
           </ModalHOC>
         </View>
