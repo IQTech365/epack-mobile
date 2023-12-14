@@ -27,6 +27,10 @@ import DemurageDetails from './components/DemurrageDetails';
 import {useBiltyFormContextHook} from '../../../../../provider/BiltyFormContextProvider';
 import useAuthId from '../../../../../hooks/useAuthId';
 import {IMaterial} from './biltyReducer2';
+import { getVehicleSizeRequest } from '../../../../../redux/slices/VehicleSlice';
+import Spinner from '../../../../../common/Spinner';
+import { getUnitTypeRequest } from '../../../../../redux/slices/ProfileSettingSlice';
+import { getPackingTypesRequest } from '../../../../../redux/slices/CommonSlice';
 
 interface IBiltyFormViewProps {
   orderId: string | undefined;
@@ -204,8 +208,18 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
       remarks: state.remark,
       addedBy: authId,
     };
-    console.log(payload, 'payload Bility req');
+    console.log('BiltyForm-payload',JSON.stringify(payload));
     dispatch(createBiltyRequest(payload));
+  }, []);
+
+  const {getVehicleSizeRequesting} = useAppSelector(state => state.Vehicle);
+  const {getunitTypeRequesting} = useAppSelector(state => state.Setting);
+  const {packingTypesRequesting} = useAppSelector(state => state.Vehicle);
+
+  useEffect(() => {
+    dispatch(getVehicleSizeRequest());
+    dispatch(getUnitTypeRequest());
+    dispatch(getPackingTypesRequest());
   }, []);
 
   useEffect(() => {
@@ -256,6 +270,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
           textStyle={styles.textStyle}
         />
         <Spacer height={8} />
+        <Spinner show={getVehicleSizeRequesting || getunitTypeRequesting || packingTypesRequesting} />
       </View>
     </AvoidSoftInputViewHOC>
   );

@@ -109,3 +109,6 @@ export const GET_PACKING_MATERIALS = `/enquiry/get-packing-material`;
 // Templates
 export const GET_MONEY_RECEIPT_TEMPLATE_HTML = (templateId, receiptId) => `template/money-receipt-template/create/${templateId}/${receiptId}`;
 export const GET_QUOTATION_TEMPLATE_HTML = (templateId, receiptId) => `template/create-quotation-template/${templateId}/${receiptId}`;
+
+// Packing Types
+export const GET_PACKING_TYPES = `/shifting-management/packing-type/getAll`;

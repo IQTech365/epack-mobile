@@ -4,25 +4,23 @@ import styles from './style';
 import CollapsibleView from '../../../../../../../common/CollapsibleView';
 import Spacer from '../../../../../../../common/Spacer';
 import Label from '../../../../../../../common/Label';
-import BouncyCheckboxGroup, {
-  ICheckboxButton,
-} from 'react-native-bouncy-checkbox-group';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import Input from '../../../../../../../common/Input';
 import {COLOR_BLACK, COLOR_BLUE} from '../../../../../../../utils/colors';
 import DropdownComponent from '../../../../../../../common/DropdownComponent';
 import Button from '../../../../../../../common/Button';
-import packingMaterilUnitOptions from '../../../../../../../data/packingMaterialUnitOptions.json';
 import DeleteIcon from '../../../../../../../images/icons/delete.svg';
 import {IMaterial} from '../../biltyReducer2';
 import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
-import packingMaterilOptions from '../../../../../../../data/packingMaterialOptions.json';
 import {TDropdownItem} from '../../../../../../../type/TDropdownItem';
 import {
   liabilityOfTaxOptions,
   riskTypeOptions,
   typeOfMovingOptions,
 } from './utils';
+import { useAppSelector } from '../../../../../../../redux/hooks';
+import { IUnitType } from '../../../../../../../interface/setting/unitType/IGetunitTypeResponse';
+import { IPackingType } from '../../../../../../../interface/common/common';
 
 const MaterialDetails: React.FC<{}> = ({}) => {
   const {
@@ -42,6 +40,33 @@ const MaterialDetails: React.FC<{}> = ({}) => {
   const [applicableWeight, setApplicableWeight] = useState<string>('');
   const [unit, setUnit] = useState<string>('');
   const [valueOfGoods, setValueOfGoods] = useState<string>('');
+
+  const {unitType} = useAppSelector(state => state.Setting);
+  const {packingTypes} = useAppSelector(state => state.Common);
+  
+  const _getUnitTypes = () => {
+    let unitTypes:TDropdownItem[] = [];
+    const {data} = unitType || {};
+    if(data && Array.isArray(data) && data.length > 0) {
+      unitTypes = data.map((d:IUnitType) => {
+        const item:TDropdownItem = {label: d.unitType, value: d.unitType};
+        return item;
+      });
+    }
+    return unitTypes;
+  }
+
+  const _getPackingTypes = () => {
+    let packTypes:TDropdownItem[] = [];
+    const {data} = packingTypes || {};
+    if(data && Array.isArray(data) && data.length > 0) {
+      packTypes = data.map((d:IPackingType) => {
+        const item:TDropdownItem = {label: d.packingType, value: d.packingType};
+        return item;
+      });
+    }
+    return packTypes;
+  }
 
   const handleDeleteMaterialItem = (index: number) => {
     const clone = [...state.materials];
@@ -226,7 +251,7 @@ const MaterialDetails: React.FC<{}> = ({}) => {
               <View style={styles.itemContainer}>
                 <Label text="Packing Type" style={styles.label} />
                 <DropdownComponent
-                  data={packingMaterilOptions}
+                  data={_getPackingTypes()}
                   onSelect={(item: TDropdownItem) => {
                     setPackingType(item.label);
                   }}
@@ -282,7 +307,7 @@ const MaterialDetails: React.FC<{}> = ({}) => {
               <View style={styles.itemContainer}>
                 <Label text="Units" style={styles.label} />
                 <DropdownComponent
-                  data={packingMaterilUnitOptions}
+                  data={_getUnitTypes()}
                   onSelect={(item: TDropdownItem) => {
                     setUnit(item.label);
                   }}

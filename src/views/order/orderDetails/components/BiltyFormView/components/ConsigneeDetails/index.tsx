@@ -147,7 +147,7 @@ const ConsigneeDetails: React.FC<{}> = ({}) => {
           <View style={styles.itemContainer}>
             <Label text="State" style={styles.label} />
             <EpackDropdown
-              data={[]}
+              data={states}
               placeholder={'Select State'}
               hanldeData={setConsigneeState}
               //@ts-ignore
@@ -157,7 +157,7 @@ const ConsigneeDetails: React.FC<{}> = ({}) => {
           <View style={styles.itemContainer}>
             <Label text="City" style={styles.label} />
             <EpackDropdown
-              data={[]}
+              data={cities}
               placeholder={'Select City'}
               hanldeData={setConsigneeCity}
               //@ts-ignore

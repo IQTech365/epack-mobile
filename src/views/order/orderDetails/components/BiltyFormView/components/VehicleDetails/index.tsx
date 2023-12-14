@@ -11,7 +11,8 @@ import {COLOR_BLACK} from '../../../../../../../utils/colors';
 import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
 import {TDropdownItem} from '../../../../../../../type/TDropdownItem';
 import {formatDate4} from '../../../../../../../utils/formatter';
-import vehicleTypeOptions from '../../../../../../../data/vehicleTypeOptions.json';
+import { useAppSelector } from '../../../../../../../redux/hooks';
+import { IVehicleSize } from '../../../../../../../interface/vehicle/IGetVehicleSizeResponse';
 
 const VehicleDetails: React.FC<{}> = ({}) => {
   const {
@@ -31,6 +32,20 @@ const VehicleDetails: React.FC<{}> = ({}) => {
     setExpectedDateOfDelivery,
   } = useBiltyFormContextHook();
 
+  const {vehicleSizeData} = useAppSelector(state => state.Vehicle);
+
+  const _getVehicleSizes = () => {
+    let vehicleSizes:TDropdownItem[] = [];
+    const {data} = vehicleSizeData || {};
+    if(data && Array.isArray(data) && data.length > 0) {
+      vehicleSizes = data.map((d:IVehicleSize) => {
+        const item:TDropdownItem = {label: d.vehicleSize, value: d.vehicleSize};
+        return item;
+      });
+    }
+    return vehicleSizes;
+  }
+
   return (
     <CollapsibleView title="VEHICLE DETAILS" collapsed={true}>
       <View>
@@ -48,7 +63,7 @@ const VehicleDetails: React.FC<{}> = ({}) => {
           <View style={styles.itemContainer}>
             <Label text="Vehicle Load Size" style={styles.label} />
             <DropdownComponent
-              data={vehicleTypeOptions}
+              data={_getVehicleSizes()}
               onSelect={(item: TDropdownItem) => {
                 setVehicleType(item.label);
               }}
