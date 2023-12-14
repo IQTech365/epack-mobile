@@ -9,6 +9,7 @@ import Spacer from '../../../../../../../common/Spacer';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
 import EpackDropdown from '../../../../../../../common/DropdownComponent2';
+import LoadingAddressView from './LoadingAddressView';
 
 const ConsignerDetails: React.FC<{}> = ({}) => {
   const {
@@ -29,58 +30,6 @@ const ConsignerDetails: React.FC<{}> = ({}) => {
 
   const stateDropdwonCompRef = useRef(null);
   const cityDropdownCompRef = useRef(null);
-  const loadingStateDropdwonCompRef = useRef(null);
-  const loadingCityDropdownCompRef = useRef(null);
-
-  const renderLoadingAddressView = () => {
-    return (
-      <>
-        <Spacer height={4} />
-        <View style={styles.elementContainer2}>
-          <Label text="Address" style={styles.label} />
-          <Input
-            onChangeText={setLoadingAddress}
-            containerStyle={styles.inputContainer}
-            inputStyle={styles.input}
-            selectionColor={COLOR_BLACK}
-          />
-        </View>
-        <Spacer height={4} />
-        <View style={styles.elementContainer2}>
-          <Label text="Pincode" style={styles.label} />
-          <Input
-            onChangeText={setLoadingPincode}
-            containerStyle={styles.inputContainer}
-            inputStyle={styles.input}
-            selectionColor={COLOR_BLACK}
-          />
-        </View>
-        <Spacer height={4} />
-        <View style={styles.elementContainer}>
-          <View style={styles.itemContainer}>
-            <Label text="State" style={styles.label} />
-            <EpackDropdown
-              data={[]}
-              placeholder={'Select State'}
-              hanldeData={setLoadingState}
-              //@ts-ignore
-              ref={loadingStateDropdwonCompRef}
-            />
-          </View>
-          <View style={styles.itemContainer}>
-            <Label text="City" style={styles.label} />
-            <EpackDropdown
-              data={[]}
-              placeholder={'Select City'}
-              hanldeData={setLoadingCity}
-              //@ts-ignore
-              ref={loadingCityDropdownCompRef}
-            />
-          </View>
-        </View>
-      </>
-    );
-  };
 
   return (
     <CollapsibleView title="CONSIGNER DETAILS" collapsed={true}>
@@ -182,7 +131,7 @@ const ConsignerDetails: React.FC<{}> = ({}) => {
             disableBuiltInState={true}
           />
         </View>
-        {!state.loading_address_same_as_consigner ? renderLoadingAddressView() : null}
+        <LoadingAddressView />
       </View>
     </CollapsibleView>
   );

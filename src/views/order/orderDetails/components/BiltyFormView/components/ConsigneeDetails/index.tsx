@@ -9,6 +9,7 @@ import {COLOR_BLACK, COLOR_BLUE} from '../../../../../../../utils/colors';
 import EpackDropdown from '../../../../../../../common/DropdownComponent2';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
+import DeliveryAddressView from './DeliveryAddressView';
 
 const ConsigneeDetails: React.FC<{}> = ({}) => {
   const {
@@ -29,58 +30,6 @@ const ConsigneeDetails: React.FC<{}> = ({}) => {
 
   const stateDropdwonCompRef = useRef(null);
   const cityDropdownCompRef = useRef(null);
-  const deliveryStateDropdwonCompRef = useRef(null);
-  const deliveryCityDropdownCompRef = useRef(null);
-
-  const renderDeliveryAddressView = () => {
-    return (
-      <>
-        <Spacer height={4} />
-        <View style={styles.elementContainer2}>
-          <Label text="Address" style={styles.label} />
-          <Input
-            onChangeText={setDeliveryAddress}
-            containerStyle={styles.inputContainer}
-            inputStyle={styles.input}
-            selectionColor={COLOR_BLACK}
-          />
-        </View>
-        <Spacer height={4} />
-        <View style={styles.elementContainer2}>
-          <Label text="Pincode" style={styles.label} />
-          <Input
-            onChangeText={setDeliveryPincode}
-            containerStyle={styles.inputContainer}
-            inputStyle={styles.input}
-            selectionColor={COLOR_BLACK}
-          />
-        </View>
-        <Spacer height={4} />
-        <View style={styles.elementContainer}>
-          <View style={styles.itemContainer}>
-            <Label text="State" style={styles.label} />
-            <EpackDropdown
-              data={[]}
-              placeholder={'Select State'}
-              hanldeData={setDeliveryState}
-              //@ts-ignore
-              ref={deliveryStateDropdwonCompRef}
-            />
-          </View>
-          <View style={styles.itemContainer}>
-            <Label text="City" style={styles.label} />
-            <EpackDropdown
-              data={[]}
-              placeholder={'Select City'}
-              hanldeData={setDeliveryCity}
-              //@ts-ignore
-              ref={deliveryCityDropdownCompRef}
-            />
-          </View>
-        </View>
-      </>
-    );
-  };
 
   return (
     <CollapsibleView title="CONSIGNEE DETAILS" collapsed={true}>
@@ -198,7 +147,7 @@ const ConsigneeDetails: React.FC<{}> = ({}) => {
             disableBuiltInState={true}
           />
         </View>
-        {!state.delivery_address_same_as_consignee ? renderDeliveryAddressView() : null}
+        <DeliveryAddressView />
       </View>
     </CollapsibleView>
   );
