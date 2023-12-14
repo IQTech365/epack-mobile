@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {View} from 'react-native';
 import styles from './style';
 import CollapsibleView from '../../../../../../../common/CollapsibleView';
@@ -10,6 +10,9 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
 import EpackDropdown from '../../../../../../../common/DropdownComponent2';
 import LoadingAddressView from './LoadingAddressView';
+import usePincodeHook from '../../../../../../../hooks/usePincodeHook';
+import {getCities2, getStates2} from '../../../../../../../utils/formatter';
+import Spinner from '../../../../../../../common/Spinner';
 
 const ConsignerDetails: React.FC<{}> = ({}) => {
   const {
@@ -22,14 +25,49 @@ const ConsignerDetails: React.FC<{}> = ({}) => {
     setConsignerState,
     setConsignerCity,
     setIsLoadingAddressSameAsConsigner,
-    setLoadingAddress,
-    setLoadingState,
-    setLoadingPincode,
-    setLoadingCity,
   } = useBiltyFormContextHook();
 
-  const stateDropdwonCompRef = useRef(null);
+  const stateDropdownCompRef = useRef(null);
   const cityDropdownCompRef = useRef(null);
+
+  const [states, setStates] = useState<string[]>([]);
+  const [cities, setCities] = useState<string[]>([]);
+
+  const {result, fetching, setPincode} = usePincodeHook(
+    () => {},
+    () => {},
+  );
+
+  const handlePincodeChange = useCallback(
+    (text: string) => {
+      setConsignerPincode(text);
+      setPincode(text);
+    },
+    [state.consinger_pincode],
+  );
+
+  useEffect(() => {
+    if (result && result.Status != 'Error') {
+      setStates(getStates2(result));
+      setCities(getCities2(result));
+    }
+  }, [result]);
+
+  useEffect(() => {
+    if (
+      states.length > 0 &&
+      cities.length > 0 &&
+      stateDropdownCompRef &&
+      cityDropdownCompRef
+    ) {
+      //@ts-ignore
+      stateDropdownCompRef?.current?.setValue(states[0]);
+      setConsignerState(states[0]);
+      //@ts-ignore
+      cityDropdownCompRef?.current?.setValue(cities[0]);
+      setConsignerCity(cities[0]);
+    }
+  }, [states, cities]);
 
   return (
     <CollapsibleView title="CONSIGNER DETAILS" collapsed={true}>
@@ -78,7 +116,7 @@ const ConsignerDetails: React.FC<{}> = ({}) => {
         <View style={styles.elementContainer2}>
           <Label text="Pincode" style={styles.label} />
           <Input
-            onChangeText={setConsignerPincode}
+            onChangeText={handlePincodeChange}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
@@ -89,17 +127,17 @@ const ConsignerDetails: React.FC<{}> = ({}) => {
           <View style={styles.itemContainer}>
             <Label text="State" style={styles.label} />
             <EpackDropdown
-              data={[]}
+              data={states}
               placeholder={'Select State'}
               hanldeData={setConsignerState}
               //@ts-ignore
-              ref={stateDropdwonCompRef}
+              ref={stateDropdownCompRef}
             />
           </View>
           <View style={styles.itemContainer}>
             <Label text="City" style={styles.label} />
             <EpackDropdown
-              data={[]}
+              data={cities}
               placeholder={'Select City'}
               hanldeData={setConsignerCity}
               //@ts-ignore
@@ -132,6 +170,7 @@ const ConsignerDetails: React.FC<{}> = ({}) => {
           />
         </View>
         <LoadingAddressView />
+        <Spinner show={fetching} />
       </View>
     </CollapsibleView>
   );

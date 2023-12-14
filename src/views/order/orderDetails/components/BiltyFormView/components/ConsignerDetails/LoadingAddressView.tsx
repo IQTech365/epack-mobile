@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {View} from 'react-native';
 import styles from './style';
 import Spacer from '../../../../../../../common/Spacer';
@@ -7,6 +7,9 @@ import Input from '../../../../../../../common/Input';
 import EpackDropdown from '../../../../../../../common/DropdownComponent2';
 import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
 import {COLOR_BLACK} from '../../../../../../../utils/colors';
+import {getCities2, getStates2} from '../../../../../../../utils/formatter';
+import usePincodeHook from '../../../../../../../hooks/usePincodeHook';
+import Spinner from '../../../../../../../common/Spinner';
 
 interface Props {}
 
@@ -19,10 +22,49 @@ const LoadingAddressView: React.FC<Props> = ({}) => {
     setLoadingCity,
   } = useBiltyFormContextHook();
 
-  const stateDropdwonCompRef = useRef(null);
+  const stateDropdownCompRef = useRef(null);
   const cityDropdownCompRef = useRef(null);
 
-  if(!state.loading_address_same_as_consigner) return null;
+  const [states, setStates] = useState<string[]>([]);
+  const [cities, setCities] = useState<string[]>([]);
+
+  const {result, fetching, setPincode} = usePincodeHook(
+    () => {},
+    () => {},
+  );
+
+  const handlePincodeChange = useCallback(
+    (text: string) => {
+      setLoadingPincode(text);
+      setPincode(text);
+    },
+    [state.consinger_pincode],
+  );
+
+  useEffect(() => {
+    if (result && result.Status != 'Error') {
+      setStates(getStates2(result));
+      setCities(getCities2(result));
+    }
+  }, [result]);
+
+  useEffect(() => {
+    if (
+      states.length > 0 &&
+      cities.length > 0 &&
+      stateDropdownCompRef &&
+      cityDropdownCompRef
+    ) {
+      //@ts-ignore
+      stateDropdownCompRef?.current?.setValue(states[0]);
+      setLoadingState(states[0]);
+      //@ts-ignore
+      cityDropdownCompRef?.current?.setValue(cities[0]);
+      setLoadingCity(cities[0]);
+    }
+  }, [states, cities]);
+
+  if (!state.loading_address_same_as_consigner) return null;
 
   return (
     <>
@@ -40,7 +82,7 @@ const LoadingAddressView: React.FC<Props> = ({}) => {
       <View style={styles.elementContainer2}>
         <Label text="Pincode" style={styles.label} />
         <Input
-          onChangeText={setLoadingPincode}
+          onChangeText={handlePincodeChange}
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
@@ -51,17 +93,17 @@ const LoadingAddressView: React.FC<Props> = ({}) => {
         <View style={styles.itemContainer}>
           <Label text="State" style={styles.label} />
           <EpackDropdown
-            data={[]}
+            data={states}
             placeholder={'Select State'}
             hanldeData={setLoadingState}
             //@ts-ignore
-            ref={stateDropdwonCompRef}
+            ref={stateDropdownCompRef}
           />
         </View>
         <View style={styles.itemContainer}>
           <Label text="City" style={styles.label} />
           <EpackDropdown
-            data={[]}
+            data={cities}
             placeholder={'Select City'}
             hanldeData={setLoadingCity}
             //@ts-ignore
@@ -69,6 +111,7 @@ const LoadingAddressView: React.FC<Props> = ({}) => {
           />
         </View>
       </View>
+      <Spinner show={fetching} />
     </>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {View} from 'react-native';
 import styles from './style';
 import CollapsibleView from '../../../../../../../common/CollapsibleView';
@@ -10,14 +10,13 @@ import EpackDropdown from '../../../../../../../common/DropdownComponent2';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
 import DeliveryAddressView from './DeliveryAddressView';
+import usePincodeHook from '../../../../../../../hooks/usePincodeHook';
+import {getCities2, getStates2} from '../../../../../../../utils/formatter';
+import Spinner from '../../../../../../../common/Spinner';
 
 const ConsigneeDetails: React.FC<{}> = ({}) => {
   const {
     state,
-    setDeliveryAddress,
-    setDeliveryPincode,
-    setDeliveryState,
-    setDeliveryCity,
     setConsigneeName,
     setConsigneeGst,
     setConsigneeMobileNo,
@@ -28,13 +27,52 @@ const ConsigneeDetails: React.FC<{}> = ({}) => {
     setIsDeliveryAddressSameAsConsignee,
   } = useBiltyFormContextHook();
 
-  const stateDropdwonCompRef = useRef(null);
+  const stateDropdownCompRef = useRef(null);
   const cityDropdownCompRef = useRef(null);
+
+  const [states, setStates] = useState<string[]>([]);
+  const [cities, setCities] = useState<string[]>([]);
+
+  const {result, fetching, setPincode} = usePincodeHook(
+    () => {},
+    () => {},
+  );
+
+  const handlePincodeChange = useCallback(
+    (text: string) => {
+      setConsigneePincode(text);
+      setPincode(text);
+    },
+    [state.consinger_pincode],
+  );
+
+  useEffect(() => {
+    if (result && result.Status != 'Error') {
+      setStates(getStates2(result));
+      setCities(getCities2(result));
+    }
+  }, [result]);
+
+  useEffect(() => {
+    if (
+      states.length > 0 &&
+      cities.length > 0 &&
+      stateDropdownCompRef &&
+      cityDropdownCompRef
+    ) {
+      //@ts-ignore
+      stateDropdownCompRef?.current?.setValue(states[0]);
+      setConsigneeState(states[0]);
+      //@ts-ignore
+      cityDropdownCompRef?.current?.setValue(cities[0]);
+      setConsigneeCity(cities[0]);
+    }
+  }, [states, cities]);
 
   return (
     <CollapsibleView title="CONSIGNEE DETAILS" collapsed={true}>
       <View>
-      <View style={styles.elementContainer}>
+        <View style={styles.elementContainer}>
           <BouncyCheckbox
             size={25}
             fillColor={COLOR_BLUE}
@@ -46,7 +84,9 @@ const ConsigneeDetails: React.FC<{}> = ({}) => {
             style={{marginRight: 15}}
             textContainerStyle={{paddingLeft: 0}}
             onPress={(isChecked: boolean) => {
-                setIsDeliveryAddressSameAsConsignee(!state.consignee_address_same_as_client);
+              setIsDeliveryAddressSameAsConsignee(
+                !state.consignee_address_same_as_client,
+              );
             }}
             isChecked={state.consignee_address_same_as_client}
           />
@@ -96,7 +136,7 @@ const ConsigneeDetails: React.FC<{}> = ({}) => {
         <View style={styles.elementContainer2}>
           <Label text="Pincode" style={styles.label} />
           <Input
-            onChangeText={setConsigneePincode}
+            onChangeText={handlePincodeChange}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
@@ -111,7 +151,7 @@ const ConsigneeDetails: React.FC<{}> = ({}) => {
               placeholder={'Select State'}
               hanldeData={setConsigneeState}
               //@ts-ignore
-              ref={stateDropdwonCompRef}
+              ref={stateDropdownCompRef}
             />
           </View>
           <View style={styles.itemContainer}>
@@ -141,13 +181,16 @@ const ConsigneeDetails: React.FC<{}> = ({}) => {
             style={{marginRight: 15}}
             textContainerStyle={{paddingLeft: 0}}
             onPress={(isChecked: boolean) => {
-                setIsDeliveryAddressSameAsConsignee(!state.delivery_address_same_as_consignee);
+              setIsDeliveryAddressSameAsConsignee(
+                !state.delivery_address_same_as_consignee,
+              );
             }}
             isChecked={state.delivery_address_same_as_consignee}
             disableBuiltInState={true}
           />
         </View>
         <DeliveryAddressView />
+        <Spinner show={fetching} />
       </View>
     </CollapsibleView>
   );
