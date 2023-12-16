@@ -38,6 +38,8 @@ interface IBiltyFormViewProps {
 
 const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
   const {state} = useBiltyFormContextHook();
+  console.log('BiltyForm-state----', JSON.stringify(state));
+  
   const dispatch = useAppDispatch();
   const {
     createBiltyRequesting,
@@ -210,7 +212,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
     };
     console.log('BiltyForm-payload',JSON.stringify(payload));
     dispatch(createBiltyRequest(payload));
-  }, []);
+  }, [state]);
 
   const {getVehicleSizeRequesting} = useAppSelector(state => state.Vehicle);
   const {getunitTypeRequesting} = useAppSelector(state => state.Setting);

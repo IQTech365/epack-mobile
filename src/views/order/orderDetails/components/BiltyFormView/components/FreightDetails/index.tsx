@@ -35,6 +35,7 @@ const FreightDetails: React.FC<{}> = ({}) => {
     setUnloadingCharge,
     setUnloadingChargeAmount,
     setAdvanceAmount,
+    setTotalAmount,
   } = useBiltyFormContextHook();
 
   const calculateMaterialTotalAmount = () => {

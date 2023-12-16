@@ -64,7 +64,7 @@ const DeliveryAddressView: React.FC<Props> = ({}) => {
     }
   }, [states, cities]);
 
-  if (!state.delivery_address_same_as_consignee) return null;
+  if (state.delivery_address_same_as_consignee) return null;
 
   return (
     <>

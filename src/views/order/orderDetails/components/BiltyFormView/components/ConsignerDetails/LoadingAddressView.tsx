@@ -64,7 +64,7 @@ const LoadingAddressView: React.FC<Props> = ({}) => {
     }
   }, [states, cities]);
 
-  if (!state.loading_address_same_as_consigner) return null;
+  if (state.loading_address_same_as_consigner) return null;
 
   return (
     <>

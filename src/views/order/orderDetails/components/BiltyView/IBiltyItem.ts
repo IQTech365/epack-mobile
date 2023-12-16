@@ -1,0 +1,15 @@
+export interface IBiltyItem {
+    id:string,
+    enter_date: string,
+    bilty_date: string,
+    bilty_no: string,
+    billing_by:string,
+    moving_type:string,
+    from_location:string,
+    to_location:string,
+    transit_days:string,
+    risk_type:string,
+    tax_liability:string,
+    billing_type:string,
+    expected_date_of_delivery:string,
+}

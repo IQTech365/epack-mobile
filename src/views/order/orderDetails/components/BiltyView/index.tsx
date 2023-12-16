@@ -17,6 +17,12 @@ import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
 import {getBiltyListRequest} from '../../../../../redux/slices/OrderSlice';
 import Spinner from '../../../../../common/Spinner';
 import {BiltyFormContextProvider} from '../../../../../provider/BiltyFormContextProvider';
+import BiltyListItem from './BiltyListItem';
+import {IBiltyItem} from './IBiltyItem';
+import {
+  IBilty,
+  IBiltyFreight,
+} from '../../../../../interface/order/IGetBiltyListResponse';
 
 interface IBiltyViewProps {
   orderId: string;
@@ -27,9 +33,46 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
   const {biltyList, getBiltyListRequesting} = useAppSelector(
     state => state.Order,
   );
+  console.log('biltyList----', JSON.stringify(biltyList));
 
   const [showBiltyList, setShowBiltyList] = useState<boolean>(false);
   const [createNewBilty, setCreateNewBilty] = useState<boolean>(true);
+
+  const _getBiltyType = (bilty: IBilty) => {
+    let biltyType: string = '';
+    const {biltyfreights} = bilty;
+    if (biltyfreights && biltyfreights.length > 0) {
+      const biltyFreight: IBiltyFreight = biltyfreights[0];
+      biltyType = biltyFreight.freightDetails.billingStatus;
+    }
+    return biltyType;
+  };
+
+  const _getBiltyData = () => {
+    const {data} = biltyList || {};
+    let items: IBiltyItem[] = [];
+    if (data && Array.isArray(data) && data.length > 0) {
+      items = data.map((bilty: IBilty) => {
+        const item: IBiltyItem = {
+          id: bilty._id,
+          enter_date: bilty.createdAt,
+          bilty_date: bilty.biltyDate,
+          bilty_no: bilty.biltyNumber,
+          billing_by: 'NA',
+          moving_type: 'NA', // TODO: Not available in the api response
+          from_location: bilty.vehicle.shiftingFrom,
+          to_location: bilty.vehicle.shiftingTo,
+          transit_days: bilty.vehicle.transitDays,
+          risk_type: bilty.riskType,
+          tax_liability: 'NA', //TODO: Not available in the api response
+          billing_type: _getBiltyType(bilty),
+          expected_date_of_delivery: bilty.vehicle.expectedDateOfDelivery,
+        };
+        return item;
+      });
+    }
+    return items;
+  };
 
   const handleCreateNewBilty = () => {
     setShowBiltyList(false);
@@ -68,22 +111,39 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
     return null;
   };
 
+  const onPress = () => {};
+
+  const onShare = () => {};
+
+  const onDownload = () => {};
+
+  const onPreview = () => {};
+
+  const onEdit = () => {};
+
   const showList = () => {
     if (showBiltyList) {
       return (
         <FlatList
           contentContainerStyle={{alignItems: 'center', paddingVertical: 10}}
-          data={[]}
+          data={_getBiltyData()}
           refreshControl={
             <RefreshControl
               refreshing={getBiltyListRequesting}
               onRefresh={handleOnRefresh}
             />
           }
-          //   renderItem={({item, index}) => (
-          //     <QuotationListItem item={item} index={1} onPress={() => {}} />
-          //   )}
-          renderItem={({item, index}) => <Text>Bilty item</Text>}
+          renderItem={({item, index}) => (
+            <BiltyListItem
+              item={item}
+              index={index}
+              onPress={onPress}
+              onShare={onShare}
+              onDownload={onDownload}
+              onPreview={onPreview}
+              onEdit={onEdit}
+            />
+          )}
           ListEmptyComponent={showEmptyView()}
         />
       );
