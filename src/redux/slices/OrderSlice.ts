@@ -100,6 +100,12 @@ interface IOrderState {
   getBiltyListSuccess: boolean;
   getBiltyListFailure: boolean;
   getBiltyListError: any;
+  // Bilty Template Html
+  biltyTemplateHtml: IHtmlTemplateResponse | null;
+  getBiltyHtmlRequesting:boolean;
+  getBiltyHtmlSuccess:boolean;
+  getBiltyHtmlFailure:boolean;
+  getBiltyTemplateHtmlError:any;
   // Create Invoice
   createInvoiceInfo: ICreateInvoiceResponse | null;
   createInvoiceRequesting: boolean;
@@ -188,6 +194,12 @@ const initialState: IOrderState = {
   getBiltyListSuccess: false,
   getBiltyListFailure: false,
   getBiltyListError: null,
+  // Bilty Template Html
+  biltyTemplateHtml: null,
+  getBiltyHtmlRequesting:false,
+  getBiltyHtmlSuccess:false,
+  getBiltyHtmlFailure:false,
+  getBiltyTemplateHtmlError:null,
   // Create Invoice
   createInvoiceInfo: null,
   createInvoiceRequesting: false,
@@ -454,6 +466,30 @@ export const OrderSlice = createSlice({
       state.getBiltyListFailure = true;
       state.getBiltyListError = action.payload;
     },
+    // Bilty Template Html
+    getBiltyHtmlRequest: (state, action:PayloadAction<IHtmlTemplateRequest>) => {
+      state.getBiltyHtmlRequesting = true;
+    },
+    getBiltyHtmlSuccess: (state, action:PayloadAction<IHtmlTemplateResponse>) => {
+      state.getBiltyHtmlRequesting = false;
+      state.getBiltyHtmlSuccess = true;
+      state.getBiltyHtmlFailure = false;
+      state.getBiltyTemplateHtmlError = null;
+      state.biltyTemplateHtml = action.payload;
+    },
+    getBiltyHtmlFailure: (state, action:PayloadAction<any>) => {
+      state.getBiltyHtmlRequesting = false;
+      state.getBiltyHtmlSuccess = false;
+      state.getBiltyHtmlFailure = true;
+      state.getBiltyTemplateHtmlError = action.payload;
+    },
+    resetGetBiltyHtmlRequest: (state) => {
+      state.getBiltyHtmlRequesting = false;
+      state.getBiltyHtmlSuccess = false;
+      state.getBiltyHtmlFailure = false;
+      state.getBiltyTemplateHtmlError = null;
+      state.biltyTemplateHtml = null;
+    },
     // Create Invoice
     createInvoiceRequest: (
       state,
@@ -546,6 +582,11 @@ export const {
   getBiltyListRequest,
   getBiltyListSuccess,
   getBiltyListFailure,
+  // Bilty Html
+  getBiltyHtmlRequest,
+  getBiltyHtmlSuccess,
+  getBiltyHtmlFailure,
+  resetGetBiltyHtmlRequest,
   // Create Invoice
   createInvoiceRequest,
   createInvoiceSuccess,

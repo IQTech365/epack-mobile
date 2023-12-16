@@ -1,0 +1,1 @@
+export const downloadOptions:string[] = ['Driver Copy', 'Consigner Copy', 'Consignee Copy', 'Office Copy']

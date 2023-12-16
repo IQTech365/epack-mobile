@@ -16,7 +16,7 @@ interface IFormModalProps {
 
 const FormModal = forwardRef<BottomSheet, IFormModalProps>(
   ({children, onClose}, ref) => {
-    const snapPoints = useMemo(() => ['50%'], []);
+    const snapPoints = useMemo(() => ['65%'], []);
 
     const handleSheetChanges = useCallback((index: number) => {
       console.log('handleSheetChanges', index);
@@ -26,8 +26,8 @@ const FormModal = forwardRef<BottomSheet, IFormModalProps>(
       (props: BottomSheetBackdropProps) => (
         <BottomSheetBackdrop
           {...props}
-          disappearsOnIndex={0}
-          appearsOnIndex={1}
+          disappearsOnIndex={1}
+          appearsOnIndex={0}
           style={{backgroundColor: 'red'}}
         />
       ),
@@ -42,14 +42,14 @@ const FormModal = forwardRef<BottomSheet, IFormModalProps>(
         backdropComponent={renderBackdrop}
         containerStyle={styles.contentContainer}
         onChange={handleSheetChanges}>
-          <View style={styles.container}>
-            <View style={styles.closeContainer}>
-              <TouchableOpacity onPress={onClose} activeOpacity={0.4}>
-                <CloseIcon width={32} height={32} />
-              </TouchableOpacity>
-            </View>
-            {children}
+        <View style={styles.container}>
+          <View style={styles.closeContainer}>
+            <TouchableOpacity onPress={onClose} activeOpacity={0.4}>
+              <CloseIcon width={32} height={32} />
+            </TouchableOpacity>
           </View>
+          {children}
+        </View>
       </BottomSheet>
     );
   },

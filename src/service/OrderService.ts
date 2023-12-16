@@ -8,6 +8,7 @@ import {
   EDIT_COMPANY,
   EDIT_MONEY_RECEIPT_LIST,
   GET_BILTY_LIST,
+  GET_BILTY_TEMPLATE_HTML,
   GET_CAR_CONDITION_LIST,
   GET_INVOICE_LIST,
   GET_MONEY_RECEIPT_LIST,
@@ -127,5 +128,11 @@ export const GetMoneyReceiptTemplateHtmlService = async (templateId:string, mone
     console.log('GetMoneyReceiptTemplateHtmlService--payload--', JSON.stringify(templateId));
     const api = Api.getInstance();
     return await api.get<IHtmlTemplateResponse>(GET_MONEY_RECEIPT_TEMPLATE_HTML(templateId, moneyReceiptId));
+}
+
+export const GetBiltyTemplateHtmlService = async (templateId:string, docId:string): Promise<IHtmlTemplateResponse> => {
+    console.log('GetBiltyTemplateHtmlService--payload--', JSON.stringify(templateId));
+    const api = Api.getInstance();
+    return await api.get<IHtmlTemplateResponse>(GET_BILTY_TEMPLATE_HTML(templateId, docId));
 }
 

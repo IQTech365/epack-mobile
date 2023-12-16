@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   View,
   FlatList,
@@ -14,7 +14,7 @@ import ListViewIcon from '../../../../../images/icons/list_view_icon.svg';
 import ListViewIcon2 from '../../../../../images/icons/list_view_icon2.svg';
 import CreateIcon from '../../../../../images/icons/create_icon.svg';
 import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
-import {getBiltyListRequest} from '../../../../../redux/slices/OrderSlice';
+import {getBiltyHtmlRequest, getBiltyListRequest, resetGetBiltyHtmlRequest} from '../../../../../redux/slices/OrderSlice';
 import Spinner from '../../../../../common/Spinner';
 import {BiltyFormContextProvider} from '../../../../../provider/BiltyFormContextProvider';
 import BiltyListItem from './BiltyListItem';
@@ -23,6 +23,15 @@ import {
   IBilty,
   IBiltyFreight,
 } from '../../../../../interface/order/IGetBiltyListResponse';
+import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
+import FormModal from '../../../../settings/formModal';
+import {downloadOptions} from './downloadOptions';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import {COLOR_BLACK, COLOR_BLUE} from '../../../../../utils/colors';
+import {IHtmlTemplateRequest} from '../../../../../interface/order/templates/ITemplateResponse';
+import ModalHOC from '../../../../../common/ModalHOC';
+import TemplateViewer from '../../../../../common/TemplateViewer';
+import { startShare } from '../../../../../utils/utility';
 
 interface IBiltyViewProps {
   orderId: string;
@@ -30,13 +39,26 @@ interface IBiltyViewProps {
 
 const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
   const dispatch = useAppDispatch();
-  const {biltyList, getBiltyListRequesting} = useAppSelector(
-    state => state.Order,
-  );
+  const {
+    biltyList,
+    getBiltyListRequesting,
+    biltyTemplateHtml,
+    getBiltyHtmlRequesting,
+    getBiltyHtmlSuccess,
+    getBiltyHtmlFailure,
+  } = useAppSelector(state => state.Order);
   console.log('biltyList----', JSON.stringify(biltyList));
 
   const [showBiltyList, setShowBiltyList] = useState<boolean>(false);
   const [createNewBilty, setCreateNewBilty] = useState<boolean>(true);
+  const [downloadOption, setDownloadOption] = useState<string>('');
+  const [showPreview, setShowPreview] = useState<boolean>(false);
+  const [showShare, setShowShare] = useState<boolean>(false);
+  const [showDownload, setShowDownload] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [documentId, setDocumentId] = useState<string>('');
+
+  const bottomSheetRef = useRef<BottomSheet>(null);
 
   const _getBiltyType = (bilty: IBilty) => {
     let biltyType: string = '';
@@ -46,6 +68,18 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
       biltyType = biltyFreight.freightDetails.billingStatus;
     }
     return biltyType;
+  };
+
+  const presentModal = (docId: string) => {
+    setDocumentId(docId);
+    bottomSheetRef.current?.snapToIndex(0);
+  };
+
+  const dismissModal = () => {
+    setDownloadOption('');
+    // setOpenShare(false);
+    // setShouldDownload(false);
+    bottomSheetRef.current?.close();
   };
 
   const _getBiltyData = () => {
@@ -84,6 +118,12 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
     setCreateNewBilty(false);
   };
 
+  const handleShowPreviewModalClose = () => {
+    dispatch(resetGetBiltyHtmlRequest());
+    setShowModal(false);
+    
+  };
+
   useEffect(() => {
     dispatch(getBiltyListRequest(orderId));
   }, []);
@@ -111,45 +151,141 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
     return null;
   };
 
-  const onPress = () => {};
-
-  const onShare = () => {};
-
-  const onDownload = () => {};
-
-  const onPreview = () => {};
-
   const onEdit = () => {};
+
+  const handleDocumentDownload = async () => {
+    const payload: IHtmlTemplateRequest = {
+      templateId: '6578288c93cd6fcba42676d5',
+      docId: documentId,
+    };
+    dispatch(getBiltyHtmlRequest(payload));
+  };
 
   const showList = () => {
     if (showBiltyList) {
       return (
-        <FlatList
-          contentContainerStyle={{alignItems: 'center', paddingVertical: 10}}
-          data={_getBiltyData()}
-          refreshControl={
-            <RefreshControl
-              refreshing={getBiltyListRequesting}
-              onRefresh={handleOnRefresh}
-            />
-          }
-          renderItem={({item, index}) => (
-            <BiltyListItem
-              item={item}
-              index={index}
-              onPress={onPress}
-              onShare={onShare}
-              onDownload={onDownload}
-              onPreview={onPreview}
-              onEdit={onEdit}
-            />
-          )}
-          ListEmptyComponent={showEmptyView()}
-        />
+        <View style={{flex: 1}}>
+          <FlatList
+            contentContainerStyle={{alignItems: 'center', paddingVertical: 10}}
+            data={_getBiltyData()}
+            refreshControl={
+              <RefreshControl
+                refreshing={getBiltyListRequesting}
+                onRefresh={handleOnRefresh}
+              />
+            }
+            renderItem={({item, index}) => (
+              <BiltyListItem
+                item={item}
+                index={index}
+                onPress={() => {
+                  // presentModal(item.id)
+                }}
+                onShare={() => {
+                  setShowShare(true);
+                  setShowPreview(false);
+                  setShowDownload(false);
+                  presentModal(item.id);
+                }}
+                onDownload={() => {
+                  setShowShare(false);
+                  setShowPreview(false);
+                  setShowDownload(true);
+                  presentModal(item.id);
+                }}
+                onPreview={() => {
+                  setShowShare(false);
+                  setShowPreview(true);
+                  setShowDownload(false);
+                  presentModal(item.id);
+                }}
+                onEdit={onEdit}
+              />
+            )}
+            ListEmptyComponent={showEmptyView()}
+          />
+          <FormModal ref={bottomSheetRef} onClose={dismissModal}>
+            <>
+              <View style={styles.checkboxContainer}>
+                {downloadOptions.map((option, index) => {
+                  return (
+                    <BouncyCheckbox
+                      key={`${index}`}
+                      size={20}
+                      fillColor={COLOR_BLUE}
+                      unfillColor="#FFFFFF"
+                      text={option}
+                      iconStyle={{borderColor: 'red', borderRadius: 0}}
+                      innerIconStyle={{borderWidth: 1, borderRadius: 0}}
+                      onPress={(isChecked: boolean) => {
+                        setDownloadOption(option);
+                      }}
+                      textStyle={{
+                        fontFamily: 'JosefinSans-Regular',
+                        textDecorationLine: 'none',
+                        fontSize: 14,
+                        color: COLOR_BLACK,
+                      }}
+                      style={{paddingRight: 8, marginBottom: 20}}
+                      textContainerStyle={{marginLeft: 10, marginRight: 4}}
+                      isChecked={option == downloadOption}
+                      disableBuiltInState={true}
+                    />
+                  );
+                })}
+              </View>
+              <TouchableOpacity
+                onPress={handleDocumentDownload}
+                style={downloadButtonStyle}
+                activeOpacity={0.6}
+                disabled={downloadOption == ''}>
+                <Text style={styles.downloadText}>Download</Text>
+              </TouchableOpacity>
+            </>
+          </FormModal>
+          <ModalHOC
+            visible={showModal}
+            onClose={handleShowPreviewModalClose}
+            title="Preview">
+            <View style={{flex: 1}}>
+              <TemplateViewer html={biltyTemplateHtml} />
+            </View>
+          </ModalHOC>
+        </View>
       );
     }
     return null;
   };
+
+  const downloadButtonStyle =
+    downloadOption == ''
+      ? styles.downloadDisabledButton
+      : styles.downloadButton;
+
+      useEffect(() => {
+        if (
+          !getBiltyHtmlRequesting &&
+          getBiltyHtmlSuccess
+        ) {
+          if (showPreview) {
+            setShowModal(true);
+          } else if(showShare) {
+            startShare(biltyTemplateHtml, 'Bilty', dispatch(resetGetBiltyHtmlRequest()));
+          }
+        } else if (
+          !getBiltyHtmlRequesting &&
+          getBiltyHtmlFailure
+        ) {
+          setShowPreview(false);
+          setShowShare(false);
+          setShowDownload(false);
+          dispatch(resetGetBiltyHtmlRequest());
+        }
+      }, [
+        getBiltyHtmlRequesting,
+        getBiltyHtmlSuccess,
+        getBiltyHtmlFailure,
+      ]);
 
   return (
     <>
