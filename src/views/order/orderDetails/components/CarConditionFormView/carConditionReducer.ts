@@ -9,6 +9,7 @@ export enum CARCONDITION_FORM_ACTION {
   MANUFACTURER = 'MANUFACTURER',
   MODEL = 'MODEL',
   COLOR = 'COLOR',
+  VEHICLE_ACCESSORIES = 'VEHICLE_ACCESSORIES',
   YEAR = 'YEAR',
   VEHICLE_REG_NO = 'VEHICLE_REG_NO',
   VEHICLE_KM = 'VEHICLE_KM',
@@ -40,6 +41,12 @@ export enum CARCONDITION_FORM_ACTION {
   ANY_OTHER_OBSERVATION = 'ANY_OTHER_OBSERVATION',
 }
 
+export interface IAccessory {
+  accessoryName:string;
+  id:string;
+  present:boolean;
+}
+
 /** CAR CONDITION FORM STATE */
 
 interface ICarConditionFormState {
@@ -51,6 +58,7 @@ interface ICarConditionFormState {
   manufacturer: string;
   model: string;
   color: string;
+  vehicleAccessories:IAccessory[],
   yearOfManufacturing: string;
   vehicleRegistrationNumber: string;
   vehicleCoveredDistanceInKM: string;
@@ -86,7 +94,7 @@ interface ICarConditionFormState {
 
 interface ICarConditionFormAction {
   type: CARCONDITION_FORM_ACTION;
-  payload: string;
+  payload: string | IAccessory[];
 }
 
 /** INITIAL STATE */
@@ -100,6 +108,7 @@ export const initialState: ICarConditionFormState = {
   manufacturer: '',
   model: '',
   color: '',
+  vehicleAccessories:[],
   yearOfManufacturing: '',
   vehicleRegistrationNumber: '',
   vehicleCoveredDistanceInKM: '',
@@ -140,77 +149,81 @@ export const carConditionReducer = (
   const {type, payload} = action;
   switch (type) {
     case CARCONDITION_FORM_ACTION.CARCONDITION_NO:
-      return {...state, carConditionNumber: payload};
+      return {...state, carConditionNumber: payload as string};
     case CARCONDITION_FORM_ACTION.CHOOSE_TEMPLATE:
-      return {...state, chooseTemplate: payload};
+      return {...state, chooseTemplate: payload as string};
     case CARCONDITION_FORM_ACTION.DATE_OF_CARCONDITION:
-      return {...state, dateOfCarCondition: payload};
+      return {...state, dateOfCarCondition: payload as string};
     case CARCONDITION_FORM_ACTION.CN_BILTY_LR_NO:
-      return {...state, cnBiltyLrNo: payload};
+      return {...state, cnBiltyLrNo: payload as string};
+    case CARCONDITION_FORM_ACTION.VEHICLE_TYPE:
+      return {...state, vehicleType: payload as string};
     case CARCONDITION_FORM_ACTION.MANUFACTURER:
-      return {...state, manufacturer: payload};
+      return {...state, manufacturer: payload as string};
     case CARCONDITION_FORM_ACTION.MODEL:
-      return {...state, model: payload};
+      return {...state, model: payload as string};
+    case CARCONDITION_FORM_ACTION.VEHICLE_ACCESSORIES:
+      return {...state, vehicleAccessories: payload as IAccessory[]};
     case CARCONDITION_FORM_ACTION.COLOR:
-      return {...state, color: payload};
+      return {...state, color: payload as string};
     case CARCONDITION_FORM_ACTION.YEAR:
-      return {...state, yearOfManufacturing: payload};
+      return {...state, yearOfManufacturing: payload as string};
     case CARCONDITION_FORM_ACTION.VEHICLE_REG_NO:
-      return {...state, vehicleRegistrationNumber: payload};
+      return {...state, vehicleRegistrationNumber: payload as string};
     case CARCONDITION_FORM_ACTION.VEHICLE_KM:
-      return {...state, vehicleCoveredDistanceInKM: payload};
+      return {...state, vehicleCoveredDistanceInKM: payload as string};
     case CARCONDITION_FORM_ACTION.INSURANCE_COMPANY_NAME:
-      return {...state, insuranceCompany: payload};
+      return {...state, insuranceCompany: payload as string};
     case CARCONDITION_FORM_ACTION.INSURANCE_POLICY_NO:
-      return {...state, insurancePolicyNumber: payload};
+      return {...state, insurancePolicyNumber: payload as string};
     case CARCONDITION_FORM_ACTION.VEHICLE_VALUE:
-      return {...state, vehicleValue: payload};
+      return {...state, vehicleValue: payload as string};
     case CARCONDITION_FORM_ACTION.CHASIS_NO:
-      return {...state, chasisNumber: payload};
+      return {...state, chasisNumber: payload as string};
     case CARCONDITION_FORM_ACTION.ENGINE_NO:
-      return {...state, engineNumber: payload};
+      return {...state, engineNumber: payload as string};
     case CARCONDITION_FORM_ACTION.STEPNEY:
-      return {...state, stepney: payload};
+      return {...state, stepney: payload as string};
     case CARCONDITION_FORM_ACTION.WHEEL_CAPS:
-      return {...state, wheelCaps: payload};
+      return {...state, wheelCaps: payload as string};
     case CARCONDITION_FORM_ACTION.SIDE_RARE_VIEW_MIRROR:
-      return {...state, sideRareViewMirror: payload};
+      return {...state, sideRareViewMirror: payload as string};
     case CARCONDITION_FORM_ACTION.CAR_RADIO_PLAYER:
-      return {...state, carRadioPlayer: payload};
+      return {...state, carRadioPlayer: payload as string};
     case CARCONDITION_FORM_ACTION.AIR_CONDITION:
-      return {...state, airCondition: payload};
+      return {...state, airCondition: payload as string};
     case CARCONDITION_FORM_ACTION.DIGITAL_WATCH:
-      return {...state, digitalWatch: payload};
+      return {...state, digitalWatch: payload as string};
     case CARCONDITION_FORM_ACTION.SPEAKER:
-      return {...state, speaker: payload};
+      return {...state, speaker: payload as string};
     case CARCONDITION_FORM_ACTION.TOOLKIT:
-      return {...state, toolKit: payload};
+      return {...state, toolKit: payload as string};
     case CARCONDITION_FORM_ACTION.JACK:
-      return {...state, jack: payload};
+      return {...state, jack: payload as string};
     case CARCONDITION_FORM_ACTION.WIPER_ARMS_AND_BLADES:
-      return {...state, wiperAarmAndBlade: payload};
+      return {...state, wiperAarmAndBlade: payload as string};
     case CARCONDITION_FORM_ACTION.MUD_FLAP:
-      return {...state, mudFlap: payload};
+      return {...state, mudFlap: payload as string};
     case CARCONDITION_FORM_ACTION.FLOOR_RUBBER_CARPET:
-      return {...state, floorRubberCarpet: payload};
+      return {...state, floorRubberCarpet: payload as string};
     case CARCONDITION_FORM_ACTION.FUEL:
-      return {...state, fuel: payload};
+      return {...state, fuel: payload as string};
     case CARCONDITION_FORM_ACTION.CAR_COVER:
-      return {...state, carCover: payload};
+      return {...state, carCover: payload as string};
     case CARCONDITION_FORM_ACTION.BATTERY_NO:
-      return {...state, batteryNumber: payload};
+      return {...state, batteryNumber: payload as string};
     case CARCONDITION_FORM_ACTION.TYRE_NO:
-      return {...state, tyreNumber: payload};
+      return {...state, tyreNumber: payload as string};
     case CARCONDITION_FORM_ACTION.ANY_OTHER_ACCESSORIES:
-      return {...state, anyOtherAccessorie: payload};
+      return {...state, anyOtherAccessorie: payload as string};
     case CARCONDITION_FORM_ACTION.REMARKS:
-      return {...state, remarks: payload};
+      return {...state, remarks: payload as string};
     case CARCONDITION_FORM_ACTION.SCARATCHES:
-      return {...state, scaratches: payload};
+      return {...state, scaratches: payload as string};
     case CARCONDITION_FORM_ACTION.DENT:
-      return {...state, dent: payload};
+      return {...state, dent: payload as string};
     case CARCONDITION_FORM_ACTION.ANY_OTHER_OBSERVATION:
-      return {...state, visibleObservation: payload};
+      return {...state, visibleObservation: payload as string};
     default:
       return state;
   }

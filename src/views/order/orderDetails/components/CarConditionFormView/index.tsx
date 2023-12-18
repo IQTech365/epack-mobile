@@ -16,12 +16,13 @@ import {
   initialState,
   carConditionReducer,
   CARCONDITION_FORM_ACTION,
+  IAccessory,
 } from './carConditionReducer';
-import {formatDate, formatDate3} from '../../../../../utils/formatter';
+import {formatDate3} from '../../../../../utils/formatter';
 import Button from '../../../../../common/Button';
 import {ICreateCarConditionRequest} from '../../../../../interface/order/ICreateCarConditionRequest';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
-import {createCarConditionRequest} from '../../../../../redux/slices/OrderSlice';
+import {createCarConditionRequest, resetCreateCarConditionRequest} from '../../../../../redux/slices/OrderSlice';
 import Spinner from '../../../../../common/Spinner';
 import Toast from 'react-native-toast-message';
 import useCompanyId from '../../../../../hooks/useCompanyId';
@@ -41,7 +42,6 @@ interface ICarConditionFormViewProps {
 const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
   orderId,
 }) => {
-  const [switchState, setSwitchState] = useState<boolean>(false);
   const [vehicleTypeId, setVehicleTypeId] = useState<string>('');
   const [vehicleCompanyId, setVehicleCompanyId] = useState<string>('');
   const [reducerState, dispatch] = useReducer(
@@ -62,19 +62,9 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
     vehicleAccessories,
     vehicleModels,
   } = useAppSelector(state => state.Common);
-  console.log('VTypes--', JSON.stringify(vehicleTypes));
-  console.log('VCompanies--', JSON.stringify(vehicleCompanies));
-  console.log('VColors--', JSON.stringify(vehicleColors));
-  console.log('VAccessories--', JSON.stringify(vehicleAccessories));
-  console.log('VModels--', JSON.stringify(vehicleModels));
   const dispatch2 = useAppDispatch();
-  const {otpData} = useAppSelector(state => state.OTP);
   const companyId = useCompanyId();
   const authId = useAuthId();
-
-  const switchWrapperStyle = switchState
-    ? styles.switchMainWrapper
-    : styles.switchMainWrapper2;
 
   const handleCarConditionNo = (text: string) => {
     dispatch({
@@ -214,6 +204,25 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
     });
   };
 
+  const handleVehicleAccessories = (accessoryName:string, id:string, present:boolean) => {
+    const {vehicleAccessories} = reducerState;
+    const clone = [...vehicleAccessories];
+    if(present) {
+      const accessory:IAccessory = {accessoryName: accessoryName, id:id, present: present};
+      clone.push(accessory);
+      dispatch({
+        type: CARCONDITION_FORM_ACTION.VEHICLE_ACCESSORIES,
+        payload: clone,
+      });
+    } else {
+      const filters = clone.filter((acc:IAccessory) => acc.accessoryName !== accessoryName);
+      dispatch({
+        type: CARCONDITION_FORM_ACTION.VEHICLE_ACCESSORIES,
+        payload: filters,
+      });
+    }
+  }
+
   const handleCreateCarCondition = () => {
     const payload: ICreateCarConditionRequest = {
       companyId: companyId,
@@ -225,6 +234,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
       manufacturer: reducerState.manufacturer,
       model: reducerState.model,
       yearOfManufacturing: reducerState.yearOfManufacturing,
+      vehicleAccessories: reducerState.vehicleAccessories,
       color: reducerState.color,
       vehicleRegistrationNumber: reducerState.vehicleRegistrationNumber,
       vehicleCoveredDistanceInKM: reducerState.vehicleCoveredDistanceInKM,
@@ -243,7 +253,6 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
       addedBy: authId,
     };
     console.log(payload, 'payload carconditon req');
-
     dispatch2(createCarConditionRequest(payload));
   };
 
@@ -254,12 +263,14 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
         text1: 'Car condition',
         text2: 'Car Condition has been added successfully',
       });
+      dispatch2(resetCreateCarConditionRequest());
     } else if (!createCarConditionRequesting && createCarConditionError) {
       Toast.show({
         type: 'error',
         text1: 'Car condition',
         text2: 'Error in adding Car Condition. Please try again!',
       });
+      dispatch2(resetCreateCarConditionRequest());
     }
   }, [
     createCarConditionRequesting,
@@ -420,8 +431,8 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                 <View key={index}>
                   <AccessoryView
                     label={accessory.label}
-                    onYesPress={() => {}}
-                    onNoPress={() => {}}
+                    id={accessory.id}
+                    onPress={handleVehicleAccessories}
                   />
                   <Spacer height={8} />
                 </View>

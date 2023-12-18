@@ -10,6 +10,7 @@ import {
   GET_BILTY_LIST,
   GET_BILTY_TEMPLATE_HTML,
   GET_CAR_CONDITION_LIST,
+  GET_CAR_CONDITION_TEMPLATE_HTML,
   GET_INVOICE_LIST,
   GET_MONEY_RECEIPT_LIST,
   GET_MONEY_RECEIPT_TEMPLATE_HTML,
@@ -134,5 +135,11 @@ export const GetBiltyTemplateHtmlService = async (templateId:string, docId:strin
     console.log('GetBiltyTemplateHtmlService--payload--', JSON.stringify(templateId));
     const api = Api.getInstance();
     return await api.get<IHtmlTemplateResponse>(GET_BILTY_TEMPLATE_HTML(templateId, docId));
+}
+
+export const GetCarConditionTemplateHtmlService = async (templateId:string, docId:string): Promise<IHtmlTemplateResponse> => {
+    console.log('GetCarConditionTemplateHtmlService--payload--', JSON.stringify(templateId));
+    const api = Api.getInstance();
+    return await api.get<IHtmlTemplateResponse>(GET_CAR_CONDITION_TEMPLATE_HTML(templateId, docId));
 }
 

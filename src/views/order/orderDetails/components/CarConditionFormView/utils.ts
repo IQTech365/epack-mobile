@@ -17,10 +17,11 @@ interface IItem {
 }
 interface IAccessory {
   label:string;
+  id:string;
 }
 
 export const getVehicleTypeList = (response:IVehicleTypesResponse):IItem[] => {
-    const {data} = response;
+    const {data} = response || {};
     let items: IItem[] = [];
     if (data && data.length > 0) {
       items = data.map((d: IVehicleType) => {
@@ -32,7 +33,7 @@ export const getVehicleTypeList = (response:IVehicleTypesResponse):IItem[] => {
 }
 
 export const getVehicleCompanyList = (vehicleTypeId:string,response:IVehicleCompanyResponse):IItem[] => {
-    const {data} = response;
+    const {data} = response || {};
     let items: IItem[] = [];
     if (data && data.length > 0) {
       const filters:IVehicleCompany[] = data.filter((d:IVehicleCompany) => d.vehicletypesid == vehicleTypeId);
@@ -47,7 +48,7 @@ export const getVehicleCompanyList = (vehicleTypeId:string,response:IVehicleComp
 }
 
 export const getVehicleColorList = (response:IVehicleColorResponse):IItem[] => {
-    const {data} = response;
+    const {data} = response || {};
     let items: IItem[] = [];
     if (data && data.length > 0) {
       items = data.map((d: IVehicleColor) => {
@@ -59,11 +60,11 @@ export const getVehicleColorList = (response:IVehicleColorResponse):IItem[] => {
 }
 
 export const getVehicleAccessoryList = (response:IVehicleAccessoryResponse):IAccessory[] => {
-    const {data} = response;
+    const {data} = response || {};
     let items: IAccessory[] = [];
     if (data && data.length > 0) {
       items = data.map((d: IVehicleAccessory) => {
-        const item: IAccessory = {label: d.vehicleAccessory};
+        const item: IAccessory = {label: d.vehicleAccessory, id: d._id};
         return item;
       });
     }
@@ -71,7 +72,7 @@ export const getVehicleAccessoryList = (response:IVehicleAccessoryResponse):IAcc
 }
 
 export const getVehicleModelList = (vehicleCompanyId:string,response:IVehicleModelResponse):IItem[] => {
-    const {data} = response;
+    const {data} = response || {};
     let items: IItem[] = [];
     if (data && data.length > 0) {
       const filters:IVehicleModel[] = data.filter((d:IVehicleModel) => d.vehicleCompanyName == vehicleCompanyId);

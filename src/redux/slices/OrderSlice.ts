@@ -1,23 +1,26 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IOrderDetailsResponse } from '../../interface/order/IOrderDetailsResponse';
-import { ICreateCarConditionResponse } from '../../interface/order/ICreateCarConditionResponse';
-import { ICreateBiltyResponse } from '../../interface/order/ICreateBiltyResponse';
-import { ICreateInvoiceResponse } from '../../interface/order/ICreateInvoiceResponse';
-import { ICreateCarConditionRequest } from '../../interface/order/ICreateCarConditionRequest';
-import { ICreateBiltyRequest } from '../../interface/order/ICreateBiltyRequest';
-import { ICreateInvoiceRequest } from '../../interface/order/ICreateInvoiceRequest';
-import { ICreateMoneyReceiptResponse } from '../../interface/order/ICreateMoneyReceiptResponse';
-import { ICreateMoneyReceiptRequest } from '../../interface/order/ICreateMoneyReceiptRequest';
-import { IAddOrderResponse } from '../../interface/order/IAddOrderResponse';
-import { IAddOrderRequest } from '../../interface/order/IAddOrderRequest';
-import { IGetOrdersResponse } from '../../interface/order/IGetOrdersResponse';
-import { IGetMoneyReceiptsResponse } from '../../interface/order/IGetMoneyReceiptsResponse';
-import { IGetCarConditionListResponse } from '../../interface/order/IGetCarConditionListResponse';
-import { IGetBiltyListResponse } from '../../interface/order/IGetBiltyListResponse';
-import { IGetOrdersRequest } from '../../interface/order/IGetOrdersRequest';
-import { ISingleEnquiryResponse } from '../../interface/enquiry/ISingleEnquiryResponse';
-import { ISingleOrderRequest } from '../../interface/order/ISingleOrderRequest';
-import { IHtmlTemplateRequest, IHtmlTemplateResponse } from '../../interface/order/templates/ITemplateResponse';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {IOrderDetailsResponse} from '../../interface/order/IOrderDetailsResponse';
+import {ICreateCarConditionResponse} from '../../interface/order/ICreateCarConditionResponse';
+import {ICreateBiltyResponse} from '../../interface/order/ICreateBiltyResponse';
+import {ICreateInvoiceResponse} from '../../interface/order/ICreateInvoiceResponse';
+import {ICreateCarConditionRequest} from '../../interface/order/ICreateCarConditionRequest';
+import {ICreateBiltyRequest} from '../../interface/order/ICreateBiltyRequest';
+import {ICreateInvoiceRequest} from '../../interface/order/ICreateInvoiceRequest';
+import {ICreateMoneyReceiptResponse} from '../../interface/order/ICreateMoneyReceiptResponse';
+import {ICreateMoneyReceiptRequest} from '../../interface/order/ICreateMoneyReceiptRequest';
+import {IAddOrderResponse} from '../../interface/order/IAddOrderResponse';
+import {IAddOrderRequest} from '../../interface/order/IAddOrderRequest';
+import {IGetOrdersResponse} from '../../interface/order/IGetOrdersResponse';
+import {IGetMoneyReceiptsResponse} from '../../interface/order/IGetMoneyReceiptsResponse';
+import {IGetCarConditionListResponse} from '../../interface/order/IGetCarConditionListResponse';
+import {IGetBiltyListResponse} from '../../interface/order/IGetBiltyListResponse';
+import {IGetOrdersRequest} from '../../interface/order/IGetOrdersRequest';
+import {ISingleEnquiryResponse} from '../../interface/enquiry/ISingleEnquiryResponse';
+import {ISingleOrderRequest} from '../../interface/order/ISingleOrderRequest';
+import {
+  IHtmlTemplateRequest,
+  IHtmlTemplateResponse,
+} from '../../interface/order/templates/ITemplateResponse';
 
 interface IOrderState {
   // Add Order
@@ -64,7 +67,7 @@ interface IOrderState {
   getMoneyReceiptListSuccess: boolean;
   getMoneyReceiptListFailure: boolean;
   getMoneyReceiptListError: any;
-  // Edit Money Receipt 
+  // Edit Money Receipt
   moneyReceiptData: IGetMoneyReceiptsResponse | null;
   editMoneyReceiptListRequesting: boolean;
   editMoneyReceiptListSuccess: boolean;
@@ -72,10 +75,10 @@ interface IOrderState {
   editMoneyReceiptListError: any;
   // Money Receipt Template Html
   moneyReceiptTemplateHtml: IHtmlTemplateResponse | null;
-  getMoneyReceiptTemplateHtmlRequesting:boolean;
-  getMoneyReceiptTemplateHtmlSuccess:boolean;
-  getMoneyReceiptTemplateHtmlFailure:boolean;
-  getMoneyReceiptTemplateHtmlError:any;
+  getMoneyReceiptTemplateHtmlRequesting: boolean;
+  getMoneyReceiptTemplateHtmlSuccess: boolean;
+  getMoneyReceiptTemplateHtmlFailure: boolean;
+  getMoneyReceiptTemplateHtmlError: any;
   // Create Car Condition
   createCarConditionInfo: ICreateCarConditionResponse | null;
   createCarConditionRequesting: boolean;
@@ -88,6 +91,12 @@ interface IOrderState {
   getCarConditionListSuccess: boolean;
   getCarConditionListFailure: boolean;
   getCarConditionListError: any;
+  // CarCondition Template Html
+  carConditionTemplateHtml: IHtmlTemplateResponse | null;
+  getCarConditionHtmlRequesting: boolean;
+  getCarConditionHtmlSuccess: boolean;
+  getCarConditionHtmlFailure: boolean;
+  getCarConditionTemplateHtmlError: any;
   // Create Bilty
   createBiltyInfo: ICreateBiltyResponse | null;
   createBiltyRequesting: boolean;
@@ -102,10 +111,10 @@ interface IOrderState {
   getBiltyListError: any;
   // Bilty Template Html
   biltyTemplateHtml: IHtmlTemplateResponse | null;
-  getBiltyHtmlRequesting:boolean;
-  getBiltyHtmlSuccess:boolean;
-  getBiltyHtmlFailure:boolean;
-  getBiltyTemplateHtmlError:any;
+  getBiltyHtmlRequesting: boolean;
+  getBiltyHtmlSuccess: boolean;
+  getBiltyHtmlFailure: boolean;
+  getBiltyTemplateHtmlError: any;
   // Create Invoice
   createInvoiceInfo: ICreateInvoiceResponse | null;
   createInvoiceRequesting: boolean;
@@ -158,18 +167,18 @@ const initialState: IOrderState = {
   getMoneyReceiptListFailure: false,
   getMoneyReceiptListError: null,
 
-  // Edit Money Receipt 
-  moneyReceiptData:  null,
+  // Edit Money Receipt
+  moneyReceiptData: null,
   editMoneyReceiptListRequesting: false,
   editMoneyReceiptListSuccess: false,
   editMoneyReceiptListFailure: false,
   editMoneyReceiptListError: false,
   // Money Receipt Template Html
   moneyReceiptTemplateHtml: null,
-  getMoneyReceiptTemplateHtmlRequesting:false,
-  getMoneyReceiptTemplateHtmlSuccess:false,
-  getMoneyReceiptTemplateHtmlFailure:false,
-  getMoneyReceiptTemplateHtmlError:null,
+  getMoneyReceiptTemplateHtmlRequesting: false,
+  getMoneyReceiptTemplateHtmlSuccess: false,
+  getMoneyReceiptTemplateHtmlFailure: false,
+  getMoneyReceiptTemplateHtmlError: null,
   // Create Car Condition
   createCarConditionInfo: null,
   createCarConditionRequesting: false,
@@ -182,6 +191,12 @@ const initialState: IOrderState = {
   getCarConditionListSuccess: false,
   getCarConditionListFailure: false,
   getCarConditionListError: null,
+  // CarCondition Template Html
+  carConditionTemplateHtml: null,
+  getCarConditionHtmlRequesting: false,
+  getCarConditionHtmlSuccess: false,
+  getCarConditionHtmlFailure: false,
+  getCarConditionTemplateHtmlError: null,
   // Create Bilty
   createBiltyInfo: null,
   createBiltyRequesting: false,
@@ -196,10 +211,10 @@ const initialState: IOrderState = {
   getBiltyListError: null,
   // Bilty Template Html
   biltyTemplateHtml: null,
-  getBiltyHtmlRequesting:false,
-  getBiltyHtmlSuccess:false,
-  getBiltyHtmlFailure:false,
-  getBiltyTemplateHtmlError:null,
+  getBiltyHtmlRequesting: false,
+  getBiltyHtmlSuccess: false,
+  getBiltyHtmlFailure: false,
+  getBiltyTemplateHtmlError: null,
   // Create Invoice
   createInvoiceInfo: null,
   createInvoiceRequesting: false,
@@ -227,14 +242,17 @@ export const OrderSlice = createSlice({
       state.addOrderFailure = true;
       state.addOrderError = action.payload;
     },
-    resetAddOrderRequest: (state) => {
+    resetAddOrderRequest: state => {
       state.addOrderRequesting = false;
       state.addOrderSuccess = false;
       state.addOrderFailure = false;
       state.addOrderError = null;
     },
     // Get Order List
-    getOrdersRequest: (state, action: PayloadAction<Partial<IGetOrdersRequest>>) => {
+    getOrdersRequest: (
+      state,
+      action: PayloadAction<Partial<IGetOrdersRequest>>,
+    ) => {
       state.getOrdersRequesting = true;
     },
     getOrdersSuccess: (state, action: PayloadAction<IGetOrdersResponse>) => {
@@ -263,17 +281,23 @@ export const OrderSlice = createSlice({
       state.getOrderFailure = true;
       state.getOrderError = action.payload;
     },
-    resetOrderRequest: (state) => {
+    resetOrderRequest: state => {
       state.getOrderRequesting = false;
       state.getOrderSuccess = false;
       state.getOrderFailure = false;
       state.getOrderError = null;
     },
     // Get Approved Order List
-    getApprovedOrdersRequest: (state, action: PayloadAction<IGetOrdersRequest>) => {
+    getApprovedOrdersRequest: (
+      state,
+      action: PayloadAction<IGetOrdersRequest>,
+    ) => {
       state.getApprovedOrdersRequesting = true;
     },
-    getApprovedOrdersSuccess: (state, action: PayloadAction<IGetOrdersResponse>) => {
+    getApprovedOrdersSuccess: (
+      state,
+      action: PayloadAction<IGetOrdersResponse>,
+    ) => {
       state.getApprovedOrdersRequesting = false;
       state.getApprovedOrdersSuccess = true;
       state.approvedOrders = action.payload;
@@ -323,7 +347,7 @@ export const OrderSlice = createSlice({
       state.createMoneyReceiptFailure = true;
       state.createMoneyReceiptError = action.payload;
     },
-    resetCreateMoneyReceiptRequest: (state) => {
+    resetCreateMoneyReceiptRequest: state => {
       state.createMoneyReceiptRequesting = false;
       state.createMoneyReceiptSuccess = false;
       state.createMoneyReceiptFailure = false;
@@ -333,7 +357,10 @@ export const OrderSlice = createSlice({
     getMoneyReceiptListRequest: (state, action: PayloadAction<string>) => {
       state.getMoneyReceiptListRequesting = true;
     },
-    getMoneyReceiptListSuccess: (state, action: PayloadAction<IGetMoneyReceiptsResponse>) => {
+    getMoneyReceiptListSuccess: (
+      state,
+      action: PayloadAction<IGetMoneyReceiptsResponse>,
+    ) => {
       state.getMoneyReceiptListRequesting = false;
       state.getMoneyReceiptListSuccess = true;
       state.moneyReceiptList = action.payload;
@@ -345,10 +372,16 @@ export const OrderSlice = createSlice({
       state.getMoneyReceiptListError = action.payload;
     },
     // Edit Money Receipt List
-    editMoneyReceiptListRequest: (state, action: PayloadAction<{id:string, requestBody: any }>) => {
+    editMoneyReceiptListRequest: (
+      state,
+      action: PayloadAction<{id: string; requestBody: any}>,
+    ) => {
       state.editMoneyReceiptListRequesting = true;
     },
-    editMoneyReceiptListSuccess: (state, action: PayloadAction<IGetMoneyReceiptsResponse>) => {
+    editMoneyReceiptListSuccess: (
+      state,
+      action: PayloadAction<IGetMoneyReceiptsResponse>,
+    ) => {
       state.editMoneyReceiptListRequesting = false;
       state.editMoneyReceiptListSuccess = true;
       state.moneyReceiptData = action.payload;
@@ -360,29 +393,35 @@ export const OrderSlice = createSlice({
       state.editMoneyReceiptListError = action.payload;
     },
     // Money Receipt Template Html
-    getMoneyReceiptHtmlRequest: (state, action:PayloadAction<IHtmlTemplateRequest>) => {
+    getMoneyReceiptHtmlRequest: (
+      state,
+      action: PayloadAction<IHtmlTemplateRequest>,
+    ) => {
       state.getMoneyReceiptTemplateHtmlRequesting = true;
     },
-    getMoneyReceiptHtmlSuccess: (state, action:PayloadAction<IHtmlTemplateResponse>) => {
+    getMoneyReceiptHtmlSuccess: (
+      state,
+      action: PayloadAction<IHtmlTemplateResponse>,
+    ) => {
       state.getMoneyReceiptTemplateHtmlRequesting = false;
       state.getMoneyReceiptTemplateHtmlSuccess = true;
       state.getMoneyReceiptTemplateHtmlFailure = false;
       state.getMoneyReceiptTemplateHtmlError = null;
       state.moneyReceiptTemplateHtml = action.payload;
     },
-    getMoneyReceiptHtmlFailure: (state, action:PayloadAction<any>) => {
+    getMoneyReceiptHtmlFailure: (state, action: PayloadAction<any>) => {
       state.getMoneyReceiptTemplateHtmlRequesting = false;
       state.getMoneyReceiptTemplateHtmlSuccess = false;
       state.getMoneyReceiptTemplateHtmlFailure = true;
       state.getMoneyReceiptTemplateHtmlError = action.payload;
     },
-    resetGetMoneyReceiptHtmlRequest: (state) => {
+    resetGetMoneyReceiptHtmlRequest: state => {
       state.getMoneyReceiptTemplateHtmlRequesting = false;
       state.getMoneyReceiptTemplateHtmlSuccess = false;
       state.getMoneyReceiptTemplateHtmlFailure = false;
       state.getMoneyReceiptTemplateHtmlError = null;
     },
-    clearMoneyReceiptHtmlDocument: (state) => {
+    clearMoneyReceiptHtmlDocument: state => {
       state.moneyReceiptTemplateHtml = null;
     },
     // Create Car Condition
@@ -406,7 +445,7 @@ export const OrderSlice = createSlice({
       state.createCarConditionFailure = true;
       state.createCarConditionError = action.payload;
     },
-    resetCreateCarConditionRequest: (state) => {
+    resetCreateCarConditionRequest: state => {
       state.createCarConditionRequesting = false;
       state.createCarConditionSuccess = false;
       state.createCarConditionFailure = false;
@@ -416,7 +455,10 @@ export const OrderSlice = createSlice({
     getCarConditionListRequest: (state, action: PayloadAction<string>) => {
       state.getCarConditionListRequesting = true;
     },
-    getCarConditionListSuccess: (state, action: PayloadAction<IGetCarConditionListResponse>) => {
+    getCarConditionListSuccess: (
+      state,
+      action: PayloadAction<IGetCarConditionListResponse>,
+    ) => {
       state.getCarConditionListRequesting = false;
       state.getCarConditionListSuccess = true;
       state.carConditionList = action.payload;
@@ -426,6 +468,36 @@ export const OrderSlice = createSlice({
       state.getCarConditionListSuccess = false;
       state.getCarConditionListFailure = true;
       state.getCarConditionListError = action.payload;
+    },
+    // CarCondition Template Html
+    getCarConditionHtmlRequest: (
+      state,
+      action: PayloadAction<IHtmlTemplateRequest>,
+    ) => {
+      state.getCarConditionHtmlRequesting = true;
+    },
+    getCarConditionHtmlSuccess: (
+      state,
+      action: PayloadAction<IHtmlTemplateResponse>,
+    ) => {
+      state.getCarConditionHtmlRequesting = false;
+      state.getCarConditionHtmlSuccess = true;
+      state.getCarConditionHtmlFailure = false;
+      state.getBiltyTemplateHtmlError = null;
+      state.carConditionTemplateHtml = action.payload;
+    },
+    getCarConditionHtmlFailure: (state, action: PayloadAction<any>) => {
+      state.getCarConditionHtmlRequesting = false;
+      state.getCarConditionHtmlSuccess = false;
+      state.getCarConditionHtmlFailure = true;
+      state.getCarConditionTemplateHtmlError = action.payload;
+    },
+    resetGetCarConditionHtmlRequest: state => {
+      state.getCarConditionHtmlRequesting = false;
+      state.getCarConditionHtmlSuccess = false;
+      state.getCarConditionHtmlFailure = false;
+      state.getCarConditionTemplateHtmlError = null;
+      state.carConditionTemplateHtml = null;
     },
     // Create Bilty
     createBiltyRequest: (state, action: PayloadAction<ICreateBiltyRequest>) => {
@@ -445,7 +517,7 @@ export const OrderSlice = createSlice({
       state.createBiltyFailure = true;
       state.createBiltyError = action.payload;
     },
-    resetCreateBiltyRequest: (state) => {
+    resetCreateBiltyRequest: state => {
       state.createBiltyRequesting = false;
       state.createBiltySuccess = false;
       state.createBiltyFailure = false;
@@ -455,7 +527,10 @@ export const OrderSlice = createSlice({
     getBiltyListRequest: (state, action: PayloadAction<string>) => {
       state.getBiltyListRequesting = true;
     },
-    getBiltyListSuccess: (state, action: PayloadAction<IGetBiltyListResponse>) => {
+    getBiltyListSuccess: (
+      state,
+      action: PayloadAction<IGetBiltyListResponse>,
+    ) => {
       state.getBiltyListRequesting = false;
       state.getBiltyListSuccess = true;
       state.biltyList = action.payload;
@@ -467,23 +542,29 @@ export const OrderSlice = createSlice({
       state.getBiltyListError = action.payload;
     },
     // Bilty Template Html
-    getBiltyHtmlRequest: (state, action:PayloadAction<IHtmlTemplateRequest>) => {
+    getBiltyHtmlRequest: (
+      state,
+      action: PayloadAction<IHtmlTemplateRequest>,
+    ) => {
       state.getBiltyHtmlRequesting = true;
     },
-    getBiltyHtmlSuccess: (state, action:PayloadAction<IHtmlTemplateResponse>) => {
+    getBiltyHtmlSuccess: (
+      state,
+      action: PayloadAction<IHtmlTemplateResponse>,
+    ) => {
       state.getBiltyHtmlRequesting = false;
       state.getBiltyHtmlSuccess = true;
       state.getBiltyHtmlFailure = false;
       state.getBiltyTemplateHtmlError = null;
       state.biltyTemplateHtml = action.payload;
     },
-    getBiltyHtmlFailure: (state, action:PayloadAction<any>) => {
+    getBiltyHtmlFailure: (state, action: PayloadAction<any>) => {
       state.getBiltyHtmlRequesting = false;
       state.getBiltyHtmlSuccess = false;
       state.getBiltyHtmlFailure = true;
       state.getBiltyTemplateHtmlError = action.payload;
     },
-    resetGetBiltyHtmlRequest: (state) => {
+    resetGetBiltyHtmlRequest: state => {
       state.getBiltyHtmlRequesting = false;
       state.getBiltyHtmlSuccess = false;
       state.getBiltyHtmlFailure = false;
@@ -554,7 +635,7 @@ export const {
   getMoneyReceiptListRequest,
   getMoneyReceiptListSuccess,
   getMoneyReceiptListFailure,
-  // Edit Money Receipt 
+  // Edit Money Receipt
   editMoneyReceiptListRequest,
   editMoneyReceiptListSuccess,
   editMoneyReceiptListFailure,
@@ -573,6 +654,11 @@ export const {
   getCarConditionListRequest,
   getCarConditionListSuccess,
   getCarConditionListFailure,
+  // CarCondition Html
+  getCarConditionHtmlRequest,
+  getCarConditionHtmlSuccess,
+  getCarConditionHtmlFailure,
+  resetGetCarConditionHtmlRequest,
   // Create Bilty
   createBiltyRequest,
   createBiltySuccess,

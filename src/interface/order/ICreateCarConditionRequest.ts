@@ -1,3 +1,8 @@
+export interface IAccessory {
+  accessoryName:string;
+  present:boolean;
+}
+
 export interface ICreateCarConditionRequest {
   companyId: string;
   orderId: string;
@@ -9,6 +14,7 @@ export interface ICreateCarConditionRequest {
   model: string;
   yearOfManufacturing: string;
   color: string;
+  vehicleAccessories:IAccessory[],
   vehicleRegistrationNumber: string;
   vehicleCoveredDistanceInKM: string;
   vehicleValue: string;

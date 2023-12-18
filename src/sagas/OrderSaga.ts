@@ -26,6 +26,9 @@ import {
   getBiltyListFailure,
   getBiltyListRequest,
   getBiltyListSuccess,
+  getCarConditionHtmlFailure,
+  getCarConditionHtmlRequest,
+  getCarConditionHtmlSuccess,
   getCarConditionListFailure,
   getCarConditionListRequest,
   getCarConditionListSuccess,
@@ -232,6 +235,18 @@ export function* createCarConditionSaga(
     }
   }
 
+  export function* getCarConditionTemplateHtmlSaga(action: PayloadAction<IHtmlTemplateRequest>) {
+    try {
+        const {templateId, docId} = action.payload;
+        const response: IHtmlTemplateResponse = yield call(OrderService.GetCarConditionTemplateHtmlService, templateId, docId);
+        console.log('getCarConditionTemplateHtmlSaga-response----', JSON.stringify(response));
+        yield put(getCarConditionHtmlSuccess(response));
+    } catch (error) {
+        console.log('getCarConditionTemplateHtmlSaga-error----', JSON.stringify(error));
+        yield put(getCarConditionHtmlFailure(error));
+    }
+  }
+
 export function* watcherOrderSaga() {
   yield takeLatest(addOrderRequest.type, addOrderSaga);
   yield takeLatest(getOrdersRequest.type, getOrderListSaga);
@@ -246,4 +261,5 @@ export function* watcherOrderSaga() {
   yield takeLatest(getApprovedOrdersRequest.type, getApprovedOrderListSaga);
   yield takeLatest(getMoneyReceiptHtmlRequest.type, getMoneyReceiptTemplateHtmlSaga);
   yield takeLatest(getBiltyHtmlRequest.type, getBiltyTemplateHtmlSaga);
+  yield takeLatest(getCarConditionHtmlRequest.type, getCarConditionTemplateHtmlSaga);
 }
