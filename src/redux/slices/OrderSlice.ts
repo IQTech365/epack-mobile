@@ -21,6 +21,7 @@ import {
   IHtmlTemplateRequest,
   IHtmlTemplateResponse,
 } from '../../interface/order/templates/ITemplateResponse';
+import { ICreatePackingMaterialRequest, ICreatePackingMaterialResponse, IDeletePackingMaterialResponse, IGetPackingListRequest, IPackingMaterialResponse } from '../../interface/order/IPackingMaterialResponse';
 
 interface IOrderState {
   // Add Order
@@ -121,6 +122,24 @@ interface IOrderState {
   createInvoiceSuccess: boolean;
   createInvoiceFailure: boolean;
   createInvoiceError: any;
+  // Create Packing Material
+  createPackingMaterialInfo: ICreatePackingMaterialResponse | null;
+  createPackingMaterialRequesting:boolean;
+  createPackingMaterialSuccess:boolean;
+  createPackingMaterialFailure:boolean;
+  createPackingMaterialError:any;
+  // Packing Materials
+  packingMaterials: IPackingMaterialResponse | null;
+  getPackingMaterialsRequesting: boolean;
+  getPackingMaterialSuccess:boolean;
+  getPackingMaterialFailure:boolean;
+  getPackingMaterialError: any;
+  // Delete Packing Item
+  deletePackingItemInfo: IDeletePackingMaterialResponse | null;
+  deletePackingItemRequesting:boolean;
+  deletePackingItemSuccess:boolean;
+  deletePackingItemFailure:boolean;
+  deletePackingItemError:any;
 }
 
 const initialState: IOrderState = {
@@ -221,6 +240,24 @@ const initialState: IOrderState = {
   createInvoiceSuccess: false,
   createInvoiceFailure: false,
   createInvoiceError: null,
+  // Create Packing Material
+  createPackingMaterialInfo: null,
+  createPackingMaterialRequesting:false,
+  createPackingMaterialSuccess:false,
+  createPackingMaterialFailure:false,
+  createPackingMaterialError:null,
+  // Packing Materials
+  packingMaterials: null,
+  getPackingMaterialsRequesting: false,
+  getPackingMaterialSuccess:false,
+  getPackingMaterialFailure:false,
+  getPackingMaterialError: null,
+  // Delete Packing Item
+  deletePackingItemInfo: null,
+  deletePackingItemRequesting:false,
+  deletePackingItemSuccess:false,
+  deletePackingItemFailure:false,
+  deletePackingItemError:null,
 };
 
 export const OrderSlice = createSlice({
@@ -598,6 +635,81 @@ export const OrderSlice = createSlice({
       state.createInvoiceFailure = false;
       state.createInvoiceError = null;
     },
+     // Create Packing Material
+     createPackingMaterialsRequest: (
+      state,
+      action: PayloadAction<ICreatePackingMaterialRequest>,
+    ) => {
+      state.createPackingMaterialRequesting = true;
+    },
+    createPackingMaterialsSuccess: (
+      state,
+      action: PayloadAction<ICreatePackingMaterialResponse>,
+    ) => {
+      state.createPackingMaterialRequesting = false;
+      state.createPackingMaterialSuccess = true;
+      state.createPackingMaterialInfo = action.payload;
+    },
+    createPackingMaterialsFailure: (state, action: PayloadAction<any>) => {
+      state.createPackingMaterialRequesting = false;
+      state.createPackingMaterialSuccess = false;
+      state.createPackingMaterialFailure = true;
+      state.createPackingMaterialError = action.payload;
+    },
+    resetCreatePackingMaterialsRequest: (state, action: PayloadAction<any>) => {
+      state.createPackingMaterialRequesting = false;
+      state.createPackingMaterialSuccess = false;
+      state.createPackingMaterialFailure = false;
+      state.createPackingMaterialError = null;
+    },
+    // Get Packing Materials
+    getPackingMaterialsRequest: (
+      state,
+      action: PayloadAction<IGetPackingListRequest>,
+    ) => {
+      state.getPackingMaterialsRequesting = true;
+    },
+    getPackingMaterialsSuccess: (
+      state,
+      action: PayloadAction<IPackingMaterialResponse>,
+    ) => {
+      state.getPackingMaterialsRequesting = false;
+      state.getPackingMaterialSuccess = true;
+      state.packingMaterials = action.payload;
+    },
+    getPackingMaterialsFailure: (state, action: PayloadAction<any>) => {
+      state.getPackingMaterialsRequesting = false;
+      state.getPackingMaterialSuccess = false;
+      state.getPackingMaterialFailure = true;
+      state.getPackingMaterialError = action.payload;
+    },
+    // Delete Packing Material Item
+    deletePackingMaterialItemRequest: (
+      state,
+      action: PayloadAction<string>,
+    ) => {
+      state.deletePackingItemRequesting = true;
+    },
+    deletePackingMaterialItemSuccess: (
+      state,
+      action: PayloadAction<IDeletePackingMaterialResponse>,
+    ) => {
+      state.deletePackingItemRequesting = false;
+      state.deletePackingItemSuccess = true;
+      state.deletePackingItemInfo = action.payload;
+    },
+    deletePackingMaterialItemFailure: (state, action: PayloadAction<any>) => {
+      state.deletePackingItemRequesting = false;
+      state.deletePackingItemSuccess = false;
+      state.deletePackingItemFailure = true;
+      state.deletePackingItemError = action.payload;
+    },
+    resetDeletePackingMaterialItemRequest: (state, action: PayloadAction<any>) => {
+      state.deletePackingItemRequesting = false;
+      state.deletePackingItemSuccess = false;
+      state.deletePackingItemFailure = false;
+      state.deletePackingItemError = null;
+    },
   },
 });
 
@@ -677,4 +789,18 @@ export const {
   createInvoiceRequest,
   createInvoiceSuccess,
   createInvoiceFailure,
+  // Create Packing Material
+  createPackingMaterialsRequest,
+  createPackingMaterialsSuccess,
+  createPackingMaterialsFailure,
+  resetCreatePackingMaterialsRequest,
+  // Get Packing Materials
+  getPackingMaterialsRequest,
+  getPackingMaterialsSuccess,
+  getPackingMaterialsFailure,
+  // Delete Packing Material Item
+  deletePackingMaterialItemRequest,
+  deletePackingMaterialItemSuccess,
+  deletePackingMaterialItemFailure,
+  resetDeletePackingMaterialItemRequest,
 } = OrderSlice.actions;

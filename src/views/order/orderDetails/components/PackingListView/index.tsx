@@ -1,191 +1,80 @@
-import React, { useReducer, useCallback, useEffect } from 'react';
-import { View, Text, Alert } from 'react-native';
-import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
-import DatePickerComponent from '../../../../../common/DatePickerComponent';
-import DropdownComponent from '../../../../../common/DropdownComponent';
-import Input from '../../../../../common/Input';
-import Label from '../../../../../common/Label';
+import React, {useEffect, useState} from 'react';
+import {View, TouchableOpacity} from 'react-native';
 import Spacer from '../../../../../common/Spacer';
-import { TDropdownItem } from '../../../../../type/TDropdownItem';
-import { COLOR_BLACK } from '../../../../../utils/colors';
 import styles from './style';
-import receiptAgainstOptions from '../../../../../data/receiptAgainstOptions.json';
-
-import { formatDate, formatDate3 } from '../../../../../utils/formatter';
-import Button from '../../../../../common/Button';
-import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
+import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import Spinner from '../../../../../common/Spinner';
 import Toast from 'react-native-toast-message';
 import useCompanyId from '../../../../../hooks/useCompanyId';
+import useAuthId from '../../../../../hooks/useAuthId';
+import ListViewIcon from '../../../../../images/icons/list_view_icon.svg';
+import ListViewIcon2 from '../../../../../images/icons/list_view_icon2.svg';
+import CreateIcon from '../../../../../images/icons/create_icon.svg';
+import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
+import PackingFormView from './PackingFormView';
+import PackingListView from './PackingListView';
+import { getPackingTypesRequest } from '../../../../../redux/slices/CommonSlice';
 
 interface IPackingListViewProps {
-  
+  orderId: string;
 }
 
-const PackingListView: React.FC<IPackingListViewProps> = ({ }) => {
+const PackingView: React.FC<IPackingListViewProps> = ({orderId}) => {
   const companyId = useCompanyId();
-  const dispatch2 = useAppDispatch();
-  const handleReceiptDate = (date: Date) => {
-    // dispatch({
-    //   type: MONEYRECEIPT_FORM_ACTION.RECEIPT_DATE,
-    //   payload: formatDate(date),
-    // });
-  };
-
-  const handlePackingNoInputTextChange = (text: string) => {
-    // dispatch({
-    //   type: MONEYRECEIPT_FORM_ACTION.RECEIPT_NO,
-    //   payload: text,
-    // });
-  };
-
-  const handleParticularNameInputTextChange = (text: string) => {
-    // dispatch({
-    //   type: MONEYRECEIPT_FORM_ACTION.RECEIPT_NO,
-    //   payload: text,
-    // });
-  };
-
-  const handleQuantityInputTextChange = (text: string) => {
-    // dispatch({
-    //   type: MONEYRECEIPT_FORM_ACTION.RECEIPT_NO,
-    //   payload: text,
-    // });
-  };
-
-  const handleProductCodeInputTextChange = (text: string) => {
-    // dispatch({
-    //   type: MONEYRECEIPT_FORM_ACTION.RECEIPT_NO,
-    //   payload: text,
-    // });
-  };
-
-  const handleGoodsInputTextChange = (text: string) => {
-    // dispatch({
-    //   type: MONEYRECEIPT_FORM_ACTION.RECEIPT_NO,
-    //   payload: text,
-    // });
-  };
-
-  const handleDescriptionInputTextChange = (text: string) => {
-    // dispatch({
-    //   type: MONEYRECEIPT_FORM_ACTION.RECEIPT_NO,
-    //   payload: text,
-    // });
-  };
-  const handleTemplateDesign = (item: TDropdownItem) => {
-    // dispatch({
-    //   type: MONEYRECEIPT_FORM_ACTION.MONEY_RECEIPT_DESIGNS,
-    //   payload: item.value,
-    // });
-  };
-
-  const handleCreate = () => {
-  };
+  const authId = useAuthId();
+  const dispatch = useAppDispatch();
+  const [showForm, setShowForm] = useState<boolean>(false);
+  const [showList, setShowList] = useState<boolean>(true);
+  const {packingTypesRequesting} = useAppSelector(state => state.Common);
 
   useEffect(() => {
-   
-  });
+    dispatch(getPackingTypesRequest());
+  }, []);
+
+  const handleShowForm = () => {
+    setShowList(false);
+    setShowForm(true);
+  };
+
+  const handleShowList = () => {
+    setShowList(true);
+    setShowForm(false);
+  };
+
+  const _showForm = () => {
+    if (showList) return null;
+    return <PackingFormView orderId={orderId} />;
+  };
+
+  const _showList = () => {
+    if (showForm) return null;
+    return <PackingListView orderId={orderId} />;
+  };
 
   return (
-    <AvoidSoftInputViewHOC>
-      <View style={styles.container}>
-        <Spacer height={4} />
-        <Label text="Item / Particular Name" style={styles.labelHeading} />
-        <Spacer height={4} />
-          <View>
-            <View style={styles.elementContainer}>
-              <View style={styles.itemContainer}>
-                <Label text="Packing List No." style={styles.label} />
-                <Input
-                  onChangeText={handlePackingNoInputTextChange}
-                  containerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
-                  selectionColor={COLOR_BLACK}
-                  placeholder='HR 55 hY 2259'
-                />
-              </View>
-              <View style={styles.itemContainer}>
-                <Label text="Date" style={styles.label} />
-                <DatePickerComponent onDateSelect={handleReceiptDate} />
-              </View>
-            </View>
-            <Spacer height={4} />
-            <View style={styles.elementContainer2}>
-              <Label text="Item/Particulars Name" style={styles.label} />
-              <Input
-                  onChangeText={handleParticularNameInputTextChange}
-                  containerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
-                  selectionColor={COLOR_BLACK}
-                />
-            </View>
-            <Spacer height={4} />
-            <View style={styles.elementContainer}>
-              <View style={styles.itemContainer}>
-              <Label text="Quantity" style={styles.label} />
-                <Input
-                  onChangeText={handleQuantityInputTextChange}
-                  containerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
-                  selectionColor={COLOR_BLACK}
-                />
-              </View>
-              <View style={styles.itemContainer}>
-              <Label text="Packing Type" style={styles.label} />
-                <DropdownComponent
-                  data={receiptAgainstOptions}
-                  onSelect={handleTemplateDesign}
-                />
-                
-              </View>
-            </View>
-            <Spacer height={4} />
-            <View style={styles.elementContainer}>
-              <View style={styles.itemContainer}>
-              <Label text="Product Code" style={styles.label} />
-                <Input
-                  onChangeText={handleProductCodeInputTextChange}
-                  containerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
-                  selectionColor={COLOR_BLACK}
-                />
-              </View>
-              <View style={styles.itemContainer}>
-              <Label text="Value Of goods" style={styles.label} />
-              <Input
-                  onChangeText={handleGoodsInputTextChange}
-                  containerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
-                  selectionColor={COLOR_BLACK}
-                  placeholder='2000'
-                />
-              </View>
-            </View>
-            <Spacer height={4} />
-            <View style={styles.elementContainer2}>
-              <Label text="Description" style={styles.label} />
-              <Input
-                onChangeText={handleDescriptionInputTextChange}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-              />
-            </View>
-          </View>
-        
-        <Spacer height={12} />
-        <Button
-          text="Add item/Particular"
-          onPress={handleCreate}
-          disabled={false}
-          style={styles.previewButtonStyle}
-          textStyle={styles.textStyle}
-        />
-        <Spacer height={8} />
-        {/* <Spinner show={createMoneyReceiptRequesting} /> */}
+    <View style={{flex: 1}}>
+      <View style={styles.container2}>
+        <TouchableOpacity onPress={handleShowList} activeOpacity={0.4}>
+          {showList ? (
+            <ListViewIcon2 width={30} height={30} />
+          ) : (
+            <ListViewIcon width={30} height={30} />
+          )}
+        </TouchableOpacity>
+        <Spacer width={10} />
+        <TouchableOpacity onPress={handleShowForm} activeOpacity={0.4}>
+          {showForm ? (
+            <CreateIcon2 width={30} height={30} />
+          ) : (
+            <CreateIcon width={30} height={30} />
+          )}
+        </TouchableOpacity>
+        <Spacer width={10} />
       </View>
-    </AvoidSoftInputViewHOC>
+      {_showList()}
+      {_showForm()}
+      <Spinner show={packingTypesRequesting} />
+    </View>
   );
 };
-export default PackingListView;
+export default PackingView;
