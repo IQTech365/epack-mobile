@@ -31,7 +31,7 @@ const VehicleDetails: React.FC<{}> = ({}) => {
     setTransitDays,
     setExpectedDateOfDelivery,
   } = useBiltyFormContextHook();
-
+  
   const {vehicleSizeData} = useAppSelector(state => state.Vehicle);
 
   const _getVehicleSizes = () => {

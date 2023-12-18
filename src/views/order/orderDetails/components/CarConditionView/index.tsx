@@ -16,6 +16,7 @@ import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
 import CarConditionFormView from '../CarConditionFormView';
 import { getCarConditionListRequest } from '../../../../../redux/slices/OrderSlice';
 import Spinner from '../../../../../common/Spinner';
+import { getVehicleAccessoriesRequest, getVehicleColorRequest, getVehicleCompanyRequest, getVehicleModelsRequest, getVehicleTypesRequest } from '../../../../../redux/slices/CommonSlice';
 
 interface ICarConditionViewProps {
   orderId: string;
@@ -24,9 +25,16 @@ interface ICarConditionViewProps {
 const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId}) => {
   const dispatch = useAppDispatch();
   const {carConditionList, getCarConditionListRequesting} = useAppSelector(state => state.Order);
-
+  const {
+    vehicleTypesRequesting,
+    vehicleCompaniesRequesting,
+    vehicleColorsRequesting,
+    vehicleAccessoriesRequesting,
+    vehicleModelsRequesting,
+  } = useAppSelector(state => state.Common);
   const [showCarConditionList, setShowCarConditionList] = useState<boolean>(false);
   const [createNewCarCondition, setCreateNewCarCondition] = useState<boolean>(true);
+  const loading = vehicleTypesRequesting || vehicleCompaniesRequesting || vehicleColorsRequesting || vehicleAccessoriesRequesting || vehicleModelsRequesting;
 
   const handleCreateNewCarCondition = () => {
     setShowCarConditionList(false);
@@ -40,6 +48,11 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId}) => {
 
   useEffect(() => {
     dispatch(getCarConditionListRequest(orderId));
+    dispatch(getVehicleTypesRequest());
+    dispatch(getVehicleCompanyRequest());
+    dispatch(getVehicleColorRequest());
+    dispatch(getVehicleAccessoriesRequest());
+    dispatch(getVehicleModelsRequest());
   }, []);
 
   const showEmptyView = () => {
@@ -81,6 +94,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId}) => {
     return null;
   };
 
+
   return (
     <>
       <View style={styles.container}>
@@ -103,7 +117,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId}) => {
       </View>
       {showForm()}
       {showList()}
-      <Spinner show={getCarConditionListRequesting} />
+      <Spinner show={getCarConditionListRequesting || loading} />
     </>
   );
 };

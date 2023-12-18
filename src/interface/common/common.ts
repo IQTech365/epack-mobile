@@ -74,9 +74,33 @@ export interface IVehicleAccessoryResponse {
 }
 
 // Vehicle Model
-export interface IVehicleModel {}
+export interface IVehicleModel {
+  _id: string;
+  vehicleType: string;
+  vehicleCompanyName: string;
+  vehicleModel: string;
+  isActive: boolean;
+  isDeleted: boolean;
+  createdDate: string;
+  __v: number;
+}
 export interface IVehicleModelResponse {
   data: IVehicleModel[];
+  status: number;
+  error: boolean;
+}
+
+// Vehicle Type
+export interface IVehicleType {
+  _id: string;
+  vehicleType: string;
+  isActive: boolean;
+  isDeleted: boolean;
+  createdDate: string;
+  __v: number;
+}
+export interface IVehicleTypesResponse {
+  data: IVehicleType[];
   status: number;
   error: boolean;
 }

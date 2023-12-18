@@ -5,9 +5,16 @@ import {
   IVehicleColorResponse,
   IVehicleAccessoryResponse,
   IVehicleModelResponse,
+  IVehicleTypesResponse,
 } from '../../interface/common/common';
 
 interface ICommonState {
+  // Vehicle Type
+  vehicleTypes: IVehicleTypesResponse | null;
+  vehicleTypesRequesting:boolean;
+  vehicleTypesRequestSuccess:boolean;
+  vehicleTypesRequestFailure:boolean;
+  vehicleTypesError:any;
   // Get PackingType
   packingTypes: IPackingTypeResponse | null;
   packingTypesRequesting: boolean;
@@ -41,6 +48,12 @@ interface ICommonState {
 }
 
 const initialState: ICommonState = {
+  // Vehicle Type
+  vehicleTypes: null,
+  vehicleTypesRequesting:false,
+  vehicleTypesRequestSuccess:false,
+  vehicleTypesRequestFailure:false,
+  vehicleTypesError:null,
   // Get PackingType
   packingTypes: null,
   packingTypesRequesting: false,
@@ -77,9 +90,27 @@ export const CommonSlice = createSlice({
   name: 'CommonSlice',
   initialState: initialState,
   reducers: {
+    // Vehilce Types
+    getVehicleTypesRequest: state => {
+      state.packingTypesRequesting = true;
+    },
+    getVehicleTypesSuccess: (
+      state,
+      action: PayloadAction<IVehicleTypesResponse>,
+    ) => {
+      state.vehicleTypesRequesting = false;
+      state.vehicleTypesRequestSuccess = true;
+      state.vehicleTypes = action.payload;
+    },
+    getVehicleTypesFailure: (state, action: PayloadAction<any>) => {
+      state.vehicleTypesRequesting = false;
+      state.vehicleTypesRequestSuccess = false;
+      state.vehicleTypesRequestFailure = true;
+      state.vehicleTypesError = action.payload;
+    },
     // Get PackingType
     getPackingTypesRequest: state => {
-      state.packingTypesRequesting = true;
+      state.vehicleTypesRequesting = true;
     },
     getPackingTypesSuccess: (
       state,
@@ -114,20 +145,87 @@ export const CommonSlice = createSlice({
       state.vehicleCompaniesError = action.payload;
     },
     // Vehicle Color
+    getVehicleColorRequest: state => {
+      state.vehicleColorsRequesting = true;
+    },
+    getVehicleColorSuccess: (
+      state,
+      action: PayloadAction<IVehicleColorResponse>,
+    ) => {
+      state.vehicleColorsRequesting = false;
+      state.vehicleColorsRequestSuccess = true;
+      state.vehicleColors = action.payload;
+    },
+    getVehicleColorFailure: (state, action: PayloadAction<any>) => {
+      state.vehicleColorsRequesting = false;
+      state.vehicleColorsRequestSuccess = false;
+      state.vehicleColorsRequestFailure = true;
+      state.vehicleColorsError = action.payload;
+    },
     // Vehicle Accessory
+    getVehicleAccessoriesRequest: state => {
+      state.vehicleAccessoriesRequesting = true;
+    },
+    getVehicleAccessoriesSuccess: (
+      state,
+      action: PayloadAction<IVehicleAccessoryResponse>,
+    ) => {
+      state.vehicleAccessoriesRequesting = false;
+      state.vehicleAccessoriesRequestSuccess = true;
+      state.vehicleAccessories = action.payload;
+    },
+    getVehicleAccessoriesFailure: (state, action: PayloadAction<any>) => {
+      state.vehicleAccessoriesRequesting = false;
+      state.vehicleAccessoriesRequestSuccess = false;
+      state.vehicleAccessoriesRequestFailure = true;
+      state.vehicleAccessoriesError = action.payload;
+    },
     // Vehicle Model
+    getVehicleModelsRequest: state => {
+      state.vehicleModelsRequesting = true;
+    },
+    getVehicleModelsSuccess: (
+      state,
+      action: PayloadAction<IVehicleModelResponse>,
+    ) => {
+      state.vehicleModelsRequesting = false;
+      state.vehicleModelsRequestSuccess = true;
+      state.vehicleModels = action.payload;
+    },
+    getVehicleModelsFailure: (state, action: PayloadAction<any>) => {
+      state.vehicleModelsRequesting = false;
+      state.vehicleModelsRequestSuccess = false;
+      state.vehicleModelsRequestFailure = true;
+      state.vehicleModelsError = action.payload;
+    },
   },
 });
 
 export default CommonSlice.reducer;
 
 export const {
+  // Vehicle Types
+  getVehicleTypesRequest,
+  getVehicleTypesSuccess,
+  getVehicleTypesFailure,
   // Get PackingType
   getPackingTypesRequest,
   getPackingTypesSuccess,
   getPackingTypesFailure,
   // Vehicle Company
+  getVehicleCompanyRequest,
+  getVehicleCompanySuccess,
+  getVehicleCompanyFailure,
   // Vehicle Color
+  getVehicleColorRequest,
+  getVehicleColorSuccess,
+  getVehicleColorFailure,
   // Vehicle Accessory
+  getVehicleAccessoriesRequest,
+  getVehicleAccessoriesSuccess,
+  getVehicleAccessoriesFailure,
   // Vehicle Model
+  getVehicleModelsRequest,
+  getVehicleModelsSuccess,
+  getVehicleModelsFailure,
 } = CommonSlice.actions;

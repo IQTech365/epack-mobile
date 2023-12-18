@@ -47,6 +47,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
     getBiltyHtmlSuccess,
     getBiltyHtmlFailure,
   } = useAppSelector(state => state.Order);
+
   // console.log('biltyList----', JSON.stringify(biltyList));
 
   const [showBiltyList, setShowBiltyList] = useState<boolean>(false);
@@ -121,12 +122,12 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
   const handleShowPreviewModalClose = () => {
     dispatch(resetGetBiltyHtmlRequest());
     setShowModal(false);
-    
   };
 
   useEffect(() => {
     dispatch(getBiltyListRequest(orderId));
   }, []);
+
 
   const showEmptyView = () => {
     return (

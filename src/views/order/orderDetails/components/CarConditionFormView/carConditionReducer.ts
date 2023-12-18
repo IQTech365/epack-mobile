@@ -5,6 +5,7 @@ export enum CARCONDITION_FORM_ACTION {
   CHOOSE_TEMPLATE = 'CHOOSE_TEMPLATE ',
   DATE_OF_CARCONDITION = 'DATE_OF_CARCONDITION',
   CN_BILTY_LR_NO = 'CN_BILTY_LR_NO ',
+  VEHICLE_TYPE = 'VEHICLE_TYPE',
   MANUFACTURER = 'MANUFACTURER',
   MODEL = 'MODEL',
   COLOR = 'COLOR',
@@ -46,6 +47,7 @@ interface ICarConditionFormState {
   chooseTemplate: string;
   dateOfCarCondition: string;
   cnBiltyLrNo: string;
+  vehicleType:string;
   manufacturer: string;
   model: string;
   color: string;
@@ -94,6 +96,7 @@ export const initialState: ICarConditionFormState = {
   chooseTemplate: '',
   dateOfCarCondition: '',
   cnBiltyLrNo: '',
+  vehicleType: '',
   manufacturer: '',
   model: '',
   color: '',

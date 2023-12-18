@@ -1,5 +1,5 @@
-import React, { useReducer, useState, useCallback, useEffect } from 'react';
-import { View, Text, Alert } from 'react-native';
+import React, {useReducer, useState, useEffect} from 'react';
+import {View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
 import DatePickerComponent from '../../../../../common/DatePickerComponent';
@@ -7,37 +7,43 @@ import DropdownComponent from '../../../../../common/DropdownComponent';
 import Input from '../../../../../common/Input';
 import Label from '../../../../../common/Label';
 import Spacer from '../../../../../common/Spacer';
-import { TDropdownItem } from '../../../../../type/TDropdownItem';
-import { COLOR_BLACK } from '../../../../../utils/colors';
+import {TDropdownItem} from '../../../../../type/TDropdownItem';
+import {COLOR_BLACK} from '../../../../../utils/colors';
 import styles from './style';
-import shiftingLuggages from '../../../../../data/shiftingLuggage.json';
 import carYear from '../../../../../data/carYear.json';
-import carColor from '../../../../../data/carColor.json';
-import carModel from '../../../../../data/carModel.json';
-import carManufacturer from '../../../../../data/carManufacturer.json';
-import { Switch } from 'react-native-switch';
 import AccessoryView from '../AccessoryView';
-import accessories from '../../../../../data/accessories.json';
 import {
   initialState,
   carConditionReducer,
   CARCONDITION_FORM_ACTION,
 } from './carConditionReducer';
-import { formatDate, formatDate3 } from '../../../../../utils/formatter';
+import {formatDate, formatDate3} from '../../../../../utils/formatter';
 import Button from '../../../../../common/Button';
-import { ICreateCarConditionRequest } from '../../../../../interface/order/ICreateCarConditionRequest';
-import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
-import { createCarConditionRequest } from '../../../../../redux/slices/OrderSlice';
+import {ICreateCarConditionRequest} from '../../../../../interface/order/ICreateCarConditionRequest';
+import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
+import {createCarConditionRequest} from '../../../../../redux/slices/OrderSlice';
 import Spinner from '../../../../../common/Spinner';
 import Toast from 'react-native-toast-message';
 import useCompanyId from '../../../../../hooks/useCompanyId';
+import {
+  getVehicleAccessoryList,
+  getVehicleColorList,
+  getVehicleCompanyList,
+  getVehicleModelList,
+  getVehicleTypeList,
+} from './utils';
+import useAuthId from '../../../../../hooks/useAuthId';
 
 interface ICarConditionFormViewProps {
   orderId: string | undefined;
 }
 
-const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({ orderId }) => {
+const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
+  orderId,
+}) => {
   const [switchState, setSwitchState] = useState<boolean>(false);
+  const [vehicleTypeId, setVehicleTypeId] = useState<string>('');
+  const [vehicleCompanyId, setVehicleCompanyId] = useState<string>('');
   const [reducerState, dispatch] = useReducer(
     carConditionReducer,
     initialState,
@@ -47,11 +53,24 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({ orderId })
     createCarConditionSuccess,
     createCarConditionError,
     createCarConditionFailure,
-    orders
+    orders,
   } = useAppSelector(state => state.Order);
+  const {
+    vehicleTypes,
+    vehicleCompanies,
+    vehicleColors,
+    vehicleAccessories,
+    vehicleModels,
+  } = useAppSelector(state => state.Common);
+  console.log('VTypes--', JSON.stringify(vehicleTypes));
+  console.log('VCompanies--', JSON.stringify(vehicleCompanies));
+  console.log('VColors--', JSON.stringify(vehicleColors));
+  console.log('VAccessories--', JSON.stringify(vehicleAccessories));
+  console.log('VModels--', JSON.stringify(vehicleModels));
   const dispatch2 = useAppDispatch();
   const {otpData} = useAppSelector(state => state.OTP);
   const companyId = useCompanyId();
+  const authId = useAuthId();
 
   const switchWrapperStyle = switchState
     ? styles.switchMainWrapper
@@ -77,7 +96,16 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({ orderId })
     });
   };
 
+  const handleVehicleType = (item: TDropdownItem) => {
+    setVehicleTypeId(item.value);
+    dispatch({
+      type: CARCONDITION_FORM_ACTION.VEHICLE_TYPE,
+      payload: item.label,
+    });
+  };
+
   const handleManufacturer = (item: TDropdownItem) => {
+    setVehicleCompanyId(item.value);
     dispatch({
       type: CARCONDITION_FORM_ACTION.MANUFACTURER,
       payload: item.label,
@@ -193,7 +221,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({ orderId })
       templateId: '32423erer',
       carConditionNumber: reducerState.carConditionNumber,
       dateOfCarCondition: reducerState.dateOfCarCondition,
-      vehicleType: 'CAR',
+      vehicleType: reducerState.vehicleType,
       manufacturer: reducerState.manufacturer,
       model: reducerState.model,
       yearOfManufacturing: reducerState.yearOfManufacturing,
@@ -212,7 +240,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({ orderId })
       dent: reducerState.dent,
       visibleObservation: reducerState.visibleObservation,
       remarks: reducerState.remarks,
-      addedBy: otpData?.data.id as string,
+      addedBy: authId,
     };
     console.log(payload, 'payload carconditon req');
 
@@ -247,7 +275,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({ orderId })
           <View>
             <View style={styles.elementContainer}>
               <View style={styles.itemContainer}>
-                <Label text="Car Condition No." style={styles.label} />
+                <Label text="Vehicle Condition No." style={styles.label} />
                 <Input
                   onChangeText={handleCarConditionNo}
                   containerStyle={styles.inputContainer}
@@ -256,33 +284,42 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({ orderId })
                 />
               </View>
               <View style={styles.itemContainer}>
-                <Label text="Date of Car Condition" style={styles.label} />
+                <Label text="Date of Vehicle Condition" style={styles.label} />
                 <DatePickerComponent onDateSelect={handleCarConditionDate} />
               </View>
             </View>
             <Spacer height={4} />
-            <View style={styles.elementContainer2}>
-              <Label text="CN / Bilty / LR No." style={styles.label} />
-              <Input
-                onChangeText={handleCnBiltyLrNO}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-              />
+            <View style={styles.elementContainer}>
+              <View style={styles.itemContainer}>
+                <Label text="CN / Bilty / LR No." style={styles.label} />
+                <Input
+                  onChangeText={handleCnBiltyLrNO}
+                  containerStyle={styles.inputContainer}
+                  inputStyle={styles.input}
+                  selectionColor={COLOR_BLACK}
+                />
+              </View>
+              <View style={styles.itemContainer}>
+                <Label text="Vehicle Type" style={styles.label} />
+                <DropdownComponent
+                  data={getVehicleTypeList(vehicleTypes)}
+                  onSelect={handleVehicleType}
+                />
+              </View>
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
               <View style={styles.itemContainer}>
                 <Label text="Manufacturer" style={styles.label} />
                 <DropdownComponent
-                  data={carManufacturer}
+                  data={getVehicleCompanyList(vehicleTypeId, vehicleCompanies)}
                   onSelect={handleManufacturer}
                 />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Model" style={styles.label} />
                 <DropdownComponent
-                  data={carModel}
+                  data={getVehicleModelList(vehicleCompanyId, vehicleModels)}
                   onSelect={handleModel}
                 />
               </View>
@@ -292,16 +329,13 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({ orderId })
               <View style={styles.itemContainer}>
                 <Label text="Color" style={styles.label} />
                 <DropdownComponent
-                  data={carColor}
+                  data={getVehicleColorList(vehicleColors)}
                   onSelect={handleColor}
                 />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Year" style={styles.label} />
-                <DropdownComponent
-                  data={carYear}
-                  onSelect={handleYear}
-                />
+                <DropdownComponent data={carYear} onSelect={handleYear} />
               </View>
             </View>
             <Spacer height={4} />
@@ -381,13 +415,13 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({ orderId })
         <Spacer height={4} />
         <CollapsibleView title="ACCESSORIES DETAILS" collapsed={false}>
           <View>
-            {accessories.map((accessory, index) => {
+            {getVehicleAccessoryList(vehicleAccessories).map((accessory, index) => {
               return (
                 <View key={index}>
                   <AccessoryView
                     label={accessory.label}
-                    onYesPress={() => { }}
-                    onNoPress={() => { }}
+                    onYesPress={() => {}}
+                    onNoPress={() => {}}
                   />
                   <Spacer height={8} />
                 </View>

@@ -112,5 +112,16 @@ export const GET_QUOTATION_TEMPLATE_HTML = (templateId, docId) => `template/crea
 export const GET_BILTY_TEMPLATE_HTML = (templateId, docId) => `template/create-bilty-template/${templateId}/${docId}`;
 export const GET_CAR_CONDITION_TEMPLATE_HTML = (templateId, docId) => `template/create-car-condition-template/${templateId}/${docId}`;
 
+// Vehicle types
+export const GET_VEHICLE_TYPES = `/vehicle-management/vehicle-type/getAll`;
 // Packing Types
 export const GET_PACKING_TYPES = `/shifting-management/packing-type/getAll`;
+
+// Vehicle Companies
+export const GET_VEHICLE_COMPANIES = `/vehicle-management/vehicle-company/getAll`;
+// Vehicle Colors
+export const GET_VEHICLE_COLORS = `/vehicle-management/vehicle-color/getAll`;
+// Vehicle Accessories
+export const GET_VEHICLE_ACCESSORIES = `/vehicle-management/vehicle-accessory/getAll`;
+// Vehicle Models
+export const GET_VEHICLE_MODELS = `/vehicle-management/vehicle-model/all`;
