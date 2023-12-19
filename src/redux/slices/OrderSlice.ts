@@ -21,7 +21,7 @@ import {
   IHtmlTemplateRequest,
   IHtmlTemplateResponse,
 } from '../../interface/order/templates/ITemplateResponse';
-import { ICreatePackingMaterialRequest, ICreatePackingMaterialResponse, IDeletePackingMaterialResponse, IGetPackingListRequest, IPackingMaterialResponse } from '../../interface/order/IPackingMaterialResponse';
+import { ICreatePackingMaterialRequest, ICreatePackingMaterialResponse, IDeletePackingListItemResponse, IGetPackingListRequest, IPackingListResponse } from '../../interface/order/IPackingMaterialResponse';
 
 interface IOrderState {
   // Add Order
@@ -129,13 +129,13 @@ interface IOrderState {
   createPackingMaterialFailure:boolean;
   createPackingMaterialError:any;
   // Packing Materials
-  packingMaterials: IPackingMaterialResponse | null;
+  packingMaterials: IPackingListResponse | null;
   getPackingMaterialsRequesting: boolean;
   getPackingMaterialSuccess:boolean;
   getPackingMaterialFailure:boolean;
   getPackingMaterialError: any;
   // Delete Packing Item
-  deletePackingItemInfo: IDeletePackingMaterialResponse | null;
+  deletePackingItemInfo: IDeletePackingListItemResponse | null;
   deletePackingItemRequesting:boolean;
   deletePackingItemSuccess:boolean;
   deletePackingItemFailure:boolean;
@@ -671,7 +671,7 @@ export const OrderSlice = createSlice({
     },
     getPackingMaterialsSuccess: (
       state,
-      action: PayloadAction<IPackingMaterialResponse>,
+      action: PayloadAction<IPackingListResponse>,
     ) => {
       state.getPackingMaterialsRequesting = false;
       state.getPackingMaterialSuccess = true;
@@ -692,7 +692,7 @@ export const OrderSlice = createSlice({
     },
     deletePackingMaterialItemSuccess: (
       state,
-      action: PayloadAction<IDeletePackingMaterialResponse>,
+      action: PayloadAction<IDeletePackingListItemResponse>,
     ) => {
       state.deletePackingItemRequesting = false;
       state.deletePackingItemSuccess = true;

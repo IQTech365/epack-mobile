@@ -5,6 +5,8 @@ import {
   CREATE_BILTY,
   CREATE_CAR_CONDITION,
   CREATE_MONEY_RECEIPT,
+  CREATE_PACKING_LIST,
+  DELETE_PACKING_LIST_ITEM,
   EDIT_COMPANY,
   EDIT_MONEY_RECEIPT_LIST,
   GET_BILTY_LIST,
@@ -16,6 +18,7 @@ import {
   GET_MONEY_RECEIPT_TEMPLATE_HTML,
   GET_ORDER_DETAILS,
   GET_ORDER_LIST,
+  GET_PACKING_LIST,
 } from '../http/Endpoint';
 import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
 import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
@@ -38,6 +41,7 @@ import { IGetOrdersRequest } from '../interface/order/IGetOrdersRequest';
 import { ISingleOrderRequest } from '../interface/order/ISingleOrderRequest';
 import { ISingleEnquiryResponse } from '../interface/enquiry/ISingleEnquiryResponse';
 import { IHtmlTemplateResponse } from '../interface/order/templates/ITemplateResponse';
+import { ICreatePackingMaterialRequest, ICreatePackingMaterialResponse, IDeletePackingListItemResponse, IGetPackingListRequest, IPackingListResponse } from '../interface/order/IPackingMaterialResponse';
 
 export const GetOrderDetailsService = async (payload: string): Promise<IOrderDetailsResponse> => {
     console.log('GetOrderDetailsService--payload--', JSON.stringify(payload));
@@ -141,5 +145,23 @@ export const GetCarConditionTemplateHtmlService = async (templateId:string, docI
     console.log('GetCarConditionTemplateHtmlService--payload--', JSON.stringify(templateId));
     const api = Api.getInstance();
     return await api.get<IHtmlTemplateResponse>(GET_CAR_CONDITION_TEMPLATE_HTML(templateId, docId));
+}
+
+export const CreatePackingListService = async (payload: ICreatePackingMaterialRequest): Promise<ICreatePackingMaterialResponse> => {
+    console.log('CreatePackingListService--payload--', JSON.stringify(payload));
+    const api = Api.getInstance();
+    return await api.post<ICreatePackingMaterialRequest, AxiosResponse<ICreatePackingMaterialResponse>>(payload, CREATE_PACKING_LIST);
+}
+
+export const GetPackingListService = async (payload: IGetPackingListRequest): Promise<IPackingListResponse> => {
+    console.log('GetPackingListService--payload--', JSON.stringify(payload));
+    const api = Api.getInstance();
+    return await api.post<IGetPackingListRequest, AxiosResponse<IPackingListResponse>>(payload, GET_PACKING_LIST);
+}
+
+export const DeletePackingListItemService = async (item_id: string): Promise<IDeletePackingListItemResponse> => {
+    console.log('DeletePackingListItemService--payload--', JSON.stringify(item_id));
+    const api = Api.getInstance();
+    return await api.delete<any, AxiosResponse<IDeletePackingListItemResponse>>(null, DELETE_PACKING_LIST_ITEM(item_id));
 }
 

@@ -42,6 +42,9 @@ export const GET_MONEY_RECEIPT_LIST = (order_id) => `/money-receipt/${order_id}`
 export const EDIT_MONEY_RECEIPT_LIST = (order_id) => `/money-receipt/edit/${order_id}`;
 export const GET_BILTY_LIST = (order_id) => `/bilty/${order_id}`;
 export const GET_INVOICE_LIST = (order_id) => `/invoice/${order_id}`;
+export const CREATE_PACKING_LIST = `/packing-item/add`;
+export const GET_PACKING_LIST = `/packing-item/list`;
+export const DELETE_PACKING_LIST_ITEM = (item_id) => `/packing-item/${item_id}`;
 
 // Setting
 export const ADD_PAYMENT_METHOD = `/account-management/account/addAccount`;

@@ -25,7 +25,7 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
   const dispatch = useAppDispatch();
   const {orders, getOrdersRequesting, getOrdersSuccess, getOrdersFailure} =
     useAppSelector(state => state.Order);
-  console.log('OrderPageView--orders----', orders);
+  // console.log('OrderPageView--orders----', orders);
   const {data: ordersArr} = orders || {};
   const companyId = useCompanyId();
 

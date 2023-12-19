@@ -49,7 +49,7 @@ const OrderDetailsView: React.FC<Props> = ({route, navigation}) => {
       case 4:
         return <InvoiceView orderId={orderId as string} />;
         case 5:
-          return <PackingListView  />;
+          return <PackingListView orderId={orderId as string} />;
       default:
         return null;
     }

@@ -26,15 +26,15 @@ export interface IGetPackingListRequest {
   enquiryId?: string;
   id?: string;
 }
-export interface IPackingMaterialData {}
-export interface IPackingMaterialResponse {
-  data: IPackingMaterialData[];
+export interface IPackingListData {}
+export interface IPackingListResponse {
+  data: IPackingListData[];
   error: boolean;
   status: number;
 }
 
 // Delete Packing Item
-export interface IDeletePackingMaterialResponse {
+export interface IDeletePackingListItemResponse {
   data: any;
   error: boolean;
   status: number;

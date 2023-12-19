@@ -14,6 +14,12 @@ import {
   createMoneyReceiptFailure,
   createMoneyReceiptRequest,
   createMoneyReceiptSuccess,
+  createPackingMaterialsFailure,
+  createPackingMaterialsRequest,
+  createPackingMaterialsSuccess,
+  deletePackingMaterialItemFailure,
+  deletePackingMaterialItemRequest,
+  deletePackingMaterialItemSuccess,
   editMoneyReceiptListFailure,
   editMoneyReceiptListRequest,
   editMoneyReceiptListSuccess,
@@ -44,6 +50,9 @@ import {
   getOrdersFailure,
   getOrdersRequest,
   getOrdersSuccess,
+  getPackingMaterialsFailure,
+  getPackingMaterialsRequest,
+  getPackingMaterialsSuccess,
 } from '../redux/slices/OrderSlice';
 import {IAddOrderRequest} from '../interface/order/IAddOrderRequest';
 import {IAddOrderResponse} from '../interface/order/IAddOrderResponse';
@@ -60,6 +69,7 @@ import { IGetOrdersRequest } from '../interface/order/IGetOrdersRequest';
 import { ISingleOrderRequest } from '../interface/order/ISingleOrderRequest';
 import { ISingleEnquiryResponse } from '../interface/enquiry/ISingleEnquiryResponse';
 import { IHtmlTemplateRequest, IHtmlTemplateResponse } from '../interface/order/templates/ITemplateResponse';
+import { ICreatePackingMaterialRequest, ICreatePackingMaterialResponse, IDeletePackingListItemResponse, IGetPackingListRequest, IPackingListResponse } from '../interface/order/IPackingMaterialResponse';
 
 export function* addOrderSaga(action: PayloadAction<IAddOrderRequest>) {
   console.log('addOrderSaga--action--', JSON.stringify(action));
@@ -84,6 +94,17 @@ export function* getOrderListSaga(action: PayloadAction<Partial<IGetOrdersReques
   } catch (error) {
       console.log('getOrderListSaga-error----', JSON.stringify(error));
       yield put(getOrdersFailure(error));
+  }
+}
+
+export function* createPackingListSaga(action: PayloadAction<ICreatePackingMaterialRequest>) {
+  try {
+      const response: ICreatePackingMaterialResponse = yield call(OrderService.CreatePackingListService, action.payload);
+      console.log('createPackingListSaga-response----', JSON.stringify(response));
+      yield put(createPackingMaterialsSuccess(response));
+  } catch (error) {
+      console.log('createPackingListSaga-error----', JSON.stringify(error));
+      yield put(createPackingMaterialsFailure(error));
   }
 }
 
@@ -181,6 +202,28 @@ export function* createCarConditionSaga(
     }
   }
 
+  export function* getPackingListSaga(action: PayloadAction<IGetPackingListRequest>) {
+    try {
+        const response: IPackingListResponse = yield call(OrderService.GetPackingListService, action.payload);
+        console.log('getPackingListSaga-response----', JSON.stringify(response));
+        yield put(getPackingMaterialsSuccess(response));
+    } catch (error) {
+        console.log('getPackingListSaga-error----', JSON.stringify(error));
+        yield put(getPackingMaterialsFailure(error));
+    }
+  }
+
+  export function* deletePackingListItemSaga(action: PayloadAction<string>) {
+    try {
+        const response: IDeletePackingListItemResponse = yield call(OrderService.DeletePackingListItemService, action.payload);
+        console.log('deletePackingListItemSaga-response----', JSON.stringify(response));
+        yield put(deletePackingMaterialItemSuccess(response));
+    } catch (error) {
+        console.log('deletePackingListItemSaga-error----', JSON.stringify(error));
+        yield put(deletePackingMaterialItemFailure(error));
+    }
+  }
+
   export function* createBiltySaga(
     action: PayloadAction<ICreateBiltyRequest>,
   ) {
@@ -262,4 +305,7 @@ export function* watcherOrderSaga() {
   yield takeLatest(getMoneyReceiptHtmlRequest.type, getMoneyReceiptTemplateHtmlSaga);
   yield takeLatest(getBiltyHtmlRequest.type, getBiltyTemplateHtmlSaga);
   yield takeLatest(getCarConditionHtmlRequest.type, getCarConditionTemplateHtmlSaga);
+  yield takeLatest(createPackingMaterialsRequest.type, createPackingListSaga);
+  yield takeLatest(getPackingMaterialsRequest.type, getPackingListSaga);
+  yield takeLatest(deletePackingMaterialItemRequest.type, deletePackingListItemSaga);
 }
