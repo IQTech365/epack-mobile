@@ -43,6 +43,7 @@ import {
   getFranchiseRequest,
 } from '../../../../redux/slices/MyProfile';
 import useCompanyId from '../../../../hooks/useCompanyId';
+import BasicDetailsView from './components/BasicDetailsView';
 
 const AddDriverView: React.FC<{}> = ({}) => {
   const [state, dispatch] = useReducer(addAddDriverReducer, initialState);
@@ -128,20 +129,7 @@ const AddDriverView: React.FC<{}> = ({}) => {
       payload: text,
     });
   };
-
-  const handleBranchName = (text: string) => {
-    dispatch({
-      type: ADD_Driver_FORM_ACTION.BRANCH_NAME,
-      payload: text,
-    });
-  };
-
-  const handleDriverNameInputTextChange = (text: string) => {
-    dispatch({
-      type: ADD_Driver_FORM_ACTION.DRIVER_NAME,
-      payload: text,
-    });
-  };
+  
   const handleMobileInputTextChange = (text: string) => {
     dispatch({
       type: ADD_Driver_FORM_ACTION.MOBILE,
@@ -401,39 +389,7 @@ const AddDriverView: React.FC<{}> = ({}) => {
       <AvoidSoftInputViewHOC>
         <View style={styles.container}>
           <Spacer height={4} />
-
-          <View>
-            <Spacer height={4} />
-            <View style={styles.twoColumnWrapper}>
-              <View style={styles.textContainer}>
-                <Label text="Choose Entity" style={styles.label} />
-                <EpackDropdown
-                  data={chooseEntity1}
-                  placeholder={'please select or enter'}
-                  hanldeData={handleChodeEntity}
-                />
-              </View>
-              <View style={styles.textContainer}>
-                <Label text="Branch Name" style={styles.label} />
-                <EpackDropdown
-                  data={branchData}
-                  placeholder={'please select or enter'}
-                  hanldeData={handleBranchName}
-                />
-              </View>
-            </View>
-            <Spacer height={4} />
-          </View>
-          <Spacer height={4} />
-          <View style={styles.elementContainer}>
-            <Label text="Driver Name" style={styles.label} />
-            <Input
-              onChangeText={handleDriverNameInputTextChange}
-              containerStyle={styles.inputContainer}
-              inputStyle={styles.input}
-              selectionColor={COLOR_BLACK}
-            />
-          </View>
+          <BasicDetailsView />
           <Spacer height={4} />
           <View style={styles.elementContainer}>
             <Label text="Upload Driver Photo" style={styles.label} />

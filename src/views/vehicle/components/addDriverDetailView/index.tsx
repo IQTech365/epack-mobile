@@ -18,26 +18,26 @@ import Header from '../../../../common/Header';
 import AddDriverView from '../addDriverView';
 import AddDriverListItem from '../addDriverListView';
 import Spinner from '../../../../common/Spinner';
-import { getDriverRequest } from '../../../../redux/slices/VehicleSlice';
+import {getDriverRequest} from '../../../../redux/slices/VehicleSlice';
 import useCompanyId from '../../../../hooks/useCompanyId';
+import {AddDriverFormContextProvider} from '../../../../provider/AddDriverFormContextProvider';
 
-interface IAddDriverDetailViewProps {
-
-}
+interface IAddDriverDetailViewProps {}
 
 const AddDriverDetailView: React.FC<IAddDriverDetailViewProps> = ({}) => {
   const dispatch = useAppDispatch();
-  const {Drivers, getDriversRequesting} = useAppSelector(state => state.Vehicle);
+  const {Drivers, getDriversRequesting} = useAppSelector(
+    state => state.Vehicle,
+  );
   const {data: DriversData = []} = Drivers || {};
-    
-  const {
-    addCompanyInfo,
-    companies
-} = useAppSelector(state => state.Company);
+
+  const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
   const companyId = useCompanyId();
 
-  const [showAddDriverDetailList, setShowAddDriverDetailList] = useState<boolean>(false);
-  const [createNewAddDriverDetail, setCreateNewAddDriverDetail] = useState<boolean>(true);
+  const [showAddDriverDetailList, setShowAddDriverDetailList] =
+    useState<boolean>(false);
+  const [createNewAddDriverDetail, setCreateNewAddDriverDetail] =
+    useState<boolean>(true);
 
   const handleCreateNewAddDriverDetail = () => {
     setShowAddDriverDetailList(false);
@@ -67,7 +67,11 @@ const AddDriverDetailView: React.FC<IAddDriverDetailViewProps> = ({}) => {
 
   const showForm = () => {
     if (createNewAddDriverDetail) {
-      return <AddDriverView />;
+      return (
+        <AddDriverFormContextProvider>
+          <AddDriverView />
+        </AddDriverFormContextProvider>
+      );
     }
     return null;
   };
@@ -79,18 +83,16 @@ const AddDriverDetailView: React.FC<IAddDriverDetailViewProps> = ({}) => {
           contentContainerStyle={{alignItems: 'center', paddingVertical: 10}}
           data={DriversData}
           refreshControl={
-            <RefreshControl refreshing={getDriversRequesting} onRefresh={handleOnRefresh} />
+            <RefreshControl
+              refreshing={getDriversRequesting}
+              onRefresh={handleOnRefresh}
+            />
           }
-            renderItem={({item, index}) => (
-              <View style={{padding: 10}}>
-                <AddDriverListItem
-                  item={item}
-                  index={index}
-                  
-                />
-              </View>
-            )}
-         
+          renderItem={({item, index}) => (
+            <View style={{padding: 10}}>
+              <AddDriverListItem item={item} index={index} />
+            </View>
+          )}
           ListEmptyComponent={showEmptyView()}
         />
       );
@@ -100,9 +102,11 @@ const AddDriverDetailView: React.FC<IAddDriverDetailViewProps> = ({}) => {
 
   return (
     <>
-    <Header label="Add Driver" canGoBack={true} />
+      <Header label="Add Driver" canGoBack={true} />
       <View style={styles.container}>
-        <TouchableOpacity onPress={handleShowAddDriverDetailList} activeOpacity={0.4}>
+        <TouchableOpacity
+          onPress={handleShowAddDriverDetailList}
+          activeOpacity={0.4}>
           {showAddDriverDetailList ? (
             <ListViewIcon2 width={30} height={30} />
           ) : (
@@ -110,7 +114,9 @@ const AddDriverDetailView: React.FC<IAddDriverDetailViewProps> = ({}) => {
           )}
         </TouchableOpacity>
         <Spacer width={10} />
-        <TouchableOpacity onPress={handleCreateNewAddDriverDetail} activeOpacity={0.4}>
+        <TouchableOpacity
+          onPress={handleCreateNewAddDriverDetail}
+          activeOpacity={0.4}>
           {createNewAddDriverDetail ? (
             <CreateIcon2 width={30} height={30} />
           ) : (
