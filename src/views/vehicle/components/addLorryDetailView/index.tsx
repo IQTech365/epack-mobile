@@ -16,26 +16,25 @@ import CreateIcon2 from '../../../../images/icons/create_icon2.svg';
 // import Spinner from '../../../../../common/Spinner';
 import AddLorryView from '../addLorryView';
 import Header from '../../../../common/Header';
-import { getLorryRequest } from '../../../../redux/slices/VehicleSlice';
+import {getLorryRequest} from '../../../../redux/slices/VehicleSlice';
 import AddLorryListItem from '../addLorryListView';
 import Spinner from '../../../../common/Spinner';
 import useCompanyId from '../../../../hooks/useCompanyId';
+import {AddLorryFormContextProvider} from '../../../../provider/AddLorryFormContextProvider';
+import { COLOR_WHITE } from '../../../../utils/colors';
 
-interface IAddLorryDetailViewProps {
-
-}
+interface IAddLorryDetailViewProps {}
 
 const AddLorryDetailView: React.FC<IAddLorryDetailViewProps> = ({}) => {
   const dispatch = useAppDispatch();
-  const {lorryData, getLorryRequesting} = useAppSelector(state => state.Vehicle);
-  
-  const {
-    addCompanyInfo,
-    companies
-} = useAppSelector(state => state.Company);
+  const {lorryData, getLorryRequesting} = useAppSelector(
+    state => state.Vehicle,
+  );
 
-  const [showAddLorryDetailList, setShowAddLorryDetailList] = useState<boolean>(false);
-  const [createNewAddLorryDetail, setCreateNewAddLorryDetail] = useState<boolean>(true);
+  const [showAddLorryDetailList, setShowAddLorryDetailList] =
+    useState<boolean>(false);
+  const [createNewAddLorryDetail, setCreateNewAddLorryDetail] =
+    useState<boolean>(true);
   const {data: lorryArray = []} = lorryData || {};
   const companyId = useCompanyId();
 
@@ -67,7 +66,11 @@ const AddLorryDetailView: React.FC<IAddLorryDetailViewProps> = ({}) => {
 
   const showForm = () => {
     if (createNewAddLorryDetail) {
-      return <AddLorryView />;
+      return (
+        <AddLorryFormContextProvider>
+          <AddLorryView />
+        </AddLorryFormContextProvider>
+      );
     }
     return null;
   };
@@ -79,18 +82,16 @@ const AddLorryDetailView: React.FC<IAddLorryDetailViewProps> = ({}) => {
           contentContainerStyle={{alignItems: 'center', paddingVertical: 10}}
           data={lorryArray}
           refreshControl={
-            <RefreshControl refreshing={getLorryRequesting} onRefresh={handleOnRefresh} />
+            <RefreshControl
+              refreshing={getLorryRequesting}
+              onRefresh={handleOnRefresh}
+            />
           }
-            renderItem={({item, index}) => (
-                <View style={{padding: 10}}>
-                <AddLorryListItem
-                  item={item}
-                  index={index}
-                  
-                />
-              </View>
-            )}
-        
+          renderItem={({item, index}) => (
+            <View style={{padding: 10}}>
+              <AddLorryListItem item={item} index={index} />
+            </View>
+          )}
           ListEmptyComponent={showEmptyView()}
         />
       );
@@ -99,10 +100,13 @@ const AddLorryDetailView: React.FC<IAddLorryDetailViewProps> = ({}) => {
   };
 
   return (
-    <>
-    <Header label="Add Lorry" canGoBack={true} />
+    <View style={{flex: 1, backgroundColor: COLOR_WHITE}}>
+      <Header label="Add Lorry" canGoBack={true} />
+      <Spacer height={8} />
       <View style={styles.container}>
-        <TouchableOpacity onPress={handleShowAddLorryDetailList} activeOpacity={0.4}>
+        <TouchableOpacity
+          onPress={handleShowAddLorryDetailList}
+          activeOpacity={0.4}>
           {showAddLorryDetailList ? (
             <ListViewIcon2 width={30} height={30} />
           ) : (
@@ -110,7 +114,9 @@ const AddLorryDetailView: React.FC<IAddLorryDetailViewProps> = ({}) => {
           )}
         </TouchableOpacity>
         <Spacer width={10} />
-        <TouchableOpacity onPress={handleCreateNewAddLorryDetail} activeOpacity={0.4}>
+        <TouchableOpacity
+          onPress={handleCreateNewAddLorryDetail}
+          activeOpacity={0.4}>
           {createNewAddLorryDetail ? (
             <CreateIcon2 width={30} height={30} />
           ) : (
@@ -122,7 +128,7 @@ const AddLorryDetailView: React.FC<IAddLorryDetailViewProps> = ({}) => {
       {showForm()}
       {showList()}
       <Spinner show={getLorryRequesting} />
-    </>
+    </View>
   );
 };
 

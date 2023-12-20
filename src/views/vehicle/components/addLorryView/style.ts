@@ -11,14 +11,17 @@ const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    width: width * 0.95,
+    alignSelf: 'center',
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: COLOR_GRAY2,
     backgroundColor: COLOR_WHITE,
   },
   elementContainer: {
-    position:'relative',
+    position: 'relative',
     width: width * 0.9,
     justifyContent: 'center',
-    // alignItems: 'flex-start',
     alignSelf: 'center',
   },
   elementContainer2: {
@@ -36,8 +39,7 @@ const styles = StyleSheet.create({
   label: {
     color: COLOR_BLACK,
     fontSize: 14,
-    zIndex: 1, 
-  
+    zIndex: 1,
   },
   inputContainer: {
     width: '100%',
@@ -46,19 +48,18 @@ const styles = StyleSheet.create({
   },
   inputContainer2: {
     width: '100%',
-    height:'20%',
+    height: '20%',
     borderColor: COLOR_GRAY2,
     paddingLeft: 4,
   },
   input: {
     color: COLOR_BLACK,
     fontSize: 14,
-    
   },
   input2: {
     color: COLOR_BLACK,
     fontSize: 14,
-    paddingVertical:50,
+    paddingVertical: 50,
     // height:'30%',
   },
   twoColumnWrapper: {
@@ -91,12 +92,12 @@ const styles = StyleSheet.create({
   browserButtonStyle: {
     backgroundColor: COLOR_BLUE,
     borderRadius: 5,
-    width:width * 0.35,
-    height:'20%',
+    width: width * 0.35,
+    height: '20%',
   },
   browsertextStyle: {
     color: COLOR_WHITE,
-    fontSize:8,
+    fontSize: 8,
   },
   textAreaContainer: {
     borderColor: COLOR_GRAY2,
@@ -105,8 +106,8 @@ const styles = StyleSheet.create({
   },
   textArea: {
     height: 150,
-    width:width * 0.88,
-    justifyContent: "flex-start",
+    width: width * 0.88,
+    justifyContent: 'flex-start',
   },
   uploadLicenceStyle: {
     width: '100%',
@@ -116,30 +117,51 @@ const styles = StyleSheet.create({
     borderColor: COLOR_GRAY5,
     justifyContent: 'center',
   },
-  uploadLicenceTextStyle:{ 
-    textAlign: 'center', 
-},
+  uploadLicenceTextStyle: {
+    textAlign: 'center',
+  },
   uploadContainer: {
     height: 150,
     borderStyle: 'dotted',
     borderWidth: 1,
     borderRadius: 10,
     borderColor: COLOR_GRAY5,
-    justifyContent:'center'
+    justifyContent: 'center',
   },
   uploadContainerText: {
-    textAlign: 'center', 
+    textAlign: 'center',
     fontWeight: '500',
-},
+  },
   orBorderStyle: {
-    borderWidth: 0.7, 
-    width: '40%', 
+    borderWidth: 0.7,
+    width: '40%',
     borderColor: COLOR_GRAY5,
-},
+  },
   cameraText: {
     textAlign: 'center',
     color: COLOR_BLUE,
-},
+  },
+  mainPhotoViewContainer: {
+    width: width * 0.9,
+    alignSelf: 'center',
+  },
+  photoCaptureContainer: {
+    width: width * 0.9,
+    alignSelf: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    borderRadius: 5,
+    borderStyle: 'dashed',
+    borderWidth: 1,
+    alignItems: 'center',
+    padding: 10,
+  },
+  button: {
+    borderColor: COLOR_BLACK,
+    alignItems: 'center',
+    alignSelf: 'center',
+    paddingVertical: 20,
+  },
 });
 
 export default styles;
