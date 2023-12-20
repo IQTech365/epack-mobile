@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {View} from 'react-native';
 import Toast from 'react-native-toast-message';
 import AvoidSoftInputViewHOC from '../../../../common/AvoidSoftInputViewHOC';
@@ -37,35 +37,16 @@ const AddDriverView: React.FC<{}> = ({}) => {
     addDriverFailure,
     addDriverError,
   } = useAppSelector(state => state.Vehicle);
-  const [branchStatus, setBranchStatus] = useState<any>('');
-  const [branchData, setBranchData] = useState([]);
   const {Branchs, getBranchsRequesting, Franchises, getFranchiseRequesting} =
     useAppSelector(state => state.Myprofile);
-  const dispatch2 = useAppDispatch();
+  const dispatch = useAppDispatch();
   const companyId = useCompanyId();
   const authId = useAuthId();
 
   useEffect(() => {
-    const fetchData = async () => {
-      let data = [];
-      if (branchStatus === 'Branch') {
-        data =
-          Branchs &&
-          Branchs.data.map((data: any) => {
-            return data.branchName;
-          });
-      } else {
-        data =
-          Franchises &&
-          Franchises.data.map((data: any) => {
-            return data.branchName;
-          });
-      }
-      setBranchData(data);
-    };
-
-    fetchData();
-  }, [Franchises, Branchs, branchStatus]);
+    dispatch(getBranchsRequest(companyId));
+    dispatch(getFranchiseRequest(companyId));
+  }, []);
 
   const handleSubmit = () => {
     const payload: IAddDriverRequest = {
@@ -101,7 +82,7 @@ const AddDriverView: React.FC<{}> = ({}) => {
       addedBy: authId,
     };
     console.log(payload, 'add Driver..');
-    dispatch2(addDriverRequest(payload));
+    dispatch(addDriverRequest(payload));
   };
 
   useEffect(() => {
@@ -111,16 +92,19 @@ const AddDriverView: React.FC<{}> = ({}) => {
         text1: 'Add Driver',
         text2: 'Add Driver has been added successfully',
       });
-      dispatch2(restaddDriverRequest());
+      dispatch(restaddDriverRequest());
     } else if (!addDriverRequesting && addDriverFailure) {
       Toast.show({
         type: 'error',
         text1: 'Add Driver',
         text2: 'Error in adding Driver. Please try again!',
       });
-      dispatch2(restaddDriverRequest());
+      dispatch(restaddDriverRequest());
     }
   }, [addDriverRequesting, addDriveruccess, addDriverFailure]);
+
+  const loading =
+    addDriverRequesting || getBranchsRequesting || getFranchiseRequesting;
 
   return (
     <>
@@ -161,11 +145,7 @@ const AddDriverView: React.FC<{}> = ({}) => {
           <Spacer height={12} />
         </View>
       </AvoidSoftInputViewHOC>
-      <Spinner
-        show={
-          addDriverRequesting || getBranchsRequesting || getFranchiseRequesting
-        }
-      />
+      <Spinner show={loading} />
     </>
   );
 };
