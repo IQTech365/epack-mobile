@@ -21,6 +21,7 @@ import Spinner from '../../../../common/Spinner';
 import {getDriverRequest} from '../../../../redux/slices/VehicleSlice';
 import useCompanyId from '../../../../hooks/useCompanyId';
 import {AddDriverFormContextProvider} from '../../../../provider/AddDriverFormContextProvider';
+import {COLOR_WHITE} from '../../../../utils/colors';
 
 interface IAddDriverDetailViewProps {}
 
@@ -101,8 +102,9 @@ const AddDriverDetailView: React.FC<IAddDriverDetailViewProps> = ({}) => {
   };
 
   return (
-    <>
+    <View style={{flex: 1, backgroundColor: COLOR_WHITE}}>
       <Header label="Add Driver" canGoBack={true} />
+      <Spacer height={6} />
       <View style={styles.container}>
         <TouchableOpacity
           onPress={handleShowAddDriverDetailList}
@@ -128,7 +130,7 @@ const AddDriverDetailView: React.FC<IAddDriverDetailViewProps> = ({}) => {
       {showForm()}
       {showList()}
       <Spinner show={getDriversRequesting} />
-    </>
+    </View>
   );
 };
 

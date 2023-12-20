@@ -84,6 +84,16 @@ const useAddDriverFormContext = () => {
     [state.license_photo],
   );
 
+  const setAadharCardNo = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.AADHAR_CARD_NO,
+        payload: text,
+      });
+    },
+    [state.aadhar_card_no],
+  );
+
   const setAadharFrontPhoto = useCallback(
     (text: string) => {
       dispatch({
@@ -223,6 +233,7 @@ const useAddDriverFormContext = () => {
     setDriverMobileNo,
     setDriverLicenseNo,
     setLicensePhoto,
+    setAadharCardNo,
     setAadharFrontPhoto,
     setAaadharBackPhoto,
     setPermanentAddPincode,
@@ -250,6 +261,7 @@ const initAddDriverFormContextState: UseAddDriverFormContextType = {
   setDriverMobileNo: (text: string) => {},
   setDriverLicenseNo: (text: string) => {},
   setLicensePhoto: (text: string) => {},
+  setAadharCardNo: (text: string) => {},
   setAadharFrontPhoto: (text: string) => {},
   setAaadharBackPhoto: (text: string) => {},
   setPermanentAddPincode: (text: string) => {},

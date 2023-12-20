@@ -8,6 +8,7 @@ export enum ACTION {
     DRIVER_MOBILE_NO = 'DRIVER_MOBILE_NO',
     DRIVER_LICENSE_NO = 'DRIVER_LICENSE_NO',
     LICENSE_PHOTO = 'LICENSE_PHOTO',
+    AADHAR_CARD_NO = 'AADHAR_CARD_NO',
     AADHAR_FRONT_PHOTO = 'AADHAR_FRONT_PHOTO',
     AADHAR_BACK_PHOTO = 'AADHAR_BACK_PHOTO',
     PERMANENT_ADD_PINCODE = 'PERMANENT_ADD_PINCODE',
@@ -31,6 +32,7 @@ export interface IState {
     driver_mobile_no:string,
     driver_license_no:string,
     license_photo:string,
+    aadhar_card_no:string,
     aadhar_front_photo:string,
     aadhar_back_photo:string,
     permanent_add_pincode:string,
@@ -59,6 +61,7 @@ export const initialState:IState = {
     driver_mobile_no:'',
     driver_license_no:'',
     license_photo:'',
+    aadhar_card_no: '',
     aadhar_front_photo:'',
     aadhar_back_photo:'',
     permanent_add_pincode:'',
@@ -91,6 +94,8 @@ export const addDriverReducer:Reducer<IState, Action> = (state:IState, action:Ac
         return {...state, driver_license_no: payload as string};
       case ACTION.LICENSE_PHOTO:
         return {...state, license_photo: payload as string};
+      case ACTION.AADHAR_CARD_NO:
+        return {...state, aadhar_card_no: payload as string};
       case ACTION.AADHAR_FRONT_PHOTO:
         return {...state, aadhar_front_photo: payload as string};
       case ACTION.AADHAR_BACK_PHOTO:
