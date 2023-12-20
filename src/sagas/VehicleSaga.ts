@@ -8,6 +8,7 @@ import { IAddDriverRequest } from '../interface/vehicle/IAddDriverRequest';
 import { IAddDriverResponse } from '../interface/vehicle/IAddDriverResponse';
 import { IGetLorryResponse } from '../interface/vehicle/IGetLorryResponse';
 import { IGetDriverResponse } from '../interface/vehicle/IGetDriverReuest';
+import { IGetVehicleSizeResponse } from '../interface/vehicle/IGetVehicleSizeResponse';
 
 export function* addLorrySaga(action: PayloadAction<IAddLorryRequest>) {
     console.log('addLorrySaga--action--', JSON.stringify(action));
@@ -59,7 +60,7 @@ export function* getDriverSaga(action: PayloadAction<string>) {
 
 export function* getVehicleSizeSaga(action: PayloadAction<string>) {
     try {
-        const response: IGetDriverResponse = yield call(VehicleService.GetVehicleSizeService);
+        const response: IGetVehicleSizeResponse = yield call(VehicleService.GetVehicleSizeService);
         console.log('getVehicleSizeSaga-response----', JSON.stringify(response));
         yield put(getVehicleSizeSuccess(response));
     } catch (error) {

@@ -1,3 +1,4 @@
+import { IVehicleSize } from '../common/common';
 import {IAddDriverRequest} from './IAddDriverRequest';
 
 export interface IGetDriverData extends IAddDriverRequest {
@@ -6,7 +7,7 @@ export interface IGetDriverData extends IAddDriverRequest {
 }
 
 export interface IGetDriverResponse {
-  data: [IGetDriverData];
+  data: IVehicleSize[];
   status: number;
   error: boolean;
 }
