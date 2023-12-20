@@ -14,72 +14,78 @@ interface IDatePickerProps {
   mode?: 'date' | 'time' | 'datetime';
 }
 
-const DatePickerComponent: React.FC<IDatePickerProps> = forwardRef(({
-  onDateSelect,
-  style,
-  error,
-  showTime = false,
-  defaultValue,
-  mode = 'datetime'
-}, ref) => {
-  const [date, setDate] = useState<Date>(new Date());
-  const [open, setOpen] = useState<boolean>(false);
+const DatePickerComponent: React.FC<IDatePickerProps> = forwardRef(
+  (
+    {
+      onDateSelect,
+      style,
+      error,
+      showTime = false,
+      defaultValue,
+      mode = 'datetime',
+    },
+    ref,
+  ) => {
+    const [date, setDate] = useState<Date>(new Date());
+    const [open, setOpen] = useState<boolean>(false);
 
-  React.useImperativeHandle(ref, () => ({
-    setDefaultValue
-  }));
+    React.useImperativeHandle(ref, () => ({
+      setDefaultValue,
+    }));
 
-  const errorBorderStyle = error ? styles.errorBorderColor : null;
+    const errorBorderStyle = error ? styles.errorBorderColor : null;
 
-  const getDateAndTime = () => {
-    if(showTime) {
-      return formatDate3(date);
-    }
-    return formatDate(date);
-  }
+    const getDateAndTime = () => {
+      if (showTime) {
+        return formatDate3(date);
+      }
+      return formatDate(date);
+    };
 
-  const setDefaultValue = (value: Date) => {
-    setDate(value);
-  }
+    const setDefaultValue = (value: Date) => {
+      setDate(value);
+    };
 
-  useEffect(() => {
-    if(defaultValue) {
-      setDate(defaultValue);
-    }
-  }, []);
+    useEffect(() => {
+      if (defaultValue) {
+        setDate(defaultValue);
+      }
+    }, []);
 
-  return (
-    <>
-      <View style={[styles.container, errorBorderStyle, style]}>
-        <TouchableOpacity
-          onPress={() => setOpen(true)}
-          style={styles.contentContainer}>
-          <Text>{getDateAndTime()}</Text>
-          <CalendarIcon width={18} height={18} />
-        </TouchableOpacity>
-        <DatePicker
-          modal
-          open={open}
-          date={date}
-          mode={mode}
-          onConfirm={date => {
-            setOpen(false);
-            setDate(date);
-            onDateSelect && onDateSelect(date);
-          }}
-          minimumDate={new Date()}
-          onCancel={() => {
-            setOpen(false);
-          }}
-        />
-      </View>
-      {error && (
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>{error}</Text>
+    return (
+      <>
+        <View style={[styles.container, errorBorderStyle, style]}>
+          <TouchableOpacity
+            onPress={() => setOpen(true)}
+            style={styles.contentContainer}>
+            <Text>{getDateAndTime()}</Text>
+            <CalendarIcon width={18} height={18} />
+          </TouchableOpacity>
+          <DatePicker
+            modal
+            open={open}
+            date={date}
+            mode={mode}
+            androidVariant="nativeAndroid"
+            onConfirm={date => {
+              setOpen(false);
+              setDate(date);
+              onDateSelect && onDateSelect(date);
+            }}
+            minimumDate={new Date()}
+            onCancel={() => {
+              setOpen(false);
+            }}
+          />
         </View>
-      )}
-    </>
-  );
-});
+        {error && (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>{error}</Text>
+          </View>
+        )}
+      </>
+    );
+  },
+);
 
 export default DatePickerComponent;

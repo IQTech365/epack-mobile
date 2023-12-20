@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
 import Toast from 'react-native-toast-message';
 import AvoidSoftInputViewHOC from '../../../../common/AvoidSoftInputViewHOC';
@@ -27,6 +27,18 @@ import useAuthId from '../../../../hooks/useAuthId';
 import {formatDate4} from '../../../../utils/formatter';
 import DropdownComponent from '../../../../common/DropdownComponent';
 import {TDropdownItem} from '../../../../type/TDropdownItem';
+import entityOptions from '../../../../data/entityOptions.json';
+import {
+  getVehicleCompanyRequest,
+  getVehicleModelsRequest,
+  getVehicleTypesRequest,
+} from '../../../../redux/slices/CommonSlice';
+import {
+  getVehicleCompanyList,
+  getVehicleModelList,
+  getVehicleTypeList,
+} from '../../../order/orderDetails/components/CarConditionFormView/utils';
+import {getBranchList, getFirstVehicleType, getFranchiseList} from '../utils';
 
 const AddLorryView: React.FC<{}> = ({}) => {
   const {
@@ -54,15 +66,68 @@ const AddLorryView: React.FC<{}> = ({}) => {
     useAppSelector(state => state.Vehicle);
   const {Branchs, getBranchsRequesting, Franchises, getFranchiseRequesting} =
     useAppSelector(state => state.Myprofile);
+  const {
+    vehicleTypes,
+    vehicleCompanies,
+    vehicleModels,
+    vehicleTypesRequesting,
+    vehicleCompaniesRequesting,
+    vehicleModelsRequesting,
+  } = useAppSelector(state => state.Common);
+  const [vehicleTypeId, setVehicleTypeId] = useState<string>('');
+  const [vehicleCompanyId, setVehicleCompanyId] = useState<string>('');
 
   const dispatch = useAppDispatch();
   const companyId = useCompanyId();
   const authId = useAuthId();
 
+  const _getSubEntityDataList = (): TDropdownItem[] => {
+    let list: TDropdownItem[] = [];
+    if (state.entity == entityOptions[0].label) {
+      list = [];
+    } else if (state.entity == entityOptions[1].label) {
+      list = getBranchList(Branchs);
+    } else if (state.entity == entityOptions[2].label) {
+      list = getFranchiseList(Franchises);
+    }
+    return list;
+  };
+
+  const _getSubEntityLabelText = ():string => {
+    let label:string = '';
+    if(state.entity == entityOptions[0].label) {
+        label = '';
+    } else if(state.entity == entityOptions[1].label) {
+        label = 'Branch Name';
+    } else if(state.entity == entityOptions[2].label) {
+        label = 'Franchise Name';
+    }
+    return label;
+  }
+
   useEffect(() => {
     dispatch(getBranchsRequest(companyId));
     dispatch(getFranchiseRequest(companyId));
+    dispatch(getVehicleCompanyRequest());
+    dispatch(getVehicleModelsRequest());
+    dispatch(getVehicleTypesRequest());
   }, []);
+
+  useEffect(() => {
+    if(vehicleTypes !== null && vehicleTypes !== undefined) {
+        const firstVehicleType = getFirstVehicleType(vehicleTypes);
+        setVehicleTypeId(firstVehicleType?._id);
+        setLorryType(firstVehicleType?.vehicleType)
+    }
+  }, [vehicleTypes]);
+
+  const loading =
+    getBranchsRequesting ||
+    getFranchiseRequesting ||
+    vehicleTypesRequesting ||
+    addLorryRequesting ||
+    vehicleCompaniesRequesting ||
+    vehicleModelsRequesting;
 
   const handleSubmit = () => {
     const payload: IAddLorryRequest = {
@@ -111,36 +176,36 @@ const AddLorryView: React.FC<{}> = ({}) => {
       <AvoidSoftInputViewHOC>
         <View style={styles.container}>
           <Spacer height={4} />
-          <View>
-            <Spacer height={4} />
-            <View style={styles.twoColumnWrapper}>
-              <View style={styles.textContainer}>
-                <Label text="Choose Entity" style={styles.label} />
+          <View style={styles.elementContainer}>
+            <Label text="Choose Entity" style={styles.label} />
+            <DropdownComponent
+              data={entityOptions}
+              onSelect={(item: TDropdownItem) => {
+                setEntity(item.label);
+              }}
+            />
+          </View>
+          {state.entity !== entityOptions[0].label ? (
+            <>
+              <Spacer height={4} />
+              <View style={styles.elementContainer}>
+                <Label text={_getSubEntityLabelText()} style={styles.label} />
                 <DropdownComponent
-                  data={[]}
-                  onSelect={(item: TDropdownItem) => {
-                    setEntity(item.label);
-                  }}
-                />
-              </View>
-              <View style={styles.textContainer}>
-                <Label text="Branch Name" style={styles.label} />
-                <DropdownComponent
-                  data={[]}
+                  data={_getSubEntityDataList()}
                   onSelect={(item: TDropdownItem) => {
                     setSubEntity(item.label);
                   }}
                 />
               </View>
-            </View>
-            <Spacer height={4} />
-          </View>
+            </>
+          ) : null}
           <Spacer height={4} />
           <View style={styles.elementContainer}>
             <Label text="Vehicle Type" style={styles.label} />
             <DropdownComponent
-              data={[]}
+              data={getVehicleTypeList(vehicleTypes)}
               onSelect={(item: TDropdownItem) => {
+                setVehicleTypeId(item.value);
                 setLorryType(item.label);
               }}
             />
@@ -149,8 +214,9 @@ const AddLorryView: React.FC<{}> = ({}) => {
           <View style={styles.elementContainer}>
             <Label text="Vehicle Company Name" style={styles.label} />
             <DropdownComponent
-              data={[]}
+              data={getVehicleCompanyList(vehicleTypeId, vehicleCompanies)}
               onSelect={(item: TDropdownItem) => {
+                setVehicleCompanyId(item.value);
                 setLorryCompanyName(item.label);
               }}
             />
@@ -159,7 +225,7 @@ const AddLorryView: React.FC<{}> = ({}) => {
           <View style={styles.elementContainer}>
             <Label text="Vehicle Model" style={styles.label} />
             <DropdownComponent
-              data={[]}
+              data={getVehicleModelList(vehicleCompanyId, vehicleModels)}
               onSelect={(item: TDropdownItem) => {
                 setVehicleModel(item.label);
               }}
@@ -277,11 +343,7 @@ const AddLorryView: React.FC<{}> = ({}) => {
           <Spacer height={12} />
         </View>
       </AvoidSoftInputViewHOC>
-      <Spinner
-        show={
-          getBranchsRequesting || getFranchiseRequesting || addLorryRequesting
-        }
-      />
+      <Spinner show={loading} />
     </>
   );
 };

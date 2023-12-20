@@ -1,4 +1,5 @@
 import {Reducer} from 'react';
+import entityOptions from '../../../../data/entityOptions.json';
 
 export enum ACTION {
   ENTITY = 'ENTITY',
@@ -41,7 +42,7 @@ export interface IState {
 }
 
 export const initialState: IState = {
-  entity: '',
+  entity: entityOptions[0].label,
   sub_entity: '',
   lorry_company_name: '',
   lorry_type: '',

@@ -290,7 +290,7 @@ const RoleManagementView: React.FC<{}> = ({}) => {
   };
 
   const showSubmodules = (submodulename: ISubmodule[]) => {
-    if (submodulename.length > 0) {
+    if (submodulename && Array.isArray(submodulename) && submodulename.length > 0) {
       return submodulename.map((submod: ISubmodule, index: number) => {
         return (
           <View style={styles.submoduleContainer}>
