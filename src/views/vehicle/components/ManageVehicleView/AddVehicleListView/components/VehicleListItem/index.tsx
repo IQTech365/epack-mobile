@@ -18,7 +18,7 @@ const VehicleListItem: React.FC<IAddLorryListItemProps> = ({
 }: IAddLorryListItemProps) => {
   return (
     <>
-      <Shadow style={styles.cardWrapper} distance={2} key={`${index}`}>
+      <Shadow style={styles.cardWrapper} distance={4} key={`${index}`}>
         <TouchableOpacity
           style={styles.container}
           activeOpacity={0.6}

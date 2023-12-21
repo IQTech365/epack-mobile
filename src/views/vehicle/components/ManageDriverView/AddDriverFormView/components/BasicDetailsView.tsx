@@ -63,7 +63,7 @@ const BasicDetailsView: React.FC<Props> = ({}) => {
             <DropdownComponent
               data={_getSubEntityDataList()}
               onSelect={(item: TDropdownItem) => {
-                setSubEntity(item.label);
+                setSubEntity(item.value);
               }}
             />
           </View>

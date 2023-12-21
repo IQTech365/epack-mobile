@@ -16,5 +16,5 @@ export interface IAddDriverRequest {
     aadharNo: string,
     permanentAddress : Address|{},
     currentAddress: Address |{},
-    addedBy: string
+    addedBy?: string
 }

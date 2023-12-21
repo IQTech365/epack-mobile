@@ -8,7 +8,7 @@ import {COLOR_BLACK} from '../../../../../../utils/colors';
 import EpackDropdown from '../../../../../../common/DropdownComponent2';
 import {useAddDriverFormContextHook} from '../../../../../../provider/AddDriverFormContextProvider';
 import usePincodeHook from '../../../../../../hooks/usePincodeHook';
-import {getCities2, getStates2} from '../../../../../../utils/formatter';
+import {getCities2, getLocalities, getStates2} from '../../../../../../utils/formatter';
 import Spinner from '../../../../../../common/Spinner';
 
 interface Props {}
@@ -16,6 +16,7 @@ interface Props {}
 const DriverPermanentAddressView: React.FC<Props> = ({}) => {
   const [states, setStates] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
+  const [localities, setLocalities] = useState<string[]>([]);
   const {
     state,
     setPermanentAddPincode,
@@ -27,6 +28,7 @@ const DriverPermanentAddressView: React.FC<Props> = ({}) => {
 
   const stateDropdownCompRef = useRef(null);
   const cityDropdownCompRef = useRef(null);
+  const localityDropdownCompRef = useRef(null);
 
   const {result, fetching, setPincode} = usePincodeHook(
     () => {},
@@ -42,6 +44,7 @@ const DriverPermanentAddressView: React.FC<Props> = ({}) => {
     if (result && result.Status != 'Error') {
       setStates(getStates2(result));
       setCities(getCities2(result));
+      setLocalities(getLocalities(result));
     }
   }, [result]);
 
@@ -50,7 +53,7 @@ const DriverPermanentAddressView: React.FC<Props> = ({}) => {
       states.length > 0 &&
       cities.length > 0 &&
       stateDropdownCompRef &&
-      cityDropdownCompRef
+      cityDropdownCompRef && localityDropdownCompRef
     ) {
       //@ts-ignore
       stateDropdownCompRef?.current?.setValue(states[0]);
@@ -58,8 +61,11 @@ const DriverPermanentAddressView: React.FC<Props> = ({}) => {
       //@ts-ignore
       cityDropdownCompRef?.current?.setValue(cities[0]);
       setPermanentAddCity(cities[0]);
+      //@ts-ignore
+      localityDropdownCompRef?.current?.setValue(localities[0]);
+      setPermanentAddLocality(localities[0]);
     }
-  }, [states, cities]);
+  }, [states, cities, localities]);
 
   return (
     <View>
@@ -80,7 +86,7 @@ const DriverPermanentAddressView: React.FC<Props> = ({}) => {
         <View style={styles.textContainer}>
           <Label text="State" style={styles.label} />
           <EpackDropdown
-            data={[]}
+            data={states}
             placeholder={'please select or enter'}
             hanldeData={setPermanentAddState}
             //@ts-ignore
@@ -93,7 +99,7 @@ const DriverPermanentAddressView: React.FC<Props> = ({}) => {
         <View style={styles.textContainer}>
           <Label text="City" style={styles.label} />
           <EpackDropdown
-            data={[]}
+            data={cities}
             placeholder={'please select or enter'}
             hanldeData={setPermanentAddCity}
             //@ts-ignore
@@ -103,9 +109,11 @@ const DriverPermanentAddressView: React.FC<Props> = ({}) => {
         <View style={styles.textContainer}>
           <Label text="Locality" style={styles.label} />
           <EpackDropdown
-            data={[]}
+            data={localities}
             placeholder={'please select or enter'}
             hanldeData={setPermanentAddLocality}
+            //@ts-ignore
+            ref={localityDropdownCompRef}
           />
         </View>
       </View>

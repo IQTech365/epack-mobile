@@ -31,8 +31,6 @@ const ManageDriverView: React.FC<IAddDriverDetailViewProps> = ({}) => {
     state => state.Vehicle,
   );
   const {data: DriversData = []} = Drivers || {};
-
-  const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
   const companyId = useCompanyId();
 
   const [showAddDriverDetailList, setShowAddDriverDetailList] =

@@ -2,8 +2,8 @@ import React from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
 import styles from '../style';
 import Label from '../../../../../../common/Label';
-import CameraIcon from '../../../../../images/icons/camera.svg';
-import GalleryIcon from '../../../../../images/icons/gallery.svg';
+import CameraIcon from '../../../../../../images/icons/camera.svg';
+import GalleryIcon from '../../../../../../images/icons/gallery.svg';
 import {
   launchCamera,
   launchImageLibrary,

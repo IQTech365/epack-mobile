@@ -28,17 +28,15 @@ import Label from '../../../../../common/Label';
 import Input from '../../../../../common/Input';
 import {COLOR_BLACK} from '../../../../../utils/colors';
 import useAuthId from '../../../../../hooks/useAuthId';
+import entityOptions from '../../../../../data/entityOptions.json';
 
 const AddDriverView: React.FC<{}> = ({}) => {
   const {state, setAadharCardNo} = useAddDriverFormContextHook();
-  const {
-    addDriverRequesting,
-    addDriveruccess,
-    addDriverFailure,
-    addDriverError,
-  } = useAppSelector(state => state.Vehicle);
-  const {Branchs, getBranchsRequesting, Franchises, getFranchiseRequesting} =
-    useAppSelector(state => state.Myprofile);
+  const {addDriverRequesting, addDriveruccess, addDriverFailure} =
+    useAppSelector(state => state.Vehicle);
+  const {getBranchsRequesting, getFranchiseRequesting} = useAppSelector(
+    state => state.Myprofile,
+  );
   const dispatch = useAppDispatch();
   const companyId = useCompanyId();
   const authId = useAuthId();
@@ -52,7 +50,7 @@ const AddDriverView: React.FC<{}> = ({}) => {
     const payload: IAddDriverRequest = {
       companyId: companyId,
       entityType: state.entity,
-      entityId: state.sub_entity,
+      entityId: state.entity == entityOptions[0].label ? companyId : state.sub_entity,
       driverName: state.driver_name,
       mobile: state.driver_mobile_no,
       licenceNo: state.driver_license_no,
@@ -79,7 +77,7 @@ const AddDriverView: React.FC<{}> = ({}) => {
             state: state.current_add_state,
             locality: state.current_add_locality,
           },
-      addedBy: authId,
+      // addedBy: authId,
     };
     console.log(payload, 'add Driver..');
     dispatch(addDriverRequest(payload));
@@ -90,7 +88,7 @@ const AddDriverView: React.FC<{}> = ({}) => {
       Toast.show({
         type: 'success',
         text1: 'Add Driver',
-        text2: 'Add Driver has been added successfully',
+        text2: 'Driver has been added successfully',
       });
       dispatch(restaddDriverRequest());
     } else if (!addDriverRequesting && addDriverFailure) {

@@ -9,7 +9,11 @@ import EpackDropdown from '../../../../../../common/DropdownComponent2';
 import {useAddDriverFormContextHook} from '../../../../../../provider/AddDriverFormContextProvider';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import usePincodeHook from '../../../../../../hooks/usePincodeHook';
-import {getCities2, getStates2} from '../../../../../../utils/formatter';
+import {
+  getCities2,
+  getLocalities,
+  getStates2,
+} from '../../../../../../utils/formatter';
 import Spinner from '../../../../../../common/Spinner';
 
 interface Props {}
@@ -17,6 +21,7 @@ interface Props {}
 const DriverCurrentAddressView: React.FC<Props> = ({}) => {
   const [states, setStates] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
+  const [localities, setLocalities] = useState<string[]>([]);
 
   const {
     state,
@@ -30,6 +35,7 @@ const DriverCurrentAddressView: React.FC<Props> = ({}) => {
 
   const stateDropdownCompRef = useRef(null);
   const cityDropdownCompRef = useRef(null);
+  const localityDropdownCompRef = useRef(null);
 
   const {result, fetching, setPincode} = usePincodeHook(
     () => {},
@@ -38,12 +44,14 @@ const DriverCurrentAddressView: React.FC<Props> = ({}) => {
 
   const _handlePincodeChange = (text: string) => {
     setCurrentAddPincode(text);
+    setPincode(text);
   };
 
   useEffect(() => {
     if (result && result.Status != 'Error') {
       setStates(getStates2(result));
       setCities(getCities2(result));
+      setLocalities(getLocalities(result));
     }
   }, [result]);
 
@@ -52,7 +60,8 @@ const DriverCurrentAddressView: React.FC<Props> = ({}) => {
       states.length > 0 &&
       cities.length > 0 &&
       stateDropdownCompRef &&
-      cityDropdownCompRef
+      cityDropdownCompRef &&
+      localityDropdownCompRef
     ) {
       //@ts-ignore
       stateDropdownCompRef?.current?.setValue(states[0]);
@@ -60,6 +69,9 @@ const DriverCurrentAddressView: React.FC<Props> = ({}) => {
       //@ts-ignore
       cityDropdownCompRef?.current?.setValue(cities[0]);
       setCurrentAddCity(cities[0]);
+      //@ts-ignore
+      localityDropdownCompRef?.current?.setValue(localities[0]);
+      setCurrentAddLocality(localities[0]);
     }
   }, [states, cities]);
 
@@ -115,7 +127,7 @@ const DriverCurrentAddressView: React.FC<Props> = ({}) => {
             <View style={styles.textContainer}>
               <Label text="State" style={styles.label} />
               <EpackDropdown
-                data={[]}
+                data={states}
                 placeholder={'please select or enter'}
                 hanldeData={setCurrentAddState}
                 //@ts-ignore
@@ -128,7 +140,7 @@ const DriverCurrentAddressView: React.FC<Props> = ({}) => {
             <View style={styles.textContainer}>
               <Label text="City" style={styles.label} />
               <EpackDropdown
-                data={[]}
+                data={cities}
                 placeholder={'please select or enter'}
                 hanldeData={setCurrentAddCity}
                 //@ts-ignore
@@ -138,9 +150,11 @@ const DriverCurrentAddressView: React.FC<Props> = ({}) => {
             <View style={styles.textContainer}>
               <Label text="Locality" style={styles.label} />
               <EpackDropdown
-                data={[]}
+                data={localities}
                 placeholder={'please select or enter'}
                 hanldeData={setCurrentAddLocality}
+                //@ts-ignore
+                ref={localityDropdownCompRef}
               />
             </View>
           </View>
