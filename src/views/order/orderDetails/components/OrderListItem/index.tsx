@@ -39,7 +39,7 @@ const OrderListItem: React.FC<IOrderListItemProps> = ({item, index, onPress}) =>
         </View>
         <Text style={styles.orderDateText}>{item.orderData}</Text>
       </View>
-    <Shadow style={styles.cardWrapper} distance={4}>
+    <Shadow style={styles.cardWrapper} distance={1.5}>
       <TouchableOpacity style={styles.container} activeOpacity={0.6} onPress={onPress}>
         <View style={styles.dateAndQuotationNumberContainer}>
           <View style={styles.nameContainer}>
