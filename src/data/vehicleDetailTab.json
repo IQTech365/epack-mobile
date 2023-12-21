@@ -1,8 +1,8 @@
 [
     {
-        "label": "Add Driver" 
+        "label": "Manage Driver" 
     },
     {
-        "label": "Add lorry" 
+        "label": "Manage Vehicle" 
     }
 ]

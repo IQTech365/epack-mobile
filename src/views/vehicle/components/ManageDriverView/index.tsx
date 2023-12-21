@@ -31,6 +31,8 @@ const ManageDriverView: React.FC<IAddDriverDetailViewProps> = ({}) => {
     state => state.Vehicle,
   );
   const {data: DriversData = []} = Drivers || {};
+  console.log('DriversData----', JSON.stringify(DriversData));
+  
   const companyId = useCompanyId();
 
   const [showAddDriverDetailList, setShowAddDriverDetailList] =
@@ -101,7 +103,7 @@ const ManageDriverView: React.FC<IAddDriverDetailViewProps> = ({}) => {
 
   return (
     <View style={{flex: 1, backgroundColor: COLOR_WHITE}}>
-      <Header label="Add Driver" canGoBack={true} />
+      <Header label="Manage Driver" canGoBack={true} />
       <Spacer height={6} />
       <View style={styles.container}>
         <TouchableOpacity

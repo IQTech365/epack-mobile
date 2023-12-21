@@ -77,7 +77,7 @@ const AddDriverView: React.FC<{}> = ({}) => {
             state: state.current_add_state,
             locality: state.current_add_locality,
           },
-      // addedBy: authId,
+      addedBy: authId,
     };
     console.log(payload, 'add Driver..');
     dispatch(addDriverRequest(payload));

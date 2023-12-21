@@ -111,7 +111,7 @@ const ManageVehicleView: React.FC<IAddLorryDetailViewProps> = ({navigation}) => 
 
   return (
     <View style={{flex: 1, backgroundColor: COLOR_WHITE}}>
-      <Header label="Add Lorry" canGoBack={true} />
+      <Header label="Manage Vehicle" canGoBack={true} />
       <Spacer height={8} />
       <View style={styles.container}>
         <TouchableOpacity
