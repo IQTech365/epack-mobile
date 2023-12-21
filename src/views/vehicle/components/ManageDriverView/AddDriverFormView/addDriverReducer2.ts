@@ -1,5 +1,5 @@
 import {Reducer} from 'react';
-import entityOptions from '../../../../data/entityOptions.json';
+import entityOptions from '../../../../../data/entityOptions.json';
 export enum ACTION {
   ENTITY = 'ENTITY',
   SUB_ENTITY = 'SUB_ENTITY',

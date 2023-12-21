@@ -7,7 +7,7 @@ import {
   COLOR_GRAY3,
   COLOR_GRAY5,
   COLOR_WHITE,
-} from '../../../../utils/colors';
+} from '../../../../../utils/colors';
 
 const {width} = Dimensions.get('window');
 

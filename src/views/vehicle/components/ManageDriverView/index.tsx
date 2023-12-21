@@ -15,8 +15,8 @@ import CreateIcon from '../../../../images/icons/create_icon.svg';
 import CreateIcon2 from '../../../../images/icons/create_icon2.svg';
 // import Spinner from '../../../../../common/Spinner';
 import Header from '../../../../common/Header';
-import AddDriverView from '../addDriverView';
-import AddDriverListItem from '../addDriverListView';
+import AddDriverView from './AddDriverFormView';
+import AddDriverListItem from './AddDriverListView';
 import Spinner from '../../../../common/Spinner';
 import {getDriverRequest} from '../../../../redux/slices/VehicleSlice';
 import useCompanyId from '../../../../hooks/useCompanyId';
@@ -25,7 +25,7 @@ import {COLOR_WHITE} from '../../../../utils/colors';
 
 interface IAddDriverDetailViewProps {}
 
-const AddDriverDetailView: React.FC<IAddDriverDetailViewProps> = ({}) => {
+const ManageDriverView: React.FC<IAddDriverDetailViewProps> = ({}) => {
   const dispatch = useAppDispatch();
   const {Drivers, getDriversRequesting} = useAppSelector(
     state => state.Vehicle,
@@ -134,4 +134,4 @@ const AddDriverDetailView: React.FC<IAddDriverDetailViewProps> = ({}) => {
   );
 };
 
-export default AddDriverDetailView;
+export default ManageDriverView;

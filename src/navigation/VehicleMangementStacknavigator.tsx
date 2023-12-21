@@ -2,7 +2,7 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import VehiclePageView from '../views/vehicle';
 import ManageVehicleView from '../views/vehicle/components/ManageVehicleView';
-import AddDriverDetailView from '../views/vehicle/components/addDriverDetailView';
+import ManageDriverView from '../views/vehicle/components/ManageDriverView';
 import { VehicleManagementStackParamList } from './params/VehicleManagementStackParamList';
 import AddVehicleDetailsView from '../views/vehicle/components/ManageVehicleView/AddVehicleDetailsView';
 
@@ -17,7 +17,7 @@ const VehicleMangementStacknavigator = () => {
       />
       <SettingStack.Screen
         name="ManageDriver"
-        component={AddDriverDetailView}
+        component={ManageDriverView}
       />
       <SettingStack.Screen
         name="ManageVehicle"

@@ -1,10 +1,10 @@
 import React from 'react';
 import {View} from 'react-native';
 import styles from '../style';
-import {useAddDriverFormContextHook} from '../../../../../provider/AddDriverFormContextProvider';
-import Label from '../../../../../common/Label';
-import Input from '../../../../../common/Input';
-import {COLOR_BLACK} from '../../../../../utils/colors';
+import {useAddDriverFormContextHook} from '../../../../../../provider/AddDriverFormContextProvider';
+import Label from '../../../../../../common/Label';
+import Input from '../../../../../../common/Input';
+import {COLOR_BLACK} from '../../../../../../utils/colors';
 
 interface Props {}
 

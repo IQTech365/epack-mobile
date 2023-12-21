@@ -2,8 +2,8 @@ import React from 'react';
 import { View, Text, TouchableOpacity, Linking } from 'react-native';
 import { Shadow } from 'react-native-shadow-2';
 import styles from './style';
-import Spacer from '../../../../common/Spacer';
-import { Address } from '../../../../interface/vehicle/IAddDriverRequest';
+import Spacer from '../../../../../common/Spacer';
+import { Address } from '../../../../../interface/vehicle/IAddDriverRequest';
 
 
 export interface IAddDriverItem {

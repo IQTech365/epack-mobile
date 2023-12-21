@@ -1,16 +1,16 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 import styles from '../style';
-import {useAddDriverFormContextHook} from '../../../../../provider/AddDriverFormContextProvider';
-import Label from '../../../../../common/Label';
-import DropdownComponent from '../../../../../common/DropdownComponent';
-import {TDropdownItem} from '../../../../../type/TDropdownItem';
-import Input from '../../../../../common/Input';
-import {COLOR_BLACK} from '../../../../../utils/colors';
-import entityOptions from '../../../../../data/entityOptions.json';
-import {useAppSelector} from '../../../../../redux/hooks';
-import {getBranchList, getFranchiseList} from '../../utils';
-import Spacer from '../../../../../common/Spacer';
+import {useAddDriverFormContextHook} from '../../../../../../provider/AddDriverFormContextProvider';
+import Label from '../../../../../../common/Label';
+import DropdownComponent from '../../../../../../common/DropdownComponent';
+import {TDropdownItem} from '../../../../../../type/TDropdownItem';
+import Input from '../../../../../../common/Input';
+import {COLOR_BLACK} from '../../../../../../utils/colors';
+import entityOptions from '../../../../../../data/entityOptions.json';
+import {useAppSelector} from '../../../../../../redux/hooks';
+import {getBranchList, getFranchiseList} from '../../../utils';
+import Spacer from '../../../../../../common/Spacer';
 
 interface Props {}
 

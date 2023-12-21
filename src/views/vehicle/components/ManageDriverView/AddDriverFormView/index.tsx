@@ -1,33 +1,33 @@
 import React, {useEffect} from 'react';
 import {View} from 'react-native';
 import Toast from 'react-native-toast-message';
-import AvoidSoftInputViewHOC from '../../../../common/AvoidSoftInputViewHOC';
-import Spacer from '../../../../common/Spacer';
+import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
+import Spacer from '../../../../../common/Spacer';
 import styles from './style';
-import Button from '../../../../common/Button';
-import {IAddDriverRequest} from '../../../../interface/vehicle/IAddDriverRequest';
-import {useAppDispatch, useAppSelector} from '../../../../redux/hooks';
+import Button from '../../../../../common/Button';
+import {IAddDriverRequest} from '../../../../../interface/vehicle/IAddDriverRequest';
+import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import {
   addDriverRequest,
   restaddDriverRequest,
-} from '../../../../redux/slices/VehicleSlice';
-import Spinner from '../../../../common/Spinner';
+} from '../../../../../redux/slices/VehicleSlice';
+import Spinner from '../../../../../common/Spinner';
 import {
   getBranchsRequest,
   getFranchiseRequest,
-} from '../../../../redux/slices/MyProfile';
-import useCompanyId from '../../../../hooks/useCompanyId';
+} from '../../../../../redux/slices/MyProfile';
+import useCompanyId from '../../../../../hooks/useCompanyId';
 import BasicDetailsView from './components/BasicDetailsView';
 import UploadPhotoView from './components/UploadPhotoView';
 import UploadAadharPhotoView from './components/UploadAadharPhotoView';
 import DriverPermanentAddressView from './components/DriverPermanentAddressView';
 import DriverCurrentAddressView from './components/DriverCurrentAddressView';
 import DriverContactInfoView from './components/DriverContactInfoView';
-import {useAddDriverFormContextHook} from '../../../../provider/AddDriverFormContextProvider';
-import Label from '../../../../common/Label';
-import Input from '../../../../common/Input';
-import {COLOR_BLACK} from '../../../../utils/colors';
-import useAuthId from '../../../../hooks/useAuthId';
+import {useAddDriverFormContextHook} from '../../../../../provider/AddDriverFormContextProvider';
+import Label from '../../../../../common/Label';
+import Input from '../../../../../common/Input';
+import {COLOR_BLACK} from '../../../../../utils/colors';
+import useAuthId from '../../../../../hooks/useAuthId';
 
 const AddDriverView: React.FC<{}> = ({}) => {
   const {state, setAadharCardNo} = useAddDriverFormContextHook();

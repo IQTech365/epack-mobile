@@ -1,15 +1,15 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {TextInput, View} from 'react-native';
 import styles from '../style';
-import Label from '../../../../../common/Label';
-import Spacer from '../../../../../common/Spacer';
-import Input from '../../../../../common/Input';
-import {COLOR_BLACK} from '../../../../../utils/colors';
-import EpackDropdown from '../../../../../common/DropdownComponent2';
-import {useAddDriverFormContextHook} from '../../../../../provider/AddDriverFormContextProvider';
-import usePincodeHook from '../../../../../hooks/usePincodeHook';
-import {getCities2, getStates2} from '../../../../../utils/formatter';
-import Spinner from '../../../../../common/Spinner';
+import Label from '../../../../../../common/Label';
+import Spacer from '../../../../../../common/Spacer';
+import Input from '../../../../../../common/Input';
+import {COLOR_BLACK} from '../../../../../../utils/colors';
+import EpackDropdown from '../../../../../../common/DropdownComponent2';
+import {useAddDriverFormContextHook} from '../../../../../../provider/AddDriverFormContextProvider';
+import usePincodeHook from '../../../../../../hooks/usePincodeHook';
+import {getCities2, getStates2} from '../../../../../../utils/formatter';
+import Spinner from '../../../../../../common/Spinner';
 
 interface Props {}
 
