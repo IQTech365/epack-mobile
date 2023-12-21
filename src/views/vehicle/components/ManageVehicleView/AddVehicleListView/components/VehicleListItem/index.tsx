@@ -4,6 +4,9 @@ import {Shadow} from 'react-native-shadow-2';
 import styles from './style';
 import Spacer from '../../../../../../../common/Spacer';
 import {IVehicle} from '../../../../../../../interface/vehicle/IGetLorryResponse';
+import {COLOR_BLUE} from '../../../../../../../utils/colors';
+import {useAppSelector} from '../../../../../../../redux/hooks';
+import {getVehicleType} from '../../../../utils';
 
 interface IAddLorryListItemProps {
   item: IVehicle;
@@ -16,14 +19,17 @@ const VehicleListItem: React.FC<IAddLorryListItemProps> = ({
   index,
   onPress,
 }: IAddLorryListItemProps) => {
+  const {vehicleTypes, vehicleModels} = useAppSelector(state => state.Common);
   return (
     <>
-      <Shadow style={styles.cardWrapper} distance={4} key={`${index}`}>
+      <View style={styles.indexContainer}>
+        <Text style={styles.indexText}>{index + 1}</Text>
+      </View>
+      <Shadow style={styles.cardWrapper} distance={1} key={`${index}`}>
         <TouchableOpacity
           style={styles.container}
           activeOpacity={0.6}
           onPress={() => onPress(index)}>
-          <Spacer height={6} />
           <View style={styles.rowContainer}>
             <View style={styles.rowItemContainer}>
               <Text style={styles.labelText}>Entity Type</Text>
@@ -32,24 +38,6 @@ const VehicleListItem: React.FC<IAddLorryListItemProps> = ({
               <Text style={styles.valueText}>{item.entityType}</Text>
             </View>
           </View>
-          {/* <Spacer height={2} />
-                    <View style={styles.rowContainer}>
-                        <View style={styles.rowItemContainer}>
-                            <Text style={styles.labelText}>Dreiver Name</Text>
-                        </View>
-                        <View style={styles.rowItemContainer2}>
-                            <Text style={styles.valueText}>{item.driverName}</Text>
-                        </View>
-                    </View> */}
-          {/* <Spacer height={2} />
-                    <View style={styles.rowContainer}>
-                        <View style={styles.rowItemContainer}>
-                            <Text style={styles.labelText}>Branch Name</Text>
-                        </View>
-                        <View style={styles.rowItemContainer2}>
-                            <Text style={styles.valueText}>{item.branchName}</Text>
-                        </View>
-                    </View> */}
           <Spacer height={2} />
           <View style={styles.rowContainer}>
             <View style={styles.rowItemContainer}>
@@ -74,18 +62,27 @@ const VehicleListItem: React.FC<IAddLorryListItemProps> = ({
               <Text style={styles.labelText}>Vehicle Type</Text>
             </View>
             <View style={styles.rowItemContainer2}>
-              <Text style={styles.valueText}>{item.vehicleType}</Text>
+              <Text style={styles.valueText}>
+                {getVehicleType(item.vehicleType, vehicleTypes)}
+              </Text>
             </View>
           </View>
           <View style={styles.rowContainer}>
             <View style={styles.rowItemContainer}>
-              <Text style={styles.labelText}>Vehicle Reg. No</Text>
+              <Text style={styles.labelText}>Vehicle Model</Text>
             </View>
             <View style={styles.rowItemContainer2}>
+              <Text style={styles.valueText}>{item.vehicleModel || 'NA'}</Text>
+            </View>
+          </View>
+          <View style={styles.rowContainer}>
+            <View style={[styles.rowItemContainer, {borderBottomWidth: 0}]}>
+              <Text style={styles.labelText}>Vehicle Reg. No</Text>
+            </View>
+            <View style={[styles.rowItemContainer2, {borderBottomWidth: 0}]}>
               <Text style={styles.valueText}>{item.vehicleRegistrationNo}</Text>
             </View>
           </View>
-          <Spacer height={6} />
         </TouchableOpacity>
       </Shadow>
     </>

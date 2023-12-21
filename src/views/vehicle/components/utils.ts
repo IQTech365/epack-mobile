@@ -36,3 +36,15 @@ export const getFirstVehicleType = (response:IVehicleTypesResponse):IVehicleType
     //@ts-ignore
     return vehicleType;
 }
+
+export const getVehicleType = (vehicleTypeId:string,response:IVehicleTypesResponse):string => {
+    let name:string = '';
+    const {data} = response;
+    if(data && Array.isArray(data) && data.length > 0) {
+        const vehicleType:IVehicleType|undefined = data.find((d:IVehicleType) => d._id == vehicleTypeId);
+        if(vehicleType !== undefined) {
+            name = vehicleType.vehicleType;
+        }
+    }
+    return name;
+}

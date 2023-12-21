@@ -10,7 +10,11 @@ const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    width: width * 0.95,
+    alignSelf: 'center',
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: COLOR_GRAY2,
     backgroundColor: COLOR_WHITE,
   },
   elementContainer: {

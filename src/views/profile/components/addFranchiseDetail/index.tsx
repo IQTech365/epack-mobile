@@ -1,15 +1,21 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {View, FlatList, TouchableOpacity, Text, RefreshControl} from 'react-native';
+import {
+  View,
+  FlatList,
+  TouchableOpacity,
+  Text,
+  RefreshControl,
+} from 'react-native';
 import styles from './style';
 import ListViewIcon from '../../../../images/icons/list_view_icon.svg';
 import ListViewIcon2 from '../../../../images/icons/list_view_icon2.svg';
 import CreateIcon from '../../../../images/icons/create_icon.svg';
 import CreateIcon2 from '../../../../images/icons/create_icon2.svg';
-import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
+import {useAppDispatch, useAppSelector} from '../../../../redux/hooks';
 import Spacer from '../../../../common/Spacer';
 import Header from '../../../../common/Header';
 import AddFranchiseUpdateView from '../addFranchiseUpdateView';
-import { getFranchiseRequest } from '../../../../redux/slices/MyProfile';
+import {getFranchiseRequest} from '../../../../redux/slices/MyProfile';
 import AddFranchiseListItem from '../addFranchiseList';
 import Spinner from '../../../../common/Spinner';
 import useCompanyId from '../../../../hooks/useCompanyId';
@@ -45,7 +51,7 @@ const AddFranchiseView = () => {
 
   const showForm = () => {
     if (showAddFranchise) {
-      return <AddFranchiseUpdateView/>;
+      return <AddFranchiseUpdateView />;
     }
     return null;
   };
@@ -61,13 +67,9 @@ const AddFranchiseView = () => {
               onRefresh={handleOnRefresh}
             />
           }
-          renderItem={({item, index}) =>(
+          renderItem={({item, index}) => (
             <View style={{padding: 10}}>
-              <AddFranchiseListItem
-                item={item}
-                index={index}
-                
-              />
+              <AddFranchiseListItem item={item} index={index} />
             </View>
           )}
           ListEmptyComponent={showEmptyView()}
@@ -82,13 +84,15 @@ const AddFranchiseView = () => {
 
   useEffect(() => {
     dispatch(getFranchiseRequest(companyId));
-    franchiseData.length > 0?setshowFranchiseList(true):setshowAddFranchise(true);
+    franchiseData.length > 0
+      ? setshowFranchiseList(true)
+      : setshowAddFranchise(true);
   }, []);
-
 
   return (
     <View style={styles.container}>
-         <Header label="Add Franchise" canGoBack={true} />
+      <Header label="Add Franchise" canGoBack={true} />
+      <Spacer height={10} />
       <View style={styles.container2}>
         <TouchableOpacity onPress={handleShowContent} activeOpacity={0.4}>
           {showFranchiseList ? (

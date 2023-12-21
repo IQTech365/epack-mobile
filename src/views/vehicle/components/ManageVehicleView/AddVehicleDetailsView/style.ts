@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import { COLOR_BLACK, COLOR_GRAY2 } from '../../../../../utils/colors';
+import { COLOR_BLACK, COLOR_GRAY2, COLOR_GRAY3 } from '../../../../../utils/colors';
 const {width} = Dimensions.get('window');
 const styles = StyleSheet.create({
   contentWrapper: {
@@ -9,15 +9,34 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1,
     borderColor: COLOR_GRAY2,
-    padding: 8,
   },
   rowContainer: {
-    width: width * 0.9,
+    width: '100%',
     alignSelf: 'center',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    paddingVertical: 10,
+  },
+  rowItemContainer1: {
+    width: '45%',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    backgroundColor: COLOR_GRAY3,
+    paddingVertical: 12,
+    paddingLeft: 4,
+    borderBottomWidth: 0.5,
+    borderBottomColor: COLOR_GRAY2,
+  },
+  rowItemContainer2: {
+    width: '55%',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingLeft: 8,
+    borderBottomWidth: 0.5,
+    borderBottomColor: COLOR_GRAY2,
   },
   labelText: {
     color: COLOR_BLACK,

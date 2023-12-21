@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, FlatList } from 'react-native';
+import { View, ScrollView, FlatList } from 'react-native';
 import Header from '../../../common/Header';
 import Spacer from '../../../common/Spacer';
 import EnquiryInfoView from './components/EnquiryInfoView';

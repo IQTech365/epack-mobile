@@ -78,7 +78,7 @@ export const getVehicleModelList = (vehicleCompanyId:string,response:IVehicleMod
       const filters:IVehicleModel[] = data.filter((d:IVehicleModel) => d.vehicleCompanyName == vehicleCompanyId);
       if(filters.length > 0) {
         items = data.map((d: IVehicleModel) => {
-            const item: IItem = {label: d.vehicleModel, value: d.vehicleModel};
+            const item: IItem = {label: d.vehicleModel, value: d._id};
             return item;
           });
       }

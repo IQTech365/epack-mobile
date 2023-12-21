@@ -6,6 +6,7 @@ export interface IVehicle {
   vehicleCompanyName: string;
   vehicleManufacturingYear: string;
   vehicleType: string;
+  vehicleModel:string;
   vehicleRegistrationNo: string;
   vehicleChassisNo: string;
   vehicleEngineNo: string;

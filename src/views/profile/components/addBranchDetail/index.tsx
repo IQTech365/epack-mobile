@@ -1,15 +1,21 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {View, FlatList, TouchableOpacity, Text, RefreshControl} from 'react-native';
+import {
+  View,
+  FlatList,
+  TouchableOpacity,
+  Text,
+  RefreshControl,
+} from 'react-native';
 import styles from './style';
 import ListViewIcon from '../../../../images/icons/list_view_icon.svg';
 import ListViewIcon2 from '../../../../images/icons/list_view_icon2.svg';
 import CreateIcon from '../../../../images/icons/create_icon.svg';
 import CreateIcon2 from '../../../../images/icons/create_icon2.svg';
-import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
+import {useAppDispatch, useAppSelector} from '../../../../redux/hooks';
 import Spacer from '../../../../common/Spacer';
 import Header from '../../../../common/Header';
 import AddBranchUpdateView from '../addBranchUpdateView';
-import { getBranchsRequest } from '../../../../redux/slices/MyProfile';
+import {getBranchsRequest} from '../../../../redux/slices/MyProfile';
 import Spinner from '../../../../common/Spinner';
 import AddBranchListItem from '../addBranchList';
 import useCompanyId from '../../../../hooks/useCompanyId';
@@ -32,7 +38,7 @@ const AddBranchView = () => {
   const handleShowContent = () => {
     setshowBranchList(true);
     setshowAddBranch(false);
-    dispatch(getBranchsRequest(companyId))
+    dispatch(getBranchsRequest(companyId));
   };
 
   const showEmptyView = () => {
@@ -45,7 +51,7 @@ const AddBranchView = () => {
 
   const showForm = () => {
     if (showAddBranch) {
-      return <AddBranchUpdateView/>;
+      return <AddBranchUpdateView />;
     }
     return null;
   };
@@ -63,11 +69,7 @@ const AddBranchView = () => {
           }
           renderItem={({item, index}) => (
             <View style={{padding: 10}}>
-              <AddBranchListItem
-                item={item}
-                index={index}
-                
-              />
+              <AddBranchListItem item={item} index={index} />
             </View>
           )}
           ListEmptyComponent={showEmptyView()}
@@ -83,12 +85,13 @@ const AddBranchView = () => {
 
   useEffect(() => {
     dispatch(getBranchsRequest(companyId));
-    BranchsData.length > 0?setshowBranchList(true):setshowAddBranch(true);
+    BranchsData.length > 0 ? setshowBranchList(true) : setshowAddBranch(true);
   }, [dispatch]);
 
   return (
     <View style={styles.container}>
-         <Header label="Add Branch" canGoBack={true} />
+      <Header label="Add Branch" canGoBack={true} />
+      <Spacer height={10} />
       <View style={styles.container2}>
         <TouchableOpacity onPress={handleShowContent} activeOpacity={0.4}>
           {showBranchList ? (

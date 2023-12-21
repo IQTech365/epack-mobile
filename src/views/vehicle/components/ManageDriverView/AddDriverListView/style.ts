@@ -1,8 +1,22 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import {COLOR_BLACK, COLOR_BLUE, COLOR_GRAY, COLOR_GRAY2, COLOR_ORANGE, COLOR_WHITE} from '../../../../../utils/colors';
+import {COLOR_BLACK, COLOR_BLUE, COLOR_GRAY, COLOR_GRAY2, COLOR_GRAY3, COLOR_ORANGE, COLOR_WHITE} from '../../../../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
+  indexContainer: {
+    width: 28,
+    height: 32,
+    backgroundColor: COLOR_BLUE,
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  indexText:{
+    color: COLOR_WHITE,
+    fontSize: 16,
+    fontWeight: '500',
+  },
   cardWrapper: {
     borderRadius: 8,
     alignItems: 'center',
@@ -74,21 +88,29 @@ const styles = StyleSheet.create({
       width: '100%',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      paddingVertical: 4,
-      paddingHorizontal: 8,
-      padding: 6,
+      // paddingVertical: 4,
+      // paddingHorizontal: 8,
+      // padding: 6,
   },
   rowItemContainer: {
-    width: '40%',
+    width: '45%',
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: COLOR_GRAY3,
+    paddingVertical: 8,
+    paddingLeft: 4,
+    borderBottomWidth: 0.5,
+    borderBottomColor: COLOR_GRAY2,
   },
   rowItemContainer2: {
-    width: '60%',
+    width: '55%',
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingLeft: 8,
+    borderBottomWidth: 0.5,
+    borderBottomColor: COLOR_GRAY2,
   },
   nameText: {
       color: COLOR_GRAY,

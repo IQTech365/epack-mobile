@@ -28,9 +28,11 @@ const AddDriverListItem: React.FC<IAddDriverListItemProps> = ({
 }: IAddDriverListItemProps) => {
   return (
     <>
-      <Shadow style={styles.cardWrapper} distance={4}>
+      <View style={styles.indexContainer}>
+        <Text style={styles.indexText}>{index + 1}</Text>
+      </View>
+      <Shadow style={styles.cardWrapper} distance={1}>
         <TouchableOpacity style={styles.container} activeOpacity={0.6}>
-          <Spacer height={6} />
           <View style={styles.rowContainer}>
             <View style={styles.rowItemContainer}>
               <Text style={styles.labelText}>Entity Type</Text>
@@ -86,18 +88,16 @@ const AddDriverListItem: React.FC<IAddDriverListItemProps> = ({
             </View>
           </View>
           <View style={styles.rowContainer}>
-            <View style={styles.rowItemContainer}>
+            <View style={[styles.rowItemContainer, {borderBottomWidth: 0}]}>
               <Text style={styles.labelText}>Current Address</Text>
             </View>
-            <View style={styles.rowItemContainer2}>
+            <View style={[styles.rowItemContainer2, {borderBottomWidth: 0}]}>
               <Text style={styles.valueText}>
                 {item.currentAddress.address}
               </Text>
               <Text style={styles.valueText}>{item.currentAddress.city}</Text>
             </View>
           </View>
-
-          <Spacer height={6} />
         </TouchableOpacity>
       </Shadow>
     </>

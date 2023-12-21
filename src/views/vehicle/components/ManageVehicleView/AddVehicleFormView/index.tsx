@@ -138,6 +138,7 @@ const AddLorryView: React.FC<{}> = ({}) => {
       vehicleCompanyName: state.lorry_company_name,
       vehicleManufacturingYear: state.manufacturing_year,
       vehicleType: state.lorry_type,
+      vehicleModel: state.vehicle_model,
       vehicleRegistrationNo: state.reg_number,
       vehicleChassisNo: state.vehicle_chasis_no,
       vehicleEngineNo: state.vehicle_engine_no,
@@ -146,7 +147,7 @@ const AddLorryView: React.FC<{}> = ({}) => {
       vehicleRCNo: state.vehicle_rc_no,
       pollutionCertificateNo: state.pollution_certificate_no,
       pollutionRenewalDate: state.pollution_certificate_renewal_date,
-    //   createdBy: authId,
+      addedBy: authId,
     };
     console.log(payload, 'add Lorry..');
     dispatch(addLorryRequest(payload));
@@ -227,7 +228,7 @@ const AddLorryView: React.FC<{}> = ({}) => {
             <DropdownComponent
               data={getVehicleModelList(vehicleCompanyId, vehicleModels)}
               onSelect={(item: TDropdownItem) => {
-                setVehicleModel(item.label);
+                setVehicleModel(item.value);
               }}
             />
           </View>
