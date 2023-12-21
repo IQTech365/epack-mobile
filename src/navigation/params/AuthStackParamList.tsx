@@ -1,4 +1,3 @@
-import {EnquiryStackRoute} from '../../utils/constants';
 export type AuthStackParamList = {
     SignIn: undefined,
     SignUp: undefined,

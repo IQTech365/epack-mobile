@@ -2,11 +2,9 @@ export interface IAddLorryRequest {
     companyId: string,
     entityType: string,
     entityId: string,
-    driverName: string,
-    branchName: string,
-    lorryCompanyName: string,
+    vehicleCompanyName: string,
     vehicleManufacturingYear: string,
-    lorryType: string,
+    vehicleType: string,
     vehicleRegistrationNo: string,
     vehicleChassisNo: string,
     vehicleEngineNo: string,
@@ -15,5 +13,5 @@ export interface IAddLorryRequest {
     vehicleRCNo: string,
     pollutionCertificateNo: string,
     pollutionRenewalDate: string,
-    createdBy: string
+    createdBy?: string
     }

@@ -14,18 +14,22 @@ import ListViewIcon2 from '../../../../images/icons/list_view_icon2.svg';
 import CreateIcon from '../../../../images/icons/create_icon.svg';
 import CreateIcon2 from '../../../../images/icons/create_icon2.svg';
 // import Spinner from '../../../../../common/Spinner';
-import AddLorryView from '../addLorryView';
+import AddLorryView from './AddVehicleFormView';
 import Header from '../../../../common/Header';
 import {getLorryRequest} from '../../../../redux/slices/VehicleSlice';
-import AddLorryListItem from '../addLorryListView';
+import VehicleListItem from './AddVehicleListView/components/VehicleListItem';
 import Spinner from '../../../../common/Spinner';
 import useCompanyId from '../../../../hooks/useCompanyId';
 import {AddLorryFormContextProvider} from '../../../../provider/AddLorryFormContextProvider';
-import { COLOR_WHITE } from '../../../../utils/colors';
+import {COLOR_WHITE} from '../../../../utils/colors';
+import { IVehicle } from '../../../../interface/vehicle/IGetLorryResponse';
+import { NavigationProp } from '@react-navigation/native';
 
-interface IAddLorryDetailViewProps {}
+interface IAddLorryDetailViewProps {
+  navigation: NavigationProp<any, any>;
+}
 
-const AddLorryDetailView: React.FC<IAddLorryDetailViewProps> = ({}) => {
+const ManageVehicleView: React.FC<IAddLorryDetailViewProps> = ({navigation}) => {
   const dispatch = useAppDispatch();
   const {lorryData, getLorryRequesting} = useAppSelector(
     state => state.Vehicle,
@@ -36,6 +40,7 @@ const AddLorryDetailView: React.FC<IAddLorryDetailViewProps> = ({}) => {
   const [createNewAddLorryDetail, setCreateNewAddLorryDetail] =
     useState<boolean>(true);
   const {data: lorryArray = []} = lorryData || {};
+
   const companyId = useCompanyId();
 
   const handleCreateNewAddLorryDetail = () => {
@@ -64,6 +69,11 @@ const AddLorryDetailView: React.FC<IAddLorryDetailViewProps> = ({}) => {
     dispatch(getLorryRequest(companyId));
   }, []);
 
+  const goToVehicleDetails = (index: number) => {
+    const vehicle:IVehicle = lorryArray[index];
+    navigation.navigate("VehicleDetails", {item: vehicle});
+  }
+
   const showForm = () => {
     if (createNewAddLorryDetail) {
       return (
@@ -79,7 +89,7 @@ const AddLorryDetailView: React.FC<IAddLorryDetailViewProps> = ({}) => {
     if (showAddLorryDetailList) {
       return (
         <FlatList
-          contentContainerStyle={{alignItems: 'center', paddingVertical: 10}}
+          contentContainerStyle={{alignItems: 'center'}}
           data={lorryArray}
           refreshControl={
             <RefreshControl
@@ -89,7 +99,7 @@ const AddLorryDetailView: React.FC<IAddLorryDetailViewProps> = ({}) => {
           }
           renderItem={({item, index}) => (
             <View style={{padding: 10}}>
-              <AddLorryListItem item={item} index={index} />
+              <VehicleListItem item={item} index={index} onPress={goToVehicleDetails} />
             </View>
           )}
           ListEmptyComponent={showEmptyView()}
@@ -132,4 +142,4 @@ const AddLorryDetailView: React.FC<IAddLorryDetailViewProps> = ({}) => {
   );
 };
 
-export default AddLorryDetailView;
+export default ManageVehicleView;

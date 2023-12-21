@@ -1,9 +1,10 @@
 import {Reducer} from 'react';
-import entityOptions from '../../../../data/entityOptions.json';
+import entityOptions from '../../../../../data/entityOptions.json';
 
 export enum ACTION {
   ENTITY = 'ENTITY',
   SUB_ENTITY = 'SUB_ENTITY',
+  SUB_ENTITY_ID = 'SUB_ENTITY_ID',
   LORRY_COMPANY_NAME = 'LORRY_COMPANY_NAME',
   LORRY_TYPE = 'LORRY_TYPE',
   REG_NUMBER = 'REG_NUMBER',
@@ -24,6 +25,7 @@ export enum ACTION {
 export interface IState {
   entity: string;
   sub_entity: string;
+  sub_entity_id:string;
   lorry_company_name: string;
   lorry_type: string;
   reg_number: string;
@@ -43,7 +45,8 @@ export interface IState {
 
 export const initialState: IState = {
   entity: entityOptions[0].label,
-  sub_entity: '',
+  sub_entity: entityOptions[0].label,
+  sub_entity_id: entityOptions[0].label,
   lorry_company_name: '',
   lorry_type: '',
   reg_number: '',
@@ -76,6 +79,8 @@ export const addLorryReducer: Reducer<IState, Action> = (
       return {...state, entity: payload as string};
     case ACTION.SUB_ENTITY:
       return {...state, sub_entity: payload as string};
+    case ACTION.SUB_ENTITY_ID:
+      return {...state, sub_entity_id: payload as string};
     case ACTION.LORRY_COMPANY_NAME:
       return {...state, lorry_company_name: payload as string};
     case ACTION.LORRY_TYPE:

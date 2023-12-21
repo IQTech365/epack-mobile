@@ -9,7 +9,7 @@ import {
   addLorryReducer,
   initialState,
   ACTION,
-} from '../views/vehicle/components/addLorryView/addLorryReducer2';
+} from '../views/vehicle/components/ManageVehicleView/AddVehicleFormView/addLorryReducer2';
 
 const useAddLorryFormContext = () => {
   const [state, dispatch] = useReducer(addLorryReducer, initialState);
@@ -32,6 +32,16 @@ const useAddLorryFormContext = () => {
       });
     },
     [state.sub_entity],
+  );
+
+  const setSubEntityId = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.SUB_ENTITY_ID,
+        payload: text,
+      });
+    },
+    [state.sub_entity_id],
   );
 
   const setLorryCompanyName = useCallback(
@@ -188,6 +198,7 @@ const useAddLorryFormContext = () => {
     state,
     setEntity,
     setSubEntity,
+    setSubEntityId,
     setLorryCompanyName,
     setLorryType,
     setRegistrationNo,
@@ -212,6 +223,7 @@ const initAddLorryFormContextState: UseAddLorryFormContextType = {
   state: initialState,
   setEntity: (text: string) => {},
   setSubEntity: (text: string) => {},
+  setSubEntityId: (text: string) => {},
   setLorryCompanyName: (text: string) => {},
   setLorryType: (text: string) => {},
   setVehicleModel: (text: string) => {},

@@ -1,50 +1,51 @@
 import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
 import Toast from 'react-native-toast-message';
-import AvoidSoftInputViewHOC from '../../../../common/AvoidSoftInputViewHOC';
-import Spacer from '../../../../common/Spacer';
+import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
+import Spacer from '../../../../../common/Spacer';
 import styles from './style';
-import Label from '../../../../common/Label';
-import Input from '../../../../common/Input';
-import {COLOR_BLACK} from '../../../../utils/colors';
-import Button from '../../../../common/Button';
-import DatePickerComponent from '../../../../common/DatePickerComponent';
-import {useAppDispatch, useAppSelector} from '../../../../redux/hooks';
-import {IAddLorryRequest} from '../../../../interface/vehicle/IAddLorryRequest';
+import Label from '../../../../../common/Label';
+import Input from '../../../../../common/Input';
+import {COLOR_BLACK} from '../../../../../utils/colors';
+import Button from '../../../../../common/Button';
+import DatePickerComponent from '../../../../../common/DatePickerComponent';
+import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
+import {IAddLorryRequest} from '../../../../../interface/vehicle/IAddLorryRequest';
 import {
   addLorryRequest,
   restAddLorryRequest,
-} from '../../../../redux/slices/VehicleSlice';
-import Spinner from '../../../../common/Spinner';
+} from '../../../../../redux/slices/VehicleSlice';
+import Spinner from '../../../../../common/Spinner';
 import {
   getBranchsRequest,
   getFranchiseRequest,
-} from '../../../../redux/slices/MyProfile';
-import useCompanyId from '../../../../hooks/useCompanyId';
+} from '../../../../../redux/slices/MyProfile';
+import useCompanyId from '../../../../../hooks/useCompanyId';
 import UploadPhotoView from './components/UploadPhotoView';
-import {useAddLorryFormContextHook} from '../../../../provider/AddLorryFormContextProvider';
-import useAuthId from '../../../../hooks/useAuthId';
-import {formatDate4} from '../../../../utils/formatter';
-import DropdownComponent from '../../../../common/DropdownComponent';
-import {TDropdownItem} from '../../../../type/TDropdownItem';
-import entityOptions from '../../../../data/entityOptions.json';
+import {useAddLorryFormContextHook} from '../../../../../provider/AddLorryFormContextProvider';
+import useAuthId from '../../../../../hooks/useAuthId';
+import {formatDate4} from '../../../../../utils/formatter';
+import DropdownComponent from '../../../../../common/DropdownComponent';
+import {TDropdownItem} from '../../../../../type/TDropdownItem';
+import entityOptions from '../../../../../data/entityOptions.json';
 import {
   getVehicleCompanyRequest,
   getVehicleModelsRequest,
   getVehicleTypesRequest,
-} from '../../../../redux/slices/CommonSlice';
+} from '../../../../../redux/slices/CommonSlice';
 import {
   getVehicleCompanyList,
   getVehicleModelList,
   getVehicleTypeList,
-} from '../../../order/orderDetails/components/CarConditionFormView/utils';
-import {getBranchList, getFirstVehicleType, getFranchiseList} from '../utils';
+} from '../../../../order/orderDetails/components/CarConditionFormView/utils';
+import {getBranchList, getFirstVehicleType, getFranchiseList} from '../../utils';
 
 const AddLorryView: React.FC<{}> = ({}) => {
   const {
     state,
     setEntity,
     setSubEntity,
+    setSubEntityId,
     setLorryCompanyName,
     setLorryType,
     setRegistrationNo,
@@ -133,12 +134,10 @@ const AddLorryView: React.FC<{}> = ({}) => {
     const payload: IAddLorryRequest = {
       companyId: companyId,
       entityType: state.entity,
-      entityId: state.sub_entity,
-      driverName: '',
-      branchName: state.sub_entity,
-      lorryCompanyName: state.lorry_company_name,
+      entityId: state.entity == entityOptions[0].label ? companyId : state.sub_entity_id,
+      vehicleCompanyName: state.lorry_company_name,
       vehicleManufacturingYear: state.manufacturing_year,
-      lorryType: state.lorry_type,
+      vehicleType: state.lorry_type,
       vehicleRegistrationNo: state.reg_number,
       vehicleChassisNo: state.vehicle_chasis_no,
       vehicleEngineNo: state.vehicle_engine_no,
@@ -147,7 +146,7 @@ const AddLorryView: React.FC<{}> = ({}) => {
       vehicleRCNo: state.vehicle_rc_no,
       pollutionCertificateNo: state.pollution_certificate_no,
       pollutionRenewalDate: state.pollution_certificate_renewal_date,
-      createdBy: authId,
+    //   createdBy: authId,
     };
     console.log(payload, 'add Lorry..');
     dispatch(addLorryRequest(payload));
@@ -193,6 +192,7 @@ const AddLorryView: React.FC<{}> = ({}) => {
                 <DropdownComponent
                   data={_getSubEntityDataList()}
                   onSelect={(item: TDropdownItem) => {
+                    setSubEntityId(item.value);
                     setSubEntity(item.label);
                   }}
                 />
@@ -206,7 +206,7 @@ const AddLorryView: React.FC<{}> = ({}) => {
               data={getVehicleTypeList(vehicleTypes)}
               onSelect={(item: TDropdownItem) => {
                 setVehicleTypeId(item.value);
-                setLorryType(item.label);
+                setLorryType(item.value);
               }}
             />
           </View>
