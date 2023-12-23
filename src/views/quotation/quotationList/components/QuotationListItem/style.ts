@@ -1,15 +1,43 @@
 import {StyleSheet, Dimensions} from 'react-native';
 import {
+  COLOR_BLACK,
   COLOR_BLUE,
   COLOR_GRAY,
   COLOR_GRAY2,
+  COLOR_GRAY3,
+  COLOR_GRAY6,
   COLOR_WHITE,
 } from '../../../../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
+  badgeWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  bageContainer: {
+    width: 30,
+    height: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: COLOR_BLUE,
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
+  },
+  badgeText: {
+    color: COLOR_WHITE,
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  enquiryDateText: {
+    color: COLOR_BLACK,
+    fontSize: 14,
+    fontWeight: '500',
+    marginLeft: 8,
+  },
   cardWrapper: {
     borderRadius: 8,
+    borderTopLeftRadius: 0,
     alignItems: 'center',
     marginBottom: 15,
   },
@@ -24,13 +52,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 6,
+    backgroundColor: COLOR_GRAY6,
+    borderTopRightRadius: 5,
   },
   dateContainer: {
     width: '30%',
     paddingVertical: 6,
     paddingHorizontal: 4,
     alignItems: 'center',
-    backgroundColor: COLOR_GRAY2,
     borderRadius: 8,
   },
   quotationNumberContainer: {
@@ -38,7 +67,6 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 4,
     alignItems: 'center',
-    backgroundColor: COLOR_GRAY2,
     borderRadius: 8,
   },
   iconContainer: {
@@ -46,7 +74,6 @@ const styles = StyleSheet.create({
     height: 30,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: COLOR_BLUE,
     borderRadius: 15,
     marginRight: 4,
   },
@@ -54,15 +81,19 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 4,
-    paddingHorizontal: 4,
-    padding: 6,
+    // paddingVertical: 4,
+    // paddingHorizontal: 4,
+    // padding: 6,
   },
   rowItemContainer: {
     width: '50%',
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
+    paddingVertical: 10,
+    backgroundColor: COLOR_GRAY3,
+    borderBottomWidth: 0.5,
+    borderBottomColor: COLOR_GRAY2,
   },
   nameText: {
     color: COLOR_GRAY,
@@ -95,11 +126,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 8,
     paddingHorizontal: 8,
-    // backgroundColor: COLOR_BLUE,
     borderTopWidth: 1,
-    borderTopColor: COLOR_BLUE,
+    borderTopColor: COLOR_GRAY2,
     borderBottomLeftRadius: 8,
     borderBottomRightRadius: 8,
+    backgroundColor:COLOR_GRAY2,
   },
   viewDetailContainer: {
     width: '100%',

@@ -50,7 +50,7 @@ const EnquiryListItem: React.FC<IEnquiryListItemProps> = ({
         </View>
         <Text style={styles.enquiryDateText}>{item.enquiryDate}</Text>
       </View>
-      <Shadow style={styles.cardWrapper} distance={1.5}>
+      <Shadow style={styles.cardWrapper} distance={2}>
         <TouchableOpacity
           style={styles.container}
           activeOpacity={0.6}
@@ -73,7 +73,6 @@ const EnquiryListItem: React.FC<IEnquiryListItemProps> = ({
               </TouchableOpacity>
             </View>
           </View>
-          <Spacer height={6} />
           <View style={styles.rowContainer}>
             <View style={styles.rowItemContainer}>
               <Text style={styles.labelText}>Shifting Type</Text>
@@ -82,7 +81,6 @@ const EnquiryListItem: React.FC<IEnquiryListItemProps> = ({
               <Text style={styles.valueText}>{item.shiftingType}</Text>
             </View>
           </View>
-          <Spacer height={2} />
           <View style={styles.rowContainer}>
             <View style={styles.rowItemContainer}>
               <Text style={styles.labelText}>Pickup Address</Text>
@@ -91,7 +89,6 @@ const EnquiryListItem: React.FC<IEnquiryListItemProps> = ({
               <Text style={styles.valueText}>{item.pickupAddress}</Text>
             </View>
           </View>
-          <Spacer height={2} />
           <View style={styles.rowContainer}>
             <View style={styles.rowItemContainer}>
               <Text style={styles.labelText}>Delivery Address</Text>
@@ -100,16 +97,14 @@ const EnquiryListItem: React.FC<IEnquiryListItemProps> = ({
               <Text style={styles.valueText}>{item.deliveryAddress}</Text>
             </View>
           </View>
-          <Spacer height={2} />
           <View style={styles.rowContainer}>
-            <View style={styles.rowItemContainer}>
+            <View style={[styles.rowItemContainer, {borderBottomWidth: 0, borderBottomLeftRadius: 5,}]}>
               <Text style={styles.labelText}>Shifting Luggage</Text>
             </View>
-            <View style={styles.rowItemContainer2}>
+            <View style={[styles.rowItemContainer2, {borderBottomWidth: 0, borderBottomRightRadius: 5,}]}>
               <Text style={styles.valueText}>{item.shiftingLuggage}</Text>
             </View>
           </View>
-          <Spacer height={6} />
         </TouchableOpacity>
       </Shadow>
     </>

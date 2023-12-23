@@ -3,7 +3,7 @@ import {View, Text, TouchableOpacity} from 'react-native';
 import styles from './style';
 import ShareIcon from '../../images/icons/share_icon.svg';
 import DownloadIcon from '../../images/icons/download_icon.svg';
-import EditIcon from '../../images/icons/create_icon.svg';
+import EditIcon from '../../images/icons/edit2.svg';
 import PreviewIcon from '../../images/icons/preview_icon.svg';
 
 interface Props {
@@ -19,19 +19,19 @@ const DocumentActionView: React.FC<Props> = ({onDownload, onShare, onPreview, on
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.action} onPress={onShare} activeOpacity={0.6}>
-        <ShareIcon width={30} height={30} />
+        <ShareIcon width={24} height={24} />
         <Text style={styles.actionText}>Share</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.action} onPress={onDownload} activeOpacity={0.6}>
-        <DownloadIcon width={30} height={30} />
+        <DownloadIcon width={24} height={24} />
         <Text style={styles.actionText}>Download</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.action} onPress={onPreview} activeOpacity={0.6}>
-        <PreviewIcon width={30} height={30} />
+        <PreviewIcon width={24} height={24} />
         <Text style={styles.actionText}>Preview</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.action} onPress={onEdit} activeOpacity={0.6}>
-        <EditIcon width={30} height={30} />
+        <EditIcon width={24} height={24} />
         <Text style={styles.actionText}>Edit</Text>
       </TouchableOpacity>
     </View>

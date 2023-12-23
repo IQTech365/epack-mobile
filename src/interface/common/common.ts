@@ -155,3 +155,11 @@ export interface IAppSettingResponse {
   status:number;
   error:boolean;
 }
+
+export interface ICustomer {}
+
+export interface ICustomersResponse {
+  data:ICustomer[];
+  status:number;
+  error:boolean;
+}

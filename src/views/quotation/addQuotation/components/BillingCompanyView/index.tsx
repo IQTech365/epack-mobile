@@ -9,6 +9,7 @@ import Spacer from "../../../../../common/Spacer";
 import DropdownComponent from "../../../../../common/DropdownComponent";
 import { TDropdownItem } from "../../../../../type/TDropdownItem";
 import approvalAuthorityOptions from '../../../../../data/ApprovalAuthorityOptions.json';
+import SearchIcon from '../../../../../images/icons/search.svg';
 
 interface Props {
     //
@@ -38,11 +39,16 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
     const employeeMobileNoInputCompRef = useRef(null);
     const companyAddressInputCompRef = useRef(null);
 
+    const findCompaniesByName = () => {
+      //
+    }
+
     return (
       <>
         <View style={styles.fullWidthContainer}>
           <Label text="Company Name" style={styles.label} required={true} />
           <Input
+            searchIcon={<SearchIcon width={20} height={20} />}
             onChangeText={setCompanyName}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}

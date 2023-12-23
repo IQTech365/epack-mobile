@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   Text,
@@ -20,7 +20,7 @@ import {
   COLOR_GRAY2,
   COLOR_WHITE,
 } from '../utils/colors';
-import { IAppUser } from '../interface/IAppUser';
+import {IAppUser} from '../interface/IAppUser';
 import HeaderGridBackgroundImage from '../images/header-grid.png';
 import Spacer from '../common/Spacer';
 import HomeIcon from '../images/icons/home2.svg';
@@ -29,20 +29,25 @@ import HelpIcon from '../images/icons/help-black.svg';
 import SettingsIcon from '../images/icons/settings.svg';
 import SubscriptionIcon from '../images/icons/subscription.svg';
 import NewsRoomIcon from '../images/icons/newsroom.svg';
+import BranchesIcon from '../images/icons/branches_black_icon.svg';
+import VehicleMgmtIcon from '../images/icons/vehicle_mgmt_black_icon.svg';
+import FranchiseMgmtIcon from '../images/icons/franchise_mgmt_black_icon.svg';
 import LogoutIcon from '../images/icons/logout.svg';
 import SubscriptionView from '../views/subscription';
 import HelpCenterView from '../views/helpCenter';
 import NewsRoomView from '../views/newsRoom';
 import SettingStackNavigator from './SettingStackNavigator';
 import MyProfileStackNavigator from './MyProfileStackNavigator';
-import { logout } from '../redux/slices/OtpSlice';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { useAuthContext } from '../provider/AuthProvider';
+import {logout} from '../redux/slices/OtpSlice';
+import {useAppDispatch, useAppSelector} from '../redux/hooks';
+import {useAuthContext} from '../provider/AuthProvider';
 import VehicleMangementStacknavigator from './VehicleMangementStacknavigator';
 import SubscriptionPlanView from '../views/subscriptionPlan';
 import PaymentMethodView from '../views/paymentMethod';
-import { getCompaniesRequest } from '../redux/slices/CompanySlice';
-import { ICompanyInfoData } from '../interface/companyRegistration/IGetCompaniesResponse';
+import {getCompaniesRequest} from '../redux/slices/CompanySlice';
+import {ICompanyInfoData} from '../interface/companyRegistration/IGetCompaniesResponse';
+import AddFranchiseView from '../views/profile/components/addFranchiseDetail';
+import AddBranchView from '../views/profile/components/addBranchDetail';
 
 const Drawer = createDrawerNavigator();
 
@@ -55,54 +60,63 @@ const DrawerContent = (props: any) => {
   const {otpData} = useAppSelector(state => state.OTP);
 
   const getFirstCompany = () => {
-    let company:ICompanyInfoData | null  = null;
-    if(companiesData && Array.isArray(companiesData) && companiesData.length > 0) {
+    let company: ICompanyInfoData | null = null;
+    if (
+      companiesData &&
+      Array.isArray(companiesData) &&
+      companiesData.length > 0
+    ) {
       company = companiesData[0];
-    } else if(companiesData && companiesData.hasOwnProperty('authId')) {
+    } else if (companiesData && companiesData.hasOwnProperty('authId')) {
       company = companiesData;
     }
     return company;
-  }
+  };
 
   const handleLogout = () => {
     setLoggedIn(false);
     dispatch(logout());
-  }
+  };
   const firstCompany = getFirstCompany();
 
   useEffect(() => {
-    if(otpData) {
+    if (otpData) {
       const {data = {}} = otpData || {};
       dispatch(getCompaniesRequest(data?.id as string));
     }
   }, [dispatch]);
-  
+
   return (
     <View style={styles.container2}>
       <DrawerContentScrollView
         {...props}
-        contentContainerStyle={{ backgroundColor: COLOR_BLUE }}>
+        contentContainerStyle={{backgroundColor: COLOR_BLUE}}>
         <ImageBackground
           imageStyle={styles.container}
           source={HeaderGridBackgroundImage}>
           <View style={styles.innerContainer}>
             <View style={styles.avatarContainer}>
               {/* <View style={styles.avatar} /> */}
-              <Image 
+              <Image
                 //  source={{ uri: firstCompany?.companyLogo }}
-                source={{uri: 'https://fastly.picsum.photos/id/14/200/200.jpg?hmac=bwQwH7-0RPCqUVkFzd3hFhc6yDfC6_e7vgaKXZ7vFOA'}}
-                 resizeMode="center"
-                 style={styles.avatar}
-               />
+                source={{
+                  uri: 'https://fastly.picsum.photos/id/14/200/200.jpg?hmac=bwQwH7-0RPCqUVkFzd3hFhc6yDfC6_e7vgaKXZ7vFOA',
+                }}
+                resizeMode="center"
+                style={styles.avatar}
+              />
             </View>
             <Text style={styles.nameText}>{firstCompany?.companyName}</Text>
             <Text style={styles.text}>{`User ID: ${firstCompany?._id}`}</Text>
-            <Text style={styles.text}>{`Mobile: ${firstCompany?.companyMobile}`}</Text>
+            <Text
+              style={
+                styles.text
+              }>{`Mobile: ${firstCompany?.companyMobile}`}</Text>
             <Text style={styles.text}>{`Email: ${firstCompany?.email}`}</Text>
             <Spacer height={8} />
           </View>
         </ImageBackground>
-        <View style={{ backgroundColor: '#ffffff' }}>
+        <View style={{backgroundColor: '#ffffff'}}>
           <DrawerItemList {...props} />
         </View>
       </DrawerContentScrollView>
@@ -120,7 +134,7 @@ export const DrawerNavigator = () => {
   return (
     <Drawer.Navigator
       drawerContent={props => <DrawerContent {...props} />}
-      screenOptions={{ headerShown: false, drawerLabelStyle: { marginLeft: -25 } }}>
+      screenOptions={{headerShown: false, drawerLabelStyle: {marginLeft: -25}}}>
       <Drawer.Screen
         name="TabNavigator"
         component={TabNavigator}
@@ -161,11 +175,25 @@ export const DrawerNavigator = () => {
           drawerIcon: () => <NewsRoomIcon width={24} height={24} />,
         }}
       />
-       <Drawer.Screen
+      <Drawer.Screen
         name="Vehicle Management"
         component={VehicleMangementStacknavigator}
         options={{
-          drawerIcon: () => <NewsRoomIcon width={24} height={24} />,
+          drawerIcon: () => <VehicleMgmtIcon width={24} height={24} />,
+        }}
+      />
+      <Drawer.Screen
+        name="Branch Management"
+        component={AddBranchView}
+        options={{
+          drawerIcon: () => <BranchesIcon width={24} height={24} />,
+        }}
+      />
+      <Drawer.Screen
+        name="Franchise Management"
+        component={AddFranchiseView}
+        options={{
+          drawerIcon: () => <FranchiseMgmtIcon width={24} height={24} />,
         }}
       />
       <Drawer.Screen

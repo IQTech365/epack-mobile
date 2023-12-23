@@ -1,5 +1,13 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import {COLOR_BLACK, COLOR_BLUE, COLOR_GRAY, COLOR_GRAY2, COLOR_ORANGE, COLOR_WHITE} from '../../../../../utils/colors';
+import {
+  COLOR_BLACK,
+  COLOR_BLUE,
+  COLOR_GRAY,
+  COLOR_GRAY2,
+  COLOR_GRAY3,
+  COLOR_GRAY6,
+  COLOR_WHITE,
+} from '../../../../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -30,10 +38,10 @@ const styles = StyleSheet.create({
     color: COLOR_BLACK,
     fontSize: 14,
     fontWeight: '500',
-    marginLeft: 8
+    marginLeft: 8,
   },
   container: {
-    width: width * 0.90,
+    width: width * 0.9,
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',
@@ -42,78 +50,85 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    backgroundColor: COLOR_GRAY6,
+    borderTopRightRadius: 5,
   },
   nameContainer: {
     width: '60%',
-    paddingVertical: 6,
+    paddingVertical: 8,
     paddingHorizontal: 4,
     alignItems: 'flex-start',
     justifyContent: 'center',
-    backgroundColor: COLOR_GRAY2,
-    borderLeftColor: COLOR_ORANGE,
   },
   contactOptionsContainer: {
     width: '30%',
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    paddingVertical: 6,
+    paddingVertical: 8,
     paddingHorizontal: 4,
     alignItems: 'center',
     borderRadius: 8,
   },
   iconContainer: {
-      width: 30,
-      height: 30,
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: COLOR_BLUE,
-      borderRadius: 15,
-      marginRight: 4,
+    width: 30,
+    height: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: COLOR_BLUE,
+    borderRadius: 15,
+    marginRight: 4,
   },
   rowContainer: {
-      width: '100%',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      paddingVertical: 4,
-      paddingHorizontal: 8,
-      padding: 6,
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   rowItemContainer: {
     width: '40%',
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingLeft: 5,
+    backgroundColor: COLOR_GRAY3,
+    borderBottomColor: COLOR_GRAY2,
+    borderBottomWidth: 0.5,
   },
   rowItemContainer2: {
     width: '60%',
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingLeft: 5,
+    backgroundColor: COLOR_WHITE,
+    borderBottomColor: COLOR_GRAY2,
+    borderBottomWidth: 0.5,
   },
   nameText: {
-      color: COLOR_GRAY,
-      fontSize: 13,
-      fontWeight: '500'
+    color: COLOR_GRAY,
+    fontSize: 13,
+    fontWeight: '500',
   },
   amountText: {
     color: COLOR_GRAY,
     fontSize: 13,
-    fontWeight: '500'
+    fontWeight: '500',
   },
   viewDetailsText: {
     color: COLOR_GRAY,
     fontSize: 13,
-    fontWeight: '600'
+    fontWeight: '600',
   },
   labelText: {
-      color: COLOR_GRAY,
-      fontSize: 13,
-      fontWeight: '600'
+    color: COLOR_GRAY,
+    fontSize: 13,
+    fontWeight: '500',
   },
   valueText: {
     color: COLOR_GRAY,
     fontSize: 12,
-    // fontWeight: '500'
+    fontWeight: '400',
   },
   viewDetailsContainer: {
     width: '100%',
@@ -126,7 +141,7 @@ const styles = StyleSheet.create({
     borderTopColor: COLOR_BLUE,
     borderBottomLeftRadius: 8,
     borderBottomRightRadius: 8,
-},
+  },
 });
 
 export default styles;

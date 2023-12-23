@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import {COLOR_BLACK, COLOR_BLUE, COLOR_GRAY, COLOR_GRAY2, COLOR_ORANGE, COLOR_WHITE} from '../../../../../utils/colors';
+import {COLOR_BLACK, COLOR_BLUE, COLOR_GRAY, COLOR_GRAY2, COLOR_GRAY3, COLOR_GRAY6, COLOR_ORANGE, COLOR_WHITE} from '../../../../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -45,32 +45,23 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    backgroundColor: COLOR_GRAY6,
+    borderTopRightRadius: 5,
   },
   nameContainer: {
     width: '40%',
-    // height: 44,
-    paddingVertical: 6,
-    paddingHorizontal: 4,
-    alignItems: 'center',
+    paddingVertical: 8,
+    paddingLeft: 5,
+    alignItems: 'flex-start',
     justifyContent: 'center',
-    backgroundColor: COLOR_GRAY2,
-    // borderEndWidth: 15,
-    // borderBottomRightRadius: 22,
-    // borderTopLeftRadius: 8,
-    // borderEndColor: COLOR_GRAY2,
-    // borderTopStartRadius: 8,
-    // borderLeftWidth: 10,
-    // borderLeftColor: COLOR_ORANGE,
   },
   contactOptionsContainer: {
     width: '30%',
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    paddingVertical: 6,
-    paddingHorizontal: 4,
+    paddingVertical: 8,
     alignItems: 'center',
-    // backgroundColor: COLOR_GRAY2,
-    borderRadius: 8,
+    // borderRadius: 8,
   },
   iconContainer: {
       width: 30,
@@ -85,20 +76,33 @@ const styles = StyleSheet.create({
       width: '100%',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      paddingVertical: 4,
-      paddingHorizontal: 8,
-      padding: 6,
   },
   rowItemContainer: {
-    width: '50%',
+    width: '45%',
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingLeft: 5,
+    backgroundColor: COLOR_GRAY3,
+    borderBottomColor: COLOR_GRAY2,
+    borderBottomWidth: 0.5,
+  },
+  rowItemContainer2: {
+    width: '55%',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingLeft: 5,
+    backgroundColor: COLOR_WHITE,
+    borderBottomColor: COLOR_GRAY2,
+    borderBottomWidth: 0.5,
   },
   nameText: {
       color: COLOR_GRAY,
-      fontSize: 13,
-      fontWeight: '500'
+      fontSize: 14,
+      fontWeight: '600'
   },
   amountText: {
     color: COLOR_GRAY,
@@ -113,12 +117,12 @@ const styles = StyleSheet.create({
   labelText: {
       color: COLOR_GRAY,
       fontSize: 13,
-      fontWeight: '600'
+      fontWeight: '500'
   },
   valueText: {
     color: COLOR_GRAY,
     fontSize: 12,
-    // fontWeight: '500'
+    fontWeight: '400'
   },
   viewDetailsContainer: {
     width: '100%',

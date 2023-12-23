@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import { COLOR_ERROR, COLOR_WHITE } from '../../utils/colors';
+import { COLOR_ERROR, COLOR_GRAY3, COLOR_WHITE } from '../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -16,6 +16,14 @@ const styles = StyleSheet.create({
     iconContainer: {
         width: '10%',
         alignItems: 'flex-start',
+        justifyContent: 'center',
+    },
+    searchIconContainer: {
+        width: '10%',
+        backgroundColor: COLOR_GRAY3,
+        alignItems: 'center',
+        borderTopRightRadius:5,
+        borderBottomRightRadius:5,
         justifyContent: 'center',
     },
     inputContainer: {
