@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, Linking} from 'react-native';
 import {Shadow} from 'react-native-shadow-2';
 import styles from './style';
 import LocationIcon from '../../../../../images/icons/location2.svg';
@@ -60,6 +60,14 @@ const QuotationListItem: React.FC<IQuotationListItemProps> = ({
   const bottomViewStyle = show
     ? {borderBottomLeftRadius: 0, borderBottomRightRadius: 0}
     : {borderBottomLeftRadius: 8, borderBottomRightRadius: 8};
+
+    const handlePhoneCall = () => {
+      Linking.openURL(`tel:${item.phoneNumber}`);
+    }
+  
+    const handleWhatsappCall = () => {
+      Linking.openURL(`whatsapp://send?phone=+91${item.phoneNumber}`);
+    }
 
   return (
     <>
@@ -139,6 +147,7 @@ const QuotationListItem: React.FC<IQuotationListItemProps> = ({
               <View style={styles.rowContainer}>
                 <TouchableOpacity
                   style={[styles.rowItemContainer, {borderBottomWidth: 0}]}
+                  onPress={handleWhatsappCall}
                   activeOpacity={0.4}>
                   <View style={styles.iconContainer}>
                     <WhatsappIcon width={18} height={18} />
@@ -152,6 +161,7 @@ const QuotationListItem: React.FC<IQuotationListItemProps> = ({
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[styles.rowItemContainer, {borderBottomWidth: 0}]}
+                  onPress={handlePhoneCall}
                   activeOpacity={0.4}>
                   <View style={styles.iconContainer}>
                     <PhoneCallIcon width={18} height={18} />
