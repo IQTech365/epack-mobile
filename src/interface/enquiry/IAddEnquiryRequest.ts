@@ -34,6 +34,7 @@ interface IBillingInfo {
 
 export interface IAddEnquiryRequest {
   companyId: string;
+  customerId:string;
   authId: string;
   enquiryManager: string;
   shiftingType: string;

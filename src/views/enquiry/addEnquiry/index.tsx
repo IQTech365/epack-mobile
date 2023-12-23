@@ -509,6 +509,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
     
     const payload: IAddEnquiryRequest = {
       companyId: companyId,
+      customerId: '',//SEEME - write logic to pass customer ID
       authId: authId,
       enquiryManager: '',
       shiftingType: state.shiftingType.toUpperCase(),

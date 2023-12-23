@@ -35,6 +35,7 @@ export interface DropAddress {
 }
 export interface IAddOrderRequest {
   companyId: string;
+  customerId:string;
   authId: string;
   enquiryManager: string;
   shiftingType: string;

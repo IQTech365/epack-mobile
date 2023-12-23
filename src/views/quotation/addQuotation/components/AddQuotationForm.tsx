@@ -127,6 +127,7 @@ const AddQuotationForm: React.FC<Props> = ({
 
   const payload: IAddQuotationRequest = {
     companyId: companyId,
+    customerId: '',//SEEME - write logic to pass customer ID
     enquiryId: enquiryId || '',
     authId: authId,
     shiftingType: state.shifting_type.toUpperCase(),

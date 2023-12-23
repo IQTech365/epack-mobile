@@ -32,6 +32,7 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
   const {
     state,
     setCompanyName,
+    setCustomerId,
     setApprovalAuthority,
     setAuthorityPersonName,
     setAuthorityMobileNo,
@@ -121,6 +122,7 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
               approvalAuthorityOptions[approvalAuthorityOptionIndex],
             );
         }
+        setCustomerId(selectedCompanyOption._id);
         setCompanyName(selectedCompanyOption.partyName);
         setAuthorityPersonName(billingInfo.authorityPersonName);
         setAuthorityMobileNo(billingInfo.authorityPersonMobile);

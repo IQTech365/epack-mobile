@@ -36,6 +36,16 @@ const useQuotationFormContext = () => {
     [state.shifting_luggage],
   );
 
+  const setCustomerId = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.CUSTOMER_ID,
+        payload: text,
+      });
+    },
+    [state.customer_id],
+  );
+
   const setQuotationNo = useCallback(
     (text: string) => {
       dispatch({
@@ -891,6 +901,7 @@ const useQuotationFormContext = () => {
     // **** Basic Details ****
     setShiftingType,
     setShiftingLuggage,
+    setCustomerId,
     setQuotationNo,
     setDateOfQuotation,
     setDateOfMoving,
@@ -1009,6 +1020,7 @@ const initQuotationFormContextState: UseQuotationFormContextType = {
   // **** Basic Details ****
   setShiftingType: (text: string) => {},
   setShiftingLuggage: (text: string) => {},
+  setCustomerId: (text: string) => {},
   setQuotationNo: (text: string) => {},
   setDateOfQuotation: (text: string) => {},
   setDateOfMoving: (text: string) => {},

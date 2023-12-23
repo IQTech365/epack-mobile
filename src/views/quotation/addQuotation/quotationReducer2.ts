@@ -18,6 +18,7 @@ export enum ACTION {
   DATE_OF_QUOTATION = 'DATE_OF_QUOTATION',
   DATE_OF_MOVING = 'DATE_OF_MOVING',
   BILLING_BY = 'BILLING_BY',
+  CUSTOMER_ID = 'CUSTOMER_ID',
   //
   VEHICLE_TYPE = 'VEHICLE_TYPE',
   VEHICLE_MANUFACTURER = 'VEHICLE_MANUFACTURER',
@@ -146,6 +147,7 @@ export interface IOtherCharge {
 export interface IState {
   shifting_type: string;
   shifting_luggage: string;
+  customer_id: string;
   quotation_no: string;
   date_of_quotation: string;
   date_of_moving: string;
@@ -262,6 +264,7 @@ export interface IAction {
 export const initialState: IState = {
   shifting_type: shiftingTypes[0].label,
   shifting_luggage: shiftingLuggages[0].label,
+  customer_id: '',
   quotation_no: '',
   date_of_quotation: '',
   date_of_moving: '',
@@ -380,6 +383,8 @@ export const quotationReducer: Reducer<IState, IAction> = (
       return {...state, shifting_type: payload as string};
     case ACTION.SHIFTING_LUGGAGE:
       return {...state, shifting_luggage: payload as string};
+    case ACTION.CUSTOMER_ID:
+      return {...state, customer_id: payload as string};
     case ACTION.QUOTATION_NO:
       return {...state, quotation_no: payload as string};
     case ACTION.DATE_OF_QUOTATION:

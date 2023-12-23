@@ -40,7 +40,6 @@ import { IGetOrdersRequest } from '../../../interface/order/IGetOrdersRequest';
 import EpackDropdown from '../../../common/DropdownComponent2';
 import { Validator } from '../../../utils/validation';
 import useAuthId from '../../../hooks/useAuthId';
-import { ICustomer } from '../../../interface/common/common';
 
 interface IAddOrderViewProps {
   navigation: NavigationProp<any, any>;
@@ -259,7 +258,8 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
     }
     const data: IAddOrderRequest = {
       companyId: companyId,
-      authId: otpData?.data.id as string,
+      customerId: '',//SEEME - write logic to pass customer ID
+      authId: authId,
       enquiryManager: '',
       shiftingType: state.shiftingType.toUpperCase() || 'LOCAL',
       partyCompanyName: state.billingBy?.billing_info?.company_name as string,

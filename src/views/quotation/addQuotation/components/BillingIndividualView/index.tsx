@@ -25,7 +25,7 @@ interface Props {
 }
 
 const BillingIndividualView: React.FC<Props> = ({}) => {
-  const {state, setPartyName, setPartyMobileNo} = useQuotationFormContextHook();
+  const {state, setPartyName, setPartyMobileNo, setCustomerId} = useQuotationFormContextHook();
   const partyNameInputCompRef = useRef(null);
   const partyMobileNoInputCompRef = useRef(null);
   const [showCompanyList, setShowCompanyList] = useState<boolean>(false);
@@ -82,6 +82,7 @@ const BillingIndividualView: React.FC<Props> = ({}) => {
   useEffect(() => {
     if (selectedCompanyOption) {
       if (selectedCompanyOption.billingBy == 'by Individual') {
+        setCustomerId(selectedCompanyOption._id);
         setPartyName(selectedCompanyOption.partyName);
         setPartyMobileNo(selectedCompanyOption.mobile);
       }
