@@ -117,9 +117,9 @@ export interface ISubmodule {
 }
 
 export interface ISubmoduleResponse {
-  data:ISubmodule[];
-  status:number;
-  error:boolean;
+  data: ISubmodule[];
+  status: number;
+  error: boolean;
 }
 
 // App Settings
@@ -147,19 +147,61 @@ export interface IAppSetting {
   isActive: boolean;
   isDeleted: boolean;
   __v: number;
-  submodules: ISerialNo[],
+  submodules: ISerialNo[];
 }
 
 export interface IAppSettingResponse {
-  data:ISubmodule[];
-  status:number;
-  error:boolean;
+  data: ISubmodule[];
+  status: number;
+  error: boolean;
 }
 
-export interface ICustomer {}
+export interface ICustomersRequest {
+  companyId: string;
+  searchKey: string;
+}
+
+export interface ICustomerAddress {
+  shiftingFrom: string;
+  state: string;
+  city: string;
+  address: string;
+  pincode: string;
+  locality: string;
+  landmark: string;
+  floor: string;
+  isLiftAvailable: string;
+}
+
+export interface ICustomerBillingInfo {
+  companyName: string;
+  approvalAuthority: string;
+  authorityPersonName: string;
+  authorityPersonMobile: string;
+  companyAddress: string;
+  companyGST: string;
+  employeeName: string;
+  employeeDesignation: string;
+  employeeMobile: string;
+}
+
+export interface ICustomer {
+  _id: string;
+  partyName: string;
+  __v: number;
+  billingBy: string;
+  billingDetails: string | ICustomerBillingInfo;
+  branchId: string;
+  companyId: string;
+  createdAt: string;
+  isActive: boolean;
+  isDeleted: boolean;
+  mobile: string;
+  pickupAddress: ICustomerAddress;
+}
 
 export interface ICustomersResponse {
-  data:ICustomer[];
-  status:number;
-  error:boolean;
+  data: ICustomer[];
+  status: number;
+  error: boolean;
 }

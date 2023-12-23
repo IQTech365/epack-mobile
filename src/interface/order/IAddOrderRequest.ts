@@ -58,4 +58,5 @@ export interface IAddOrderRequest {
   status: string;
   deliveryDate: string;
   deliveredDate: string;
+  addedBy:string;
 }

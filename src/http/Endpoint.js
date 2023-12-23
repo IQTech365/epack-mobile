@@ -132,3 +132,5 @@ export const GET_VEHICLE_MODELS = `/vehicle-management/vehicle-model/all`;
 export const GET_SERIAL_NO_SUBMODULES = `/content-management/sub-module/all`;
 // App Settings
 export const GET_APP_SETTINGS = (company_id) => `/setting/app-setting/company/${company_id}`;
+// Search Customers
+export const SEARCH_CUSTOMER = (company_id, searchKey) => `/enquiry/search-customer?companyId=${company_id}&keys=${searchKey}`;

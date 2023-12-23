@@ -30,3 +30,13 @@ export const startShare = async (html:any, docName:string, action:any) => {
       console.log(err);
     });
   }
+
+  export const debounce = (func:any, delay:number) => {
+    let timerId:any;
+    return (...args:any) => {
+      clearTimeout(timerId);
+      timerId = setTimeout(() => {
+        func(args);
+      }, delay);
+    };
+  }

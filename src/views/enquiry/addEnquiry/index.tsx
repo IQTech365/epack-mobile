@@ -49,6 +49,7 @@ import {NavigationProp} from '@react-navigation/native';
 import EpackDropdown from '../../../common/DropdownComponent2';
 import useCompanyId from '../../../hooks/useCompanyId';
 import { Validator } from '../../../utils/validation';
+import useAuthId from '../../../hooks/useAuthId';
 
 interface IAddEnquiryViewProps {
   navigation: NavigationProp<any, any>;
@@ -72,6 +73,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
   } = useAppSelector(state => state.Enquiry);
   const {otpData} = useAppSelector(state => state.OTP);
   const companyId = useCompanyId();
+  const authId = useAuthId();
 
   const pickupCityDropdownRef = useRef(null);
   const pickupStateDropwdownRef = useRef(null);
@@ -507,7 +509,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
     
     const payload: IAddEnquiryRequest = {
       companyId: companyId,
-      authId: otpData?.data.id as string,
+      authId: authId,
       enquiryManager: '',
       shiftingType: state.shiftingType.toUpperCase(),
       partyCompanyName: '',
@@ -561,6 +563,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
           ?.employee_mobile_number as string,
       } : {},
       status: 'NEW',
+      addedBy:authId,
     };
     dispatch2(addEnquiryRequest(payload));
   }, [state]);

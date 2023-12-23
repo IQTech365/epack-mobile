@@ -39,6 +39,8 @@ import useCompanyId from '../../../hooks/useCompanyId';
 import { IGetOrdersRequest } from '../../../interface/order/IGetOrdersRequest';
 import EpackDropdown from '../../../common/DropdownComponent2';
 import { Validator } from '../../../utils/validation';
+import useAuthId from '../../../hooks/useAuthId';
+import { ICustomer } from '../../../interface/common/common';
 
 interface IAddOrderViewProps {
   navigation: NavigationProp<any, any>;
@@ -46,6 +48,7 @@ interface IAddOrderViewProps {
 
 const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
   const [state, dispatch] = useReducer(addOrderReducer, initialState);
+  const authId = useAuthId();
   const dispatch2 = useAppDispatch();
   const { addOrderRequesting, addOrderSuccess, addOrderFailure, addOrderError } =
     useAppSelector(state => state.Order);
@@ -259,7 +262,7 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
       authId: otpData?.data.id as string,
       enquiryManager: '',
       shiftingType: state.shiftingType.toUpperCase() || 'LOCAL',
-      partyCompanyName: '',
+      partyCompanyName: state.billingBy?.billing_info?.company_name as string,
       partyName: state.partyName,
       email: '',
       mobile: state.mobile,
@@ -315,6 +318,7 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
           ?.employee_mobile_number as string,
       } : {},
       status: 'NEW ORDER',
+      addedBy:authId,
     };
     console.log('AddOrder-payload----', JSON.stringify(data));
     
@@ -450,6 +454,17 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
     }
   }, [addOrderRequesting, addOrderSuccess, addOrderFailure]);
 
+  // const _getCustomerList = (): ICustomer[] => {
+  //   const {data} = customers || {};
+  //   let list: ICustomer[] = [];
+  //   if (data && Array.isArray(data) && data.length > 0) {
+  //     list = data;
+  //   }
+  //   console.log('list-aaaa----', JSON.stringify(list));
+
+  //   return list;
+  // };
+
   const showBillingByIndividualView = () => {
     if (state.billingBy?.billing_by == 'by Company') return null;
     return (
@@ -468,6 +483,8 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
             required={true}
           />
         </View>
+        <Spacer height={4} />
+
         <Spacer height={4} />
         <View style={styles.elementContainer}>
           <Label text="Mobile Number" style={styles.label} required={true} />

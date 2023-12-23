@@ -34,6 +34,14 @@ const BasicDetails: React.FC<Props> = ({}) => {
     setDateOfMoving,
     setPartyName,
     setPartyMobileNo,
+    setCompanyName,
+    setAuthorityPersonName,
+    setAuthorityMobileNo,
+    setCompanyGSt,
+    setEmployeeName,
+    setEmployeeMobileNo,
+    setEmployeeDesignation,
+    setCompanyAddress,
   } = useQuotationFormContextHook();
 
   const shiftingTypeDropdownCompRef = useRef(null);
@@ -47,6 +55,15 @@ const BasicDetails: React.FC<Props> = ({}) => {
     if(state.billing_by == billingByOptions[1].label) {
       setPartyName('');
       setPartyMobileNo('');
+    } else if(state.billing_by == billingByOptions[0].label) {
+      setCompanyName('');
+      setAuthorityPersonName('');
+      setAuthorityMobileNo('');
+      setCompanyGSt('');
+      setEmployeeName('');
+      setEmployeeMobileNo('');
+      setEmployeeDesignation('');
+      setCompanyAddress('');
     }
   }, [state.billing_by]);
 

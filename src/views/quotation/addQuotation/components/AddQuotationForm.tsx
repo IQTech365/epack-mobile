@@ -138,7 +138,7 @@ const AddQuotationForm: React.FC<Props> = ({
     quotationDate: state.date_of_quotation,
     quotationNumber: state.quotation_no,
     enquirySource: '',
-    partyCompanyName: '',
+    partyCompanyName: billingDetails.companyName,
     partyName: state.party_name,
     email: '',
     mobile: state.party_mobile_no,
@@ -204,6 +204,7 @@ const AddQuotationForm: React.FC<Props> = ({
     otherDetail2: state.other_detail_2,
     easy_access_for_loading_unloading: state.other_detail_3,
     any_restrcition_for_loading_unloading: state.other_detail_4,
+    addedBy: authId,
   };
 
   const doValidation = () => {

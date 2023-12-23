@@ -4,6 +4,8 @@ import * as CommonService from '../service/CommonService';
 import { IOtpGetRequest } from '../interface/otp/IOtpGetRequest';
 import {
     IAppSettingResponse,
+  ICustomersRequest,
+  ICustomersResponse,
   IPackingTypeResponse,
   ISubmoduleResponse,
   IVehicleAccessoryResponse,
@@ -16,6 +18,9 @@ import {
     getAppSettingsFailure,
     getAppSettingsRequest,
     getAppSettingsSuccess,
+  getCustomersFailure,
+  getCustomersRequest,
+  getCustomersSuccess,
   getPackingTypesFailure,
   getPackingTypesRequest,
   getPackingTypesSuccess,
@@ -127,6 +132,17 @@ export function* getAppSettingsSaga(action: PayloadAction<string>) {
     }
 }
 
+export function* getCustomersSaga(action: PayloadAction<ICustomersRequest>) {
+    try {
+        const response: ICustomersResponse = yield call(CommonService.GetCustomersService, action.payload);
+        console.log('getCustomersSaga-response----', JSON.stringify(response));
+        yield put(getCustomersSuccess(response));
+    } catch (error) {
+        console.log('getCustomersSaga-error----', error);
+        yield put(getCustomersFailure(JSON.stringify(error)));
+    }
+}
+
 export function* watcherCommonSaga() {
     yield takeLatest(getPackingTypesRequest.type, getPackingTypesSaga);
     yield takeLatest(getVehicleTypesRequest.type, getVehicleTypesSaga);
@@ -136,4 +152,5 @@ export function* watcherCommonSaga() {
     yield takeLatest(getVehicleModelsRequest.type, getVehicleModelsSaga);
     yield takeLatest(getSubmoduleRequest.type, getSubmodulesSaga);
     yield takeLatest(getAppSettingsRequest.type, getAppSettingsSaga);
+    yield takeLatest(getCustomersRequest.type, getCustomersSaga);
 }

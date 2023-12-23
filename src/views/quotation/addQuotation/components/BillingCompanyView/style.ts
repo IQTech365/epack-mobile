@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import {COLOR_BLACK, COLOR_GRAY} from '../../../../../utils/colors';
+import {COLOR_BLACK, COLOR_GRAY, COLOR_GRAY3, COLOR_GRAY4, COLOR_GREEN, COLOR_WHITE} from '../../../../../utils/colors';
 const {width} = Dimensions.get('window');
 const styles = StyleSheet.create({
   fullWidthContainer: {
@@ -23,6 +23,20 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
   },
+  customerItemContainer: {
+    width: width * 0.9,
+    alignSelf: 'center',
+    paddingVertical: 10,
+    backgroundColor: COLOR_GREEN,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    paddingLeft: 8,
+  },
+  customerNameText: {
+    color: COLOR_WHITE,
+    fontSize: 16,
+    fontWeight: '400',
+  }
 });
 
 export default styles;

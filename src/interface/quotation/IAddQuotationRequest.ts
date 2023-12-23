@@ -122,4 +122,5 @@ export interface IAddQuotationRequest {
   otherDetail2: string;
   easy_access_for_loading_unloading: string;
   any_restrcition_for_loading_unloading: string;
+  addedBy: string;
 }

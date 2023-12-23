@@ -8,6 +8,8 @@ import {
   IVehicleTypesResponse,
   ISubmoduleResponse,
   IAppSettingResponse,
+  ICustomersResponse,
+  ICustomersRequest,
 } from '../../interface/common/common';
 
 interface ICommonState {
@@ -59,6 +61,12 @@ interface ICommonState {
   getAppSettingsSuccess:boolean;
   getAppSettingsFailure:boolean;
   getAppSettingsError:any;
+  // Searched Customers
+  customers: ICustomersResponse | null;
+  getCustomersRequesting:boolean;
+  getCustomersSuccess:boolean;
+  getCustomersFailure:boolean;
+  getCustomersError:any;
 }
 
 const initialState: ICommonState = {
@@ -110,6 +118,12 @@ const initialState: ICommonState = {
   getAppSettingsSuccess:false,
   getAppSettingsFailure:false,
   getAppSettingsError:null,
+  // Searched Customers
+  customers: null,
+  getCustomersRequesting:false,
+  getCustomersSuccess:false,
+  getCustomersFailure:false,
+  getCustomersError:null,
 };
 
 export const CommonSlice = createSlice({
@@ -260,6 +274,31 @@ export const CommonSlice = createSlice({
       state.getAppSettingsFailure = true;
       state.getAppSettingsError = action.payload;
     },
+    // Customers
+    getCustomersRequest: (state, action: PayloadAction<ICustomersRequest>) => {
+      state.getCustomersRequesting = true;
+    },
+    getCustomersSuccess: (
+      state,
+      action: PayloadAction<ICustomersResponse>,
+    ) => {
+      state.getCustomersRequesting = false;
+      state.getCustomersSuccess = true;
+      state.customers = action.payload;
+    },
+    getCustomersFailure: (state, action: PayloadAction<any>) => {
+      state.getCustomersRequesting = false;
+      state.getCustomersSuccess = false;
+      state.getCustomersFailure = true;
+      state.getCustomersError = action.payload;
+    },
+    resetGetCustomersRequest: (state) => {
+      state.getCustomersRequesting = false;
+      state.getCustomersSuccess = false;
+      state.getCustomersFailure = false;
+      state.getCustomersError = null;
+      state.customers = null;
+    },
   },
 });
 
@@ -298,4 +337,10 @@ export const {
   getAppSettingsRequest,
   getAppSettingsSuccess,
   getAppSettingsFailure,
+  // Customers
+  getCustomersRequest,
+  getCustomersSuccess,
+  getCustomersFailure,
+  resetGetCustomersRequest,
 } = CommonSlice.actions;
+

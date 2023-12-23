@@ -42,7 +42,7 @@ const EnquiryListItem: React.FC<IEnquiryListItemProps> = ({
   const handleWhatsappCall = () => {
     Linking.openURL(`whatsapp://send?phone=+91${item.phoneNumber}`);
   }
-  
+
   return (
     <>
       <View style={styles.badgeWrapper}>
@@ -98,11 +98,11 @@ const EnquiryListItem: React.FC<IEnquiryListItemProps> = ({
               <Text style={styles.valueText}>{item.deliveryAddress}</Text>
             </View>
           </View>
-          <View style={styles.rowContainer}>
-            <View style={[styles.rowItemContainer, {borderBottomWidth: 0, borderBottomLeftRadius: 5,}]}>
+          <View style={[styles.rowContainer]}>
+            <View style={[styles.rowItemContainer, {borderBottomLeftRadius: 5,}]}>
               <Text style={styles.labelText}>Shifting Luggage</Text>
             </View>
-            <View style={[styles.rowItemContainer2, {borderBottomWidth: 0, borderBottomRightRadius: 5,}]}>
+            <View style={[styles.rowItemContainer2, {borderBottomRightRadius: 5,}]}>
               <Text style={styles.valueText}>{item.shiftingLuggage}</Text>
             </View>
           </View>
