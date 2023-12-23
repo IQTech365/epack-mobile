@@ -1,54 +1,100 @@
-import React, {useState} from 'react';
-import {View, FlatList} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, FlatList, Text, RefreshControl} from 'react-native';
 import styles from './style';
 import Header from '../../../common/Header';
-import serialNo from '../../../data/serialNo.json';
 import Spacer from '../../../common/Spacer';
 import Tab from '../../../common/Tab';
-import MoneyReceiptSN from './MoneyReceipt';
-import CarConditionSN from './CarCondition';
-import BiltySN from './Bilty';
-import InvoiceSN from './Invoice';
-import QuotationSN from './Quotation';
+import {useAppDispatch, useAppSelector} from '../../../redux/hooks';
+import Spinner from '../../../common/Spinner';
+import {
+  getAppSettingsRequest,
+  getSubmoduleRequest,
+} from '../../../redux/slices/CommonSlice';
+import {IAppSetting, ISubmodule} from '../../../interface/common/common';
+import SerialNoListItem from './SerialNoSettingListItem';
+import SerilaNoSettingFormView from './SerialNoSettingFormView';
+import useCompanyId from '../../../hooks/useCompanyId';
 
 const AddSerialNoView = () => {
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
-
+  const [selectedSubmodule, setSelectedSubmodule] = useState<ISubmodule>();
+  const dispatch = useAppDispatch();
+  const companyId = useCompanyId();
+  const {
+    getSubmodulesRequesting,
+    submodules,
+    appSettings,
+    getAppSettingsRequesting,
+  } = useAppSelector(state => state.Common);
   const handleTabChange = (index: number) => {
     setActiveTabIndex(index);
+    _setSubmoduleByIndex(index);
   };
-  
-  const showTabItem = () => {
-    switch (activeTabIndex) {
-      case 0:
-       return <MoneyReceiptSN moduleId='5' moduleName='MONEY RECEIPT' />
-      case 1:
-        return <CarConditionSN moduleId='4' moduleName='CAR CONDITION' />
-      case 2:
-        return <BiltySN moduleId='3' moduleName='BILTY' />
-      case 3:
-        return <InvoiceSN moduleId='2' moduleName='INVOICE' />
-      case 4:
-        return <QuotationSN moduleId='1' moduleName='QUOTATION'/>
-      default:
-        return null;
+
+  const _getSubmodules = (): ISubmodule[] => {
+    let items: ISubmodule[] = [];
+    const {data} = submodules || {};
+    if (data && Array.isArray(data) && data.length > 0) {
+      items = data;
+    }
+    return items;
+  };
+
+  const _setSubmoduleByIndex = (index: number) => {
+    const {data} = submodules || {};
+    if (data && Array.isArray(data) && data.length > 0) {
+      const firstSubmodule: ISubmodule = data[index];
+      setSelectedSubmodule(firstSubmodule);
     }
   };
 
+  const _getSerialNoSettingsBySubmoduleId = () => {
+    let settings: IAppSetting[] = [];
+    const {data} = appSettings || {};
+    if (data && Array.isArray(data) && data.length > 0) {
+      settings = data.filter(
+        (d: IAppSetting) => d.subModuleId == selectedSubmodule?._id,
+      );
+    }
+    return settings;
+  };
+
+  const handleOnRefresh = () => {
+    dispatch(getAppSettingsRequest(companyId));
+  };
+
+  useEffect(() => {
+    dispatch(getSubmoduleRequest());
+    dispatch(getAppSettingsRequest(companyId));
+  }, []);
+
+  useEffect(() => {
+    if (submodules) {
+      _setSubmoduleByIndex(0);
+    }
+  }, [submodules]);
+
+  const showEmptyView = () => {
+    return (
+      <View style={styles.emptyContainer2}>
+        <Text>No Serial No.# Found!</Text>
+      </View>
+    );
+  };
 
   return (
-    <View style={{flex: 1, backgroundColor:'#ffff' }}>
+    <View style={{flex: 1, backgroundColor: '#ffff', alignItems: 'center'}}>
       <Header canGoBack={true} label="Serial No Setting" />
       <Spacer height={10} />
       <View style={styles.tabsContainer}>
         <FlatList
-          style={{ paddingHorizontal: 8 }}
-          data={serialNo}
+          style={{paddingHorizontal: 8}}
+          data={_getSubmodules()}
           horizontal
           showsHorizontalScrollIndicator={false}
-          renderItem={({ item, index }) => (
+          renderItem={({item, index}) => (
             <Tab
-              label={item.label}
+              label={item.subModuleName.toUpperCase()}
               index={index}
               onPress={handleTabChange}
               activeIndex={activeTabIndex}
@@ -57,7 +103,32 @@ const AddSerialNoView = () => {
         />
       </View>
       <Spacer height={10} />
-      {showTabItem()}
+      <FlatList
+        contentContainerStyle={{alignItems: 'center'}}
+        data={_getSerialNoSettingsBySubmoduleId()}
+        refreshControl={
+          <RefreshControl
+            refreshing={getAppSettingsRequesting}
+            onRefresh={handleOnRefresh}
+          />
+        }
+        renderItem={({item, index}) => (
+          <SerialNoListItem
+            item={item}
+            moduleName={selectedSubmodule?.subModuleName as string}
+          />
+        )}
+        ListEmptyComponent={showEmptyView()}
+        ListHeaderComponent={
+          <SerilaNoSettingFormView
+            moduleId={selectedSubmodule?._id as string}
+            moduleName={
+              selectedSubmodule?.subModuleName.toUpperCase() as string
+            }
+          />
+        }
+      />
+      <Spinner show={getSubmodulesRequesting || getAppSettingsRequesting} />
       <Spacer height={8} />
     </View>
   );

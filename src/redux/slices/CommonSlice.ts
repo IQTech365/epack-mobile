@@ -6,6 +6,8 @@ import {
   IVehicleAccessoryResponse,
   IVehicleModelResponse,
   IVehicleTypesResponse,
+  ISubmoduleResponse,
+  IAppSettingResponse,
 } from '../../interface/common/common';
 
 interface ICommonState {
@@ -45,6 +47,18 @@ interface ICommonState {
   vehicleModelsRequestSuccess: boolean;
   vehicleModelsRequestFailure: boolean;
   vehicleModelsError: any;
+  // SubModule
+  submodules: ISubmoduleResponse | null;
+  getSubmodulesRequesting:boolean;
+  getSubmodulesSuccess:boolean;
+  getSubmoduleFailure:boolean;
+  getSubmoduleError:any;
+  // App Serial No Settings
+  appSettings: IAppSettingResponse | null;
+  getAppSettingsRequesting: boolean;
+  getAppSettingsSuccess:boolean;
+  getAppSettingsFailure:boolean;
+  getAppSettingsError:any;
 }
 
 const initialState: ICommonState = {
@@ -84,6 +98,18 @@ const initialState: ICommonState = {
   vehicleModelsRequestSuccess: false,
   vehicleModelsRequestFailure: false,
   vehicleModelsError: null,
+  // SubModule
+  submodules: null,
+  getSubmodulesRequesting:false,
+  getSubmodulesSuccess:false,
+  getSubmoduleFailure:false,
+  getSubmoduleError:null,
+  // App Serial No Settings
+  appSettings: null,
+  getAppSettingsRequesting: false,
+  getAppSettingsSuccess:false,
+  getAppSettingsFailure:false,
+  getAppSettingsError:null,
 };
 
 export const CommonSlice = createSlice({
@@ -198,6 +224,42 @@ export const CommonSlice = createSlice({
       state.vehicleModelsRequestFailure = true;
       state.vehicleModelsError = action.payload;
     },
+    // Submodule
+    getSubmoduleRequest: state => {
+      state.getSubmodulesRequesting = true;
+    },
+    getSubmoduleSuccess: (
+      state,
+      action: PayloadAction<ISubmoduleResponse>,
+    ) => {
+      state.getSubmodulesRequesting = false;
+      state.getSubmodulesSuccess = true;
+      state.submodules = action.payload;
+    },
+    getSubmoduleFailure: (state, action: PayloadAction<any>) => {
+      state.getSubmodulesRequesting = false;
+      state.getSubmodulesSuccess = false;
+      state.getSubmoduleFailure = true;
+      state.getSubmoduleError = action.payload;
+    },
+    // App Serial No Settings
+    getAppSettingsRequest: (state, action: PayloadAction<string>) => {
+      state.getAppSettingsRequesting = true;
+    },
+    getAppSettingsSuccess: (
+      state,
+      action: PayloadAction<IAppSettingResponse>,
+    ) => {
+      state.getAppSettingsRequesting = false;
+      state.getAppSettingsSuccess = true;
+      state.appSettings = action.payload;
+    },
+    getAppSettingsFailure: (state, action: PayloadAction<any>) => {
+      state.getAppSettingsRequesting = false;
+      state.getAppSettingsSuccess = false;
+      state.getAppSettingsFailure = true;
+      state.getAppSettingsError = action.payload;
+    },
   },
 });
 
@@ -228,4 +290,12 @@ export const {
   getVehicleModelsRequest,
   getVehicleModelsSuccess,
   getVehicleModelsFailure,
+  // Submodule
+  getSubmoduleRequest,
+  getSubmoduleSuccess,
+  getSubmoduleFailure,
+  // App Serial No Settings
+  getAppSettingsRequest,
+  getAppSettingsSuccess,
+  getAppSettingsFailure,
 } = CommonSlice.actions;

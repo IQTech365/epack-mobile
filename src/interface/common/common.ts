@@ -104,3 +104,54 @@ export interface IVehicleTypesResponse {
   status: number;
   error: boolean;
 }
+
+// Sub Module
+export interface ISubmodule {
+  _id: string;
+  moduleId: string;
+  subModuleName: string;
+  availableOnDocument: boolean;
+  isActive: boolean;
+  isDeleted: boolean;
+  moduleName: string;
+}
+
+export interface ISubmoduleResponse {
+  data:ISubmodule[];
+  status:number;
+  error:boolean;
+}
+
+// App Settings
+export interface ISerialNo {
+  _id: string;
+  moduleId: string;
+  subModuleName: string;
+  availableOnDocument: boolean;
+  description: string;
+  isActive: boolean;
+  isDeleted: boolean;
+  createdDate: string;
+  __v: 0;
+}
+
+export interface IAppSetting {
+  _id: string;
+  companyId: string;
+  companyEntity: string;
+  entityId: string;
+  subModuleId: string;
+  moduleName: string;
+  prefix: string;
+  initialValue: string;
+  isActive: boolean;
+  isDeleted: boolean;
+  __v: number;
+  submodules: ISerialNo[],
+}
+
+export interface IAppSettingResponse {
+  data:ISubmodule[];
+  status:number;
+  error:boolean;
+}

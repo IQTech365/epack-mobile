@@ -1,6 +1,6 @@
 import {Api} from '../http/Api';
-import { GET_PACKING_TYPES, GET_VEHICLE_ACCESSORIES, GET_VEHICLE_COLORS, GET_VEHICLE_COMPANIES, GET_VEHICLE_MODELS, GET_VEHICLE_TYPES } from '../http/Endpoint';
-import { IPackingTypeResponse, IVehicleAccessoryResponse, IVehicleColorResponse, IVehicleCompanyResponse, IVehicleModelResponse, IVehicleTypesResponse } from '../interface/common/common';
+import { GET_APP_SETTINGS, GET_PACKING_TYPES, GET_SERIAL_NO_SUBMODULES, GET_VEHICLE_ACCESSORIES, GET_VEHICLE_COLORS, GET_VEHICLE_COMPANIES, GET_VEHICLE_MODELS, GET_VEHICLE_TYPES } from '../http/Endpoint';
+import { IAppSettingResponse, IPackingTypeResponse, ISubmoduleResponse, IVehicleAccessoryResponse, IVehicleColorResponse, IVehicleCompanyResponse, IVehicleModelResponse, IVehicleTypesResponse } from '../interface/common/common';
 
 export const GetPackingTypesService = async (): Promise<IPackingTypeResponse> => {
     const api = Api.getInstance();
@@ -37,3 +37,14 @@ export const GetVehicleModelsService = async (): Promise<IVehicleModelResponse> 
     return await api.get<IVehicleModelResponse>(GET_VEHICLE_MODELS);
 }
 
+// Submodules
+export const GetSubmodulesService = async (): Promise<ISubmoduleResponse> => {
+    const api = Api.getInstance();
+    return await api.get<ISubmoduleResponse>(GET_SERIAL_NO_SUBMODULES);
+}
+
+// Submodules
+export const GetAppSettingsService = async (companyId:string): Promise<IAppSettingResponse> => {
+    const api = Api.getInstance();
+    return await api.get<IAppSettingResponse>(GET_APP_SETTINGS(companyId));
+}

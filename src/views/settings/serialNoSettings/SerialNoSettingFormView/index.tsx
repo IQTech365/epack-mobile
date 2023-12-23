@@ -15,19 +15,27 @@ import {
   getFranchiseRequest,
 } from '../../../../redux/slices/MyProfile';
 import {ICreateSerialNoRequest} from '../../../../interface/setting/serialNo/ICreateSerialNoRequest';
-import {createSerialNoRequest, resetCreateSerialNoRequest} from '../../../../redux/slices/SerialNoSettingSlice';
+import {
+  createSerialNoRequest,
+  resetCreateSerialNoRequest,
+} from '../../../../redux/slices/SerialNoSettingSlice';
 import Toast from 'react-native-toast-message';
 import Spinner from '../../../../common/Spinner';
 import useCompanyId from '../../../../hooks/useCompanyId';
+import {getAppSettingsRequest} from '../../../../redux/slices/CommonSlice';
 
 interface IMoneyReceiptSNProps {
   moduleId: string;
   moduleName: string;
 }
 
-const SerialNoSettingFormView:React.FC<IMoneyReceiptSNProps> = ({moduleId, moduleName}) => {
+const SerialNoSettingFormView: React.FC<IMoneyReceiptSNProps> = ({
+  moduleId,
+  moduleName,
+}) => {
+  const companyId = useCompanyId();
   const [entityType, setEntityType] = useState<string>(chooseEntity[0].label);
-  const [subEntityType, setSubEntityType] = useState<string>('0');
+  const [subEntityTypeId, setSubEntityTypeId] = useState<string>(companyId);
   const [prefix, setPrefix] = useState<string>('');
   const [suffix, setSuffix] = useState<string>('');
   const dispatch = useAppDispatch();
@@ -37,11 +45,8 @@ const SerialNoSettingFormView:React.FC<IMoneyReceiptSNProps> = ({moduleId, modul
     createSerialNumberSuccess,
     createSerialNumberFailure,
   } = useAppSelector(state => state.SNSetting);
-  const { otpData } = useAppSelector(state => state.OTP);
-
   const {data: brancheData = []} = Branchs || {};
   const {data: franchiseData = []} = Franchises || {};
-  const companyId = useCompanyId();
 
   const transformBranchData = () => {
     let _data: TDropdownItem[] = [];
@@ -96,9 +101,9 @@ const SerialNoSettingFormView:React.FC<IMoneyReceiptSNProps> = ({moduleId, modul
 
   const handleSubEntity = useCallback(
     (item: TDropdownItem) => {
-      setSubEntityType(item.value);
+      setSubEntityTypeId(item.value);
     },
-    [subEntityType],
+    [subEntityTypeId],
   );
 
   const handlePrefixTextInputChange = (text: string) => {
@@ -113,9 +118,8 @@ const SerialNoSettingFormView:React.FC<IMoneyReceiptSNProps> = ({moduleId, modul
     const payload: ICreateSerialNoRequest = {
       companyId: companyId,
       companyEntity: entityType,
-      branchId: subEntityType,
-      moduleId: moduleId,
-      moduleName: moduleName,
+      entityId: subEntityTypeId,
+      subModuleId: moduleId,
       prefix: prefix,
       initialValue: suffix,
       // createdBy: otpData?.data.id as string,
@@ -134,18 +138,23 @@ const SerialNoSettingFormView:React.FC<IMoneyReceiptSNProps> = ({moduleId, modul
       Toast.show({
         type: 'success',
         text1: 'Serial No',
-        text2: 'Serial Number created successfully.'
+        text2: 'Serial Number created successfully.',
       });
       dispatch(resetCreateSerialNoRequest());
+      dispatch(getAppSettingsRequest(companyId));
     } else if (!createSerialNumberRequesting && createSerialNumberFailure) {
       Toast.show({
         type: 'error',
         text1: 'Serial No',
-        text2: 'Error in creating Serial Number. Please try again!'
+        text2: 'Error in creating Serial Number. Please try again!',
       });
       dispatch(resetCreateSerialNoRequest());
     }
-  }, [createSerialNumberRequesting, createSerialNumberSuccess, createSerialNumberFailure]);
+  }, [
+    createSerialNumberRequesting,
+    createSerialNumberSuccess,
+    createSerialNumberFailure,
+  ]);
 
   return (
     <View>
@@ -190,7 +199,7 @@ const SerialNoSettingFormView:React.FC<IMoneyReceiptSNProps> = ({moduleId, modul
           />
         </View>
       </View>
-      <Spacer height={8} />
+      <Spacer height={12} />
       <Button
         text="SAVE"
         onPress={handleSave}
@@ -198,7 +207,7 @@ const SerialNoSettingFormView:React.FC<IMoneyReceiptSNProps> = ({moduleId, modul
         style={styles.previewButtonStyle}
         textStyle={styles.textStyle}
       />
-      <Spacer height={8} />
+      <Spacer height={20} />
       <Spinner show={createSerialNumberRequesting} />
     </View>
   );

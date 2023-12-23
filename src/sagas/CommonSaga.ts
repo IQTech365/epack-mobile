@@ -3,7 +3,9 @@ import {PayloadAction} from '@reduxjs/toolkit';
 import * as CommonService from '../service/CommonService';
 import { IOtpGetRequest } from '../interface/otp/IOtpGetRequest';
 import {
+    IAppSettingResponse,
   IPackingTypeResponse,
+  ISubmoduleResponse,
   IVehicleAccessoryResponse,
   IVehicleColorResponse,
   IVehicleCompanyResponse,
@@ -11,9 +13,15 @@ import {
   IVehicleTypesResponse,
 } from '../interface/common/common';
 import {
+    getAppSettingsFailure,
+    getAppSettingsRequest,
+    getAppSettingsSuccess,
   getPackingTypesFailure,
   getPackingTypesRequest,
   getPackingTypesSuccess,
+  getSubmoduleFailure,
+  getSubmoduleRequest,
+  getSubmoduleSuccess,
   getVehicleAccessoriesFailure,
   getVehicleAccessoriesRequest,
   getVehicleAccessoriesSuccess,
@@ -97,6 +105,28 @@ export function* getVehicleModelsSaga(action: PayloadAction<any>) {
     }
 }
 
+export function* getSubmodulesSaga(action: PayloadAction<any>) {
+    try {
+        const response: ISubmoduleResponse = yield call(CommonService.GetSubmodulesService);
+        console.log('getSubmodulesSaga-response----', JSON.stringify(response));
+        yield put(getSubmoduleSuccess(response));
+    } catch (error) {
+        console.log('getSubmodulesSaga-error----', error);
+        yield put(getSubmoduleFailure(JSON.stringify(error)));
+    }
+}
+
+export function* getAppSettingsSaga(action: PayloadAction<string>) {
+    try {
+        const response: IAppSettingResponse = yield call(CommonService.GetAppSettingsService, action.payload);
+        console.log('getAppSettingsSaga-response----', JSON.stringify(response));
+        yield put(getAppSettingsSuccess(response));
+    } catch (error) {
+        console.log('getAppSettingsSaga-error----', error);
+        yield put(getAppSettingsFailure(JSON.stringify(error)));
+    }
+}
+
 export function* watcherCommonSaga() {
     yield takeLatest(getPackingTypesRequest.type, getPackingTypesSaga);
     yield takeLatest(getVehicleTypesRequest.type, getVehicleTypesSaga);
@@ -104,4 +134,6 @@ export function* watcherCommonSaga() {
     yield takeLatest(getVehicleColorRequest.type, getVehicleColorsSaga);
     yield takeLatest(getVehicleAccessoriesRequest.type, getVehicleAccessoriesSaga);
     yield takeLatest(getVehicleModelsRequest.type, getVehicleModelsSaga);
+    yield takeLatest(getSubmoduleRequest.type, getSubmodulesSaga);
+    yield takeLatest(getAppSettingsRequest.type, getAppSettingsSaga);
 }

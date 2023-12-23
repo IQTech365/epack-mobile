@@ -16,6 +16,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    emptyContainer2: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
     tabsContainer: {
         width: width,
         height: 40,

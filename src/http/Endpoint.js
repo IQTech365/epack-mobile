@@ -128,3 +128,7 @@ export const GET_VEHICLE_COLORS = `/vehicle-management/vehicle-color/getAll`;
 export const GET_VEHICLE_ACCESSORIES = `/vehicle-management/vehicle-accessory/getAll`;
 // Vehicle Models
 export const GET_VEHICLE_MODELS = `/vehicle-management/vehicle-model/all`;
+// Submodules
+export const GET_SERIAL_NO_SUBMODULES = `/content-management/sub-module/all`;
+// App Settings
+export const GET_APP_SETTINGS = (company_id) => `/setting/app-setting/company/${company_id}`;
