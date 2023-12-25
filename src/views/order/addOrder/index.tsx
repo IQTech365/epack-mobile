@@ -57,7 +57,6 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
   const [pickupCities, setPickupCities] = useState<TDropdownItem[]>([]);
   const [deliveryStates, setDeliveryStates] = useState<TDropdownItem[]>([]);
   const [deliveryCities, setDeliveryCities] = useState<TDropdownItem[]>([]);
-  const { otpData } = useAppSelector(state => state.OTP);
 
   const pickupCityDropdownRef = useRef(null);
   const pickupStateDropwdownRef = useRef(null);

@@ -396,11 +396,6 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
           errors.employeeMobile = 'Mobile number invalid';
         }
       }
-      // if(!state.billingBy?.billing_info?.employee_mobile_number) {
-      //   errors.employeeMobile = "Employee mobile number required";
-      // } else if(!Validator.mobile(state.billingBy?.billing_info?.employee_mobile_number)) {
-      //   errors.employeeMobile = "Mobile number invalid";
-      // }
     } else if(state.billingBy?.billing_by == 'by Individual') {
       setShowMobileNumberError(false);
       delete errors?.companyName;
@@ -412,15 +407,10 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
       if(!state.mobile) {
         errors.mobile = "Mobile number required";
       }
-      //  else if(!Validator.mobile(state.mobile)) {
-      //   errors.mobile = "Mobile number invalid";
-      // }
     }
     if(state.shiftingLuggage.length == 0) {
       errors.shiftingLuggage = "Shifting luggage required"
     }
-    console.log('addEnquiry--errors--', JSON.stringify(errors));
-    
     setErrors(errors);
     setIsFormValid(Object.keys(errors).length === 0);
   }
