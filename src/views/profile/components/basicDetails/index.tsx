@@ -68,6 +68,14 @@ const BasicDetailsView: React.FC<IBasicDetailsViewProps> = ({}) => {
           <EnquiryDetailListItem label="Reg. Mobile Number" value={firstCompany?.companyMobile} />
         </View>
         <Spacer height={8} />
+        <View style={styles.companyLogoContainer}>
+          <Text>Company logo display here</Text>
+        </View>
+        <Spacer height={8} />
+        <View style={styles.companyLogoContainer}>
+          <Text>Company signature display here</Text>
+        </View>
+        <Spacer height={8} />
         <ModalHOC
           visible={openModal}
           onClose={handleModalClose}

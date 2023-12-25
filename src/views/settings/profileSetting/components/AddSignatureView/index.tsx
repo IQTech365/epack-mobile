@@ -3,13 +3,10 @@ import {View, FlatList} from 'react-native';
 import styles from './style';
 import BottomSheet from '@gorhom/bottom-sheet';
 import FormModal from '../../../formModal';
-import Header from '../../../../../common/Header';
-import SerialNoSettingPageView from '../../../../company/serialNoSettings';
-import Spacer from '../../../../../common/Spacer';
 import EmptyView from '../../../emptyView';
-import DocumentUpdateView from '../DocumentUpdateView';
-import FooterContentUpdateView from '../FooterContentUpdateView';
 import SignatureUpdateView from '../SignatureUpdateView';
+import Spacer from '../../../../../common/Spacer';
+import Label from '../../../../../common/Label';
 
 const AddSignatureView = () => {
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -23,23 +20,12 @@ const AddSignatureView = () => {
   };
 
   return (
-    <View style={{flex: 1, alignItems: 'center',
-    justifyContent: 'center',}}>
-      <FlatList
-        data={[]}
-        contentContainerStyle={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-        renderItem={({item, index}) => null}
-        ListEmptyComponent={
-          <EmptyView message="You have not added any signature yet!" onPress={presentModal} />
-        }
-      />
-      <FormModal ref={bottomSheetRef} onClose={dismissModal}>
-        <SignatureUpdateView />
-      </FormModal>
+    <View style={{flex: 1, justifyContent: 'flex-start'}}>
+      <View style={styles.currentSignatureContainer}></View>
+      <Spacer height={4} />
+      <View style={styles.LabelContainer}>
+        <Label text='CHANGE SIGNATURE' style={styles.labelText} />
+      </View>
     </View>
   );
 };

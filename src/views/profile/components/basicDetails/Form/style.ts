@@ -68,6 +68,23 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR_BLUE,
     borderRadius: 5,
   },
+  photoCaptureContainer: {
+    width: width * 0.9,
+    alignSelf: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    borderRadius: 5,
+    borderStyle: 'dashed',
+    borderWidth: 1,
+    alignItems: 'center',
+    padding: 10,
+  },
+  button: {
+    borderColor: COLOR_BLACK,
+    alignItems: 'center',
+    alignSelf: 'center',
+    paddingVertical: 20,
+  },
 });
 
 export default styles;

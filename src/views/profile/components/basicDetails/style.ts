@@ -30,6 +30,15 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '500',
       },
+      companyLogoContainer: {
+        width: width * 0.9,
+        alignSelf: 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 150,
+        borderRadius: 5,
+        borderWidth: 1,
+      }
 });
 
 export default styles;
