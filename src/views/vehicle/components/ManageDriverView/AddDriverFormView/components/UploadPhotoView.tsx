@@ -179,7 +179,6 @@ const UploadPhotoView: React.FC<Props> = ({title, photo}) => {
         <Image source={{uri: uri}} style={styles.avatarImage} />
         <Button
           text="Upload"
-          // variant="contain"
           onPress={handleUploadImage}
           style={styles.uploadButton}
           textStyle={styles.uploadText}

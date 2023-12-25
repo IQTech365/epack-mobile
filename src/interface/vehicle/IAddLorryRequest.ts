@@ -7,12 +7,15 @@ export interface IAddLorryRequest {
     vehicleType: string,
     vehicleModel: string,
     vehicleRegistrationNo: string,
+    rcDoc: string,
     vehicleChassisNo: string,
     vehicleEngineNo: string,
     permitNo: string,
+    permitDoc: string,
     permitRenewalDate: string,
     vehicleRCNo: string,
     pollutionCertificateNo: string,
+    pollutionDoc: string,
     pollutionRenewalDate: string,
     addedBy: string
     }

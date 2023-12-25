@@ -21,7 +21,7 @@ import {
   getFranchiseRequest,
 } from '../../../../../redux/slices/MyProfile';
 import useCompanyId from '../../../../../hooks/useCompanyId';
-import UploadPhotoView from './components/UploadPhotoView';
+import UploadPhotoView, { PHOTO } from './components/UploadPhotoView';
 import {useAddLorryFormContextHook} from '../../../../../provider/AddLorryFormContextProvider';
 import useAuthId from '../../../../../hooks/useAuthId';
 import {formatDate4} from '../../../../../utils/formatter';
@@ -140,12 +140,15 @@ const AddLorryView: React.FC<{}> = ({}) => {
       vehicleType: state.lorry_type,
       vehicleModel: state.vehicle_model,
       vehicleRegistrationNo: state.reg_number,
+      rcDoc: state.vehicle_rc_photo,
       vehicleChassisNo: state.vehicle_chasis_no,
       vehicleEngineNo: state.vehicle_engine_no,
       permitNo: state.permit_no,
+      pollutionDoc: state.pollution_certificate_photo,
       permitRenewalDate: state.permit_no_renewal_date,
       vehicleRCNo: state.vehicle_rc_no,
       pollutionCertificateNo: state.pollution_certificate_no,
+      permitDoc: state.permit_photo,
       pollutionRenewalDate: state.pollution_certificate_renewal_date,
       addedBy: authId,
     };
@@ -288,7 +291,7 @@ const AddLorryView: React.FC<{}> = ({}) => {
           </View>
 
           <Spacer height={4} />
-          <UploadPhotoView title="Uplaod RC Photo" />
+          <UploadPhotoView title="Uplaod RC Photo" photo={PHOTO.RC} />
           <Spacer height={4} />
           <View style={styles.twoColumnWrapper}>
             <View style={styles.textContainer}>
@@ -310,7 +313,7 @@ const AddLorryView: React.FC<{}> = ({}) => {
             </View>
           </View>
           <Spacer height={4} />
-          <UploadPhotoView title="Upload Pollution Certificate" />
+          <UploadPhotoView title="Upload Pollution Certificate" photo={PHOTO.POLLUTION_CERT} />
           <Spacer height={4} />
           <View style={styles.twoColumnWrapper}>
             <View style={styles.textContainer}>
@@ -332,7 +335,7 @@ const AddLorryView: React.FC<{}> = ({}) => {
             </View>
           </View>
           <Spacer height={4} />
-          <UploadPhotoView title="Upload Permit Phto" />
+          <UploadPhotoView title="Upload Permit Phto" photo={PHOTO.PERMIT_DOC} />
           <Spacer height={12} />
           <Button
             text="SAVE"
