@@ -5,12 +5,16 @@ export enum ACTION {
   SUB_ENTITY = 'SUB_ENTITY',
   DRIVER_NAME = 'DRIVER_NAME',
   DRIVER_PHOTO = 'DRIVER_PHOTO',
+  DRIVER_PHOTO_FILE = 'DRIVER_PHOTO_FILE',
   DRIVER_MOBILE_NO = 'DRIVER_MOBILE_NO',
   DRIVER_LICENSE_NO = 'DRIVER_LICENSE_NO',
   LICENSE_PHOTO = 'LICENSE_PHOTO',
+  LICENSE_PHOTO_FILE = 'LICENSE_PHOTO_FILE',
   AADHAR_CARD_NO = 'AADHAR_CARD_NO',
   AADHAR_FRONT_PHOTO = 'AADHAR_FRONT_PHOTO',
+  AADHAR_FRONT_PHOTO_FILE = 'AADHAR_FRONT_PHOTO_FILE',
   AADHAR_BACK_PHOTO = 'AADHAR_BACK_PHOTO',
+  AADHAR_BACK_PHOTO_FILE = 'AADHAR_BACK_PHOTO_FILE',
   PERMANENT_ADD_PINCODE = 'PERMANENT_ADD_PINCODE',
   PERMANENT_ADD_STATE = 'PERMANENT_ADD_STATE',
   PERMANENT_ADD_CITY = 'PERMANENT_ADD_CITY',
@@ -29,12 +33,16 @@ export interface IState {
   sub_entity: string;
   driver_name: string;
   driver_photo: string;
+  driver_photo_file:any;
   driver_mobile_no: string;
   driver_license_no: string;
   license_photo: string;
+  license_photo_file:any;
   aadhar_card_no: string;
   aadhar_front_photo: string;
+  aadhar_front_photo_file:any;
   aadhar_back_photo: string;
+  aadhar_back_photo_file:any;
   permanent_add_pincode: string;
   permanent_add_state: string;
   permanent_add_city: string;
@@ -58,12 +66,16 @@ export const initialState: IState = {
   sub_entity: '',
   driver_name: '',
   driver_photo: '',
+  driver_photo_file: null,
   driver_mobile_no: '',
   driver_license_no: '',
   license_photo: '',
+  license_photo_file: null,
   aadhar_card_no: '',
   aadhar_front_photo: '',
+  aadhar_front_photo_file: null,
   aadhar_back_photo: '',
+  aadhar_back_photo_file: null,
   permanent_add_pincode: '',
   permanent_add_state: '',
   permanent_add_city: '',
@@ -91,18 +103,26 @@ export const addDriverReducer: Reducer<IState, Action> = (
       return {...state, driver_name: payload as string};
     case ACTION.DRIVER_PHOTO:
       return {...state, driver_photo: payload as string};
+    case ACTION.DRIVER_PHOTO_FILE:
+      return {...state, driver_photo_file: payload as any};
     case ACTION.DRIVER_MOBILE_NO:
       return {...state, driver_mobile_no: payload as string};
     case ACTION.DRIVER_LICENSE_NO:
       return {...state, driver_license_no: payload as string};
     case ACTION.LICENSE_PHOTO:
       return {...state, license_photo: payload as string};
+    case ACTION.LICENSE_PHOTO_FILE:
+      return {...state, license_photo_file: payload as any};
     case ACTION.AADHAR_CARD_NO:
       return {...state, aadhar_card_no: payload as string};
     case ACTION.AADHAR_FRONT_PHOTO:
       return {...state, aadhar_front_photo: payload as string};
+    case ACTION.AADHAR_FRONT_PHOTO_FILE:
+      return {...state, aadhar_front_photo_file: payload as any};
     case ACTION.AADHAR_BACK_PHOTO:
       return {...state, aadhar_back_photo: payload as string};
+    case ACTION.AADHAR_BACK_PHOTO_FILE:
+      return {...state, aadhar_back_photo_file: payload as any};
     case ACTION.PERMANENT_ADD_PINCODE:
       return {...state, permanent_add_pincode: payload as string};
     case ACTION.PERMANENT_ADD_STATE:

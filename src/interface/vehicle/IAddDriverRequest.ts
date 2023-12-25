@@ -11,9 +11,13 @@ export interface IAddDriverRequest {
     entityType: string,
     entityId: string,
     driverName: string,
+    driverPhoto: string,
     mobile:string,
     licenceNo: string,
+    driverLicence: string,
     aadharNo: string,
+    aadharFront: string,
+    aadharBack: string,
     permanentAddress : Address|{},
     currentAddress: Address |{},
     addedBy?: string

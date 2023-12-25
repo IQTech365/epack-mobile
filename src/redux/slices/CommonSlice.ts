@@ -67,6 +67,12 @@ interface ICommonState {
   getCustomersSuccess:boolean;
   getCustomersFailure:boolean;
   getCustomersError:any;
+  // Upload Image
+  uploadedImage:any;
+  imageUploading:boolean;
+  imageUploadSuccess:boolean;
+  imageUploadFailure:boolean;
+  imageUploadError:any;
 }
 
 const initialState: ICommonState = {
@@ -124,6 +130,12 @@ const initialState: ICommonState = {
   getCustomersSuccess:false,
   getCustomersFailure:false,
   getCustomersError:null,
+  // Upload Image
+  uploadedImage:null,
+  imageUploading:false,
+  imageUploadSuccess:false,
+  imageUploadFailure:false,
+  imageUploadError:null,
 };
 
 export const CommonSlice = createSlice({
@@ -299,6 +311,31 @@ export const CommonSlice = createSlice({
       state.getCustomersError = null;
       state.customers = null;
     },
+    // Image Upload
+    imageUploadRequest: (state, action: PayloadAction<any>) => {
+      state.imageUploading = true;
+    },
+    imageUploadSuccess: (
+      state,
+      action: PayloadAction<any>,
+    ) => {
+      state.imageUploading = false;
+      state.imageUploadSuccess = true;
+      state.uploadedImage = action.payload;
+    },
+    imageUploadFailure: (state, action: PayloadAction<any>) => {
+      state.imageUploading = false;
+      state.imageUploadSuccess = false;
+      state.imageUploadFailure = true;
+      state.imageUploadError = action.payload;
+    },
+    resetImageUploadRequest: (state) => {
+      state.imageUploading = false;
+      state.imageUploadSuccess = false;
+      state.imageUploadFailure = false;
+      state.imageUploadError = null;
+      state.uploadedImage = null;
+    },
   },
 });
 
@@ -342,5 +379,10 @@ export const {
   getCustomersSuccess,
   getCustomersFailure,
   resetGetCustomersRequest,
+  // Image Upload
+  imageUploadRequest,
+  imageUploadSuccess,
+  imageUploadFailure,
+  resetImageUploadRequest,
 } = CommonSlice.actions;
 

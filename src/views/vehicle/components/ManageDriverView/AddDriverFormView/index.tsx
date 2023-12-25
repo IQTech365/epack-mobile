@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
 import Toast from 'react-native-toast-message';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
@@ -18,7 +18,7 @@ import {
 } from '../../../../../redux/slices/MyProfile';
 import useCompanyId from '../../../../../hooks/useCompanyId';
 import BasicDetailsView from './components/BasicDetailsView';
-import UploadPhotoView from './components/UploadPhotoView';
+import UploadPhotoView, { PHOTO } from './components/UploadPhotoView';
 import UploadAadharPhotoView from './components/UploadAadharPhotoView';
 import DriverPermanentAddressView from './components/DriverPermanentAddressView';
 import DriverCurrentAddressView from './components/DriverCurrentAddressView';
@@ -32,11 +32,11 @@ import entityOptions from '../../../../../data/entityOptions.json';
 
 const AddDriverView: React.FC<{}> = ({}) => {
   const {state, setAadharCardNo} = useAddDriverFormContextHook();
-  const {addDriverRequesting, addDriveruccess, addDriverFailure} =
-    useAppSelector(state => state.Vehicle);
+  const {addDriverRequesting, addDriveruccess, addDriverFailure} = useAppSelector(state => state.Vehicle);
   const {getBranchsRequesting, getFranchiseRequesting} = useAppSelector(
     state => state.Myprofile,
   );
+  
   const dispatch = useAppDispatch();
   const companyId = useCompanyId();
   const authId = useAuthId();
@@ -52,9 +52,13 @@ const AddDriverView: React.FC<{}> = ({}) => {
       entityType: state.entity,
       entityId: state.entity == entityOptions[0].label ? companyId : state.sub_entity,
       driverName: state.driver_name,
+      driverPhoto: state.driver_photo,
       mobile: state.driver_mobile_no,
       licenceNo: state.driver_license_no,
+      driverLicence: state.license_photo,
       aadharNo: state.aadhar_card_no,
+      aadharFront: state.aadhar_front_photo,
+      aadharBack: state.aadhar_back_photo,
       permanentAddress: {
         pincode: state.permanent_add_pincode,
         address: state.permanent_add_address,
@@ -111,11 +115,11 @@ const AddDriverView: React.FC<{}> = ({}) => {
           <Spacer height={4} />
           <BasicDetailsView />
           <Spacer height={4} />
-          <UploadPhotoView title="Upload Driver Photo" />
+          <UploadPhotoView title="Upload Driver Photo" photo={PHOTO.DRIVER} />
           <Spacer height={4} />
           <DriverContactInfoView />
           <Spacer height={4} />
-          <UploadPhotoView title="Upload License Photo" />
+          <UploadPhotoView title="Upload License Photo" photo={PHOTO.LICENSE} />
           <Spacer height={4} />
           <View style={styles.elementContainer}>
             <Label text="Aadhar Card No." style={styles.label} />

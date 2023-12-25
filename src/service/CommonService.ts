@@ -1,5 +1,6 @@
+import { AxiosResponse } from 'axios';
 import {Api} from '../http/Api';
-import { GET_APP_SETTINGS, GET_PACKING_TYPES, GET_SERIAL_NO_SUBMODULES, GET_VEHICLE_ACCESSORIES, GET_VEHICLE_COLORS, GET_VEHICLE_COMPANIES, GET_VEHICLE_MODELS, GET_VEHICLE_TYPES, SEARCH_CUSTOMER } from '../http/Endpoint';
+import { GET_APP_SETTINGS, GET_PACKING_TYPES, GET_SERIAL_NO_SUBMODULES, GET_VEHICLE_ACCESSORIES, GET_VEHICLE_COLORS, GET_VEHICLE_COMPANIES, GET_VEHICLE_MODELS, GET_VEHICLE_TYPES, IMAGE_UPLOAD, SEARCH_CUSTOMER } from '../http/Endpoint';
 import { IAppSettingResponse, ICustomersRequest, ICustomersResponse, IPackingTypeResponse, ISubmoduleResponse, IVehicleAccessoryResponse, IVehicleColorResponse, IVehicleCompanyResponse, IVehicleModelResponse, IVehicleTypesResponse } from '../interface/common/common';
 
 export const GetPackingTypesService = async (): Promise<IPackingTypeResponse> => {
@@ -53,4 +54,10 @@ export const GetAppSettingsService = async (companyId:string): Promise<IAppSetti
 export const GetCustomersService = async (payload:ICustomersRequest): Promise<ICustomersResponse> => {
     const api = Api.getInstance();
     return await api.get<ICustomersResponse>(SEARCH_CUSTOMER(payload.companyId, payload.searchKey));
+}
+
+// Image Upload
+export const ImageUploadService = async (payload: any): Promise<any> => {
+    const api = Api.getInstance();
+    return await api.post<any, AxiosResponse<any>>(payload, IMAGE_UPLOAD);
 }

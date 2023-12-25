@@ -54,6 +54,16 @@ const useAddDriverFormContext = () => {
     [state.driver_photo],
   );
 
+  const setDriverPhotoFile = useCallback(
+    (file: any) => {
+      dispatch({
+        type: ACTION.DRIVER_PHOTO_FILE,
+        payload: file,
+      });
+    },
+    [state.driver_photo_file],
+  );
+
   const setDriverMobileNo = useCallback(
     (text: string) => {
       dispatch({
@@ -84,6 +94,16 @@ const useAddDriverFormContext = () => {
     [state.license_photo],
   );
 
+  const setLicensePhotoFile = useCallback(
+    (file: any) => {
+      dispatch({
+        type: ACTION.LICENSE_PHOTO_FILE,
+        payload: file,
+      });
+    },
+    [state.license_photo_file],
+  );
+
   const setAadharCardNo = useCallback(
     (text: string) => {
       dispatch({
@@ -104,6 +124,16 @@ const useAddDriverFormContext = () => {
     [state.aadhar_front_photo],
   );
 
+  const setAadharFrontPhotoFile = useCallback(
+    (file: any) => {
+      dispatch({
+        type: ACTION.AADHAR_FRONT_PHOTO_FILE,
+        payload: file,
+      });
+    },
+    [state.aadhar_front_photo_file],
+  );
+
   const setAaadharBackPhoto = useCallback(
     (text: string) => {
       dispatch({
@@ -112,6 +142,16 @@ const useAddDriverFormContext = () => {
       });
     },
     [state.aadhar_back_photo],
+  );
+
+  const setAaadharBackPhotoFile = useCallback(
+    (file: any) => {
+      dispatch({
+        type: ACTION.AADHAR_BACK_PHOTO_FILE,
+        payload: file,
+      });
+    },
+    [state.aadhar_back_photo_file],
   );
 
   const setPermanentAddPincode = useCallback(
@@ -230,12 +270,16 @@ const useAddDriverFormContext = () => {
     setSubEntity,
     setDriverName,
     setDriverPhoto,
+    setDriverPhotoFile,
     setDriverMobileNo,
     setDriverLicenseNo,
     setLicensePhoto,
+    setLicensePhotoFile,
     setAadharCardNo,
     setAadharFrontPhoto,
+    setAadharFrontPhotoFile,
     setAaadharBackPhoto,
+    setAaadharBackPhotoFile,
     setPermanentAddPincode,
     setPermanentAddState,
     setPermanentAddCity,
@@ -258,12 +302,16 @@ const initAddDriverFormContextState: UseAddDriverFormContextType = {
   setSubEntity: (text: string) => {},
   setDriverName: (text: string) => {},
   setDriverPhoto: (text: string) => {},
+  setDriverPhotoFile: (file:any) => {},
   setDriverMobileNo: (text: string) => {},
   setDriverLicenseNo: (text: string) => {},
   setLicensePhoto: (text: string) => {},
+  setLicensePhotoFile: (file:any) => {},
   setAadharCardNo: (text: string) => {},
   setAadharFrontPhoto: (text: string) => {},
+  setAadharFrontPhotoFile: (file:any) => {},
   setAaadharBackPhoto: (text: string) => {},
+  setAaadharBackPhotoFile: (file:any) => {},
   setPermanentAddPincode: (text: string) => {},
   setPermanentAddState: (text: string) => {},
   setPermanentAddCity: (text: string) => {},

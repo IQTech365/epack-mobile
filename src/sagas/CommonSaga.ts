@@ -42,6 +42,9 @@ import {
   getVehicleTypesFailure,
   getVehicleTypesRequest,
   getVehicleTypesSuccess,
+  imageUploadFailure,
+  imageUploadRequest,
+  imageUploadSuccess,
 } from '../redux/slices/CommonSlice';
 
 export function* getPackingTypesSaga(action: PayloadAction<Partial<IOtpGetRequest>>) {
@@ -143,6 +146,18 @@ export function* getCustomersSaga(action: PayloadAction<ICustomersRequest>) {
     }
 }
 
+export function* imageUploadSaga(action: PayloadAction<any>) {
+    try {
+        //@ts-ignore
+        const response: any = yield call(CommonService.ImageUploadService, action.payload);
+        console.log('imageUploadSaga-response----', JSON.stringify(response));
+        yield put(imageUploadSuccess(response));
+    } catch (error) {
+        console.log('imageUploadSaga-error----', error);
+        yield put(imageUploadFailure(error));
+    }
+}
+
 export function* watcherCommonSaga() {
     yield takeLatest(getPackingTypesRequest.type, getPackingTypesSaga);
     yield takeLatest(getVehicleTypesRequest.type, getVehicleTypesSaga);
@@ -153,4 +168,5 @@ export function* watcherCommonSaga() {
     yield takeLatest(getSubmoduleRequest.type, getSubmodulesSaga);
     yield takeLatest(getAppSettingsRequest.type, getAppSettingsSaga);
     yield takeLatest(getCustomersRequest.type, getCustomersSaga);
+    yield takeLatest(imageUploadRequest.type, imageUploadSaga);
 }
