@@ -100,7 +100,16 @@ const SignatureCaptureView: React.FC<IProps> = ({
             <CloseIcon width={24} height={24} />
           </TouchableOpacity>
         </View>
-        <Image source={{uri: previousSignatureUri}} style={styles.prevSignature} />
+        {previousSignatureUri ? (
+          <Image
+            source={{uri: previousSignatureUri}}
+            style={styles.prevSignature}
+          />
+        ) : (
+          <View style={styles.signatureWrapper}>
+            <Text>No Signature available</Text>
+          </View>
+        )}
       </View>
     );
   };
@@ -113,7 +122,7 @@ const SignatureCaptureView: React.FC<IProps> = ({
             style={styles.signature}
             ref={signatureRef}
             onSaveEvent={(result: any) => {
-            //   console.log('onSaveEvent--', result);
+              //   console.log('onSaveEvent--', result);
               onSave(result?.pathName as string);
               const formData = new FormData();
               formData.append('image', {
@@ -165,7 +174,9 @@ const SignatureCaptureView: React.FC<IProps> = ({
 
   return (
     <>
-      {updateSignature ? _showSignatureCaptureView() : _showPreviousSignatureView()}
+      {updateSignature
+        ? _showSignatureCaptureView()
+        : _showPreviousSignatureView()}
     </>
   );
 };

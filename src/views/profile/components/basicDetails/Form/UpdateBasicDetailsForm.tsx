@@ -37,6 +37,7 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({
   const [companySignatureImage, setCompanySignatureImage] =
     useState<string>('');
   const [changeSignature, setChangeSignature] = useState<boolean>(false);
+  const [changeLogo, setChangeLogo] = useState<boolean>(false);
   const [signatureType, setSignatureType] = useState<string>(
     signatureTypeOptions[0],
   );
@@ -81,7 +82,7 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({
       _id: firstCompany?._id as string,
       authId: firstCompany?.authId as string,
       companyName: firstCompany?.companyName as string,
-      contactPerson: contactPerson,
+      contactPerson: contactPerson || firstCompany?.contactPerson as string,
       email: firstCompany?.email as string,
       companyMobile: firstCompany?.companyMobile as string,
       companyAddress: firstCompany?.companyAddress as string,
@@ -90,10 +91,10 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({
       pincode: firstCompany?.pincode as string,
       ibaApprovalCode: firstCompany?.ibaApprovalCode as string,
       ibaValidDate: '2023-10-25',
-      companyWebite: website,
+      companyWebite: website || firstCompany?.companyWebite as string,
       CINNumber: firstCompany?.CINNumber as string,
       companyLogo: companyLogoImage || (firstCompany?.companyLogo as string),
-      punchLine: comapnyPunch,
+      punchLine: comapnyPunch || firstCompany?.punchLine as string,
       companyProfile: '',
       district: '',
       postOffice: '',
@@ -115,16 +116,24 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({
     }
   }, [editCompanyRequesting, editCompanySuccess, editCompanyFailure]);
 
-  const onCompanyLogoUploadSuccess = (imagePath: string) => {
-    setCompanyLogoImage(imagePath);
-  };
-
-  const onCompanySignatureUploadSuccess = (imagePath: string) => {
-    setCompanySignatureImage(imagePath);
-  };
+  const onImageUploadSuccess = (imagePath:string) => {
+    if(changeLogo) {
+      setCompanyLogoImage(imagePath);
+    } else if(changeSignature) {
+      setCompanySignatureImage(imagePath);
+    } else {
+      setCompanyLogoImage(imagePath);
+    }
+  }
 
   const onChangeSignature = () => {
+    setChangeLogo(false);
     setChangeSignature(true);
+  }
+
+  const onChangeImage = () => {
+    setChangeLogo(true);
+    setChangeSignature(false);
   }
 
   return (
@@ -169,8 +178,9 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({
           </View>
           <Spacer height={10} />
           <CommonPhotoUploadView
-            onUploadSuccess={onCompanyLogoUploadSuccess}
+            onUploadSuccess={onImageUploadSuccess}
             previousImageUri={firstCompany?.companyLogo as string}
+            onChageImage={onChangeImage}
           />
           <Spacer height={20} />
           <View style={styles.elementContainer3}>
@@ -204,15 +214,16 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({
           <Spacer height={10} />
           {signatureType == signatureTypeOptions[0] ? (
             <SignatureCaptureView
-              onSave={onCompanySignatureUploadSuccess}
+              onSave={onImageUploadSuccess}
               previousSignatureUri=""
               updateSignature={changeSignature}
               onChangeSignature={onChangeSignature}
             />
           ) : (
             <CommonPhotoUploadView
-              onUploadSuccess={onCompanySignatureUploadSuccess}
+              onUploadSuccess={onImageUploadSuccess}
               previousImageUri={firstCompany?.companySignature as string}
+              onChageImage={onChangeSignature}
             />
           )}
           <Spacer height={20} />

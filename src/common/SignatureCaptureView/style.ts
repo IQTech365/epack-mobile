@@ -6,6 +6,8 @@ const styles = StyleSheet.create({
     width: width * 0.9,
     height: 150,
     alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
     borderColor: COLOR_BLACK,
     borderWidth: 1,
   },

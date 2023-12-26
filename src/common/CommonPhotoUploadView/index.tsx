@@ -46,11 +46,13 @@ export enum DOCUMENT {
 export interface IProps {
   onUploadSuccess: (imagePath: string) => void;
   previousImageUri: string;
+  onChageImage: () => void;
 }
 
 const CommonPhotoUploadView: React.FC<IProps> = ({
   onUploadSuccess,
   previousImageUri,
+  onChageImage
 }) => {
   const {
     imageUploading,
@@ -147,6 +149,7 @@ const CommonPhotoUploadView: React.FC<IProps> = ({
   const handleChangeImage = () => {
     setImageFile(null);
     setTempImageUri('');
+    onChageImage && onChageImage();
   };
 
   const handleUploadImage = () => {
