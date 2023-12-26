@@ -18,6 +18,7 @@ import {
 } from '../../../../../redux/slices/CompanySlice';
 import {ICompanyEditRequest} from '../../../../../interface/companyRegistration/ICompanyEditRequest';
 import CommonPhotoUploadView from '../../../../../common/CommonPhotoUploadView';
+import { ToastType, showToast } from '../../../../../utils/utility';
 
 interface IUpdateBasicDetailsFormProps {
   //
@@ -99,19 +100,11 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({
 
   useEffect(() => {
     if (!editCompanyRequesting && editCompanySuccess) {
-      Toast.show({
-        type: 'success',
-        text1: 'Edit Company',
-        text2: 'Company has been added successfully',
-      });
+      showToast('Success', 'Company Info update successfull', ToastType.SUCCESS);
       dispatch(reseteditCompanyRequest());
       onClose();
     } else if (!editCompanyRequesting && editCompanyFailure) {
-      Toast.show({
-        type: 'error',
-        text1: 'Edit Company',
-        text2: 'Error in Edit Company. Please try again!',
-      });
+      showToast('Error', 'Company Info update failed. Try again!', ToastType.ERROR);
       dispatch(reseteditCompanyRequest());
     }
   }, [editCompanyRequesting, editCompanySuccess, editCompanyFailure]);

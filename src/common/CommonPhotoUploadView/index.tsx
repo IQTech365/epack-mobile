@@ -18,6 +18,9 @@ import {
   resetImageUploadRequest,
 } from '../../redux/slices/CommonSlice';
 import Spinner from '../Spinner';
+import Toast, {BaseToast, ErrorToast} from 'react-native-toast-message';
+import {COLOR_BLACK, COLOR_GREEN} from '../../utils/colors';
+import { ToastType, showToast } from '../../utils/utility';
 
 interface IOptions {
   mediaType: MediaType;
@@ -54,6 +57,42 @@ const CommonPhotoUploadView: React.FC<IProps> = ({
   const [tempImageUri, setTempImageUri] = useState<string>(previousImageUri);
   const [imageFile, setImageFile] = useState<any>(null);
   const [showUploadButton, setShowUploadButton] = useState<boolean>(false);
+
+  const toastConfig = {
+    success: (props: any) => (
+      <BaseToast
+        {...props}
+        style={{borderLeftColor: COLOR_GREEN}}
+        contentContainerStyle={{paddingHorizontal: 10, paddingVertical: 15}}
+        contentContainerProps={{paddingHorizontal: 15}}
+        text1Style={{
+          fontSize: 18,
+          fontWeight: '400',
+        }}
+        text2Style={{
+          fontSize: 16,
+          fontWeight: '300',
+          color: COLOR_BLACK,
+        }}
+      />
+    ),
+    error: (props: any) => (
+      <ErrorToast
+        {...props}
+        contentContainerStyle={{paddingHorizontal: 10, paddingVertical: 15}}
+        contentContainerProps={{paddingHorizontal: 15}}
+        text1Style={{
+          fontSize: 18,
+          fontWeight: '400',
+        }}
+        text2Style={{
+          fontSize: 16,
+          fontWeight: '300',
+          color: COLOR_BLACK,
+        }}
+      />
+    ),
+  };
 
   const _getUploadedImagePath = () => {
     let path: string = '';
@@ -169,16 +208,17 @@ const CommonPhotoUploadView: React.FC<IProps> = ({
 
   useEffect(() => {
     if (!imageUploading && imageUploadSuccess) {
-      console.log('uploadedImage-----', JSON.stringify(uploadedImage));
       const imagePath = _getUploadedImagePath();
       onUploadSuccess && onUploadSuccess(imagePath);
       setImageFile(null);
       setShowUploadButton(false);
       dispatch(resetImageUploadRequest());
+      showToast("Success", "Image Upload successful.", ToastType.SUCCESS);
     } else if (!imageUploading && imageUploadFailure) {
       setImageFile(null);
       setShowUploadButton(false);
       dispatch(resetImageUploadRequest());
+      showToast("Error", "Image Upload Failed. Try again!", ToastType.ERROR);
     }
   }, [imageUploading, imageUploadSuccess, imageUploadFailure]);
 
@@ -186,6 +226,7 @@ const CommonPhotoUploadView: React.FC<IProps> = ({
     <>
       {_PhotoView()}
       <Spinner show={imageUploading} />
+      <Toast config={toastConfig} visibilityTime={2000} />
     </>
   );
 };

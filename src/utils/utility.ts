@@ -1,5 +1,7 @@
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import Share from 'react-native-share';
+import Toast from 'react-native-toast-message';
+
 export const startShare = async (html:any, docName:string, action:any) => {
     let options = {
       html: html,
@@ -40,3 +42,18 @@ export const startShare = async (html:any, docName:string, action:any) => {
       }, delay);
     };
   }
+
+  export enum ToastType {
+    SUCCESS = 'success',
+    ERROR = 'error',
+  }
+
+  export const showToast = (title:string, message:string, toastType: ToastType) => {
+    Toast.show({
+      type: toastType,
+      text1: title,
+      text2: message,
+    });
+  }
+  
+  
