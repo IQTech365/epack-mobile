@@ -1,53 +1,55 @@
-import { NavigationProp } from '@react-navigation/native';
-import React, { useEffect, useCallback } from 'react';
-import { View, Text, FlatList, RefreshControl } from 'react-native';
+import {NavigationProp} from '@react-navigation/native';
+import React, {useEffect, useCallback} from 'react';
+import {View, Text, FlatList, RefreshControl} from 'react-native';
 import Header from '../../common/Header';
 import Spacer from '../../common/Spacer';
-import { ClientStackRoute } from '../../utils/constants';
-import ClientListItem, {
-  IClientItem,
-} from './clientDetails/components/ClientListItem';
+import {ClientStackRoute} from '../../utils/constants';
 import styles from './style';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { IGetOrdersRequest } from '../../interface/order/IGetOrdersRequest';
-import { getApprovedOrdersRequest, getOrdersRequest } from '../../redux/slices/OrderSlice';
+import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import useCompanyId from '../../hooks/useCompanyId';
+import {ICustomer, ICustomerRequest} from '../../interface/customer/customer';
+import {getCustomersRequest} from '../../redux/slices/CustomerSlice';
+import Spinner from '../../common/Spinner';
+import ClientListItem from './clientDetails/components/ClientListItem';
 
 interface IClientPageViewProps {
   navigation: NavigationProp<any, any>;
 }
 
-const ClientPageView: React.FC<IClientPageViewProps> = ({ navigation }) => {
-  const { otpData } = useAppSelector(state => state.OTP);
+const ClientPageView: React.FC<IClientPageViewProps> = ({navigation}) => {
   const companyId = useCompanyId();
-  const { approvedOrders, getOrdersRequesting } =
-    useAppSelector(state => state.Order);
-  const { data: ordersArr } = approvedOrders || {};
-  console.log('ClientPageView--orders--', JSON.stringify(ordersArr));
-  
+  const {getCustomersRequesting, customers} = useAppSelector(
+    state => state.Customer,
+  );
+  console.log('ClientsPage--customers--', JSON.stringify(customers));
   const dispatch = useAppDispatch();
 
-  const handleOnRefresh = useCallback(() => {
-    let orderListReq: IGetOrdersRequest = {
-      // authId: otpData?.data.id as string,
+  const _fetchCustomers = () => {
+    const payload: ICustomerRequest = {
       companyId: companyId,
-      status: "COMPLETED"
-    }
-    dispatch(getApprovedOrdersRequest(orderListReq));
+    };
+    dispatch(getCustomersRequest(payload));
+  };
+
+  const handleOnRefresh = useCallback(() => {
+    _fetchCustomers();
   }, []);
 
-  useEffect(() => {
-    let orderListReq: IGetOrdersRequest = {
-      authId: otpData?.data.id as string,
-      companyId: companyId,
-      status: "COMPLETED"
+  const _getCustomerList = () => {
+    const {data} = customers || {};
+    let list:ICustomer[] = [];
+    if(data && Array.isArray(data) && data.length > 0) {
+      list = data;
     }
-    dispatch(getApprovedOrdersRequest(orderListReq));
+    return list;
+  }
 
-  }, [dispatch])
+  useEffect(() => {
+    _fetchCustomers();
+  }, [dispatch]);
 
-  const handleEnquiryDetailsClick = (item:any) => { 
-    navigation.navigate(ClientStackRoute.ClientDetails, {item:item});
+  const handleClientDetailsClick = (item: any) => {
+    navigation.navigate(ClientStackRoute.ClientDetails, {item: item});
   };
 
   return (
@@ -58,23 +60,23 @@ const ClientPageView: React.FC<IClientPageViewProps> = ({ navigation }) => {
       <Spacer height={12} />
       <FlatList
         contentContainerStyle={styles.listContent}
-        data={ordersArr}
+        data={_getCustomerList()}
         refreshControl={
           <RefreshControl
-            refreshing={getOrdersRequesting}
+            refreshing={getCustomersRequesting}
             onRefresh={handleOnRefresh}
           />
         }
-        renderItem={({ item, index }) => (
+        renderItem={({item, index}) => (
           <ClientListItem
             item={item}
             index={index}
-            onPress={()=>handleEnquiryDetailsClick(item)}
+            onPress={() => handleClientDetailsClick(item)}
           />
         )}
-        ListEmptyComponent={() => <Text>No Orders available</Text>}
+        ListEmptyComponent={() => <Text>No Clients available</Text>}
       />
-
+      <Spinner show={getCustomersRequesting} />
     </View>
   );
 };

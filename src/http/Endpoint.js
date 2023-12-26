@@ -136,3 +136,5 @@ export const GET_APP_SETTINGS = (company_id) => `/setting/app-setting/company/${
 export const SEARCH_CUSTOMER = (company_id, searchKey) => `/enquiry/search-customer?companyId=${company_id}&keys=${searchKey}`;
 // Image Upload
 export const IMAGE_UPLOAD = `/setting/upload-image`;
+// Customers
+export const GET_CUSTOMERS = `/enquiry/get-customer-list`;

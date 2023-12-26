@@ -21,6 +21,7 @@ import  MyProfileSlice  from './slices/MyProfile';
 import UserRoleManagementSlice from './slices/UserRoleManagementSlice';
 import VehicleSlice from './slices/VehicleSlice';
 import CommonSlice from './slices/CommonSlice';
+import CustomerSlice from './slices/CustomerSlice';
 
 const persistConfig = {
   key: 'root',
@@ -43,6 +44,7 @@ const appReducer = combineReducers({
   UserRole: UserRoleManagementSlice,
   Vehicle: VehicleSlice,
   Common:CommonSlice,
+  Customer:CustomerSlice,
 });
 
 const rootReducer: Reducer = (state: RootState, action: AnyAction) => {

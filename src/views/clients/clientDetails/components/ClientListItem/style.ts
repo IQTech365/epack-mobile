@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import {COLOR_BLUE, COLOR_GRAY, COLOR_GRAY2, COLOR_ORANGE, COLOR_WHITE} from '../../../../../utils/colors';
+import {COLOR_BLUE, COLOR_GRAY, COLOR_GRAY2, COLOR_GRAY3, COLOR_GRAY6, COLOR_ORANGE, COLOR_WHITE} from '../../../../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   container: {
-    width: width * 0.95,
+    width: width * 0.90,
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',
@@ -20,22 +20,19 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    backgroundColor: COLOR_GRAY6,
+    paddingHorizontal: 5,
+    paddingVertical: 5,
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
   },
   nameContainer: {
-    width: '40%',
-    // height: 44,
+    width: '70%',
     paddingVertical: 6,
     paddingHorizontal: 8,
     alignItems: 'flex-start',
     justifyContent: 'center',
-    // backgroundColor: COLOR_GRAY2,
-    // borderEndWidth: 15,
-    // borderBottomRightRadius: 22,
-    // borderTopLeftRadius: 8,
-    // borderEndColor: COLOR_GRAY2,
-    // borderTopStartRadius: 8,
-    // borderLeftWidth: 10,
-    // borderLeftColor: COLOR_ORANGE,
+    
   },
   contactOptionsContainer: {
     width: '30%',
@@ -60,21 +57,28 @@ const styles = StyleSheet.create({
       width: '100%',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      paddingVertical: 4,
-      paddingHorizontal: 8,
-      padding: 6,
   },
   rowItemContainer: {
-    width: '30%',
+    width: '35%',
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: COLOR_GRAY3,
+    paddingVertical: 10,
+    borderBottomWidth: 0.5,
+    borderBottomColor: COLOR_GRAY2,
+    paddingLeft: 8,
   },
   rowItemContainer2: {
-    width: '64%',
+    width: '65%',
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: COLOR_WHITE,
+    paddingVertical: 10,
+    borderBottomWidth: 0.5,
+    borderBottomColor: COLOR_GRAY2,
+    paddingLeft: 8,
   },
   colonContainer: {
     width: '6%',
