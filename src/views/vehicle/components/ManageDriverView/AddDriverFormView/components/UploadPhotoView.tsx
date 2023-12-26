@@ -18,6 +18,7 @@ import Button from '../../../../../../common/Button';
 import { useAppDispatch, useAppSelector } from '../../../../../../redux/hooks';
 import { imageUploadRequest, resetImageUploadRequest } from '../../../../../../redux/slices/CommonSlice';
 import Spinner from '../../../../../../common/Spinner';
+import { ToastType, showToast } from '../../../../../../utils/utility';
 
 interface IOptions {
   mediaType: MediaType;
@@ -63,6 +64,7 @@ const UploadPhotoView: React.FC<Props> = ({title, photo}) => {
   const dispatch = useAppDispatch();
   const [isDriverPhoto, setIsDriverPhoto] = useState<boolean>(false);
   const [isLicensePhoto, setIsLicensePhoto] = useState<boolean>(false);
+  const [showUploadButton, setShowUploadButton] = useState<boolean>(false);
 
   const _getUploadedImagePath = () => {
     let path:string = '';
@@ -205,7 +207,6 @@ const UploadPhotoView: React.FC<Props> = ({title, photo}) => {
 
   useEffect(() => {
     if(!imageUploading && imageUploadSuccess) {
-      console.log('uploadedImage-----', JSON.stringify(uploadedImage));
       if(photo == PHOTO.DRIVER && isDriverPhoto) {
         const driverImagePath = _getUploadedImagePath();
         setDriverPhoto(driverImagePath);
@@ -215,10 +216,12 @@ const UploadPhotoView: React.FC<Props> = ({title, photo}) => {
       }
       setIsDriverPhoto(false);
       setIsLicensePhoto(false);
+      showToast("Image upload successfull.", ToastType.SUCCESS);
       dispatch(resetImageUploadRequest());
     } else if(!imageUploading && imageUploadFailure) {
       setIsDriverPhoto(false);
       setIsLicensePhoto(false);
+      showToast("Image upload failed. Try again!", ToastType.ERROR);
       dispatch(resetImageUploadRequest());
     }
   }, [imageUploading, imageUploadSuccess, imageUploadFailure]);

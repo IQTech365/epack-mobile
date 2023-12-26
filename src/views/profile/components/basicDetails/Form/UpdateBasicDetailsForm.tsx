@@ -1,13 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
-import Toast from 'react-native-toast-message';
+import {View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import Button from '../../../../../common/Button';
 import Input from '../../../../../common/Input';
 import Label from '../../../../../common/Label';
 import Spacer from '../../../../../common/Spacer';
 import Spinner from '../../../../../common/Spinner';
-import {COLOR_BLACK} from '../../../../../utils/colors';
+import {COLOR_BLACK, COLOR_BLUE} from '../../../../../utils/colors';
 import styles from './style';
 import {ICompanyInfoData} from '../../../../../interface/companyRegistration/IGetCompaniesResponse';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
@@ -17,8 +16,11 @@ import {
   reseteditCompanyRequest,
 } from '../../../../../redux/slices/CompanySlice';
 import {ICompanyEditRequest} from '../../../../../interface/companyRegistration/ICompanyEditRequest';
-import CommonPhotoUploadView from '../../../../../common/CommonPhotoUploadView';
-import { ToastType, showToast } from '../../../../../utils/utility';
+import CommonPhotoUploadView, { DOCUMENT } from '../../../../../common/CommonPhotoUploadView';
+import {ToastType, showToast} from '../../../../../utils/utility';
+import {signatureTypeOptions} from '../utils';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import SignatureCaptureView from '../../../../../common/SignatureCaptureView';
 
 interface IUpdateBasicDetailsFormProps {
   //
@@ -32,17 +34,22 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({
   const [contactPerson, setContactPerson] = useState<string>('');
   const [website, setWebsite] = useState<string>('');
   const [companyLogoImage, setCompanyLogoImage] = useState<string>('');
-  const [companySignatureImage, setCompanySignatureImage] = useState<string>('');
+  const [companySignatureImage, setCompanySignatureImage] =
+    useState<string>('');
+  const [changeSignature, setChangeSignature] = useState<boolean>(false);
+  const [signatureType, setSignatureType] = useState<string>(
+    signatureTypeOptions[0],
+  );
+  const [uploadType, setUploadType] = useState<DOCUMENT>(DOCUMENT.COMPANY_LOGO);
+  
   const {
     companies,
     editCompanyRequesting,
     editCompanySuccess,
     editCompanyFailure,
   } = useAppSelector(state => state.Company);
-  const {verifiedData} = useAppSelector(state => state.OTP);
   const {data: companiesData} = companies || {};
   const dispatch = useAppDispatch();
-  const {data} = verifiedData || {};
 
   const getFirstCompany = () => {
     let company: ICompanyInfoData | null = null;
@@ -57,8 +64,6 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({
   };
 
   const firstCompany = getFirstCompany();
-  console.log('firstCompany----', JSON.stringify(firstCompany));
-
   const handleCompnyPunchLineInput = (text: string) => {
     setCompanyPunch(text);
   };
@@ -87,12 +92,13 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({
       ibaValidDate: '2023-10-25',
       companyWebite: website,
       CINNumber: firstCompany?.CINNumber as string,
-      companyLogo: companyLogoImage || firstCompany?.companyLogo as string,
+      companyLogo: companyLogoImage || (firstCompany?.companyLogo as string),
       punchLine: comapnyPunch,
       companyProfile: '',
       district: '',
       postOffice: '',
-      companySignature: companySignatureImage || firstCompany?.companySignature as string,
+      companySignature:
+        companySignatureImage || (firstCompany?.companySignature as string),
     };
     dispatch(editCompanyRequest(payload));
     // dispatch(getCompaniesRequest(firstCompany?.authId as string));
@@ -100,11 +106,11 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({
 
   useEffect(() => {
     if (!editCompanyRequesting && editCompanySuccess) {
-      showToast('Success', 'Company Info update successfull', ToastType.SUCCESS);
+      showToast('Company Info update successfull', ToastType.SUCCESS);
       dispatch(reseteditCompanyRequest());
       onClose();
     } else if (!editCompanyRequesting && editCompanyFailure) {
-      showToast('Error', 'Company Info update failed. Try again!', ToastType.ERROR);
+      showToast('Company Info update failed. Try again!', ToastType.ERROR);
       dispatch(reseteditCompanyRequest());
     }
   }, [editCompanyRequesting, editCompanySuccess, editCompanyFailure]);
@@ -116,6 +122,10 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({
   const onCompanySignatureUploadSuccess = (imagePath: string) => {
     setCompanySignatureImage(imagePath);
   };
+
+  const onChangeSignature = () => {
+    setChangeSignature(true);
+  }
 
   return (
     <>
@@ -166,11 +176,45 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({
           <View style={styles.elementContainer3}>
             <Label text="Company Signature" style={styles.label} />
           </View>
+          <View style={styles.checkboxContainer}>
+            {signatureTypeOptions.map(d => {
+              return (
+                <BouncyCheckbox
+                  size={25}
+                  fillColor={COLOR_BLUE}
+                  unfillColor="#FFFFFF"
+                  text={d}
+                  iconStyle={styles.iconStyle}
+                  innerIconStyle={styles.innerIconStyle}
+                  textStyle={styles.textStyle2}
+                  style={{marginRight: 15}}
+                  textContainerStyle={{paddingLeft: 0}}
+                  onPress={(isChecked: boolean) => {
+                    setSignatureType(d);
+                    if(d == signatureTypeOptions[1]) {
+                      setChangeSignature(false);
+                    }
+                  }}
+                  isChecked={d == signatureType}
+                  disableBuiltInState={true}
+                />
+              );
+            })}
+          </View>
           <Spacer height={10} />
-          <CommonPhotoUploadView
-            onUploadSuccess={onCompanySignatureUploadSuccess}
-            previousImageUri={firstCompany?.companySignature as string}
-          />
+          {signatureType == signatureTypeOptions[0] ? (
+            <SignatureCaptureView
+              onSave={onCompanySignatureUploadSuccess}
+              previousSignatureUri=""
+              updateSignature={changeSignature}
+              onChangeSignature={onChangeSignature}
+            />
+          ) : (
+            <CommonPhotoUploadView
+              onUploadSuccess={onCompanySignatureUploadSuccess}
+              previousImageUri={firstCompany?.companySignature as string}
+            />
+          )}
           <Spacer height={20} />
           <Button
             text="UPDATE"

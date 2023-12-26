@@ -48,7 +48,8 @@ export const startShare = async (html:any, docName:string, action:any) => {
     ERROR = 'error',
   }
 
-  export const showToast = (title:string, message:string, toastType: ToastType) => {
+  export const showToast = (message:string, toastType: ToastType) => {
+    const title:string = toastType == ToastType.SUCCESS ? 'Success' : 'Error';
     Toast.show({
       type: toastType,
       text1: title,

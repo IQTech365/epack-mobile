@@ -38,6 +38,11 @@ const options: IOptions = {
   cameraType: 'back',
 };
 
+export enum DOCUMENT {
+  COMPANY_LOGO,
+  COMPANY_SIGNATURE,
+}
+
 export interface IProps {
   onUploadSuccess: (imagePath: string) => void;
   previousImageUri: string;
@@ -213,12 +218,12 @@ const CommonPhotoUploadView: React.FC<IProps> = ({
       setImageFile(null);
       setShowUploadButton(false);
       dispatch(resetImageUploadRequest());
-      showToast("Success", "Image Upload successful.", ToastType.SUCCESS);
+      showToast("Image Upload successful.", ToastType.SUCCESS);
     } else if (!imageUploading && imageUploadFailure) {
       setImageFile(null);
       setShowUploadButton(false);
       dispatch(resetImageUploadRequest());
-      showToast("Error", "Image Upload Failed. Try again!", ToastType.ERROR);
+      showToast("Image Upload Failed. Try again!", ToastType.ERROR);
     }
   }, [imageUploading, imageUploadSuccess, imageUploadFailure]);
 

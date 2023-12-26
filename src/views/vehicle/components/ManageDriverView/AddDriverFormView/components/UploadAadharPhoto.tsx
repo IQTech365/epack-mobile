@@ -16,6 +16,7 @@ import Label from '../../../../../../common/Label';
 import Button from '../../../../../../common/Button';
 import { useAppDispatch, useAppSelector } from '../../../../../../redux/hooks';
 import { imageUploadRequest, resetImageUploadRequest } from '../../../../../../redux/slices/CommonSlice';
+import { ToastType, showToast } from '../../../../../../utils/utility';
 
 export enum AADHAR {
   FRONT,
@@ -220,11 +221,13 @@ const UploadAadharPhoto: React.FC<IProps> = ({imageSide}) => {
       }
       setIsAadharFront(false);
       setIsAadharBack(false);
+      showToast("Image upload successfull.", ToastType.SUCCESS);
       dispatch(resetImageUploadRequest());
     } else if(!imageUploading && imageUploadFailure) {
       setIsAadharFront(false);
       setIsAadharBack(false);
       dispatch(resetImageUploadRequest());
+      showToast("Image upload failed. Try again!", ToastType.ERROR);
     }
   }, [imageUploading, imageUploadSuccess, imageUploadFailure]);
 

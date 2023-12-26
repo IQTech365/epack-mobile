@@ -1,6 +1,5 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {View} from 'react-native';
-import Toast from 'react-native-toast-message';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../../../common/Spacer';
 import styles from './style';
@@ -29,6 +28,7 @@ import Input from '../../../../../common/Input';
 import {COLOR_BLACK} from '../../../../../utils/colors';
 import useAuthId from '../../../../../hooks/useAuthId';
 import entityOptions from '../../../../../data/entityOptions.json';
+import { ToastType, showToast } from '../../../../../utils/utility';
 
 const AddDriverView: React.FC<{}> = ({}) => {
   const {state, setAadharCardNo} = useAddDriverFormContextHook();
@@ -89,18 +89,10 @@ const AddDriverView: React.FC<{}> = ({}) => {
 
   useEffect(() => {
     if (!addDriverRequesting && addDriveruccess) {
-      Toast.show({
-        type: 'success',
-        text1: 'Add Driver',
-        text2: 'Driver has been added successfully',
-      });
+      showToast('Driver added successfully.', ToastType.SUCCESS)
       dispatch(restaddDriverRequest());
     } else if (!addDriverRequesting && addDriverFailure) {
-      Toast.show({
-        type: 'error',
-        text1: 'Add Driver',
-        text2: 'Error in adding Driver. Please try again!',
-      });
+      showToast('Adding new Driver failed. Try again!', ToastType.ERROR)
       dispatch(restaddDriverRequest());
     }
   }, [addDriverRequesting, addDriveruccess, addDriverFailure]);

@@ -85,6 +85,31 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     paddingVertical: 20,
   },
+  checkboxContainer: {
+    width: width * 0.9,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  iconStyle:{
+    borderColor: 'red',
+    borderRadius: 0,
+    width: 18,
+    height: 18,
+  },
+  innerIconStyle: {
+    borderWidth: 1,
+    borderRadius: 0,
+    width: 18,
+    height: 18,
+  },
+  textStyle2:{
+    fontFamily: 'JosefinSans-Regular',
+    textDecorationLine: 'none',
+    color: COLOR_BLACK
+  }
 });
 
 export default styles;

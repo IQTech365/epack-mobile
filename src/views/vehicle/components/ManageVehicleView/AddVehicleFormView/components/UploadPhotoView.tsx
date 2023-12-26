@@ -21,6 +21,7 @@ import {
 import Button from '../../../../../../common/Button';
 import CloseIcon from '../../../../../../images/icons/x-circle.svg';
 import Spinner from '../../../../../../common/Spinner';
+import { ToastType, showToast } from '../../../../../../utils/utility';
 
 export enum PHOTO {
   RC,
@@ -252,12 +253,14 @@ const UploadPhotoView: React.FC<Props> = ({title, photo}) => {
       setIsRCPhoto(false);
       setIsPollCertPhoto(false);
       setIsPermitPhoto(false);
+      showToast("Image upload successfull.", ToastType.SUCCESS);
       dispatch(resetImageUploadRequest());
     } else if (!imageUploading && imageUploadFailure) {
       setIsRCPhoto(false);
       setIsPollCertPhoto(false);
       setIsPermitPhoto(false);
       dispatch(resetImageUploadRequest());
+      showToast("Image upload failed. Try again!", ToastType.ERROR);
     }
   }, [imageUploading, imageUploadSuccess, imageUploadFailure]);
 
