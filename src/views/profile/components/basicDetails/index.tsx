@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Text, View, TouchableOpacity} from 'react-native';
+import {Text, View, TouchableOpacity, Image} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../../common/Spacer';
 import EnquiryDetailListItem from '../../../enquiry/enquiryDetails/components/EnquiryDetailListItem';
@@ -73,7 +73,7 @@ const BasicDetailsView: React.FC<IBasicDetailsViewProps> = ({}) => {
         </View>
         <Spacer height={8} />
         <View style={styles.companyLogoContainer}>
-          <Text>Company signature display here</Text>
+          <Image source={{uri: firstCompany?.companySignature}} style={{width: 100, height: 100}} />
         </View>
         <Spacer height={8} />
         <ModalHOC

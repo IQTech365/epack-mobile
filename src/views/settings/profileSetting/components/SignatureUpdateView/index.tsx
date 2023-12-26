@@ -129,7 +129,7 @@ const SignatureUpdateView: React.FC<ISigatureUpdateProps> = ({}) => {
         <Spacer height={4} />
 
         <View style={styles.textContainer2}>
-          <Label text="Name of Employe" style={styles.label} />
+          <Label text="Name of Employee" style={styles.label} />
           <DropdownComponent data={employeName} onSelect={handleRoleType} />
         </View>
         <Spacer height={12} />

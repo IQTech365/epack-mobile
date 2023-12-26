@@ -17,6 +17,7 @@ import {
   imageUploadRequest,
   resetImageUploadRequest,
 } from '../../redux/slices/CommonSlice';
+import Spinner from '../Spinner';
 
 interface IOptions {
   mediaType: MediaType;
@@ -39,9 +40,10 @@ export interface IProps {
   previousImageUri: string;
 }
 
-const CommonPhotoUploadView: React.FC<IProps> = ({onUploadSuccess, previousImageUri}) => {
-    console.log('previousImageUri----', previousImageUri);
-    
+const CommonPhotoUploadView: React.FC<IProps> = ({
+  onUploadSuccess,
+  previousImageUri,
+}) => {
   const {
     imageUploading,
     imageUploadSuccess,
@@ -51,6 +53,7 @@ const CommonPhotoUploadView: React.FC<IProps> = ({onUploadSuccess, previousImage
   const dispatch = useAppDispatch();
   const [tempImageUri, setTempImageUri] = useState<string>(previousImageUri);
   const [imageFile, setImageFile] = useState<any>(null);
+  const [showUploadButton, setShowUploadButton] = useState<boolean>(false);
 
   const _getUploadedImagePath = () => {
     let path: string = '';
@@ -71,6 +74,7 @@ const CommonPhotoUploadView: React.FC<IProps> = ({onUploadSuccess, previousImage
           const imageObj = assets[0];
           setImageFile(imageObj);
           setTempImageUri(imageObj.uri as string);
+          setShowUploadButton(true);
         }
       }
     } catch (error) {
@@ -88,6 +92,7 @@ const CommonPhotoUploadView: React.FC<IProps> = ({onUploadSuccess, previousImage
           const imageObj = assets[0];
           setImageFile(imageObj);
           setTempImageUri(imageObj.uri as string);
+          setShowUploadButton(true);
         }
       }
     } catch (error) {
@@ -138,12 +143,14 @@ const CommonPhotoUploadView: React.FC<IProps> = ({onUploadSuccess, previousImage
           </TouchableOpacity>
         </View>
         <Image source={{uri: uri}} style={styles.avatarImage} />
-        <Button
-          text="Upload"
-          onPress={handleUploadImage}
-          style={styles.uploadButton}
-          textStyle={styles.uploadText}
-        />
+        {showUploadButton ? (
+          <Button
+            text="Upload"
+            onPress={handleUploadImage}
+            style={styles.uploadButton}
+            textStyle={styles.uploadText}
+          />
+        ) : null}
       </View>
     );
   };
@@ -158,7 +165,7 @@ const CommonPhotoUploadView: React.FC<IProps> = ({onUploadSuccess, previousImage
 
   useEffect(() => {
     setTempImageUri(previousImageUri);
-  }, []);
+  }, [previousImageUri]);
 
   useEffect(() => {
     if (!imageUploading && imageUploadSuccess) {
@@ -166,18 +173,21 @@ const CommonPhotoUploadView: React.FC<IProps> = ({onUploadSuccess, previousImage
       const imagePath = _getUploadedImagePath();
       onUploadSuccess && onUploadSuccess(imagePath);
       setImageFile(null);
+      setShowUploadButton(false);
       dispatch(resetImageUploadRequest());
     } else if (!imageUploading && imageUploadFailure) {
       setImageFile(null);
+      setShowUploadButton(false);
       dispatch(resetImageUploadRequest());
     }
   }, [imageUploading, imageUploadSuccess, imageUploadFailure]);
 
-  useEffect(() => {
-    return setTempImageUri('');
-  }, []);
-
-  return <>{_PhotoView()}</>;
+  return (
+    <>
+      {_PhotoView()}
+      <Spinner show={imageUploading} />
+    </>
+  );
 };
 
 export default CommonPhotoUploadView;
