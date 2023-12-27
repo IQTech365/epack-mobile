@@ -215,7 +215,7 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({
           {signatureType == signatureTypeOptions[0] ? (
             <SignatureCaptureView
               onSave={onImageUploadSuccess}
-              previousSignatureUri=""
+              previousSignatureUri={firstCompany?.companySignature as string}
               updateSignature={changeSignature}
               onChangeSignature={onChangeSignature}
             />

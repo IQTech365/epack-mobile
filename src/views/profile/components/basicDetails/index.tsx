@@ -128,13 +128,16 @@ const BasicDetailsView: React.FC<IBasicDetailsViewProps> = ({}) => {
           </View>
           <Spacer height={8} />
           <View style={styles.companyLogoContainer}>
-            <Text>Company logo display here</Text>
+          <Image
+              source={{uri: firstCompany?.companyLogo}}
+              style={{width: '100%', height: 100, resizeMode: 'contain'}}
+            />
           </View>
           <Spacer height={8} />
           <View style={styles.companyLogoContainer}>
             <Image
               source={{uri: firstCompany?.companySignature}}
-              style={{width: 100, height: 100}}
+              style={{width: '100%', height: 100, resizeMode: "contain"}}
             />
           </View>
           <Spacer height={8} />
