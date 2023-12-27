@@ -50,7 +50,7 @@ export const GetAppSettingsService = async (companyId:string): Promise<IAppSetti
     return await api.get<IAppSettingResponse>(GET_APP_SETTINGS(companyId));
 }
 
-// Submodules
+// Customers
 export const GetCustomersService = async (payload:ICustomersRequest): Promise<ICustomersResponse> => {
     const api = Api.getInstance();
     return await api.get<ICustomersResponse>(SEARCH_CUSTOMER(payload.companyId, payload.searchKey));

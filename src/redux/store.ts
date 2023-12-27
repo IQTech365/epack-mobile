@@ -15,13 +15,18 @@ import EnquirySlice from './slices/EnquirySlice';
 import OrderSlice from './slices/OrderSlice';
 import QuotationSlice from './slices/QuotationSlice';
 import ProfileSettingSlice from './slices/ProfileSettingSlice';
-import { removeIsRegistrationComplete, removeLoginStatus, removeToken } from '../utils/storage';
+import {
+  removeIsRegistrationComplete,
+  removeLoginStatus,
+  removeToken,
+} from '../utils/storage';
 import SNSettingSlice from './slices/SerialNoSettingSlice';
-import  MyProfileSlice  from './slices/MyProfile';
+import MyProfileSlice from './slices/MyProfile';
 import UserRoleManagementSlice from './slices/UserRoleManagementSlice';
 import VehicleSlice from './slices/VehicleSlice';
 import CommonSlice from './slices/CommonSlice';
 import CustomerSlice from './slices/CustomerSlice';
+import SubscriptionSlice from './slices/SubscriptionSlice';
 
 const persistConfig = {
   key: 'root',
@@ -43,8 +48,9 @@ const appReducer = combineReducers({
   Myprofile: MyProfileSlice,
   UserRole: UserRoleManagementSlice,
   Vehicle: VehicleSlice,
-  Common:CommonSlice,
-  Customer:CustomerSlice,
+  Common: CommonSlice,
+  Customer: CustomerSlice,
+  Subscription: SubscriptionSlice,
 });
 
 const rootReducer: Reducer = (state: RootState, action: AnyAction) => {

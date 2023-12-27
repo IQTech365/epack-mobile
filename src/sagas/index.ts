@@ -10,6 +10,7 @@ import { watcherMyprofileSaga } from './MyprofileSaga';
 import { watcherVehicleSaga } from './VehicleSaga';
 import {watcherCommonSaga} from './CommonSaga';
 import { watcherCustomerSaga } from './CustomerSaga';
+import { watcherSubscriptionSaga } from './SubscriptionSaga';
 
 export function* rootSaga() {
   yield all([
@@ -23,5 +24,6 @@ export function* rootSaga() {
     fork(watcherVehicleSaga),
     fork(watcherCommonSaga),
     fork(watcherCustomerSaga),
+    fork(watcherSubscriptionSaga),
   ]);
 }

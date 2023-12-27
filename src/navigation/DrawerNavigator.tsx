@@ -154,8 +154,8 @@ export const DrawerNavigator = () => {
       <Drawer.Screen
         name="Subscription"
         // component={SubscriptionView}
-        // component={SubscriptionPlanView}
-        component={PaymentMethodView}
+        component={SubscriptionPlanView}
+        // component={PaymentMethodView}
         options={{
           title: 'Subscription',
           drawerIcon: () => <SubscriptionIcon width={24} height={24} />,

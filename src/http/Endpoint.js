@@ -138,3 +138,9 @@ export const SEARCH_CUSTOMER = (company_id, searchKey) => `/enquiry/search-custo
 export const IMAGE_UPLOAD = `/setting/upload-image`;
 // Customers
 export const GET_CUSTOMERS = `/enquiry/get-customer-list`;
+// Subscription Plans
+export const GET_SUBSCRIPTION_PLANS = `/subscription/getAll`;
+// Submodule Features
+export const GET_SUBMODULE_FEATURES_ALL = `/content-management/sub-module-feature/all`;
+// Submodule list
+export const GET_SUBMODULE_LIST = `/content-management/sub-module/all`;
