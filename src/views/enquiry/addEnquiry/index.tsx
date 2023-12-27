@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {View, Text, Alert} from 'react-native';
+import {View, Text, Alert, TouchableOpacity} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../common/Spacer';
 import styles from './style';
@@ -48,8 +48,18 @@ import Toast from 'react-native-toast-message';
 import {NavigationProp} from '@react-navigation/native';
 import EpackDropdown from '../../../common/DropdownComponent2';
 import useCompanyId from '../../../hooks/useCompanyId';
-import { Validator } from '../../../utils/validation';
+import {Validator} from '../../../utils/validation';
 import useAuthId from '../../../hooks/useAuthId';
+import {
+  ICustomer,
+  ICustomerBillingInfo,
+  ICustomersRequest,
+} from '../../../interface/common/common';
+import {debounce} from '../../../utils/utility';
+import {
+  getCustomersRequest,
+  resetGetCustomersRequest,
+} from '../../../redux/slices/CommonSlice';
 
 interface IAddEnquiryViewProps {
   navigation: NavigationProp<any, any>;
@@ -66,11 +76,8 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
   const [deliveryStates, setDeliveryStates] = useState<TDropdownItem[]>([]);
   const [deliveryCities, setDeliveryCities] = useState<TDropdownItem[]>([]);
   const dispatch2 = useAppDispatch();
-  const {
-    addEnquiryRequesting,
-    addEnquirySuccess,
-    addEnquiryFailure,
-  } = useAppSelector(state => state.Enquiry);
+  const {addEnquiryRequesting, addEnquirySuccess, addEnquiryFailure} =
+    useAppSelector(state => state.Enquiry);
   const {otpData} = useAppSelector(state => state.OTP);
   const companyId = useCompanyId();
   const authId = useAuthId();
@@ -83,7 +90,19 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
   const [errors, setErrors] = useState();
   const [isFormValid, setIsFormValid] = useState<boolean>(true);
   const [showErrors, setShowErrors] = useState<boolean>(false);
-  const [showMobileNumberError, setShowMobileNumberError] = useState<boolean>(false);
+  const [showMobileNumberError, setShowMobileNumberError] =
+    useState<boolean>(false);
+
+  const {
+    customers,
+    getCustomersRequesting,
+    getCustomersSuccess,
+    getCustomersFailure,
+  } = useAppSelector(state => state.Common);
+  const [selectedCompanyOption, setSelectedCompanyOption] =
+    useState<ICustomer | null>(null);
+  const [showCompanyList, setShowCompanyList] = useState<boolean>(false);
+  const approvalAuthorityDropdownCompRef = useRef(null);
 
   const setPincodeError = () => {
     dispatch({
@@ -359,15 +378,15 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
   }, [result]);
 
   const validateForm = () => {
-    let errors:any = {};
-    if(state.billingBy?.billing_by == 'by Company') {
+    let errors: any = {};
+    if (state.billingBy?.billing_by == 'by Company') {
       delete errors.partyName;
       delete errors.mobile;
-      if(!state.billingBy?.billing_info?.company_name) {
-        errors.companyName = "Company name required";
+      if (!state.billingBy?.billing_info?.company_name) {
+        errors.companyName = 'Company name required';
       }
-      if(!state.billingBy?.billing_info?.employee_name) {
-        errors.employeeName = "Employee name required";
+      if (!state.billingBy?.billing_info?.employee_name) {
+        errors.employeeName = 'Employee name required';
       }
       if (
         !state.billingBy.billing_info?.authority_mobile_number &&
@@ -396,24 +415,24 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
           errors.employeeMobile = 'Mobile number invalid';
         }
       }
-    } else if(state.billingBy?.billing_by == 'by Individual') {
+    } else if (state.billingBy?.billing_by == 'by Individual') {
       setShowMobileNumberError(false);
       delete errors?.companyName;
       delete errors?.employeeName;
-      delete errors?.employeeMobile
-      if(!state.partyName) {
-        errors.partyName = "Party name required";
+      delete errors?.employeeMobile;
+      if (!state.partyName) {
+        errors.partyName = 'Party name required';
       }
-      if(!state.mobile) {
-        errors.mobile = "Mobile number required";
+      if (!state.mobile) {
+        errors.mobile = 'Mobile number required';
       }
     }
-    if(state.shiftingLuggage.length == 0) {
-      errors.shiftingLuggage = "Shifting luggage required"
+    if (state.shiftingLuggage.length == 0) {
+      errors.shiftingLuggage = 'Shifting luggage required';
     }
     setErrors(errors);
     setIsFormValid(Object.keys(errors).length === 0);
-  }
+  };
 
   useEffect(() => {
     setShowErrors(false);
@@ -496,10 +515,10 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
       }
       return;
     }
-    
+
     const payload: IAddEnquiryRequest = {
       companyId: companyId,
-      customerId: '',//SEEME - write logic to pass customer ID
+      customerId: selectedCompanyOption?._id as string,
       authId: authId,
       enquiryManager: '',
       shiftingType: state.shiftingType.toUpperCase(),
@@ -514,9 +533,10 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
       alternateNumbers: '',
       shiftingDate: '',
       pickupAddress: {
-        shiftingFrom: state.pickupAddress?.city as string || pickupCities[0]?.label,
-        state: state.pickupAddress?.state as string || pickupStates[0]?.label,
-        city: state.pickupAddress?.city as string || pickupCities[0]?.label,
+        shiftingFrom:
+          (state.pickupAddress?.city as string) || pickupCities[0]?.label,
+        state: (state.pickupAddress?.state as string) || pickupStates[0]?.label,
+        city: (state.pickupAddress?.city as string) || pickupCities[0]?.label,
         address: state.pickupAddress?.address as string,
         pincode: state.pickupAddress?.pincode as string,
         landmark: state.pickupAddress?.landmark as string,
@@ -525,9 +545,10 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
           state.pickupAddress?.isLiftAvailable.toLocaleUpperCase() as string,
       },
       dropAddress: {
-        shiftingTo: state.dropAddress?.city as string || deliveryCities[0]?.label,
-        state: state.dropAddress?.state as string || deliveryStates[0]?.label,
-        city: state.dropAddress?.city as string || deliveryCities[0]?.label,
+        shiftingTo:
+          (state.dropAddress?.city as string) || deliveryCities[0]?.label,
+        state: (state.dropAddress?.state as string) || deliveryStates[0]?.label,
+        city: (state.dropAddress?.city as string) || deliveryCities[0]?.label,
         address: state.dropAddress?.address as string,
         pincode: state.dropAddress?.pincode as string,
         landmark: state.dropAddress?.landmark as string,
@@ -536,33 +557,106 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
           state.dropAddress?.isLiftAvailable.toLocaleUpperCase() as string,
       },
       billingBy: state.billingBy?.billing_by as string,
-      billingDetails: state.billingBy?.billing_by == 'by Company' ? {
-        companyName: state.billingBy?.billing_info?.company_name as string,
-        approvalAuthority: state.billingBy?.billing_info
-          ?.approval_authority as string || approvalAuthorityOptions[0].label,
-        authorityPersonName: state.billingBy?.billing_info
-          ?.authority_person_name as string,
-        authorityPersonMobile: state.billingBy?.billing_info
-          ?.authority_mobile_number as string,
-        companyAddress: state.billingBy?.billing_info
-          ?.company_address as string,
-        companyGST: state.billingBy?.billing_info?.company_gst as string,
-        employeeName: state.billingBy?.billing_info?.employee_name as string,
-        employeeDesignation: state.billingBy?.billing_info
-          ?.employee_designation as string,
-        employeeMobile: state.billingBy?.billing_info
-          ?.employee_mobile_number as string,
-      } : {},
+      billingDetails:
+        state.billingBy?.billing_by == 'by Company'
+          ? {
+              companyName: state.billingBy?.billing_info
+                ?.company_name as string,
+              approvalAuthority:
+                (state.billingBy?.billing_info?.approval_authority as string) ||
+                approvalAuthorityOptions[0].label,
+              authorityPersonName: state.billingBy?.billing_info
+                ?.authority_person_name as string,
+              authorityPersonMobile: state.billingBy?.billing_info
+                ?.authority_mobile_number as string,
+              companyAddress: state.billingBy?.billing_info
+                ?.company_address as string,
+              companyGST: state.billingBy?.billing_info?.company_gst as string,
+              employeeName: state.billingBy?.billing_info
+                ?.employee_name as string,
+              employeeDesignation: state.billingBy?.billing_info
+                ?.employee_designation as string,
+              employeeMobile: state.billingBy?.billing_info
+                ?.employee_mobile_number as string,
+            }
+          : {},
       status: 'NEW',
-      addedBy:authId,
+      addedBy: authId,
     };
     dispatch2(addEnquiryRequest(payload));
   }, [state]);
+
+  const handleMobileNo = (text: string) => {
+    handleMobileNumInputTextChange(text);
+    if (!Validator.isEmpty(text) && text.length == 10) {
+      const payload: ICustomersRequest = {
+        companyId: companyId,
+        searchKey: text,
+      };
+      debounce(dispatch2(getCustomersRequest(payload)), 3000);
+    }
+  };
+
+  const _getCustomerList = (): ICustomer[] => {
+    const {data} = customers || {};
+    let list: ICustomer[] = [];
+    if (data && Array.isArray(data) && data.length > 0) {
+      list = data;
+    }
+    return list;
+  };
+
+  const handleCustomerOption = (customer: ICustomer) => {
+    setSelectedCompanyOption(customer);
+    handlePartyNameInputTextChange(customer.partyName);
+    setShowCompanyList(false);
+    dispatch2(resetGetCustomersRequest());
+  };
+
+  useEffect(() => {
+    if (
+      !getCustomersRequesting &&
+      (getCustomersSuccess || getCustomersFailure)
+    ) {
+      setShowCompanyList(true);
+    }
+  }, [
+    customers,
+    getCustomersRequesting,
+    getCustomersSuccess,
+    getCustomersFailure,
+  ]);
 
   const showBillingByIndividualView = () => {
     if (state.billingBy?.billing_by == 'by Company') return null;
     return (
       <>
+        <Spacer height={4} />
+        <View style={styles.elementContainer}>
+          <Label text="Mobile Number" style={styles.label} required={true} />
+          <Input
+            onChangeText={handleMobileNo}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            inputType="numeric"
+            selectionColor={COLOR_BLACK}
+            //@ts-ignore
+            error={showErrors ? errors?.mobile : ''}
+            required={true}
+            type="mobile"
+          />
+        </View>
+        <Spacer height={4} />
+        {showCompanyList &&
+          _getCustomerList().map((d: ICustomer) => {
+            return (
+              <TouchableOpacity
+                style={styles.customerItemContainer}
+                onPress={() => handleCustomerOption(d)}>
+                <Text style={styles.customerNameText}>{d.partyName}</Text>
+              </TouchableOpacity>
+            );
+          })}
         <Spacer height={4} />
         <View style={styles.elementContainer}>
           <Label text="Party Name" style={styles.label} required={true} />
@@ -571,30 +665,94 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
+            value={state.partyName}
             //@ts-ignore
             error={showErrors ? errors?.partyName : ''}
-            type='text'
+            type="text"
             required={true}
-          />
-        </View>
-        <Spacer height={4} />
-        <View style={styles.elementContainer}>
-          <Label text="Mobile Number" style={styles.label} required={true} />
-          <Input
-            onChangeText={handleMobileNumInputTextChange}
-            containerStyle={styles.inputContainer}
-            inputStyle={styles.input}
-            inputType='numeric'
-            selectionColor={COLOR_BLACK}
-            //@ts-ignore
-            error={showErrors ? errors?.mobile : ''}
-            required={true}
-            type='mobile'
           />
         </View>
       </>
     );
   };
+
+  const handleCompanyName = (text: string) => {
+    const {billingBy} = state;
+    const tempObj = {
+      ...billingBy,
+      billing_info: {...billingBy?.billing_info, company_name: text},
+    };
+    dispatch({
+      type: ENQUIRY_FORM_ACTION.BILLING_BY,
+      payload: tempObj as TBillingBy,
+    });
+    if (!Validator.isEmpty(text)) {
+      const payload: ICustomersRequest = {
+        companyId: companyId,
+        searchKey: text,
+      };
+      debounce(dispatch2(getCustomersRequest(payload)), 3000);
+    }
+  };
+
+  const handleCustomerOption2 = (customer: ICustomer) => {
+    setSelectedCompanyOption(customer);
+    const {billingBy} = state;
+    const tempObj = {
+      ...billingBy,
+      billing_info: {
+        ...billingBy?.billing_info,
+      //@ts-ignore
+        company_name: customer?.billingDetails?.companyName as string,
+      },
+    };
+    dispatch({
+      type: ENQUIRY_FORM_ACTION.BILLING_BY,
+      payload: tempObj as TBillingBy,
+    });
+    setShowCompanyList(false);
+    dispatch2(resetGetCustomersRequest());
+  };
+
+  useEffect(() => {
+    if (selectedCompanyOption) {
+      if (selectedCompanyOption.billingBy == 'by Company') {
+        const billingInfo: ICustomerBillingInfo =
+          selectedCompanyOption.billingDetails as ICustomerBillingInfo;
+        const approvalAuthorityOptionIndex: number =
+          approvalAuthorityOptions.findIndex(
+            (d: TDropdownItem) => d.label == billingInfo.approvalAuthority,
+          );
+        if (approvalAuthorityOptionIndex !== -1) {
+          //@ts-ignore
+          approvalAuthorityDropdownCompRef && approvalAuthorityDropdownCompRef.current.setDefaultValue(
+              approvalAuthorityOptions[approvalAuthorityOptionIndex],
+            );
+        }
+
+        // setAuthorityPersonName(billingInfo.authorityPersonName);
+        const {billingBy} = state;
+        const tempObj = {
+          ...billingBy,
+          billing_info: {
+            ...billingBy?.billing_info,
+            approval_authority: billingInfo.approvalAuthority,
+            authority_person_name: billingInfo.authorityPersonName,
+            authority_mobile_number: billingInfo.authorityPersonMobile,
+            company_gst: billingInfo.companyGST.toUpperCase(),
+            employee_name: billingInfo.employeeName,
+            employee_designation: billingInfo.employeeDesignation,
+            employee_mobile_number: billingInfo.employeeMobile,
+            company_address: billingInfo.companyAddress,
+          },
+        };
+        dispatch({
+          type: ENQUIRY_FORM_ACTION.BILLING_BY,
+          payload: tempObj as TBillingBy,
+        });
+      }
+    }
+  }, [selectedCompanyOption]);
 
   const showBillingByCompanyView = () => {
     if (state.billingBy?.billing_by == 'by Individual') return null;
@@ -604,26 +762,28 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
         <View style={styles.elementContainer}>
           <Label text="Company Name" style={styles.label} required={true} />
           <Input
-            onChangeText={(text: string) => {
-              const {billingBy} = state;
-              const tempObj = {
-                ...billingBy,
-                billing_info: {...billingBy?.billing_info, company_name: text},
-              };
-              dispatch({
-                type: ENQUIRY_FORM_ACTION.BILLING_BY,
-                payload: tempObj as TBillingBy,
-              });
-            }}
+            onChangeText={handleCompanyName}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
             required={true}
-            type='text'
+            value={state.billingBy?.billing_info?.company_name}
+            type="text"
             //@ts-ignore
             error={showErrors ? errors?.companyName : ''}
           />
         </View>
+        <Spacer height={4} />
+        {showCompanyList &&
+          _getCustomerList().map((d: ICustomer) => {
+            return (
+              <TouchableOpacity
+                style={styles.customerItemContainer}
+                onPress={() => handleCustomerOption2(d)}>
+                <Text style={styles.customerNameText}>{d.partyName}</Text>
+              </TouchableOpacity>
+            );
+          })}
         <Spacer height={4} />
         <View style={styles.elementContainer}>
           <Label text="Approval Authority" style={styles.label} />
@@ -643,6 +803,8 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
                 payload: tempObj as TBillingBy,
               });
             }}
+            //@ts-ignore
+            ref={approvalAuthorityDropdownCompRef}
           />
         </View>
         <Spacer height={4} />
@@ -663,6 +825,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
                 payload: tempObj as TBillingBy,
               });
             }}
+            value={state.billingBy?.billing_info?.authority_person_name}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
@@ -686,11 +849,12 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
                 payload: tempObj as TBillingBy,
               });
             }}
+            value={state.billingBy?.billing_info?.authority_mobile_number}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
-            inputType='numeric'
-            type='mobile'
+            inputType="numeric"
+            type="mobile"
             //@ts-ignore
             error={showErrors ? errors?.employeeMobile : ''}
           />
@@ -703,13 +867,17 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
               const {billingBy} = state;
               const tempObj = {
                 ...billingBy,
-                billing_info: {...billingBy?.billing_info, company_gst: text.toUpperCase()},
+                billing_info: {
+                  ...billingBy?.billing_info,
+                  company_gst: text.toUpperCase(),
+                },
               };
               dispatch({
                 type: ENQUIRY_FORM_ACTION.BILLING_BY,
                 payload: tempObj as TBillingBy,
               });
             }}
+            value={state.billingBy?.billing_info?.company_gst}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
@@ -731,12 +899,13 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
                 payload: tempObj as TBillingBy,
               });
             }}
+            value={state.billingBy?.billing_info?.employee_name}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
             //@ts-ignore
             error={showErrors ? errors?.employeeName : ''}
-            type='text'
+            type="text"
             required={true}
           />
         </View>
@@ -758,6 +927,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
                 payload: tempObj as TBillingBy,
               });
             }}
+            value={state.billingBy?.billing_info?.employee_designation}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
@@ -781,11 +951,12 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
                 payload: tempObj as TBillingBy,
               });
             }}
-            inputType='numeric'
+            value={state.billingBy?.billing_info?.employee_mobile_number}
+            inputType="numeric"
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
-            type='mobile'
+            type="mobile"
             //@ts-ignore
             error={showErrors ? errors?.employeeMobile : ''}
           />
@@ -808,6 +979,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
                 payload: tempObj as TBillingBy,
               });
             }}
+            value={state.billingBy?.billing_info?.company_address}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
@@ -820,11 +992,15 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
   const showShiftingLuggageErrorView = () => {
     //@ts-ignore
     const {shiftingLuggage} = errors || {};
-    if(shiftingLuggage) {
-      return <View style={styles.errorContainer}><Text style={styles.error}>{shiftingLuggage}</Text></View>
+    if (shiftingLuggage) {
+      return (
+        <View style={styles.errorContainer}>
+          <Text style={styles.error}>{shiftingLuggage}</Text>
+        </View>
+      );
     }
     return null;
-  }
+  };
 
   return (
     <AvoidSoftInputViewHOC>
@@ -853,7 +1029,11 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
             {showBillingByCompanyView()}
             <Spacer height={4} />
             <View style={styles.labelContainer}>
-              <Label text="Shifting Luggage" style={styles.label} required={true} />
+              <Label
+                text="Shifting Luggage"
+                style={styles.label}
+                required={true}
+              />
             </View>
             <View style={styles.elementContainer2}>
               {shiftingLuggageOptions.map((item, index) => {
@@ -883,7 +1063,10 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
                     onPress={(isChecked: boolean) => {
                       handleShiftingLuggagesSelection(item.label);
                     }}
-                    isChecked={state.shiftingLuggage.findIndex(e => e == item.label) !== -1}
+                    isChecked={
+                      state.shiftingLuggage.findIndex(e => e == item.label) !==
+                      -1
+                    }
                     disableBuiltInState={true}
                   />
                 );
@@ -920,12 +1103,12 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
             <View style={styles.elementContainer}>
               <Label text="City" style={styles.label} />
               <EpackDropdown
-                  data={pickupCities.map(e => e.label)}
-                  placeholder={'Select City'}
-                  hanldeData={handlePickupCity}
-                  //@ts-ignore
-                  ref={pickupCityDropdownRef}
-                />
+                data={pickupCities.map(e => e.label)}
+                placeholder={'Select City'}
+                hanldeData={handlePickupCity}
+                //@ts-ignore
+                ref={pickupCityDropdownRef}
+              />
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
@@ -984,12 +1167,12 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
             <View style={styles.elementContainer}>
               <Label text="City" style={styles.label} />
               <EpackDropdown
-                  data={deliveryCities.map(e => e.label)}
-                  placeholder={'Select City'}
-                  hanldeData={handleDeliveryCity}
-                  //@ts-ignore
-                  ref={dropCityDropdownRef}
-                />
+                data={deliveryCities.map(e => e.label)}
+                placeholder={'Select City'}
+                hanldeData={handleDeliveryCity}
+                //@ts-ignore
+                ref={dropCityDropdownRef}
+              />
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>

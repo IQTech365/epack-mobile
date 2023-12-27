@@ -1,15 +1,21 @@
-import React, { useCallback, useEffect, useReducer, useRef, useState } from 'react';
-import { View, Text } from 'react-native';
+import React, {
+  useCallback,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from 'react';
+import {View, Text, TouchableOpacity} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../common/Spacer';
 import styles from './style';
 import shiftingTypeOptions from '../../../data/shiftingType.json';
-import { TDropdownItem } from '../../../type/TDropdownItem';
+import {TDropdownItem} from '../../../type/TDropdownItem';
 import Label from '../../../common/Label';
 import DropdownComponent from '../../../common/DropdownComponent';
 import Header from '../../../common/Header';
 import Input from '../../../common/Input';
-import { COLOR_BLACK, COLOR_BLUE } from '../../../utils/colors';
+import {COLOR_BLACK, COLOR_BLUE} from '../../../utils/colors';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import CollapsibleView from '../../../common/CollapsibleView';
 import Button from '../../../common/Button';
@@ -24,32 +30,43 @@ import {
 } from './addOrderReducer';
 import approvalAuthorityOptions from '../../../data/ApprovalAuthorityOptions.json';
 import billingByOptions from '../../../data/billingByOptions.json';
-import { formatDate4, getCities, getStates } from '../../../utils/formatter';
+import {formatDate4, getCities, getStates} from '../../../utils/formatter';
 import shiftingLuggageOptions from '../../../data/shiftingLuggage.json';
 import usePincodeHook, {
   PINCODE_REQUEST_KEY,
 } from '../../../hooks/usePincodeHook';
 import Spinner from '../../../common/Spinner';
-import { IAddOrderRequest } from '../../../interface/order/IAddOrderRequest';
-import { addOrderRequest, getApprovedOrdersRequest, getOrdersRequest, resetAddOrderRequest } from '../../../redux/slices/OrderSlice';
-import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import {IAddOrderRequest} from '../../../interface/order/IAddOrderRequest';
+import {
+  addOrderRequest,
+  getApprovedOrdersRequest,
+  getOrdersRequest,
+  resetAddOrderRequest,
+} from '../../../redux/slices/OrderSlice';
+import {useAppDispatch, useAppSelector} from '../../../redux/hooks';
 import Toast from 'react-native-toast-message';
 import {NavigationProp} from '@react-navigation/native';
 import useCompanyId from '../../../hooks/useCompanyId';
-import { IGetOrdersRequest } from '../../../interface/order/IGetOrdersRequest';
+import {IGetOrdersRequest} from '../../../interface/order/IGetOrdersRequest';
 import EpackDropdown from '../../../common/DropdownComponent2';
-import { Validator } from '../../../utils/validation';
+import {Validator} from '../../../utils/validation';
 import useAuthId from '../../../hooks/useAuthId';
+import {ICustomer, ICustomerBillingInfo, ICustomersRequest} from '../../../interface/common/common';
+import {debounce} from '../../../utils/utility';
+import {
+  getCustomersRequest,
+  resetGetCustomersRequest,
+} from '../../../redux/slices/CommonSlice';
 
 interface IAddOrderViewProps {
   navigation: NavigationProp<any, any>;
 }
 
-const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
+const AddOrderView: React.FC<IAddOrderViewProps> = ({navigation}) => {
   const [state, dispatch] = useReducer(addOrderReducer, initialState);
   const authId = useAuthId();
   const dispatch2 = useAppDispatch();
-  const { addOrderRequesting, addOrderSuccess, addOrderFailure, addOrderError } =
+  const {addOrderRequesting, addOrderSuccess, addOrderFailure, addOrderError} =
     useAppSelector(state => state.Order);
   const [pincodeRequestKey, setPincodeRequestKey] =
     useState<PINCODE_REQUEST_KEY>(PINCODE_REQUEST_KEY.ADD_ORDER_PICKUP_ADDRESS);
@@ -67,6 +84,17 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
   const [isFormValid, setIsFormValid] = useState<boolean>(true);
   const [showErrors, setShowErrors] = useState<boolean>(false);
 
+  const {
+    customers,
+    getCustomersRequesting,
+    getCustomersSuccess,
+    getCustomersFailure,
+  } = useAppSelector(state => state.Common);
+  const [selectedCompanyOption, setSelectedCompanyOption] =
+    useState<ICustomer | null>(null);
+  const [showCompanyList, setShowCompanyList] = useState<boolean>(false);
+  const approvalAuthorityDropdownCompRef = useRef(null);
+
   const setPincodeError = () => {
     // setPincodeError2('Invalid Pincode');
   };
@@ -74,7 +102,7 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
   const resetPincodeError = () => {
     // setPincodeError2('');
   };
-  const { result, fetching, setPincode } = usePincodeHook(
+  const {result, fetching, setPincode} = usePincodeHook(
     setPincodeError,
     resetPincodeError,
   );
@@ -87,7 +115,7 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
   };
 
   const handleBillingBy = (item: TDropdownItem) => {
-    const { billingBy } = state;
+    const {billingBy} = state;
     const tempObj = {
       ...billingBy,
       billing_by: item.label,
@@ -231,7 +259,7 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
   };
 
   const handleShiftingLuggage = (value: string) => {
-    const { shiftingLuggage } = state;
+    const {shiftingLuggage} = state;
     let temp = [...shiftingLuggage];
     const itemIndex = temp.findIndex(itm => itm == value);
     if (itemIndex == -1) {
@@ -247,7 +275,7 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
 
   const handleAddOrder = () => {
     setShowErrors(true);
-    if(!isFormValid) {
+    if (!isFormValid) {
       Toast.show({
         type: 'error',
         text1: 'Form',
@@ -257,7 +285,7 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
     }
     const data: IAddOrderRequest = {
       companyId: companyId,
-      customerId: '',//SEEME - write logic to pass customer ID
+      customerId: selectedCompanyOption?._id as string,
       authId: authId,
       enquiryManager: '',
       shiftingType: state.shiftingType.toUpperCase() || 'LOCAL',
@@ -299,36 +327,40 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
         isLiftAvailable: state.deliveryLiftStatus.toUpperCase() || 'YES',
       },
       billingBy: state.billingBy?.billing_by as string,
-      billingDetails: state.billingBy?.billing_by == 'by Company' ? {
-        companyName: state.billingBy?.billing_info?.company_name as string,
-        approvalAuthority: state.billingBy?.billing_info
-          ?.approval_authority as string || approvalAuthorityOptions[0].label,
-        authorityPersonName: state.billingBy?.billing_info
-          ?.authority_person_name as string,
-        authorityPersonMobile: state.billingBy?.billing_info
-          ?.authority_mobile_number as string,
-        companyAddress: state.billingBy?.billing_info
-          ?.company_address as string,
-        companyGST: state.billingBy?.billing_info?.company_gst as string,
-        employeeName: state.billingBy?.billing_info?.employee_name as string,
-        employeeDesignation: state.billingBy?.billing_info
-          ?.employee_designation as string,
-        employeeMobile: state.billingBy?.billing_info
-          ?.employee_mobile_number as string,
-      } : {},
+      billingDetails:
+        state.billingBy?.billing_by == 'by Company'
+          ? {
+              companyName: state.billingBy?.billing_info
+                ?.company_name as string,
+              approvalAuthority:
+                (state.billingBy?.billing_info?.approval_authority as string) ||
+                approvalAuthorityOptions[0].label,
+              authorityPersonName: state.billingBy?.billing_info
+                ?.authority_person_name as string,
+              authorityPersonMobile: state.billingBy?.billing_info
+                ?.authority_mobile_number as string,
+              companyAddress: state.billingBy?.billing_info
+                ?.company_address as string,
+              companyGST: state.billingBy?.billing_info?.company_gst as string,
+              employeeName: state.billingBy?.billing_info
+                ?.employee_name as string,
+              employeeDesignation: state.billingBy?.billing_info
+                ?.employee_designation as string,
+              employeeMobile: state.billingBy?.billing_info
+                ?.employee_mobile_number as string,
+            }
+          : {},
       status: 'NEW ORDER',
-      addedBy:authId,
+      addedBy: authId,
     };
     console.log('AddOrder-payload----', JSON.stringify(data));
-    
+
     dispatch2(addOrderRequest(data));
   };
 
   useEffect(() => {
     if (result && result.Status != 'Error') {
-      if (
-        pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_ORDER_PICKUP_ADDRESS
-      ) {
+      if (pincodeRequestKey === PINCODE_REQUEST_KEY.ADD_ORDER_PICKUP_ADDRESS) {
         setPickupStates(getStates(result));
         setPickupCities(getCities(result));
       } else if (
@@ -374,50 +406,56 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
     let orderListReq: IGetOrdersRequest = {
       // authId: otpData?.data.id as string,
       companyId: companyId,
-      status: "COMPLETED"
-    }
+      status: 'COMPLETED',
+    };
     dispatch2(getApprovedOrdersRequest(orderListReq));
-  }
+  };
 
   const showShiftingLuggageErrorView = () => {
     //@ts-ignore
     const {shiftingLuggage} = errors || {};
-    if(shiftingLuggage) {
-      return <View style={styles.errorContainer}><Text style={styles.error}>{shiftingLuggage}</Text></View>
+    if (shiftingLuggage) {
+      return (
+        <View style={styles.errorContainer}>
+          <Text style={styles.error}>{shiftingLuggage}</Text>
+        </View>
+      );
     }
     return null;
-  }
+  };
 
   const validateForm = () => {
-    let errors:any = {};
-    if(state.billingBy?.billing_by == 'by Company') {
-      if(!state.billingBy?.billing_info?.company_name) {
-        errors.companyName = "Company name required";
+    let errors: any = {};
+    if (state.billingBy?.billing_by == 'by Company') {
+      if (!state.billingBy?.billing_info?.company_name) {
+        errors.companyName = 'Company name required';
       }
-      if(!state.billingBy?.billing_info?.employee_name) {
-        errors.employeeName = "Employee name required";
+      if (!state.billingBy?.billing_info?.employee_name) {
+        errors.employeeName = 'Employee name required';
       }
-      if(!state.billingBy?.billing_info?.employee_mobile_number) {
-        errors.employeeMobile = "Employee mobile number required";
-      } else if(!Validator.mobile(state.billingBy?.billing_info?.employee_mobile_number)) {
-        errors.employeeMobile = "Mobile number invalid";
+      if (!state.billingBy?.billing_info?.employee_mobile_number) {
+        errors.employeeMobile = 'Employee mobile number required';
+      } else if (
+        !Validator.mobile(state.billingBy?.billing_info?.employee_mobile_number)
+      ) {
+        errors.employeeMobile = 'Mobile number invalid';
       }
-    } else if(state.billingBy?.billing_by == 'by Individual') {
-      if(!state.partyName) {
-        errors.partyName = "Party name required";
+    } else if (state.billingBy?.billing_by == 'by Individual') {
+      if (!state.partyName) {
+        errors.partyName = 'Party name required';
       }
-      if(!state.mobile) {
-        errors.mobile = "Mobile number required";
-      } else if(!Validator.mobile(state.mobile)) {
-        errors.mobile = "Mobile number invalid";
+      if (!state.mobile) {
+        errors.mobile = 'Mobile number required';
+      } else if (!Validator.mobile(state.mobile)) {
+        errors.mobile = 'Mobile number invalid';
       }
     }
-    if(state.shiftingLuggage.length == 0) {
-      errors.shiftingLuggage = "Shifting luggage required"
+    if (state.shiftingLuggage.length == 0) {
+      errors.shiftingLuggage = 'Shifting luggage required';
     }
     setErrors(errors);
     setIsFormValid(Object.keys(errors).length === 0);
-  }
+  };
 
   useEffect(() => {
     setShowErrors(false);
@@ -453,21 +491,77 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
     }
   }, [addOrderRequesting, addOrderSuccess, addOrderFailure]);
 
-  // const _getCustomerList = (): ICustomer[] => {
-  //   const {data} = customers || {};
-  //   let list: ICustomer[] = [];
-  //   if (data && Array.isArray(data) && data.length > 0) {
-  //     list = data;
-  //   }
-  //   console.log('list-aaaa----', JSON.stringify(list));
+  const handleMobileNo = (text: string) => {
+    handleMobileNumInputTextChange(text);
+    if (!Validator.isEmpty(text) && text.length == 10) {
+      const payload: ICustomersRequest = {
+        companyId: companyId,
+        searchKey: text,
+      };
+      debounce(dispatch2(getCustomersRequest(payload)), 3000);
+    }
+  };
 
-  //   return list;
-  // };
+  const _getCustomerList = (): ICustomer[] => {
+    const {data} = customers || {};
+    let list: ICustomer[] = [];
+    if (data && Array.isArray(data) && data.length > 0) {
+      list = data;
+    }
+    return list;
+  };
+
+  const handleCustomerOption = (customer: ICustomer) => {
+    setSelectedCompanyOption(customer);
+    handlePartyNameInputTextChange(customer.partyName);
+    setShowCompanyList(false);
+    dispatch2(resetGetCustomersRequest());
+  };
+
+  useEffect(() => {
+    if (
+      !getCustomersRequesting &&
+      (getCustomersSuccess || getCustomersFailure)
+    ) {
+      setShowCompanyList(true);
+    }
+  }, [
+    customers,
+    getCustomersRequesting,
+    getCustomersSuccess,
+    getCustomersFailure,
+  ]);
 
   const showBillingByIndividualView = () => {
     if (state.billingBy?.billing_by == 'by Company') return null;
     return (
       <>
+        <Spacer height={4} />
+        <View style={styles.elementContainer}>
+          <Label text="Mobile Number" style={styles.label} required={true} />
+          <Input
+            onChangeText={handleMobileNo}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+            //@ts-ignore
+            error={showErrors ? errors?.mobile : ''}
+            type="mobile"
+            required={true}
+            value={state.mobile}
+          />
+        </View>
+        <Spacer height={4} />
+        {showCompanyList &&
+          _getCustomerList().map((d: ICustomer) => {
+            return (
+              <TouchableOpacity
+                style={styles.customerItemContainer}
+                onPress={() => handleCustomerOption(d)}>
+                <Text style={styles.customerNameText}>{d.partyName}</Text>
+              </TouchableOpacity>
+            );
+          })}
         <Spacer height={4} />
         <View style={styles.elementContainer}>
           <Label text="Party Name" style={styles.label} required={true} />
@@ -478,29 +572,92 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
             selectionColor={COLOR_BLACK}
             //@ts-ignore
             error={showErrors ? errors?.partyName : ''}
-            type='text'
+            type="text"
             required={true}
-          />
-        </View>
-        <Spacer height={4} />
-
-        <Spacer height={4} />
-        <View style={styles.elementContainer}>
-          <Label text="Mobile Number" style={styles.label} required={true} />
-          <Input
-            onChangeText={handleMobileNumInputTextChange}
-            containerStyle={styles.inputContainer}
-            inputStyle={styles.input}
-            selectionColor={COLOR_BLACK}
-            //@ts-ignore
-            error={showErrors ? errors?.mobile : ''}
-            type='mobile'
-            required={true}
+            value={state.partyName}
           />
         </View>
       </>
     );
   };
+
+  const handleCompanyName = (text: string) => {
+    const {billingBy} = state;
+    const tempObj = {
+      ...billingBy,
+      billing_info: {...billingBy?.billing_info, company_name: text},
+    };
+    dispatch({
+      type: ADDORDER_FORM_ACTION.BILLING_BY,
+      payload: tempObj as TBillingBy,
+    });
+    if (!Validator.isEmpty(text)) {
+      const payload: ICustomersRequest = {
+        companyId: companyId,
+        searchKey: text,
+      };
+      debounce(dispatch2(getCustomersRequest(payload)), 3000);
+    }
+  };
+
+  const handleCustomerOption2 = (customer: ICustomer) => {
+    setSelectedCompanyOption(customer);
+    const {billingBy} = state;
+    const tempObj = {
+      ...billingBy,
+      billing_info: {
+        ...billingBy?.billing_info,
+      //@ts-ignore
+        company_name: customer?.billingDetails?.companyName as string,
+      },
+    };
+    dispatch({
+      type: ADDORDER_FORM_ACTION.BILLING_BY,
+      payload: tempObj as TBillingBy,
+    });
+    setShowCompanyList(false);
+    dispatch2(resetGetCustomersRequest());
+  };
+
+  useEffect(() => {
+    if (selectedCompanyOption) {
+      if (selectedCompanyOption.billingBy == 'by Company') {
+        const billingInfo: ICustomerBillingInfo =
+          selectedCompanyOption.billingDetails as ICustomerBillingInfo;
+        const approvalAuthorityOptionIndex: number =
+          approvalAuthorityOptions.findIndex(
+            (d: TDropdownItem) => d.label == billingInfo.approvalAuthority,
+          );
+        if (approvalAuthorityOptionIndex !== -1) {
+          //@ts-ignore
+          approvalAuthorityDropdownCompRef && approvalAuthorityDropdownCompRef.current.setDefaultValue(
+              approvalAuthorityOptions[approvalAuthorityOptionIndex],
+            );
+        }
+
+        // setAuthorityPersonName(billingInfo.authorityPersonName);
+        const {billingBy} = state;
+        const tempObj = {
+          ...billingBy,
+          billing_info: {
+            ...billingBy?.billing_info,
+            approval_authority: billingInfo.approvalAuthority,
+            authority_person_name: billingInfo.authorityPersonName,
+            authority_mobile_number: billingInfo.authorityPersonMobile,
+            company_gst: billingInfo.companyGST.toUpperCase(),
+            employee_name: billingInfo.employeeName,
+            employee_designation: billingInfo.employeeDesignation,
+            employee_mobile_number: billingInfo.employeeMobile,
+            company_address: billingInfo.companyAddress,
+          },
+        };
+        dispatch({
+          type: ADDORDER_FORM_ACTION.BILLING_BY,
+          payload: tempObj as TBillingBy,
+        });
+      }
+    }
+  }, [selectedCompanyOption]);
 
   const showBillingByCompanyView = () => {
     if (state.billingBy?.billing_by == 'by Individual') return null;
@@ -510,33 +667,35 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
         <View style={styles.elementContainer}>
           <Label text="Company Name" style={styles.label} required={true} />
           <Input
-            onChangeText={(text: string) => {
-              const { billingBy } = state;
-              const tempObj = {
-                ...billingBy,
-                billing_info: { ...billingBy?.billing_info, company_name: text },
-              };
-              dispatch({
-                type: ADDORDER_FORM_ACTION.BILLING_BY,
-                payload: tempObj as TBillingBy,
-              });
-            }}
+            onChangeText={handleCompanyName}
+            value={state.billingBy?.billing_info?.company_name}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
             required={true}
-            type='text'
+            type="text"
             //@ts-ignore
             error={showErrors ? errors?.companyName : ''}
           />
         </View>
+        <Spacer height={4} />
+        {showCompanyList &&
+          _getCustomerList().map((d: ICustomer) => {
+            return (
+              <TouchableOpacity
+                style={styles.customerItemContainer}
+                onPress={() => handleCustomerOption2(d)}>
+                <Text style={styles.customerNameText}>{d.partyName}</Text>
+              </TouchableOpacity>
+            );
+          })}
         <Spacer height={4} />
         <View style={styles.elementContainer}>
           <Label text="Approval Authority" style={styles.label} />
           <DropdownComponent
             data={approvalAuthorityOptions}
             onSelect={(item: TDropdownItem) => {
-              const { billingBy } = state;
+              const {billingBy} = state;
               const tempObj = {
                 ...billingBy,
                 billing_info: {
@@ -549,6 +708,8 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
                 payload: tempObj as TBillingBy,
               });
             }}
+            //@ts-ignore
+            ref={approvalAuthorityDropdownCompRef}
           />
         </View>
         <Spacer height={4} />
@@ -556,7 +717,7 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
           <Label text="Authority Person Name" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const { billingBy } = state;
+              const {billingBy} = state;
               const tempObj = {
                 ...billingBy,
                 billing_info: {
@@ -569,6 +730,7 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
                 payload: tempObj as TBillingBy,
               });
             }}
+            value={state.billingBy?.billing_info?.authority_person_name}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
@@ -579,7 +741,7 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
           <Label text="Authority Mobile Number" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const { billingBy } = state;
+              const {billingBy} = state;
               const tempObj = {
                 ...billingBy,
                 billing_info: {
@@ -592,10 +754,11 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
                 payload: tempObj as TBillingBy,
               });
             }}
+            value={state.billingBy?.billing_info?.authority_mobile_number}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
-            type='mobile'
+            type="mobile"
           />
         </View>
         <Spacer height={4} />
@@ -603,16 +766,17 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
           <Label text="Company GST" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const { billingBy } = state;
+              const {billingBy} = state;
               const tempObj = {
                 ...billingBy,
-                billing_info: { ...billingBy?.billing_info, company_gst: text },
+                billing_info: {...billingBy?.billing_info, company_gst: text},
               };
               dispatch({
                 type: ADDORDER_FORM_ACTION.BILLING_BY,
                 payload: tempObj as TBillingBy,
               });
             }}
+            value={state.billingBy?.billing_info?.company_gst}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
@@ -623,22 +787,23 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
           <Label text="Employee Name" style={styles.label} required={true} />
           <Input
             onChangeText={(text: string) => {
-              const { billingBy } = state;
+              const {billingBy} = state;
               const tempObj = {
                 ...billingBy,
-                billing_info: { ...billingBy?.billing_info, employee_name: text },
+                billing_info: {...billingBy?.billing_info, employee_name: text},
               };
               dispatch({
                 type: ADDORDER_FORM_ACTION.BILLING_BY,
                 payload: tempObj as TBillingBy,
               });
             }}
+            value={state.billingBy?.billing_info?.employee_name}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
             //@ts-ignore
             error={showErrors ? errors?.employeeName : ''}
-            type='text'
+            type="text"
             required={true}
           />
         </View>
@@ -647,7 +812,7 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
           <Label text="Employee Designation" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const { billingBy } = state;
+              const {billingBy} = state;
               const tempObj = {
                 ...billingBy,
                 billing_info: {
@@ -660,6 +825,7 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
                 payload: tempObj as TBillingBy,
               });
             }}
+            value={state.billingBy?.billing_info?.employee_designation}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
@@ -667,10 +833,14 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
         </View>
         <Spacer height={4} />
         <View style={styles.elementContainer}>
-          <Label text="Employee Mobile Number" style={styles.label} required={true} />
+          <Label
+            text="Employee Mobile Number"
+            style={styles.label}
+            required={true}
+          />
           <Input
             onChangeText={(text: string) => {
-              const { billingBy } = state;
+              const {billingBy} = state;
               const tempObj = {
                 ...billingBy,
                 billing_info: {
@@ -683,10 +853,11 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
                 payload: tempObj as TBillingBy,
               });
             }}
+            value={state.billingBy?.billing_info?.employee_mobile_number}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
-            type='mobile'
+            type="mobile"
             required={true}
             //@ts-ignore
             error={showErrors ? errors?.employeeMobile : ''}
@@ -697,7 +868,7 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
           <Label text="Company Address" style={styles.label} />
           <Input
             onChangeText={(text: string) => {
-              const { billingBy } = state;
+              const {billingBy} = state;
               const tempObj = {
                 ...billingBy,
                 billing_info: {
@@ -710,6 +881,7 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
                 payload: tempObj as TBillingBy,
               });
             }}
+            value={state.billingBy?.billing_info?.company_address}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
@@ -800,12 +972,15 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
                       fontFamily: 'JosefinSans-Regular',
                       textDecorationLine: 'none',
                     }}
-                    style={{ marginRight: 15, marginBottom: 10 }}
-                    textContainerStyle={{ paddingLeft: 0 }}
+                    style={{marginRight: 15, marginBottom: 10}}
+                    textContainerStyle={{paddingLeft: 0}}
                     onPress={(isChecked: boolean) => {
                       handleShiftingLuggage(item.label);
                     }}
-                    isChecked={state.shiftingLuggage.findIndex(e => e == item.label) !== -1}
+                    isChecked={
+                      state.shiftingLuggage.findIndex(e => e == item.label) !==
+                      -1
+                    }
                     disableBuiltInState={true}
                   />
                 );
@@ -817,37 +992,37 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
         <Spacer height={4} />
         <CollapsibleView title="PICKUP ADDRESS" collapsed={true}>
           <View>
-          <View style={styles.twoColumnWrapper}>
-          <View style={styles.textContainer}>
-              <Label text="Pin code" style={styles.label} />
-              <Input
-                onChangeText={handlePickupPinCode}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-              />
-            </View>
-            <View style={styles.textContainer}>
-              <Label text="State" style={styles.label} />
-              <EpackDropdown
+            <View style={styles.twoColumnWrapper}>
+              <View style={styles.textContainer}>
+                <Label text="Pin code" style={styles.label} />
+                <Input
+                  onChangeText={handlePickupPinCode}
+                  containerStyle={styles.inputContainer}
+                  inputStyle={styles.input}
+                  selectionColor={COLOR_BLACK}
+                />
+              </View>
+              <View style={styles.textContainer}>
+                <Label text="State" style={styles.label} />
+                <EpackDropdown
                   data={pickupStates.map(e => e.label)}
                   placeholder={'Select State'}
                   hanldeData={handlePickupState}
                   //@ts-ignore
                   ref={pickupStateDropwdownRef}
                 />
+              </View>
             </View>
-          </View>
-            
+
             <View style={styles.elementContainer}>
               <Label text="City" style={styles.label} />
               <EpackDropdown
-                  data={pickupCities.map(e => e.label)}
-                  placeholder={'Select City'}
-                  hanldeData={handlePickupCity}
-                  //@ts-ignore
-                  ref={pickupCityDropdownRef}
-                />
+                data={pickupCities.map(e => e.label)}
+                placeholder={'Select City'}
+                hanldeData={handlePickupCity}
+                //@ts-ignore
+                ref={pickupCityDropdownRef}
+              />
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
@@ -882,36 +1057,36 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({ navigation }) => {
         <Spacer height={4} />
         <CollapsibleView title="DELIVERY ADDRESS" collapsed={true}>
           <View>
-          <View style={styles.twoColumnWrapper}>
-          <View style={styles.textContainer}>
-              <Label text="Pin code" style={styles.label} />
-              <Input
-                onChangeText={handleDeliveryPinCode}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-              />
-            </View>
-            <View style={styles.textContainer}>
-              <Label text="State" style={styles.label} />
-              <EpackDropdown
+            <View style={styles.twoColumnWrapper}>
+              <View style={styles.textContainer}>
+                <Label text="Pin code" style={styles.label} />
+                <Input
+                  onChangeText={handleDeliveryPinCode}
+                  containerStyle={styles.inputContainer}
+                  inputStyle={styles.input}
+                  selectionColor={COLOR_BLACK}
+                />
+              </View>
+              <View style={styles.textContainer}>
+                <Label text="State" style={styles.label} />
+                <EpackDropdown
                   data={deliveryStates.map(e => e.label)}
                   placeholder={'Select State'}
                   hanldeData={handleDeliveryState}
                   //@ts-ignore
                   ref={dropStateDropdownRef}
                 />
+              </View>
             </View>
-          </View>
             <View style={styles.elementContainer}>
               <Label text="City" style={styles.label} />
               <EpackDropdown
-                  data={deliveryCities.map(e => e.label)}
-                  placeholder={'Select City'}
-                  hanldeData={handleDeliveryCity}
-                  //@ts-ignore
-                  ref={dropCityDropdownRef}
-                />
+                data={deliveryCities.map(e => e.label)}
+                placeholder={'Select City'}
+                hanldeData={handleDeliveryCity}
+                //@ts-ignore
+                ref={dropCityDropdownRef}
+              />
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>

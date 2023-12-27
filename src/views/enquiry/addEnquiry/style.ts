@@ -5,6 +5,7 @@ import {
   COLOR_ERROR,
   COLOR_GRAY,
   COLOR_GRAY2,
+  COLOR_GREEN,
   COLOR_WHITE,
 } from '../../../utils/colors';
 
@@ -75,6 +76,20 @@ const styles = StyleSheet.create({
     color: COLOR_ERROR,
     fontSize: 14,
   },
+  customerItemContainer: {
+    width: width * 0.9,
+    alignSelf: 'center',
+    paddingVertical: 10,
+    backgroundColor: COLOR_GREEN,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    paddingLeft: 8,
+  },
+  customerNameText: {
+    color: COLOR_WHITE,
+    fontSize: 16,
+    fontWeight: '400',
+  }
 });
 
 export default styles;
