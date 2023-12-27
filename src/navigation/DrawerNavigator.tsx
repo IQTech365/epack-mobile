@@ -86,6 +86,26 @@ const DrawerContent = (props: any) => {
     }
   }, [dispatch]);
 
+  const _getCompanyNameOrLogo = () => {
+    const {companyLogo, companyName} = firstCompany || {};
+    if (companyLogo) {
+      return (
+        <Image
+          source={{uri: firstCompany?.companyLogo}}
+          resizeMode="contain"
+          style={styles.avatar}
+        />
+      );
+    } else {
+      return (
+        <View style={styles.avatar}>
+          <Text style={styles.nameText2}>{companyName?.substring(0, 1).toUpperCase()}</Text>
+        </View>
+      );
+    }
+    return null;
+  };
+
   return (
     <View style={styles.container2}>
       <DrawerContentScrollView
@@ -97,14 +117,12 @@ const DrawerContent = (props: any) => {
           <View style={styles.innerContainer}>
             <View style={styles.avatarContainer}>
               {/* <View style={styles.avatar} /> */}
-              <Image
-                //  source={{ uri: firstCompany?.companyLogo }}
-                source={{
-                  uri: 'https://fastly.picsum.photos/id/14/200/200.jpg?hmac=bwQwH7-0RPCqUVkFzd3hFhc6yDfC6_e7vgaKXZ7vFOA',
-                }}
-                resizeMode="center"
+              {/* <Image
+                source={{uri: firstCompany?.companyLogo}}
+                resizeMode="contain"
                 style={styles.avatar}
-              />
+              /> */}
+              {_getCompanyNameOrLogo()}
             </View>
             <Text style={styles.nameText}>{firstCompany?.companyName}</Text>
             <Text style={styles.text}>{`User ID: ${firstCompany?._id}`}</Text>
@@ -240,12 +258,19 @@ const styles = StyleSheet.create({
     width: 88,
     height: 88,
     borderRadius: 44,
-    backgroundColor: COLOR_GRAY,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: COLOR_BLUE2,
   },
   nameText: {
     color: COLOR_WHITE,
     fontSize: 18,
     fontWeight: '500',
+  },
+  nameText2: {
+    color: COLOR_WHITE,
+    fontSize: 24,
+    fontWeight: '600',
   },
   text: {
     color: COLOR_WHITE,

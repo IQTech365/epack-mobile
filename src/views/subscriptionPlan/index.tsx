@@ -1,9 +1,9 @@
 import React, {useEffect} from 'react';
-import {View, ScrollView, Dimensions} from 'react-native';
+import {View, ScrollView, Dimensions, ImageBackground} from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import Header from '../../common/Header';
 import SubscriptionPlanCard from './components/subscriptionPlanCard';
-const {width} = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 import subscriptionplans from '../../data/subscrptionplans.json';
 import {COLOR_GRAY5} from '../../utils/colors';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
@@ -15,6 +15,7 @@ import {
 import {getModulesRequest} from '../../redux/slices/UserRoleManagementSlice';
 import {ISubscriptionPlan} from '../../interface/subscription/subscription';
 import { prepareSubscriptionPlanList } from './utils';
+import BackgroundImage from '../../images/subscription_bg.png';
 
 const SubscriptionPlanView = () => {
   const dispatch = useAppDispatch();
@@ -71,7 +72,7 @@ const SubscriptionPlanView = () => {
   ]);
 
   return (
-    <View style={{flex: 1, backgroundColor: COLOR_GRAY5}}>
+    <ImageBackground style={{flex: 1, height:height, width: width}} source={BackgroundImage}>
       <Header canGoBack={true} label="Choose Subscription Plan" />
       <Carousel
         loop
@@ -92,7 +93,7 @@ const SubscriptionPlanView = () => {
           );
         }}
       />
-    </View>
+    </ImageBackground>
   );
 };
 
