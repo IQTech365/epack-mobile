@@ -8,9 +8,9 @@ import {
 } from 'react-native';
 import SignatureCapture from 'react-native-signature-capture';
 import style from './style';
-import CameraIcon from '../../../images/icons/camera.svg';
-import GalleryIcon from '../../../images/icons/gallery.svg';
-import Spacer from '../../../common/Spacer';
+import CameraIcon from '../../../../images/icons/camera.svg';
+import GalleryIcon from '../../../../images/icons/gallery.svg';
+import Spacer from '../../../../common/Spacer';
 import {
   launchCamera,
   launchImageLibrary,
@@ -18,24 +18,24 @@ import {
   MediaType,
   PhotoQuality,
 } from 'react-native-image-picker';
-import {useCompanyRegistrationContextHook} from '../../../provider/CompanyRegistrationContextProvider';
-import Button from '../../../common/Button';
-import Alert, {STATUS_CODE} from '../../../common/Alert';
-import {Validator} from '../../../utils/validation';
-import {useAppDispatch, useAppSelector} from '../../../redux/hooks';
+import {useCompanyRegistrationContextHook} from '../../../../provider/CompanyRegistrationContextProvider';
+import Button from '../../../../common/Button';
+import Alert, {STATUS_CODE} from '../../../../common/Alert';
+import {Validator} from '../../../../utils/validation';
+import {useAppDispatch, useAppSelector} from '../../../../redux/hooks';
 import {
   resetUploadSignatureRequest,
   uploadSignatureRequest,
-} from '../../../redux/slices/CompanySlice';
+} from '../../../../redux/slices/CompanySlice';
 import {
   setAuthToken,
   setIsRegistrationComplete,
   setLoginStatus,
-} from '../../../utils/storage';
-import Spinner from '../../../common/Spinner';
-import Toast from 'react-native-toast-message';
-import { useAuthContext } from '../../../provider/AuthProvider';
-import useCompanyId from '../../../hooks/useCompanyId';
+} from '../../../../utils/storage';
+import Spinner from '../../../../common/Spinner';
+import {useAuthContext} from '../../../../provider/AuthProvider';
+import useCompanyId from '../../../../hooks/useCompanyId';
+import {ToastType, showToast} from '../../../../utils/utility';
 
 interface IOptions {
   mediaType: MediaType;
@@ -62,12 +62,13 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
   currentStep,
   setCurrentStep,
 }) => {
-  const {state, setOwnerSignature} = useCompanyRegistrationContextHook();
-  const [signatureUri, setSignatureUri] = useState<any>(state.ownerSignature);
+  const {state, setCompanySignature} = useCompanyRegistrationContextHook();
+  const [signatureUri, setSignatureUri] = useState<any>(
+    state.company_signature_url,
+  );
   const [imageFile, setImageFile] = useState<any>(null);
   const [isBase64Image, setIsBase64Image] = useState<boolean>(false);
-  const [showSignatureRequiredAlert, setShowSignatureRequiredAlert] =
-    useState<boolean>(false);
+  const [showSignatureRequiredAlert, setShowSignatureRequiredAlert] = useState<boolean>(false);
   const signatureRef = useRef();
   const dispatch = useAppDispatch();
   const {verifiedData} = useAppSelector(state => state.OTP);
@@ -75,7 +76,6 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
     uploadSignatureRequesting,
     uploadSignatureSuccess,
     uploadSignatureFailure,
-    uploadSignatureError,
   } = useAppSelector(state => state.Company);
 
   const companyId = useCompanyId();
@@ -84,8 +84,8 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
 
   const _onSaveEvent = (result: any) => {
     console.log(result);
-    setSignatureUri(result?.encoded);
-    setOwnerSignature(result?.encoded as string);
+    setSignatureUri(result?.pathName);
+    // setCompanySignature(result?.encoded as string);
   };
 
   const _onDragEvent = () => {
@@ -101,7 +101,7 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
   const resetSign = () => {
     setIsBase64Image(false);
     setSignatureUri('');
-    setOwnerSignature('' as string);
+    setCompanySignature('' as string);
     //@ts-ignore
     signatureRef.current?.resetImage();
   };
@@ -110,16 +110,16 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
     setIsBase64Image(false);
     try {
       const result = await launchCamera(options);
+      console.log('Camera-result----', JSON.stringify(result));
       if (result && result.hasOwnProperty('assets')) {
         const {assets} = result || {};
         if (assets && Array.isArray(assets) && assets.length > 0) {
           const imageObj = assets[0];
           setImageFile(imageObj);
           setSignatureUri(imageObj.uri as string);
-          setOwnerSignature(imageObj.uri as string);
+          setCompanySignature(imageObj.uri as string);
         }
       }
-      console.log('Camera-result----', JSON.stringify(result));
     } catch (error) {
       console.log('Error in launching camera--', error);
     }
@@ -136,7 +136,7 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
           const imageObj = assets[0];
           setImageFile(imageObj);
           setSignatureUri(imageObj.uri as string);
-          setOwnerSignature(imageObj.uri as string);
+          setCompanySignature(imageObj.uri as string);
         }
       }
     } catch (error) {
@@ -155,10 +155,10 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
     await setLoginStatus();
     await setAuthToken(verifiedData?.data?.token as string);
     setLoggedIn(true);
-  }
+  };
 
   const handleUploadClick = useCallback(() => {
-    if (Validator.isEmpty(state.ownerSignature)) {
+    if (Validator.isEmpty(state.company_signature_url)) {
       setShowSignatureRequiredAlert(true);
     } else {
       const formData = new FormData();
@@ -176,26 +176,13 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
     setShowSignatureRequiredAlert(false);
   };
 
-  const signature = isBase64Image
-    ? {uri: `data:image/png;base64,${signatureUri}`}
-    : {uri: signatureUri};
-
   useEffect(() => {
     if (!uploadSignatureRequesting && uploadSignatureSuccess) {
-      Toast.show({
-        type: 'success',
-        text1: 'Signature Upload',
-        text2: 'Signature has been added successfully',
-      });
+      showToast('Signature uplaod success.', ToastType.SUCCESS);
       dispatch(resetUploadSignatureRequest());
       completeRegistrationAndLoggedIn();
     } else if (!uploadSignatureRequesting && uploadSignatureFailure) {
-      console.log('Error in uploading signature. Try again!');
-      Toast.show({
-        type: 'error',
-        text1: 'Signature Upload',
-        text2: 'Error in Uploading Signature. Please try again!',
-      });
+      showToast('Signature uplaod failed. Try again!', ToastType.ERROR);
       dispatch(resetUploadSignatureRequest());
     }
   }, [
@@ -266,8 +253,8 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
             </View>
             <Spacer />
             <View style={style.signatureImageContainer}>
-              {signature.uri ? (
-                <Image source={signature} style={style.sign} />
+              {signatureUri ? (
+                <Image source={{uri: signatureUri}} style={style.sign} />
               ) : (
                 <Text>Signature Preview</Text>
               )}

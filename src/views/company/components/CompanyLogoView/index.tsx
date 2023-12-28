@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import styles from './style';
-import LogoPlaceholder from '../../../images/logo_placeholder.png';
+import LogoPlaceholder from '../../../../images/logo_placeholder.png';
 import {
   launchCamera,
   launchImageLibrary,
@@ -9,16 +9,19 @@ import {
   MediaType,
   PhotoQuality,
 } from 'react-native-image-picker';
-import CameraIcon from '../../../images/icons/camera.svg';
-import GalleryIcon from '../../../images/icons/gallery.svg';
-import Spacer from '../../../common/Spacer';
-import {useCompanyRegistrationContextHook} from '../../../provider/CompanyRegistrationContextProvider';
-import Button from '../../../common/Button';
-import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
-import { resetUploadCompanyLogoRequest, uploadCompanyLogoRequest } from '../../../redux/slices/CompanySlice';
-import Spinner from '../../../common/Spinner';
-import Toast from 'react-native-toast-message';
-import useCompanyId from '../../../hooks/useCompanyId';
+import CameraIcon from '../../../../images/icons/camera.svg';
+import GalleryIcon from '../../../../images/icons/gallery.svg';
+import Spacer from '../../../../common/Spacer';
+import {useCompanyRegistrationContextHook} from '../../../../provider/CompanyRegistrationContextProvider';
+import Button from '../../../../common/Button';
+import {useAppDispatch, useAppSelector} from '../../../../redux/hooks';
+import {
+  resetUploadCompanyLogoRequest,
+  uploadCompanyLogoRequest,
+} from '../../../../redux/slices/CompanySlice';
+import Spinner from '../../../../common/Spinner';
+import useCompanyId from '../../../../hooks/useCompanyId';
+import {ToastType, showToast} from '../../../../utils/utility';
 
 interface IOptions {
   mediaType: MediaType;
@@ -47,21 +50,21 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
 }) => {
   const {state, setCompanyLogo: setCompanyLogo2} =
     useCompanyRegistrationContextHook();
-  const [companyLogo, setCompanyLogo] = useState<string>(state.companyLogo);
+  const [companyLogo, setCompanyLogo] = useState<string>(
+    state.company_logo_url,
+  );
   const [imageFile, setImageFile] = useState<any>(null);
-  
-  const {
-    uploadLogoRequesting,
-    uploadLogoSuccess,
-    uploadLogoFailure,
-  } = useAppSelector(state => state.Company);
+
+  const {uploadLogoRequesting, uploadLogoSuccess, uploadLogoFailure} =
+    useAppSelector(state => state.Company);
   const companyId = useCompanyId();
-  
+
   const dispatch = useAppDispatch();
   const handleLaunchCamera = async () => {
     try {
       const result = await launchCamera(options);
       if (result && result.hasOwnProperty('assets')) {
+        console.log('Camera-result----', JSON.stringify(result));
         const {assets} = result || {};
         if (assets && Array.isArray(assets) && assets.length > 0) {
           const imageObj = assets[0];
@@ -70,7 +73,6 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
           setCompanyLogo2(imageObj.uri as string);
         }
       }
-      console.log('Camera-result----', JSON.stringify(result));
     } catch (error) {
       console.log('Error in launching camera--', error);
     }
@@ -102,32 +104,24 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
 
   const handleUploadClick = useCallback(() => {
     const formData = new FormData();
-        formData.append('companyLogo', {
-          uri: imageFile?.uri,
-          type: imageFile?.type,
-          name: imageFile?.fileName,
-        });
-        formData.append('id',companyId);
-        dispatch(uploadCompanyLogoRequest(formData));
+    formData.append('companyLogo', {
+      uri: imageFile?.uri,
+      type: imageFile?.type,
+      name: imageFile?.fileName,
+    });
+    formData.append('id', companyId);
+    dispatch(uploadCompanyLogoRequest(formData));
   }, [state]);
 
   useEffect(() => {
-    if(!uploadLogoRequesting && uploadLogoSuccess) {
-      Toast.show({
-        type: 'success',
-        text1: 'Company Logo Upload',
-        text2: 'Company Logo has been added successfully'
-      });
+    if (!uploadLogoRequesting && uploadLogoSuccess) {
+      showToast('Company Logo Uploaded successfully.', ToastType.SUCCESS);
       dispatch(resetUploadCompanyLogoRequest());
       setTimeout(() => {
         setCurrentStep(currentStep + 1);
       }, 3000);
-    } else if(!uploadLogoRequesting && uploadLogoFailure) {
-      Toast.show({
-        type: 'error',
-        text1: 'Company Logo Upload',
-        text2: 'Error in Uploading Company Logo. Please try again!'
-      });
+    } else if (!uploadLogoRequesting && uploadLogoFailure) {
+      showToast('Company Logo upload failed. Try again!', ToastType.ERROR);
       dispatch(resetUploadCompanyLogoRequest());
     }
   }, [uploadLogoRequesting, uploadLogoSuccess, uploadLogoFailure]);
@@ -154,41 +148,41 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
         <View style={styles.galleryContainer}>
           <TouchableOpacity style={styles.button} onPress={handleLaunchGallery}>
             <>
-            <Text>Pick from Gallery</Text>
-            <GalleryIcon width={50} height={50} />
+              <Text>Pick from Gallery</Text>
+              <GalleryIcon width={50} height={50} />
             </>
           </TouchableOpacity>
         </View>
         <View style={styles.cameraContainer}>
           <TouchableOpacity style={styles.button} onPress={handleLaunchCamera}>
             <>
-            <Text>Take from Camera</Text>
-            <CameraIcon width={50} height={50} />
+              <Text>Take from Camera</Text>
+              <CameraIcon width={50} height={50} />
             </>
           </TouchableOpacity>
         </View>
       </View>
-        <View style={styles.buttonContainer}>
-          <View style={styles.prevButtonContainer}>
-            {currentStep > 1 ? (
-              <Button
-                text="Upload"
-                onPress={handleUploadClick}
-                style={styles.buttonStyle}
-                textStyle={styles.buttonTextStyle}
-              />
-            ) : null}
-          </View>
-          <View style={styles.nextButtonContainer}>
+      <View style={styles.buttonContainer}>
+        <View style={styles.prevButtonContainer}>
+          {currentStep > 1 ? (
             <Button
-              text={currentStep == 5 ? 'Save' : 'Next'}
-              onPress={handleNextClick}
+              text="Upload"
+              onPress={handleUploadClick}
               style={styles.buttonStyle}
               textStyle={styles.buttonTextStyle}
             />
-          </View>
+          ) : null}
         </View>
-        <Spinner show={uploadLogoRequesting} />
+        <View style={styles.nextButtonContainer}>
+          <Button
+            text={currentStep == 5 ? 'Save' : 'Next'}
+            onPress={handleNextClick}
+            style={styles.buttonStyle}
+            textStyle={styles.buttonTextStyle}
+          />
+        </View>
+      </View>
+      <Spinner show={uploadLogoRequesting} />
     </View>
   );
 };

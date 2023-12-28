@@ -6,41 +6,36 @@ import React, {
   useContext,
 } from 'react';
 import {
-  companyRegistrationReducer,
+  registrationReducer,
   initialState,
-  ICompanyRegistrationState,
-  COMPANY_REGISTRATION_ACTION,
-  IDocumentSerialNo,
-  IDocumentTemplate,
-} from '../views/company/registrationReducer';
+  ACTION,
+} from '../views/company/registrationReducer2';
 
 const useCompanyRegistrationContext = () => {
-  const [state, dispatch] = useReducer(
-    companyRegistrationReducer,
-    initialState,
-  );
+  const [state, dispatch] = useReducer(registrationReducer, initialState);
 
   const setCompanyName = useCallback(
-    (text: string) =>   dispatch({
-      type: COMPANY_REGISTRATION_ACTION.COMPANY_NAME,
-      payload: text,
-    }),
-    [state.companyName],
+    (text: string) =>
+      dispatch({
+        type: ACTION.COMPANY_NAME,
+        payload: text,
+      }),
+    [state.company_name],
   );
 
   const setContactPerson = useCallback(
     (text: string) =>
       dispatch({
-        type: COMPANY_REGISTRATION_ACTION.CONTACT_PERSON,
+        type: ACTION.CONTACT_PERSON,
         payload: text,
       }),
-    [state.contactPerson],
+    [state.contact_person],
   );
 
   const setMobile = useCallback(
     (text: string) =>
       dispatch({
-        type: COMPANY_REGISTRATION_ACTION.MOBILE,
+        type: ACTION.MOBILE,
         payload: text,
       }),
     [state.mobile],
@@ -49,25 +44,25 @@ const useCompanyRegistrationContext = () => {
   const setEmail = useCallback(
     (text: string) =>
       dispatch({
-        type: COMPANY_REGISTRATION_ACTION.EMAIL,
+        type: ACTION.EMAIL,
         payload: text,
       }),
     [state.email],
   );
 
-  const setPincode = useCallback(
+  const setPincode2 = useCallback(
     (text: string) =>
       dispatch({
-        type: COMPANY_REGISTRATION_ACTION.PIN_CODE,
+        type: ACTION.PINCODE,
         payload: text,
       }),
-    [state.pinCode],
+    [state.pincode],
   );
 
   const setState = useCallback(
     (text: string) =>
       dispatch({
-        type: COMPANY_REGISTRATION_ACTION.STATE,
+        type: ACTION.STATE,
         payload: text,
       }),
     [state.state],
@@ -76,7 +71,7 @@ const useCompanyRegistrationContext = () => {
   const setCity = useCallback(
     (text: string) =>
       dispatch({
-        type: COMPANY_REGISTRATION_ACTION.CITY,
+        type: ACTION.CITY,
         payload: text,
       }),
     [state.city],
@@ -85,245 +80,73 @@ const useCompanyRegistrationContext = () => {
   const setAddress = useCallback(
     (text: string) =>
       dispatch({
-        type: COMPANY_REGISTRATION_ACTION.ADDRESS,
+        type: ACTION.ADDRESS,
         payload: text,
       }),
     [state.address],
   );
 
-  const setIbaApprovalCode = useCallback(
+  const setIbaApprovalStatus = useCallback(
     (text: string) =>
       dispatch({
-        type: COMPANY_REGISTRATION_ACTION.IBA_APPROVAL_CODE,
+        type: ACTION.IBA_APPROVAL_STATUS,
         payload: text,
       }),
-    [state.ibaApprovalCode],
+    [state.iba_approval_status],
   );
 
-  const setIbaApprovalTillDate = useCallback(
+  const setIbaCode = useCallback(
     (text: string) =>
       dispatch({
-        type: COMPANY_REGISTRATION_ACTION.IBA_CODE_VALID_TILL,
+        type: ACTION.IBA_APPROVAL_CODE,
         payload: text,
       }),
-    [state.ibaApprovalValidTill],
+    [state.iba_approval_code],
+  );
+
+  const setIbaExpiryDate = useCallback(
+    (text: string) =>
+      dispatch({
+        type: ACTION.IBA_EXPIRY_DATE,
+        payload: text,
+      }),
+    [state.iba_expiry_date],
   );
 
   const setCompanyType = useCallback(
     (text: string) =>
       dispatch({
-        type: COMPANY_REGISTRATION_ACTION.COMPANY_TYPE,
+        type: ACTION.COMPANY_TYPE,
         payload: text,
       }),
-    [state.companyType],
+    [state.company_type],
   );
 
   const setDocument = useCallback(
     (text: string) =>
       dispatch({
-        type: COMPANY_REGISTRATION_ACTION.DOCUMENT,
+        type: ACTION.GOVT_DOCUMENT,
         payload: text,
       }),
-    [state.document],
+    [state.govt_document],
   );
 
   const setCompanyLogo = useCallback(
     (text: string) =>
       dispatch({
-        type: COMPANY_REGISTRATION_ACTION.COMPANY_LOGO,
+        type: ACTION.COMPANY_LOGO_URL,
         payload: text,
       }),
-    [state.companyLogo],
+    [state.company_logo_url],
   );
 
-  const setOwnerSignature = useCallback(
+  const setCompanySignature = useCallback(
     (text: string) =>
       dispatch({
-        type: COMPANY_REGISTRATION_ACTION.OWNER_SIGNATURE,
+        type: ACTION.COMPANY_SIGNATURE_URL,
         payload: text,
       }),
-    [state.ownerSignature],
-  );
-
-  const setShiftingLuggage = useCallback(
-    (text: string) =>
-      dispatch({
-        type: COMPANY_REGISTRATION_ACTION.SHIFTING_LUGGAGE,
-        payload: text,
-      }),
-    [state.shiftingLuggage],
-  );
-
-  const setDocumentSerialNumber = useCallback(
-    (document: IDocumentSerialNo) =>
-      dispatch({
-        type: COMPANY_REGISTRATION_ACTION.DOCUMENT_SERIAL_NUMBERS,
-        payload: document as IDocumentSerialNo,
-      }),
-    [state.documentSerialNumbers],
-  );
-
-  const setDocumentTemplates = useCallback(
-    (document: IDocumentTemplate) =>
-      dispatch({
-        type: COMPANY_REGISTRATION_ACTION.DOCUMENT_TEMPLATES,
-        payload: document as IDocumentTemplate,
-      }),
-    [state.documentTemplates],
-  );
-
-  // Errors
-  const setCompanyNameError = useCallback(
-    (text: string) =>
-      dispatch({
-        type: COMPANY_REGISTRATION_ACTION.COMPANY_NAME_ERROR,
-        payload: text,
-      }),
-    [state.errors.companyName],
-  );
-
-  const setContactPersonError = useCallback(
-    (text: string) =>
-      dispatch({
-        type: COMPANY_REGISTRATION_ACTION.CONTACT_PERSON_ERROR,
-        payload: text,
-      }),
-    [state.errors.contactPerson],
-  );
-
-  const setMobileError = useCallback(
-    (text: string) =>
-      dispatch({
-        type: COMPANY_REGISTRATION_ACTION.MOBILE_ERROR,
-        payload: text,
-      }),
-    [state.errors.mobile],
-  );
-
-  const setEmailError = useCallback(
-    (text: string) =>
-      dispatch({
-        type: COMPANY_REGISTRATION_ACTION.EMAIL_ERROR,
-        payload: text,
-      }),
-    [state.errors.email],
-  );
-
-  const setPincodeError = useCallback(
-    (text: string) =>
-      dispatch({
-        type: COMPANY_REGISTRATION_ACTION.PINCODE_ERROR,
-        payload: text,
-      }),
-    [state.errors.pinCode],
-  );
-
-  const setStateError = useCallback(
-    (text: string) =>
-      dispatch({
-        type: COMPANY_REGISTRATION_ACTION.STATE_ERROR,
-        payload: text,
-      }),
-    [state.errors.state],
-  );
-
-  const setCityError = useCallback(
-    (text: string) =>
-      dispatch({
-        type: COMPANY_REGISTRATION_ACTION.CITY_ERROR,
-        payload: text,
-      }),
-    [state.errors.city],
-  );
-
-  const setAddressError = useCallback(
-    (text: string) =>
-      dispatch({
-        type: COMPANY_REGISTRATION_ACTION.ADDRESS_ERROR,
-        payload: text,
-      }),
-    [state.errors.address],
-  );
-
-  const setIbaApprovalCodeError = useCallback(
-    (text: string) =>
-      dispatch({
-        type: COMPANY_REGISTRATION_ACTION.IBA_APPROVAL_CODE_ERROR,
-        payload: text,
-      }),
-    [state.errors.ibaApprovalCode],
-  );
-
-  const setIbaApprovalTillDateError = useCallback(
-    (text: string) =>
-      dispatch({
-        type: COMPANY_REGISTRATION_ACTION.IBA_CODE_VALID_TILL_ERROR,
-        payload: text,
-      }),
-    [state.errors.ibaApprovalValidTill],
-  );
-
-  const setCompanyTypeError = useCallback(
-    (text: string) =>
-      dispatch({
-        type: COMPANY_REGISTRATION_ACTION.COMPANY_TYPE_ERROR,
-        payload: text,
-      }),
-    [state.errors.companyType],
-  );
-
-  const setDocumentError = useCallback(
-    (text: string) =>
-      dispatch({
-        type: COMPANY_REGISTRATION_ACTION.DOCUMENT_ERROR,
-        payload: text,
-      }),
-    [state.errors.document],
-  );
-
-  const setCompanyLogoError = useCallback(
-    (text: string) =>
-      dispatch({
-        type: COMPANY_REGISTRATION_ACTION.COMPANY_LOGO_ERROR,
-        payload: text,
-      }),
-    [state.errors.companyLogo],
-  );
-
-  const setOwnerSignatureError = useCallback(
-    (text: string) =>
-      dispatch({
-        type: COMPANY_REGISTRATION_ACTION.OWNER_SIGNATURE_ERROR,
-        payload: text,
-      }),
-    [state.errors.ownerSignature],
-  );
-
-  const setShiftingLuggageError = useCallback(
-    (text: string) =>
-      dispatch({
-        type: COMPANY_REGISTRATION_ACTION.SHIFTING_LUGGAGE_ERROR,
-        payload: text,
-      }),
-    [state.errors.shiftingLuggage],
-  );
-
-  const setDocumentSerialNumberError = useCallback(
-    (text: string) =>
-      dispatch({
-        type: COMPANY_REGISTRATION_ACTION.DOCUMENT_SERIAL_NUMBERS_ERROR,
-        payload: text,
-      }),
-    [state.errors.documentSerialNumbers],
-  );
-
-  const setDocumentTemplatesError = useCallback(
-    (text: string) =>
-      dispatch({
-        type: COMPANY_REGISTRATION_ACTION.DOCUMENT_TEMPLATES_ERROR,
-        payload: text,
-      }),
-    [state.errors.documentTemplates],
+    [state.company_signature_url],
   );
 
   return {
@@ -332,37 +155,17 @@ const useCompanyRegistrationContext = () => {
     setContactPerson,
     setMobile,
     setEmail,
-    setPincode,
+    setPincode2,
     setState,
     setCity,
-    setIbaApprovalCode,
-    setIbaApprovalTillDate,
+    setIbaApprovalStatus,
+    setIbaCode,
+    setIbaExpiryDate,
     setAddress,
     setCompanyType,
     setDocument,
     setCompanyLogo,
-    setOwnerSignature,
-    setShiftingLuggage,
-    setDocumentSerialNumber,
-    setDocumentTemplates,
-    // Errors
-    setCompanyNameError,
-    setContactPersonError,
-    setMobileError,
-    setEmailError,
-    setPincodeError,
-    setStateError,
-    setCityError,
-    setIbaApprovalCodeError,
-    setIbaApprovalTillDateError,
-    setAddressError,
-    setCompanyTypeError,
-    setDocumentError,
-    setCompanyLogoError,
-    setOwnerSignatureError,
-    setShiftingLuggageError,
-    setDocumentSerialNumberError,
-    setDocumentTemplatesError,
+    setCompanySignature,
   };
 };
 
@@ -376,48 +179,33 @@ const initCompanyRegistrationContextState: UseCompanyRegistrationContextType = {
   setContactPerson: (text: string) => {},
   setMobile: (text: string) => {},
   setEmail: (text: string) => {},
-  setPincode: (text: string) => {},
+  setPincode2: (text: string) => {},
   setState: (text: string) => {},
   setCity: (text: string) => {},
-  setIbaApprovalCode: (text: string) => {},
-  setIbaApprovalTillDate: (text: string) => {},
+  setIbaApprovalStatus: (text: string) => {},
+  setIbaCode: (text: string) => {},
+  setIbaExpiryDate: (text: string) => {},
   setAddress: (text: string) => {},
   setCompanyType: (text: string) => {},
   setDocument: (text: string) => {},
   setCompanyLogo: (text: string) => {},
-  setOwnerSignature: (text: string) => {},
-  setShiftingLuggage: (text: string) => {},
-  setDocumentSerialNumber: (document: IDocumentSerialNo) => {},
-  setDocumentTemplates: (document: IDocumentTemplate) => {},
-  // Errors
-  setCompanyNameError: (text: string) => {},
-  setContactPersonError: (text: string) => {},
-  setMobileError: (text: string) => {},
-  setEmailError: (text: string) => {},
-  setPincodeError: (text: string) => {},
-  setStateError: (text: string) => {},
-  setCityError: (text: string) => {},
-  setIbaApprovalCodeError: (text: string) => {},
-  setIbaApprovalTillDateError: (text: string) => {},
-  setAddressError: (text: string) => {},
-  setCompanyTypeError: (text: string) => {},
-  setDocumentError: (text: string) => {},
-  setCompanyLogoError: (text: string) => {},
-  setOwnerSignatureError: (text: string) => {},
-  setShiftingLuggageError: (text: string) => {},
-  setDocumentSerialNumberError: (text: string) => {},
-  setDocumentTemplatesError: (text: string) => {},
+  setCompanySignature: (text: string) => {},
 };
 
-const CompanyRegistrationContext = createContext<UseCompanyRegistrationContextType>(initCompanyRegistrationContextState);
+const CompanyRegistrationContext =
+  createContext<UseCompanyRegistrationContextType>(
+    initCompanyRegistrationContextState,
+  );
 
-const useCompanyRegistrationContextHook = () => useContext(CompanyRegistrationContext);
+const useCompanyRegistrationContextHook = () =>
+  useContext(CompanyRegistrationContext);
 
 const CompanyRegistrationContextProvider: React.FC<{
   children: ReactElement;
 }> = ({children}) => {
   return (
-    <CompanyRegistrationContext.Provider value={useCompanyRegistrationContext()}>
+    <CompanyRegistrationContext.Provider
+      value={useCompanyRegistrationContext()}>
       {children}
     </CompanyRegistrationContext.Provider>
   );

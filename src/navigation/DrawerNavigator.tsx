@@ -97,6 +97,7 @@ const DrawerContent = (props: any) => {
         />
       );
     } else {
+      if(!companyName) return null;
       return (
         <View style={styles.avatar}>
           <Text style={styles.nameText2}>{companyName?.substring(0, 1).toUpperCase()}</Text>

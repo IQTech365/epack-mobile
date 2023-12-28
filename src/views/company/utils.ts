@@ -1,0 +1,1 @@
+export const ibaApprovalOptions:string[] = ['Not Approved', 'Approved'];

@@ -39,26 +39,12 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
     setContactPerson,
     setMobile,
     setEmail,
-    setPincode: setPincode2,
     setCity,
     setState,
     setAddress,
-    setIbaApprovalCode,
-    setIbaApprovalTillDate,
     setCompanyType: setCompanyType2,
     setDocument,
-    setCompanyNameError,
-    setContactPersonError,
-    setMobileError,
-    setEmailError,
-    setPincodeError: setPincodeError2,
-    setStateError,
-    setCityError,
-    setIbaApprovalCodeError,
-    setIbaApprovalTillDateError,
-    setAddressError,
-    setCompanyTypeError,
-    setDocumentError,
+    
   } = useCompanyRegistrationContextHook();
   const [ibaApproval, setIbaApproval] = useState<string>(ibaApprovalOptions[0]);
   const [companyType, setCompanyType] = useState<string>('1');
@@ -76,11 +62,9 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
   const companyTypeDropdownRef = useRef(null);
 
   const setPincodeError = () => {
-    setPincodeError2('Invalid Pincode');
   };
 
   const resetPincodeError = () => {
-    setPincodeError2('');
   };
   const {result, fetching, setPincode} = usePincodeHook(
     setPincodeError,
@@ -88,31 +72,31 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
   );
 
   const handleCompanyNameInputTextChange = (text: string) => {
-    if (state.errors.companyName) {
-      setCompanyNameError('');
-    }
-    setCompanyName(text);
+    // if (state.errors.companyName) {
+    //   setCompanyNameError('');
+    // }
+    // setCompanyName(text);
   };
 
   const handleContactPersonInputTextChange = (text: string) => {
-    if (state.errors.contactPerson) {
-      setContactPersonError('');
-    }
-    setContactPerson(text);
+    // if (state.errors.contactPerson) {
+    //   setContactPersonError('');
+    // }
+    // setContactPerson(text);
   };
 
   const handleEmailInputTextChange = (text: string) => {
-    if (state.errors.email) {
-      setEmailError('');
-    }
-    setEmail(text);
+    // if (state.errors.email) {
+    //   setEmailError('');
+    // }
+    // setEmail(text);
   };
 
   const handleMobileInputTextChange = (text: string) => {
-    if (state.errors.mobile) {
-      setMobileError('');
-    }
-    setMobile(text);
+    // if (state.errors.mobile) {
+    //   setMobileError('');
+    // }
+    // setMobile(text);
   };
 
   const handleCitySelectChange = (item: string) => {
@@ -124,24 +108,24 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
   };
 
   const handleAddressInputTextChange = (text: string) => {
-    if (state.errors.address) {
-      setAddressError('');
-    }
-    setAddress(text);
+    // if (state.errors.address) {
+    //   setAddressError('');
+    // }
+    // setAddress(text);
   };
 
   const handleIbaApprovalCodeInputTextChange = (text: string) => {
-    if (state.errors.ibaApprovalCode) {
-      setIbaApprovalCodeError('');
-    }
-    setIbaApprovalCode(text);
+    // if (state.errors.ibaApprovalCode) {
+    //   setIbaApprovalCodeError('');
+    // }
+    // setIbaApprovalCode(text);
   };
 
   const handleDocumentChange = (text: string) => {
-    if (state.errors.document) {
-      setDocumentError('');
-    }
-    setDocument(text);
+    // if (state.errors.document) {
+    //   setDocumentError('');
+    // }
+    // setDocument(text);
   };
 
   const handleCompanyTypeSelectChange = (item: TDropdownItem) => {
@@ -154,12 +138,12 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
   };
 
   const handleIbaCodeValidTillDate = (date: Date) => {
-    setIbaApprovalTillDate(formatDate2(date));
+    // setIbaApprovalTillDate(formatDate2(date));
   };
 
   const handlePickupPinCode = useCallback((text: string) => {
     setPincode(text);
-    setPincode2(text);
+    // setPincode2(text);
   }, []);
 
   const validateRegistrationForm = () => {
@@ -178,148 +162,144 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
     let companyTypeFilled = false;
     let documentFilled = false;
 
-    if (Validator.isEmpty(state.companyName)) {
-      setCompanyNameError('Company name required');
-    } else {
-      companyNameFilled = true;
-      setCompanyNameError('');
-    }
+    // if (Validator.isEmpty(state.companyName)) {
+    //   setCompanyNameError('Company name required');
+    // } else {
+    //   companyNameFilled = true;
+    //   setCompanyNameError('');
+    // }
 
-    if (Validator.isEmpty(state.contactPerson)) {
-      setContactPersonError('Contact person name required');
-    } else {
-      contactPersonNameFilled = true;
-      setContactPersonError('');
-    }
+    // if (Validator.isEmpty(state.contactPerson)) {
+    //   setContactPersonError('Contact person name required');
+    // } else {
+    //   contactPersonNameFilled = true;
+    //   setContactPersonError('');
+    // }
 
-    if (Validator.isEmpty(state.mobile)) {
-      setMobileError('Mobile required');
-    } else {
-      mobileFilled = true;
-      setMobileError('');
-    }
+    // if (Validator.isEmpty(state.mobile)) {
+    //   setMobileError('Mobile required');
+    // } else {
+    //   mobileFilled = true;
+    //   setMobileError('');
+    // }
 
-    if (Validator.isEmpty(state.email)) {
-      setEmailError('Email required');
-    } else {
-      emailFilled = true;
-      setEmailError('');
-    }
+    // if (Validator.isEmpty(state.email)) {
+    //   setEmailError('Email required');
+    // } else {
+    //   emailFilled = true;
+    //   setEmailError('');
+    // }
 
-    if (Validator.isEmpty(state.pinCode)) {
-      setPincodeError2('Pincode required');
-    } else {
-      pincodeFilled = true;
-      setPincodeError2('');
-    }
+    // if (Validator.isEmpty(state.pinCode)) {
+    //   setPincodeError2('Pincode required');
+    // } else {
+    //   pincodeFilled = true;
+    //   setPincodeError2('');
+    // }
 
-    if (Validator.isEmpty(state.state)) {
-      setStateError('State required');
-    } else {
-      stateFilled = true;
-      setStateError('');
-    }
+    // if (Validator.isEmpty(state.state)) {
+    //   setStateError('State required');
+    // } else {
+    //   stateFilled = true;
+    //   setStateError('');
+    // }
 
-    if (Validator.isEmpty(state.city)) {
-      setCityError('City required');
-    } else {
-      cityFilled = true;
-      setCityError('');
-    }
+    // if (Validator.isEmpty(state.city)) {
+    //   setCityError('City required');
+    // } else {
+    //   cityFilled = true;
+    //   setCityError('');
+    // }
 
-    if (Validator.isEmpty(state.address)) {
-      setAddressError('Address required');
-    } else {
-      addressFilled = true;
-      setAddressError('');
-    }
+    // if (Validator.isEmpty(state.address)) {
+    //   setAddressError('Address required');
+    // } else {
+    //   addressFilled = true;
+    //   setAddressError('');
+    // }
 
-    if (ibaApproval == 'Approved') {
-      if (Validator.isEmpty(state.ibaApprovalCode)) {
-        setIbaApprovalCodeError('IBA Approval code required');
-      } else {
-        ibaApprovalCodeFilled = true;
-        setIbaApprovalCodeError('');
-      }
+    // if (ibaApproval == 'Approved') {
+    //   if (Validator.isEmpty(state.ibaApprovalCode)) {
+    //     setIbaApprovalCodeError('IBA Approval code required');
+    //   } else {
+    //     ibaApprovalCodeFilled = true;
+    //     setIbaApprovalCodeError('');
+    //   }
 
-      if (Validator.isEmpty(state.ibaApprovalValidTill)) {
-        setIbaApprovalTillDateError('IBA Approval Date required');
-      } else {
-        ibaApprovalValidTillFilled = true;
-        setIbaApprovalTillDateError('');
-      }
-    }
+    //   if (Validator.isEmpty(state.ibaApprovalValidTill)) {
+    //     setIbaApprovalTillDateError('IBA Approval Date required');
+    //   } else {
+    //     ibaApprovalValidTillFilled = true;
+    //     setIbaApprovalTillDateError('');
+    //   }
+    // }
 
-    if (Validator.isEmpty(state.companyType)) {
-      setCompanyTypeError('Company Type required');
-    } else {
-      companyTypeFilled = true;
-      setCompanyTypeError('');
-    }
+    // if (Validator.isEmpty(state.companyType)) {
+    //   setCompanyTypeError('Company Type required');
+    // } else {
+    //   companyTypeFilled = true;
+    //   setCompanyTypeError('');
+    // }
 
-    if (Validator.isEmpty(state.document)) {
-      setDocumentError('Document number required');
-    } else {
-      documentFilled = true;
-      setDocumentError('');
-    }
-    let areFieldsValid: boolean = false;
-    let isRequiredFieldsFilled =
-      companyNameFilled &&
-      contactPersonNameFilled &&
-      mobileFilled &&
-      emailFilled &&
-      pincodeFilled &&
-      stateFilled &&
-      cityFilled &&
-      addressFilled &&
-      companyTypeFilled &&
-      documentFilled;
-      console.log('isRequiredFieldsFilled-------', isRequiredFieldsFilled);
-    if (ibaApproval == ibaApprovalOptions[0]) {
-      console.log('inside-if');
+    // if (Validator.isEmpty(state.document)) {
+    //   setDocumentError('Document number required');
+    // } else {
+    //   documentFilled = true;
+    //   setDocumentError('');
+    // }
+    // let areFieldsValid: boolean = false;
+    // let isRequiredFieldsFilled =
+    //   companyNameFilled &&
+    //   contactPersonNameFilled &&
+    //   mobileFilled &&
+    //   emailFilled &&
+    //   pincodeFilled &&
+    //   stateFilled &&
+    //   cityFilled &&
+    //   addressFilled &&
+    //   companyTypeFilled &&
+    //   documentFilled;
+    //   console.log('isRequiredFieldsFilled-------', isRequiredFieldsFilled);
+    // if (ibaApproval == ibaApprovalOptions[0]) {
+    //   console.log('inside-if');
       
-      areFieldsValid = isRequiredFieldsFilled;
-    } else if (ibaApproval == ibaApprovalOptions[1]) {
-      console.log('inside-else');
-      areFieldsValid =
-        isRequiredFieldsFilled &&
-        ibaApprovalCodeFilled &&
-        ibaApprovalValidTillFilled;
-    }
-    console.log('areFieldsValid-------', areFieldsValid);
+    //   areFieldsValid = isRequiredFieldsFilled;
+    // } else if (ibaApproval == ibaApprovalOptions[1]) {
+    //   console.log('inside-else');
+    //   areFieldsValid =
+    //     isRequiredFieldsFilled &&
+    //     ibaApprovalCodeFilled &&
+    //     ibaApprovalValidTillFilled;
+    // }
+    // console.log('areFieldsValid-------', areFieldsValid);
     
-    return areFieldsValid;
+    return false;
   };
 
   const handleNextClick = useCallback(() => {
     if (currentStep >= 1 && currentStep < 5) {
       const isValidForm = validateRegistrationForm();
-      // setCurrentStep(currentStep + 1);
       if (isValidForm) {
         const data: ICompanyRegistrationRequest = {
           authId: otpData?.data.id as string,
-          companyName: state.companyName,
-          contactPerson: state.contactPerson,
+          companyName: '',
+          contactPerson: '',
           email: state.email,
           companyMobile: state.mobile,
           companyAddress: state.address,
           state: state.state,
           city: state.city,
-          pincode: state.pinCode,
-          ibaApprovalCode: state.ibaApprovalCode,
-          ibaValidDate: state.ibaApprovalValidTill,
+          pincode: '',
           companyWebite: 'www.abc.com',
-          CINNumber: state.document,
           companyLogo: '',
           punchLine: 'na',
           companyProfile: '',
           district: '',
           postOffice: '',
           govRegdDetails: {
-            companyType: state.companyType || companyTypeOptions[0].label,
-            companyPAN: state.companyType == ('Propritorship' || 'Partnership') ? state.document : '',
-            incorporationNumber: state.companyType == ('Pvt. Ltd. Company' || 'LLP') ? state.document : '',
+            // companyType: state.companyType || companyTypeOptions[0].label,
+            // companyPAN: state.companyType == ('Propritorship' || 'Partnership') ? state.document : '',
+            // incorporationNumber: state.companyType == ('Pvt. Ltd. Company' || 'LLP') ? state.document : '',
           },
           accountDetails: [],
           packerSignature: '',
@@ -339,7 +319,7 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
       //@ts-ignore
       companyTypeDropdownRef?.current?.setDefaultValue(companyTypeOptions[0]);
       setCompanyType2(companyTypeOptions[0].label);
-      setCompanyTypeError('');
+      // setCompanyTypeError('');
     }
   }, []);
 
@@ -395,8 +375,8 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
-                value={state.companyName}
-                error={state.errors.companyName}
+                // value={state.companyName}
+                // error={state.errors.companyName}
                 placeholder="Enter your company name"
                 type="text"
                 required={true}
@@ -414,8 +394,8 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
-                value={state.contactPerson}
-                error={state.errors.contactPerson}
+                // value={state.contactPerson}
+                // error={state.errors.contactPerson}
                 placeholder="Enter contact person name"
                 type="text"
                 required={true}
@@ -430,7 +410,7 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 value={state.mobile}
-                error={state.errors.mobile}
+                // error={state.errors.mobile}
                 placeholder="Enter mobile number"
                 type="mobile"
                 required={true}
@@ -446,7 +426,7 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 value={state.email}
-                error={state.errors.email}
+                // error={state.errors.email}
                 placeholder="Enter email"
                 type="email"
                 required={true}
@@ -460,8 +440,8 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
-                value={state.pinCode}
-                error={state.errors.pinCode}
+                // value={state.pinCode}
+                // error={state.errors.pinCode}
                 placeholder="Enter pincode"
               />
             </View>
@@ -495,7 +475,7 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 value={state.address}
-                error={state.errors.address}
+                // error={state.errors.address}
                 placeholder="Enter your address"
                 type="text"
                 required={true}
@@ -534,8 +514,8 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
                     textContainerStyle={{paddingLeft: 0}}
                     onPress={(isChecked: boolean) => {
                       if (itm == ibaApprovalOptions[0]) {
-                        setIbaApprovalCodeError('');
-                        setIbaApprovalTillDateError('');
+                        // setIbaApprovalCodeError('');
+                        // setIbaApprovalTillDateError('');
                       }
                       setIbaApproval(itm);
                     }}
@@ -559,8 +539,8 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
                     containerStyle={styles.inputContainer}
                     inputStyle={styles.input}
                     selectionColor={COLOR_BLACK}
-                    value={state.ibaApprovalCode}
-                    error={state.errors.ibaApprovalCode}
+                    // value={state.ibaApprovalCode}
+                    // error={state.errors.ibaApprovalCode}
                     placeholder="Ener IBA approval code"
                     type="text"
                     required={true}
@@ -576,7 +556,7 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
                   <DatePickerComponent
                     onDateSelect={handleIbaCodeValidTillDate}
                     style={{width: '100%'}}
-                    error={state.errors.ibaApprovalValidTill}
+                    // error={state.errors.ibaApprovalValidTill}
                   />
                 </View>
               </>
@@ -587,7 +567,7 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
               <DropdownComponent
                 data={companyTypeOptions}
                 onSelect={handleCompanyTypeSelectChange}
-                error={state.errors.companyType}
+                // error={state.errors.companyType}
               />
             </View>
             <Spacer height={4} />
@@ -602,8 +582,8 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
-                value={state.document}
-                error={state.errors.document}
+                // value={state.document}
+                // error={state.errors.document}
                 placeholder="Enter document number"
                 type="text"
                 required={true}
@@ -612,7 +592,6 @@ const RegisterCompanyView: React.FC<IRegisterCompanyViewProps> = ({
             </View>
           </View>
           <Spacer height={12} />
-          <Spinner show={fetching} />
         </View>
       </AvoidSoftInputViewHOC>
       <View style={styles.buttonContainer}>

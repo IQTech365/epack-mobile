@@ -4,19 +4,19 @@ import {
   COLOR_BLUE,
   COLOR_GRAY2,
   COLOR_WHITE,
-} from '../../../utils/colors';
-
+} from '../../../../utils/colors';
 const {width} = Dimensions.get('window');
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLOR_WHITE,
   },
+  contentContainer: {
+    flex: 0.9,
+  },
   elementContainer: {
     width: width * 0.9,
     justifyContent: 'center',
-    alignItems: 'flex-start',
     alignSelf: 'center',
   },
   elementContainer2: {
@@ -64,6 +64,64 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR_BLUE,
     borderRadius: 5,
   },
+  titleText: {
+    fontSize: 18,
+    color: COLOR_BLACK,
+    fontWeight: '400',
+    paddingHorizontal: 16,
+  },
+  datePickerWidth: {
+    width: width * 0.9,
+  },
+  twoButtonContainer: {
+    width: width * 0.9,
+    alignSelf: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  oneButtonContainer: {
+    width: width * 0.9,
+    alignSelf: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  prevButtonContainer: {
+    width: '50%',
+  },
+  nextButtonContainer: {
+    width: '50%',
+  },
+  nextButtonContainer2: {
+    width: '70%',
+  },
+  buttonStyle: {
+    backgroundColor: COLOR_BLUE,
+    width: '80%',
+    alignSelf: 'center',
+  },
+  buttonTextStyle: {
+    color: COLOR_WHITE,
+  },
+  iconStyle:{
+    borderColor: 'red',
+    borderRadius: 12,
+    width: 22,
+    height: 22,
+  },
+  innerIconStyle:{
+    borderWidth: 1,
+    borderRadius: 12,
+    width: 22,
+    height: 22,
+  },
+  textStyle2:{
+    fontFamily: 'JosefinSans-Regular',
+    textDecorationLine: 'none',
+  }
 });
 
 export default styles;

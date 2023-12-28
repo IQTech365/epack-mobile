@@ -4,12 +4,12 @@ import {View} from 'react-native';
 import Header from '../../common/Header';
 import Spacer from '../../common/Spacer';
 import styles from './style';
-import RegisterCompanyView from './registerCompany';
-import SignatureViewPage from './signature';
-import CompanyLogoPageView from './companyLogo';
+import SignatureViewPage from './components/CompanySignatureView';
+import CompanyLogoPageView from './components/CompanyLogoView';
 import {CompanyRegistrationContextProvider} from '../../provider/CompanyRegistrationContextProvider';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import { AuthStackParamList } from '../../navigation/params/AuthStackParamList';
+import {AuthStackParamList} from '../../navigation/params/AuthStackParamList';
+import CompanyBasicDetailsView from './components/CompanyBasicDetailsView';
 type Props = NativeStackScreenProps<AuthStackParamList, 'RegisterCompany'>;
 
 const RegistrationPageView: React.FC<Props> = ({route, navigation}) => {
@@ -18,33 +18,47 @@ const RegistrationPageView: React.FC<Props> = ({route, navigation}) => {
 
   const handleCurrentStep = (step: number) => {
     setCurrentStep(step);
-  }
+  };
 
   const showCurrentStep = () => {
     switch (currentStep) {
       case 1:
-        return <RegisterCompanyView currentStep={currentStep} setCurrentStep={handleCurrentStep} />;
+        return (
+          <CompanyBasicDetailsView
+            currentStep={currentStep}
+            setCurrentStep={handleCurrentStep}
+          />
+        );
       case 2:
-        return <CompanyLogoPageView currentStep={currentStep} setCurrentStep={handleCurrentStep} />;
+        return (
+          <CompanyLogoPageView
+            currentStep={currentStep}
+            setCurrentStep={handleCurrentStep}
+          />
+        );
       case 3:
-        return <SignatureViewPage currentStep={currentStep} setCurrentStep={handleCurrentStep} />;
+        return (
+          <SignatureViewPage
+            currentStep={currentStep}
+            setCurrentStep={handleCurrentStep}
+          />
+        );
       default:
-        return null;
+        return <></>;
     }
   };
 
   return (
-    <CompanyRegistrationContextProvider>
-      <View style={styles.container}>
-          <Spacer height={4} />
-          <Header
-            label={`Company Registration ${currentStep}/3`}
-            canGoBack={true}
-            showDrawerIcon={false}
-          />
-          {showCurrentStep()}
-        </View>
-    </CompanyRegistrationContextProvider>
+    <View style={styles.container}>
+      <Header
+        label={`Company Registration ${currentStep}/3`}
+        canGoBack={true}
+        showDrawerIcon={false}
+      />
+      <CompanyRegistrationContextProvider>
+        {showCurrentStep()}
+      </CompanyRegistrationContextProvider>
+    </View>
   );
 };
 
