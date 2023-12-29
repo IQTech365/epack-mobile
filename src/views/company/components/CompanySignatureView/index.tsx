@@ -21,11 +21,10 @@ import {
 import {useCompanyRegistrationContextHook} from '../../../../provider/CompanyRegistrationContextProvider';
 import Button from '../../../../common/Button';
 import Alert, {STATUS_CODE} from '../../../../common/Alert';
-import {Validator} from '../../../../utils/validation';
 import {useAppDispatch, useAppSelector} from '../../../../redux/hooks';
 import {
-  resetUploadSignatureRequest,
-  uploadSignatureRequest,
+  editCompanyRequest,
+  reseteditCompanyRequest,
 } from '../../../../redux/slices/CompanySlice';
 import {
   setAuthToken,
@@ -40,6 +39,12 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {COLOR_BLUE, COLOR_WHITE} from '../../../../utils/colors';
 import {signatureOptions} from '../../utils';
 import CloseIcon from '../../../../images/icons/x-circle.svg';
+import {ICompanyEditRequest} from '../../../../interface/companyRegistration/ICompanyEditRequest';
+import {
+  imageUploadRequest,
+  resetImageUploadRequest,
+} from '../../../../redux/slices/CommonSlice';
+import useAuthId from '../../../../hooks/useAuthId';
 
 interface IOptions {
   mediaType: MediaType;
@@ -76,17 +81,39 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
   const signatureRef = useRef();
   const dispatch = useAppDispatch();
   const {verifiedData} = useAppSelector(state => state.OTP);
-  const {
-    uploadSignatureRequesting,
-    uploadSignatureSuccess,
-    uploadSignatureFailure,
-  } = useAppSelector(state => state.Company);
-  const [signatureType, setSignatureType] = useState<string>(signatureOptions[0]);
-  const [isDigitalSignatureProvided, setIsDigitalSignatureProvided] = useState<boolean>(false);
+  const [signatureType, setSignatureType] = useState<string>(
+    signatureOptions[0],
+  );
+  const [isDigitalSignatureProvided, setIsDigitalSignatureProvided] =
+    useState<boolean>(false);
 
   const companyId = useCompanyId();
+  const authId = useAuthId();
   const authContext = useAuthContext();
   const {setLoggedIn} = authContext;
+
+  const {
+    companies,
+    editCompanyRequesting,
+    editCompanySuccess,
+    editCompanyFailure,
+  } = useAppSelector(state => state.Company);
+
+  const {
+    imageUploading,
+    imageUploadSuccess,
+    imageUploadFailure,
+    uploadedImage,
+  } = useAppSelector(state => state.Common);
+
+  const _getUploadedImagePath = () => {
+    let path: string = '';
+    const {data} = uploadedImage || {};
+    if (data && data.hasOwnProperty('Location')) {
+      path = data?.Location;
+    }
+    return path;
+  };
 
   const handleLaunchCamera = async () => {
     try {
@@ -131,43 +158,77 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
     setLoggedIn(true);
   };
 
-  const handleUploadClick = useCallback(() => {
-    if (Validator.isEmpty(signatureUri)) {
-      setShowSignatureRequiredAlert(true);
-    } else {
-      const formData = new FormData();
-      formData.append('companySignature', {
-        uri: imageFile?.uri,
-        type: imageFile?.type,
-        name: imageFile?.fileName,
-      });
-      formData.append('id', companyId);
-      dispatch(uploadSignatureRequest(formData));
-    }
-  }, [state]);
-
   const handleAlertPress = () => {
     setShowSignatureRequiredAlert(false);
   };
 
+  const handleCompanySignatureUriUpdate = () => {
+    const imagePath = _getUploadedImagePath();
+    const payload: ICompanyEditRequest = {
+      _id: companyId,
+      authId: authId,
+      companyName: state.company_name,
+      contactPerson: state.contact_person,
+      email: state.email,
+      companyMobile: state.mobile,
+      companyAddress: state.address,
+      state: state.state,
+      city: state.city,
+      pincode: state.pincode,
+      companyWebite: 'abc@xyz.com',
+      companyLogo: state.company_logo_url,
+      punchLine: '',
+      companyProfile: '',
+      district: '',
+      postOffice: '',
+      companySignature: imagePath,
+    };
+    dispatch(editCompanyRequest(payload));
+  };
+
+  const handleUploadClick = useCallback(() => {
+    const formData = new FormData();
+    formData.append('image', {
+      uri: imageFile?.uri,
+      type: imageFile?.type,
+      name: imageFile?.fileName,
+    });
+    dispatch(imageUploadRequest(formData));
+  }, [state]);
+
   useEffect(() => {
-    if (!uploadSignatureRequesting && uploadSignatureSuccess) {
-      showToast('Signature uplaod success.', ToastType.SUCCESS);
-      dispatch(resetUploadSignatureRequest());
-      completeRegistrationAndLoggedIn();
-    } else if (!uploadSignatureRequesting && uploadSignatureFailure) {
-      showToast('Signature uplaod failed. Try again!', ToastType.ERROR);
-      dispatch(resetUploadSignatureRequest());
+    if (!imageUploading && imageUploadSuccess) {
+      setImageFile(null);
+      showToast('Image Upload successful.', ToastType.SUCCESS);
+      handleCompanySignatureUriUpdate();
+    } else if (!imageUploading && imageUploadFailure) {
+      setImageFile(null);
+      dispatch(resetImageUploadRequest());
+      showToast('Image Upload Failed. Try again!', ToastType.ERROR);
     }
-  }, [
-    uploadSignatureRequesting,
-    uploadSignatureSuccess,
-    uploadSignatureFailure,
-  ]);
+  }, [imageUploading, imageUploadSuccess, imageUploadFailure]);
+
+  useEffect(() => {
+    if (!editCompanyRequesting && editCompanySuccess) {
+      showToast('Company Info updated successful.', ToastType.SUCCESS);
+      dispatch(resetImageUploadRequest());
+      dispatch(reseteditCompanyRequest());
+      completeRegistrationAndLoggedIn();
+      // onClose();
+    } else if (!editCompanyRequesting && editCompanyFailure) {
+      showToast('Company Info update failed. Try again!', ToastType.ERROR);
+      dispatch(resetImageUploadRequest());
+      dispatch(reseteditCompanyRequest());
+    }
+  }, [editCompanyRequesting, editCompanySuccess, editCompanyFailure]);
 
   const handleChangeImage = () => {
     setSignatureUri('');
   };
+
+  const handleGoBack = () => {
+    setCurrentStep(currentStep - 1);
+  }
 
   const _showImageView = () => {
     return (
@@ -228,18 +289,16 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
             ref={signatureRef}
             onSaveEvent={(result: any) => {
               console.log(result);
-              // setSignatureUri(result?.pathName);
               if (!isDigitalSignatureProvided) {
                 setShowSignatureRequiredAlert(true);
               } else {
                 const formData = new FormData();
-                formData.append('companySignature', {
+                formData.append('image', {
                   uri: `file://${result?.pathName}`,
                   type: 'image/png',
                   name: 'signature.png',
                 });
-                formData.append('id', companyId);
-                dispatch(uploadSignatureRequest(formData));
+                dispatch(imageUploadRequest(formData));
               }
             }}
             onDragEvent={() => {
@@ -315,7 +374,18 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
           ? _showDigitalSignatureCaptureView()
           : _showImageUploadChooserView()}
         <Spacer />
+        <View style={style.buttonContainer}>
+          <Spacer height={8} />
+          <Button
+            text="Go Back"
+            variant="contain"
+            onPress={handleGoBack}
+            style={style.goBackButtonStyle}
+            // textStyle={style.buttonText}
+          />
+        </View>
       </View>
+      
       {showSignatureRequiredAlert ? (
         <Alert
           variant={STATUS_CODE.ERROR}
@@ -324,7 +394,7 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
           visible={showSignatureRequiredAlert}
         />
       ) : null}
-      <Spinner show={uploadSignatureRequesting} />
+      <Spinner show={imageUploading || editCompanyRequesting} />
     </>
   );
 };

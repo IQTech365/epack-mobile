@@ -16,12 +16,15 @@ import {useCompanyRegistrationContextHook} from '../../../../provider/CompanyReg
 import Button from '../../../../common/Button';
 import {useAppDispatch, useAppSelector} from '../../../../redux/hooks';
 import {
-  resetUploadCompanyLogoRequest,
-  uploadCompanyLogoRequest,
+  editCompanyRequest,
+  reseteditCompanyRequest,
 } from '../../../../redux/slices/CompanySlice';
 import Spinner from '../../../../common/Spinner';
 import useCompanyId from '../../../../hooks/useCompanyId';
 import {ToastType, showToast} from '../../../../utils/utility';
+import { imageUploadRequest, resetImageUploadRequest } from '../../../../redux/slices/CommonSlice';
+import { ICompanyEditRequest } from '../../../../interface/companyRegistration/ICompanyEditRequest';
+import useAuthId from '../../../../hooks/useAuthId';
 
 interface IOptions {
   mediaType: MediaType;
@@ -48,18 +51,39 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
   currentStep,
   setCurrentStep,
 }) => {
-  const {state, setCompanyLogo: setCompanyLogo2} =
-    useCompanyRegistrationContextHook();
+  const {state, setCompanyLogo: setCompanyLogo2} = useCompanyRegistrationContextHook();
   const [companyLogo, setCompanyLogo] = useState<string>(
     state.company_logo_url,
   );
   const [imageFile, setImageFile] = useState<any>(null);
-
-  const {uploadLogoRequesting, uploadLogoSuccess, uploadLogoFailure} =
-    useAppSelector(state => state.Company);
   const companyId = useCompanyId();
+  const authId = useAuthId();
+
+  const {
+    companies,
+    editCompanyRequesting,
+    editCompanySuccess,
+    editCompanyFailure,
+  } = useAppSelector(state => state.Company);
+
+  const {
+    imageUploading,
+    imageUploadSuccess,
+    imageUploadFailure,
+    uploadedImage,
+  } = useAppSelector(state => state.Common);
+
+  const _getUploadedImagePath = () => {
+    let path: string = '';
+    const {data} = uploadedImage || {};
+    if (data && data.hasOwnProperty('Location')) {
+      path = data?.Location;
+    }
+    return path;
+  };
 
   const dispatch = useAppDispatch();
+  
   const handleLaunchCamera = async () => {
     try {
       const result = await launchCamera(options);
@@ -102,29 +126,65 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
     }
   }, [state]);
 
+  const handleCompanyLogoUriUpdate = () => {
+    const imagePath = _getUploadedImagePath();
+    setCompanyLogo2(imagePath);
+    const payload: ICompanyEditRequest = {
+      _id: companyId,
+      authId: authId,
+      companyName: state.company_name,
+      contactPerson: state.contact_person,
+      email: state.email,
+      companyMobile: state.mobile,
+      companyAddress: state.address,
+      state: state.state,
+      city: state.city,
+      pincode: state.pincode,
+      companyWebite: 'abc@xyz.com',
+      companyLogo: imagePath,
+      punchLine: '',
+      companyProfile: '',
+      district: '',
+      postOffice: '',
+      companySignature: state.company_signature_url,
+    };
+    dispatch(editCompanyRequest(payload));
+  };
+
   const handleUploadClick = useCallback(() => {
     const formData = new FormData();
-    formData.append('companyLogo', {
+    formData.append('image', {
       uri: imageFile?.uri,
       type: imageFile?.type,
       name: imageFile?.fileName,
     });
-    formData.append('id', companyId);
-    dispatch(uploadCompanyLogoRequest(formData));
+    dispatch(imageUploadRequest(formData));
   }, [state]);
 
   useEffect(() => {
-    if (!uploadLogoRequesting && uploadLogoSuccess) {
-      showToast('Company Logo Uploaded successfully.', ToastType.SUCCESS);
-      dispatch(resetUploadCompanyLogoRequest());
-      setTimeout(() => {
-        setCurrentStep(currentStep + 1);
-      }, 3000);
-    } else if (!uploadLogoRequesting && uploadLogoFailure) {
-      showToast('Company Logo upload failed. Try again!', ToastType.ERROR);
-      dispatch(resetUploadCompanyLogoRequest());
+    if (!imageUploading && imageUploadSuccess) {
+      setImageFile(null);
+      showToast("Image Upload successful.", ToastType.SUCCESS);
+      handleCompanyLogoUriUpdate();
+    } else if (!imageUploading && imageUploadFailure) {
+      setImageFile(null);
+      dispatch(resetImageUploadRequest());
+      showToast("Image Upload Failed. Try again!", ToastType.ERROR);
     }
-  }, [uploadLogoRequesting, uploadLogoSuccess, uploadLogoFailure]);
+  }, [imageUploading, imageUploadSuccess, imageUploadFailure]);
+
+  useEffect(() => {
+    if (!editCompanyRequesting && editCompanySuccess) {
+      showToast('Company Info updated successful.', ToastType.SUCCESS);
+      dispatch(resetImageUploadRequest());
+      dispatch(reseteditCompanyRequest());
+      setCurrentStep(currentStep + 1);
+    } else if (!editCompanyRequesting && editCompanyFailure) {
+      showToast('Company Info update failed. Try again!', ToastType.ERROR);
+      dispatch(resetImageUploadRequest());
+      dispatch(reseteditCompanyRequest());
+    }
+  }, [editCompanyRequesting, editCompanySuccess, editCompanyFailure]);
 
   return (
     <View style={styles.container}>
@@ -175,14 +235,14 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
         </View>
         <View style={styles.nextButtonContainer}>
           <Button
-            text={currentStep == 5 ? 'Save' : 'Next'}
+            text={currentStep == 5 ? 'Save' : 'Skip'}
             onPress={handleNextClick}
-            style={styles.buttonStyle}
+            style={styles.skipButtonStyle}
             textStyle={styles.buttonTextStyle}
           />
         </View>
       </View>
-      <Spinner show={uploadLogoRequesting} />
+      <Spinner show={imageUploading || editCompanyRequesting} />
     </View>
   );
 };

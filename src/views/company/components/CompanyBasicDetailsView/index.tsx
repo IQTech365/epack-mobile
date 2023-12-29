@@ -108,6 +108,7 @@ const CompanyBasicDetailsView: React.FC<IProps> = ({
   };
 
   const handleSave = useCallback(() => {
+    // return setCurrentStep(currentStep + 1);
     if (currentStep >= 1 && currentStep < 5) {
       setShouldValidate(true);
       const hasErrors:boolean = validate(state).some((d:IError) => !d.valid);
