@@ -1,5 +1,6 @@
 import {Reducer} from 'react';
 import { ibaApprovalOptions } from './utils';
+import companyTypeOptions from '../../data/companyType.json';
 export enum ACTION {
   COMPANY_NAME = 'COMPANY_NAME',
   CONTACT_PERSON = 'CONTACT_PERSON',
@@ -53,7 +54,7 @@ export const initialState: IState = {
   iba_approval_status: ibaApprovalOptions[0],
   iba_approval_code: '',
   iba_expiry_date: '',
-  company_type: '',
+  company_type: companyTypeOptions[0].label,
   govt_document: '',
   company_logo_url: '',
   company_signature_url: '',

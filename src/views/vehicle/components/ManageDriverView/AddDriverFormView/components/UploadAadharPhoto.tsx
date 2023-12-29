@@ -221,7 +221,7 @@ const UploadAadharPhoto: React.FC<IProps> = ({imageSide}) => {
       }
       setIsAadharFront(false);
       setIsAadharBack(false);
-      showToast("Image upload successfull.", ToastType.SUCCESS);
+      showToast("Image upload successful.", ToastType.SUCCESS);
       dispatch(resetImageUploadRequest());
     } else if(!imageUploading && imageUploadFailure) {
       setIsAadharFront(false);

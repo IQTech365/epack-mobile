@@ -1,8 +1,6 @@
-import {NavigationProp} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {View} from 'react-native';
 import Header from '../../common/Header';
-import Spacer from '../../common/Spacer';
 import styles from './style';
 import SignatureViewPage from './components/CompanySignatureView';
 import CompanyLogoPageView from './components/CompanyLogoView';
@@ -51,8 +49,7 @@ const RegistrationPageView: React.FC<Props> = ({route, navigation}) => {
   return (
     <View style={styles.container}>
       <Header
-        label={`Company Registration ${currentStep}/3`}
-        canGoBack={true}
+        label={`COMPANY REGISTRATION STEP - ${currentStep}/3`}
         showDrawerIcon={false}
       />
       <CompanyRegistrationContextProvider>

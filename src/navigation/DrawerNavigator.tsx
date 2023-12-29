@@ -117,12 +117,6 @@ const DrawerContent = (props: any) => {
           source={HeaderGridBackgroundImage}>
           <View style={styles.innerContainer}>
             <View style={styles.avatarContainer}>
-              {/* <View style={styles.avatar} /> */}
-              {/* <Image
-                source={{uri: firstCompany?.companyLogo}}
-                resizeMode="contain"
-                style={styles.avatar}
-              /> */}
               {_getCompanyNameOrLogo()}
             </View>
             <Text style={styles.nameText}>{firstCompany?.companyName}</Text>

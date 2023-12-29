@@ -36,6 +36,10 @@ import Spinner from '../../../../common/Spinner';
 import {useAuthContext} from '../../../../provider/AuthProvider';
 import useCompanyId from '../../../../hooks/useCompanyId';
 import {ToastType, showToast} from '../../../../utils/utility';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import {COLOR_BLUE, COLOR_WHITE} from '../../../../utils/colors';
+import {signatureOptions} from '../../utils';
+import CloseIcon from '../../../../images/icons/x-circle.svg';
 
 interface IOptions {
   mediaType: MediaType;
@@ -67,8 +71,8 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
     state.company_signature_url,
   );
   const [imageFile, setImageFile] = useState<any>(null);
-  const [isBase64Image, setIsBase64Image] = useState<boolean>(false);
-  const [showSignatureRequiredAlert, setShowSignatureRequiredAlert] = useState<boolean>(false);
+  const [showSignatureRequiredAlert, setShowSignatureRequiredAlert] =
+    useState<boolean>(false);
   const signatureRef = useRef();
   const dispatch = useAppDispatch();
   const {verifiedData} = useAppSelector(state => state.OTP);
@@ -77,37 +81,14 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
     uploadSignatureSuccess,
     uploadSignatureFailure,
   } = useAppSelector(state => state.Company);
+  const [signatureType, setSignatureType] = useState<string>(signatureOptions[0]);
+  const [isDigitalSignatureProvided, setIsDigitalSignatureProvided] = useState<boolean>(false);
 
   const companyId = useCompanyId();
   const authContext = useAuthContext();
   const {setLoggedIn} = authContext;
 
-  const _onSaveEvent = (result: any) => {
-    console.log(result);
-    setSignatureUri(result?.pathName);
-    // setCompanySignature(result?.encoded as string);
-  };
-
-  const _onDragEvent = () => {
-    console.log('dragged');
-  };
-
-  const saveSign = () => {
-    setIsBase64Image(true);
-    //@ts-ignore
-    signatureRef.current?.saveImage();
-  };
-
-  const resetSign = () => {
-    setIsBase64Image(false);
-    setSignatureUri('');
-    setCompanySignature('' as string);
-    //@ts-ignore
-    signatureRef.current?.resetImage();
-  };
-
   const handleLaunchCamera = async () => {
-    setIsBase64Image(false);
     try {
       const result = await launchCamera(options);
       console.log('Camera-result----', JSON.stringify(result));
@@ -126,7 +107,6 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
   };
 
   const handleLaunchGallery = async () => {
-    setIsBase64Image(false);
     try {
       const result = await launchImageLibrary(options);
       console.log('Gallery-result----', JSON.stringify(result));
@@ -144,12 +124,6 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
     }
   };
 
-  const handlePreviousClick = useCallback(() => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
-    }
-  }, [state]);
-
   const completeRegistrationAndLoggedIn = async () => {
     await setIsRegistrationComplete();
     await setLoginStatus();
@@ -158,7 +132,7 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
   };
 
   const handleUploadClick = useCallback(() => {
-    if (Validator.isEmpty(state.company_signature_url)) {
+    if (Validator.isEmpty(signatureUri)) {
       setShowSignatureRequiredAlert(true);
     } else {
       const formData = new FormData();
@@ -191,96 +165,156 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
     uploadSignatureFailure,
   ]);
 
+  const handleChangeImage = () => {
+    setSignatureUri('');
+  };
+
+  const _showImageView = () => {
+    return (
+      <>
+        <View style={style.imageContainer}>
+          <View style={style.closeIconContainer}>
+            <TouchableOpacity onPress={handleChangeImage}>
+              <CloseIcon width={24} height={24} />
+            </TouchableOpacity>
+          </View>
+          <Image source={{uri: signatureUri}} style={style.image} />
+        </View>
+        <View style={style.buttonContainer}>
+          <Spacer height={8} />
+          <Button
+            text="Upload"
+            onPress={handleUploadClick}
+            style={style.buttonStyle2}
+            textStyle={style.buttonText}
+          />
+        </View>
+      </>
+    );
+  };
+
+  const _showImageUploadChooserView = () => {
+    if (signatureUri) {
+      return _showImageView();
+    }
+    return (
+      <>
+        <View style={style.rowContainer}>
+          <TouchableOpacity style={style.button} onPress={handleLaunchCamera}>
+            <>
+              <Text style={style.text}>Camera</Text>
+              <Spacer width={2} />
+              <CameraIcon width={30} height={30} />
+            </>
+          </TouchableOpacity>
+          <TouchableOpacity style={style.button} onPress={handleLaunchGallery}>
+            <>
+              <Text style={style.text}>Gallery</Text>
+              <Spacer width={2} />
+              <GalleryIcon width={30} height={30} />
+            </>
+          </TouchableOpacity>
+        </View>
+      </>
+    );
+  };
+
+  const _showDigitalSignatureCaptureView = () => {
+    return (
+      <>
+        <View style={style.signatureWrapper}>
+          <SignatureCapture
+            style={style.signature}
+            ref={signatureRef}
+            onSaveEvent={(result: any) => {
+              console.log(result);
+              // setSignatureUri(result?.pathName);
+              if (!isDigitalSignatureProvided) {
+                setShowSignatureRequiredAlert(true);
+              } else {
+                const formData = new FormData();
+                formData.append('companySignature', {
+                  uri: `file://${result?.pathName}`,
+                  type: 'image/png',
+                  name: 'signature.png',
+                });
+                formData.append('id', companyId);
+                dispatch(uploadSignatureRequest(formData));
+              }
+            }}
+            onDragEvent={() => {
+              console.log('dragged');
+              setIsDigitalSignatureProvided(true);
+            }}
+            saveImageFileInExtStorage={false}
+            showNativeButtons={false}
+            showTitleLabel={false}
+            backgroundColor="#ffffff"
+            strokeColor="#000000"
+            minStrokeWidth={4}
+            maxStrokeWidth={4}
+            viewMode={'portrait'}
+          />
+        </View>
+        <View style={{flexDirection: 'row'}}>
+          <TouchableHighlight
+            style={style.uploadButtonStyle}
+            onPress={() => {
+              //@ts-ignore
+              signatureRef && signatureRef.current?.saveImage();
+            }}>
+            <Text style={style.text2}>Upload</Text>
+          </TouchableHighlight>
+          <TouchableHighlight
+            style={style.resetButtonStyle}
+            onPress={() => {
+              //@ts-ignore
+              signatureRef && signatureRef.current?.resetImage();
+              setIsDigitalSignatureProvided(false);
+            }}>
+            <Text style={style.text2}>Reset</Text>
+          </TouchableHighlight>
+        </View>
+      </>
+    );
+  };
+
   return (
     <>
       <View style={style.container}>
-        <View style={style.contentContainer}>
-          <View style={{flex: 1, flexDirection: 'column'}}>
-            <Text style={style.titleText}>
-              Sign below or take your signature photo from Camera or Gallery.
-            </Text>
-            <Spacer />
-            <View style={style.signatureWrapper}>
-              <SignatureCapture
-                style={style.signature}
-                ref={signatureRef}
-                onSaveEvent={_onSaveEvent}
-                onDragEvent={_onDragEvent}
-                saveImageFileInExtStorage={false}
-                showNativeButtons={false}
-                showTitleLabel={false}
-                backgroundColor="#ffffff"
-                strokeColor="#000000"
-                minStrokeWidth={4}
-                maxStrokeWidth={4}
-                viewMode={'portrait'}
+        <Text style={style.titleText}>
+          Please select signature type you want to uplod.
+        </Text>
+        <Spacer height={10} />
+        <View style={style.checkboxContainer}>
+          {signatureOptions.map((itm, index) => {
+            return (
+              <BouncyCheckbox
+                key={itm}
+                size={25}
+                unfillColor={COLOR_WHITE}
+                text={itm}
+                fillColor={COLOR_BLUE}
+                iconStyle={style.iconStyle}
+                innerIconStyle={style.innerIconStyle}
+                textStyle={style.textStyle2}
+                style={{marginRight: 15, marginBottom: 10}}
+                textContainerStyle={{paddingLeft: 0}}
+                onPress={(isChecked: boolean) => {
+                  setSignatureUri('');
+                  setSignatureType(itm);
+                }}
+                isChecked={signatureType == itm}
+                disableBuiltInState={true}
               />
-            </View>
-            <Spacer />
-            <View style={style.rowContainer}>
-              <TouchableOpacity
-                style={style.button}
-                onPress={handleLaunchCamera}>
-                <Text style={style.text}>Camera</Text>
-                <Spacer width={10} />
-                <CameraIcon width={30} height={30} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={style.button}
-                onPress={handleLaunchGallery}>
-                <Text style={style.text}>Gallery</Text>
-                <Spacer width={10} />
-                <GalleryIcon width={30} height={30} />
-              </TouchableOpacity>
-            </View>
-            <Spacer />
-            <View style={{flexDirection: 'row'}}>
-              <TouchableHighlight
-                style={style.buttonStyle}
-                onPress={() => {
-                  saveSign();
-                }}>
-                <Text>Save</Text>
-              </TouchableHighlight>
-
-              <TouchableHighlight
-                style={style.buttonStyle}
-                onPress={() => {
-                  resetSign();
-                }}>
-                <Text>Reset</Text>
-              </TouchableHighlight>
-            </View>
-            <Spacer />
-            <View style={style.signatureImageContainer}>
-              {signatureUri ? (
-                <Image source={{uri: signatureUri}} style={style.sign} />
-              ) : (
-                <Text>Signature Preview</Text>
-              )}
-            </View>
-          </View>
+            );
+          })}
         </View>
-        <View style={style.buttonContainer}>
-          <View style={style.prevButtonContainer}>
-            {currentStep > 1 ? (
-              <Button
-                text="Previous"
-                onPress={handlePreviousClick}
-                style={style.buttonStyle2}
-                textStyle={style.buttonTextStyle}
-              />
-            ) : null}
-          </View>
-          <View style={style.nextButtonContainer}>
-            <Button
-              text="Upload"
-              onPress={handleUploadClick}
-              style={style.buttonStyle2}
-              textStyle={style.buttonTextStyle}
-            />
-          </View>
-        </View>
+        <Spacer height={10} />
+        {signatureType == signatureOptions[0]
+          ? _showDigitalSignatureCaptureView()
+          : _showImageUploadChooserView()}
+        <Spacer />
       </View>
       {showSignatureRequiredAlert ? (
         <Alert
