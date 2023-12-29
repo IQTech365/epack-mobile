@@ -12,6 +12,7 @@ type Props = NativeStackScreenProps<AuthStackParamList, 'RegisterCompany'>;
 
 const RegistrationPageView: React.FC<Props> = ({route, navigation}) => {
   const registrationStep: number = route.params.registrationStep;
+  console.log('data-data---registrationStep---', registrationStep);
   const [currentStep, setCurrentStep] = useState<number>(registrationStep);
 
   const handleCurrentStep = (step: number) => {

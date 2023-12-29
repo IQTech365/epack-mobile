@@ -90,6 +90,5 @@ export const validate = (state:IState):IError[] => {
 export const getError = (fieldName:string, state:IState, shouldValidate:boolean):string => {
     const errors:IError[] = validate(state);
     const error:IError = errors.find((d:IError) => d.fieldName == fieldName) as IError;
-    console.log('IError-obj--', JSON.stringify(error));
     return shouldValidate ? error?.error : '' ;
 }

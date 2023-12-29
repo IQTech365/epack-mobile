@@ -135,9 +135,11 @@ const OTPPageView = (props: any) => {
         if(firstCompany.companySignature) {
           completeRegistrationAndLoggedIn();
         } else {
+          console.log('data-data---- block-1');
           navigation.navigate(AuthStackRoute.RegisterCompany, {registrationStep: 3});
         }
       } else {
+        console.log('data-data---- block-2');
         navigation.navigate(AuthStackRoute.RegisterCompany, {registrationStep: 1});
       }
     } else if(!getCompaniesRequesting && getCompaniesFailure) {

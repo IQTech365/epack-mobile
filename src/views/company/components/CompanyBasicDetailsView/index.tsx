@@ -48,16 +48,12 @@ const CompanyBasicDetailsView: React.FC<IProps> = ({
     setAddress,
     setCompanyType,
     setDocument,
-    setCompanyLogo,
-    setCompanySignature,
   } = useCompanyRegistrationContextHook();
   const [states, setStates] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
   const [shouldValidate, setShouldValidate] = useState<boolean>(false);
   const cityDropdownRef = useRef(null);
   const stateDropwdownRef = useRef(null);
-  const documentInputRef = useRef(null);
-  const companyTypeDropdownRef = useRef(null);
   const dispatch = useAppDispatch();
   const {otpData} = useAppSelector(state => state.OTP);
   const {requesting, success, error, failure, addCompanyInfo} = useAppSelector(
@@ -165,6 +161,7 @@ const CompanyBasicDetailsView: React.FC<IProps> = ({
 
   useEffect(() => {
     if (!requesting && success && !error) {
+      console.log('data-data---block-3');
       setCurrentStep(currentStep + 1);
     } else if (!requesting && !success && error) {
       Alert.alert('Error in registering the company');

@@ -24,6 +24,7 @@ import Alert, {STATUS_CODE} from '../../../../common/Alert';
 import {useAppDispatch, useAppSelector} from '../../../../redux/hooks';
 import {
   editCompanyRequest,
+  getCompaniesRequest,
   reseteditCompanyRequest,
 } from '../../../../redux/slices/CompanySlice';
 import {
@@ -45,6 +46,7 @@ import {
   resetImageUploadRequest,
 } from '../../../../redux/slices/CommonSlice';
 import useAuthId from '../../../../hooks/useAuthId';
+import { ICompanyInfoData } from '../../../../interface/companyRegistration/IGetCompaniesResponse';
 
 interface IOptions {
   mediaType: MediaType;
@@ -105,6 +107,25 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
     imageUploadFailure,
     uploadedImage,
   } = useAppSelector(state => state.Common);
+
+  const {data: companiesData} = companies || {};
+  const {otpData} = useAppSelector(state => state.OTP);
+
+  const getFirstCompany = () => {
+    let company: ICompanyInfoData | null = null;
+    if (
+      companiesData &&
+      Array.isArray(companiesData) &&
+      companiesData.length > 0
+    ) {
+      company = companiesData[0];
+    } else if (companiesData && companiesData.hasOwnProperty('authId')) {
+      company = companiesData;
+    }
+    return company;
+  };
+
+  const firstCompany = getFirstCompany();
 
   const _getUploadedImagePath = () => {
     let path: string = '';
@@ -167,16 +188,16 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
     const payload: ICompanyEditRequest = {
       _id: companyId,
       authId: authId,
-      companyName: state.company_name,
-      contactPerson: state.contact_person,
-      email: state.email,
-      companyMobile: state.mobile,
-      companyAddress: state.address,
-      state: state.state,
-      city: state.city,
-      pincode: state.pincode,
-      companyWebite: 'abc@xyz.com',
-      companyLogo: state.company_logo_url,
+      companyName: state.company_name || firstCompany?.companyName,
+      contactPerson: state.contact_person || firstCompany?.contactPerson,
+      email: state.email || firstCompany?.email,
+      companyMobile: state.mobile || firstCompany?.companyMobile,
+      companyAddress: state.address || firstCompany?.companyAddress,
+      state: state.state || firstCompany?.state,
+      city: state.city || firstCompany?.city,
+      pincode: state.pincode || firstCompany?.pincode,
+      companyWebite: 'abc@xyz.com' || firstCompany?.companyWebite,
+      companyLogo: state.company_logo_url || firstCompany?.companyLogo,
       punchLine: '',
       companyProfile: '',
       district: '',
@@ -195,6 +216,13 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
     });
     dispatch(imageUploadRequest(formData));
   }, [state]);
+
+  useEffect(() => {
+    if (otpData) {
+      const {data = {}} = otpData || {};
+      dispatch(getCompaniesRequest(data?.id as string));
+    }
+  }, []);
 
   useEffect(() => {
     if (!imageUploading && imageUploadSuccess) {
