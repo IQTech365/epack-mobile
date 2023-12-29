@@ -104,7 +104,6 @@ const DrawerContent = (props: any) => {
         </View>
       );
     }
-    return null;
   };
 
   return (

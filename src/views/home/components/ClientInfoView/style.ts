@@ -13,6 +13,11 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center'
   },
+  nameText2: {
+    color: COLOR_WHITE,
+    fontSize: 24,
+    fontWeight: '600',
+  },
   clientLogoContainer: {
     width: '30%',
     alignItems: 'center',
