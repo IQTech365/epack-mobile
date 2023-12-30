@@ -9,9 +9,15 @@ export interface ISubscriptionFeature {
   qty: string;
 }
 
+export interface IPlan {
+  duration:string;
+  amount: string;
+}
+
 export interface ISubscriptionPlan {
   _id: string;
   subscriptionType: string;
+  plans:IPlan[];
   duration: string;
   amount: number;
   isActive: boolean;

@@ -26,6 +26,7 @@ const Header: React.FC<IHeaderProps> = ({
 
   const {companies} = useAppSelector(state => state.Company);
   const {data: companiesData} = companies || {};
+
   const getFirstCompany = () => {
     let company: ICompanyInfoData | null = null;
     if (
@@ -40,6 +41,26 @@ const Header: React.FC<IHeaderProps> = ({
     return company;
   };
   const firstCompany = getFirstCompany();
+
+  const _getCompanyNameOrLogo = () => {
+    const {companyLogo, companyName} = firstCompany || {};
+    if (companyLogo) {
+      return (
+        <Image
+          source={{uri: firstCompany?.companyLogo}}
+          resizeMode="contain"
+          style={styles.avatar}
+        />
+      );
+    } else {
+      if(!companyName) return null;
+      return (
+        <View style={styles.avatar}>
+          <Text style={styles.nameText2}>{companyName?.substring(0, 1).toUpperCase()}</Text>
+        </View>
+      );
+    }
+  };
 
   const handleGoBack = () => {
     if (showDrawerIcon) {
@@ -71,15 +92,7 @@ const Header: React.FC<IHeaderProps> = ({
       <View style={styles.actionContainer}>
         <TouchableOpacity activeOpacity={0.6} onPress={handleProfileClick}>
           <View style={styles.avtarContainer}>
-            <Image
-              //  source={{ uri: firstCompany?.companyLogo }}
-              source={{
-                uri: 'https://fastly.picsum.photos/id/14/200/200.jpg?hmac=bwQwH7-0RPCqUVkFzd3hFhc6yDfC6_e7vgaKXZ7vFOA',
-              }}
-              resizeMode="center"
-              style={styles.avatar}
-            />
-            {/* <View style={styles.avatar} /> */}
+            {_getCompanyNameOrLogo()}
           </View>
         </TouchableOpacity>
         <Spacer width={15} />

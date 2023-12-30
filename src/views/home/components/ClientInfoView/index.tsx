@@ -49,7 +49,9 @@ const ClientInfoView = () => {
     <Shadow style={styles.cardWrapper} distance={6}>
       <View style={styles.clientInfoContainer}>
         <View style={styles.clientLogoContainer}>
+          <View style={styles.logoContainer}>
           {_getCompanyNameOrLogo()}
+          </View>
         </View>
         <View style={styles.clientDetailContainer}>
           <Text style={styles.nameText}>{firstCompany?.companyName}</Text>

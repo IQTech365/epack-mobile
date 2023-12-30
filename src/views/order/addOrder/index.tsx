@@ -52,7 +52,7 @@ import EpackDropdown from '../../../common/DropdownComponent2';
 import {Validator} from '../../../utils/validation';
 import useAuthId from '../../../hooks/useAuthId';
 import {ICustomer, ICustomerBillingInfo, ICustomersRequest} from '../../../interface/common/common';
-import {debounce} from '../../../utils/utility';
+import {ToastType, debounce, showToast} from '../../../utils/utility';
 import {
   getCustomersRequest,
   resetGetCustomersRequest,
@@ -351,7 +351,6 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({navigation}) => {
             }
           : {},
       status: 'NEW ORDER',
-      addedBy: authId,
     };
     console.log('AddOrder-payload----', JSON.stringify(data));
 
@@ -457,6 +456,13 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({navigation}) => {
     setIsFormValid(Object.keys(errors).length === 0);
   };
 
+  const _fetchOrders = () => {
+    const payload: Partial<IGetOrdersRequest> = {
+      companyId: companyId,
+    };
+    dispatch2(getOrdersRequest(payload));
+  }
+
   useEffect(() => {
     setShowErrors(false);
     validateForm();
@@ -472,21 +478,13 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({navigation}) => {
 
   useEffect(() => {
     if (!addOrderRequesting && addOrderSuccess) {
-      Toast.show({
-        type: 'success',
-        text1: 'Order',
-        text2: 'Order has been added successfully',
-      });
+      showToast("New Order created successfully.", ToastType.SUCCESS);
       dispatch2(resetAddOrderRequest());
-      dispatch2(getOrdersRequest(companyId));
+      _fetchOrders();
       fetchCompletedOrders();
       navigation?.goBack();
     } else if (!addOrderRequesting && addOrderFailure) {
-      Toast.show({
-        type: 'error',
-        text1: 'Order',
-        text2: 'Error in adding order. Please try again!',
-      });
+      showToast("New Order not created. Try again!", ToastType.ERROR);
       dispatch2(resetAddOrderRequest());
     }
   }, [addOrderRequesting, addOrderSuccess, addOrderFailure]);

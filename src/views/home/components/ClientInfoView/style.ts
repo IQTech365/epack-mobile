@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import { COLOR_BLACK, COLOR_WHITE } from '../../../../utils/colors';
+import { COLOR_BLACK, COLOR_BLUE, COLOR_WHITE } from '../../../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -23,6 +23,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  logoContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: COLOR_BLUE,
+  },
   clientDetailContainer: {
     width: '70%',
     alignItems: 'flex-start',
@@ -32,6 +40,8 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   cardWrapper: {
     alignItems: 'center',

@@ -44,7 +44,6 @@ import usePincodeHook, {
 import {getCities, getStates} from '../../../utils/formatter';
 import shiftingLuggageOptions from '../../../data/shiftingLuggage.json';
 import Spinner from '../../../common/Spinner';
-import Toast from 'react-native-toast-message';
 import {NavigationProp} from '@react-navigation/native';
 import EpackDropdown from '../../../common/DropdownComponent2';
 import useCompanyId from '../../../hooks/useCompanyId';
@@ -55,7 +54,7 @@ import {
   ICustomerBillingInfo,
   ICustomersRequest,
 } from '../../../interface/common/common';
-import {debounce} from '../../../utils/utility';
+import {ToastType, debounce, showToast} from '../../../utils/utility';
 import {
   getCustomersRequest,
   resetGetCustomersRequest,
@@ -480,20 +479,12 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
 
   useEffect(() => {
     if (!addEnquiryRequesting && addEnquirySuccess) {
-      Toast.show({
-        type: 'success',
-        text1: 'Enquriy',
-        text2: 'Enquiry has been added successfully',
-      });
+      showToast("New Enquiry added successfully.", ToastType.SUCCESS);
       dispatch2(resetAddEnquiryRequest());
       dispatch2(getEnquiriesRequest(companyId));
       navigation.goBack();
     } else if (!addEnquiryRequesting && addEnquiryFailure) {
-      Toast.show({
-        type: 'error',
-        text1: 'Enquriy',
-        text2: 'Error in adding enquiry. Please try again!',
-      });
+      showToast("New Enquiry not created. Try again!", ToastType.ERROR);
       dispatch2(resetAddEnquiryRequest());
     }
   }, [addEnquiryRequesting, addEnquirySuccess, addEnquiryFailure]);
@@ -507,11 +498,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
           'Enter either Authority Mobile number or Employee Mobile number',
         );
       } else {
-        Toast.show({
-          type: 'error',
-          text1: 'Form',
-          text2: 'Form data is not valid. Please correct!',
-        });
+        showToast("Form data incorrect. Please correct!", ToastType.ERROR);
       }
       return;
     }
@@ -581,7 +568,6 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
             }
           : {},
       status: 'NEW',
-      addedBy: authId,
     };
     dispatch2(addEnquiryRequest(payload));
   }, [state]);

@@ -1,14 +1,67 @@
 import React from 'react';
-import {View, Text, ImageBackground, TouchableOpacity} from 'react-native';
+import {View, Text, ImageBackground, TouchableOpacity, Linking} from 'react-native';
 import styles from './style';
 import HeaderGridBackgroundImage from '../../../../../images/header-grid.png';
-import PhoneIcon from '../../../../../images/icons/phone.svg';
+import PhoneIcon from '../../../../../images/icons/phone-call.svg';
 import WhatsappIcon from '../../../../../images/icons/whatsapp.svg';
 import Spacer from '../../../../../common/Spacer';
+import {
+  ICustomer,
+  ICustomerBillingInfo,
+} from '../../../../../interface/customer/customer';
+import {formatDate5} from '../../../../../utils/formatter';
 
-interface IClientInfoViewProps {}
+interface IClientInfoViewProps {
+  item: ICustomer;
+}
 
-const ClientInfoView: React.FC<IClientInfoViewProps> = ({}) => {
+const ClientInfoView: React.FC<IClientInfoViewProps> = ({item}) => {
+  const _getClientOrCompanyName = (): string => {
+    let name: string = '';
+    if (item.billingBy == 'by Individual') {
+      name = item.partyName;
+    } else {
+      const billingInfo: ICustomerBillingInfo =
+        item.billingDetails as ICustomerBillingInfo;
+      name = billingInfo.companyName;
+    }
+    return name;
+  };
+
+  const handlePhoneCall = () => {
+    let phoneNumber:string = '';
+    if(item.billingBy == 'by Individual') {
+      phoneNumber = item.mobile;
+    } else {
+      const billingInfo:ICustomerBillingInfo = item.billingDetails as ICustomerBillingInfo;
+      if(billingInfo.authorityPersonMobile) {
+        phoneNumber = billingInfo.authorityPersonMobile;
+      } else if(billingInfo.employeeMobile) {
+        phoneNumber = billingInfo.employeeMobile;
+      }
+    }
+    if(phoneNumber) {
+      Linking.openURL(`tel:${phoneNumber}`);
+    }
+  }
+
+  const handleWhatsappCall = () => {
+    let phoneNumber:string = '';
+    if(item.billingBy == 'by Individual') {
+      phoneNumber = item.mobile;
+    } else {
+      const billingInfo:ICustomerBillingInfo = item.billingDetails as ICustomerBillingInfo;
+      if(billingInfo.authorityPersonMobile) {
+        phoneNumber = billingInfo.authorityPersonMobile;
+      } else if(billingInfo.employeeMobile) {
+        phoneNumber = billingInfo.employeeMobile;
+      }
+    }
+    if(phoneNumber) {
+      Linking.openURL(`whatsapp://send?phone=+91${phoneNumber}`);
+    }
+  }
+
   return (
     <View style={styles.backgroundContainer}>
       <ImageBackground
@@ -17,46 +70,49 @@ const ClientInfoView: React.FC<IClientInfoViewProps> = ({}) => {
         <View style={styles.innerContainer}>
           <View style={styles.leftContainer}>
             <View style={styles.infoContainer}>
-              <View style={[styles.itemContainer]}>
-                <Text style={styles.nameText}>Ms. Vanshika Vats</Text>
+              <View style={[styles.labelContainer]}>
+                <Text style={styles.nameText}>Client Name</Text>
               </View>
-              <View style={[styles.itemContainer]}>
-                <Text style={styles.normalText}>Delhi</Text>
+              <View style={styles.hyphenContainer}>
+                <Text style={styles.hyphenText}>-</Text>
               </View>
-            </View>
-            <View style={styles.infoContainer}>
-              <View style={styles.itemContainer}>
-                <View style={styles.labelContainer}>
-                  <Text style={styles.labelText}>Customer ID</Text>
-                </View>
-                <View style={styles.hyphenContainer}>
-                  <Text style={styles.hyphenText}>-</Text>
-                </View>
-                <View style={styles.valueContainer}>
-                  <Text style={styles.valueText}>65678</Text>
-                </View>
+              <View style={[styles.valueContainer]}>
+                <Text style={styles.normalText}>
+                  {_getClientOrCompanyName()}
+                </Text>
               </View>
             </View>
             <View style={styles.infoContainer}>
-              <View style={styles.itemContainer}>
-                <View style={styles.labelContainer}>
-                  <Text style={styles.labelText}>Regd. Date</Text>
-                </View>
-                <View style={styles.hyphenContainer}>
-                  <Text style={styles.hyphenText}>-</Text>
-                </View>
-                <View style={styles.valueContainer}>
-                  <Text style={styles.valueText}>27-07-2023</Text>
-                </View>
+              <View style={styles.labelContainer}>
+                <Text style={styles.nameText}>Client ID</Text>
+              </View>
+              <View style={styles.hyphenContainer}>
+                <Text style={styles.hyphenText}>-</Text>
+              </View>
+              <View style={styles.valueContainer}>
+                <Text style={styles.valueText}>{item._id}</Text>
+              </View>
+            </View>
+            <View style={styles.infoContainer}>
+              <View style={styles.labelContainer}>
+                <Text style={styles.nameText}>Regd. Date</Text>
+              </View>
+              <View style={styles.hyphenContainer}>
+                <Text style={styles.hyphenText}>-</Text>
+              </View>
+              <View style={styles.valueContainer}>
+                <Text style={styles.valueText}>
+                  {formatDate5(new Date(item.createdAt))}
+                </Text>
               </View>
             </View>
           </View>
           <View style={styles.iconItemContainer}>
-            <TouchableOpacity activeOpacity={0.6}>
+            <TouchableOpacity activeOpacity={0.6} onPress={handleWhatsappCall}>
               <WhatsappIcon width={24} height={24} />
             </TouchableOpacity>
             <Spacer height={20} />
-            <TouchableOpacity activeOpacity={0.6}>
+            <TouchableOpacity activeOpacity={0.6} onPress={handlePhoneCall}>
               <PhoneIcon width={24} height={24} />
             </TouchableOpacity>
           </View>

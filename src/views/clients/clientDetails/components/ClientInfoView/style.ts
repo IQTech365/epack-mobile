@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
         width: '100%',
         flexDirection: 'row',
         paddingVertical: 2,
+        alignItems: 'center',
     },
     iconItemContainer: {
         width: '10%',
@@ -41,8 +42,8 @@ const styles = StyleSheet.create({
     },
     nameText: {
         color: COLOR_WHITE,
-        fontSize: 18,
-        fontWeight: '600',
+        fontSize: 16,
+        fontWeight: '400',
     },
     labelText: {
         color: COLOR_WHITE,
@@ -50,28 +51,29 @@ const styles = StyleSheet.create({
     },
     valueText: {
         color: COLOR_WHITE,
-        fontSize: 12, 
+        fontSize: 14, 
     },
     normalText: {
         color: COLOR_WHITE,
-        fontSize: 14,
+        fontSize: 16,
     },
     hyphenText: {
         color: COLOR_WHITE,
         fontSize: 16,
     },
     labelContainer: {
-        width: '40%',
+        width: '30%',
         alignItems: 'flex-start',
         justifyContent: 'flex-start',
+        paddingLeft: 10,
     },
     hyphenContainer: {
-        width: '10%',
+        width: '5%',
         alignItems: 'center',
         justifyContent: 'flex-start',
     },
     valueContainer: {
-        width: '50%',
+        width: '65%',
         alignItems: 'flex-start',
         justifyContent: 'flex-start',
     }

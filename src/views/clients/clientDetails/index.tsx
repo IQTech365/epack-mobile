@@ -9,11 +9,12 @@ import Tab from '../../../common/Tab';
 import ClientInfoView from './components/ClientInfoView';
 import ContactDetailsView from './components/ContactDetailsView';
 import ShiftingDetailsView from './components/ShiftingDetailsView';
-import { ClientStackParamList } from '../../../navigation/params/CientDtackParamList';
+import { ClientStackParamList } from '../../../navigation/params/CientStackParamList';
+import { ICustomer } from '../../../interface/customer/customer';
 
 type Props = NativeStackScreenProps<ClientStackParamList, 'ClientDetails'>;
 const ClientDetailsView: React.FC<Props> = ({route}) => {
-    const item: any  = route.params?.item;
+    const item: ICustomer  = route.params?.item as ICustomer;
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
 
   const handleTabChange = (index: number) => {
@@ -33,7 +34,7 @@ const ClientDetailsView: React.FC<Props> = ({route}) => {
   return (
     <View style={styles.container}>
       <Header label="CLIENT DETAILS" canGoBack={true} />
-      <ClientInfoView />
+      <ClientInfoView item={item} />
       <Spacer height={10} />
       <View style={styles.tabsContainer}>
         <FlatList

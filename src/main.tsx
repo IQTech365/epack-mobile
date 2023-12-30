@@ -27,10 +27,12 @@ const Main = () => {
         text1Style={{
           fontSize: 18,
           fontWeight: '400',
+          color: COLOR_BLACK,
         }}
         text2Style={{
           fontSize: 16,
           fontWeight: '300',
+          color: COLOR_BLACK,
         }}
       />
     ),
@@ -42,6 +44,7 @@ const Main = () => {
         text1Style={{
           fontSize: 18,
           fontWeight: '400',
+          color: COLOR_BLACK,
         }}
         text2Style={{
           fontSize: 16,

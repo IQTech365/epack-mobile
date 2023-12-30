@@ -53,5 +53,4 @@ export interface IAddEnquiryRequest {
   billingBy: string;
   billingDetails: IBillingInfo | {};
   status: string;
-  addedBy:string;
 }

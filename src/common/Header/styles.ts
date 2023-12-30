@@ -45,13 +45,18 @@ const styles = StyleSheet.create({
         color: COLOR_WHITE,
         fontSize: 16,
     },
+    nameText2: {
+        color: COLOR_WHITE,
+        fontSize: 24,
+        fontWeight: '600',
+      },
     avtarContainer: {
         width: 30,
         height: 30,
         borderRadius: 15,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: COLOR_WHITE,
+        backgroundColor: COLOR_BLUE,
     },
     avatar: {
         width: 28,
