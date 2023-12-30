@@ -24,9 +24,9 @@ const ClientDetailsView: React.FC<Props> = ({route}) => {
   const showTabItem = () => {
     switch (activeTabIndex) {
       case 0:
-        return <ContactDetailsView  item = {item}/>
+        return <ContactDetailsView  item={item}/>
       case 1:
-        return <ShiftingDetailsView />
+        return <ShiftingDetailsView item={item} />
       default:
         return null;
     }

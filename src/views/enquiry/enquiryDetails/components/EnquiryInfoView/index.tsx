@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {View, Text, ImageBackground, TouchableOpacity, Linking} from 'react-native';
 import styles from './style';
 import HeaderGridBackgroundImage from '../../../../../images/header-grid.png';
-import PhoneIcon from '../../../../../images/icons/phone.svg';
+import PhoneIcon from '../../../../../images/icons/phone-call.svg';
 import WhatsappIcon from '../../../../../images/icons/whatsapp.svg';
 import Spacer from '../../../../../common/Spacer';
 import {formatDate} from '../../../../../utils/formatter';

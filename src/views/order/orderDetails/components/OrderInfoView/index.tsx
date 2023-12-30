@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import styles from './style';
 import HeaderGridBackgroundImage from '../../../../../images/header-grid.png';
-import PhoneIcon from '../../../../../images/icons/phone.svg';
+import PhoneIcon from '../../../../../images/icons/phone-call.svg';
 import WhatsappIcon from '../../../../../images/icons/whatsapp.svg';
 import Spacer from '../../../../../common/Spacer';
 import {
@@ -25,7 +25,6 @@ import {
   updateEnquiryStatusRequest,
 } from '../../../../../redux/slices/EnquirySlice';
 import Toast from 'react-native-toast-message';
-import {IGetOrdersData} from '../../../../../interface/order/IGetOrdersResponse';
 import {formatDate} from '../../../../../utils/formatter';
 import { IUpdateEnquiryStatusRequest } from '../../../../../interface/enquiry/IUpdateEnquiryStatusRequest';
 import { ISingleEnquiryData } from '../../../../../interface/enquiry/ISingleEnquiryResponse';

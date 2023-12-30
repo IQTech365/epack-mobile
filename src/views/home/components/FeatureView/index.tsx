@@ -9,11 +9,11 @@ import {Shadow} from 'react-native-shadow-2';
 
 interface Props {
   featureName: string;
-  featureType: FEATURE_TYPE,
+  featureType: FEATURE_TYPE;
+  onPress: (featureType: FEATURE_TYPE) => void;
 }
 
-const FeatureView: React.FC<Props> = ({featureName, featureType}) => {
-
+const FeatureView: React.FC<Props> = ({featureName, featureType, onPress}) => {
   const _getTaskIcon = () => {
     switch (featureType) {
       case FEATURE_TYPE.BRANCHES:
@@ -28,8 +28,13 @@ const FeatureView: React.FC<Props> = ({featureName, featureType}) => {
   };
 
   return (
-    <Shadow distance={4} startColor='#FFFFFF'>
-      <TouchableOpacity style={styles.container} activeOpacity={0.6}>
+    <Shadow distance={4} startColor="#FFFFFF">
+      <TouchableOpacity
+        style={styles.container}
+        activeOpacity={0.6}
+        onPress={() => {
+          onPress(featureType);
+        }}>
         <View style={styles.iconContainer}>{_getTaskIcon()}</View>
         <View style={styles.taskNameContainer}>
           <Text style={styles.taskNameText}>{featureName}</Text>

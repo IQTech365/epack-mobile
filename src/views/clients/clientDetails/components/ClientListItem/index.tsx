@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, Linking} from 'react-native';
 import {Shadow} from 'react-native-shadow-2';
 import styles from './style';
 import PhoneBlueIcon from '../../../../../images/icons/phone-blue.svg';
@@ -72,6 +72,40 @@ const ClientListItem: React.FC<IClientListItemProps> = ({
     return name;
   }
 
+  const handlePhoneCall = () => {
+    let phoneNumber:string = '';
+    if(item.billingBy == 'by Individual') {
+      phoneNumber = item.mobile;
+    } else {
+      const billingInfo:ICustomerBillingInfo = item.billingDetails as ICustomerBillingInfo;
+      if(billingInfo.authorityPersonMobile) {
+        phoneNumber = billingInfo.authorityPersonMobile;
+      } else if(billingInfo.employeeMobile) {
+        phoneNumber = billingInfo.employeeMobile;
+      }
+    }
+    if(phoneNumber) {
+      Linking.openURL(`tel:${phoneNumber}`);
+    }
+  }
+
+  const handleWhatsappCall = () => {
+    let phoneNumber:string = '';
+    if(item.billingBy == 'by Individual') {
+      phoneNumber = item.mobile;
+    } else {
+      const billingInfo:ICustomerBillingInfo = item.billingDetails as ICustomerBillingInfo;
+      if(billingInfo.authorityPersonMobile) {
+        phoneNumber = billingInfo.authorityPersonMobile;
+      } else if(billingInfo.employeeMobile) {
+        phoneNumber = billingInfo.employeeMobile;
+      }
+    }
+    if(phoneNumber) {
+      Linking.openURL(`whatsapp://send?phone=+91${phoneNumber}`);
+    }
+  }
+
   return (
     <View style={styles.wrapper} key={`${index}`}>
       <Shadow style={styles.cardWrapper} distance={1.5}>
@@ -84,11 +118,11 @@ const ClientListItem: React.FC<IClientListItemProps> = ({
               <Text style={styles.nameText}>{_getClientName()}</Text>
             </View>
             <View style={styles.contactOptionsContainer}>
-              <TouchableOpacity activeOpacity={0.6}>
+              <TouchableOpacity activeOpacity={0.6} onPress={handleWhatsappCall}>
                 <WhatsappIcon width={24} height={24} />
               </TouchableOpacity>
               <Spacer width={20} height={0} />
-              <TouchableOpacity activeOpacity={0.6}>
+              <TouchableOpacity activeOpacity={0.6} onPress={handlePhoneCall}>
                 <PhoneBlueIcon width={24} height={24} />
               </TouchableOpacity>
             </View>

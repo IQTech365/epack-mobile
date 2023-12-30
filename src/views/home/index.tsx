@@ -10,6 +10,11 @@ import BannerView from './components/BannerView';
 import FeatureView from './components/FeatureView';
 
 const HomePageView = () => {
+
+  const handleFeatureClick = (featureType: FEATURE_TYPE) => {
+    //
+  }
+
   return (
     <View style={styles.container}>
       <Header canGoBack={true} showDrawerIcon={true} label="Home" />
@@ -32,14 +37,17 @@ const HomePageView = () => {
           <FeatureView
             featureName="Branches"
             featureType={FEATURE_TYPE.BRANCHES}
+            onPress={handleFeatureClick}
           />
           <FeatureView
             featureName={`Vehicle\nManagement`}
             featureType={FEATURE_TYPE.VEHICLE_MANAGEMENT}
+            onPress={handleFeatureClick}
           />
           <FeatureView
             featureName="Franchies"
             featureType={FEATURE_TYPE.FRANCHIES}
+            onPress={handleFeatureClick}
           />
         </View>
         <Spacer height={10} />

@@ -5,10 +5,10 @@ import CollapsibleView from '../../../../../common/CollapsibleView';
 import Spacer from '../../../../../common/Spacer';
 import EnquiryDetailListItem from '../../../../enquiry/enquiryDetails/components/EnquiryDetailListItem';
 import styles from './style';
-import { ICustomerBillingInfo } from '../../../../../interface/customer/customer';
+import { ICustomer, ICustomerBillingInfo } from '../../../../../interface/customer/customer';
 
 interface IContactDetailsViewProps {
-  item:any
+  item:ICustomer
 }
 
 const ContactDetailsView: React.FC<IContactDetailsViewProps> = ({item}) => {
@@ -37,6 +37,14 @@ const ContactDetailsView: React.FC<IContactDetailsViewProps> = ({item}) => {
     return contact;
   };
 
+  const _getBillingInfo = ():ICustomerBillingInfo|null => {
+    let billingInfo:ICustomerBillingInfo | null = null;
+    if (item.billingBy == 'by Company') {
+      billingInfo = item.billingDetails as ICustomerBillingInfo;
+    } 
+    return billingInfo;
+  }
+
   return (
     <AvoidSoftInputViewHOC>
       <View style={styles.container}>
@@ -45,22 +53,20 @@ const ContactDetailsView: React.FC<IContactDetailsViewProps> = ({item}) => {
           <View>
             {item.billingDetails ==''?
             <View style={styles.elementContainer}>
-            <EnquiryDetailListItem label='Billing Type:' value='individual'/>
+            <EnquiryDetailListItem label='Billing Type:' value='Individual'/>
               <EnquiryDetailListItem label='Contact Person:' value={_getClientName()}/>
-              <EnquiryDetailListItem label='Email:' value={item.email}/>
-              <EnquiryDetailListItem label='Mobile:' value={_getContactNo()}/>
-              <EnquiryDetailListItem label='Landline:' value={item.landline} isLast={true}/>
+              <EnquiryDetailListItem label='Mobile:' value={_getContactNo()} isLast={true}/>
             </View>:
             <View style={styles.elementContainer}>
             <EnquiryDetailListItem label='Billing Type:' value={'Company'}  />
-              <EnquiryDetailListItem label='Company Name:' value={item.billingDetails.companyName}/>
-              <EnquiryDetailListItem label='Company GST:' value={item.billingDetails.companyGST}/>
-              <EnquiryDetailListItem label='Approval Authority:' value={item.billingDetails.approvalAuthority}/>
-              <EnquiryDetailListItem label='Approval Person:' value={item.billingDetails.authorityPersonName}/>
-              <EnquiryDetailListItem label='Mobile Number:' value={item.billingDetails.authorityPersonMobile}/>
-              <EnquiryDetailListItem label='Employee Name:' value={item.billingDetails.employeeName}/>
-              <EnquiryDetailListItem label='Employee Number:' value={item.billingDetails.employeeMobile}/>
-              <EnquiryDetailListItem label='Employee Designation:' value={item.billingDetails.employeeDesignation} isLast={true}/>
+              <EnquiryDetailListItem label='Company Name:' value={_getBillingInfo()?.companyName}/>
+              <EnquiryDetailListItem label='Company GST:' value={_getBillingInfo()?.companyGST}/>
+              <EnquiryDetailListItem label='Approval Authority:' value={_getBillingInfo()?.approvalAuthority}/>
+              <EnquiryDetailListItem label='Approval Person:' value={_getBillingInfo()?.authorityPersonName}/>
+              <EnquiryDetailListItem label='Mobile Number:' value={_getBillingInfo()?.authorityPersonMobile}/>
+              <EnquiryDetailListItem label='Employee Name:' value={_getBillingInfo()?.employeeName}/>
+              <EnquiryDetailListItem label='Employee Number:' value={_getBillingInfo()?.employeeMobile}/>
+              <EnquiryDetailListItem label='Employee Designation:' value={_getBillingInfo()?.employeeDesignation} isLast={true}/>
             </View>
             }
           </View>

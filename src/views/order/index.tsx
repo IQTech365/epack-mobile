@@ -25,7 +25,6 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
   const dispatch = useAppDispatch();
   const {orders, getOrdersRequesting, getOrdersSuccess, getOrdersFailure} =
     useAppSelector(state => state.Order);
-  // console.log('OrderPageView--orders----', orders);
   const {data: ordersArr} = orders || {};
   const companyId = useCompanyId();
 
@@ -134,18 +133,19 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
     return order;
   };
 
-  const handleOnRefresh = useCallback(() => {
+  const _fetchOrders = () => {
     const payload: Partial<IGetOrdersRequest> = {
       companyId: companyId,
     };
     dispatch(getOrdersRequest(payload));
+  }
+
+  const handleOnRefresh = useCallback(() => {
+    _fetchOrders();
   }, []);
 
   useEffect(() => {
-    const payload: Partial<IGetOrdersRequest> = {
-      companyId: companyId,
-    };
-    dispatch(getOrdersRequest(payload));
+    _fetchOrders();
   }, []);
 
   return (

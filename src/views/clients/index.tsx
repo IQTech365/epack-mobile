@@ -11,6 +11,8 @@ import {ICustomer, ICustomerRequest} from '../../interface/customer/customer';
 import {getCustomersRequest} from '../../redux/slices/CustomerSlice';
 import Spinner from '../../common/Spinner';
 import ClientListItem from './clientDetails/components/ClientListItem';
+import { IGetOrdersRequest } from '../../interface/order/IGetOrdersRequest';
+import { getOrdersRequest } from '../../redux/slices/OrderSlice';
 
 interface IClientPageViewProps {
   navigation: NavigationProp<any, any>;
@@ -21,7 +23,7 @@ const ClientPageView: React.FC<IClientPageViewProps> = ({navigation}) => {
   const {getCustomersRequesting, customers} = useAppSelector(
     state => state.Customer,
   );
-  console.log('ClientsPage--customers--', JSON.stringify(customers));
+  const {orders, getOrdersRequesting} = useAppSelector(state => state.Order);
   const dispatch = useAppDispatch();
 
   const _fetchCustomers = () => {
@@ -30,6 +32,13 @@ const ClientPageView: React.FC<IClientPageViewProps> = ({navigation}) => {
     };
     dispatch(getCustomersRequest(payload));
   };
+
+  const _fetchOrders = () => {
+    const payload: Partial<IGetOrdersRequest> = {
+      companyId: companyId,
+    };
+    dispatch(getOrdersRequest(payload));
+  }
 
   const handleOnRefresh = useCallback(() => {
     _fetchCustomers();
@@ -46,6 +55,7 @@ const ClientPageView: React.FC<IClientPageViewProps> = ({navigation}) => {
 
   useEffect(() => {
     _fetchCustomers();
+    // _fetchOrders();
   }, [dispatch]);
 
   const handleClientDetailsClick = (item: any) => {
