@@ -1,8 +1,13 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {
+  IGetPurchasedSubscriptionListResponse,
+  IGetPurchasedSubscriptionParams,
   ISubmoduleFeatureListResponse,
   ISubmoduleListResponse,
   ISubscriptionPlanListResponse,
+  IUpdateSubscriptionParams,
+  IUpdateSubscriptionRequest,
+  IUpdateSubscriptionResponse,
 } from '../../interface/subscription/subscription';
 
 interface ISubscriptionState {
@@ -24,6 +29,19 @@ interface ISubscriptionState {
   getSubmodulesRequestSuccess: boolean;
   getSubmodulesRequestFailure: boolean;
   getSubmodulesRequestError: any;
+  // Get Subscription purchase list
+  purchasedSubscriptions: IGetPurchasedSubscriptionListResponse | null;
+  getPurchasedSubscriptionsRequesting:boolean;
+  getPurchasedSubscriptionsSuccess:boolean;
+  getPurchasedSubscriptionsFailure:boolean;
+  getPurchasedSubscriptionsError:any;
+
+  // Update Subscription info with company_id
+  updateSubscriptionInfo: IUpdateSubscriptionResponse | null;
+  updateSubscriptionRequesting:boolean;
+  updateSubscriptionSuccess:boolean;
+  updateSubscriptionFailure:boolean;
+  updateSubscriptionError:any;
 }
 
 const initialState: ISubscriptionState = {
@@ -45,6 +63,18 @@ const initialState: ISubscriptionState = {
   getSubmodulesRequestSuccess: false,
   getSubmodulesRequestFailure: false,
   getSubmodulesRequestError: null,
+  // Get Subscription purchase list
+  purchasedSubscriptions: null,
+  getPurchasedSubscriptionsRequesting:false,
+  getPurchasedSubscriptionsSuccess:false,
+  getPurchasedSubscriptionsFailure:false,
+  getPurchasedSubscriptionsError:null,
+  // Update Subscription info with company_id
+  updateSubscriptionInfo: null,
+  updateSubscriptionRequesting:false,
+  updateSubscriptionSuccess:false,
+  updateSubscriptionFailure:false,
+  updateSubscriptionError:null,
 };
 
 export const SubscriptionSlice = createSlice({
@@ -105,6 +135,49 @@ export const SubscriptionSlice = createSlice({
       state.getSubmodulesRequestFailure = true;
       state.getSubmodulesRequestError = action.payload;
     },
+    // Get Subscription purchase list
+    getPurchasedSubscriptionRequest: (state, action: PayloadAction<IGetPurchasedSubscriptionParams>) => {
+      state.getPurchasedSubscriptionsRequesting = true;
+    },
+    getPurchasedSubscriptionSuccess: (
+      state,
+      action: PayloadAction<IGetPurchasedSubscriptionListResponse>,
+    ) => {
+      state.getPurchasedSubscriptionsRequesting = false;
+      state.getPurchasedSubscriptionsSuccess = true;
+      state.purchasedSubscriptions = action.payload;
+    },
+    getPurchasedSubscriptionFailure: (state, action: PayloadAction<any>) => {
+      state.getPurchasedSubscriptionsRequesting = false;
+      state.getPurchasedSubscriptionsSuccess = false;
+      state.getPurchasedSubscriptionsFailure = true;
+      state.getPurchasedSubscriptionsError = action.payload;
+    },
+    // Update Subscription info with company_id
+    updateSubscriptionRequest: (state, action: PayloadAction<IUpdateSubscriptionRequest>) => {
+      state.updateSubscriptionRequesting = true;
+    },
+    updateSubscriptionSuccess: (
+      state,
+      action: PayloadAction<IUpdateSubscriptionResponse>,
+    ) => {
+      state.updateSubscriptionRequesting = false;
+      state.updateSubscriptionSuccess = true;
+      state.updateSubscriptionInfo = action.payload;
+    },
+    updateSubscriptionFailure: (state, action: PayloadAction<any>) => {
+      state.updateSubscriptionRequesting = false;
+      state.updateSubscriptionSuccess = false;
+      state.updateSubscriptionFailure = true;
+      state.updateSubscriptionError = action.payload;
+    },
+    resetUpdateSubscriptionRequest: (state) => {
+      state.updateSubscriptionRequesting = false;
+      state.updateSubscriptionSuccess = false;
+      state.updateSubscriptionFailure = false;
+      state.updateSubscriptionError = null;
+      state.updateSubscriptionInfo = null;
+    },
   },
 });
 
@@ -123,4 +196,13 @@ export const {
   getSubmodulesRequest,
   getSubmodulesSuccess,
   getSubmodulesFailure,
+  // Get Subscription purchase list
+  getPurchasedSubscriptionRequest,
+  getPurchasedSubscriptionSuccess,
+  getPurchasedSubscriptionFailure,
+  // Update Subscription info with company_id
+  updateSubscriptionRequest,
+  updateSubscriptionSuccess,
+  updateSubscriptionFailure,
+  resetUpdateSubscriptionRequest,
 } = SubscriptionSlice.actions;

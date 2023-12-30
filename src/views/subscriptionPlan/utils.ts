@@ -1,7 +1,9 @@
 import {IModule} from '../../interface/setting/role/IModule';
 import {
+  IPlanFeature,
   ISubmodule,
   ISubmoduleFeature,
+  ISubmoduleFeatureWithActions,
   ISubscriptionFeature,
   ISubscriptionPlan,
 } from '../../interface/subscription/subscription';
@@ -58,6 +60,42 @@ export const transformFeatureList = (
   return transformList;
 };
 
+export const _getPlanFeatures = (list:ISubscriptionFeature[]) => {
+  const planFeatures:IPlanFeature[] = [];
+  const moduleIds = list.map((d:ISubscriptionFeature) => d.moduleId);
+  const nonDuplicateModuleIds = Array.from(new Set(moduleIds));
+  nonDuplicateModuleIds.forEach((d:string) => {
+    const module:ISubscriptionFeature = list.find((e:ISubscriptionFeature) => e.moduleId == d) as ISubscriptionFeature;
+    const submodules:ISubscriptionFeature[] = list.filter((sm:ISubscriptionFeature) => sm.moduleId == module.moduleId);
+    const submodulesWithFeatures:ISubmoduleFeatureWithActions[] = [];
+    submodules.forEach((submod:ISubscriptionFeature) => {
+      const features:string[] = _getSubmoduleFeatures(submod.subModuleId, submodules);
+      const item:ISubmoduleFeatureWithActions = {
+        moduleFeature: submod.subModuleName,
+        actions: features
+      }
+      submodulesWithFeatures.push(item);
+    })
+    const ids = submodulesWithFeatures.map(({ moduleFeature }) => moduleFeature);
+    const filterDuplicates:ISubmoduleFeatureWithActions[] = submodulesWithFeatures.filter(({ moduleFeature }, index) =>
+    !ids.includes(moduleFeature, index + 1));
+    const planFeature:IPlanFeature = {
+      moduleName: module.moduleName,
+      moduleFeatures: filterDuplicates
+    }
+    planFeatures.push(planFeature);
+  });
+  
+  return planFeatures;
+}
+
+const _getSubmoduleFeatures = ( submoduleId:string, list:ISubscriptionFeature[]) => {
+  let submoduleFeatures:string[] = [];
+  const filterSubmodules = list.filter((d:ISubscriptionFeature) => d.subModuleId == submoduleId);
+  submoduleFeatures = filterSubmodules.map((d:ISubscriptionFeature) => d.featureName);
+  return submoduleFeatures;
+}
+
 export const prepareSubscriptionPlanList = (data: ISubscriptionPlan[], moduleData: IModule[],
     submoduleData: ISubmodule[],
     submoduleFeatureData: ISubmoduleFeature[]): ISubscriptionPlan[] => {
@@ -71,5 +109,19 @@ export const prepareSubscriptionPlanList = (data: ISubscriptionPlan[], moduleDat
       return plan
     });
   }
-  return plans;
+  return prepareSubscriptionPlanList2(plans);
+};
+
+export const prepareSubscriptionPlanList2 = (data: ISubscriptionPlan[]): ISubscriptionPlan[] => {
+let plans: ISubscriptionPlan[] = [];
+if (data && Array.isArray(data) && data.length > 0) {
+  plans = data.map((d: ISubscriptionPlan) => {
+    const plan: ISubscriptionPlan = {
+      ...d,
+      planFeatures: _getPlanFeatures(d.list)
+    };
+    return plan
+  });
+}
+return plans;
 };

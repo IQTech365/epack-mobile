@@ -1,13 +1,7 @@
 import { AxiosResponse } from 'axios';
 import {Api} from '../http/Api';
-import { GET_SUBMODULE_FEATURES_ALL, GET_SUBMODULE_LIST, GET_SUBSCRIPTION_PLANS } from '../http/Endpoint';
-import { ISubmoduleFeatureListResponse, ISubmoduleListResponse, ISubscriptionPlanListResponse } from '../interface/subscription/subscription';
-
-// Image Upload
-// export const GetCustomerListService = async (payload: ICustomerRequest): Promise<any> => {
-//     const api = Api.getInstance();
-//     return await api.post<ICustomerRequest, AxiosResponse<ICustomerListResponse>>(payload, GET_CUSTOMERS);
-// }
+import { GET_SUBMODULE_FEATURES_ALL, GET_SUBMODULE_LIST, GET_SUBSCRIPTION_PLANS, GET_SUBSCRIPTION_PURCHASE_LIST, UPDATE_SUBSCRIPTION_INFO } from '../http/Endpoint';
+import { IGetPurchasedSubscriptionListResponse, IGetPurchasedSubscriptionParams, ISubmoduleFeatureListResponse, ISubmoduleListResponse, ISubscriptionPlanListResponse, IUpdateSubscriptionPayload, IUpdateSubscriptionRequest, IUpdateSubscriptionResponse } from '../interface/subscription/subscription';
 
 // Subscription Plans
 export const GetSubscriptionPlanListService = async (): Promise<ISubscriptionPlanListResponse> => {
@@ -25,4 +19,17 @@ export const GetSubmoduleFeaturesListService = async (): Promise<ISubmoduleFeatu
 export const GetSubmoduleListService = async (): Promise<ISubmoduleListResponse> => {
     const api = Api.getInstance();
     return await api.get<ISubmoduleListResponse>(GET_SUBMODULE_LIST);
+}
+
+// Get Subscription purchase list
+export const GetPurchasedSubscriptionListService = async (params:IGetPurchasedSubscriptionParams): Promise<IGetPurchasedSubscriptionListResponse> => {
+    const api = Api.getInstance();
+    return await api.get<IGetPurchasedSubscriptionListResponse>(GET_SUBSCRIPTION_PURCHASE_LIST(params.authId, params.companyId));
+}
+// Update Subscription info with company_id
+export const UpdateSubscriptionInfoService = async (req: IUpdateSubscriptionRequest): Promise<any> => {
+    const api = Api.getInstance();
+    const {params, payload} = req;
+    const {authId, purchaseId} = params;
+    return await api.post<IUpdateSubscriptionPayload, AxiosResponse<IUpdateSubscriptionResponse>>(payload, UPDATE_SUBSCRIPTION_INFO(authId, purchaseId));
 }

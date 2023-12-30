@@ -25,6 +25,17 @@ export interface ISubscriptionPlan {
   list: ISubscriptionFeature[];
   created: string;
   __v: number;
+  planFeatures:IPlanFeature[];
+}
+
+export interface ISubmoduleFeatureWithActions {
+  moduleFeature:string;
+  actions:string[];
+}
+
+export interface IPlanFeature {
+  moduleName:string;
+  moduleFeatures:ISubmoduleFeatureWithActions[];
 }
 
 export interface ISubscriptionPlanListResponse {
@@ -65,4 +76,35 @@ export interface ISubmoduleListResponse {
   data: ISubmodule[];
   status: number;
   error: boolean;
+}
+
+// Get Subscription purchase list
+export interface IGetPurchasedSubscriptionParams {
+  authId: string;
+  companyId:string;
+}
+
+export interface IPurchasedSubscription {}
+export interface IGetPurchasedSubscriptionListResponse {
+  data:IPurchasedSubscription[];
+  status:number;
+  error:boolean;
+}
+
+// Update Subscription info with company_id
+export interface IUpdateSubscriptionParams {
+  authId: string;
+  purchaseId:string;
+}
+export interface IUpdateSubscriptionPayload {
+  companyId:string;
+}
+export interface IUpdateSubscriptionRequest {
+  params: IUpdateSubscriptionParams;
+  payload: IUpdateSubscriptionPayload;
+}
+export interface IUpdateSubscriptionResponse {
+  data:any;
+  status:number;
+  error:boolean;
 }

@@ -144,3 +144,7 @@ export const GET_SUBSCRIPTION_PLANS = `/subscription/getAll`;
 export const GET_SUBMODULE_FEATURES_ALL = `/content-management/sub-module-feature/all`;
 // Submodule list
 export const GET_SUBMODULE_LIST = `/content-management/sub-module/all`;
+// Get Subscription purchase list
+export const GET_SUBSCRIPTION_PURCHASE_LIST = (auth_id, company_id) => `/purchase/get/${auth_id}/${company_id}`;
+// Update Subscription info with company_id
+export const UPDATE_SUBSCRIPTION_INFO = (auth_id, purchase_id) => `/purchase/update/${auth_id}/${purchase_id}`;

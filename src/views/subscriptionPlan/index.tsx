@@ -16,6 +16,7 @@ import {getModulesRequest} from '../../redux/slices/UserRoleManagementSlice';
 import {ISubscriptionPlan} from '../../interface/subscription/subscription';
 import { prepareSubscriptionPlanList } from './utils';
 import BackgroundImage from '../../images/subscription_bg.png';
+import SubscriptionPlanCard2 from './components/subscriptionPlanCard2';
 
 const SubscriptionPlanView = () => {
   const dispatch = useAppDispatch();
@@ -79,7 +80,7 @@ const SubscriptionPlanView = () => {
         width={width}
         mode="parallax"
         // autoPlay={true}
-        data={subscriptionplans}
+        data={_prepareSubscriptionPlanList()}
         scrollAnimationDuration={1000}
         panGestureHandlerProps={{
           activeOffsetX: [-10, 10],
@@ -88,7 +89,8 @@ const SubscriptionPlanView = () => {
         renderItem={({item, index}) => {
           return (
             <ScrollView showsVerticalScrollIndicator={false}>
-              <SubscriptionPlanCard item={item} onPress={handleByPlan} />
+              {/* <SubscriptionPlanCard item={item} onPress={handleByPlan} /> */}
+              <SubscriptionPlanCard2 item={item} onPress={handleByPlan} />
             </ScrollView>
           );
         }}
