@@ -95,11 +95,11 @@ const OrderListItem: React.FC<IOrderListItemProps> = ({
               </Text>
             </View>
           </View>
-          <View style={styles.rowContainer}>
-            <View style={[styles.rowItemContainer, {borderBottomWidth: 0}]}>
+          <View style={[styles.rowContainer, {borderBottomLeftRadius: 5, borderBottomRightRadius: 5}]}>
+            <View style={[styles.rowItemContainer, {borderBottomLeftRadius: 5}]}>
               <Text style={styles.labelText}>Shifting Luggage</Text>
             </View>
-            <View style={[styles.rowItemContainer2, {borderBottomWidth: 0}]}>
+            <View style={[styles.rowItemContainer2, {borderBottomRightRadius: 5}]}>
               <Text style={styles.valueText}>{item.shiftingLuggage}</Text>
             </View>
           </View>
