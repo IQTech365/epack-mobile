@@ -5,4 +5,5 @@ export type AuthStackParamList = {
     ForgotPassword: undefined,
     Intro: undefined,
     RegisterCompany: {registrationStep: number},
+    Subscription: undefined,
 }

@@ -1,3 +1,16 @@
+export interface IGovtRegDetails {
+  companyType: string;
+  companyPAN: string;
+  companyGST: string;
+  incorporationNumber: string;
+  IBAStatus: string;
+  IBAcode: string;
+  IBAExpiry: string;
+  udyamRegdNumber: string;
+  shopActNumber: string;
+  ISONumber: string;
+}
+
 export interface ICompanyInfoData {
   _id: string;
   authId: string;
@@ -9,16 +22,15 @@ export interface ICompanyInfoData {
   state: string;
   city: string;
   pincode: string;
-  ibaApprovalCode: string;
-  ibaValidDate: string;
   companyWebite: string;
-  CINNumber: string;
   companyLogo: string;
   punchLine: string;
   companyProfile: string;
   district: string;
   postOffice: string;
+  govRegdDetails: IGovtRegDetails;
   accountDetais: [];
+  referralCode: string;
   isActive: boolean;
   isDeleted: boolean;
   created: string;
@@ -26,7 +38,7 @@ export interface ICompanyInfoData {
 }
 
 export interface IGetCompaniesResponse {
-  data: [ICompanyInfoData];
+  data: ICompanyInfoData[];
   status: number;
   error: boolean;
 }

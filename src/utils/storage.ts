@@ -71,3 +71,27 @@ export const removeIsRegistrationComplete = async () => {
     console.log('AsyncStorage Error in removing registration', e);
   }
 };
+
+export const setCurrentCompanyId = async (companyId:string) => {
+  try {
+    await AsyncStorage.setItem('company_id', companyId);
+  } catch (error) {
+    console.log('AsyncStorage Error in saving', error);
+  }
+};
+
+export const getCurrentCompanyId = async () => {
+  try {
+    return await AsyncStorage.getItem('company_id');
+  } catch (e) {
+    console.log('AsyncStorage Error in fetching company_id', e);
+  }
+};
+
+export const removeCurrentCompanyId = async () => {
+  try {
+    return await AsyncStorage.removeItem('company_id');
+  } catch (e) {
+    console.log('AsyncStorage Error in removing company_id', e);
+  }
+};

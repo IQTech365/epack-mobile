@@ -1,23 +1,23 @@
 // Subscription Plans
 export interface ISubscriptionFeature {
   featureId: string;
-  featureName:string;
+  featureName: string;
   moduleId: string;
-  moduleName:string;
+  moduleName: string;
   subModuleId: string;
-  subModuleName:string;
+  subModuleName: string;
   qty: string;
 }
 
 export interface IPlan {
-  duration:string;
+  duration: string;
   amount: string;
 }
 
 export interface ISubscriptionPlan {
   _id: string;
   subscriptionType: string;
-  plans:IPlan[];
+  plans: IPlan[];
   duration: string;
   amount: number;
   isActive: boolean;
@@ -25,17 +25,17 @@ export interface ISubscriptionPlan {
   list: ISubscriptionFeature[];
   created: string;
   __v: number;
-  planFeatures:IPlanFeature[];
+  planFeatures: IPlanFeature[];
 }
 
 export interface ISubmoduleFeatureWithActions {
-  moduleFeature:string;
-  actions:string[];
+  moduleFeature: string;
+  actions: string[];
 }
 
 export interface IPlanFeature {
-  moduleName:string;
-  moduleFeatures:ISubmoduleFeatureWithActions[];
+  moduleName: string;
+  moduleFeatures: ISubmoduleFeatureWithActions[];
 }
 
 export interface ISubscriptionPlanListResponse {
@@ -81,30 +81,60 @@ export interface ISubmoduleListResponse {
 // Get Subscription purchase list
 export interface IGetPurchasedSubscriptionParams {
   authId: string;
-  companyId:string;
+  companyId: string;
 }
 
 export interface IPurchasedSubscription {}
 export interface IGetPurchasedSubscriptionListResponse {
-  data:IPurchasedSubscription[];
-  status:number;
-  error:boolean;
+  data: IPurchasedSubscription[];
+  status: number;
+  error: boolean;
 }
 
 // Update Subscription info with company_id
 export interface IUpdateSubscriptionParams {
   authId: string;
-  purchaseId:string;
+  purchaseId: string;
 }
 export interface IUpdateSubscriptionPayload {
-  companyId:string;
+  companyId: string;
 }
 export interface IUpdateSubscriptionRequest {
   params: IUpdateSubscriptionParams;
   payload: IUpdateSubscriptionPayload;
 }
 export interface IUpdateSubscriptionResponse {
-  data:any;
-  status:number;
-  error:boolean;
+  data: any;
+  status: number;
+  error: boolean;
+}
+
+// Razorpay Order
+export interface IRazorPayOrderSuccessResponse {
+  id: string;
+  entity: string;
+  amount: number;
+  amount_paid: number;
+  amount_due: number;
+  currency: string;
+  receipt: string;
+  offer_id: any;
+  status: string;
+  attempts: string;
+  notes: any[];
+  created_at: any;
+}
+
+export interface IRazorPayOrderFailure {
+  code: string;
+  description: string;
+  source: string;
+  step: string;
+  reason: string;
+  metadata: any;
+  field: string;
+}
+
+export interface IRazorPayOrderFailureResponse {
+  error:IRazorPayOrderFailure
 }

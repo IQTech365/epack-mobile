@@ -23,6 +23,8 @@ import Button from '../../../../common/Button';
 import {ICompanyRegistrationRequest} from '../../../../interface/companyRegistration/ICompanyRegistrationRequest';
 import {addCompanyRequest} from '../../../../redux/slices/CompanySlice';
 import { ACTION } from '../../registrationReducer2';
+import { ICompanyInfoData } from '../../../../interface/companyRegistration/IGetCompaniesResponse';
+import { setCurrentCompanyId } from '../../../../utils/storage';
 
 interface IProps {
   currentStep: number;
@@ -161,8 +163,12 @@ const CompanyBasicDetailsView: React.FC<IProps> = ({
 
   useEffect(() => {
     if (!requesting && success && !error) {
-      console.log('data-data---block-3');
-      setCurrentStep(currentStep + 1);
+      const {data} = addCompanyInfo || {}
+      if(data) {
+        const company:ICompanyInfoData = data as ICompanyInfoData;
+        setCurrentCompanyId(company._id);
+        setCurrentStep(currentStep + 1);
+      }
     } else if (!requesting && !success && error) {
       Alert.alert('Error in registering the company');
     }

@@ -53,4 +53,24 @@ export class Api extends HttpClient {
   public getPostalAddress = async <TResponse>(url: string, config: RequestInit = {}): Promise<TResponse> => {
     return fetch(url, config).then(res => res.json()).then(data => data as TResponse);
   }
+
+  // ** Create Order_id on Server before `Razorpay Payment`
+  public createOrder = async <R>(order_amount:number):Promise<R> => {
+    const kyeId = `rzp_test_Dl3dSM01ZoLIgz`;
+    const keySecret = `FIxbbAQZxuOh2It12i2FKSK8`;
+    const url = `https://api.razorpay.com/v1/orders`;
+    const data = {
+      "amount": order_amount,
+      "currency": "INR",
+  }
+    const config:RequestInit = {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Basic ' + btoa(`${kyeId}:${keySecret}`),
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    }
+    return fetch(url, config).then(res => res.json()).then(data => data as R)
+  }
 }

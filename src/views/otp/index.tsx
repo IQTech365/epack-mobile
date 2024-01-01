@@ -1,5 +1,5 @@
 import React, {useCallback, useState, useRef, useEffect} from 'react';
-import {Alert, View} from 'react-native';
+import {View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import AvoidSoftInputViewHOC from '../../common/AvoidSoftInputViewHOC';
 import styles from './styles';
@@ -13,12 +13,22 @@ import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {INTRO_BG_LINEARGRADIENT} from '../../utils/colors';
 import Label from '../../common/Label';
 import OTPInput from '../../common/OtpInput';
-import {resetVerifyOtpRequest, verifyOtpRequest} from '../../redux/slices/OtpSlice';
+import {
+  resetVerifyOtpRequest,
+  verifyOtpRequest,
+} from '../../redux/slices/OtpSlice';
 import Header from '../../common/Header';
-import { IOtpVerifyRequest } from '../../interface/otp/IOtpVerifyRequest';
-import { getIsRegistrationComplete, setAuthToken, setIsRegistrationComplete, setLoginStatus } from '../../utils/storage';
-import { getCompaniesRequest } from '../../redux/slices/CompanySlice';
-import { useAuthContext } from '../../provider/AuthProvider';
+import {IOtpVerifyRequest} from '../../interface/otp/IOtpVerifyRequest';
+import {
+  setAuthToken,
+  setIsRegistrationComplete,
+  setLoginStatus,
+} from '../../utils/storage';
+import {getCompaniesRequest} from '../../redux/slices/CompanySlice';
+import {useAuthContext} from '../../provider/AuthProvider';
+import CompanyListModal from '../../common/CompanyListModal';
+import {ICompanyInfoData} from '../../interface/companyRegistration/IGetCompaniesResponse';
+import { ToastType, showToast } from '../../utils/utility';
 
 const OTPPageView = (props: any) => {
   const {navigation} = props;
@@ -33,7 +43,13 @@ const OTPPageView = (props: any) => {
     verifiedData,
     otpData,
   } = useAppSelector(state => state.OTP);
-  const {getCompaniesRequesting, getCompaniesSuccess, getCompaniesFailure, companies} = useAppSelector(state => state.Company);
+  const {
+    getCompaniesRequesting,
+    getCompaniesSuccess,
+    getCompaniesFailure,
+    companies,
+  } = useAppSelector(state => state.Company);
+
 
   const [otp1, setOtp1] = useState<string>('');
   const [otp2, setOtp2] = useState<string>('');
@@ -41,6 +57,7 @@ const OTPPageView = (props: any) => {
   const [otp4, setOtp4] = useState<string>('');
   const [otp5, setOtp5] = useState<string>('');
   const [otp6, setOtp6] = useState<string>('');
+  const [showCompaniesModal, setShowCompaniesModal] = useState<boolean>(false);
 
   const inputRef1 = useRef();
   const inputRef2 = useRef();
@@ -109,39 +126,63 @@ const OTPPageView = (props: any) => {
     await setIsRegistrationComplete();
     await setLoginStatus();
     setLoggedIn(true);
+  };
+
+  const closeModal = () => {
+    setShowCompaniesModal(false);
+    navigation.navigate("Subscription");
+  };
+
+  const _getCompaniesList = (): ICompanyInfoData[] => {
+    const {data} = companies || {};
+    let list: ICompanyInfoData[] = [];
+    if (data && Array.isArray(data) && data.length > 0) {
+      list = data;
+    }
+    return list;
+  };
+
+  const _doCompleteRegistration = () => {
+    setShowCompaniesModal(false);
+    navigation.navigate(AuthStackRoute.RegisterCompany, {
+          registrationStep: 3,
+    });
   }
 
   useEffect(() => {
-    if(!verifyOtpRequesting && verifyOtpSuccess) {
-      console.log('verifiedData------', JSON.stringify(verifiedData));
+    if (!verifyOtpRequesting && verifyOtpSuccess) {
       const {data} = verifiedData || {};
-      if(data?.id) {
+      if (data?.id) {
         setAuthToken(data.token);
         dispatch(getCompaniesRequest(data?.id));
         dispatch(resetVerifyOtpRequest());
       }
-    } else if(!verifyOtpRequesting && verifyOtpFailure) {
+    } else if (!verifyOtpRequesting && verifyOtpFailure) {
       dispatch(resetVerifyOtpRequest());
-      Alert.alert('Otp verification failed');
+      showToast('Otp verification failed. Try again!', ToastType.ERROR);
     }
   }, [verifyOtpRequesting, verifyOtpSuccess, verifyOtpFailure]);
 
   useEffect(() => {
-    if(!getCompaniesRequesting && getCompaniesSuccess) {
+    if (!getCompaniesRequesting && getCompaniesSuccess) {
       const {data} = companies || {};
       console.log('data-data----', JSON.stringify(data));
-      if(data && Array.isArray(data) && data.length > 0) {
-        const firstCompany = data[0];
-        if(firstCompany.companySignature) {
-          completeRegistrationAndLoggedIn();
-        } else {
-          navigation.navigate(AuthStackRoute.RegisterCompany, {registrationStep: 3});
-        }
+      if (data && Array.isArray(data) && data.length > 0) {
+        // const firstCompany = data[0];
+        // if (firstCompany.companySignature) {
+        //   completeRegistrationAndLoggedIn();
+        // } else {
+        //   navigation.navigate(AuthStackRoute.RegisterCompany, {
+        //     registrationStep: 3,
+        //   });
+        // }
+        setShowCompaniesModal(true);
       } else {
-        navigation.navigate(AuthStackRoute.RegisterCompany, {registrationStep: 1});
+        setShowCompaniesModal(false);
+        navigation.navigate("Subscription");
       }
-    } else if(!getCompaniesRequesting && getCompaniesFailure) {
-      Alert.alert('Error in Getting companies details.');
+    } else if (!getCompaniesRequesting && getCompaniesFailure) {
+      showToast('Error in Getting companies details.', ToastType.ERROR);
     }
   }, [getCompaniesRequesting, getCompaniesSuccess, getCompaniesFailure]);
 
@@ -162,37 +203,37 @@ const OTPPageView = (props: any) => {
             ref={inputRef1}
             onChangeText={onChangeOtpText1}
             autoFocus={true}
-            inputType='numeric'
+            inputType="numeric"
           />
           <OTPInput
             //@ts-ignore
             ref={inputRef2}
             onChangeText={onChangeOtpText2}
-            inputType='numeric'
+            inputType="numeric"
           />
           <OTPInput
             //@ts-ignore
             ref={inputRef3}
             onChangeText={onChangeOtpText3}
-            inputType='numeric'
+            inputType="numeric"
           />
           <OTPInput
             //@ts-ignore
             ref={inputRef4}
             onChangeText={onChangeOtpText4}
-            inputType='numeric'
+            inputType="numeric"
           />
           <OTPInput
             //@ts-ignore
             ref={inputRef5}
             onChangeText={onChangeOtpText5}
-            inputType='numeric'
+            inputType="numeric"
           />
           <OTPInput
             //@ts-ignore
             ref={inputRef6}
             onChangeText={onChangeOtpText6}
-            inputType='numeric'
+            inputType="numeric"
           />
         </View>
         <Spacer />
@@ -203,7 +244,18 @@ const OTPPageView = (props: any) => {
           disabled={disabled}
         />
         <Spacer height={50} />
-        <Spinner variant='white' show={verifyOtpRequesting || getCompaniesRequesting} />
+        <Spinner
+          variant="white"
+          show={verifyOtpRequesting || getCompaniesRequesting}
+        />
+        <CompanyListModal
+          visible={showCompaniesModal}
+          onPress={closeModal}
+          data={_getCompaniesList()}
+          doCompleteRegistration={() => {
+            _doCompleteRegistration()
+          }}
+        />
       </LinearGradient>
     </AvoidSoftInputViewHOC>
   );

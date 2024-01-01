@@ -153,6 +153,13 @@ export const SubscriptionSlice = createSlice({
       state.getPurchasedSubscriptionsFailure = true;
       state.getPurchasedSubscriptionsError = action.payload;
     },
+    resetGetPurchasedSubscriptionRequest: (state, action: PayloadAction<any>) => {
+      state.getPurchasedSubscriptionsRequesting = false;
+      state.getPurchasedSubscriptionsSuccess = false;
+      state.getPurchasedSubscriptionsFailure = true;
+      state.getPurchasedSubscriptionsError = null;
+      state.purchasedSubscriptions = null;
+    },
     // Update Subscription info with company_id
     updateSubscriptionRequest: (state, action: PayloadAction<IUpdateSubscriptionRequest>) => {
       state.updateSubscriptionRequesting = true;
@@ -200,6 +207,7 @@ export const {
   getPurchasedSubscriptionRequest,
   getPurchasedSubscriptionSuccess,
   getPurchasedSubscriptionFailure,
+  resetGetPurchasedSubscriptionRequest,
   // Update Subscription info with company_id
   updateSubscriptionRequest,
   updateSubscriptionSuccess,

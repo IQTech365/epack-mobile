@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, ScrollView, Dimensions, ImageBackground} from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import Header from '../../common/Header';
@@ -13,12 +13,22 @@ import {
   getSubscriptionPlansRequest,
 } from '../../redux/slices/SubscriptionSlice';
 import {getModulesRequest} from '../../redux/slices/UserRoleManagementSlice';
-import {ISubscriptionPlan} from '../../interface/subscription/subscription';
-import { prepareSubscriptionPlanList } from './utils';
+import {
+  IRazorPayOrderFailureResponse,
+  IRazorPayOrderSuccessResponse,
+  ISubscriptionPlan,
+} from '../../interface/subscription/subscription';
+import {prepareSubscriptionPlanList} from './utils';
 import BackgroundImage from '../../images/subscription_bg.png';
 import SubscriptionPlanCard2 from './components/subscriptionPlanCard2';
+import RazorpayCheckout from 'react-native-razorpay';
+import * as SubscriptionService from '../../service/SubscriptionService';
+import {ToastType, showToast} from '../../utils/utility';
+import Spinner from '../../common/Spinner';
+import { AuthStackRoute } from '../../utils/constants';
 
-const SubscriptionPlanView = () => {
+const SubscriptionPlanView = (props: any) => {
+  const {navigation} = props;
   const dispatch = useAppDispatch();
   const {
     subscriptionPlans,
@@ -29,39 +39,100 @@ const SubscriptionPlanView = () => {
     getSubmoduleFeaturesRequestSuccess,
     getSubmodulesRequesting,
     getSubmodulesRequestSuccess,
-    submodules
+    submodules,
   } = useAppSelector(state => state.Subscription);
   console.log('submodules----', JSON.stringify(submodules));
-  
+
   const {modules, getModulesRequesting, getModulesSuccess} = useAppSelector(
     state => state.UserRole,
   );
+  const [paymentProcessing, setPaymentProcessing] = useState<boolean>(false);
+  const [paymentDone, setPaymentDone] = useState<boolean>(false);
   const {data: subscriptionData} = subscriptionPlans || {};
   const {data: moduleData} = modules || {};
   const {data: submoduleData} = submodules || {};
   const {data: submoduleFeatureData} = submoduleFeatures || {};
-  const handleByPlan = (planType: string) => {
-    // TODO: Process Payment and the move user to Dashboard
+  const handleByPlan = async (plan: ISubscriptionPlan) => {
+    // Create Order on Server
+    // try {
+    //   const orderSuccessResposne:IRazorPayOrderSuccessResponse = await SubscriptionService.createRazorpayOrder(100);
+    //   console.log('Razorpay-orderSuccessResposne-----', JSON.stringify(orderSuccessResposne));
+    //   // TODO: Start Checkout
+    // } catch (error) {
+    //   console.log('handleByPlan---', JSON.stringify(error));
+    //   const orderFailureResponse:IRazorPayOrderFailureResponse = error as IRazorPayOrderFailureResponse;
+    //   console.log('Razorpay-orderFailureResponse-----', JSON.stringify(orderFailureResponse));
+    //   showToast(orderFailureResponse?.error?.description, ToastType.ERROR);
+    // }
+    _doPayment(plan);
   };
 
+  const _doPayment = (plan: ISubscriptionPlan) => {
+    const options: any = {
+      description: 'Credits towards consultation',
+      image: 'https://i.imgur.com/3g7nmJC.jpg',
+      currency: 'INR',
+      key: 'rzp_test_Dl3dSM01ZoLIgz',
+      amount: '5000',
+      name: 'EpackBook',
+      order_id: 'order_NJI9cMGygj24Z0', //Replace this with an order_id created using Orders API.
+      prefill: {
+        email: 'essencewebtech@gmail.com',
+        contact: '9191919191',
+        name: 'Gaurav Kumar',
+      },
+      theme: {color: '#53a20e'},
+    };
+    try {
+      RazorpayCheckout.open(options)
+            .then((data:any) => {
+              // handle success
+              // alert(`Success: ${data.razorpay_payment_id}`);
+              console.log('Payment-Success----', data.razorpay_payment_id);
+              showToast(data.razorpay_payment_id, ToastType.SUCCESS);
+              setPaymentProcessing(false);
+              setPaymentDone(true);
+              navigation.navigate(AuthStackRoute.RegisterCompany, {
+                registrationStep: 1,
+              });
+            })
+            .catch((error:any) => {
+              // handle failure
+              // alert(`Error: ${error.code} | ${error.description}`);
+              showToast(`Error: ${error.code} | ${error.description}`, ToastType.ERROR);
+              setPaymentProcessing(false);
+            })
+    } catch (err) {
+      console.log('error processing');
+    }
+  }
+
   const _prepareSubscriptionPlanList = (): ISubscriptionPlan[] => {
-    return prepareSubscriptionPlanList(subscriptionData, moduleData, submoduleData, submoduleFeatureData);
+    return prepareSubscriptionPlanList(
+      subscriptionData,
+      moduleData,
+      submoduleData,
+      submoduleFeatureData,
+    );
   };
-  console.log('_prepareSubscriptionPlanList---', JSON.stringify(_prepareSubscriptionPlanList()));
+  console.log(
+    '_prepareSubscriptionPlanList---',
+    JSON.stringify(_prepareSubscriptionPlanList()),
+  );
 
   useEffect(() => {
     dispatch(getSubscriptionPlansRequest());
     dispatch(getModulesRequest());
     dispatch(getSubmodulesRequest());
     dispatch(getSubmoduleFeaturesRequest());
-    
   }, []);
 
   useEffect(() => {
     if (
       getSubscriptionPlansRequestSuccess &&
       getSubmoduleFeaturesRequestSuccess &&
-      getModulesSuccess && getSubmodulesRequestSuccess
+      getModulesSuccess &&
+      getSubmodulesRequestSuccess
     ) {
       _prepareSubscriptionPlanList();
     }
@@ -73,7 +144,9 @@ const SubscriptionPlanView = () => {
   ]);
 
   return (
-    <ImageBackground style={{flex: 1, height:height, width: width}} source={BackgroundImage}>
+    <ImageBackground
+      style={{flex: 1, height: height, width: width}}
+      source={BackgroundImage}>
       <Header canGoBack={true} label="Choose Subscription Plan" />
       <Carousel
         loop
@@ -91,6 +164,7 @@ const SubscriptionPlanView = () => {
             <ScrollView showsVerticalScrollIndicator={false}>
               {/* <SubscriptionPlanCard item={item} onPress={handleByPlan} /> */}
               <SubscriptionPlanCard2 item={item} onPress={handleByPlan} />
+              <Spinner show={paymentProcessing} />
             </ScrollView>
           );
         }}

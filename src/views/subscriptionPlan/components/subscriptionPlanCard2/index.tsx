@@ -12,11 +12,15 @@ import TickIcon from '../../../../images/icons/tick_icon.svg';
 import CloseTickIcon from '../../../../images/icons/close_icon3.svg';
 import Spacer from '../../../../common/Spacer';
 import {Shadow} from 'react-native-shadow-2';
-import { IPlanFeature, ISubmoduleFeatureWithActions, ISubscriptionPlan } from '../../../../interface/subscription/subscription';
+import {
+  IPlanFeature,
+  ISubmoduleFeatureWithActions,
+  ISubscriptionPlan,
+} from '../../../../interface/subscription/subscription';
 
 interface ISubscriptionPlanCardProps {
   item: ISubscriptionPlan;
-  onPress: (planType: string) => void;
+  onPress: (plan: ISubscriptionPlan) => void;
 }
 
 const SubscriptionPlanCard2: React.FC<ISubscriptionPlanCardProps> = ({
@@ -27,7 +31,7 @@ const SubscriptionPlanCard2: React.FC<ISubscriptionPlanCardProps> = ({
 
   const getTickIcon = (featureName: string) => {
     if (
-        subscriptionType.toUpperCase() == 'FREE' &&
+      subscriptionType.toUpperCase() == 'FREE' &&
       (featureName == 'Staff Management System' ||
         featureName == 'Branch Management System' ||
         featureName == 'Franchise Management System' ||
@@ -36,14 +40,17 @@ const SubscriptionPlanCard2: React.FC<ISubscriptionPlanCardProps> = ({
       return <CloseTickIcon width={15} height={15} />;
     }
     if (
-        subscriptionType.toUpperCase() == 'BASIC' &&
+      subscriptionType.toUpperCase() == 'BASIC' &&
       (featureName == 'Branch Management System' ||
         featureName == 'Franchise Management System' ||
         featureName == 'Vehicle Management System')
     ) {
       return <CloseTickIcon width={15} height={15} />;
     }
-    if (subscriptionType.toUpperCase() == 'PRO' && featureName == 'Franchise Management System') {
+    if (
+      subscriptionType.toUpperCase() == 'PRO' &&
+      featureName == 'Franchise Management System'
+    ) {
       return <CloseTickIcon width={15} height={15} />;
     }
     return <TickIcon width={15} height={15} />;
@@ -71,14 +78,17 @@ const SubscriptionPlanCard2: React.FC<ISubscriptionPlanCardProps> = ({
             style={styles.planNameAndPriceContainer}
             useAngle={true}
             angle={45}>
-            <Text style={styles.planTypeText}>{subscriptionType.charAt(0).toUpperCase()+subscriptionType.substring(1)}</Text>
-            <Text style={styles.planPriceText}>{"1000"}</Text>
-            <Text style={styles.planDurationText}>{"3 Months"}</Text>
+            <Text style={styles.planTypeText}>
+              {subscriptionType.charAt(0).toUpperCase() +
+                subscriptionType.substring(1)}
+            </Text>
+            <Text style={styles.planPriceText}>{'1000'}</Text>
+            <Text style={styles.planDurationText}>{'3 Months'}</Text>
           </LinearGradient>
 
           {planFeatures.map((planFeature: IPlanFeature, index: number) => {
             return (
-              <>
+              <View key={`${index}`}>
                 <Spacer height={5} />
                 <View style={styles.featureWrapper}>
                   <View style={styles.planFeatureContainer}>
@@ -88,9 +98,12 @@ const SubscriptionPlanCard2: React.FC<ISubscriptionPlanCardProps> = ({
                     </Text>
                   </View>
                   {planFeature.moduleFeatures.map(
-                    (subSubFeature: ISubmoduleFeatureWithActions, indx: number) => {
+                    (
+                      subSubFeature: ISubmoduleFeatureWithActions,
+                      indx: number,
+                    ) => {
                       return (
-                        <>
+                        <View key={`${indx}`}>
                           <View style={styles.featureValuesContainer}>
                             <TickIcon width={10} height={10} />
                             <Text style={styles.featuresText2}>
@@ -100,7 +113,9 @@ const SubscriptionPlanCard2: React.FC<ISubscriptionPlanCardProps> = ({
                           {subSubFeature.actions.map(
                             (subSubSubFeature: string, i: number) => {
                               return (
-                                <View style={styles.featureValuesContainer2}>
+                                <View
+                                  style={styles.featureValuesContainer2}
+                                  key={`${i}`}>
                                   <View style={styles.dot} />
                                   <Text style={styles.featuresText}>
                                     {subSubSubFeature}
@@ -109,17 +124,15 @@ const SubscriptionPlanCard2: React.FC<ISubscriptionPlanCardProps> = ({
                               );
                             },
                           )}
-                        </>
+                        </View>
                       );
                     },
                   )}
                 </View>
-              </>
+              </View>
             );
           })}
-          <TouchableOpacity
-            activeOpacity={0.6}
-            onPress={() => onPress(item._id)}>
+          <TouchableOpacity activeOpacity={0.6} onPress={() => onPress(item)}>
             <LinearGradient
               colors={getPlanGradientColors()}
               style={styles.buttonContainer}

@@ -16,6 +16,7 @@ import OrderSlice from './slices/OrderSlice';
 import QuotationSlice from './slices/QuotationSlice';
 import ProfileSettingSlice from './slices/ProfileSettingSlice';
 import {
+  removeCurrentCompanyId,
   removeIsRegistrationComplete,
   removeLoginStatus,
   removeToken,
@@ -59,6 +60,7 @@ const rootReducer: Reducer = (state: RootState, action: AnyAction) => {
     removeLoginStatus();
     removeToken();
     removeIsRegistrationComplete();
+    removeCurrentCompanyId();
     state = {} as RootState;
   }
   return appReducer(state, action);

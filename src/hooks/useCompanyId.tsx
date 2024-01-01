@@ -1,7 +1,13 @@
 import React from "react";
 import { useAppSelector } from "../redux/hooks";
+import { getCurrentCompanyId } from "../utils/storage";
+import { ICompanyInfoData } from "../interface/companyRegistration/IGetCompaniesResponse";
 
-const useCompanyId = () => {
+const _getCurrentCompanyId = async () => {
+
+}
+
+const useCompanyId = async () => {
     const {addCompanyInfo, companies} = useAppSelector(state => state.Company);
     let companyId;
     const {data} = addCompanyInfo || {};
@@ -13,8 +19,8 @@ const useCompanyId = () => {
       Array.isArray(companiesData) &&
       companiesData.length > 0
     ) {
-      const firstCompany = companiesData[0];
-      companyId = firstCompany._id;
+      // const firstCompany = companiesData[0];
+      companyId = await getCurrentCompanyId();
     } else if(companiesData && companiesData.hasOwnProperty('_id')) {
       companyId = companiesData._id;
     }

@@ -21,6 +21,7 @@ const AuthStackNavigator = () => {
             <AuthStack.Screen name="ForgotPassword" component={ForgotPasswordPageView} />
             <AuthStack.Screen name="Intro" component={IntroPageView} />
             <AuthStack.Screen name="RegisterCompany" component={RegistrationPageView} initialParams={{registrationStep: 1}} />
+            <AuthStack.Screen name="Subscription" component={SubscriptionPlanView} />
         </AuthStack.Navigator>
     );
 }

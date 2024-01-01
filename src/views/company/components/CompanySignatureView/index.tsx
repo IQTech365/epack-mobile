@@ -29,6 +29,7 @@ import {
 } from '../../../../redux/slices/CompanySlice';
 import {
   setAuthToken,
+  setCurrentCompanyId,
   setIsRegistrationComplete,
   setLoginStatus,
 } from '../../../../utils/storage';
@@ -89,7 +90,7 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
   const [isDigitalSignatureProvided, setIsDigitalSignatureProvided] =
     useState<boolean>(false);
 
-  const companyId = useCompanyId();
+  // const companyId = useCompanyId();
   const authId = useAuthId();
   const authContext = useAuthContext();
   const {setLoggedIn} = authContext;
@@ -111,21 +112,27 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
   const {data: companiesData} = companies || {};
   const {otpData} = useAppSelector(state => state.OTP);
 
-  const getFirstCompany = () => {
+  const getCompany = async () => {
     let company: ICompanyInfoData | null = null;
+    const companyId = await useCompanyId();
     if (
       companiesData &&
       Array.isArray(companiesData) &&
       companiesData.length > 0
     ) {
-      company = companiesData[0];
+      if(companyId) {
+        const _company = companiesData.find((d:ICompanyInfoData) => d._id == companyId);
+        if(_company) {
+          company = _company;
+        }
+      }
     } else if (companiesData && companiesData.hasOwnProperty('authId')) {
       company = companiesData;
     }
     return company;
   };
 
-  const firstCompany = getFirstCompany();
+  
 
   const _getUploadedImagePath = () => {
     let path: string = '';
@@ -183,21 +190,23 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
     setShowSignatureRequiredAlert(false);
   };
 
-  const handleCompanySignatureUriUpdate = () => {
+  const handleCompanySignatureUriUpdate = async () => {
     const imagePath = _getUploadedImagePath();
+    const companyId = await useCompanyId();
+    const company = await getCompany() as ICompanyInfoData;
     const payload: ICompanyEditRequest = {
-      _id: companyId,
+      _id: companyId as string,
       authId: authId,
-      companyName: state.company_name || firstCompany?.companyName,
-      contactPerson: state.contact_person || firstCompany?.contactPerson,
-      email: state.email || firstCompany?.email,
-      companyMobile: state.mobile || firstCompany?.companyMobile,
-      companyAddress: state.address || firstCompany?.companyAddress,
-      state: state.state || firstCompany?.state,
-      city: state.city || firstCompany?.city,
-      pincode: state.pincode || firstCompany?.pincode,
-      companyWebite: 'abc@xyz.com' || firstCompany?.companyWebite,
-      companyLogo: state.company_logo_url || firstCompany?.companyLogo,
+      companyName: state.company_name || company?.companyName,
+      contactPerson: state.contact_person || company?.contactPerson,
+      email: state.email || company?.email,
+      companyMobile: state.mobile || company?.companyMobile,
+      companyAddress: state.address || company?.companyAddress,
+      state: state.state || company?.state,
+      city: state.city || company?.city,
+      pincode: state.pincode || company?.pincode,
+      companyWebite: 'abc@xyz.com' || company?.companyWebite,
+      companyLogo: state.company_logo_url || company?.companyLogo,
       punchLine: '',
       companyProfile: '',
       district: '',

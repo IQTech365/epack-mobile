@@ -164,9 +164,9 @@ export const DrawerNavigator = () => {
         }}
       />
       <Drawer.Screen
-        name="Subscription"
-        // component={SubscriptionView}
-        component={SubscriptionPlanView}
+        name="User Subscription"
+        component={SubscriptionView}
+        // component={SubscriptionPlanView}
         // component={PaymentMethodView}
         options={{
           title: 'Subscription',
