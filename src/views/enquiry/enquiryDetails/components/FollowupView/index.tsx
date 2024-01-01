@@ -35,9 +35,16 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
   const {surveyList, getSurveyListRequesting} = useAppSelector(
     state => state.Enquiry,
   );
-  const companyId = useCompanyId();
   const {data: surveyData} = surveyList || {};
   const [taskData, setTaskData] = useState<string>('');
+
+  const _getSurveyItemListRequest = async () => {
+    const companyId = await useCompanyId();
+    const payload: any = {
+      companyId: companyId,
+    };
+    dispatch(getSurveyItemListRequest(payload));
+  }
 
   useEffect(() => {
     if (taskName == 'FOLLOW UP') {
@@ -46,10 +53,7 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
       dispatch(getSurveyListRequest(enquiryId));
     }
     if (taskData == 'SURVEY ITEM') {
-      const payload: any = {
-        companyId: companyId,
-      };
-      dispatch(getSurveyItemListRequest(payload));
+      _getSurveyItemListRequest();
     }
   }, [taskName, taskData]);
 

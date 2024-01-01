@@ -41,8 +41,6 @@ const ManageVehicleView: React.FC<IAddLorryDetailViewProps> = ({navigation}) => 
     useState<boolean>(true);
   const {data: lorryArray = []} = lorryData || {};
 
-  const companyId = useCompanyId();
-
   const handleCreateNewAddLorryDetail = () => {
     setShowAddLorryDetailList(false);
     setCreateNewAddLorryDetail(true);
@@ -53,8 +51,13 @@ const ManageVehicleView: React.FC<IAddLorryDetailViewProps> = ({navigation}) => 
     setCreateNewAddLorryDetail(false);
   };
 
-  useEffect(() => {
+  const _getLorryRequest = async () => {
+    const companyId = await useCompanyId();
     dispatch(getLorryRequest(companyId));
+  }
+
+  useEffect(() => {
+    _getLorryRequest();
   }, []);
 
   const showEmptyView = () => {
@@ -66,7 +69,7 @@ const ManageVehicleView: React.FC<IAddLorryDetailViewProps> = ({navigation}) => 
   };
 
   const handleOnRefresh = useCallback(() => {
-    dispatch(getLorryRequest(companyId));
+    _getLorryRequest();
   }, []);
 
   const goToVehicleDetails = (index: number) => {

@@ -36,7 +36,6 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({ enquiryId}) => {
   const [quantity, setQuantity] = useState<string>('');
   const [goods, setGoods] = useState<string>('');
   const [remarks, setRemarks] = useState<string>('');
-  const companyId = useCompanyId();
   const authId = useAuthId();
 
   const dispatch = useAppDispatch();
@@ -66,7 +65,8 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({ enquiryId}) => {
   };
 
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
+  const companyId = await useCompanyId();
    const payload:IAddSurveyItemRequest = {
       companyId: companyId,
       enquiryId: enquiryId,
@@ -81,6 +81,14 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({ enquiryId}) => {
   dispatch(addSurveyItemRequest(payload))
   };
 
+  const _getSurveyItemListRequest = async () => {
+    const companyId = await useCompanyId();
+    const payload :any= {
+      companyId:companyId
+    }
+    dispatch(getSurveyItemListRequest(payload));
+  }
+
   useEffect(() => {
     if (!addSurveyItemRequesting && addSurveyItemSuccess) {
       Toast.show({
@@ -89,10 +97,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({ enquiryId}) => {
         text2: 'Survey Item List has been added successfully',
       });
       dispatch(resetAddSurveyItemRequest());
-      const payload :any= {
-        companyId:companyId
-      }
-      dispatch(getSurveyItemListRequest(payload));
+      _getSurveyItemListRequest();
     } else if (!addSurveyItemRequesting && addSurveyItemFailure) {
       Toast.show({
         type: 'error',

@@ -79,7 +79,6 @@ const RoleManagementView: React.FC<{}> = ({}) => {
   const {data: franchiseData = []} = Franchises || {};
 
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
 
   const transformBranchData = () => {
     let _data: TDropdownItem[] = [];
@@ -175,7 +174,8 @@ const RoleManagementView: React.FC<{}> = ({}) => {
     [permissions],
   );
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    const companyId = await useCompanyId();
     const payload: IAddUserRoleRequest = {
       companyId: companyId,
       roleTypeId: roleType,
@@ -323,10 +323,20 @@ const RoleManagementView: React.FC<{}> = ({}) => {
     return null;
   };
 
+  const _getBranchesRequest = async () => {
+    const companyId = await useCompanyId();
+    dispatch(getBranchsRequest(companyId));
+  }
+
+  const _getFranchiseRequest = async () => {
+    const companyId = await useCompanyId();
+    dispatch(getFranchiseRequest(companyId));
+  }
+
   useEffect(() => {
     dispatch(getRoleTypesRequest());
-    dispatch(getBranchsRequest(companyId));
-    dispatch(getFranchiseRequest(companyId));
+    _getBranchesRequest();
+    _getFranchiseRequest();
     dispatch(getModulesRequest());
   }, []);
 

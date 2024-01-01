@@ -59,7 +59,6 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
   const [downloadOption, setDownloadOption] = useState<string>('');
   const bottomSheetRef = useRef<BottomSheet>(null);
   const {data: quotationData} = quotations || {};
-  const companyId = useCompanyId();
   const [openPreview, setOpenPreview] = useState<boolean>(false);
   const [openShare, setOpenShare] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -230,18 +229,20 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
     navigation.navigate(QuotationStackRoute.AddQuotation);
   };
 
-  const handleOnRefresh = useCallback(() => {
+  const _getQuotationsRequest = async () => {
+    const companyId = await useCompanyId();
     const payload: IGetQuotationRequest = {
       companyId: companyId,
     };
     dispatch(getQuotationsRequest(payload));
+  }
+
+  const handleOnRefresh = useCallback(() => {
+    _getQuotationsRequest();
   }, []);
 
   useEffect(() => {
-    const payload: IGetQuotationRequest = {
-      companyId: companyId,
-    };
-    dispatch(getQuotationsRequest(payload));
+    _getQuotationsRequest();
   }, []);
 
   useEffect(() => {

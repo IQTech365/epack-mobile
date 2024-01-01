@@ -33,7 +33,6 @@ const ManageDriverView: React.FC<IAddDriverDetailViewProps> = ({}) => {
   const {data: DriversData = []} = Drivers || {};
   console.log('DriversData----', JSON.stringify(DriversData));
   
-  const companyId = useCompanyId();
 
   const [showAddDriverDetailList, setShowAddDriverDetailList] =
     useState<boolean>(false);
@@ -50,8 +49,13 @@ const ManageDriverView: React.FC<IAddDriverDetailViewProps> = ({}) => {
     setCreateNewAddDriverDetail(false);
   };
 
-  useEffect(() => {
+  const _getDriverRequest = async () => {
+    const companyId = await useCompanyId();
     dispatch(getDriverRequest(companyId));
+  }
+
+  useEffect(() => {
+    _getDriverRequest();
   }, []);
 
   const showEmptyView = () => {
@@ -63,7 +67,7 @@ const ManageDriverView: React.FC<IAddDriverDetailViewProps> = ({}) => {
   };
 
   const handleOnRefresh = useCallback(() => {
-    dispatch(getDriverRequest(companyId));
+    _getDriverRequest();
   }, []);
 
   const showForm = () => {

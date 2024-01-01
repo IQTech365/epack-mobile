@@ -26,7 +26,6 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
   const {orders, getOrdersRequesting, getOrdersSuccess, getOrdersFailure} =
     useAppSelector(state => state.Order);
   const {data: ordersArr} = orders || {};
-  const companyId = useCompanyId();
 
   const getClientName = (item: IGetOrdersData) => {
     let clientName = '';
@@ -133,7 +132,8 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
     return order;
   };
 
-  const _fetchOrders = () => {
+  const _fetchOrders = async () => {
+    const companyId = await useCompanyId();
     const payload: Partial<IGetOrdersRequest> = {
       companyId: companyId,
     };

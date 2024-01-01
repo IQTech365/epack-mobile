@@ -42,7 +42,6 @@ const AddFranchiseUpdateView: React.FC<{}> = ({}) => {
   const {addFranchiseRequesting, addFranchiseuccess, addFranchiseFailure} =
     useAppSelector(state => state.Myprofile);
   const dispatch2 = useAppDispatch();
-  const companyId = useCompanyId();
 
   const cityDropdownCompRef = useRef(null);
   const stateDropdownCompRef = useRef(null);
@@ -129,7 +128,8 @@ const AddFranchiseUpdateView: React.FC<{}> = ({}) => {
     // setEntityType(item.value);
   };
 
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = useCallback(async () => {
+    const companyId = await useCompanyId();
     const payload: IAddFranchiseRequest = {
       companyId: companyId,
       franchiseName: state.franchiseName,

@@ -35,7 +35,6 @@ const AddBranchUpdateView: React.FC<{}> = ({}) => {
 
   const {addBranchRequesting, addBranchSuccess, addBranchFailure} =
     useAppSelector(state => state.Myprofile);
-  const companyId = useCompanyId();
   const dispatch2 = useAppDispatch();
 
   const {result, fetching, setPincode} = usePincodeHook(
@@ -109,7 +108,8 @@ const AddBranchUpdateView: React.FC<{}> = ({}) => {
     });
   };
 
-  const handleSave = useCallback(() => {
+  const handleSave = useCallback(async () => {
+    const companyId = await useCompanyId();
     const payload: IAddBranchRequest = {
       companyId: companyId,
       branchName: state.branchName,

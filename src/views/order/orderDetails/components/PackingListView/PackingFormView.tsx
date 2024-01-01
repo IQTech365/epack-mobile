@@ -16,7 +16,6 @@ import {formatDate4} from '../../../../../utils/formatter';
 import DropdownComponent from '../../../../../common/DropdownComponent';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import Button from '../../../../../common/Button';
-import useCompanyId from '../../../../../hooks/useCompanyId';
 import useAuthId from '../../../../../hooks/useAuthId';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import {createPackingMaterialsRequest} from '../../../../../redux/slices/OrderSlice';
@@ -58,7 +57,6 @@ const ListHeaderView: React.FC<Props> = ({orderId}) => {
     return packTypes;
   };
 
-  const companyId = useCompanyId();
   const authId = useAuthId();
   const dispatch2 = useAppDispatch();
 

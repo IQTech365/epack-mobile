@@ -23,7 +23,6 @@ const AddFooterContentView = () => {
     getFooterContentsFailure,
   } = useAppSelector(state => state.Setting);
   console.log('FooterContents-', JSON.stringify(footerContents));
-  const companyId = useCompanyId();
 
   const handleCreateNewContent = () => {
     setShowContentList(false);
@@ -63,8 +62,13 @@ const AddFooterContentView = () => {
     return null;
   };
 
+  const _getFooterContentsRequest = async () => {
+    const companyId = await useCompanyId();
+    dispatch(getFooterContentsRequest(companyId));
+  }
+
   useEffect(() => {
-    dispatch(getFooterContentsRequest(companyId))
+    _getFooterContentsRequest();
   }, []);
 
   return (

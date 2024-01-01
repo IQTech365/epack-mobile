@@ -19,21 +19,23 @@ interface IClientPageViewProps {
 }
 
 const ClientPageView: React.FC<IClientPageViewProps> = ({navigation}) => {
-  const companyId = useCompanyId();
+  
   const {getCustomersRequesting, customers} = useAppSelector(
     state => state.Customer,
   );
   const {orders, getOrdersRequesting} = useAppSelector(state => state.Order);
   const dispatch = useAppDispatch();
 
-  const _fetchCustomers = () => {
+  const _fetchCustomers = async () => {
+    const companyId = await useCompanyId();
     const payload: ICustomerRequest = {
       companyId: companyId,
     };
     dispatch(getCustomersRequest(payload));
   };
 
-  const _fetchOrders = () => {
+  const _fetchOrders = async () => {
+    const companyId = await useCompanyId();
     const payload: Partial<IGetOrdersRequest> = {
       companyId: companyId,
     };

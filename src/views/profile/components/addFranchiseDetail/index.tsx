@@ -28,17 +28,21 @@ const AddFranchiseView = () => {
   );
   const dispatch = useAppDispatch();
   const {data: franchiseData = []} = Franchises || {};
-  const companyId = useCompanyId();
 
   const handleCreateNewContent = () => {
     setshowFranchiseList(false);
     setshowAddFranchise(true);
   };
 
+  const _getFranchiseRequest = async () => {
+    const companyId = await useCompanyId();
+    dispatch(getFranchiseRequest(companyId));
+  }
+
   const handleShowContent = () => {
     setshowFranchiseList(true);
     setshowAddFranchise(false);
-    dispatch(getFranchiseRequest(companyId));
+    _getFranchiseRequest();
   };
 
   const showEmptyView = () => {
@@ -79,11 +83,11 @@ const AddFranchiseView = () => {
     return null;
   };
   const handleOnRefresh = useCallback(() => {
-    dispatch(getFranchiseRequest(companyId));
+    _getFranchiseRequest();
   }, []);
 
   useEffect(() => {
-    dispatch(getFranchiseRequest(companyId));
+    _getFranchiseRequest();
     franchiseData.length > 0
       ? setshowFranchiseList(true)
       : setshowAddFranchise(true);

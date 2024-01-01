@@ -37,7 +37,7 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId, navi
     updateEnquiryStatusSuccess,
     updateEnquiryStatusFailure,
   } = useAppSelector(state => state.Enquiry);
-  const companyId = useCompanyId();
+  
 
   const [enquiryStatus, setEnquiryStatus] = useState<string>(item?.status as string);
   const getEnquiryDate = () => {
@@ -83,11 +83,17 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId, navi
     return mobile;
   }
 
-  const refreshOrders = () => {
+  const refreshOrders = async () => {
+    const companyId = await useCompanyId();
     const payload: Partial<IGetOrdersRequest> = {
       companyId: companyId,
     };
     dispatch(getOrdersRequest(payload));
+  }
+
+  const _getEnquiriesRequest = async () => {
+    const companyId = await useCompanyId();
+    dispatch(getEnquiriesRequest(companyId));
   }
 
   useEffect(() => {
@@ -98,7 +104,7 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId, navi
         text2: `Enquiry status has been updated to ${enquiryStatus.toUpperCase()}`,
       });
       dispatch(resetUpdateEnquiryStatusRequest());
-      dispatch(getEnquiriesRequest(companyId));
+      _getEnquiriesRequest();
       if(enquiryStatus == 'Approved') {
         refreshOrders();
         navigation.goBack();

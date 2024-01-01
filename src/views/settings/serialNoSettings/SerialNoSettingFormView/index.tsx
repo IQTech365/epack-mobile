@@ -33,9 +33,8 @@ const SerialNoSettingFormView: React.FC<IMoneyReceiptSNProps> = ({
   moduleId,
   moduleName,
 }) => {
-  const companyId = useCompanyId();
   const [entityType, setEntityType] = useState<string>(chooseEntity[0].label);
-  const [subEntityTypeId, setSubEntityTypeId] = useState<string>(companyId);
+  const [subEntityTypeId, setSubEntityTypeId] = useState<string>('');
   const [prefix, setPrefix] = useState<string>('');
   const [suffix, setSuffix] = useState<string>('');
   const dispatch = useAppDispatch();
@@ -114,7 +113,17 @@ const SerialNoSettingFormView: React.FC<IMoneyReceiptSNProps> = ({
     setSuffix(text);
   };
 
-  const handleSave = () => {
+  const _setCompanyId = async () => {
+    const companyId = await useCompanyId();
+    setSubEntityTypeId(companyId);
+  }
+
+  useEffect(() => {
+    _setCompanyId();
+  }, []);
+
+  const handleSave = async () => {
+    const companyId = await useCompanyId();
     const payload: ICreateSerialNoRequest = {
       companyId: companyId,
       companyEntity: entityType,
@@ -128,10 +137,25 @@ const SerialNoSettingFormView: React.FC<IMoneyReceiptSNProps> = ({
     dispatch(createSerialNoRequest(payload));
   };
 
-  useEffect(() => {
+  const _getBranchsRequest = async () => {
+    const companyId = await useCompanyId();
     dispatch(getBranchsRequest(companyId));
+  }
+
+  const _getFranchiseRequest = async () => {
+    const companyId = await useCompanyId();
     dispatch(getFranchiseRequest(companyId));
+  }
+
+  useEffect(() => {
+    _getBranchsRequest();
+    _getFranchiseRequest();
   }, []);
+
+  const _getAppSettingsRequest = async () => {
+    const companyId = await useCompanyId();
+    dispatch(getAppSettingsRequest(companyId));
+  }
 
   useEffect(() => {
     if (!createSerialNumberRequesting && createSerialNumberSuccess) {
@@ -141,7 +165,7 @@ const SerialNoSettingFormView: React.FC<IMoneyReceiptSNProps> = ({
         text2: 'Serial Number created successfully.',
       });
       dispatch(resetCreateSerialNoRequest());
-      dispatch(getAppSettingsRequest(companyId));
+      _getAppSettingsRequest();
     } else if (!createSerialNumberRequesting && createSerialNumberFailure) {
       Toast.show({
         type: 'error',

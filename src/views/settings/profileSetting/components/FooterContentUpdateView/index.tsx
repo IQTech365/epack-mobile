@@ -43,7 +43,6 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({}) => {
   const {addFooterContentRequesting, addFooterContentSuccess, addFooterContentFailure, submodules} = useAppSelector(state => state.Setting);
   const richText = React.useRef();
   const {data: submodulesData = []} = submodules || {};
-  const companyId = useCompanyId();
 
   const handleAccountType = (item: TDropdownItem) => {
     setAccountType(item.label);
@@ -67,7 +66,8 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({}) => {
     }
   }
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    const companyId = await useCompanyId();
     const payload: IAddFooterContentRequest = {
       companyId: companyId,
       modulesView: modules,

@@ -20,7 +20,6 @@ const AddContactView = () => {
   const dispatch = useAppDispatch();
   const {getContactsRequesting, contacts} = useAppSelector(state => state.Setting);
   const {data: contactsData} = contacts || {};
-  const companyId = useCompanyId();
   
   const getTransformedData = () => {
     let _data: IContactListItem[] = [];
@@ -75,8 +74,13 @@ const AddContactView = () => {
     return null;
   };
 
-  useEffect(() => {
+  const _getContactsRequest = async () => {
+    const companyId = await useCompanyId();
     dispatch(getContactsRequest(companyId));
+  }
+
+  useEffect(() => {
+    _getContactsRequest();
   }, []);
 
   useEffect(() => {

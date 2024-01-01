@@ -38,15 +38,26 @@ const AddDriverView: React.FC<{}> = ({}) => {
   );
   
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
+  
   const authId = useAuthId();
 
-  useEffect(() => {
+  const _getBranchsRequest = async () => {
+    const companyId = await useCompanyId();
     dispatch(getBranchsRequest(companyId));
+  }
+
+  const _getFranchiseRequest = async () => {
+    const companyId = await useCompanyId();
     dispatch(getFranchiseRequest(companyId));
+  }
+
+  useEffect(() => {
+    _getBranchsRequest();
+    _getFranchiseRequest();
   }, []);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    const companyId = await useCompanyId();
     const payload: IAddDriverRequest = {
       companyId: companyId,
       entityType: state.entity,

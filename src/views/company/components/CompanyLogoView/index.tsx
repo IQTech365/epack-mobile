@@ -58,7 +58,7 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
     state.company_logo_url,
   );
   const [imageFile, setImageFile] = useState<any>(null);
-  const companyId = useCompanyId();
+  
   const authId = useAuthId();
 
   const {
@@ -147,8 +147,9 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
     }
   }, [state]);
 
-  const handleCompanyLogoUriUpdate = () => {
+  const handleCompanyLogoUriUpdate = async () => {
     const imagePath = _getUploadedImagePath();
+    const companyId = await useCompanyId();
     setCompanyLogo2(imagePath);
     const payload: ICompanyEditRequest = {
       _id: companyId,

@@ -12,7 +12,6 @@ interface Props {
 
 const PackingListView: React.FC<Props> = ({orderId}) => {
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
   const {getPackingMaterialsRequesting, packingMaterials} = useAppSelector(
     state => state.Order,
   );
@@ -27,12 +26,17 @@ const PackingListView: React.FC<Props> = ({orderId}) => {
     return items;
   };
 
-  useEffect(() => {
+  const _getPackingMaterialsRequest = async () => {
+    const companyId = await useCompanyId();
     const payload:IGetPackingListRequest = {
-        companyId: companyId,
-        enquiryId: orderId
-    }
-    dispatch(getPackingMaterialsRequest(payload));
+      companyId: companyId,
+      enquiryId: orderId
+  }
+  dispatch(getPackingMaterialsRequest(payload));
+  }
+
+  useEffect(() => {
+    _getPackingMaterialsRequest();
   }, []);
 
   return (

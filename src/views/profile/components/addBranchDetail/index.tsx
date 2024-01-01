@@ -28,17 +28,16 @@ const AddBranchView = () => {
   );
   const {data: BranchsData = []} = Branchs || {};
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
 
   const handleCreateNewContent = () => {
     setshowBranchList(false);
     setshowAddBranch(true);
   };
 
-  const handleShowContent = () => {
+  const handleShowContent = async () => {
     setshowBranchList(true);
     setshowAddBranch(false);
-    dispatch(getBranchsRequest(companyId));
+    _getBranchsRequest();
   };
 
   const showEmptyView = () => {
@@ -79,12 +78,17 @@ const AddBranchView = () => {
     return null;
   };
 
-  const handleOnRefresh = useCallback(() => {
+  const _getBranchsRequest = async () => {
+    const companyId = await useCompanyId();
     dispatch(getBranchsRequest(companyId));
+  }
+
+  const handleOnRefresh = useCallback(async () => {
+    _getBranchsRequest();
   }, []);
 
   useEffect(() => {
-    dispatch(getBranchsRequest(companyId));
+    _getBranchsRequest();
     BranchsData.length > 0 ? setshowBranchList(true) : setshowAddBranch(true);
   }, [dispatch]);
 

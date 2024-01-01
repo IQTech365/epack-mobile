@@ -90,7 +90,6 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
   const [isDigitalSignatureProvided, setIsDigitalSignatureProvided] =
     useState<boolean>(false);
 
-  // const companyId = useCompanyId();
   const authId = useAuthId();
   const authContext = useAuthContext();
   const {setLoggedIn} = authContext;

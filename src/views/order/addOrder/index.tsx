@@ -79,7 +79,6 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({navigation}) => {
   const pickupStateDropwdownRef = useRef(null);
   const dropStateDropdownRef = useRef(null);
   const dropCityDropdownRef = useRef(null);
-  const companyId = useCompanyId();
   const [errors, setErrors] = useState();
   const [isFormValid, setIsFormValid] = useState<boolean>(true);
   const [showErrors, setShowErrors] = useState<boolean>(false);
@@ -273,7 +272,7 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({navigation}) => {
     });
   };
 
-  const handleAddOrder = () => {
+  const handleAddOrder = async () => {
     setShowErrors(true);
     if (!isFormValid) {
       Toast.show({
@@ -283,6 +282,7 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({navigation}) => {
       });
       return;
     }
+    const companyId = await useCompanyId();
     const data: IAddOrderRequest = {
       companyId: companyId,
       customerId: selectedCompanyOption?._id as string,
@@ -401,7 +401,8 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({navigation}) => {
     }
   }, [deliveryStates, deliveryCities]);
 
-  const fetchCompletedOrders = () => {
+  const fetchCompletedOrders = async () => {
+    const companyId = await useCompanyId();
     let orderListReq: IGetOrdersRequest = {
       // authId: otpData?.data.id as string,
       companyId: companyId,
@@ -456,7 +457,8 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({navigation}) => {
     setIsFormValid(Object.keys(errors).length === 0);
   };
 
-  const _fetchOrders = () => {
+  const _fetchOrders = async () => {
+    const companyId = await useCompanyId();
     const payload: Partial<IGetOrdersRequest> = {
       companyId: companyId,
     };
@@ -489,9 +491,10 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({navigation}) => {
     }
   }, [addOrderRequesting, addOrderSuccess, addOrderFailure]);
 
-  const handleMobileNo = (text: string) => {
+  const handleMobileNo = async (text: string) => {
     handleMobileNumInputTextChange(text);
     if (!Validator.isEmpty(text) && text.length == 10) {
+      const companyId = await useCompanyId();
       const payload: ICustomersRequest = {
         companyId: companyId,
         searchKey: text,
@@ -579,6 +582,15 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({navigation}) => {
     );
   };
 
+  const _getCustomersRequest = async (text:string) => {
+    const companyId = await useCompanyId();
+    const payload: ICustomersRequest = {
+      companyId: companyId,
+      searchKey: text,
+    };
+    debounce(dispatch2(getCustomersRequest(payload)), 3000);
+  }
+
   const handleCompanyName = (text: string) => {
     const {billingBy} = state;
     const tempObj = {
@@ -590,11 +602,7 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({navigation}) => {
       payload: tempObj as TBillingBy,
     });
     if (!Validator.isEmpty(text)) {
-      const payload: ICustomersRequest = {
-        companyId: companyId,
-        searchKey: text,
-      };
-      debounce(dispatch2(getCustomersRequest(payload)), 3000);
+      _getCustomersRequest(text);
     }
   };
 

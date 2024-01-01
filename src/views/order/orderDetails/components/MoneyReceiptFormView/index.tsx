@@ -61,7 +61,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
     editMoneyReceiptListRequesting,
     editMoneyReceiptListSuccess,
   } = useAppSelector(state => state.Order);
-  const companyId = useCompanyId();
+  
   const authId = useAuthId();
   const {quotations, getQuotationsRequesting} = useAppSelector(
     state => state.Quotation,
@@ -178,7 +178,8 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
     return _data;
   };
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
+    const companyId = await useCompanyId();
     const payload: ICreateMoneyReceiptRequest = {
       companyId: companyId,
       orderId: orderId as string,
@@ -227,11 +228,16 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
     }
   };
 
-  useEffect(() => {
+  const _getQuotationsRequest = async () => {
+    const companyId = await useCompanyId();
     const payload: IGetQuotationRequest = {
       companyId:companyId
     };
     dispatch2(getQuotationsRequest(payload));
+  }
+
+  useEffect(() => {
+    _getQuotationsRequest();
   }, []);
 
   useEffect(() => {

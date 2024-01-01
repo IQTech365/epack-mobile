@@ -25,7 +25,7 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
   const {enquiries, getEnquiriesRequesting} = useAppSelector(
     state => state.Enquiry,
   );
-  const companyId = useCompanyId();
+  
   const {data} = enquiries || {};
 
   let transformedData: IEnquiryItem[] = [];
@@ -80,12 +80,17 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
     });
   };
 
-  const handleOnRefresh = useCallback(() => {
+  const _getEnquiriesRequest = async () => {
+    const companyId = await useCompanyId();
     dispatch(getEnquiriesRequest(companyId));
+  }
+
+  const handleOnRefresh = useCallback(() => {
+    _getEnquiriesRequest();
   }, []);
 
   useEffect(() => {
-    dispatch(getEnquiriesRequest(companyId));
+    _getEnquiriesRequest();
   }, []);
 
   return (

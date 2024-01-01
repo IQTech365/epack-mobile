@@ -49,7 +49,6 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
   } = useAppSelector(state => state.Setting);
   const {data: submodulesData = []} = submodules || {};
   const {otpData} = useAppSelector(state => state.OTP);
-  const companyId = useCompanyId();
 
   const handleAccountType = (item: TDropdownItem) => {
     setAccountType(item.label);
@@ -91,7 +90,8 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
   }
 
   
-  const handleSave = () => {
+  const handleSave = async () => {
+    const companyId = await useCompanyId();
     const payload: IAddPaymentMethodRequest = {
       companyId: companyId,
       accountType: accountType,

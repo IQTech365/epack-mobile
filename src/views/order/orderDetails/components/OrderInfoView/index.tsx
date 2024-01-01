@@ -46,7 +46,6 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item, navigation
     updateEnquiryStatusSuccess,
     updateEnquiryStatusFailure,
   } = useAppSelector(state => state.Enquiry);
-  const companyId = useCompanyId();
 
   const handleOrderStatusChange = (value: string) => {
     setOrderStatus(value);
@@ -64,7 +63,8 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item, navigation
     // Linking.openURL(`whatsapp://send?phone=+91${item?.mobile}`);
   };
 
-  const refetchOrderList = () => {
+  const refetchOrderList = async () => {
+  const companyId = await useCompanyId();
     const payload: Partial<IGetOrdersRequest> = {
       companyId: companyId,
     }

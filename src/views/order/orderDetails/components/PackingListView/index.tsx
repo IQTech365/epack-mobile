@@ -4,9 +4,6 @@ import Spacer from '../../../../../common/Spacer';
 import styles from './style';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import Spinner from '../../../../../common/Spinner';
-import Toast from 'react-native-toast-message';
-import useCompanyId from '../../../../../hooks/useCompanyId';
-import useAuthId from '../../../../../hooks/useAuthId';
 import ListViewIcon from '../../../../../images/icons/list_view_icon.svg';
 import ListViewIcon2 from '../../../../../images/icons/list_view_icon2.svg';
 import CreateIcon from '../../../../../images/icons/create_icon.svg';
@@ -20,8 +17,6 @@ interface IPackingListViewProps {
 }
 
 const PackingView: React.FC<IPackingListViewProps> = ({orderId}) => {
-  const companyId = useCompanyId();
-  const authId = useAuthId();
   const dispatch = useAppDispatch();
   const [showForm, setShowForm] = useState<boolean>(false);
   const [showList, setShowList] = useState<boolean>(true);
