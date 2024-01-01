@@ -4,16 +4,17 @@ import Carousel from 'react-native-reanimated-carousel';
 import Header from '../../common/Header';
 import SubscriptionPlanCard from './components/subscriptionPlanCard';
 const {width, height} = Dimensions.get('window');
-import subscriptionplans from '../../data/subscrptionplans.json';
-import {COLOR_GRAY5} from '../../utils/colors';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {
+  addPurchaseRequest,
   getSubmoduleFeaturesRequest,
   getSubmodulesRequest,
   getSubscriptionPlansRequest,
+  resetAddPurchaseRequest,
 } from '../../redux/slices/SubscriptionSlice';
 import {getModulesRequest} from '../../redux/slices/UserRoleManagementSlice';
 import {
+  IAddPurchaseRequest,
   IRazorPayOrderFailureResponse,
   IRazorPayOrderSuccessResponse,
   ISubscriptionPlan,
@@ -25,11 +26,14 @@ import RazorpayCheckout from 'react-native-razorpay';
 import * as SubscriptionService from '../../service/SubscriptionService';
 import {ToastType, showToast} from '../../utils/utility';
 import Spinner from '../../common/Spinner';
-import { AuthStackRoute } from '../../utils/constants';
+import {AuthStackRoute} from '../../utils/constants';
+import useAuthId from '../../hooks/useAuthId';
+import {formatDate4} from '../../utils/formatter';
 
 const SubscriptionPlanView = (props: any) => {
   const {navigation} = props;
   const dispatch = useAppDispatch();
+  const authId = useAuthId();
   const {
     subscriptionPlans,
     getSubscriptionPlansRequesting,
@@ -40,6 +44,10 @@ const SubscriptionPlanView = (props: any) => {
     getSubmodulesRequesting,
     getSubmodulesRequestSuccess,
     submodules,
+    addPurchaseRequesting,
+    addPurchaseSuccess,
+    addPurchaseFailure,
+    addPurchaseInfo,
   } = useAppSelector(state => state.Subscription);
   console.log('submodules----', JSON.stringify(submodules));
 
@@ -67,15 +75,27 @@ const SubscriptionPlanView = (props: any) => {
     _doPayment(plan);
   };
 
+  const _addPurchase = (plan: ISubscriptionPlan) => {
+    const payload: IAddPurchaseRequest = {
+      authId: authId,
+      subscriptionId: plan._id,
+      purchaseDate: formatDate4(new Date()),
+      expiryDate: '06-01-24',
+      purchaseAmount: '100',
+      status: 'active',
+    };
+    dispatch(addPurchaseRequest(payload));
+  };
+
   const _doPayment = (plan: ISubscriptionPlan) => {
     const options: any = {
-      description: 'Credits towards consultation',
+      description: 'Epack Book Subscription',
       image: 'https://i.imgur.com/3g7nmJC.jpg',
       currency: 'INR',
       key: 'rzp_test_Dl3dSM01ZoLIgz',
       amount: '5000',
       name: 'EpackBook',
-      order_id: 'order_NJI9cMGygj24Z0', //Replace this with an order_id created using Orders API.
+      order_id: 'order_NJN9VIkIQc0G9J', //Replace this with an order_id created using Orders API.
       prefill: {
         email: 'essencewebtech@gmail.com',
         contact: '9191919191',
@@ -85,27 +105,28 @@ const SubscriptionPlanView = (props: any) => {
     };
     try {
       RazorpayCheckout.open(options)
-            .then((data:any) => {
-              // handle success
-              // alert(`Success: ${data.razorpay_payment_id}`);
-              console.log('Payment-Success----', data.razorpay_payment_id);
-              showToast(data.razorpay_payment_id, ToastType.SUCCESS);
-              setPaymentProcessing(false);
-              setPaymentDone(true);
-              navigation.navigate(AuthStackRoute.RegisterCompany, {
-                registrationStep: 1,
-              });
-            })
-            .catch((error:any) => {
-              // handle failure
-              // alert(`Error: ${error.code} | ${error.description}`);
-              showToast(`Error: ${error.code} | ${error.description}`, ToastType.ERROR);
-              setPaymentProcessing(false);
-            })
+        .then((data: any) => {
+          // handle success
+          // alert(`Success: ${data.razorpay_payment_id}`);
+          console.log('Payment-Success----', data.razorpay_payment_id);
+          showToast(data.razorpay_payment_id, ToastType.SUCCESS);
+          setPaymentProcessing(false);
+          setPaymentDone(true);
+          _addPurchase(plan);
+        })
+        .catch((error: any) => {
+          // handle failure
+          // alert(`Error: ${error.code} | ${error.description}`);
+          showToast(
+            `Error: ${error.code} | ${error.description}`,
+            ToastType.ERROR,
+          );
+          setPaymentProcessing(false);
+        });
     } catch (err) {
       console.log('error processing');
     }
-  }
+  };
 
   const _prepareSubscriptionPlanList = (): ISubscriptionPlan[] => {
     return prepareSubscriptionPlanList(
@@ -143,6 +164,18 @@ const SubscriptionPlanView = (props: any) => {
     getSubmodulesRequestSuccess,
   ]);
 
+  useEffect(() => {
+    if (!addPurchaseRequesting && addPurchaseSuccess) {
+      dispatch(resetAddPurchaseRequest());
+      navigation.navigate(AuthStackRoute.RegisterCompany, {
+        registrationStep: 1,
+      });
+    } else if (!addPurchaseRequesting && addPurchaseFailure) {
+      // README: If payment is done and plan is not activated due to server issue. 
+      // Then needs to activte the plan from backend. 
+    }
+  }, [addPurchaseRequesting, addPurchaseSuccess, addPurchaseFailure]);
+
   return (
     <ImageBackground
       style={{flex: 1, height: height, width: width}}
@@ -164,7 +197,7 @@ const SubscriptionPlanView = (props: any) => {
             <ScrollView showsVerticalScrollIndicator={false}>
               {/* <SubscriptionPlanCard item={item} onPress={handleByPlan} /> */}
               <SubscriptionPlanCard2 item={item} onPress={handleByPlan} />
-              <Spinner show={paymentProcessing} />
+              <Spinner show={paymentProcessing || addPurchaseRequesting} />
             </ScrollView>
           );
         }}

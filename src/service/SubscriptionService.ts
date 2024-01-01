@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 import {Api} from '../http/Api';
-import { GET_SUBMODULE_FEATURES_ALL, GET_SUBMODULE_LIST, GET_SUBSCRIPTION_PLANS, GET_SUBSCRIPTION_PURCHASE_LIST, UPDATE_SUBSCRIPTION_INFO } from '../http/Endpoint';
-import { IGetPurchasedSubscriptionListResponse, IGetPurchasedSubscriptionParams, IRazorPayOrderSuccessResponse, ISubmoduleFeatureListResponse, ISubmoduleListResponse, ISubscriptionPlanListResponse, IUpdateSubscriptionPayload, IUpdateSubscriptionRequest, IUpdateSubscriptionResponse } from '../interface/subscription/subscription';
+import { ADD_PURCHASE, GET_SUBMODULE_FEATURES_ALL, GET_SUBMODULE_LIST, GET_SUBSCRIPTION_PLANS, GET_SUBSCRIPTION_PURCHASE_LIST, UPDATE_SUBSCRIPTION_INFO } from '../http/Endpoint';
+import { IAddPurchaseRequest, IAddPurchaseResponse, IGetPurchasedSubscriptionListResponse, IGetPurchasedSubscriptionParams, IRazorPayOrderSuccessResponse, ISubmoduleFeatureListResponse, ISubmoduleListResponse, ISubscriptionPlanListResponse, IUpdateSubscriptionPayload, IUpdateSubscriptionRequest, IUpdateSubscriptionResponse } from '../interface/subscription/subscription';
 
 // Subscription Plans
 export const GetSubscriptionPlanListService = async (): Promise<ISubscriptionPlanListResponse> => {
@@ -38,4 +38,10 @@ export const UpdateSubscriptionInfoService = async (req: IUpdateSubscriptionRequ
 export const createRazorpayOrder = async (amount:number):Promise<IRazorPayOrderSuccessResponse> => {
     const api = Api.getInstance();
     return await api.createOrder(amount);
+}
+
+// Add Purchase
+export const AddPurchaseService = async (payload: IAddPurchaseRequest): Promise<any> => {
+    const api = Api.getInstance();
+    return await api.post<IAddPurchaseRequest, AxiosResponse<IAddPurchaseResponse>>(payload, ADD_PURCHASE);
 }

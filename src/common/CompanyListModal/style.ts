@@ -31,6 +31,8 @@ const styles = StyleSheet.create({
   modalText: {
     textAlign: 'center',
     color: COLOR_WHITE,
+    fontSize: 16,
+    fontWeight: '500',
   },
   descriptionText: {
     textAlign: 'left',

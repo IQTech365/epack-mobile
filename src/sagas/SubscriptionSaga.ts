@@ -1,8 +1,8 @@
 import {takeLatest, put, call} from 'redux-saga/effects';
 import {PayloadAction} from '@reduxjs/toolkit';
 import * as SubscriptionService from '../service/SubscriptionService';
-import { IGetPurchasedSubscriptionListResponse, IGetPurchasedSubscriptionParams, ISubmoduleFeatureListResponse, ISubmoduleListResponse, ISubscriptionPlanListResponse, IUpdateSubscriptionRequest, IUpdateSubscriptionResponse } from '../interface/subscription/subscription';
-import { getPurchasedSubscriptionFailure, getPurchasedSubscriptionRequest, getPurchasedSubscriptionSuccess, getSubmoduleFeaturesFailure, getSubmoduleFeaturesRequest, getSubmoduleFeaturesSuccess, getSubmodulesFailure, getSubmodulesRequest, getSubmodulesSuccess, getSubscriptionPlansFailure, getSubscriptionPlansRequest, getSubscriptionPlansSuccess, updateSubscriptionFailure, updateSubscriptionRequest, updateSubscriptionSuccess } from '../redux/slices/SubscriptionSlice';
+import { IAddPurchaseRequest, IAddPurchaseResponse, IGetPurchasedSubscriptionListResponse, IGetPurchasedSubscriptionParams, ISubmoduleFeatureListResponse, ISubmoduleListResponse, ISubscriptionPlanListResponse, IUpdateSubscriptionRequest, IUpdateSubscriptionResponse } from '../interface/subscription/subscription';
+import { addPurchaseFailure, addPurchaseRequest, addPurchaseSuccess, getPurchasedSubscriptionFailure, getPurchasedSubscriptionRequest, getPurchasedSubscriptionSuccess, getSubmoduleFeaturesFailure, getSubmoduleFeaturesRequest, getSubmoduleFeaturesSuccess, getSubmodulesFailure, getSubmodulesRequest, getSubmodulesSuccess, getSubscriptionPlansFailure, getSubscriptionPlansRequest, getSubscriptionPlansSuccess, updateSubscriptionFailure, updateSubscriptionRequest, updateSubscriptionSuccess } from '../redux/slices/SubscriptionSlice';
 
 export function* getSubscriptionPlanListSaga(action: PayloadAction<any>) {
   try {
@@ -59,10 +59,22 @@ export function* updateSubscriptionSaga(action: PayloadAction<IUpdateSubscriptio
   }
 }
 
+export function* addPurchaseSaga(action: PayloadAction<IAddPurchaseRequest>) {
+  try {
+    const response: IAddPurchaseResponse = yield call(SubscriptionService.AddPurchaseService, action.payload);
+    console.log('addPurchaseSaga-response----', JSON.stringify(response));
+    yield put(addPurchaseSuccess(response));
+  } catch (error) {
+    console.log('addPurchaseSaga-error----', error);
+    yield put(addPurchaseFailure(JSON.stringify(error)));
+  }
+}
+
 export function* watcherSubscriptionSaga() {
   yield takeLatest(getSubscriptionPlansRequest.type, getSubscriptionPlanListSaga);
   yield takeLatest(getSubmoduleFeaturesRequest.type, getSubmoduleFeatureListSaga);
   yield takeLatest(getSubmodulesRequest.type, getSubmoduleListSaga);
   yield takeLatest(getPurchasedSubscriptionRequest.type, getPurchasedSubscriptionListSaga);
   yield takeLatest(updateSubscriptionRequest.type, updateSubscriptionSaga);
+  yield takeLatest(addPurchaseRequest.type, addPurchaseSaga);
 }

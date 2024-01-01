@@ -1,5 +1,5 @@
 import React, {useCallback, useState, useRef, useEffect} from 'react';
-import {View} from 'react-native';
+import {Text, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import AvoidSoftInputViewHOC from '../../common/AvoidSoftInputViewHOC';
 import styles from './styles';
@@ -149,6 +149,15 @@ const OTPPageView = (props: any) => {
     });
   }
 
+  const _displayOTP = () => {
+    let otp:string = '';
+    const {data} = otpData || {};
+    if(data) {
+      otp = data?.otp;
+    }
+    return otp;
+  }
+
   useEffect(() => {
     if (!verifyOtpRequesting && verifyOtpSuccess) {
       const {data} = verifiedData || {};
@@ -179,7 +188,7 @@ const OTPPageView = (props: any) => {
         setShowCompaniesModal(true);
       } else {
         setShowCompaniesModal(false);
-        navigation.navigate("Subscription");
+        navigation.replace("Subscription");
       }
     } else if (!getCompaniesRequesting && getCompaniesFailure) {
       showToast('Error in Getting companies details.', ToastType.ERROR);
@@ -243,6 +252,9 @@ const OTPPageView = (props: any) => {
           onPress={onVerifyOtpPress}
           disabled={disabled}
         />
+        <View>
+          <Text>{_displayOTP()}</Text>
+        </View>
         <Spacer height={50} />
         <Spinner
           variant="white"

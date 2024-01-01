@@ -136,5 +136,21 @@ export interface IRazorPayOrderFailure {
 }
 
 export interface IRazorPayOrderFailureResponse {
-  error:IRazorPayOrderFailure
+  error: IRazorPayOrderFailure;
+}
+
+// Add Purchase
+export interface IAddPurchaseRequest {
+  authId: string;
+  subscriptionId: string;
+  purchaseDate: string;
+  expiryDate: string;
+  purchaseAmount: string;
+  status: string;
+}
+
+export interface IAddPurchaseResponse {
+  data: any;
+  status: number;
+  error: boolean;
 }

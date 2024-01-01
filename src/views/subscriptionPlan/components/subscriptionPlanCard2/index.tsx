@@ -60,7 +60,7 @@ const SubscriptionPlanCard2: React.FC<ISubscriptionPlanCardProps> = ({
     let gradientColors = FREE_PLAN_LINEARGRADIENT;
     if (subscriptionType.toUpperCase() == 'FREE') {
       gradientColors = FREE_PLAN_LINEARGRADIENT;
-    } else if (subscriptionType.toUpperCase() == 'BASIC') {
+    } else if (subscriptionType.toUpperCase() == 'PLUS') {
       gradientColors = BASIC_PLAN_LINEARGRADIENT;
     } else if (subscriptionType.toUpperCase() == 'PRO') {
       gradientColors = PRO_PLAN_LINEARGRADIENT;
@@ -88,7 +88,7 @@ const SubscriptionPlanCard2: React.FC<ISubscriptionPlanCardProps> = ({
 
           {planFeatures.map((planFeature: IPlanFeature, index: number) => {
             return (
-              <View key={`${index}`}>
+              <View key={`${index}`} style={styles.featureWrapper}>
                 <Spacer height={5} />
                 <View style={styles.featureWrapper}>
                   <View style={styles.planFeatureContainer}>

@@ -1,5 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {
+  IAddPurchaseRequest,
+  IAddPurchaseResponse,
   IGetPurchasedSubscriptionListResponse,
   IGetPurchasedSubscriptionParams,
   ISubmoduleFeatureListResponse,
@@ -42,6 +44,12 @@ interface ISubscriptionState {
   updateSubscriptionSuccess:boolean;
   updateSubscriptionFailure:boolean;
   updateSubscriptionError:any;
+  // Add Purchase
+  addPurchaseInfo: IAddPurchaseResponse | null;
+  addPurchaseRequesting: boolean;
+  addPurchaseSuccess:boolean;
+  addPurchaseFailure:boolean;
+  addPurchaseError: any;
 }
 
 const initialState: ISubscriptionState = {
@@ -75,6 +83,12 @@ const initialState: ISubscriptionState = {
   updateSubscriptionSuccess:false,
   updateSubscriptionFailure:false,
   updateSubscriptionError:null,
+  // Add Purchase
+  addPurchaseInfo: null,
+  addPurchaseRequesting: false,
+  addPurchaseSuccess:false,
+  addPurchaseFailure:false,
+  addPurchaseError: null,
 };
 
 export const SubscriptionSlice = createSlice({
@@ -185,6 +199,31 @@ export const SubscriptionSlice = createSlice({
       state.updateSubscriptionError = null;
       state.updateSubscriptionInfo = null;
     },
+    // Add Purchase
+    addPurchaseRequest: (state, action: PayloadAction<IAddPurchaseRequest>) => {
+      state.addPurchaseRequesting = true;
+    },
+    addPurchaseSuccess: (
+      state,
+      action: PayloadAction<IAddPurchaseResponse>,
+    ) => {
+      state.addPurchaseRequesting = false;
+      state.addPurchaseSuccess = true;
+      state.addPurchaseInfo = action.payload;
+    },
+    addPurchaseFailure: (state, action: PayloadAction<any>) => {
+      state.addPurchaseRequesting = false;
+      state.addPurchaseSuccess = false;
+      state.addPurchaseFailure = true;
+      state.addPurchaseError = action.payload;
+    },
+    resetAddPurchaseRequest: (state) => {
+      state.addPurchaseRequesting = false;
+      state.addPurchaseSuccess = false;
+      state.addPurchaseFailure = false;
+      state.addPurchaseError = null;
+      // state.addPurchaseInfo = null;
+    },
   },
 });
 
@@ -213,4 +252,9 @@ export const {
   updateSubscriptionSuccess,
   updateSubscriptionFailure,
   resetUpdateSubscriptionRequest,
+  // Add Purchase
+  addPurchaseRequest,
+  addPurchaseSuccess,
+  addPurchaseFailure,
+  resetAddPurchaseRequest,
 } = SubscriptionSlice.actions;

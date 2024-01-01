@@ -64,7 +64,7 @@ const CompanyListModal: React.FC<IProps> = ({
         activeOpacity={0.4}
         onPress={onPress}
         style={styles.footerItem}>
-        <Text style={styles.descriptionText}>Create New</Text>
+        <Text style={styles.footerText}>Create New</Text>
       </TouchableOpacity>
     );
   };
@@ -98,7 +98,7 @@ const CompanyListModal: React.FC<IProps> = ({
         //TODO: find subscription for given company_id
         // If subscription found close the modal and send user to the Dashbaord
         // else ask to subscribe
-        let isSubscribed: boolean = false;
+        let isSubscribed: boolean = true;
         if(isSubscribed) {
           if(selectedCompany?.companySignature) {
             completeRegistrationAndLoggedIn();
