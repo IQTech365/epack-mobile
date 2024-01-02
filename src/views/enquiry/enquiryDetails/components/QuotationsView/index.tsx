@@ -39,6 +39,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
   );
   const {data: quotationData} = quotations || {};
   const dispatch = useAppDispatch();
+  const companyId = useCompanyId();
 
   const [showQuotationList, setShowQuotationList] = useState<boolean>(false);
   const [createNewQuotation, setCreateNewQuotation] = useState<boolean>(true);
@@ -164,8 +165,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
     setCreateNewQuotation(false);
   };
 
-  const handleOnRefresh = useCallback(async () => {
-  const companyId = await useCompanyId();
+  const handleOnRefresh = useCallback(() => {
     const payload: IGetQuotationRequest = {
       // id: enquiryId,
       companyId:companyId

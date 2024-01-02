@@ -80,6 +80,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
   const {otpData} = useAppSelector(state => state.OTP);
   
   const authId = useAuthId();
+  const companyId = useCompanyId();
 
   const pickupCityDropdownRef = useRef(null);
   const pickupStateDropwdownRef = useRef(null);
@@ -477,8 +478,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
     }
   }, [deliveryStates, deliveryCities]);
 
-  const _getEnquiriesRequest = async () => {
-    const companyId = await useCompanyId();
+  const _getEnquiriesRequest = () => {
     dispatch2(getEnquiriesRequest(companyId));
   }
 
@@ -494,7 +494,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
     }
   }, [addEnquiryRequesting, addEnquirySuccess, addEnquiryFailure]);
 
-  const handleSubmit = useCallback(async () => {
+  const handleSubmit = useCallback(() => {
     setShowErrors(true);
     if (!isFormValid) {
       if (showMobileNumberError) {
@@ -507,7 +507,6 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
       }
       return;
     }
-    const companyId = await useCompanyId();
     const payload: IAddEnquiryRequest = {
       companyId: companyId,
       customerId: selectedCompanyOption?._id as string,
@@ -577,10 +576,9 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
     dispatch2(addEnquiryRequest(payload));
   }, [state]);
 
-  const handleMobileNo = async (text: string) => {
+  const handleMobileNo = (text: string) => {
     handleMobileNumInputTextChange(text);
     if (!Validator.isEmpty(text) && text.length == 10) {
-      const companyId = await useCompanyId();
       const payload: ICustomersRequest = {
         companyId: companyId,
         searchKey: text,
@@ -668,7 +666,7 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
     );
   };
 
-  const handleCompanyName = async (text: string) => {
+  const handleCompanyName = (text: string) => {
     const {billingBy} = state;
     const tempObj = {
       ...billingBy,
@@ -679,7 +677,6 @@ const AddEnquiryView: React.FC<IAddEnquiryViewProps> = ({navigation}) => {
       payload: tempObj as TBillingBy,
     });
     if (!Validator.isEmpty(text)) {
-      const companyId = await useCompanyId();
       const payload: ICustomersRequest = {
         companyId: companyId,
         searchKey: text,

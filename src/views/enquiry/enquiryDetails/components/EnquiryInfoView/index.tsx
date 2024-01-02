@@ -32,6 +32,8 @@ interface IEnquiryInfoViewProps {
 
 const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId, navigation}) => {
   const dispatch = useAppDispatch();
+  const companyId = useCompanyId();
+
   const {
     updateEnquiryStatusRequesting,
     updateEnquiryStatusSuccess,
@@ -83,16 +85,14 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId, navi
     return mobile;
   }
 
-  const refreshOrders = async () => {
-    const companyId = await useCompanyId();
+  const refreshOrders = () => {
     const payload: Partial<IGetOrdersRequest> = {
       companyId: companyId,
     };
     dispatch(getOrdersRequest(payload));
   }
 
-  const _getEnquiriesRequest = async () => {
-    const companyId = await useCompanyId();
+  const _getEnquiriesRequest = () => {
     dispatch(getEnquiriesRequest(companyId));
   }
 

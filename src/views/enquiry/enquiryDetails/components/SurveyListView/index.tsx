@@ -39,6 +39,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({ enquiryId}) => {
   const authId = useAuthId();
 
   const dispatch = useAppDispatch();
+  const companyId = useCompanyId();
 
   const handleSurveyListInputTextChange = (text: string) => {
     setServeyList(text);
@@ -65,8 +66,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({ enquiryId}) => {
   };
 
 
-  const handleCreate = async () => {
-  const companyId = await useCompanyId();
+  const handleCreate = () => {
    const payload:IAddSurveyItemRequest = {
       companyId: companyId,
       enquiryId: enquiryId,
@@ -81,8 +81,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({ enquiryId}) => {
   dispatch(addSurveyItemRequest(payload))
   };
 
-  const _getSurveyItemListRequest = async () => {
-    const companyId = await useCompanyId();
+  const _getSurveyItemListRequest = () => {
     const payload :any= {
       companyId:companyId
     }

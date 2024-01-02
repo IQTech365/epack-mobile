@@ -23,10 +23,10 @@ const ShiftingDetailsView: React.FC<IShiftingDetailsViewProps> = ({item}) => {
   console.log('ShiftingDetailsView--orders--', JSON.stringify(orders));
 
   const dispatch = useAppDispatch();
-  
+  const companyId = useCompanyId();
 
-  const _fetchOrders = async () => {
-    const companyId = await useCompanyId();
+  const _fetchOrders = () => {
+    
     const payload: Partial<IGetOrdersRequest> = {
       companyId: companyId,
     };

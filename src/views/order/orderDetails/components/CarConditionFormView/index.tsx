@@ -64,6 +64,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
   } = useAppSelector(state => state.Common);
   const dispatch2 = useAppDispatch();
   const authId = useAuthId();
+  const companyId = useCompanyId();
 
   const handleCarConditionNo = (text: string) => {
     dispatch({
@@ -222,8 +223,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
     }
   }
 
-  const handleCreateCarCondition = async () => {
-    const companyId = await useCompanyId();
+  const handleCreateCarCondition = () => {
     const payload: ICreateCarConditionRequest = {
       companyId: companyId,
       orderId: orderId as string,

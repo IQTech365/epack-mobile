@@ -22,6 +22,7 @@ interface IEnquiryPageViewProps {
 
 const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
   const dispatch = useAppDispatch();
+  const companyId = useCompanyId();
   const {enquiries, getEnquiriesRequesting} = useAppSelector(
     state => state.Enquiry,
   );
@@ -80,8 +81,7 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
     });
   };
 
-  const _getEnquiriesRequest = async () => {
-    const companyId = await useCompanyId();
+  const _getEnquiriesRequest = () => {
     dispatch(getEnquiriesRequest(companyId));
   }
 

@@ -21,6 +21,7 @@ import Header from '../../common/Header';
 import {IOtpVerifyRequest} from '../../interface/otp/IOtpVerifyRequest';
 import {
   setAuthToken,
+  setCurrentCompanyId,
   setIsRegistrationComplete,
   setLoginStatus,
 } from '../../utils/storage';
@@ -122,7 +123,8 @@ const OTPPageView = (props: any) => {
 
   const disabled = !otp1 || !otp2 || !otp3 || !otp4 || !otp5 || !otp6;
 
-  const completeRegistrationAndLoggedIn = async () => {
+  const completeRegistrationAndLoggedIn = async (companyId:string) => {
+    await setCurrentCompanyId(companyId);
     await setIsRegistrationComplete();
     await setLoginStatus();
     setLoggedIn(true);
@@ -177,18 +179,18 @@ const OTPPageView = (props: any) => {
       const {data} = companies || {};
       console.log('data-data----', JSON.stringify(data));
       if (data && Array.isArray(data) && data.length > 0) {
-        // const firstCompany = data[0];
-        // if (firstCompany.companySignature) {
-        //   completeRegistrationAndLoggedIn();
-        // } else {
-        //   navigation.navigate(AuthStackRoute.RegisterCompany, {
-        //     registrationStep: 3,
-        //   });
-        // }
-        setShowCompaniesModal(true);
+        const firstCompany = data[0];
+        if (firstCompany.companySignature) {
+          completeRegistrationAndLoggedIn(firstCompany._id);
+        } else {
+          navigation.navigate(AuthStackRoute.RegisterCompany, {
+            registrationStep: 3,
+          });
+        }
+        // setShowCompaniesModal(true);
       } else {
-        setShowCompaniesModal(false);
-        navigation.replace("Subscription");
+        // setShowCompaniesModal(false);
+        // navigation.replace("Subscription");
       }
     } else if (!getCompaniesRequesting && getCompaniesFailure) {
       showToast('Error in Getting companies details.', ToastType.ERROR);

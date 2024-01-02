@@ -38,6 +38,8 @@ const SerialNoSettingFormView: React.FC<IMoneyReceiptSNProps> = ({
   const [prefix, setPrefix] = useState<string>('');
   const [suffix, setSuffix] = useState<string>('');
   const dispatch = useAppDispatch();
+  const companyId = useCompanyId();
+
   const {Franchises, Branchs} = useAppSelector(state => state.Myprofile);
   const {
     createSerialNumberRequesting,
@@ -113,8 +115,7 @@ const SerialNoSettingFormView: React.FC<IMoneyReceiptSNProps> = ({
     setSuffix(text);
   };
 
-  const _setCompanyId = async () => {
-    const companyId = await useCompanyId();
+  const _setCompanyId = () => {
     setSubEntityTypeId(companyId);
   }
 
@@ -122,8 +123,7 @@ const SerialNoSettingFormView: React.FC<IMoneyReceiptSNProps> = ({
     _setCompanyId();
   }, []);
 
-  const handleSave = async () => {
-    const companyId = await useCompanyId();
+  const handleSave = () => {
     const payload: ICreateSerialNoRequest = {
       companyId: companyId,
       companyEntity: entityType,
@@ -137,13 +137,11 @@ const SerialNoSettingFormView: React.FC<IMoneyReceiptSNProps> = ({
     dispatch(createSerialNoRequest(payload));
   };
 
-  const _getBranchsRequest = async () => {
-    const companyId = await useCompanyId();
+  const _getBranchsRequest = () => {
     dispatch(getBranchsRequest(companyId));
   }
 
-  const _getFranchiseRequest = async () => {
-    const companyId = await useCompanyId();
+  const _getFranchiseRequest = () => {
     dispatch(getFranchiseRequest(companyId));
   }
 
@@ -152,8 +150,7 @@ const SerialNoSettingFormView: React.FC<IMoneyReceiptSNProps> = ({
     _getFranchiseRequest();
   }, []);
 
-  const _getAppSettingsRequest = async () => {
-    const companyId = await useCompanyId();
+  const _getAppSettingsRequest = () => {
     dispatch(getAppSettingsRequest(companyId));
   }
 

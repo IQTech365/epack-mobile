@@ -39,6 +39,8 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
   const [accountOptions, setAccountOptions] = useState<IAccountOptions[]>(bankNameOptions);
   const [modules, setModules] = useState<string[]>(['']);
   const dispatch = useAppDispatch();
+  const companyId = useCompanyId();
+
   const {
     addPaymentMethodRequesting,
     addPaymentMethodSuccess,
@@ -90,8 +92,7 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
   }
 
   
-  const handleSave = async () => {
-    const companyId = await useCompanyId();
+  const handleSave = () => {
     const payload: IAddPaymentMethodRequest = {
       companyId: companyId,
       accountType: accountType,

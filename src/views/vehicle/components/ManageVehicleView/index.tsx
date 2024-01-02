@@ -31,6 +31,7 @@ interface IAddLorryDetailViewProps {
 
 const ManageVehicleView: React.FC<IAddLorryDetailViewProps> = ({navigation}) => {
   const dispatch = useAppDispatch();
+  const companyId = useCompanyId();
   const {lorryData, getLorryRequesting} = useAppSelector(
     state => state.Vehicle,
   );
@@ -51,8 +52,7 @@ const ManageVehicleView: React.FC<IAddLorryDetailViewProps> = ({navigation}) => 
     setCreateNewAddLorryDetail(false);
   };
 
-  const _getLorryRequest = async () => {
-    const companyId = await useCompanyId();
+  const _getLorryRequest = () => {
     dispatch(getLorryRequest(companyId));
   }
 

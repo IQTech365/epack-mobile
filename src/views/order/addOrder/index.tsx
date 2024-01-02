@@ -66,6 +66,7 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({navigation}) => {
   const [state, dispatch] = useReducer(addOrderReducer, initialState);
   const authId = useAuthId();
   const dispatch2 = useAppDispatch();
+  const companyId = useCompanyId();
   const {addOrderRequesting, addOrderSuccess, addOrderFailure, addOrderError} =
     useAppSelector(state => state.Order);
   const [pincodeRequestKey, setPincodeRequestKey] =
@@ -280,9 +281,9 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({navigation}) => {
         text1: 'Form',
         text2: 'Form data is not valid. Please correct!',
       });
+      showToast('Form is not valid. Please check!', ToastType.ERROR);
       return;
     }
-    const companyId = await useCompanyId();
     const data: IAddOrderRequest = {
       companyId: companyId,
       customerId: selectedCompanyOption?._id as string,
@@ -402,7 +403,6 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({navigation}) => {
   }, [deliveryStates, deliveryCities]);
 
   const fetchCompletedOrders = async () => {
-    const companyId = await useCompanyId();
     let orderListReq: IGetOrdersRequest = {
       // authId: otpData?.data.id as string,
       companyId: companyId,
@@ -458,7 +458,6 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({navigation}) => {
   };
 
   const _fetchOrders = async () => {
-    const companyId = await useCompanyId();
     const payload: Partial<IGetOrdersRequest> = {
       companyId: companyId,
     };
@@ -494,7 +493,6 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({navigation}) => {
   const handleMobileNo = async (text: string) => {
     handleMobileNumInputTextChange(text);
     if (!Validator.isEmpty(text) && text.length == 10) {
-      const companyId = await useCompanyId();
       const payload: ICustomersRequest = {
         companyId: companyId,
         searchKey: text,
@@ -583,7 +581,6 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({navigation}) => {
   };
 
   const _getCustomersRequest = async (text:string) => {
-    const companyId = await useCompanyId();
     const payload: ICustomersRequest = {
       companyId: companyId,
       searchKey: text,
@@ -1006,6 +1003,7 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({navigation}) => {
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
+                  inputType="numeric"
                 />
               </View>
               <View style={styles.textContainer}>
@@ -1070,6 +1068,7 @@ const AddOrderView: React.FC<IAddOrderViewProps> = ({navigation}) => {
                   onChangeText={handleDeliveryPinCode}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
+                  inputType="numeric"
                   selectionColor={COLOR_BLACK}
                 />
               </View>

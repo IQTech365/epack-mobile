@@ -54,6 +54,8 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
   const companyAddressInputCompRef = useRef(null);
 
   const dispatch = useAppDispatch();
+  const companyId = useCompanyId();
+
   const {
     customers,
     getCustomersRequesting,
@@ -64,8 +66,7 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
   const [selectedCompanyOption, setSelectedCompanyOption] =
     useState<ICustomer | null>(null);
 
-  const handleCompanyName = async (text: string) => {
-    const companyId = await useCompanyId();
+  const handleCompanyName = (text: string) => {
     setCompanyName(text);
     if (!Validator.isEmpty(text)) {
       const payload: ICustomersRequest = {

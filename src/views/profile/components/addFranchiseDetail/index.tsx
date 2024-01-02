@@ -27,6 +27,8 @@ const AddFranchiseView = () => {
     state => state.Myprofile,
   );
   const dispatch = useAppDispatch();
+  const companyId = useCompanyId();
+
   const {data: franchiseData = []} = Franchises || {};
 
   const handleCreateNewContent = () => {
@@ -34,8 +36,7 @@ const AddFranchiseView = () => {
     setshowAddFranchise(true);
   };
 
-  const _getFranchiseRequest = async () => {
-    const companyId = await useCompanyId();
+  const _getFranchiseRequest = () => {
     dispatch(getFranchiseRequest(companyId));
   }
 

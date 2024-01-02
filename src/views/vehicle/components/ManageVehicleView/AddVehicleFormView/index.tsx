@@ -79,6 +79,8 @@ const AddLorryView: React.FC<{}> = ({}) => {
   const [vehicleCompanyId, setVehicleCompanyId] = useState<string>('');
 
   const dispatch = useAppDispatch();
+  const companyId = useCompanyId();
+
   const authId = useAuthId();
 
   const _getSubEntityDataList = (): TDropdownItem[] => {
@@ -105,13 +107,11 @@ const AddLorryView: React.FC<{}> = ({}) => {
     return label;
   }
 
-  const _getBranchsRequest = async () => {
-    const companyId = await useCompanyId();
+  const _getBranchsRequest = () => {
     dispatch(getBranchsRequest(companyId));
   }
 
-  const _getFranchiseRequest = async () => {
-    const companyId = await useCompanyId();
+  const _getFranchiseRequest = () => {
     dispatch(getFranchiseRequest(companyId));
   }
 
@@ -139,8 +139,7 @@ const AddLorryView: React.FC<{}> = ({}) => {
     vehicleCompaniesRequesting ||
     vehicleModelsRequesting;
 
-  const handleSubmit = async () => {
-    const companyId = await useCompanyId();
+  const handleSubmit = () => {
     const payload: IAddLorryRequest = {
       companyId: companyId,
       entityType: state.entity,

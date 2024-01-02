@@ -40,6 +40,8 @@ interface IOrderInfoViewProps {
 
 const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item, navigation}) => {
   const dispatch = useAppDispatch();
+  const companyId = useCompanyId();
+
   const [orderStatus, setOrderStatus] = useState<string>(item?.status as string);
   const {
     updateEnquiryStatusRequesting,
@@ -63,8 +65,7 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item, navigation
     // Linking.openURL(`whatsapp://send?phone=+91${item?.mobile}`);
   };
 
-  const refetchOrderList = async () => {
-  const companyId = await useCompanyId();
+  const refetchOrderList = () => {
     const payload: Partial<IGetOrdersRequest> = {
       companyId: companyId,
     }

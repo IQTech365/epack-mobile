@@ -56,6 +56,8 @@ const AddQuotationForm: React.FC<Props> = ({
     setDropPincodeError,
   } = useQuotationFormContextHook();
   const authId = useAuthId();
+  const companyId = useCompanyId();
+
   const dispatch = useAppDispatch();
   const {
     addQuotationRequesting,
@@ -169,8 +171,7 @@ const AddQuotationForm: React.FC<Props> = ({
     return valid;
   }
 
-  const hanldeSubmit = async () => {
-    const companyId = await useCompanyId();
+  const hanldeSubmit = () => {
     const billingDetails = {
       companyName: state.company_name,
       approvalAuthority: state.approval_authority,
@@ -276,8 +277,7 @@ const AddQuotationForm: React.FC<Props> = ({
     }
   };
 
-  const _getQuotationsRequest = async () => {
-    const companyId = await useCompanyId();
+  const _getQuotationsRequest = () => {
     const payload: IGetQuotationRequest = {
       companyId: companyId,
     };

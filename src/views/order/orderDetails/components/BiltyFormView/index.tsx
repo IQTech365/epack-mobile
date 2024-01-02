@@ -41,6 +41,8 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
   console.log('BiltyForm-state----', JSON.stringify(state));
   
   const dispatch = useAppDispatch();
+  const companyId = useCompanyId();
+
   const {
     createBiltyRequesting,
     createBiltySuccess,
@@ -51,8 +53,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
   
   const authId = useAuthId();
 
-  const handleCreateBilty = useCallback(async () => {
-    const companyId = await useCompanyId();
+  const handleCreateBilty = useCallback(() => {
     const payload: ICreateBiltyRequest = {
       companyId: companyId,
       enquiryId: orderId as string,

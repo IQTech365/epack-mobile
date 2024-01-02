@@ -37,6 +37,7 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
   const {data: submodulesData = []} = submodules || {};
   const {otpData} = useAppSelector(state => state.OTP);
   const dispatch = useAppDispatch();
+  const companyId = useCompanyId();
 
   const handleTextInputChange = (text: string) => {
     if(contactNumberError) {
@@ -108,8 +109,7 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
     setContactType(item.label);
   };
 
-  const handleSave = async () => {
-    const companyId = await useCompanyId();
+  const handleSave = () => {
     if(contactNumber && modules.length > 0) {
       setContactNumberError('');
       const payload: IAddContactDetailRequest = {
@@ -134,8 +134,7 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
    
   }
 
-  const _getContactsRequest = async () => {
-    const companyId = await useCompanyId();
+  const _getContactsRequest = () => {
     dispatch(getContactsRequest(companyId));
   }
 

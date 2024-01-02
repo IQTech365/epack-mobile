@@ -35,6 +35,8 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
   const [documentTitle, setDocumentTitle] = useState<string>('');
   const [modules, setModules] = useState<string[]>(['']);
   const dispatch = useAppDispatch();
+  const companyId = useCompanyId();
+
   const {otpData} = useAppSelector(state => state.OTP);
   const {submodules, addDocumentRequesting, addDocumentSuccess, addDocumentFailure} = useAppSelector(state => state.Setting);
   const {data: submodulesData = []} = submodules || {};
@@ -99,8 +101,7 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
     return _value;
   }
 
-  const handleSave = async () => {
-    const companyId = await useCompanyId();
+  const handleSave = () => {
     const payload:IAddDocumentRequest = {
       companyId: companyId,
       moduleId: modules,

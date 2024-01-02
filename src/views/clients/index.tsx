@@ -25,17 +25,16 @@ const ClientPageView: React.FC<IClientPageViewProps> = ({navigation}) => {
   );
   const {orders, getOrdersRequesting} = useAppSelector(state => state.Order);
   const dispatch = useAppDispatch();
+  const companyId = useCompanyId();
 
-  const _fetchCustomers = async () => {
-    const companyId = await useCompanyId();
+  const _fetchCustomers = () => {
     const payload: ICustomerRequest = {
       companyId: companyId,
     };
     dispatch(getCustomersRequest(payload));
   };
 
-  const _fetchOrders = async () => {
-    const companyId = await useCompanyId();
+  const _fetchOrders = () => {
     const payload: Partial<IGetOrdersRequest> = {
       companyId: companyId,
     };

@@ -63,6 +63,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
   } = useAppSelector(state => state.Order);
   
   const authId = useAuthId();
+  const companyId = useCompanyId();
   const {quotations, getQuotationsRequesting} = useAppSelector(
     state => state.Quotation,
   );
@@ -178,8 +179,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
     return _data;
   };
 
-  const handleCreate = async () => {
-    const companyId = await useCompanyId();
+  const handleCreate = () => {
     const payload: ICreateMoneyReceiptRequest = {
       companyId: companyId,
       orderId: orderId as string,
@@ -228,8 +228,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
     }
   };
 
-  const _getQuotationsRequest = async () => {
-    const companyId = await useCompanyId();
+  const _getQuotationsRequest = () => {
     const payload: IGetQuotationRequest = {
       companyId:companyId
     };

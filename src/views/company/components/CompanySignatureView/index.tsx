@@ -83,6 +83,8 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
     useState<boolean>(false);
   const signatureRef = useRef();
   const dispatch = useAppDispatch();
+  const companyId = useCompanyId();
+
   const {verifiedData} = useAppSelector(state => state.OTP);
   const [signatureType, setSignatureType] = useState<string>(
     signatureOptions[0],
@@ -111,9 +113,8 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
   const {data: companiesData} = companies || {};
   const {otpData} = useAppSelector(state => state.OTP);
 
-  const getCompany = async () => {
+  const getCompany = () => {
     let company: ICompanyInfoData | null = null;
-    const companyId = await useCompanyId();
     if (
       companiesData &&
       Array.isArray(companiesData) &&
@@ -189,10 +190,9 @@ const SignatureViewPage: React.FC<ISignatureViewProps> = ({
     setShowSignatureRequiredAlert(false);
   };
 
-  const handleCompanySignatureUriUpdate = async () => {
+  const handleCompanySignatureUriUpdate = () => {
     const imagePath = _getUploadedImagePath();
-    const companyId = await useCompanyId();
-    const company = await getCompany() as ICompanyInfoData;
+    const company = getCompany() as ICompanyInfoData;
     const payload: ICompanyEditRequest = {
       _id: companyId as string,
       authId: authId,

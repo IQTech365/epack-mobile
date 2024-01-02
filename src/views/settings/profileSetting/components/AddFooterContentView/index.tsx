@@ -16,6 +16,7 @@ const AddFooterContentView = () => {
   const [showContentList, setShowContentList] = useState<boolean>(false);
   const [showAddContent, setShowAddContent] = useState<boolean>(true);
   const dispatch = useAppDispatch();
+  const companyId = useCompanyId();
   const {
     footerContents,
     getFooterContentsRequesting,
@@ -62,8 +63,8 @@ const AddFooterContentView = () => {
     return null;
   };
 
-  const _getFooterContentsRequest = async () => {
-    const companyId = await useCompanyId();
+  const _getFooterContentsRequest = () => {
+    
     dispatch(getFooterContentsRequest(companyId));
   }
 

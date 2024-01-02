@@ -48,6 +48,8 @@ const downloadOptions = ['With Sign. & Stamp', 'Without Sign. & Stamp'];
 
 const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
   const dispatch = useAppDispatch();
+  const companyId = useCompanyId();
+
   const {
     quotations = [],
     getQuotationsRequesting,
@@ -229,8 +231,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
     navigation.navigate(QuotationStackRoute.AddQuotation);
   };
 
-  const _getQuotationsRequest = async () => {
-    const companyId = await useCompanyId();
+  const _getQuotationsRequest = () => {
     const payload: IGetQuotationRequest = {
       companyId: companyId,
     };

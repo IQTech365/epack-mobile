@@ -28,6 +28,7 @@ const AddBranchView = () => {
   );
   const {data: BranchsData = []} = Branchs || {};
   const dispatch = useAppDispatch();
+  const companyId = useCompanyId();
 
   const handleCreateNewContent = () => {
     setshowBranchList(false);
@@ -78,8 +79,7 @@ const AddBranchView = () => {
     return null;
   };
 
-  const _getBranchsRequest = async () => {
-    const companyId = await useCompanyId();
+  const _getBranchsRequest = () => {
     dispatch(getBranchsRequest(companyId));
   }
 

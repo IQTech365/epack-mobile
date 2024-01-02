@@ -18,6 +18,7 @@ const AddContactView = () => {
   const [showContactList, setShowContactList] = useState<boolean>(false);
   const [showAddContact, setShowAddContact] = useState<boolean>(true);
   const dispatch = useAppDispatch();
+  const companyId = useCompanyId();
   const {getContactsRequesting, contacts} = useAppSelector(state => state.Setting);
   const {data: contactsData} = contacts || {};
   
@@ -74,8 +75,8 @@ const AddContactView = () => {
     return null;
   };
 
-  const _getContactsRequest = async () => {
-    const companyId = await useCompanyId();
+  const _getContactsRequest = () => {
+    
     dispatch(getContactsRequest(companyId));
   }
 

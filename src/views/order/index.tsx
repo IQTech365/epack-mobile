@@ -23,6 +23,7 @@ interface IOrderPageViewProps {
 
 const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
   const dispatch = useAppDispatch();
+  const companyId = useCompanyId();
   const {orders, getOrdersRequesting, getOrdersSuccess, getOrdersFailure} =
     useAppSelector(state => state.Order);
   const {data: ordersArr} = orders || {};
@@ -132,8 +133,7 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
     return order;
   };
 
-  const _fetchOrders = async () => {
-    const companyId = await useCompanyId();
+  const _fetchOrders = () => {
     const payload: Partial<IGetOrdersRequest> = {
       companyId: companyId,
     };

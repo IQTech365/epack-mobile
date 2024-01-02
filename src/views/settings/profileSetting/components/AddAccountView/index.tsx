@@ -25,6 +25,7 @@ const AddAccountView = () => {
   const [showAddPaymentMehod, setShowAddPaymentMethod] =
     useState<boolean>(true);
     const dispatch = useAppDispatch();
+    const companyId = useCompanyId();
 
   const rederItemBankAccount = (index: number) => {
     return (
@@ -120,8 +121,7 @@ const AddAccountView = () => {
     );
   };
 
-  const _getPaymentMethodsRequest = async () => {
-    const companyId = await useCompanyId();
+  const _getPaymentMethodsRequest = () => {
     dispatch(getPaymentMethodsRequest(companyId));
   }
 

@@ -19,6 +19,8 @@ const AddSerialNoView = () => {
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
   const [selectedSubmodule, setSelectedSubmodule] = useState<ISubmodule>();
   const dispatch = useAppDispatch();
+  const companyId = useCompanyId();
+
   const {
     getSubmodulesRequesting,
     submodules,
@@ -58,8 +60,7 @@ const AddSerialNoView = () => {
     return settings;
   };
 
-  const _getAppSettingsRequest = async () => {
-    const companyId = await useCompanyId();
+  const _getAppSettingsRequest = () => {
     dispatch(getAppSettingsRequest(companyId));
   }
 

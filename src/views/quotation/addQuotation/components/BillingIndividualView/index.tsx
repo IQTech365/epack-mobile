@@ -31,6 +31,8 @@ const BillingIndividualView: React.FC<Props> = ({}) => {
   const [showCompanyList, setShowCompanyList] = useState<boolean>(false);
   const [selectedCompanyOption, setSelectedCompanyOption] = useState<ICustomer | null>(null);
   const dispatch = useAppDispatch();
+  const companyId = useCompanyId();
+
   const {
     customers,
     getCustomersRequesting,
@@ -38,10 +40,9 @@ const BillingIndividualView: React.FC<Props> = ({}) => {
     getCustomersFailure,
   } = useAppSelector(state => state.Common);
 
-  const handleMobileNo = async (text: string) => {
+  const handleMobileNo = (text: string) => {
     setPartyMobileNo(text);
     if(!Validator.isEmpty(text) && text.length == 10){
-      const companyId = await useCompanyId();
       const payload: ICustomersRequest = {
         companyId: companyId,
         searchKey: text,

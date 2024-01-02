@@ -27,6 +27,8 @@ interface IAddDriverDetailViewProps {}
 
 const ManageDriverView: React.FC<IAddDriverDetailViewProps> = ({}) => {
   const dispatch = useAppDispatch();
+  const companyId = useCompanyId();
+
   const {Drivers, getDriversRequesting} = useAppSelector(
     state => state.Vehicle,
   );
@@ -49,8 +51,7 @@ const ManageDriverView: React.FC<IAddDriverDetailViewProps> = ({}) => {
     setCreateNewAddDriverDetail(false);
   };
 
-  const _getDriverRequest = async () => {
-    const companyId = await useCompanyId();
+  const _getDriverRequest = () => {
     dispatch(getDriverRequest(companyId));
   }
 

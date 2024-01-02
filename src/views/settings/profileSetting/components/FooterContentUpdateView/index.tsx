@@ -40,6 +40,8 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({}) => {
   const [content, setContent] = useState<string>('');
   const [modules, setModules] = useState<string[]>(['']);
   const dispatch = useAppDispatch();
+  const companyId = useCompanyId();
+
   const {addFooterContentRequesting, addFooterContentSuccess, addFooterContentFailure, submodules} = useAppSelector(state => state.Setting);
   const richText = React.useRef();
   const {data: submodulesData = []} = submodules || {};
@@ -66,8 +68,7 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({}) => {
     }
   }
 
-  const handleSave = async () => {
-    const companyId = await useCompanyId();
+  const handleSave = () => {
     const payload: IAddFooterContentRequest = {
       companyId: companyId,
       modulesView: modules,
