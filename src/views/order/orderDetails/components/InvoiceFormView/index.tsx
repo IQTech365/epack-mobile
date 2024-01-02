@@ -40,9 +40,10 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({}) => {
   } = useInvoiceFormContextHook();
   console.log('InvoiceFormView--', JSON.stringify(state, null, ' '));
 
-  const switchWrapperStyle = switchState
-    ? styles.switchMainWrapper
-    : styles.switchMainWrapper2;
+  const handleCreateInvoice = () => {
+
+  }
+
 
   return (
     <AvoidSoftInputViewHOC>
@@ -180,8 +181,8 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({}) => {
         </CollapsibleView>
         <Spacer height={12} />
         <Button
-          text="PREVIEW"
-          onPress={() => {}}
+          text="CREATE"
+          onPress={handleCreateInvoice}
           disabled={false}
           style={styles.previewButtonStyle}
           textStyle={styles.textStyle2}

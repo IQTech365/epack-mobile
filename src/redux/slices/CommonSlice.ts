@@ -10,6 +10,7 @@ import {
   IAppSettingResponse,
   ICustomersResponse,
   ICustomersRequest,
+  IBannerListResponse,
 } from '../../interface/common/common';
 
 interface ICommonState {
@@ -73,6 +74,12 @@ interface ICommonState {
   imageUploadSuccess:boolean;
   imageUploadFailure:boolean;
   imageUploadError:any;
+  // Banners
+  banners: IBannerListResponse | null;
+  getBannersRequesting: boolean;
+  getBannersSuccess: boolean;
+  getBannersFailure: boolean;
+  getBannersError: any;
 }
 
 const initialState: ICommonState = {
@@ -136,6 +143,12 @@ const initialState: ICommonState = {
   imageUploadSuccess:false,
   imageUploadFailure:false,
   imageUploadError:null,
+  // Banners
+  banners: null,
+  getBannersRequesting: false,
+  getBannersSuccess: false,
+  getBannersFailure: false,
+  getBannersError: null,
 };
 
 export const CommonSlice = createSlice({
@@ -336,6 +349,24 @@ export const CommonSlice = createSlice({
       state.imageUploadError = null;
       state.uploadedImage = null;
     },
+    // Banners
+    getBannersRequest: (state) => {
+      state.getBannersRequesting = true;
+    },
+    getBannersSuccess: (
+      state,
+      action: PayloadAction<IBannerListResponse>,
+    ) => {
+      state.getBannersRequesting = false;
+      state.getBannersSuccess = true;
+      state.banners = action.payload;
+    },
+    getBannersFailure: (state, action: PayloadAction<any>) => {
+      state.getBannersRequesting = false;
+      state.getBannersSuccess = false;
+      state.getBannersFailure = true;
+      state.getBannersError = action.payload;
+    },
   },
 });
 
@@ -384,5 +415,9 @@ export const {
   imageUploadSuccess,
   imageUploadFailure,
   resetImageUploadRequest,
+  // Banners
+  getBannersRequest,
+  getBannersSuccess,
+  getBannersFailure,
 } = CommonSlice.actions;
 

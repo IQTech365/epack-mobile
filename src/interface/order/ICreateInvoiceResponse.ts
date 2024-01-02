@@ -1,9 +1,9 @@
-interface IInvoiceData {
+interface IInvoice {
   //
 }
 
 export interface ICreateInvoiceResponse {
-  data: IInvoiceData;
+  data: IInvoice;
   status: number;
   error: boolean;
 }

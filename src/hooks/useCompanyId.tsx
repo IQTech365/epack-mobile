@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {useAppSelector} from '../redux/hooks';
 import {getCurrentCompanyId} from '../utils/storage';
-import {ICompanyInfoData} from '../interface/companyRegistration/IGetCompaniesResponse';
 
 const useCompanyId = () => {
   const [companyId, setCompanyId] = useState<string>('');

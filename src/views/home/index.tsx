@@ -30,7 +30,6 @@ const HomePageView = () => {
           <TaskView taskName={TASK_NAME.DELIVERED_ORDERS} count={25} />
           <TaskView taskName={TASK_NAME.TOTAL_CUSTOMERS} count={90} />
         </View>
-        <Spacer height={5} />
         <BannerView />
         <Spacer height={20} />
         <View style={styles.featureContainer}>

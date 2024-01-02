@@ -205,3 +205,22 @@ export interface ICustomersResponse {
   status: number;
   error: boolean;
 }
+
+export interface IBanner {
+  _id: string;
+  title: string;
+  bannerImage: string;
+  fromDate: string;
+  toDate: string;
+  createdBy: string;
+  isActive: boolean;
+  isDeleted: boolean;
+  createdDate: string;
+  __v: number;
+}
+
+export interface IBannerListResponse {
+  data: IBanner[];
+  status: number;
+  error: boolean;
+}

@@ -150,3 +150,5 @@ export const GET_SUBSCRIPTION_PURCHASE_LIST = (auth_id, company_id) => `/purchas
 export const UPDATE_SUBSCRIPTION_INFO = (auth_id, purchase_id) => `/purchase/update/${auth_id}/${purchase_id}`;
 // Add Purchase
 export const ADD_PURCHASE = `/purchase/add`;
+// Banners
+export const GET_BANNERS = `/setting/banner-image/all`;

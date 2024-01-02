@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 import {Api} from '../http/Api';
-import { GET_APP_SETTINGS, GET_PACKING_TYPES, GET_SERIAL_NO_SUBMODULES, GET_VEHICLE_ACCESSORIES, GET_VEHICLE_COLORS, GET_VEHICLE_COMPANIES, GET_VEHICLE_MODELS, GET_VEHICLE_TYPES, IMAGE_UPLOAD, SEARCH_CUSTOMER } from '../http/Endpoint';
-import { IAppSettingResponse, ICustomersRequest, ICustomersResponse, IPackingTypeResponse, ISubmoduleResponse, IVehicleAccessoryResponse, IVehicleColorResponse, IVehicleCompanyResponse, IVehicleModelResponse, IVehicleTypesResponse } from '../interface/common/common';
+import { GET_APP_SETTINGS, GET_BANNERS, GET_PACKING_TYPES, GET_SERIAL_NO_SUBMODULES, GET_VEHICLE_ACCESSORIES, GET_VEHICLE_COLORS, GET_VEHICLE_COMPANIES, GET_VEHICLE_MODELS, GET_VEHICLE_TYPES, IMAGE_UPLOAD, SEARCH_CUSTOMER } from '../http/Endpoint';
+import { IAppSettingResponse, IBannerListResponse, ICustomersRequest, ICustomersResponse, IPackingTypeResponse, ISubmoduleResponse, IVehicleAccessoryResponse, IVehicleColorResponse, IVehicleCompanyResponse, IVehicleModelResponse, IVehicleTypesResponse } from '../interface/common/common';
 
 export const GetPackingTypesService = async (): Promise<IPackingTypeResponse> => {
     const api = Api.getInstance();
@@ -60,4 +60,10 @@ export const GetCustomersService = async (payload:ICustomersRequest): Promise<IC
 export const ImageUploadService = async (payload: any): Promise<any> => {
     const api = Api.getInstance();
     return await api.post<any, AxiosResponse<any>>(payload, IMAGE_UPLOAD);
+}
+
+// Banners
+export const GetBannersService = async (): Promise<IBannerListResponse> => {
+    const api = Api.getInstance();
+    return await api.get<IBannerListResponse>(GET_BANNERS);
 }

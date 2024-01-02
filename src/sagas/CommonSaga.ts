@@ -18,6 +18,9 @@ import {
     getAppSettingsFailure,
     getAppSettingsRequest,
     getAppSettingsSuccess,
+  getBannersFailure,
+  getBannersRequest,
+  getBannersSuccess,
   getCustomersFailure,
   getCustomersRequest,
   getCustomersSuccess,
@@ -158,6 +161,18 @@ export function* imageUploadSaga(action: PayloadAction<any>) {
     }
 }
 
+export function* getBannersSaga(action: PayloadAction<any>) {
+    try {
+        //@ts-ignore
+        const response: any = yield call(CommonService.GetBannersService);
+        console.log('getBannersSaga-response----', JSON.stringify(response));
+        yield put(getBannersSuccess(response));
+    } catch (error) {
+        console.log('getBannersSaga-error----', error);
+        yield put(getBannersFailure(error));
+    }
+}
+
 export function* watcherCommonSaga() {
     yield takeLatest(getPackingTypesRequest.type, getPackingTypesSaga);
     yield takeLatest(getVehicleTypesRequest.type, getVehicleTypesSaga);
@@ -169,4 +184,5 @@ export function* watcherCommonSaga() {
     yield takeLatest(getAppSettingsRequest.type, getAppSettingsSaga);
     yield takeLatest(getCustomersRequest.type, getCustomersSaga);
     yield takeLatest(imageUploadRequest.type, imageUploadSaga);
+    yield takeLatest(getBannersRequest.type, getBannersSaga);
 }
