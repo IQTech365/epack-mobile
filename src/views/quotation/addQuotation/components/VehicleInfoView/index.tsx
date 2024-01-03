@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {View} from 'react-native';
 import styles from './style';
 import Label from '../../../../../common/Label';
@@ -27,6 +27,17 @@ const VehicleInfoView: React.FC<IProps> = ({}) => {
   const {vehicleTypes, vehicleCompanies, vehicleModels} = useAppSelector(
     state => state.Common,
   );
+
+  useEffect(() => {
+    if(vehicleTypes && state.shifting_luggage == shiftingLuggages[3].label) {
+      const list = getVehicleTypeList(vehicleTypes);
+      if(list.length > 0) {
+        const firstItem = list[0];
+        setVehicleTypeId(firstItem.value);
+        setVehicleType(firstItem.label);
+      }
+    }
+  }, [vehicleTypes]);
 
   if (state.shifting_luggage !== shiftingLuggages[3].label) return null;
 

@@ -8,7 +8,7 @@ import {COLOR_BLUE} from '../../../../../../../utils/colors';
 import {useQuotationFormContextHook} from '../../../../../../../provider/QuotationFormContextProvider';
 import SingleChargeInputView from '../SingleChargeInputView';
 import BothChargeInputView from '../BothChargeInputView';
-
+import shiftingLuggages from '../../../../../../../data/shiftingLuggage.json';
 interface Props {
   freightType: FREIGHT_TYPE;
   options: string[];
@@ -136,6 +136,30 @@ const FreightTypeView: React.FC<Props> = ({freightType, options}) => {
     }
     return null;
   };
+
+  useEffect(() => {
+    if(state.shifting_luggage == shiftingLuggages[3].label) {
+      if(freightType == FREIGHT_TYPE.PACKING_CHARGE) {
+        setPackingCharge(options[2]);
+      }
+      if(freightType == FREIGHT_TYPE.PACKING_MATERIAL_CHARGE) {
+        setPackingMaterialCharge(options[2]);
+      }
+      if(freightType == FREIGHT_TYPE.UNPACKING_CHARGE) {
+        setUnpackingCharge(options[2]);
+      }
+    } else {
+      if(freightType == FREIGHT_TYPE.PACKING_CHARGE) {
+        setPackingCharge(options[1]);
+      }
+      if(freightType == FREIGHT_TYPE.PACKING_MATERIAL_CHARGE) {
+        setPackingMaterialCharge(options[1]);
+      }
+      if(freightType == FREIGHT_TYPE.UNPACKING_CHARGE) {
+        setUnpackingCharge(options[1]);
+      }
+    }
+  }, [state.shifting_luggage]);
 
   useEffect(() => {
     if(freightType == FREIGHT_TYPE.LOAD_TYPE) {

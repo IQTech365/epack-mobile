@@ -68,7 +68,6 @@ const styles = StyleSheet.create({
   fullWidthContainer: {
     width: width * 0.9,
     alignSelf: 'center',
-    alignItems: 'flex-start',
     justifyContent: 'center',
   },
   inputContainer: {

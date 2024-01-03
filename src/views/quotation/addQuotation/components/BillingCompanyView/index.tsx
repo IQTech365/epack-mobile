@@ -210,7 +210,7 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
       <Spacer height={4} />
 
       <View style={styles.fullWidthContainer}>
-        <Label text="Employee Name" style={styles.label} required={true} />
+        <Label text="Employee Name" style={styles.label} />
         <Input
           onChangeText={setEmployeeName}
           containerStyle={styles.inputContainer}
@@ -222,7 +222,6 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
           //@ts-ignore
           error={state.errors.employee_name}
           type="text"
-          required={true}
         />
       </View>
       <Spacer height={4} />
@@ -253,7 +252,6 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
             //@ts-ignore
             ref={employeeDesignationInputCompRef}
             type="text"
-            required={true}
           />
         </View>
       </View>

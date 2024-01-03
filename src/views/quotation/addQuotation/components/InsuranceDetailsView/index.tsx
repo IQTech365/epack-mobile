@@ -15,6 +15,7 @@ import insurancePercentOptions from '../../../../../data/insurancePercentOptions
 import gstPercentOptions from '../../../../../data/gstPercentOptions.json';
 import Spacer from '../../../../../common/Spacer';
 import Input from '../../../../../common/Input';
+import EpackDropdown from '../../../../../common/DropdownComponent2';
 
 interface Props {
   //
@@ -37,7 +38,7 @@ const InsuranceDetailsView: React.FC<Props> = ({}) => {
   const insuranceGoodsValueInputCompRef = useRef(null);
 
   return (
-    <CollapsibleView title="INSURANCE DETAILS" collapsed={true}>
+    <CollapsibleView title="TRANSIT INSURANCE DETAILS" collapsed={true}>
       <View>
         <View style={styles.optionContainer}>
           {options2.map((option: string, index: number) => (
@@ -64,15 +65,13 @@ const InsuranceDetailsView: React.FC<Props> = ({}) => {
           <>
             <View style={styles.fullWidthContainer}>
               <Label text="Shifting Luggage" style={styles.labelText} />
-              <DropdownComponent
-                data={shiftingLuggageOptions}
-                onSelect={(item: TDropdownItem) => {
-                  setTransitShiftingLuggage(item.label);
-                }}
-                defaultValue={shiftingLuggageOptions[0]}
-                //@ts-ignore
-                ref={shiftingLuggageDropdownCompRef}
-              />
+              <EpackDropdown
+              data={shiftingLuggageOptions.map(({label}) => label)}
+              placeholder={'Select State'}
+              hanldeData={setTransitShiftingLuggage}
+              //@ts-ignore
+              ref={shiftingLuggageDropdownCompRef}
+            />
             </View>
             <Spacer height={4} />
             <View style={styles.fullWidthContainer}>
