@@ -9,10 +9,11 @@ import Animated, {
 import {COLOR_BLUE, COLOR_GRAY2} from '../../../../utils/colors';
 import {Circle, Svg} from 'react-native-svg';
 import HeadsetIcon from '../../../../images/icons/headset_icon.svg';
-import FollowupsIcon from '../../../../images/icons/followups_icon.svg';
+import FollowupsIcon from '../../../../images/icons/followups.svg';
 import SurveyIcon from '../../../../images/icons/today_survey_icon.svg';
 import DeliveredOrdrsIcon from '../../../../images/icons/delivered_orders_icon.svg';
 import CustomersIcon from '../../../../images/icons/total_customers_icon.svg';
+import NewOrdersIcon from '../../../../images/icons/new_orders.svg';
 import {TASK_NAME} from '../../utils';
 import {Shadow} from 'react-native-shadow-2';
 
@@ -77,7 +78,7 @@ const TaskView: React.FC<Props> = ({taskName, count}) => {
       case TASK_NAME.TODAY_SURVEY:
         return <SurveyIcon width={40} height={40} />;
       case TASK_NAME.NEW_ORDERS:
-        return <HeadsetIcon width={40} height={40} />;
+        return <NewOrdersIcon width={40} height={40} />;
       case TASK_NAME.DELIVERED_ORDERS:
         return <DeliveredOrdrsIcon width={40} height={40} />;
       case TASK_NAME.TOTAL_CUSTOMERS:
