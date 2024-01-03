@@ -7,16 +7,17 @@ const {width, height} = Dimensions.get('window');
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {
   addPurchaseRequest,
+  createRazorpayRequest,
   getSubmoduleFeaturesRequest,
   getSubmodulesRequest,
   getSubscriptionPlansRequest,
   resetAddPurchaseRequest,
+  resetCreateRazorpayRequest,
 } from '../../redux/slices/SubscriptionSlice';
 import {getModulesRequest} from '../../redux/slices/UserRoleManagementSlice';
 import {
   IAddPurchaseRequest,
-  IRazorPayOrderFailureResponse,
-  IRazorPayOrderSuccessResponse,
+  IRazorPayCreateOrderPayload,
   ISubscriptionPlan,
 } from '../../interface/subscription/subscription';
 import {prepareSubscriptionPlanList} from './utils';
@@ -48,6 +49,10 @@ const SubscriptionPlanView = (props: any) => {
     addPurchaseSuccess,
     addPurchaseFailure,
     addPurchaseInfo,
+    createRazorpayOrderRequesting,
+    createRazorpayOrderSuccess,
+    createRazorpayOrderFailure,
+    razorpayOrder
   } = useAppSelector(state => state.Subscription);
   console.log('submodules----', JSON.stringify(submodules));
 
@@ -62,17 +67,12 @@ const SubscriptionPlanView = (props: any) => {
   const {data: submoduleFeatureData} = submoduleFeatures || {};
   const handleByPlan = async (plan: ISubscriptionPlan) => {
     // Create Order on Server
-    // try {
-    //   const orderSuccessResposne:IRazorPayOrderSuccessResponse = await SubscriptionService.createRazorpayOrder(100);
-    //   console.log('Razorpay-orderSuccessResposne-----', JSON.stringify(orderSuccessResposne));
-    //   // TODO: Start Checkout
-    // } catch (error) {
-    //   console.log('handleByPlan---', JSON.stringify(error));
-    //   const orderFailureResponse:IRazorPayOrderFailureResponse = error as IRazorPayOrderFailureResponse;
-    //   console.log('Razorpay-orderFailureResponse-----', JSON.stringify(orderFailureResponse));
-    //   showToast(orderFailureResponse?.error?.description, ToastType.ERROR);
-    // }
-    _doPayment(plan);
+    const payload:IRazorPayCreateOrderPayload = {
+      amount: plan.amount * 100,
+      currency: 'INR',
+    }
+    dispatch(createRazorpayRequest(payload));
+    // _doPayment(plan);
   };
 
   const _addPurchase = (plan: ISubscriptionPlan) => {
@@ -176,6 +176,14 @@ const SubscriptionPlanView = (props: any) => {
     }
   }, [addPurchaseRequesting, addPurchaseSuccess, addPurchaseFailure]);
 
+  useEffect(() => {
+    if (!createRazorpayOrderRequesting && createRazorpayOrderSuccess) {
+      dispatch(resetCreateRazorpayRequest());
+    } else if (!createRazorpayOrderRequesting && createRazorpayOrderFailure) {
+      showToast('Error in Createing Order ID', ToastType.ERROR);
+    }
+  }, [createRazorpayOrderRequesting, createRazorpayOrderSuccess, createRazorpayOrderFailure]);
+
   return (
     <ImageBackground
       style={{flex: 1, height: height, width: width}}
@@ -195,7 +203,6 @@ const SubscriptionPlanView = (props: any) => {
         renderItem={({item, index}) => {
           return (
             <ScrollView showsVerticalScrollIndicator={false}>
-              {/* <SubscriptionPlanCard item={item} onPress={handleByPlan} /> */}
               <SubscriptionPlanCard2 item={item} onPress={handleByPlan} />
               <Spinner show={paymentProcessing || addPurchaseRequesting} />
             </ScrollView>

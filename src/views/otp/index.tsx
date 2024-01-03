@@ -160,6 +160,13 @@ const OTPPageView = (props: any) => {
     return otp;
   }
 
+  const _setCompanyIdAndDoCompleteRegistration = async (id:string) => {
+    await setCurrentCompanyId(id);
+    navigation.navigate(AuthStackRoute.RegisterCompany, {
+      registrationStep: 3,
+    });
+  }
+
   useEffect(() => {
     if (!verifyOtpRequesting && verifyOtpSuccess) {
       const {data} = verifiedData || {};
@@ -183,14 +190,15 @@ const OTPPageView = (props: any) => {
         if (firstCompany.companySignature) {
           completeRegistrationAndLoggedIn(firstCompany._id);
         } else {
-          navigation.navigate(AuthStackRoute.RegisterCompany, {
-            registrationStep: 3,
-          });
+          _setCompanyIdAndDoCompleteRegistration(firstCompany._id);
         }
         // setShowCompaniesModal(true);
       } else {
         // setShowCompaniesModal(false);
         // navigation.replace("Subscription");
+        navigation.navigate(AuthStackRoute.RegisterCompany, {
+          registrationStep: 1,
+        });
       }
     } else if (!getCompaniesRequesting && getCompaniesFailure) {
       showToast('Error in Getting companies details.', ToastType.ERROR);

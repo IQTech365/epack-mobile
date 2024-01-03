@@ -152,3 +152,5 @@ export const UPDATE_SUBSCRIPTION_INFO = (auth_id, purchase_id) => `/purchase/upd
 export const ADD_PURCHASE = `/purchase/add`;
 // Banners
 export const GET_BANNERS = `/setting/banner-image/all`;
+// Razorpay Order
+export const CREATE_RAZORPAY_ORDER = `/purchase/order`;

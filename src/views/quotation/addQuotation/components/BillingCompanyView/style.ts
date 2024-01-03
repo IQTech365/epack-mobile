@@ -32,6 +32,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingLeft: 8,
   },
+  twoColumnContainer: {
+    width: width * 0.9,
+    alignSelf: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  itemContainer: {
+    width: width * 0.44,
+  },
   customerNameText: {
     color: COLOR_WHITE,
     fontSize: 16,

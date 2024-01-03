@@ -106,7 +106,7 @@ const StorageChargesView: React.FC<Props> = ({}) => {
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
-                value={state.transit_goods_value}
+                value={state.storage_amount}
                 //@ts-ignore
                 //error={showErrors && errors.dropPincode}
                 //@ts-ignore

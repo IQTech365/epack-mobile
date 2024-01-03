@@ -4,6 +4,8 @@ import {
   IAddPurchaseResponse,
   IGetPurchasedSubscriptionListResponse,
   IGetPurchasedSubscriptionParams,
+  IRazorPayCreateOrderPayload,
+  IRazorPayOrderResponse,
   ISubmoduleFeatureListResponse,
   ISubmoduleListResponse,
   ISubscriptionPlanListResponse,
@@ -50,6 +52,12 @@ interface ISubscriptionState {
   addPurchaseSuccess:boolean;
   addPurchaseFailure:boolean;
   addPurchaseError: any;
+  // Razorpay Create Order
+  razorpayOrder: IRazorPayOrderResponse | null;
+  createRazorpayOrderRequesting: boolean;
+  createRazorpayOrderSuccess: boolean;
+  createRazorpayOrderFailure: boolean;
+  createRazorpayOrderError: any;
 }
 
 const initialState: ISubscriptionState = {
@@ -89,6 +97,12 @@ const initialState: ISubscriptionState = {
   addPurchaseSuccess:false,
   addPurchaseFailure:false,
   addPurchaseError: null,
+  // Razorpay Create Order
+  razorpayOrder: null,
+  createRazorpayOrderRequesting: false,
+  createRazorpayOrderSuccess: false,
+  createRazorpayOrderFailure: false,
+  createRazorpayOrderError: null,
 };
 
 export const SubscriptionSlice = createSlice({
@@ -222,7 +236,32 @@ export const SubscriptionSlice = createSlice({
       state.addPurchaseSuccess = false;
       state.addPurchaseFailure = false;
       state.addPurchaseError = null;
-      // state.addPurchaseInfo = null;
+      state.addPurchaseInfo = null;
+    },
+    // Razorpay Order
+    createRazorpayRequest: (state, action: PayloadAction<IRazorPayCreateOrderPayload>) => {
+      state.createRazorpayOrderRequesting = true;
+    },
+    createRazorpaySuccess: (
+      state,
+      action: PayloadAction<IAddPurchaseResponse>,
+    ) => {
+      state.createRazorpayOrderRequesting = false;
+      state.createRazorpayOrderSuccess = true;
+      state.razorpayOrder = action.payload;
+    },
+    createRazorpayFailure: (state, action: PayloadAction<any>) => {
+      state.createRazorpayOrderRequesting = false;
+      state.createRazorpayOrderSuccess = false;
+      state.createRazorpayOrderFailure = true;
+      state.razorpayOrder = action.payload;
+    },
+    resetCreateRazorpayRequest: (state) => {
+      state.createRazorpayOrderRequesting = false;
+      state.createRazorpayOrderSuccess = false;
+      state.createRazorpayOrderFailure = false;
+      state.createRazorpayOrderError = null;
+      // state.razorpayOrder = null;
     },
   },
 });
@@ -257,4 +296,9 @@ export const {
   addPurchaseSuccess,
   addPurchaseFailure,
   resetAddPurchaseRequest,
+  // Razorpay Order
+  createRazorpayRequest,
+  createRazorpaySuccess,
+  createRazorpayFailure,
+  resetCreateRazorpayRequest,
 } = SubscriptionSlice.actions;

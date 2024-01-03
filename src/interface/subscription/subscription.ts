@@ -110,7 +110,7 @@ export interface IUpdateSubscriptionResponse {
 }
 
 // Razorpay Order
-export interface IRazorPayOrderSuccessResponse {
+export interface IRazorPayOrder {
   id: string;
   entity: string;
   amount: number;
@@ -125,18 +125,15 @@ export interface IRazorPayOrderSuccessResponse {
   created_at: any;
 }
 
-export interface IRazorPayOrderFailure {
-  code: string;
-  description: string;
-  source: string;
-  step: string;
-  reason: string;
-  metadata: any;
-  field: string;
+export interface IRazorPayCreateOrderPayload {
+  amount: number;
+  currency: string;
 }
 
-export interface IRazorPayOrderFailureResponse {
-  error: IRazorPayOrderFailure;
+export interface IRazorPayOrderResponse {
+  data: IRazorPayOrder,
+  status: number;
+  error: boolean;
 }
 
 // Add Purchase

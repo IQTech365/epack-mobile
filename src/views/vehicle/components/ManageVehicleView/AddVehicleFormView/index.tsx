@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
-import Toast from 'react-native-toast-message';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../../../common/Spacer';
 import styles from './style';
@@ -39,6 +38,7 @@ import {
   getVehicleTypeList,
 } from '../../../../order/orderDetails/components/CarConditionFormView/utils';
 import {getBranchList, getFirstVehicleType, getFranchiseList} from '../../utils';
+import { ToastType, showToast } from '../../../../../utils/utility';
 
 const AddLorryView: React.FC<{}> = ({}) => {
   const {
@@ -167,18 +167,10 @@ const AddLorryView: React.FC<{}> = ({}) => {
 
   useEffect(() => {
     if (!addLorryRequesting && addLorrySuccess) {
-      Toast.show({
-        type: 'success',
-        text1: 'Add Lorry',
-        text2: 'Add Lorry has been added successfully',
-      });
+      showToast('Vehicle added successfully.', ToastType.SUCCESS);
       dispatch(restAddLorryRequest());
     } else if (!addLorryRequesting && addLorryFailure) {
-      Toast.show({
-        type: 'error',
-        text1: 'Add Lorry',
-        text2: 'Error in adding Lorry. Please try again!',
-      });
+      showToast('Error added new Vehicle. Try again!', ToastType.ERROR);
       dispatch(restAddLorryRequest());
     }
   }, [addLorryRequesting, addLorrySuccess, addLorryFailure]);

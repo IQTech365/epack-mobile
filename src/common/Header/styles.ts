@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     },
     nameText2: {
         color: COLOR_WHITE,
-        fontSize: 24,
+        fontSize: 16,
         fontWeight: '600',
       },
     avtarContainer: {
@@ -63,6 +63,8 @@ const styles = StyleSheet.create({
         height: 28,
         backgroundColor: COLOR_GRAY,
         borderRadius: 14,
+        alignItems: 'center',
+        justifyContent: 'center',
     }
 });
 

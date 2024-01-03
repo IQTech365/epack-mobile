@@ -10,6 +10,7 @@ import {
   options,
   options2,
 } from './components/FreightDetailsView/components/utils';
+import * as Utils from './components/OtherDetailsView/utils';
 
 export enum ACTION {
   SHIFTING_TYPE = 'SHIFTING_TYPE',
@@ -36,6 +37,9 @@ export enum ACTION {
   EMPLOYEE_DESIGNATION = 'EMPLOYEE_DESIGNATION',
   EMPLOYEE_MOBILE_NO = 'EMPLOYEE_MOBILE_NO',
   COMPANY_ADDRESS = 'COMPANY_ADDRESS',
+  COMPANY_PINCODE = 'COMPANY_PINCODE',
+  COMPANY_STATE = 'COMPANY_STATE',
+  COMPANY_CITY = 'COMPANY_CITY',
   //
   PICKUP_PINCODE = 'PICKUP_PINCODE',
   PICKUP_STATE = 'PICKUP_STATE',
@@ -170,6 +174,9 @@ export interface IState {
   employee_designation: string;
   employee_mobile_no: string;
   company_address: string;
+  company_pincode: string;
+  company_state: string;
+  company_city: string;
   // **** Pickup Address
   pickup_pincode: string;
   pickup_state: string;
@@ -287,6 +294,9 @@ export const initialState: IState = {
   employee_designation: '',
   employee_mobile_no: '',
   company_address: '',
+  company_pincode: '',
+  company_state: '',
+  company_city: '',
   // **** Pickup Address ****
   pickup_pincode: '',
   pickup_state: '',
@@ -354,9 +364,9 @@ export const initialState: IState = {
   storage_to_date: '',
   storage_amount: '',
   // **** Other Details ****
-  other_detail_1: '',
+  other_detail_1: Utils.options[0],
   other_detail_2: '',
-  other_detail_3: '',
+  other_detail_3: Utils.options[1],
   other_detail_4: '',
   // **** Errors ****
   errors: {
@@ -417,6 +427,12 @@ export const quotationReducer: Reducer<IState, IAction> = (
       return {...state, authority_mobile_no: payload as string};
     case ACTION.COMPANY_GST:
       return {...state, company_gst: payload as string};
+    case ACTION.COMPANY_PINCODE:
+      return {...state, company_pincode: payload as string};
+    case ACTION.COMPANY_STATE:
+      return {...state, company_state: payload as string};
+    case ACTION.COMPANY_CITY:
+      return {...state, company_city: payload as string};
     case ACTION.EMPLOYEE_NAME:
       return {...state, employee_name: payload as string};
     case ACTION.EMPLOYEE_MOBILE_NO:

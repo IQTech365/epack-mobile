@@ -142,11 +142,11 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
     }
   };
 
-  const handleNextClick = useCallback(() => {
+  const handleNextClick = () => {
     if (currentStep >= 1 && currentStep < 3) {
       setCurrentStep(currentStep + 1);
     }
-  }, [state]);
+  };
 
   const handleCompanyLogoUriUpdate = () => {
     const imagePath = _getUploadedImagePath();
@@ -174,7 +174,7 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
     dispatch(editCompanyRequest(payload));
   };
 
-  const handleUploadClick = useCallback(() => {
+  const handleUploadClick = () => {
     const formData = new FormData();
     formData.append('image', {
       uri: imageFile?.uri,
@@ -182,7 +182,7 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
       name: imageFile?.fileName,
     });
     dispatch(imageUploadRequest(formData));
-  }, [state]);
+  };
 
   useEffect(() => {
     if (otpData) {

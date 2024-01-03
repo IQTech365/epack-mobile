@@ -1,8 +1,8 @@
 import {takeLatest, put, call} from 'redux-saga/effects';
 import {PayloadAction} from '@reduxjs/toolkit';
 import * as SubscriptionService from '../service/SubscriptionService';
-import { IAddPurchaseRequest, IAddPurchaseResponse, IGetPurchasedSubscriptionListResponse, IGetPurchasedSubscriptionParams, ISubmoduleFeatureListResponse, ISubmoduleListResponse, ISubscriptionPlanListResponse, IUpdateSubscriptionRequest, IUpdateSubscriptionResponse } from '../interface/subscription/subscription';
-import { addPurchaseFailure, addPurchaseRequest, addPurchaseSuccess, getPurchasedSubscriptionFailure, getPurchasedSubscriptionRequest, getPurchasedSubscriptionSuccess, getSubmoduleFeaturesFailure, getSubmoduleFeaturesRequest, getSubmoduleFeaturesSuccess, getSubmodulesFailure, getSubmodulesRequest, getSubmodulesSuccess, getSubscriptionPlansFailure, getSubscriptionPlansRequest, getSubscriptionPlansSuccess, updateSubscriptionFailure, updateSubscriptionRequest, updateSubscriptionSuccess } from '../redux/slices/SubscriptionSlice';
+import { IAddPurchaseRequest, IAddPurchaseResponse, IGetPurchasedSubscriptionListResponse, IGetPurchasedSubscriptionParams, IRazorPayCreateOrderPayload, IRazorPayOrderResponse, ISubmoduleFeatureListResponse, ISubmoduleListResponse, ISubscriptionPlanListResponse, IUpdateSubscriptionRequest, IUpdateSubscriptionResponse } from '../interface/subscription/subscription';
+import { addPurchaseFailure, addPurchaseRequest, addPurchaseSuccess, createRazorpayFailure, createRazorpayRequest, createRazorpaySuccess, getPurchasedSubscriptionFailure, getPurchasedSubscriptionRequest, getPurchasedSubscriptionSuccess, getSubmoduleFeaturesFailure, getSubmoduleFeaturesRequest, getSubmoduleFeaturesSuccess, getSubmodulesFailure, getSubmodulesRequest, getSubmodulesSuccess, getSubscriptionPlansFailure, getSubscriptionPlansRequest, getSubscriptionPlansSuccess, updateSubscriptionFailure, updateSubscriptionRequest, updateSubscriptionSuccess } from '../redux/slices/SubscriptionSlice';
 
 export function* getSubscriptionPlanListSaga(action: PayloadAction<any>) {
   try {
@@ -70,6 +70,17 @@ export function* addPurchaseSaga(action: PayloadAction<IAddPurchaseRequest>) {
   }
 }
 
+export function* createRazorpayOrderSaga(action: PayloadAction<IRazorPayCreateOrderPayload>) {
+  try {
+    const response: IRazorPayOrderResponse = yield call(SubscriptionService.createRazorpayOrder, action.payload);
+    console.log('createRazorpayOrderSaga-response----', JSON.stringify(response));
+    yield put(createRazorpaySuccess(response));
+  } catch (error) {
+    console.log('createRazorpayOrderSaga-error----', error);
+    yield put(createRazorpayFailure(JSON.stringify(error)));
+  }
+}
+
 export function* watcherSubscriptionSaga() {
   yield takeLatest(getSubscriptionPlansRequest.type, getSubscriptionPlanListSaga);
   yield takeLatest(getSubmoduleFeaturesRequest.type, getSubmoduleFeatureListSaga);
@@ -77,4 +88,5 @@ export function* watcherSubscriptionSaga() {
   yield takeLatest(getPurchasedSubscriptionRequest.type, getPurchasedSubscriptionListSaga);
   yield takeLatest(updateSubscriptionRequest.type, updateSubscriptionSaga);
   yield takeLatest(addPurchaseRequest.type, addPurchaseSaga);
+  yield takeLatest(createRazorpayRequest.type, createRazorpayOrderSaga);
 }

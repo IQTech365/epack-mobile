@@ -166,7 +166,7 @@ const useQuotationFormContext = () => {
     },
     [state.authority_person_name],
   );
-  const setAuthorityMobileNo= useCallback(
+  const setAuthorityMobileNo = useCallback(
     (text: string) => {
       dispatch({
         type: ACTION.AUTHORITY_MOBILE_NO,
@@ -219,6 +219,36 @@ const useQuotationFormContext = () => {
       });
     },
     [state.company_address],
+  );
+
+  const setCompanyPincode = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.COMPANY_PINCODE,
+        payload: text,
+      });
+    },
+    [state.company_pincode],
+  );
+
+  const setCompanyState = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.COMPANY_STATE,
+        payload: text,
+      });
+    },
+    [state.company_state],
+  );
+
+  const setCompanyCity = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.COMPANY_CITY,
+        payload: text,
+      });
+    },
+    [state.company_city],
   );
 
   // **** Pickup Address ****
@@ -759,25 +789,19 @@ const useQuotationFormContext = () => {
   );
 
   // **** Reset Dispatch ****
-  const resetAllPartLoad = useCallback(
-    () => {
-      dispatch({
-        type: ACTION.RESET_ALL_PART_LOAD,
-        payload: '',
-      });
-    },
-    [state.freight_part_load],
-  );
+  const resetAllPartLoad = useCallback(() => {
+    dispatch({
+      type: ACTION.RESET_ALL_PART_LOAD,
+      payload: '',
+    });
+  }, [state.freight_part_load]);
 
-  const resetAllFullLoad = useCallback(
-    () => {
-      dispatch({
-        type: ACTION.RESET_ALL_FULL_LOAD,
-        payload: '',
-      });
-    },
-    [state.freight_full_load],
-  );
+  const resetAllFullLoad = useCallback(() => {
+    dispatch({
+      type: ACTION.RESET_ALL_FULL_LOAD,
+      payload: '',
+    });
+  }, [state.freight_full_load]);
 
   // **** Errors ****
   const setPartyNameError = useCallback(
@@ -877,7 +901,7 @@ const useQuotationFormContext = () => {
   ]);
 
   const validateForm = useCallback(
-    (validate:boolean) => {
+    (validate: boolean) => {
       dispatch({
         type: ACTION.VALIDATE_FORM,
         payload: validate,
@@ -887,7 +911,7 @@ const useQuotationFormContext = () => {
   );
 
   const validForm = useCallback(
-    (valid:boolean) => {
+    (valid: boolean) => {
       dispatch({
         type: ACTION.VALID_FORM,
         payload: valid,
@@ -923,6 +947,9 @@ const useQuotationFormContext = () => {
     setEmployeeDesignation,
     setEmployeeMobileNo,
     setCompanyAddress,
+    setCompanyPincode,
+    setCompanyState,
+    setCompanyCity,
     // **** Pickup Address ****
     setPickupPincode,
     setPickupState,
@@ -1042,6 +1069,9 @@ const initQuotationFormContextState: UseQuotationFormContextType = {
   setEmployeeDesignation: (text: string) => {},
   setEmployeeMobileNo: (text: string) => {},
   setCompanyAddress: (text: string) => {},
+  setCompanyPincode: (text: string) => {},
+  setCompanyState: (text: string) => {},
+  setCompanyCity: (text: string) => {},
   // **** Pickup Address ****
   setPickupPincode: (text: string) => {},
   setPickupState: (text: string) => {},
@@ -1114,8 +1144,8 @@ const initQuotationFormContextState: UseQuotationFormContextType = {
   setOtherDetail3: (text: string) => {},
   setOtherDetail4: (text: string) => {},
   // **** Reset ****
-  resetAllPartLoad:() => {},
-  resetAllFullLoad:() => {},
+  resetAllPartLoad: () => {},
+  resetAllFullLoad: () => {},
   // *** Errors ****
   setPartyNameError: (text: string) => {},
   setPartyMobileNoError: (text: string) => {},
@@ -1127,7 +1157,7 @@ const initQuotationFormContextState: UseQuotationFormContextType = {
   setDropPincodeError: (text: string) => {},
   // **** Reset Errors ****
   resetError: () => {},
-  validateForm: (validate:boolean) => {},
+  validateForm: (validate: boolean) => {},
   validForm: (valid: boolean) => {},
 };
 

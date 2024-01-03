@@ -17,12 +17,14 @@ import billingByOptions from '../../../../../data/billingByOptions.json';
 import {formatDate4} from '../../../../../utils/formatter';
 import BillingIndividualView from '../BillingIndividualView';
 import BillingCompanyView from '../BillingCompanyView';
+import VehicleInfoView from '../VehicleInfoView';
 interface Props {
   //
 }
 
 const BasicDetails: React.FC<Props> = ({}) => {
   const [switchState, setSwitchState] = useState<boolean>(true);
+  
   const switchWrapperStyle = switchState ? styles.switchMainWrapper : styles.switchMainWrapper2;
   const {
     state,
@@ -95,6 +97,7 @@ const BasicDetails: React.FC<Props> = ({}) => {
             />
           </View>
         </View>
+        <VehicleInfoView />
         <Spacer height={4} />
         <View style={styles.labelContainer}>
           <Label text="Quotation No." style={styles.label} />

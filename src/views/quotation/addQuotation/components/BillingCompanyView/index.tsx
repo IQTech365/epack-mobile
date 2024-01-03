@@ -9,7 +9,6 @@ import Spacer from '../../../../../common/Spacer';
 import DropdownComponent from '../../../../../common/DropdownComponent';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import approvalAuthorityOptions from '../../../../../data/ApprovalAuthorityOptions.json';
-import SearchIcon from '../../../../../images/icons/search.svg';
 import {debounce} from '../../../../../utils/utility';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import {
@@ -23,6 +22,7 @@ import {
 } from '../../../../../interface/common/common';
 import useCompanyId from '../../../../../hooks/useCompanyId';
 import {Validator} from '../../../../../utils/validation';
+import CompanyAddressView from '../CompanyAddressView';
 
 interface Props {
   //
@@ -83,8 +83,6 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
     if (data && Array.isArray(data) && data.length > 0) {
       list = data;
     }
-    console.log('list-aaaa----', JSON.stringify(list));
-
     return list;
   };
 
@@ -167,16 +165,33 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
           );
         })}
       <Spacer height={4} />
-      <View style={styles.fullWidthContainer}>
-        <Label text="Approval Authority" style={styles.label} />
-        <DropdownComponent
-          data={approvalAuthorityOptions}
-          onSelect={(item: TDropdownItem) => {
-            setApprovalAuthority(item.label);
-          }}
-          //@ts-ignore
-          ref={approvalAuthorityDropdownCompRef}
-        />
+      <View style={styles.twoColumnContainer}>
+        <View style={styles.itemContainer}>
+          <Label text="Approval Authority" style={styles.label} />
+          <DropdownComponent
+            data={approvalAuthorityOptions}
+            onSelect={(item: TDropdownItem) => {
+              setApprovalAuthority(item.label);
+            }}
+            //@ts-ignore
+            ref={approvalAuthorityDropdownCompRef}
+          />
+        </View>
+        <View style={styles.itemContainer}>
+          <Label text="Authority Mobile Number" style={styles.label} />
+          <Input
+            onChangeText={setAuthorityMobileNo}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+            value={state.authority_mobile_no}
+            //@ts-ignore
+            ref={authorityMobileNoInputCompRef}
+            //@ts-ignore
+            error={state.errors.authority_mobile_no}
+            inputType="numeric"
+          />
+        </View>
       </View>
       <Spacer height={4} />
       <View style={styles.fullWidthContainer}>
@@ -193,36 +208,7 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
         />
       </View>
       <Spacer height={4} />
-      <View style={styles.fullWidthContainer}>
-        <Label text="Authority Mobile Number" style={styles.label} />
-        <Input
-          onChangeText={setAuthorityMobileNo}
-          containerStyle={styles.inputContainer}
-          inputStyle={styles.input}
-          selectionColor={COLOR_BLACK}
-          value={state.authority_mobile_no}
-          //@ts-ignore
-          ref={authorityMobileNoInputCompRef}
-          //@ts-ignore
-          error={state.errors.authority_mobile_no}
-          inputType="numeric"
-        />
-      </View>
-      <Spacer height={4} />
-      <View style={styles.fullWidthContainer}>
-        <Label text="Company GST" style={styles.label} />
-        <Input
-          onChangeText={setCompanyGSt}
-          containerStyle={styles.inputContainer}
-          inputStyle={styles.input}
-          selectionColor={COLOR_BLACK}
-          value={state.company_gst}
-          //@ts-ignore
-          ref={companyGstInputCompRef}
-          type="text"
-        />
-      </View>
-      <Spacer height={4} />
+
       <View style={styles.fullWidthContainer}>
         <Label text="Employee Name" style={styles.label} required={true} />
         <Input
@@ -240,34 +226,49 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
         />
       </View>
       <Spacer height={4} />
-      <View style={styles.fullWidthContainer}>
-        <Label text="Employee Designation" style={styles.label} />
-        <Input
-          onChangeText={setEmployeeDesignation}
-          containerStyle={styles.inputContainer}
-          inputStyle={styles.input}
-          selectionColor={COLOR_BLACK}
-          value={state.employee_designation}
-          //@ts-ignore
-          ref={employeeDesignationInputCompRef}
-          type="text"
-          required={true}
-        />
+      <View style={styles.twoColumnContainer}>
+        <View style={styles.itemContainer}>
+          <Label text="Employee Mobile Number" style={styles.label} />
+          <Input
+            onChangeText={setEmployeeMobileNo}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+            value={state.employee_mobile_no}
+            //@ts-ignore
+            ref={employeeMobileNoInputCompRef}
+            //@ts-ignore
+            error={state.errors.employee_mobile_no}
+            inputType="numeric"
+          />
+        </View>
+        <View style={styles.itemContainer}>
+          <Label text="Employee Designation" style={styles.label} />
+          <Input
+            onChangeText={setEmployeeDesignation}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+            value={state.employee_designation}
+            //@ts-ignore
+            ref={employeeDesignationInputCompRef}
+            type="text"
+            required={true}
+          />
+        </View>
       </View>
       <Spacer height={4} />
       <View style={styles.fullWidthContainer}>
-        <Label text="Employee Mobile Number" style={styles.label} />
+        <Label text="Company GST" style={styles.label} />
         <Input
-          onChangeText={setEmployeeMobileNo}
+          onChangeText={setCompanyGSt}
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
-          value={state.employee_mobile_no}
+          value={state.company_gst}
           //@ts-ignore
-          ref={employeeMobileNoInputCompRef}
-          //@ts-ignore
-          error={state.errors.employee_mobile_no}
-          inputType="numeric"
+          ref={companyGstInputCompRef}
+          type="text"
         />
       </View>
       <Spacer height={4} />
@@ -284,6 +285,8 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
           type="text"
         />
       </View>
+      <Spacer height={4} />
+      <CompanyAddressView />
     </>
   );
 };

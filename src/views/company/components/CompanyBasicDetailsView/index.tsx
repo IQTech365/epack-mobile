@@ -22,7 +22,6 @@ import companyTypeOptions from '../../../../data/companyType.json';
 import Button from '../../../../common/Button';
 import {ICompanyRegistrationRequest} from '../../../../interface/companyRegistration/ICompanyRegistrationRequest';
 import {addCompanyRequest} from '../../../../redux/slices/CompanySlice';
-import { ACTION } from '../../registrationReducer2';
 import { ICompanyInfoData } from '../../../../interface/companyRegistration/IGetCompaniesResponse';
 import { setCurrentCompanyId } from '../../../../utils/storage';
 
@@ -210,7 +209,7 @@ const CompanyBasicDetailsView: React.FC<IProps> = ({
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 value={state.company_name}
-                error={getError(ACTION.COMPANY_NAME, state, shouldValidate)}
+                error={getError('COMPANY_NAME', state, shouldValidate)}
                 placeholder="Enter your company name"
                 type="text"
                 required={true}
@@ -229,7 +228,7 @@ const CompanyBasicDetailsView: React.FC<IProps> = ({
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 value={state.contact_person}
-                error={getError(ACTION.CONTACT_PERSON, state, shouldValidate)}
+                error={getError('CONTACT_PERSON', state, shouldValidate)}
                 placeholder="Enter contact person name"
                 type="text"
                 required={true}
@@ -259,7 +258,7 @@ const CompanyBasicDetailsView: React.FC<IProps> = ({
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 value={state.email}
-                error={getError(ACTION.EMAIL, state, shouldValidate)}
+                error={getError('EMAIL', state, shouldValidate)}
                 placeholder="Enter email"
                 type="email"
                 required={true}
@@ -274,7 +273,7 @@ const CompanyBasicDetailsView: React.FC<IProps> = ({
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 value={state.pincode}
-                error={getError(ACTION.PINCODE, state, shouldValidate)}
+                error={getError('PINCODE', state, shouldValidate)}
                 placeholder="Enter pincode"
               />
             </View>
@@ -308,7 +307,7 @@ const CompanyBasicDetailsView: React.FC<IProps> = ({
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 value={state.address}
-                error={getError(ACTION.ADDRESS, state, shouldValidate)}
+                error={getError('ADDRESS', state, shouldValidate)}
                 placeholder="Enter your address"
                 type="text"
                 required={true}
@@ -359,7 +358,7 @@ const CompanyBasicDetailsView: React.FC<IProps> = ({
                     inputStyle={styles.input}
                     selectionColor={COLOR_BLACK}
                     value={state.iba_approval_code}
-                    error={getError(ACTION.IBA_APPROVAL_CODE, state, shouldValidate)}
+                    error={getError('IBA_APPROVAL_CODE', state, shouldValidate)}
                     placeholder="Ener IBA approval code"
                     type="text"
                     required={true}
@@ -377,7 +376,7 @@ const CompanyBasicDetailsView: React.FC<IProps> = ({
                       setIbaExpiryDate(formatDate4(date));
                     }}
                     style={{width: '100%'}}
-                    error={getError(ACTION.IBA_EXPIRY_DATE, state, shouldValidate)}
+                    error={getError('IBA_EXPIRY_DATE', state, shouldValidate)}
                   />
                 </View>
               </>
@@ -390,7 +389,7 @@ const CompanyBasicDetailsView: React.FC<IProps> = ({
                 onSelect={(item: TDropdownItem) => {
                   setCompanyType(item.label);
                 }}
-                error={getError(ACTION.COMPANY_TYPE, state, shouldValidate)}
+                error={getError('COMPANY_TYPE', state, shouldValidate)}
               />
             </View>
             <Spacer height={4} />
@@ -406,7 +405,7 @@ const CompanyBasicDetailsView: React.FC<IProps> = ({
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 value={state.govt_document}
-                error={getError(ACTION.GOVT_DOCUMENT, state, shouldValidate)}
+                error={getError('GOVT_DOCUMENT', state, shouldValidate)}
                 placeholder="Enter document number"
                 type="text"
                 required={true}

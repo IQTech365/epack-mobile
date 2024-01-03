@@ -27,10 +27,15 @@ import {
   resetaddQuotationRequest,
 } from '../../../../redux/slices/QuotationSlice';
 import {IGetQuotationRequest} from '../../../../interface/quotation/IGetQuotationRequest';
-import Toast from 'react-native-toast-message';
 import billingByOptions from '../../../../data/billingByOptions.json';
 import Spinner from '../../../../common/Spinner';
-import { Validator } from '../../../../utils/validation';
+import {Validator} from '../../../../utils/validation';
+import {
+  getVehicleCompanyRequest,
+  getVehicleModelsRequest,
+  getVehicleTypesRequest,
+} from '../../../../redux/slices/CommonSlice';
+import {ToastType, showToast} from '../../../../utils/utility';
 
 interface Props {
   fromEnquiry?: boolean;
@@ -67,6 +72,12 @@ const AddQuotationForm: React.FC<Props> = ({
     quotation,
     getQuotationRequesting,
   } = useAppSelector(state => state.Quotation);
+
+  const {
+    vehicleTypesRequesting,
+    vehicleCompaniesRequesting,
+    vehicleModelsRequesting,
+  } = useAppSelector(state => state.Common);
 
   const transitInsurance: ITransitInsurance = {
     isRequired: state.transit_insurance,
@@ -114,10 +125,8 @@ const AddQuotationForm: React.FC<Props> = ({
     return null;
   };
 
-  
-
   const doValidation = () => {
-    let valid:boolean = true;
+    let valid: boolean = true;
     const {
       party_name,
       party_mobile_no,
@@ -127,49 +136,56 @@ const AddQuotationForm: React.FC<Props> = ({
       employee_mobile_no,
       pickup_pincode,
       drop_pincode,
-      billing_by
+      billing_by,
     } = state;
-    if(billing_by == billingByOptions[0].label) {
+    if (billing_by == billingByOptions[0].label) {
       setCompanyNameError('');
       setAuthorityMobileNoError('');
       setEmployeeMobileNoError('');
       setEmployeeNameError('');
-      if(Validator.isEmpty(party_name)) {
+      if (Validator.isEmpty(party_name)) {
         setPartyNameError('Party name required');
         valid = false;
       }
-      if(Validator.isEmpty(party_mobile_no)) {
+      if (Validator.isEmpty(party_mobile_no)) {
         setPartyMobileNoError('Mobile required');
         valid = false;
       }
     }
-    if(billing_by == billingByOptions[1].label) {
+    if (billing_by == billingByOptions[1].label) {
       setPartyNameError('');
       setPartyMobileNoError('');
-      if(Validator.isEmpty(company_name)) {
+      if (Validator.isEmpty(company_name)) {
         setCompanyNameError('Company name required');
         valid = false;
       }
-      if(Validator.isEmpty(authority_mobile_no) && Validator.isEmpty(employee_mobile_no)) {
-        setEmployeeMobileNoError('Either enter this Mobile No. or Authority Mobile No.');
-        setAuthorityMobileNoError('Either enter this Mobile No. or Employee Mobile No.');
+      if (
+        Validator.isEmpty(authority_mobile_no) &&
+        Validator.isEmpty(employee_mobile_no)
+      ) {
+        setEmployeeMobileNoError(
+          'Either enter this Mobile No. or Authority Mobile No.',
+        );
+        setAuthorityMobileNoError(
+          'Either enter this Mobile No. or Employee Mobile No.',
+        );
         valid = false;
       }
-      if(Validator.isEmpty(employee_name)) {
+      if (Validator.isEmpty(employee_name)) {
         setEmployeeNameError('Employee name required');
         valid = false;
       }
     }
-    if(Validator.isEmpty(pickup_pincode)) {
+    if (Validator.isEmpty(pickup_pincode)) {
       setPickupPincodeError('Pincode required');
       valid = false;
     }
-    if(Validator.isEmpty(drop_pincode)) {
+    if (Validator.isEmpty(drop_pincode)) {
       setDropPincodeError('Pincode required');
       valid = false;
     }
     return valid;
-  }
+  };
 
   const hanldeSubmit = () => {
     const billingDetails = {
@@ -182,6 +198,9 @@ const AddQuotationForm: React.FC<Props> = ({
       employeeName: state.employee_name,
       employeeDesignation: state.employee_designation,
       employeeMobile: state.employee_mobile_no,
+      companyPincode: state.company_pincode,
+      companyState: state.company_state,
+      companyCity: state.company_city,
     };
     const payload: IAddQuotationRequest = {
       companyId: companyId,
@@ -252,13 +271,15 @@ const AddQuotationForm: React.FC<Props> = ({
       surchargeCharges: state.surcharge_percent,
       discountType: state.discount_in_quotation,
       discountAmount: state.discount_percent_or_value,
-      transitInsurance: state.transit_insurance == options2[0] ? transitInsurance : null,
+      transitInsurance:
+        state.transit_insurance == options2[0] ? transitInsurance : null,
       storageCharges: state.storage == options2[0] ? storage : null,
       otherCharges: prepareOtherCharges(),
-      quotationAmount: '1000',// README: Mock quotation amount
+      quotationAmount: '1000', // README: Mock quotation amount
       advanceAmount: state.advance_amount,
       billingBy: state.billing_by,
-      billingDetails: state.billing_by == billingByOptions[1].label ? billingDetails : {},
+      billingDetails:
+        state.billing_by == billingByOptions[1].label ? billingDetails : {},
       otherDetail1: state.other_detail_1,
       otherDetail2: state.other_detail_2,
       easy_access_for_loading_unloading: state.other_detail_3,
@@ -266,14 +287,10 @@ const AddQuotationForm: React.FC<Props> = ({
       addedBy: authId,
     };
     resetError();
-    if(doValidation()) {
+    if (doValidation()) {
       dispatch(addQuotationRequest(payload));
     } else {
-      Toast.show({
-        type: 'error',
-        text1: 'Invalid From',
-        text2: 'All fileds are not provided. Please check the incorrect fields.!!',
-      });
+      showToast('Form is not filled properly. Please check!', ToastType.ERROR);
     }
   };
 
@@ -282,24 +299,22 @@ const AddQuotationForm: React.FC<Props> = ({
       companyId: companyId,
     };
     dispatch(getQuotationsRequest(payload));
-  }
+  };
+
+  useEffect(() => {
+    dispatch(getVehicleCompanyRequest());
+    dispatch(getVehicleModelsRequest());
+    dispatch(getVehicleTypesRequest());
+  }, []);
 
   useEffect(() => {
     if (!addQuotationRequesting && addQuotationSuccess) {
-      Toast.show({
-        type: 'success',
-        text1: 'Quotation',
-        text2: 'Quotation has been added successfully',
-      });
+      showToast('New Quotation Created.', ToastType.SUCCESS);
       dispatch(resetaddQuotationRequest());
-     _getQuotationsRequest();
+      _getQuotationsRequest();
       navigation?.goBack();
     } else if (!addQuotationRequesting && addQuotationFailure) {
-      Toast.show({
-        type: 'error',
-        text1: 'Quotation',
-        text2: 'Error in adding Quotation. Please try again!',
-      });
+      showToast('New Quotation not Created. Try again!', ToastType.ERROR);
       dispatch(resetaddQuotationRequest());
     }
   }, [addQuotationRequesting, addQuotationSuccess, addQuotationFailure]);
@@ -328,7 +343,15 @@ const AddQuotationForm: React.FC<Props> = ({
         textStyle={styles.textStyle}
       />
       <Spacer height={12} />
-      <Spinner show={addQuotationRequesting || getQuotationRequesting} />
+      <Spinner
+        show={
+          addQuotationRequesting ||
+          getQuotationRequesting ||
+          vehicleTypesRequesting ||
+          vehicleCompaniesRequesting ||
+          vehicleModelsRequesting
+        }
+      />
     </>
   );
 };

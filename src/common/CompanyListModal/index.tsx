@@ -76,6 +76,11 @@ const CompanyListModal: React.FC<IProps> = ({
     setLoggedIn(true);
   };
 
+  const _setCompanyIdAndDoCompleteRegistration = async () => {
+    await setCurrentCompanyId(selectedCompany?._id as string);
+    doCompleteRegistration && doCompleteRegistration();
+  }
+
   useEffect(() => {
     if(selectedCompany) {
       _getSubscriptionList();
@@ -103,7 +108,7 @@ const CompanyListModal: React.FC<IProps> = ({
           if(selectedCompany?.companySignature) {
             completeRegistrationAndLoggedIn();
           } else {
-            doCompleteRegistration && doCompleteRegistration();
+            _setCompanyIdAndDoCompleteRegistration();
           }
         } else {
           // Close modal and send user to subscribe first
