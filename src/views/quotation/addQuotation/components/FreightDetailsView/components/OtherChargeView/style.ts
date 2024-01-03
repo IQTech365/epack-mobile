@@ -3,7 +3,9 @@ import {
   COLOR_BLACK,
   COLOR_BLUE,
   COLOR_GRAY,
+  COLOR_GRAY2,
   COLOR_GRAY3,
+  COLOR_GRAY4,
   COLOR_WHITE,
 } from '../../../../../../../utils/colors';
 const {width} = Dimensions.get('window');
@@ -19,7 +21,6 @@ const styles = StyleSheet.create({
   fullWidthContainer: {
     width: width * 0.9,
     alignSelf: 'center',
-    alignItems: 'flex-start',
     justifyContent: 'center',
   },
   fullWidhCompContainer2: {
@@ -29,6 +30,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     marginBottom: 8,
+  },
+  iconContainer: {
+    width: 30,
+    height: 30
   },
   inputContainer: {
     width: '100%',

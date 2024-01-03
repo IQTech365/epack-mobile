@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import styles from './style';
 import Label from '../../../../../../../common/Label';
@@ -8,8 +8,13 @@ import Spacer from '../../../../../../../common/Spacer';
 import {useQuotationFormContextHook} from '../../../../../../../provider/QuotationFormContextProvider';
 import Button from '../../../../../../../common/Button';
 import PlusIcon from '../../../../../../../images/icons/plus_icon.svg';
+import MinusIcon from '../../../../../../../images/icons/minus_red.svg';
 import OtherChargeListItem from './OtherChargeListItem';
-import { IOtherCharge } from '../../../../quotationReducer2';
+import {IOtherCharge} from '../../../../quotationReducer2';
+import {Shadow} from 'react-native-shadow-2';
+import EpackDropdown from '../../../../../../../common/DropdownComponent2';
+import { particularOptions } from '../utils';
+import { ToastType, showToast } from '../../../../../../../utils/utility';
 
 interface Props {}
 
@@ -23,15 +28,56 @@ const OtherChargeView: React.FC<Props> = ({}) => {
   const fullLoadRatePerItemInputCompRef = useRef(null);
   const fullLoadAmountInputCompRef = useRef(null);
 
-  const [particularName, setParticularName] = useState<string>('');
+  const [particularName, setParticularName] = useState<string>(particularOptions[0]);
   const [quantity, setQuantity] = useState<string>('');
   const [partLoadRatePerItem, setPartLoadRatePerItem] = useState<string>('');
   const [partLoadAmount, setPartLoadAmount] = useState<string>('');
   const [fullLoadRatePerItem, setFullLoadRatePerItem] = useState<string>('');
   const [fullLoadAmount, setFullLoadAmount] = useState<string>('');
   const [items, setItems] = useState<IOtherCharge[]>([]);
+  const [isPartLoadAmountEditable, setIsPartLoadAmountEditable] = useState<boolean>(true);
+  const [isFullLoadAmountEditable, setIsFullLoadAmountEditable] = useState<boolean>(true);
+
+  const _calculatePartLoadAmount = () => {
+    let amount:string = '0';
+    if(quantity && partLoadRatePerItem) {
+      amount = (parseInt(quantity) * parseInt(partLoadRatePerItem)).toString();
+    } else {
+      amount = partLoadAmount;
+    }
+    return amount;
+  }
+
+  const _calculateFullLoadAmount = () => {
+    let amount:string = '0';
+    if(quantity && fullLoadRatePerItem) {
+      amount = (parseInt(quantity) * parseInt(fullLoadRatePerItem)).toString();
+    } else {
+      amount = fullLoadAmount;
+    }
+    return amount;
+  }
 
   const handleAddItem = () => {
+    console.log('particularName----', particularName);
+    console.log('partLoadAmount----', partLoadAmount);
+    console.log('partLoadRatePerItem----', partLoadRatePerItem);
+    
+    if(!particularName) {
+      return showToast('Please Select or Enter particular name', ToastType.ERROR);
+    } else if(state.freight_part_load && state.freight_full_load) {
+      if(!_calculatePartLoadAmount() && !_calculateFullLoadAmount()) {
+        return showToast('Please enter Part & Full Load amount', ToastType.ERROR);
+      } else if(!_calculatePartLoadAmount()) {
+        return showToast('Please enter Full Load amount', ToastType.ERROR);
+      } else if(!_calculateFullLoadAmount()) {
+        return showToast('Please enter Full Load amount', ToastType.ERROR);
+      }
+    } else if(state.freight_part_load && !_calculatePartLoadAmount()) {
+      return showToast('Please enter Part Load amount', ToastType.ERROR);
+    } else if(state.freight_full_load && !_calculateFullLoadAmount()) {
+      return showToast('Please enter Full Load amount', ToastType.ERROR);
+    }
     const item: IOtherCharge = {
       particular_name: particularName,
       quantity: quantity,
@@ -54,37 +100,59 @@ const OtherChargeView: React.FC<Props> = ({}) => {
   };
 
   const resetInputs = () => {
-    if(particularsInputCompRef) {
+    if (particularsInputCompRef) {
       //@ts-ignore
-      particularsInputCompRef?.current.reset('');
+      particularsInputCompRef?.current.setValue('');
       setParticularName('');
     }
-    if(quantityInputCompRef) {
+    if (quantityInputCompRef) {
       //@ts-ignore
       quantityInputCompRef?.current.reset('');
       setQuantity('');
     }
-    if(state.freight_part_load && partLoadRatePerItemInputCompRef) {
+    if (state.freight_part_load && partLoadRatePerItemInputCompRef) {
       //@ts-ignore
       partLoadRatePerItemInputCompRef?.current.reset('');
       setPartLoadRatePerItem('');
     }
-    if(state.freight_part_load && partLoadAmountInputCompRef) {
+    if (state.freight_part_load && partLoadAmountInputCompRef) {
       //@ts-ignore
       partLoadAmountInputCompRef?.current.reset('');
       setPartLoadAmount('');
     }
-    if(state.freight_full_load && fullLoadRatePerItemInputCompRef) {
+    if (state.freight_full_load && fullLoadRatePerItemInputCompRef) {
       //@ts-ignore
       fullLoadRatePerItemInputCompRef?.current.reset('');
       setFullLoadRatePerItem('');
     }
-    if(state.freight_full_load && fullLoadAmountInputCompRef) {
+    if (state.freight_full_load && fullLoadAmountInputCompRef) {
       //@ts-ignore
       fullLoadAmountInputCompRef?.current.reset('');
-      setFullLoadAmount('')
+      setFullLoadAmount('');
     }
-  }
+  };
+
+  useEffect(() => {
+    if(!partLoadRatePerItem && state.freight_part_load && shouldAdd) {
+        //@ts-ignore
+        partLoadAmountInputCompRef && partLoadAmountInputCompRef?.current.reset('');
+        setIsPartLoadAmountEditable(true);
+        setPartLoadAmount('');
+    } else if(partLoadRatePerItem && state.freight_part_load && shouldAdd) {
+      setIsPartLoadAmountEditable(false);
+    }
+  }, [partLoadRatePerItem]);
+
+  useEffect(() => {
+    if(!fullLoadRatePerItem && state.freight_full_load && shouldAdd) {
+        //@ts-ignore
+        fullLoadAmountInputCompRef && fullLoadAmountInputCompRef?.current.reset('');
+        setIsFullLoadAmountEditable(true);
+        setFullLoadAmount('');
+    } else if(fullLoadRatePerItem && state.freight_full_load && shouldAdd) {
+      setIsFullLoadAmountEditable(false);
+    }
+  }, [fullLoadRatePerItem]);
 
   const _renderOtherChargePartLoadView = () => {
     if (state.freight_part_load) {
@@ -112,10 +180,11 @@ const OtherChargeView: React.FC<Props> = ({}) => {
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
-                value={partLoadAmount}
+                value={_calculatePartLoadAmount()}
                 //@ts-ignore
                 ref={partLoadAmountInputCompRef}
                 inputType="numeric"
+                editable={isPartLoadAmountEditable}
               />
             </View>
           </View>
@@ -151,10 +220,11 @@ const OtherChargeView: React.FC<Props> = ({}) => {
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
-                value={fullLoadAmount}
+                value={_calculateFullLoadAmount()}
                 //@ts-ignore
                 ref={fullLoadAmountInputCompRef}
                 inputType="numeric"
+                editable={isFullLoadAmountEditable}
               />
             </View>
           </View>
@@ -173,56 +243,66 @@ const OtherChargeView: React.FC<Props> = ({}) => {
       <View style={styles.fullWidhCompContainer2}>
         <Label text="OTHER CHARGES" style={styles.label} />
         <Spacer width={10} />
-        <TouchableOpacity onPress={toggleShouldAddItem}>
-          <PlusIcon width={30} height={30} />
+        <TouchableOpacity
+          onPress={toggleShouldAddItem}
+          style={styles.iconContainer}>
+          {shouldAdd ? (
+            <MinusIcon width={25} height={25} />
+          ) : (
+            <PlusIcon width={30} height={30} />
+          )}
         </TouchableOpacity>
       </View>
       {shouldAdd ? (
         <>
-          <View style={styles.contentContainer}>
-            <View style={styles.fullWidthContainer}>
-              <Label text="Particulars/Items" style={styles.label} />
-              <Input
-                onChangeText={setParticularName}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-                value={particularName}
-                //@ts-ignore
-                ref={particularsInputCompRef}
-              />
+          <Shadow distance={1}>
+            <View style={styles.contentContainer}>
+              <View style={styles.fullWidthContainer}>
+                <Label text="Particulars/Items" style={styles.label} />
+                <EpackDropdown
+                  data={particularOptions}
+                  placeholder={'Select State'}
+                  hanldeData={setParticularName}
+                  //@ts-ignore
+                  ref={particularsInputCompRef}
+                />
+              </View>
+              <Spacer height={4} />
+              <View style={styles.fullWidthContainer}>
+                <Label text="Quantity" style={styles.label} />
+                <Input
+                  onChangeText={setQuantity}
+                  containerStyle={styles.inputContainer}
+                  inputStyle={styles.input}
+                  selectionColor={COLOR_BLACK}
+                  value={quantity}
+                  //@ts-ignore
+                  ref={quantityInputCompRef}
+                  inputType="numeric"
+                />
+              </View>
+              {_renderOtherChargePartLoadView()}
+              {_renderOtherChargeFullLoadView()}
+              <Spacer height={12} />
+              <View style={styles.fullWidthContainer}>
+                <Button
+                  text="Add"
+                  onPress={handleAddItem}
+                  disabled={false}
+                  style={styles.buttonStyle}
+                  textStyle={styles.textStyle}
+                />
+              </View>
+              <Spacer height={12} />
+              {items.map((item: IOtherCharge, index) => (
+                <OtherChargeListItem
+                  data={item}
+                  index={index}
+                  onDelete={handleDeleteItem}
+                />
+              ))}
             </View>
-            <Spacer height={4} />
-            <View style={styles.fullWidthContainer}>
-              <Label text="Quantity" style={styles.label} />
-              <Input
-                onChangeText={setQuantity}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-                value={quantity}
-                //@ts-ignore
-                ref={quantityInputCompRef}
-                inputType="numeric"
-              />
-            </View>
-            {_renderOtherChargePartLoadView()}
-            {_renderOtherChargeFullLoadView()}
-            <Spacer height={12} />
-            <View style={styles.fullWidthContainer}>
-              <Button
-                text="Add"
-                onPress={handleAddItem}
-                disabled={false}
-                style={styles.buttonStyle}
-                textStyle={styles.textStyle}
-              />
-            </View>
-            <Spacer height={12} />
-            {items.map((item: IOtherCharge, index) => (
-              <OtherChargeListItem data={item} index={index} onDelete={handleDeleteItem} />
-            ))}
-          </View>
+          </Shadow>
         </>
       ) : null}
     </>

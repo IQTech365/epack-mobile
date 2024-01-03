@@ -13,7 +13,8 @@ import {
 } from '../../../../../../../utils/colors';
 import DeleteIcon from '../../../../../../../images/icons/delete.svg';
 import {Shadow} from 'react-native-shadow-2';
-import { IOtherCharge } from '../../../../quotationReducer2';
+import {IOtherCharge} from '../../../../quotationReducer2';
+import Spacer from '../../../../../../../common/Spacer';
 
 interface Props {
   data: IOtherCharge;
@@ -23,69 +24,72 @@ interface Props {
 
 const OtherChargeListItem: React.FC<Props> = ({data, index, onDelete}) => {
   return (
-    <Shadow distance={1}>
-      <View style={styles.container} key={`${index}`}>
-        <View style={styles.contentContainer}>
-          <View style={styles.rowContainer}>
-            <Text style={styles.labelText}>Item Name:</Text>
-            <Text style={styles.valueText}>{data.particular_name}</Text>
+    <>
+      <Shadow distance={1}>
+        <View style={styles.container} key={`${index}`}>
+          <View style={styles.contentContainer}>
+            <View style={styles.rowContainer}>
+              <Text style={styles.labelText}>Item Name:</Text>
+              <Text style={styles.valueText}>{data.particular_name}</Text>
+            </View>
+            {data.quantity ? (
+              <>
+                <View style={styles.rowContainer}>
+                  <Text style={styles.labelText}>Quantity:</Text>
+                  <Text style={styles.valueText}>{data.quantity}</Text>
+                </View>
+              </>
+            ) : null}
+            {data.part_load_rate_per_item ? (
+              <>
+                <View style={styles.rowContainer}>
+                  <Text style={styles.labelText}>Rate/Item (PL):</Text>
+                  <Text style={styles.valueText}>
+                    {data.part_load_rate_per_item}
+                  </Text>
+                </View>
+              </>
+            ) : null}
+            {data.part_load_amount ? (
+              <>
+                <View style={styles.rowContainer}>
+                  <Text style={styles.labelText}>Amount (PL):</Text>
+                  <Text style={styles.valueText}>{data.part_load_amount}</Text>
+                </View>
+              </>
+            ) : null}
+            {data.full_load_rate_per_item ? (
+              <>
+                <View style={styles.rowContainer}>
+                  <Text style={styles.labelText}>Rate/Item (FL):</Text>
+                  <Text style={styles.valueText}>
+                    {data.full_load_rate_per_item}
+                  </Text>
+                </View>
+              </>
+            ) : null}
+            {data.full_load_amount ? (
+              <>
+                <View style={styles.rowContainer}>
+                  <Text style={styles.labelText}>Amount (FL):</Text>
+                  <Text style={styles.valueText}>{data.full_load_amount}</Text>
+                </View>
+              </>
+            ) : null}
           </View>
-          {data.quantity ? (
-            <>
-              <View style={styles.rowContainer}>
-                <Text style={styles.labelText}>Quantity:</Text>
-                <Text style={styles.valueText}>{data.quantity}</Text>
-              </View>
-            </>
-          ) : null}
-          {data.part_load_rate_per_item ? (
-            <>
-              <View style={styles.rowContainer}>
-                <Text style={styles.labelText}>Rate/Item (PL):</Text>
-                <Text style={styles.valueText}>
-                  {data.part_load_rate_per_item}
-                </Text>
-              </View>
-            </>
-          ) : null}
-          {data.part_load_amount ? (
-            <>
-              <View style={styles.rowContainer}>
-                <Text style={styles.labelText}>Amount (PL):</Text>
-                <Text style={styles.valueText}>{data.part_load_amount}</Text>
-              </View>
-            </>
-          ) : null}
-          {data.full_load_rate_per_item ? (
-            <>
-              <View style={styles.rowContainer}>
-                <Text style={styles.labelText}>Rate/Item (FL):</Text>
-                <Text style={styles.valueText}>
-                  {data.full_load_rate_per_item}
-                </Text>
-              </View>
-            </>
-          ) : null}
-          {data.full_load_amount ? (
-            <>
-              <View style={styles.rowContainer}>
-                <Text style={styles.labelText}>Amount (FL):</Text>
-                <Text style={styles.valueText}>{data.full_load_amount}</Text>
-              </View>
-            </>
-          ) : null}
+          <View style={styles.actionContainer}>
+            <TouchableOpacity
+              activeOpacity={0.4}
+              onPress={() => {
+                onDelete(index);
+              }}>
+              <DeleteIcon width={30} height={30} />
+            </TouchableOpacity>
+          </View>
         </View>
-        <View style={styles.actionContainer}>
-          <TouchableOpacity
-            activeOpacity={0.4}
-            onPress={() => {
-              onDelete(index);
-            }}>
-            <DeleteIcon width={30} height={30} />
-          </TouchableOpacity>
-        </View>
-      </View>
-    </Shadow>
+      </Shadow>
+      <Spacer height={6} />
+    </>
   );
 };
 
