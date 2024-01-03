@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {View} from 'react-native';
 import styles from './style';
 import Label from '../../../../../../../common/Label';
@@ -33,13 +33,20 @@ const SingleChargeInputView: React.FC<Props> = ({freightType}) => {
     if(state.shifting_luggage == shiftingLuggages[3].label) {
       text = state.freight_part_load ? 'In Sharing' : 'Separate';
     }
-    if (freightType == FREIGHT_TYPE.LOAD_TYPE) {
+    if (freightType == FREIGHT_TYPE.LOAD_TYPE && state.shifting_luggage == shiftingLuggages[3].label) {
+      if (state.freight_part_load && !state.freight_full_load) {
+        text = 'Freight In Sharing';
+      } else if (state.freight_full_load && !state.freight_part_load) {
+        text = 'Freight Separate';
+      }
+    } else if (freightType == FREIGHT_TYPE.LOAD_TYPE) {
       if (state.freight_part_load && !state.freight_full_load) {
         text = 'Freight Part';
       } else if (state.freight_full_load && !state.freight_part_load) {
         text = 'Freight Full';
       }
     }
+    
 
     return text;
   };

@@ -178,7 +178,7 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
           />
         </View>
         <View style={styles.itemContainer}>
-          <Label text="Authority Mobile Number" style={styles.label} />
+          <Label text="Auth. Mobile No." style={styles.label} />
           <Input
             onChangeText={setAuthorityMobileNo}
             containerStyle={styles.inputContainer}
@@ -227,7 +227,7 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
       <Spacer height={4} />
       <View style={styles.twoColumnContainer}>
         <View style={styles.itemContainer}>
-          <Label text="Employee Mobile Number" style={styles.label} />
+          <Label text="Emp. Mobile No." style={styles.label} />
           <Input
             onChangeText={setEmployeeMobileNo}
             containerStyle={styles.inputContainer}
@@ -242,7 +242,7 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
           />
         </View>
         <View style={styles.itemContainer}>
-          <Label text="Employee Designation" style={styles.label} />
+          <Label text="Emp. Designation" style={styles.label} />
           <Input
             onChangeText={setEmployeeDesignation}
             containerStyle={styles.inputContainer}

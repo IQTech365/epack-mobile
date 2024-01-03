@@ -8,7 +8,7 @@ import DropdownComponent from '../../../../../common/DropdownComponent';
 import Label from '../../../../../common/Label';
 import {useQuotationFormContextHook} from '../../../../../provider/QuotationFormContextProvider';
 import Spacer from '../../../../../common/Spacer';
-
+import shiftingLuggages from '../../../../../data/shiftingLuggage.json';
 interface IProps {
   //
 }
@@ -17,7 +17,7 @@ const VehicleLoadSizeView: React.FC<IProps> = ({}) => {
   const {vehicleSizeData} = useAppSelector(state => state.Vehicle);
   const {state, setLorryType} = useQuotationFormContextHook();
 
-  if (!state.freight_full_load) return null;
+  if (!state.freight_full_load || (state.shifting_luggage == shiftingLuggages[3].label)) return null;
 
   const _getVehicleSizes = () => {
     let vehicleSizes: TDropdownItem[] = [];

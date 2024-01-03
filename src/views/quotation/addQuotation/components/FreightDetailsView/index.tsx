@@ -18,7 +18,7 @@ import SurchargeView from './components/SurchargeView';
 import DiscountView from './components/DiscountView';
 import GstView from './components/GstView';
 import VehicleLoadSizeView from '../VehicleLoadSizeView';
-import { useQuotationFormContextHook } from '../../../../../provider/QuotationFormContextProvider';
+import {useQuotationFormContextHook} from '../../../../../provider/QuotationFormContextProvider';
 import shiftingLuggages from '../../../../../data/shiftingLuggage.json';
 interface Props {
   //
@@ -29,11 +29,15 @@ const FreightDetailsView: React.FC<Props> = ({}) => {
   return (
     <CollapsibleView title="FREIGHT DETAILS" collapsed={true}>
       <View style={{alignItems: 'center'}}>
+        <VehicleLoadSizeView />
         <FreightTypeView
-          options={state.shifting_luggage == shiftingLuggages[3].label ? loadOptions2 : loadOptions}
+          options={
+            state.shifting_luggage == shiftingLuggages[3].label
+              ? loadOptions2
+              : loadOptions
+          }
           freightType={FREIGHT_TYPE.LOAD_TYPE}
         />
-        <VehicleLoadSizeView />
         <Spacer height={4} />
         <FreightTypeView
           options={options}

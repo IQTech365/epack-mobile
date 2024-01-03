@@ -35,10 +35,15 @@ const BothChargeInputView: React.FC<Props> = ({freightType}) => {
       label1 = 'In Sharing';
       label2 = 'Separate';
     }
-    if (freightType == FREIGHT_TYPE.LOAD_TYPE) {
+    if (freightType == FREIGHT_TYPE.LOAD_TYPE && state.shifting_luggage == shiftingLuggages[3].label) {
+      label1 = 'Freight In Sharing';
+      label2 = 'Freight Separate';
+    } else if (freightType == FREIGHT_TYPE.LOAD_TYPE) {
       label1 = 'Freight Part';
       label2 = 'Freight Full';
     }
+
+    
     return {label1, label2};
   };
 
