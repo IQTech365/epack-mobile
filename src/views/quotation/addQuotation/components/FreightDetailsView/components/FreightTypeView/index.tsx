@@ -3,7 +3,7 @@ import {Text, View} from 'react-native';
 import styles from './style';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import Spacer from '../../../../../../../common/Spacer';
-import {FREIGHT_TYPE, loadOptions} from '../utils';
+import {FREIGHT_TYPE} from '../utils';
 import {COLOR_BLUE} from '../../../../../../../utils/colors';
 import {useQuotationFormContextHook} from '../../../../../../../provider/QuotationFormContextProvider';
 import SingleChargeInputView from '../SingleChargeInputView';
@@ -59,15 +59,15 @@ const FreightTypeView: React.FC<Props> = ({freightType, options}) => {
     let option: string = '';
     switch (freightType) {
       case FREIGHT_TYPE.LOAD_TYPE:
-        if (op == loadOptions[0]) {
+        if (op == options[0]) {
           if (state.freight_part_load) {
-            option = loadOptions[0];
+            option = options[0];
           } else {
             option = '';
           }
-        } else if (op == loadOptions[1]) {
+        } else if (op == options[1]) {
           if (state.freight_full_load) {
-            option = loadOptions[1];
+            option = options[1];
           } else {
             option = '';
           }
@@ -97,9 +97,9 @@ const FreightTypeView: React.FC<Props> = ({freightType, options}) => {
   const _handleOption = (option: string) => {
     switch (freightType) {
       case FREIGHT_TYPE.LOAD_TYPE:
-        if (option == loadOptions[0]) {
+        if (option == options[0]) {
           setFreightPartLoad(!state.freight_part_load);
-        } else if (option == loadOptions[1]) {
+        } else if (option == options[1]) {
           setFreightFullLoad(!state.freight_full_load);
         }
         break;

@@ -6,7 +6,7 @@ import Input from '../../../../../../../common/Input';
 import {COLOR_BLACK} from '../../../../../../../utils/colors';
 import {useQuotationFormContextHook} from '../../../../../../../provider/QuotationFormContextProvider';
 import {FREIGHT_TYPE, options} from '../utils';
-
+import shiftingLuggages from '../../../../../../../data/shiftingLuggage.json';
 interface Props {
   freightType: FREIGHT_TYPE;
 }
@@ -30,6 +30,9 @@ const SingleChargeInputView: React.FC<Props> = ({freightType}) => {
 
   const _getLabelText = () => {
     let text: string = state.freight_part_load ? 'Part Load' : 'Full Load';
+    if(state.shifting_luggage == shiftingLuggages[3].label) {
+      text = state.freight_part_load ? 'In Sharing' : 'Separate';
+    }
     if (freightType == FREIGHT_TYPE.LOAD_TYPE) {
       if (state.freight_part_load && !state.freight_full_load) {
         text = 'Freight Part';

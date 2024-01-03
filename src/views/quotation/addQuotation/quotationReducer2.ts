@@ -11,6 +11,7 @@ import {
   options2,
 } from './components/FreightDetailsView/components/utils';
 import * as Utils from './components/OtherDetailsView/utils';
+import { formatDate4 } from '../../../utils/formatter';
 
 export enum ACTION {
   SHIFTING_TYPE = 'SHIFTING_TYPE',
@@ -273,8 +274,8 @@ export const initialState: IState = {
   shifting_luggage: shiftingLuggages[0].label,
   customer_id: '',
   quotation_no: '',
-  date_of_quotation: '',
-  date_of_moving: '',
+  date_of_quotation: formatDate4(new Date()),
+  date_of_moving: formatDate4(new Date()),
   // **** Vehicle ****
   vehicle_type: '',
   vehicle_manufacturer: '',

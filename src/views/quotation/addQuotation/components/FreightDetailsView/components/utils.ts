@@ -8,6 +8,7 @@ export enum FREIGHT_TYPE {
 }
 
 export const loadOptions: string[] = ['Part Load', 'Full Load'];
+export const loadOptions2: string[] = ['In Sharing', 'Separate'];
 export const options: string[] = ['Included', 'Additional', 'Not Required'];
 export const loadingChargeOptions: string[] = [...options, 'Loading by Party'];
 export const unloadingChargeOptions: string[] = [

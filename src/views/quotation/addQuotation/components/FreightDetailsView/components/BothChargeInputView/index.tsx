@@ -6,6 +6,7 @@ import Label from '../../../../../../../common/Label';
 import Input from '../../../../../../../common/Input';
 import {useQuotationFormContextHook} from '../../../../../../../provider/QuotationFormContextProvider';
 import {FREIGHT_TYPE, options} from '../utils';
+import shiftingLuggages from '../../../../../../../data/shiftingLuggage.json';
 
 interface Props {
   freightType: FREIGHT_TYPE;
@@ -29,8 +30,11 @@ const BothChargeInputView: React.FC<Props> = ({freightType}) => {
   } = useQuotationFormContextHook();
 
   const _getLabelText = () => {
-    let label1: string = 'Part Load',
-      label2: string = 'Full Load';
+    let label1: string = 'Part Load', label2: string = 'Full Load';
+    if(state.shifting_luggage == shiftingLuggages[3].label) {
+      label1 = 'In Sharing';
+      label2 = 'Separate';
+    }
     if (freightType == FREIGHT_TYPE.LOAD_TYPE) {
       label1 = 'Freight Part';
       label2 = 'Freight Full';

@@ -36,6 +36,7 @@ import {
   getVehicleTypesRequest,
 } from '../../../../redux/slices/CommonSlice';
 import {ToastType, showToast} from '../../../../utils/utility';
+import { getVehicleSizeRequest } from '../../../../redux/slices/VehicleSlice';
 
 interface Props {
   fromEnquiry?: boolean;
@@ -78,6 +79,8 @@ const AddQuotationForm: React.FC<Props> = ({
     vehicleCompaniesRequesting,
     vehicleModelsRequesting,
   } = useAppSelector(state => state.Common);
+
+  const {getVehicleSizeRequesting} = useAppSelector(state => state.Vehicle);
 
   const transitInsurance: ITransitInsurance = {
     isRequired: state.transit_insurance,
@@ -305,6 +308,7 @@ const AddQuotationForm: React.FC<Props> = ({
     dispatch(getVehicleCompanyRequest());
     dispatch(getVehicleModelsRequest());
     dispatch(getVehicleTypesRequest());
+    dispatch(getVehicleSizeRequest());
   }, []);
 
   useEffect(() => {
