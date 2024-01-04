@@ -183,6 +183,9 @@ export interface ICustomerBillingInfo {
   employeeName: string;
   employeeDesignation: string;
   employeeMobile: string;
+  companyPincode: string;
+  companyState: string;
+  companyCity: string;
 }
 
 export interface ICustomer {

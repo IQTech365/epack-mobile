@@ -1,5 +1,8 @@
 import {Reducer} from 'react';
-
+import shiftingTypeOptions from '../../../data/shiftingType.json';
+import billingByOptions from '../../../data/billingByOptions.json';
+import shiftingLuggageOptions from '../../../data/shiftingLuggage.json';
+import approvalAuthorityOptions from '../../../data/ApprovalAuthorityOptions.json';
 export enum ACTION {
   SHIFTING_TYPE = 'SHIFTING_TYPE',
   SHIFTING_LUGGAGE = 'SHIFTING_LUGGAGE',
@@ -7,6 +10,7 @@ export enum ACTION {
   // Individual
   PARTY_NAME = 'PARTY_NAME',
   PARTY_MOBILE_NO = 'PARTY_MOBILE_NO',
+  CUSTOMER_ID = 'CUSTOMER_ID',
   // Company
   COMPANY_NAME = 'COMPANY_NAME',
   APPROVAL_AUTHORITY = 'APPROVAL_AUTHORITY',
@@ -17,6 +21,9 @@ export enum ACTION {
   EMPLOYEE_DESIGNATION = 'EMPLOYEE_DESIGNATION',
   EMPLOYEE_MOBILE_NUMBER = 'EMPLOYEE_MOBILE_NUMBER',
   COMPANY_ADDRESS = 'COMPANY_ADDRESS',
+  COMPANY_PINCODE = 'COMPANY_PINCODE',
+  COMPANY_STATE = 'COMPANY_STATE',
+  COMPANY_CITY = 'COMPANY_CITY',
   // Pickup Address `P = Pickup Address`
   P_PINCODE = 'P_PINCODE',
   P_STATE = 'P_STATE',
@@ -40,6 +47,7 @@ export interface IState {
   //Individual
   party_name: string;
   party_mobile_no: string;
+  customer_id: string;
   //Company
   company_name: string;
   approval_authority: string;
@@ -50,6 +58,9 @@ export interface IState {
   employee_designation: string;
   employee_mobile_no: string;
   company_address: string;
+  company_pincode: string;
+  company_state: string;
+  company_city: string;
   //Pickup
   p_pincode: string;
   p_state: string;
@@ -72,15 +83,16 @@ export interface IAction {
 }
 
 export const initialState: IState = {
-  shifting_type: '',
-  shifting_luggages: [],
-  billing_by: '',
+  shifting_type: shiftingTypeOptions[0].label,
+  shifting_luggages: [shiftingLuggageOptions[0].label],
+  billing_by: billingByOptions[0].label,
   //Individual
   party_name: '',
   party_mobile_no: '',
+  customer_id: '',
   //Company
   company_name: '',
-  approval_authority: '',
+  approval_authority: approvalAuthorityOptions[0].label,
   authority_person_name: '',
   authority_mobile_no: '',
   company_gst: '',
@@ -88,6 +100,9 @@ export const initialState: IState = {
   employee_designation: '',
   employee_mobile_no: '',
   company_address: '',
+  company_pincode: '',
+  company_state: '',
+  company_city: '',
   //Pickup
   p_pincode: '',
   p_state: '',
@@ -140,6 +155,12 @@ export const enquiryReducer: Reducer<IState, IAction> = (
       return {...state, employee_mobile_no: payload as string};
     case ACTION.COMPANY_ADDRESS:
       return {...state, company_address: payload as string};
+    case ACTION.COMPANY_PINCODE:
+      return {...state, company_pincode: payload as string};
+    case ACTION.COMPANY_STATE:
+      return {...state, company_state: payload as string};
+    case ACTION.COMPANY_CITY:
+      return {...state, company_city: payload as string};
     // Pickup Address
     case ACTION.P_PINCODE:
       return {...state, p_pincode: payload as string};

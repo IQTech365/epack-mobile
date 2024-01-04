@@ -17,6 +17,9 @@ export enum ACTION {
   EMPLOYEE_DESIGNATION = 'EMPLOYEE_DESIGNATION',
   EMPLOYEE_MOBILE_NUMBER = 'EMPLOYEE_MOBILE_NUMBER',
   COMPANY_ADDRESS = 'COMPANY_ADDRESS',
+  COMPANY_PINCODE = 'COMPANY_PINCODE',
+  COMPANY_STATE = 'COMPANY_STATE',
+  COMPANY_CITY = 'COMPANY_CITY',
   // Amount
   ORDER_AMOUNT = 'ORDER_AMOUNT',
   TOKEN_AMOUNT = 'TOKEN_AMOUNT',
@@ -54,6 +57,9 @@ export interface IState {
   employee_designation: string;
   employee_mobile_no: string;
   company_address: string;
+  company_pincode: string;
+  company_state: string;
+  company_city: string;
   //Amount
   order_amount: string;
   token_amount: string;
@@ -96,6 +102,9 @@ export const initialState: IState = {
   employee_designation: '',
   employee_mobile_no: '',
   company_address: '',
+  company_pincode: '',
+  company_state: '',
+  company_city: '',
   //Amount
   order_amount: '',
   token_amount: '',
@@ -152,6 +161,12 @@ export const addOrderReducer: Reducer<IState, IAction> = (
       return {...state, employee_mobile_no: payload as string};
     case ACTION.COMPANY_ADDRESS:
       return {...state, company_address: payload as string};
+    case ACTION.COMPANY_PINCODE:
+      return {...state, company_pincode: payload as string};
+    case ACTION.COMPANY_STATE:
+      return {...state, company_state: payload as string};
+    case ACTION.COMPANY_CITY:
+      return {...state, company_city: payload as string};
     // Amount
     case ACTION.ORDER_AMOUNT:
       return {...state, order_amount: payload as string};
