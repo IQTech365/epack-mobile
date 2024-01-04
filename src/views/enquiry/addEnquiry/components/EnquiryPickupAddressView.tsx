@@ -14,6 +14,7 @@ import {COLOR_BLACK} from '../../../../utils/colors';
 import usePincodeHook from '../../../../hooks/usePincodeHook';
 import {getCities2, getStates2} from '../../../../utils/formatter';
 import {useEnquiryFormContextHook} from '../../../../provider/EnquiryFormContextProvider';
+import Spinner from '../../../../common/Spinner';
 
 interface IProps {}
 
@@ -134,6 +135,7 @@ const EnquiryPickupAddressView: FC<IProps> = ({}) => {
             />
           </View>
         </View>
+        <Spinner show={fetching} />
       </View>
     </CollapsibleView>
   );

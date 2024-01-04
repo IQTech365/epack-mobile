@@ -14,7 +14,7 @@ import {
 const useOrderFormContext = () => {
   const [state, dispatch] = useReducer(addOrderReducer, initialState);
 
-  const setBillingType = useCallback(
+  const setShiftingType = useCallback(
     (text: string) => {
       dispatch({
         type: ACTION.SHIFTING_TYPE,
@@ -92,6 +92,16 @@ const useOrderFormContext = () => {
       });
     },
     [state.party_mobile_no],
+  );
+
+  const setCustomerId = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.CUSTOMER_ID,
+        payload: text,
+      });
+    },
+    [state.customer_id],
   );
 
   const setCompanyName = useCallback(
@@ -336,7 +346,7 @@ const useOrderFormContext = () => {
 
   return {
     state,
-    setBillingType,
+    setShiftingType,
     setDateOfMoving,
     setOrderAmount,
     setTokenAmount,
@@ -344,6 +354,7 @@ const useOrderFormContext = () => {
     setBillingBy,
     setPartyName,
     setPartyMobileNo,
+    setCustomerId,
     setCompanyName,
     setApprovalAuthority,
     setAuthorityPersonName,
@@ -375,7 +386,7 @@ type UsOrderFormContextType = ReturnType<typeof useOrderFormContext>;
 
 const initOrderFormContextState: UsOrderFormContextType = {
   state: initialState,
-  setBillingType: (text: string) => {},
+  setShiftingType: (text: string) => {},
   setDateOfMoving: (text: string) => {},
   setOrderAmount: (text: string) => {},
   setTokenAmount: (text: string) => {},
@@ -383,6 +394,7 @@ const initOrderFormContextState: UsOrderFormContextType = {
   setBillingBy: (text: string) => {},
   setPartyName: (text: string) => {},
   setPartyMobileNo: (text: string) => {},
+  setCustomerId: (text: string) => {},
   setCompanyName: (text: string) => {},
   setApprovalAuthority: (text: string) => {},
   setAuthorityPersonName: (text: string) => {},

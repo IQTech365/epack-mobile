@@ -3,6 +3,9 @@ import shiftingTypeOptions from '../../../data/shiftingType.json';
 import billingByOptions from '../../../data/billingByOptions.json';
 import shiftingLuggageOptions from '../../../data/shiftingLuggage.json';
 import approvalAuthorityOptions from '../../../data/ApprovalAuthorityOptions.json';
+import liftStatusOptions from '../../../data/liftStatusOptions.json';
+import floorOptions from '../../../data/floorOptions.json';
+
 export enum ACTION {
   SHIFTING_TYPE = 'SHIFTING_TYPE',
   SHIFTING_LUGGAGE = 'SHIFTING_LUGGAGE',
@@ -108,15 +111,15 @@ export const initialState: IState = {
   p_state: '',
   p_city: '',
   p_address: '',
-  p_current_floor: '',
-  p_lift_status: '',
+  p_current_floor: floorOptions[0].label,
+  p_lift_status: liftStatusOptions[0].label,
   //Drop
   d_pincode: '',
   d_state: '',
   d_city: '',
   d_address: '',
-  d_current_floor: '',
-  d_lift_status: '',
+  d_current_floor: floorOptions[0].label,
+  d_lift_status: liftStatusOptions[0].label,
 };
 
 export const enquiryReducer: Reducer<IState, IAction> = (

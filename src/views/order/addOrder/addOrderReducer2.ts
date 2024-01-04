@@ -1,4 +1,11 @@
 import {Reducer} from 'react';
+import billingByOptions from '../../../data/billingByOptions.json';
+import shiftingLuggageOptions from '../../../data/shiftingLuggage.json';
+import shiftingTypeOptions from '../../../data/shiftingType.json';
+import { formatDate4 } from '../../../utils/formatter';
+import liftStatusOptions from '../../../data/liftStatusOptions.json';
+import floorOptions from '../../../data/floorOptions.json';
+import approvalAuthorityOptions from '../../../data/ApprovalAuthorityOptions.json';
 
 export enum ACTION {
   SHIFTING_TYPE = 'SHIFTING_TYPE',
@@ -7,6 +14,7 @@ export enum ACTION {
   // Individual
   PARTY_NAME = 'PARTY_NAME',
   PARTY_MOBILE_NO = 'PARTY_MOBILE_NO',
+  CUSTOMER_ID = 'CUSTOMER_ID',
   // Company
   COMPANY_NAME = 'COMPANY_NAME',
   APPROVAL_AUTHORITY = 'APPROVAL_AUTHORITY',
@@ -47,6 +55,7 @@ export interface IState {
   //Individual
   party_name: string;
   party_mobile_no: string;
+  customer_id: string;
   //Company
   company_name: string;
   approval_authority: string;
@@ -86,15 +95,16 @@ export interface IAction {
 }
 
 export const initialState: IState = {
-  shifting_type: '',
-  date_of_moving: '',
-  billing_by: '',
+  shifting_type: shiftingTypeOptions[0].label,
+  date_of_moving: formatDate4(new Date()),
+  billing_by: billingByOptions[0].label,
   //Individual
   party_name: '',
   party_mobile_no: '',
+  customer_id: '',
   //Company
   company_name: '',
-  approval_authority: '',
+  approval_authority: approvalAuthorityOptions[0].label,
   authority_person_name: '',
   authority_mobile_no: '',
   company_gst: '',
@@ -108,21 +118,21 @@ export const initialState: IState = {
   //Amount
   order_amount: '',
   token_amount: '',
-  shifting_luggages: [],
+  shifting_luggages: [shiftingLuggageOptions[0].label],
   //Pickup
   p_pincode: '',
   p_state: '',
   p_city: '',
   p_address: '',
-  p_current_floor: '',
-  p_lift_status: '',
+  p_current_floor: floorOptions[0].label,
+  p_lift_status: liftStatusOptions[0].label,
   //Drop
   d_pincode: '',
   d_state: '',
   d_city: '',
   d_address: '',
-  d_current_floor: '',
-  d_lift_status: '',
+  d_current_floor: floorOptions[0].label,
+  d_lift_status: liftStatusOptions[0].label,
 };
 
 export const addOrderReducer: Reducer<IState, IAction> = (
@@ -142,6 +152,8 @@ export const addOrderReducer: Reducer<IState, IAction> = (
       return {...state, party_name: payload as string};
     case ACTION.PARTY_MOBILE_NO:
       return {...state, party_mobile_no: payload as string};
+    case ACTION.CUSTOMER_ID:
+      return {...state, customer_id: payload as string};
     // Billing Company
     case ACTION.COMPANY_NAME:
       return {...state, company_name: payload as string};

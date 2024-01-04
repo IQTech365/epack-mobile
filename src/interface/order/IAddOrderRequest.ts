@@ -47,7 +47,7 @@ export interface IAddOrderRequest {
   orderAmount: string;
   landline: string;
   tokenAmount: string;
-  shiftingLuggage: [string];
+  shiftingLuggage: string[];
   enquirySource: string;
   gstNumber: string;
   alternateNumbers: string[];
