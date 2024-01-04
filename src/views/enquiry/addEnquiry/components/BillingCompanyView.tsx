@@ -24,7 +24,7 @@ import {
 import approvalAuthorityOptions from '../../../../data/ApprovalAuthorityOptions.json';
 import EpackDropdown from '../../../../common/DropdownComponent2';
 import usePincodeHook from '../../../../hooks/usePincodeHook';
-import { getCities2, getStates2 } from '../../../../utils/formatter';
+import {getCities2, getStates2} from '../../../../utils/formatter';
 
 interface IProps {}
 
@@ -53,7 +53,8 @@ const BillingCompanyView: FC<IProps> = ({}) => {
   const [showCompanyList, setShowCompanyList] = useState<boolean>(false);
   const [states, setStates] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
-  const [selectedCompanyOption, setSelectedCompanyOption] = useState<ICustomer | null>(null);
+  const [selectedCompanyOption, setSelectedCompanyOption] =
+    useState<ICustomer | null>(null);
   const {
     customers,
     getCustomersRequesting,
@@ -104,30 +105,30 @@ const BillingCompanyView: FC<IProps> = ({}) => {
     if (selectedCompanyOption) {
       if (selectedCompanyOption.billingBy == 'by Company') {
         setCustomerId(selectedCompanyOption._id);
-    const billingInfo: ICustomerBillingInfo =
-    selectedCompanyOption.billingDetails as ICustomerBillingInfo;
-    setCompanyName(billingInfo.companyName);
-    const optionIndex: number = approvalAuthorityOptions.findIndex(
-      (d: TDropdownItem) => d.label == billingInfo.approvalAuthority,
-    );
-    if (optionIndex !== -1) {
-      //@ts-ignore
-      approvalAuthorityDropdownCompRef && approvalAuthorityDropdownCompRef.current.setDefaultValue(
-          approvalAuthorityOptions[optionIndex],
+        const billingInfo: ICustomerBillingInfo =
+          selectedCompanyOption.billingDetails as ICustomerBillingInfo;
+        setCompanyName(billingInfo.companyName);
+        const optionIndex: number = approvalAuthorityOptions.findIndex(
+          (d: TDropdownItem) => d.label == billingInfo.approvalAuthority,
         );
-    }
-    setAuthorityPersonName(billingInfo.authorityPersonName);
-    setAuthorityMobileNo(billingInfo.authorityPersonMobile);
-    setEmployeeName(billingInfo.employeeName);
-    setEmployeeMobileNo(billingInfo.employeeMobile);
-    setEmployeeDesignation(billingInfo.employeeDesignation);
-    setCompanyGST(billingInfo.companyGST);
-    setCompanyAddress(billingInfo.companyAddress);
-    setCompanyPincode(billingInfo.companyPincode);
-    setCompanyState(billingInfo.companyState);
-    setCompanyCity(billingInfo.companyCity);
-    setShowCompanyList(false);
-    dispatch(resetGetCustomersRequest());
+        if (optionIndex !== -1) {
+          //@ts-ignore
+          approvalAuthorityDropdownCompRef && approvalAuthorityDropdownCompRef.current.setDefaultValue(
+              approvalAuthorityOptions[optionIndex],
+            );
+        }
+        setAuthorityPersonName(billingInfo.authorityPersonName);
+        setAuthorityMobileNo(billingInfo.authorityPersonMobile);
+        setEmployeeName(billingInfo.employeeName);
+        setEmployeeMobileNo(billingInfo.employeeMobile);
+        setEmployeeDesignation(billingInfo.employeeDesignation);
+        setCompanyGST(billingInfo.companyGST);
+        setCompanyAddress(billingInfo.companyAddress);
+        setCompanyPincode(billingInfo.companyPincode);
+        setCompanyState(billingInfo.companyState);
+        setCompanyCity(billingInfo.companyCity);
+        setShowCompanyList(false);
+        dispatch(resetGetCustomersRequest());
       }
     }
   }, [selectedCompanyOption]);
@@ -197,18 +198,33 @@ const BillingCompanyView: FC<IProps> = ({}) => {
           );
         })}
       <Spacer height={4} />
-      <View style={styles.elementContainer}>
-        <Label text="Approval Authority" style={styles.label} />
-        <DropdownComponent
-          data={approvalAuthorityOptions}
-          onSelect={(item: TDropdownItem) => {
-            setApprovalAuthority(item.label);
-          }}
-          //@ts-ignore
-          ref={approvalAuthorityDropdownCompRef}
-        />
+      <View style={styles.twoColumnWrapper}>
+        <View style={styles.textContainer}>
+          <Label text="Approval Authority" style={styles.label} />
+          <DropdownComponent
+            data={approvalAuthorityOptions}
+            onSelect={(item: TDropdownItem) => {
+              setApprovalAuthority(item.label);
+            }}
+            //@ts-ignore
+            ref={approvalAuthorityDropdownCompRef}
+          />
+        </View>
+        <View style={styles.textContainer}>
+          <Label text="Auth. Mobile No." style={styles.label} />
+          <Input
+            onChangeText={setAuthorityMobileNo}
+            value={state.authority_mobile_no}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+            inputType="numeric"
+            type="mobile"
+            //@ts-ignore
+            // error={showErrors ? errors?.employeeMobile : ''}
+          />
+        </View>
       </View>
-      <Spacer height={4} />
       <View style={styles.elementContainer}>
         <Label text="Authority Person Name" style={styles.label} />
         <Input
@@ -217,21 +233,6 @@ const BillingCompanyView: FC<IProps> = ({}) => {
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
-        />
-      </View>
-      <Spacer height={4} />
-      <View style={styles.elementContainer}>
-        <Label text="Authority Mobile Number" style={styles.label} />
-        <Input
-          onChangeText={setAuthorityMobileNo}
-          value={state.authority_mobile_no}
-          containerStyle={styles.inputContainer}
-          inputStyle={styles.input}
-          selectionColor={COLOR_BLACK}
-          inputType="numeric"
-          type="mobile"
-          //@ts-ignore
-          // error={showErrors ? errors?.employeeMobile : ''}
         />
       </View>
       <Spacer height={4} />
@@ -248,7 +249,7 @@ const BillingCompanyView: FC<IProps> = ({}) => {
       </View>
       <Spacer height={4} />
       <View style={styles.elementContainer}>
-        <Label text="Employee Name" style={styles.label} required={true} />
+        <Label text="Employee Name" style={styles.label} />
         <Input
           onChangeText={setEmployeeName}
           value={state.employee_name}
@@ -258,35 +259,36 @@ const BillingCompanyView: FC<IProps> = ({}) => {
           //@ts-ignore
           //   error={showErrors ? errors?.employeeName : ''}
           type="text"
-          required={true}
         />
       </View>
       <Spacer height={4} />
-      <View style={styles.elementContainer}>
-        <Label text="Employee Designation" style={styles.label} />
-        <Input
-          onChangeText={setEmployeeDesignation}
-          value={state.employee_designation}
-          containerStyle={styles.inputContainer}
-          inputStyle={styles.input}
-          selectionColor={COLOR_BLACK}
-        />
+      <View style={styles.twoColumnWrapper}>
+        <View style={styles.textContainer}>
+          <Label text="Emp. Desig." style={styles.label} />
+          <Input
+            onChangeText={setEmployeeDesignation}
+            value={state.employee_designation}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+          />
+        </View>
+        <View style={styles.textContainer}>
+          <Label text="Emp. Mobile No." style={styles.label} />
+          <Input
+            onChangeText={setEmployeeMobileNo}
+            value={state.employee_mobile_no}
+            inputType="numeric"
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+            type="mobile"
+            //@ts-ignore
+            //   error={showErrors ? errors?.employeeMobile : ''}
+          />
+        </View>
       </View>
-      <Spacer height={4} />
-      <View style={styles.elementContainer}>
-        <Label text="Employee Mobile Number" style={styles.label} />
-        <Input
-          onChangeText={setEmployeeMobileNo}
-          value={state.employee_mobile_no}
-          inputType="numeric"
-          containerStyle={styles.inputContainer}
-          inputStyle={styles.input}
-          selectionColor={COLOR_BLACK}
-          type="mobile"
-          //@ts-ignore
-          //   error={showErrors ? errors?.employeeMobile : ''}
-        />
-      </View>
+
       <Spacer height={4} />
       <View style={styles.elementContainer}>
         <Label text="Company Address" style={styles.label} />
