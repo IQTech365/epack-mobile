@@ -20,7 +20,6 @@ import {
   COLOR_GRAY2,
   COLOR_WHITE,
 } from '../utils/colors';
-import {IAppUser} from '../interface/IAppUser';
 import HeaderGridBackgroundImage from '../images/header-grid.png';
 import Spacer from '../common/Spacer';
 import HomeIcon from '../images/icons/home2.svg';
@@ -97,10 +96,12 @@ const DrawerContent = (props: any) => {
         />
       );
     } else {
-      if(!companyName) return null;
+      if (!companyName) return null;
       return (
         <View style={styles.avatar}>
-          <Text style={styles.nameText2}>{companyName?.substring(0, 1).toUpperCase()}</Text>
+          <Text style={styles.nameText2}>
+            {companyName?.substring(0, 1).toUpperCase()}
+          </Text>
         </View>
       );
     }
@@ -146,7 +147,14 @@ export const DrawerNavigator = () => {
   return (
     <Drawer.Navigator
       drawerContent={props => <DrawerContent {...props} />}
-      screenOptions={{headerShown: false, drawerLabelStyle: {marginLeft: -25}}}>
+      screenOptions={{
+        headerShown: false,
+        drawerLabelStyle: {
+          marginLeft: -25,
+          fontFamily: 'WorkSans-SemiBold',
+          color: COLOR_GRAY,
+        },
+      }}>
       <Drawer.Screen
         name="TabNavigator"
         component={TabNavigator}
@@ -260,17 +268,17 @@ const styles = StyleSheet.create({
   nameText: {
     color: COLOR_WHITE,
     fontSize: 18,
-    fontFamily: 'WorkSans-SemiBold'
+    fontFamily: 'WorkSans-SemiBold',
   },
   nameText2: {
     color: COLOR_WHITE,
     fontSize: 24,
-    fontFamily: 'WorkSans-Regular'
+    fontFamily: 'WorkSans-Regular',
   },
   text: {
     color: COLOR_WHITE,
     fontSize: 14,
-    fontFamily: 'WorkSans-Regular'
+    fontFamily: 'WorkSans-Regular',
   },
   bottomContainer: {
     padding: 20,
@@ -284,6 +292,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: COLOR_GRAY,
     marginLeft: 10,
-    fontFamily: 'WorkSans-SemiBold'
+    fontFamily: 'WorkSans-SemiBold',
   },
 });
