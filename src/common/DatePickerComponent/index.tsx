@@ -56,9 +56,10 @@ const DatePickerComponent: React.FC<IDatePickerProps> = forwardRef(
       <>
         <View style={[styles.container, errorBorderStyle, style]}>
           <TouchableOpacity
+            activeOpacity={0.4}
             onPress={() => setOpen(true)}
             style={styles.contentContainer}>
-            <Text>{getDateAndTime()}</Text>
+            <Text style={styles.dateText}>{getDateAndTime()}</Text>
             <CalendarIcon width={18} height={18} />
           </TouchableOpacity>
           <DatePicker
@@ -67,6 +68,7 @@ const DatePickerComponent: React.FC<IDatePickerProps> = forwardRef(
             date={date}
             mode={mode}
             androidVariant="nativeAndroid"
+            // textColor='#000000'
             onConfirm={date => {
               setOpen(false);
               setDate(date);

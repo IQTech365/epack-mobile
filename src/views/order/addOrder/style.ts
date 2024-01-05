@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   },
   label: {
     color: COLOR_BLACK,
-    fontSize: 14,
+    fontSize: 16,
   },
   inputContainer: {
     width: '100%',
@@ -97,6 +97,23 @@ const styles = StyleSheet.create({
     color: COLOR_WHITE,
     fontSize: 16,
     fontWeight: '400',
+  },
+  iconStyle:{
+    borderColor: 'red',
+    borderRadius: 0,
+    width: 16,
+    height: 16,
+  },
+  innerIconStyle:{
+    borderWidth: 1,
+    borderRadius: 0,
+    width: 16,
+    height: 16,
+  },
+  textStyle2:{
+    fontFamily: 'JosefinSans-Regular',
+    textDecorationLine: 'none',
+    color: COLOR_GRAY
   }
 });
 

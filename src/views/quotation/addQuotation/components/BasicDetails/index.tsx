@@ -123,6 +123,7 @@ const BasicDetails: React.FC<Props> = ({}) => {
               containerStyle={styles.switchInputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
+              placeholder='Serial#'
               editable={!switchState}
               //@ts-ignore
               ref={quotationNoInputCompRef}
@@ -130,6 +131,7 @@ const BasicDetails: React.FC<Props> = ({}) => {
             />
           </View>
         </View>
+        <Spacer height={4} />
         <View style={styles.twoColumnContainer}>
           <View style={styles.compContainer}>
             <Label text="Date of Quotation" style={styles.label} />

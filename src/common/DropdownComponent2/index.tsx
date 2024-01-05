@@ -12,6 +12,7 @@ import {
 import styles from './style';
 import CloseIcon from '../../images/icons/close_icon.svg';
 import DownArrowIcon from '../../images/icons/down-arrow.svg';
+import { COLOR_GRAY } from '../../utils/colors';
 
 interface IEpackDropdownProps {
   placeholder: string;
@@ -85,6 +86,7 @@ const EpackDropdown: React.FC<IEpackDropdownProps> = forwardRef(
           placeholder={placeholder}
           value={inputValue}
           ref={inputRef}
+          placeholderTextColor={COLOR_GRAY}
           // onFocus={toggleDropdown}
           onChangeText={text => setInputValue(text)}
           onBlur={addCustomOption}
@@ -122,7 +124,7 @@ const EpackDropdown: React.FC<IEpackDropdownProps> = forwardRef(
                     key={option}
                     onPress={() => selectOption(option)}
                     style={styles.optionItem}>
-                    <Text>{option}</Text>
+                    <Text style={styles.optionItemText}>{option}</Text>
                   </TouchableOpacity>
                 ))}
             </View>

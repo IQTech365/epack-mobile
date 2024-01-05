@@ -88,7 +88,7 @@ const PickupAddressView: React.FC<Props> = ({}) => {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
-              placeholder="pincode"
+              placeholder="Enter Pincode"
               //@ts-ignore
               ref={pincodeInputCompRef}
               //@ts-ignore

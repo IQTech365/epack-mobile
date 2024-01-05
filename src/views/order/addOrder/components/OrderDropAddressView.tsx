@@ -80,6 +80,7 @@ const OrderDropAddressView: FC<IProps> = ({}) => {
               inputStyle={styles.input}
               inputType="numeric"
               selectionColor={COLOR_BLACK}
+              placeholder='Enter Pincode'
             />
           </View>
           <View style={styles.textContainer}>

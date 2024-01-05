@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import { COLOR_GRAY4, COLOR_GRAY5 } from '../../utils/colors';
+import { COLOR_BLACK, COLOR_GRAY, COLOR_GRAY4, COLOR_GRAY5 } from '../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -7,8 +7,10 @@ const styles = StyleSheet.create({
     borderWidth: 0.7,
     borderColor: COLOR_GRAY4,
     padding: 5,
+    paddingLeft: 10,
     borderRadius: 5,
     height: 46,
+    color: COLOR_BLACK
   },
   dropdownIcon: {
     position: 'absolute',
@@ -49,6 +51,10 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
   },
+  optionItemText: {
+    color: COLOR_GRAY,
+    fontSize: 14,
+  }
 });
 
 export default styles;

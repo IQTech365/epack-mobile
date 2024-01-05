@@ -35,7 +35,8 @@ const styles = StyleSheet.create({
   textStyle: {
     fontFamily: 'JosefinSans-Regular',
     textDecorationLine: 'none',
-    fontSize: 14,
+    fontSize: 15,
+    color: COLOR_GRAY
   },
   textContainerStyle: {
     paddingLeft: 0,

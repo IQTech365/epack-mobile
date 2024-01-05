@@ -35,7 +35,8 @@ const styles = StyleSheet.create({
   textStyle: {
     fontFamily: 'JosefinSans-Regular',
     textDecorationLine: 'none',
-    fontSize: 14,
+    fontSize: 15,
+    color: COLOR_GRAY,
   },
   textContainerStyle: {
     paddingLeft: 0,
@@ -53,7 +54,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   labelText: {
-    fontSize: 14,
+    fontSize: 16,
     color: COLOR_BLACK,
   },
   loadTypeErrorContainer: {

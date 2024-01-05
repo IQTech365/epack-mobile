@@ -7,7 +7,7 @@ import {
   TextStyle,
   TouchableOpacity,
 } from 'react-native';
-import {COLOR_GRAY3, COLOR_WHITE, OFF_WHITE} from '../../utils/colors';
+import {COLOR_GRAY3, COLOR_GRAY4, COLOR_WHITE} from '../../utils/colors';
 import styles from './styles';
 import {Validator} from '../../utils/validation';
 
@@ -133,7 +133,7 @@ const Input: React.FC<InputProps> = forwardRef(
               style={[styles.input, inputStyle]}
               placeholder={placeholder}
               onChangeText={_handleTextChange}
-              placeholderTextColor={OFF_WHITE}
+              placeholderTextColor={COLOR_GRAY4}
               selectionColor={selectionColor}
               keyboardType={inputType}
               editable={editable}

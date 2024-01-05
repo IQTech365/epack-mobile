@@ -66,12 +66,12 @@ const InsuranceDetailsView: React.FC<Props> = ({}) => {
             <View style={styles.fullWidthContainer}>
               <Label text="Shifting Luggage" style={styles.labelText} />
               <EpackDropdown
-              data={shiftingLuggageOptions.map(({label}) => label)}
-              placeholder={'Select State'}
-              hanldeData={setTransitShiftingLuggage}
-              //@ts-ignore
-              ref={shiftingLuggageDropdownCompRef}
-            />
+                data={shiftingLuggageOptions.map(({label}) => label)}
+                placeholder="Select Luggage"
+                hanldeData={setTransitShiftingLuggage}
+                //@ts-ignore
+                ref={shiftingLuggageDropdownCompRef}
+              />
             </View>
             <Spacer height={4} />
             <View style={styles.fullWidthContainer}>
@@ -129,6 +129,7 @@ const InsuranceDetailsView: React.FC<Props> = ({}) => {
                 inputType="numeric"
               />
             </View>
+            <Spacer height={4} />
           </>
         ) : null}
       </View>

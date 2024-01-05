@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
   },
   selectedTextStyle: {
     fontSize: 16,
+    color: COLOR_BLACK,
   },
   iconStyle: {
     width: 20,

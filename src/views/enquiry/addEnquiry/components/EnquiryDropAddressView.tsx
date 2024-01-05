@@ -80,6 +80,7 @@ const EnquiryDropAddressView: FC<IProps> = ({}) => {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
+              placeholder='Enter Pincode'
             />
           </View>
           <View style={styles.textContainer}>

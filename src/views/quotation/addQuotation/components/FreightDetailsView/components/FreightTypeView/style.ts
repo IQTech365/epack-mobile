@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import {COLOR_BLACK, COLOR_ERROR} from '../../../../../../../utils/colors';
+import {COLOR_BLACK, COLOR_ERROR, COLOR_GRAY} from '../../../../../../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -47,6 +47,7 @@ const styles = StyleSheet.create({
     fontFamily: 'JosefinSans-Regular',
     textDecorationLine: 'none',
     fontSize: 14,
+    color: COLOR_GRAY
   },
   textContainerStyle: {
     paddingLeft: 0,
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   labelText: {
-    fontSize: 14,
+    fontSize: 15,
     color: COLOR_BLACK,
   },
   loadTypeErrorContainer: {
