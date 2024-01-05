@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import { COLOR_BLACK } from '../../../../../../../../../utils/colors';
+import { COLOR_BLACK, COLOR_GRAY } from '../../../../../../../../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -22,27 +22,28 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   iconStyle: {
-    borderRadius: 0,
-    width: 16,
-    height: 16,
+    borderRadius: 12,
+    width: 22,
+    height: 22,
   },
   innerIconStyle: {
     borderWidth: 1,
-    borderRadius: 0,
-    width: 16,
-    height: 16,
+    borderRadius: 12,
+    width: 22,
+    height: 22,
   },
   textStyle: {
-    fontFamily: 'JosefinSans-Regular',
+    fontFamily: 'WorkSans-Regular',
+    color: COLOR_BLACK,
     textDecorationLine: 'none',
-    fontSize: 14,
+    fontSize: 15,
   },
   textContainerStyle: {
     paddingLeft: 0, 
-    marginLeft: 10
+    marginLeft: 5
   },
   style: {
-    marginRight: 25,
+    marginRight: 20,
     marginBottom: 15,
   },
   checkboxContainer: {
@@ -55,6 +56,7 @@ const styles = StyleSheet.create({
   labelText: {
     fontSize: 14,
     color: COLOR_BLACK,
+    fontFamily: 'WorkSans-Medium'
   }
 });
 

@@ -19,7 +19,8 @@ const styles = StyleSheet.create({
   },
   label: {
     color: COLOR_BLACK,
-    fontSize: 14,
+    fontSize: 15,
+    fontFamily: 'WorkSans-Regular'
   },
   inputContainer: {
     width: '100%',

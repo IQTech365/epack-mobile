@@ -1,5 +1,5 @@
-import React, {useReducer, useCallback, useEffect} from 'react';
-import {View, Text, Alert} from 'react-native';
+import React, {useReducer, useEffect} from 'react';
+import {View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
 import DatePickerComponent from '../../../../../common/DatePickerComponent';
@@ -10,7 +10,6 @@ import Spacer from '../../../../../common/Spacer';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import {COLOR_BLACK} from '../../../../../utils/colors';
 import styles from './style';
-import shiftingLuggages from '../../../../../data/shiftingLuggage.json';
 import paymentTypeOptions from '../../../../../data/paymentTypeOptions.json';
 import receiptAgainstOptions from '../../../../../data/receiptAgainstOptions.json';
 import modeOfPaymentOptions from '../../../../../data/modeOfPaymentOptions.json';
@@ -29,14 +28,13 @@ import {
   resetCreateMoneyReceiptRequest,
 } from '../../../../../redux/slices/OrderSlice';
 import Spinner from '../../../../../common/Spinner';
-import Toast from 'react-native-toast-message';
 import useCompanyId from '../../../../../hooks/useCompanyId';
 import useAuthId from '../../../../../hooks/useAuthId';
 import { getQuotationsRequest } from '../../../../../redux/slices/QuotationSlice';
 import { IGetQuotationRequest } from '../../../../../interface/quotation/IGetQuotationRequest';
-import { IQuotationItem } from '../../../../quotation/quotationList/components/QuotationListItem';
 import { IGetQuotationData } from '../../../../../interface/quotation/IGetQuotationsResponse';
 import EpackDropdown from '../../../../../common/DropdownComponent2';
+import { ToastType, showToast } from '../../../../../utils/utility';
 
 interface IMoneyReceiptFormViewProps {
   orderId: string | undefined;
@@ -244,22 +242,13 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
       (!createMoneyReceiptRequesting && createMoneyReceiptSuccess) ||
       (!editMoneyReceiptListRequesting && editMoneyReceiptListSuccess)
     ) {
-      //pdf  stuff here
-      Toast.show({
-        type: 'success',
-        text1: `${isEdit ? 'Updated Money Receipt' : 'Money Receipt'}`,
-        text2: 'Money Receipt has been added successfully',
-      });
+      showToast('Money Receipt Created.', ToastType.SUCCESS);
       dispatch2(resetCreateMoneyReceiptRequest());
     } else if (
       (!createMoneyReceiptRequesting && createMoneyReceiptError) ||
       (!editMoneyReceiptListRequesting && editMoneyReceiptListSuccess)
     ) {
-      Toast.show({
-        type: 'error',
-        text1: `${isEdit ? 'Updated Money Receipt' : 'Money Receipt'}`,
-        text2: 'Error in adding Money Receipt. Please try again!',
-      });
+      showToast('Money Receipt Not Created. Try again!', ToastType.ERROR);
       dispatch2(resetCreateMoneyReceiptRequest());
     }
   }, [

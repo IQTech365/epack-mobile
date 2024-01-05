@@ -44,11 +44,12 @@ const styles = StyleSheet.create({
   label: {
     color: COLOR_BLACK,
     fontSize: 14,
+    fontFamily: 'WorkSans-Regular'
   },
   label2: {
     color: COLOR_BLACK,
     fontSize: 14,
-    fontWeight: '500',
+    fontFamily: 'WorkSans-SemiBold'
   },
   inputContainer: {
     width: '100%',

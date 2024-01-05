@@ -102,17 +102,17 @@ const styles = StyleSheet.create({
   viewDetailsText: {
     color: COLOR_GRAY,
     fontSize: 13,
-    fontWeight: '600'
+    fontFamily: 'WorkSans-SemiBold'
   },
   labelText: {
       color: COLOR_GRAY,
       fontSize: 13,
-      fontWeight: '600'
+      fontFamily: 'WorkSans-Medium'
   },
   valueText: {
     color: COLOR_GRAY,
     fontSize: 12,
-    // fontWeight: '500'
+    fontFamily: 'WorkSans-Regular'
   },
   viewDetailsContainer: {
     width: '100%',

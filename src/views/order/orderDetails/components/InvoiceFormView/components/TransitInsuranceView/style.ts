@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
   label: {
     color: COLOR_BLACK,
     fontSize: 14,
+    fontFamily: 'WorkSans-Medium'
   },
   inputContainer: {
     width: '100%',
@@ -42,20 +43,21 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   iconStyle: {
-    borderRadius: 0,
-    width: 16,
-    height: 16,
+    borderRadius: 12,
+    width: 22,
+    height: 22,
   },
   innerIconStyle: {
     borderWidth: 1,
-    borderRadius: 0,
-    width: 16,
-    height: 16,
+    borderRadius: 12,
+    width: 22,
+    height: 22,
   },
   textStyle: {
-    fontFamily: 'JosefinSans-Regular',
+    fontFamily: 'WorkSans-Regular',
     textDecorationLine: 'none',
-    fontSize: 14,
+    fontSize: 15,
+    color: COLOR_BLACK,
   },
   textContainerStyle: {
     paddingLeft: 0, 

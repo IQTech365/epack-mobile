@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import { COLOR_BLUE, COLOR_GRAY, COLOR_GRAY2, COLOR_GRAY5, COLOR_WHITE } from '../../../../../utils/colors';
+import { COLOR_BLACK, COLOR_BLUE, COLOR_GRAY, COLOR_GRAY2, COLOR_GRAY5, COLOR_WHITE } from '../../../../../utils/colors';
 const {width} = Dimensions.get('window');
 const styles = StyleSheet.create({
     container: {
@@ -25,7 +25,8 @@ const styles = StyleSheet.create({
     },
     text: {
         color: COLOR_GRAY,
-        fontSize: 14,
+        fontSize: 15,
+        fontFamily: 'WorkSans-Regular'
     },
     downloadDisabledButton: {
         alignSelf: 'center',
@@ -38,6 +39,7 @@ const styles = StyleSheet.create({
     downloadText: {
         color: COLOR_WHITE,
         fontSize: 14,
+        fontFamily: 'WorkSans-Regular'
     },
     downloadButton: {
         alignSelf: 'center',
@@ -53,6 +55,12 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         alignSelf: 'center', 
     },
+    textStyle:{
+        fontFamily: 'WorkSans-Regular',
+        textDecorationLine: 'none',
+        fontSize: 15,
+        color: COLOR_BLACK,
+      }
 });
 
 export default styles;

@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
     text: {
         color: COLOR_GRAY,
         fontSize: 14,
+        fontFamily: 'WorkSans-Regular'
     }
 });
 

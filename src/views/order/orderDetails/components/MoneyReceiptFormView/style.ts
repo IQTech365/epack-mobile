@@ -24,12 +24,12 @@ const styles = StyleSheet.create({
     itemContainer: {
         width: width * 0.44,
         justifyContent: 'space-between',
-        // alignItems: 'flex-start',
         alignSelf: 'center',
     },
     label: {
         color: COLOR_BLACK,
         fontSize: 14,
+        fontFamily: 'WorkSans-Medium'
     },
     inputContainer: {
         width: '100%',

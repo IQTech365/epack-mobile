@@ -2,6 +2,7 @@ import {StyleSheet, Dimensions} from 'react-native';
 import {
   COLOR_BLACK,
   COLOR_BLUE,
+  COLOR_GRAY,
   COLOR_GRAY2,
   COLOR_WHITE,
 } from '../../../../../utils/colors';
@@ -37,13 +38,9 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   label: {
+    fontFamily: 'WorkSans-Medium',
     color: COLOR_BLACK,
     fontSize: 14,
-  },
-  label2: {
-    color: COLOR_BLACK,
-    fontSize: 16,
-    fontWeight: '600',
   },
   inputContainer: {
     width: '100%',
@@ -109,9 +106,10 @@ const styles = StyleSheet.create({
     height: 16,
   },
   textStyle: {
-    fontFamily: 'JosefinSans-Regular',
+    fontFamily: 'WorkSans-Regular',
+    color: COLOR_BLACK,
     textDecorationLine: 'none',
-    fontSize: 14,
+    fontSize: 15,
   },
   textContainerStyle: {
     paddingLeft: 0,

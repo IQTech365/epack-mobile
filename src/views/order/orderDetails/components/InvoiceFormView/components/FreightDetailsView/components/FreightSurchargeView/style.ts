@@ -43,7 +43,8 @@ const styles = StyleSheet.create({
   },
   label: {
     color: COLOR_BLACK,
-    fontSize: 14,
+    fontSize: 15,
+    fontFamily: 'WorkSans-Medium'
   },
   label2: {
     color: COLOR_BLACK,

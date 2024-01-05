@@ -41,9 +41,8 @@ const style = StyleSheet.create<IContactDetailsStyle>({
   },
   headerText: {
     color: COLOR_BLACK,
-    // fontFamily: fontRegular_600,
+    fontFamily: 'WorkSans-SemiBold',
     fontSize: 14,
-    fontWeight: '700',
   },
   downarrow: {
     width: 16,

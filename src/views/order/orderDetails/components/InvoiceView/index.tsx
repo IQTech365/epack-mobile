@@ -40,7 +40,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId}) => {
   const showEmptyView = () => {
     return (
       <View style={styles.emptyContainer}>
-        <Text>No Invoice Found!</Text>
+        <Text style={styles.text}>No Invoice Found!</Text>
       </View>
     );
   };

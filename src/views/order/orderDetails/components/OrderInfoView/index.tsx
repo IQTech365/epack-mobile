@@ -217,6 +217,7 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item, navigation
                         },
                         optionText: {
                           paddingVertical: 8,
+                          color: COLOR_GRAY
                         },
                       }}>
                       {orderStatusOptions.map((option, index) => {

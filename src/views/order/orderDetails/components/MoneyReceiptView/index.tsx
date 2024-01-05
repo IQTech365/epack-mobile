@@ -24,11 +24,10 @@ import {
 import Spinner from '../../../../../common/Spinner';
 import AddMoneyReceiptListItem from '../MoneyReceiptList';
 import FormModal from '../../../../settings/formModal';
-import {COLOR_BLACK, COLOR_BLUE} from '../../../../../utils/colors';
+import {COLOR_BLUE} from '../../../../../utils/colors';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {IHtmlTemplateRequest} from '../../../../../interface/order/templates/ITemplateResponse';
 import ModalHOC from '../../../../../common/ModalHOC';
-import MoneyReceiptTemplate from './MoneyReceiptTemplate';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import { startShare } from '../../../../../utils/utility';
 import TemplateViewer from '../../../../../common/TemplateViewer';
@@ -177,7 +176,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
   const showEmptyView = () => {
     return (
       <View style={styles.emptyContainer}>
-        <Text>No MoneyReceipt Found!</Text>
+        <Text style={styles.text}>No Money Receipt Found!</Text>
       </View>
     );
   };
@@ -249,12 +248,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
                       onPress={(isChecked: boolean) => {
                         setDownloadOption(option);
                       }}
-                      textStyle={{
-                        fontFamily: 'JosefinSans-Regular',
-                        textDecorationLine: 'none',
-                        fontSize: 14,
-                        color: COLOR_BLACK,
-                      }}
+                      textStyle={styles.textStyle}
                       style={{paddingRight: 8, marginBottom: 20}}
                       textContainerStyle={{marginLeft: 10, marginRight: 4}}
                       isChecked={option == downloadOption}

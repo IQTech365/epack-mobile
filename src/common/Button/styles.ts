@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 18,
         color: COLOR_GRAY,
+        fontFamily: 'WorkSans-SemiBold'
     },
     disabled: {
         opacity: 0.7,

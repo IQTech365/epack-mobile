@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import { COLOR_BLUE, COLOR_GRAY, COLOR_GRAY2, COLOR_WHITE } from '../../utils/colors';
+import { COLOR_BLACK, COLOR_BLUE, COLOR_GRAY, COLOR_GRAY2, COLOR_WHITE } from '../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -7,8 +7,8 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         paddingHorizontal: 12,
         borderRadius: 20,
-        borderWidth: 1,
-        borderColor: COLOR_GRAY2,
+        borderWidth: 0.5,
+        borderColor: COLOR_GRAY,
         alignItems: 'center',
         justifyContent: 'center',
         marginRight: 8,
@@ -27,10 +27,12 @@ const styles = StyleSheet.create({
     activeText: {
         color: COLOR_WHITE,
         fontSize: 12,
+        fontFamily: 'WorkSans-Medium',
     },
     inactiveText: {
-        color: COLOR_GRAY,
-        fontSize: 12, 
+        color: COLOR_BLACK,
+        fontSize: 12,
+        fontFamily: 'WorkSans-SemiBold'
     }
 });
 
