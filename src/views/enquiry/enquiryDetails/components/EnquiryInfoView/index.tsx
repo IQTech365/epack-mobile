@@ -12,7 +12,7 @@ import {
   MenuOption,
   MenuTrigger,
 } from 'react-native-popup-menu';
-import {COLOR_GRAY2, COLOR_WHITE} from '../../../../../utils/colors';
+import {COLOR_GRAY, COLOR_GRAY2, COLOR_WHITE} from '../../../../../utils/colors';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import { IUpdateEnquiryStatusRequest } from '../../../../../interface/enquiry/IUpdateEnquiryStatusRequest';
 import { getEnquiriesRequest, resetUpdateEnquiryStatusRequest, updateEnquiryStatusRequest } from '../../../../../redux/slices/EnquirySlice';
@@ -205,6 +205,7 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId, navi
                         },
                         optionText: {
                           paddingVertical: 8,
+                          color: COLOR_GRAY
                         }
                       }}>
                         {enquiryStatusOptions.map((option, index) => {

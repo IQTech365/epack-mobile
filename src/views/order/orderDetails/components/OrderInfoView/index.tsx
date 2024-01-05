@@ -17,7 +17,7 @@ import {
   MenuOption,
   MenuTrigger,
 } from 'react-native-popup-menu';
-import {COLOR_GRAY2, COLOR_WHITE} from '../../../../../utils/colors';
+import {COLOR_GRAY, COLOR_GRAY2, COLOR_WHITE} from '../../../../../utils/colors';
 import orderStatusOptions from '../../../../../data/orderStatusOptions.json';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import {
@@ -230,6 +230,7 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item, navigation
                               },
                               optionText: {
                                 paddingVertical: 8,
+                                color: COLOR_GRAY
                               },
                             }
                           : undefined;
