@@ -29,6 +29,7 @@ interface InputProps {
   type?: 'mobile' | 'email' | 'none' | 'text';
   required?: boolean;
   secureTextEntry?: boolean;
+  placeholderTextColor?: string;
 }
 
 const Input: React.FC<InputProps> = forwardRef(
@@ -51,6 +52,7 @@ const Input: React.FC<InputProps> = forwardRef(
       type = 'none',
       required = false,
       secureTextEntry,
+      placeholderTextColor = COLOR_GRAY4,
     },
     ref,
   ) => {
@@ -133,7 +135,7 @@ const Input: React.FC<InputProps> = forwardRef(
               style={[styles.input, inputStyle]}
               placeholder={placeholder}
               onChangeText={_handleTextChange}
-              placeholderTextColor={COLOR_GRAY4}
+              placeholderTextColor={placeholderTextColor}
               selectionColor={selectionColor}
               keyboardType={inputType}
               editable={editable}

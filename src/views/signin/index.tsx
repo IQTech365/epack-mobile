@@ -13,7 +13,7 @@ import Input from '../../common/Input';
 import Spacer from '../../common/Spacer';
 import Spinner from '../../common/Spinner';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
-import {COLOR_BLUE, INTRO_BG_LINEARGRADIENT} from '../../utils/colors';
+import {COLOR_BLUE, COLOR_WHITE, INTRO_BG_LINEARGRADIENT, OFF_WHITE} from '../../utils/colors';
 import Label from '../../common/Label';
 import {IOtpGetRequest} from '../../interface/otp/IOtpGetRequest';
 import {getOtpRequest, restGetOtpRequest} from '../../redux/slices/OtpSlice';
@@ -92,7 +92,7 @@ const SignInPageView = (props: any) => {
     } else {
       setTopLabel('Enter mobile number');
       setInputLabel('Mobile Number');
-      setInputKeyboardType('default');
+      setInputKeyboardType('numeric');
     }
   }, [isStaffLogin]);
 
@@ -147,6 +147,7 @@ const SignInPageView = (props: any) => {
           onChangeText={onChangeMobileText}
           error={null}
           maxLength={isStaffLogin ? 20 : 10}
+          placeholderTextColor={OFF_WHITE}
         />
         <Spacer />
         {isStaffLogin && (
@@ -157,6 +158,7 @@ const SignInPageView = (props: any) => {
             onChangeText={onChangePasswordText}
             error={null}
             secureTextEntry={true}
+            placeholderTextColor={OFF_WHITE}
           />
         )}
         <Spacer />
