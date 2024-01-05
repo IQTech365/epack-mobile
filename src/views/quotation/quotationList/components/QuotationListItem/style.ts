@@ -27,13 +27,13 @@ const styles = StyleSheet.create({
   badgeText: {
     color: COLOR_WHITE,
     fontSize: 16,
-    fontWeight: '500',
+    fontFamily: 'WorkSans-Bold'
   },
   enquiryDateText: {
     color: COLOR_BLACK,
     fontSize: 14,
-    fontWeight: '500',
     marginLeft: 8,
+    fontFamily: 'WorkSans-SemiBold'
   },
   cardWrapper: {
     borderRadius: 8,
@@ -62,8 +62,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 8,
   },
+  nameContainer: {
+    width: '60%',
+    paddingVertical: 6,
+    paddingHorizontal: 4,
+    // alignItems: 'center',
+    borderRadius: 8,
+  },
   quotationNumberContainer: {
-    width: '50%',
+    width: '40%',
     paddingVertical: 6,
     paddingHorizontal: 4,
     alignItems: 'center',
@@ -98,7 +105,7 @@ const styles = StyleSheet.create({
   nameText: {
     color: COLOR_GRAY,
     fontSize: 13,
-    fontWeight: '500',
+    fontFamily: 'WorkSans-SemiBold'
   },
   amountText: {
     color: COLOR_GRAY,
@@ -106,18 +113,19 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   viewDetailsText: {
-    color: COLOR_GRAY,
+    color: COLOR_BLACK,
     fontSize: 13,
-    fontWeight: '600',
+    fontFamily: 'WorkSans-Bold'
   },
   destinationTypeText: {
-    color: COLOR_GRAY,
+    color: COLOR_BLACK,
     fontSize: 10,
+    fontFamily: 'WorkSans-Regular'
   },
   destinationText: {
     color: COLOR_GRAY,
     fontSize: 13,
-    fontWeight: '500',
+    fontFamily: 'WorkSans-Medium'
   },
   viewDetailsContainer: {
     width: '100%',

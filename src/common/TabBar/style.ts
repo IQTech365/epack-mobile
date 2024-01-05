@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
     text: {
         color: COLOR_WHITE,
         fontSize: 10,
+        fontFamily: 'WorkSans-Medium'
     }
 });
 

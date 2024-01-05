@@ -133,7 +133,7 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
               />
             </View>
           )}
-          ListEmptyComponent={() => <Text>No Enquiries available</Text>}
+          ListEmptyComponent={() => <Text style={styles.text}>No Enquiries available</Text>}
         />
       )}
     </View>

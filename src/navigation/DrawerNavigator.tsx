@@ -260,16 +260,17 @@ const styles = StyleSheet.create({
   nameText: {
     color: COLOR_WHITE,
     fontSize: 18,
-    fontWeight: '500',
+    fontFamily: 'WorkSans-SemiBold'
   },
   nameText2: {
     color: COLOR_WHITE,
     fontSize: 24,
-    fontWeight: '600',
+    fontFamily: 'WorkSans-Regular'
   },
   text: {
     color: COLOR_WHITE,
     fontSize: 14,
+    fontFamily: 'WorkSans-Regular'
   },
   bottomContainer: {
     padding: 20,
@@ -283,6 +284,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: COLOR_GRAY,
     marginLeft: 10,
-    fontWeight: '500',
+    fontFamily: 'WorkSans-SemiBold'
   },
 });

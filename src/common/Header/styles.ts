@@ -44,11 +44,12 @@ const styles = StyleSheet.create({
     text: {
         color: COLOR_WHITE,
         fontSize: 16,
+        fontFamily: 'WorkSans-Bold'
     },
     nameText2: {
         color: COLOR_WHITE,
         fontSize: 16,
-        fontWeight: '600',
+        fontFamily: 'WorkSans-Medium'
       },
     avtarContainer: {
         width: 30,

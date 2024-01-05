@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: COLOR_WHITE,
     fontSize: 14,
-    fontWeight: '500'
+    fontFamily: 'WorkSans-SemiBold'
   }
 });
 

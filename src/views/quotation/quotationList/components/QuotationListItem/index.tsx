@@ -84,7 +84,7 @@ const QuotationListItem: React.FC<IQuotationListItemProps> = ({
           <TouchableOpacity activeOpacity={0.6} onPress={onPress}>
             <View style={styles.container}>
               <View style={styles.dateAndQuotationNumberContainer}>
-                <View style={styles.dateContainer}>
+                <View style={styles.nameContainer}>
                   <Text style={styles.nameText}>{item.clientName}</Text>
                 </View>
                 <View style={styles.quotationNumberContainer}>

@@ -59,7 +59,6 @@ const TabBar = ({state, descriptors, navigation}: any) => {
                         key={`${index}`}
                     >
                         <View style={styles.tab} >
-                            {/* {isFocused ? <ActiveTabBackground width={50} height={50} /> : <View style={{width: 50, height: 50}} />} */}
                             <View style={{width: 50, height: 50}} />
                             <View style={{position: 'absolute', top: 5, bottom: 5, alignItems: 'center', justifyContent: 'center'}}>
                                 {tabIcon(options, isFocused)}

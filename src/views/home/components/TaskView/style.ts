@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
   countText: {
     color: COLOR_WHITE,
     fontSize: 12,
-    fontWeight: '400'
+    fontFamily: 'WorkSans-Regular'
   },
   taskNameContainer: {
     position: 'absolute',
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: COLOR_BLACK,
     fontSize: 12,
-    fontWeight: '500'
+    fontFamily: 'WorkSans-Medium'
   }
 });
 

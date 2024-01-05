@@ -22,6 +22,7 @@ const styles = StyleSheet.create({
     actionText: {
         color: COLOR_BLACK,
         fontSize: 12,
+        fontFamily: 'WorkSans-Medium'
     }
 });
 

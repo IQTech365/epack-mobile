@@ -26,11 +26,12 @@ const styles = StyleSheet.create({
     countLabel: {
         color: COLOR_GRAY,
         fontSize: 14,
-        fontWeight: '500',
+        fontFamily: 'WorkSans-SemiBold'
     },
     countValue: {
         color: COLOR_GRAY,
         fontSize: 12,
+        fontFamily: 'WorkSans-Regular'
     },
     buttonContainer: {
         flexDirection: 'row',
@@ -47,7 +48,7 @@ const styles = StyleSheet.create({
         color: COLOR_WHITE,
         fontSize: 12,
         marginLeft: 6,
-        fontWeight: '500'
+        fontFamily: 'WorkSans-Bold'
     },
 });
 

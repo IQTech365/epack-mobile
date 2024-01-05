@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
   label: {
     color: COLOR_BLACK,
     fontSize: 16,
+    fontFamily: 'WorkSans-Medium'
   },
   inputContainer: {
     width: '100%',
@@ -111,9 +112,9 @@ const styles = StyleSheet.create({
     height: 16,
   },
   textStyle2:{
-    fontFamily: 'JosefinSans-Regular',
+    fontFamily: 'WorkSans-Regular',
     textDecorationLine: 'none',
-    color: COLOR_GRAY
+    color: COLOR_BLACK
   }
 });
 

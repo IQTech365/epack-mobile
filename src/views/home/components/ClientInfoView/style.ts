@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
   nameText2: {
     color: COLOR_WHITE,
     fontSize: 24,
-    fontWeight: '600',
+    fontFamily: 'WorkSans-Bold'
   },
   clientLogoContainer: {
     width: '30%',
@@ -50,12 +50,12 @@ const styles = StyleSheet.create({
   nameText: {
     fontSize: 16,
     color: COLOR_BLACK,
-    fontWeight: '600',
+    fontFamily: 'WorkSans-SemiBold'
   },
   idText: {
     fontSize: 14,
     color: COLOR_BLACK,
-    fontWeight: '400',
+    fontFamily: 'WorkSans-Medium'
   }
 });
 
