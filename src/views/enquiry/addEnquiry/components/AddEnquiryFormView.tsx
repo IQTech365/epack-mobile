@@ -59,7 +59,7 @@ const AddEnquiryFormView: React.FC<IProps> = ({navigation}) => {
       customerId: state.customer_id,
       authId: authId,
       enquiryManager: '',
-      shiftingType: state.shifting_type,
+      shiftingType: state.shifting_type.toUpperCase(),
       partyCompanyName: '',
       partyName: state.party_name,
       email: '',
@@ -78,7 +78,7 @@ const AddEnquiryFormView: React.FC<IProps> = ({navigation}) => {
         pincode: state.p_pincode,
         landmark: '',
         floor: state.p_current_floor,
-        isLiftAvailable: state.p_lift_status,
+        isLiftAvailable: state.p_lift_status.toUpperCase(),
       },
       dropAddress: {
         shiftingTo: state.d_city,
@@ -88,7 +88,7 @@ const AddEnquiryFormView: React.FC<IProps> = ({navigation}) => {
         pincode: state.d_pincode,
         landmark: '',
         floor: state.d_current_floor,
-        isLiftAvailable: state.d_lift_status,
+        isLiftAvailable: state.d_lift_status.toUpperCase(),
       },
       billingBy: state.billing_by,
       billingDetails:
@@ -108,8 +108,7 @@ const AddEnquiryFormView: React.FC<IProps> = ({navigation}) => {
       status: 'NEW',
     };
     console.log('NewEnquiry-paylaod--', JSON.stringify(payload));
-    
-    // dispatch(addEnquiryRequest(payload));
+    dispatch(addEnquiryRequest(payload));
   }, [state]);
 
   useEffect(() => {

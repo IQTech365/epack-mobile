@@ -43,7 +43,7 @@ const OrderDropAddressView: FC<IProps> = ({}) => {
       setDropPincode(text);
       setPincode(text);
     },
-    [state.p_pincode],
+    [state.d_pincode],
   );
 
   useEffect(() => {

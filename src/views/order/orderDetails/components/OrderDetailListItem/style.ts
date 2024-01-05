@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import { COLOR_GRAY, COLOR_GRAY2, COLOR_GRAY3 } from '../../../../../utils/colors';
+import { COLOR_BLACK, COLOR_GRAY, COLOR_GRAY2, COLOR_GRAY3 } from '../../../../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -28,6 +28,14 @@ const styles = StyleSheet.create({
     },
     lastItemBorderStyle: {
         borderBottomWidth: 0,
+    },
+    labelText: {
+        fontSize: 15,
+        color: COLOR_BLACK,
+    },
+    valueText: {
+        fontSize: 15,
+        color: COLOR_GRAY
     }
 });
 

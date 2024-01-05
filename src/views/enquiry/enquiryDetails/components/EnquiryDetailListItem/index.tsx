@@ -15,10 +15,10 @@ const EnquiryDetailListItem:React.FC<IEnquiryDetailListItemProps> = ({label, val
     return (
         <View style={styles.container}>
             <View style={[styles.labelContainer, lastItemStyle]}>
-                <Text>{label}</Text>
+                <Text style={styles.labelText}>{label}</Text>
             </View>
             <View style={[styles.valueContainer, lastItemStyle]}>
-                <Text>{value ? value : 'Not Available'}</Text>
+                <Text style={styles.valueText}>{value ? value : 'Not Available'}</Text>
             </View>
         </View>
     );

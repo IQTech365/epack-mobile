@@ -4,7 +4,7 @@ const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   cardWrapper: {
-    borderRadius: 8,
+    borderRadius: 30,
     alignItems: 'center',
     alignSelf: 'center',
   },
@@ -13,19 +13,22 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 5,
     backgroundColor: COLOR_WHITE,
-    padding: 4,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    // padding: 4,
   },
   contentContainer: {
-    width: width * 0.93,
+    width: '100%',
     alignSelf: 'center',
     alignItems: 'center',
+    borderRadius: 30,
   },
   planNameAndPriceContainer: {
     width: '100%',
     paddingVertical: 20,
     alignItems: 'center',
-    borderTopLeftRadius: 5,
-    borderTopRightRadius: 5,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
   },
   planTypeText: {
     color: COLOR_WHITE,

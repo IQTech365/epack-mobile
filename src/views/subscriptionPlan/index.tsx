@@ -30,6 +30,7 @@ import Spinner from '../../common/Spinner';
 import {AuthStackRoute} from '../../utils/constants';
 import useAuthId from '../../hooks/useAuthId';
 import {formatDate4} from '../../utils/formatter';
+import subscriptions from '../../data/subscrptionplans.json';
 
 const SubscriptionPlanView = (props: any) => {
   const {navigation} = props;
@@ -194,7 +195,8 @@ const SubscriptionPlanView = (props: any) => {
         width={width}
         mode="parallax"
         // autoPlay={true}
-        data={_prepareSubscriptionPlanList()}
+        // data={_prepareSubscriptionPlanList()}
+        data={subscriptions}
         scrollAnimationDuration={1000}
         panGestureHandlerProps={{
           activeOffsetX: [-10, 10],
@@ -203,7 +205,8 @@ const SubscriptionPlanView = (props: any) => {
         renderItem={({item, index}) => {
           return (
             <ScrollView showsVerticalScrollIndicator={false}>
-              <SubscriptionPlanCard2 item={item} onPress={handleByPlan} />
+              <SubscriptionPlanCard item={item} onPress={() => {}}/>
+              {/* <SubscriptionPlanCard2 item={item} onPress={handleByPlan} /> */}
               <Spinner show={paymentProcessing || addPurchaseRequesting} />
             </ScrollView>
           );
