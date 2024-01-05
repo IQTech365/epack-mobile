@@ -52,7 +52,7 @@ const AddOrderFormView: FC<IProps> = ({navigation}) => {
       customerId: state.customer_id,
       authId: authId,
       enquiryManager: '',
-      shiftingType: state.shifting_type,
+      shiftingType: state.shifting_type.toUpperCase(),
       partyCompanyName: '',
       partyName: state.party_name,
       email: '',
@@ -77,7 +77,7 @@ const AddOrderFormView: FC<IProps> = ({navigation}) => {
         locality: 'Not Available',
         landmark: 'Not Available',
         floor: state.p_current_floor,
-        isLiftAvailable: state.p_lift_status,
+        isLiftAvailable: state.p_lift_status.toUpperCase(),
       },
       dropAddress: {
         shiftingTo: state.d_city,
@@ -88,7 +88,7 @@ const AddOrderFormView: FC<IProps> = ({navigation}) => {
         locality: 'Not Available',
         landmark: 'Not Available',
         floor: state.d_current_floor,
-        isLiftAvailable: state.d_lift_status,
+        isLiftAvailable: state.d_lift_status.toUpperCase(),
       },
       billingBy: state.billing_by,
       billingDetails:
