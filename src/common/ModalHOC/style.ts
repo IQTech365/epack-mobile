@@ -22,8 +22,8 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontSize: 16,
-    fontWeight: '400',
     color: COLOR_WHITE,
+    fontFamily: 'WorkSans-Bold'
   },
 });
 

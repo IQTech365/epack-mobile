@@ -252,22 +252,9 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({
                 unfillColor="#FFFFFF"
                 text={itm.label}
                 fillColor={COLOR_BLUE}
-                iconStyle={{
-                  borderColor: 'red',
-                  borderRadius: 0,
-                  width: 16,
-                  height: 16,
-                }}
-                innerIconStyle={{
-                  borderWidth: 1,
-                  borderRadius: 0,
-                  width: 16,
-                  height: 16,
-                }}
-                textStyle={{
-                  fontFamily: 'JosefinSans-Regular',
-                  textDecorationLine: 'none',
-                }}
+                iconStyle={styles.iconStyle}
+                innerIconStyle={styles.innerIconStyle}
+                textStyle={styles.textStyle2}
                 style={{marginRight: 15, marginBottom: 10}}
                 textContainerStyle={{paddingLeft: 0}}
                 onPress={(isChecked: boolean) => {

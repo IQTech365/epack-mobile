@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
   label: {
     color: COLOR_BLACK,
     fontSize: 14,
+    fontFamily: 'WorkSans-Medium'
   },
   labelContainer: {
     width: width * 0.9,
@@ -74,6 +75,23 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR_BLUE,
     borderRadius: 5,
   },
+  iconStyle:{
+    borderColor: 'red',
+    borderRadius: 0,
+    width: 16,
+    height: 16,
+  },
+  innerIconStyle:{
+    borderWidth: 1,
+    borderRadius: 0,
+    width: 16,
+    height: 16,
+  },
+  textStyle2:{
+    fontFamily: 'WorkSans-Regular',
+    textDecorationLine: 'none',
+    color: COLOR_BLACK,
+  }
 });
 
 export default styles;
