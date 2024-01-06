@@ -35,11 +35,12 @@ const styles = StyleSheet.create({
   label: {
     color: COLOR_BLACK,
     fontSize: 14,
+    fontFamily: 'WorkSans-Medium'
   },
   label2: {
     color: COLOR_BLACK,
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily: 'WorkSans-Medium'
   },
   inputContainer: {
     width: '100%',

@@ -27,13 +27,13 @@ const styles = StyleSheet.create({
   badgeText: {
     color: COLOR_WHITE,
     fontSize: 16,
-    fontWeight: '500',
+    fontFamily: 'WorkSans-Bold'
   },
   orderDateText: {
     color: COLOR_BLACK,
     fontSize: 14,
-    fontWeight: '500',
-    marginLeft: 8
+    marginLeft: 8,
+    fontFamily: 'WorkSans-SemiBold'
   },
   container: {
     width: width * 0.92,
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
   nameText: {
       color: COLOR_GRAY,
       fontSize: 14,
-      fontWeight: '600'
+      fontFamily: 'WorkSans-SemiBold'
   },
   amountText: {
     color: COLOR_GRAY,
@@ -115,14 +115,14 @@ const styles = StyleSheet.create({
     fontWeight: '600'
   },
   labelText: {
-      color: COLOR_GRAY,
+      color: COLOR_BLACK,
       fontSize: 13,
-      fontWeight: '500'
+      fontFamily: 'WorkSans-Medium'
   },
   valueText: {
-    color: COLOR_GRAY,
-    fontSize: 12,
-    fontWeight: '400'
+    color: COLOR_BLACK,
+    fontSize: 13,
+    fontFamily: 'WorkSans-Regular'
   },
   viewDetailsContainer: {
     width: '100%',

@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
     label: {
         color: COLOR_BLACK,
         fontSize: 14,
+        fontFamily: 'WorkSans-Medium'
     },
     inputContainer: {
         width: '100%',
@@ -39,6 +40,7 @@ const styles = StyleSheet.create({
     input: {
         color: COLOR_BLACK,
         fontSize: 14,
+        fontFamily: 'WorkSans-Regular'
     },
     switchMainWrapper3: {
         borderWidth: 1, 

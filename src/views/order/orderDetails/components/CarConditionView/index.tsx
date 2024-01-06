@@ -120,7 +120,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId}) => {
   const showEmptyView = () => {
     return (
       <View style={styles.emptyContainer}>
-        <Text>No CarCondition Found!</Text>
+        <Text style={styles.text}>No CarCondition Found!</Text>
       </View>
     );
   };

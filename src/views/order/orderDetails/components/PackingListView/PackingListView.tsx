@@ -28,6 +28,14 @@ const PackingListView: React.FC<Props> = ({orderId}) => {
     return items;
   };
 
+  const showEmptyView = () => {
+    return (
+      <View style={styles.emptyContainer}>
+        <Text style={styles.text}>No Packing Info Found!</Text>
+      </View>
+    );
+  };
+
   const _getPackingMaterialsRequest = () => {
     const payload:IGetPackingListRequest = {
       companyId: companyId,
@@ -45,6 +53,7 @@ const PackingListView: React.FC<Props> = ({orderId}) => {
       <FlatList
         data={_getPackingMaterils()}
         renderItem={({item, index}) => <Text>Hello</Text>}
+        ListEmptyComponent={showEmptyView()}
       />
     </View>
   );

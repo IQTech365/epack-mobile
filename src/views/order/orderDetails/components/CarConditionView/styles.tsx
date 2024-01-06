@@ -24,8 +24,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     text: {
-        color: COLOR_GRAY,
+        color: COLOR_BLACK,
         fontSize: 14,
+        fontFamily: 'WorkSans-Regular'
     },
     // List Item
     mainWrapper: {

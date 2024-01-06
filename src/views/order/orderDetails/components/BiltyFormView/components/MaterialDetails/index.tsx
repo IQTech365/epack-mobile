@@ -337,7 +337,7 @@ const MaterialDetails: React.FC<{}> = ({}) => {
         {showMaterialList()}
         <Spacer height={4} />
         <View style={styles.labelContainer}>
-          <Label text="Risk Type" style={styles.label2} />
+          <Label text="Risk Type" style={styles.label} />
         </View>
         <View style={styles.optionContainer}>
           {riskTypeOptions.map((option: string, index: number) => (
@@ -362,7 +362,7 @@ const MaterialDetails: React.FC<{}> = ({}) => {
         </View>
         <Spacer height={4} />
         <View style={styles.labelContainer}>
-          <Label text="Liability of Tax" style={styles.label2} />
+          <Label text="Liability of Tax" style={styles.label} />
         </View>
         <View style={styles.optionContainer}>
           {liabilityOfTaxOptions.map((option: string, index: number) => (

@@ -1,5 +1,5 @@
 import {ICheckboxButton} from 'react-native-bouncy-checkbox-group';
-import {COLOR_BLUE} from '../../../../../../../utils/colors';
+import {COLOR_BLACK, COLOR_BLUE} from '../../../../../../../utils/colors';
 
 export const typeOfMovingOptions:string[] = ['Household', 'Vehicle', 'Commercial', '3PL']
 export const riskTypeOptions:string[] = ['Owners Risk', 'Carrier Risk'];
@@ -12,7 +12,7 @@ export const payTypeOptions: Array<ICheckboxButton> = [
       fillColor: COLOR_BLUE,
       iconStyle: {borderColor: 'red', borderRadius: 0, width: 15, height: 15},
       innerIconStyle: {borderWidth: 1, borderRadius: 0, width: 15, height: 15},
-      textStyle: {fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none'},
+      textStyle: {fontFamily: 'WorkSans-Regular', textDecorationLine: 'none', color: COLOR_BLACK},
       style: {paddingRight: 16},
     },
     {
@@ -21,7 +21,7 @@ export const payTypeOptions: Array<ICheckboxButton> = [
       fillColor: COLOR_BLUE,
       iconStyle: {borderColor: 'red', borderRadius: 0, width: 15, height: 15},
       innerIconStyle: {borderWidth: 1, borderRadius: 0, width: 15, height: 15},
-      textStyle: {fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none'},
+      textStyle: {fontFamily: 'WorkSans-Regular', textDecorationLine: 'none', color: COLOR_BLACK},
       style: {paddingRight: 16},
     },
     {
@@ -30,7 +30,7 @@ export const payTypeOptions: Array<ICheckboxButton> = [
       fillColor: COLOR_BLUE,
       iconStyle: {borderColor: 'red', borderRadius: 0, width: 15, height: 15},
       innerIconStyle: {borderWidth: 1, borderRadius: 0, width: 15, height: 15},
-      textStyle: {fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none'},
+      textStyle: {fontFamily: 'WorkSans-Regular', textDecorationLine: 'none', color: COLOR_BLACK},
     },
   ];
 
@@ -41,7 +41,7 @@ export const payTypeOptions: Array<ICheckboxButton> = [
       fillColor: COLOR_BLUE,
       iconStyle: {borderColor: 'red', borderRadius: 0, width: 15, height: 15},
       innerIconStyle: {borderWidth: 1, borderRadius: 0, width: 15, height: 15},
-      textStyle: {fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none'},
+      textStyle: {fontFamily: 'WorkSans-Regular', textDecorationLine: 'none', color: COLOR_BLACK},
       style: {paddingRight: 10},
     },
     {
@@ -50,6 +50,6 @@ export const payTypeOptions: Array<ICheckboxButton> = [
       fillColor: COLOR_BLUE,
       iconStyle: {borderColor: 'red', borderRadius: 0, width: 15, height: 15},
       innerIconStyle: {borderWidth: 1, borderRadius: 0, width: 15, height: 15},
-      textStyle: {fontFamily: 'JosefinSans-Regular', textDecorationLine: 'none'},
+      textStyle: {fontFamily: 'WorkSans-Regular', textDecorationLine: 'none', color: COLOR_BLACK},
     },
   ];

@@ -132,7 +132,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
   const showEmptyView = () => {
     return (
       <View style={styles.emptyContainer}>
-        <Text>No Bilty Found!</Text>
+        <Text style={styles.text}>No Bilty Found!</Text>
       </View>
     );
   };

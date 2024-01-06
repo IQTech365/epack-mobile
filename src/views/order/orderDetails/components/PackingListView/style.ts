@@ -45,11 +45,13 @@ const styles = StyleSheet.create({
   label: {
     color: COLOR_BLACK,
     fontSize: 14,
+    fontFamily: 'WorkSans-Medium'
   },
   labelHeading: {
     color: COLOR_BLACK,
     fontSize: 18,
     left: width * 0.05,
+    fontFamily: 'WorkSans-Medium'
   },
   inputContainer: {
     width: '100%',
@@ -69,7 +71,7 @@ const styles = StyleSheet.create({
   },
   // items
   listItemContainer: {
-    width: width * 0.90,
+    width: width * 0.9,
     alignSelf: 'center',
     justifyContent: 'center',
     borderRadius: 5,
@@ -80,7 +82,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  leftItemContainer:{
+  leftItemContainer: {
     width: '80%',
     alignItems: 'center',
   },
@@ -90,7 +92,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
-  deleteIconContainer:{
+  deleteIconContainer: {
     width: '20%',
     alignItems: 'center',
     justifyContent: 'center',
@@ -98,13 +100,23 @@ const styles = StyleSheet.create({
   labelText: {
     color: COLOR_BLACK,
     fontSize: 16,
-    fontWeight: '500',
+    fontFamily: 'WorkSans-Medium'
   },
   valueText: {
     color: COLOR_BLACK,
     fontSize: 14,
-    fontWeight: '400',
-  }
+    fontFamily: 'WorkSans-Medium'
+  },
+  emptyContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  text: {
+    color: COLOR_BLACK,
+    fontSize: 14,
+    fontFamily: 'WorkSans-Regular',
+  },
 });
 
 export default styles;

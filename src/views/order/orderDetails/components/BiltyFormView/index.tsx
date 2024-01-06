@@ -6,7 +6,6 @@ import {View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../../../common/Spacer';
 import styles from './style';
-import Toast from 'react-native-toast-message';
 import {ICreateBiltyRequest} from '../../../../../interface/order/ICreateBiltyRequest';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import Button from '../../../../../common/Button';
@@ -31,6 +30,7 @@ import { getVehicleSizeRequest } from '../../../../../redux/slices/VehicleSlice'
 import Spinner from '../../../../../common/Spinner';
 import { getUnitTypeRequest } from '../../../../../redux/slices/ProfileSettingSlice';
 import { getPackingTypesRequest } from '../../../../../redux/slices/CommonSlice';
+import { ToastType, showToast } from '../../../../../utils/utility';
 
 interface IBiltyFormViewProps {
   orderId: string | undefined;
@@ -228,18 +228,10 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
 
   useEffect(() => {
     if (!createBiltyRequesting && createBiltySuccess) {
-      Toast.show({
-        type: 'success',
-        text1: 'Create Bilty',
-        text2: 'Bilty has been created successfully',
-      });
+      showToast('New Bilty Created', ToastType.SUCCESS);
       dispatch(resetCreateBiltyRequest());
     } else if (!createBiltyRequesting && createBiltyError) {
-      Toast.show({
-        type: 'error',
-        text1: 'Create Bilty',
-        text2: 'Error in creating Bilty. Please try again!',
-      });
+      showToast('New Bilty Not Created. Try again!', ToastType.ERROR);
       dispatch(resetCreateBiltyRequest());
     }
   }, [createBiltyRequesting, createBiltySuccess, createBiltyFailure]);
