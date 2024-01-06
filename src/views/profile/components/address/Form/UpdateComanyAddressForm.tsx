@@ -19,6 +19,7 @@ import DropdownComponent from '../../../../../common/DropdownComponent';
 import { ICompanyInfoData } from '../../../../../interface/companyRegistration/IGetCompaniesResponse';
 import { ICompanyEditRequest } from '../../../../../interface/companyRegistration/ICompanyEditRequest';
 import { editCompanyRequest } from '../../../../../redux/slices/CompanySlice';
+import useCompanyId from '../../../../../hooks/useCompanyId';
 
 export enum ADDRESS_TYPE {
   PICKUP,
@@ -34,6 +35,7 @@ const UpdateComanyAddressForm: React.FC<IUpdateComanyAddressFormProps> = ({
 }) => {
   
   const dispatch = useAppDispatch();
+  const companyId = useCompanyId();
   const {updateAddressRequesting, updateAddressSuccess, updateAddressFailure} = useAppSelector(state => state.Enquiry);
   const [states, setStates] = useState<TDropdownItem[]>([]);
   const [cities, setCities] = useState<TDropdownItem[]>([]);
@@ -63,15 +65,15 @@ const UpdateComanyAddressForm: React.FC<IUpdateComanyAddressFormProps> = ({
   );
   const { data: companiesData } = companies || {};
 
-  const getFirstCompany = () => {
+  const getCompany = () => {
     let company: ICompanyInfoData | null = null;
     if (companiesData && Array.isArray(companiesData) && companiesData.length > 0) {
-      company = companiesData[0];
+      company = companiesData.find((d:ICompanyInfoData) => d._id == companyId);
     }
     return company;
   }
 
-  const firstCompany = getFirstCompany();
+  const firstCompany = getCompany();
 
   const handleAddressTextChange = useCallback(
     (text: string) => {
@@ -217,10 +219,10 @@ const UpdateComanyAddressForm: React.FC<IUpdateComanyAddressFormProps> = ({
       state: state,
       city:city,
       pincode: pin,
-      ibaApprovalCode: firstCompany?.ibaApprovalCode as string,
+      ibaApprovalCode: firstCompany?.govRegdDetails?.IBAcode as string,
       ibaValidDate: "2023-10-25",
       companyWebite: firstCompany?.companyWebite as string,
-      CINNumber: firstCompany?.CINNumber as string,
+      CINNumber: firstCompany?.govRegdDetails?.incorporationNumber as string,
       companyLogo: "",
       punchLine: firstCompany?.punchLine as string,
       companyProfile: "",

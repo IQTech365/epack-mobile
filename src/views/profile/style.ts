@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     text: {
         color: COLOR_BLACK,
         fontSize: 16,
-        fontWeight: '600',
+        fontFamily: 'WorkSans-SemiBold'
     }
 });
 

@@ -14,6 +14,7 @@ import {ICompanyInfoData} from '../../../../interface/companyRegistration/IGetCo
 import {getCompaniesRequest} from '../../../../redux/slices/CompanySlice';
 import Spinner from '../../../../common/Spinner';
 import {COLOR_BLACK, COLOR_GREEN} from '../../../../utils/colors';
+import Label from '../../../../common/Label';
 
 interface IBasicDetailsViewProps {}
 
@@ -109,7 +110,7 @@ const BasicDetailsView: React.FC<IBasicDetailsViewProps> = ({}) => {
               value={firstCompany?.companyName}
             />
             <EnquiryDetailListItem
-              label="Company Punch Line"
+              label="Punch Line"
               value={firstCompany?.punchLine || 'Not Available'}
             />
             <EnquiryDetailListItem
@@ -122,11 +123,12 @@ const BasicDetailsView: React.FC<IBasicDetailsViewProps> = ({}) => {
             />
             <EnquiryDetailListItem label="Email" value={firstCompany?.email} />
             <EnquiryDetailListItem
-              label="Reg. Mobile Number"
+              label="Reg. Mobile No."
               value={firstCompany?.companyMobile}
             />
           </View>
           <Spacer height={8} />
+          <Label text='Company Logo' style={styles.labelText2} />
           <View style={styles.companyLogoContainer}>
           <Image
               source={{uri: firstCompany?.companyLogo}}
@@ -134,6 +136,7 @@ const BasicDetailsView: React.FC<IBasicDetailsViewProps> = ({}) => {
             />
           </View>
           <Spacer height={8} />
+          <Label text='Admin Signature' style={styles.labelText2} />
           <View style={styles.companyLogoContainer}>
             <Image
               source={{uri: firstCompany?.companySignature}}

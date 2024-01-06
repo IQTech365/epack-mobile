@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import { COLOR_GRAY, COLOR_WHITE } from '../../../../utils/colors';
+import { COLOR_BLACK, COLOR_GRAY, COLOR_WHITE } from '../../../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -28,7 +28,12 @@ const styles = StyleSheet.create({
       labelText: {
         color: COLOR_GRAY,
         fontSize: 16,
-        fontWeight: '500',
+        fontFamily: 'WorkSans-SemiBold'
+      },
+      labelText2: {
+        color: COLOR_BLACK,
+        fontSize: 14,
+        fontFamily: 'WorkSans-SemiBold'
       },
       companyLogoContainer: {
         width: width * 0.9,

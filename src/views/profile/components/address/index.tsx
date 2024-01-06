@@ -13,6 +13,7 @@ import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
 import { ICompanyInfoData } from '../../../../interface/companyRegistration/IGetCompaniesResponse';
 import Spinner from '../../../../common/Spinner';
 import { getCompaniesRequest } from '../../../../redux/slices/CompanySlice';
+import useCompanyId from '../../../../hooks/useCompanyId';
 interface IAddressViewProps {
   showEditIcon?: boolean;
 }
@@ -22,16 +23,17 @@ const AddressView: React.FC<IAddressViewProps> = ({showEditIcon = true}) => {
   const {companies, getCompaniesRequesting} = useAppSelector(state => state.Company);
   const {data: companiesData} = companies || {};
   const dispatch = useAppDispatch();
+  const companyId = useCompanyId();
 
-  const getFirstCompany = () => {
+  const getCompany = () => {
     let company:ICompanyInfoData | null  = null;
     if(companiesData && Array.isArray(companiesData) && companiesData.length > 0) {
-      company = companiesData[0];
+      company = companiesData.find((d:ICompanyInfoData) => d._id == companyId);
     }
     return company;
   }
 
-  const firstCompany = getFirstCompany();
+  const firstCompany = getCompany();
 
   const handleModalOpen = () => {
     setOpenModal(true);
@@ -61,8 +63,8 @@ const AddressView: React.FC<IAddressViewProps> = ({showEditIcon = true}) => {
           <EnquiryDetailListItem label='Pincode' value={firstCompany?.pincode} />
           <EnquiryDetailListItem label='State' value={firstCompany?.state} />
           <EnquiryDetailListItem label='City' value={firstCompany?.city} />
-          <EnquiryDetailListItem label='Locality' value={firstCompany?.companyAddress || "Not Available"} />
-          <EnquiryDetailListItem label='Landmark' value={firstCompany?.companyAddress || "Not Available"} />
+          <EnquiryDetailListItem label='Locality' value={firstCompany?.companyAddress} />
+          <EnquiryDetailListItem label='Landmark' value={firstCompany?.companyAddress} />
           <EnquiryDetailListItem label='Address' value={firstCompany?.companyAddress} />
           <EnquiryDetailListItem label='Country' value='India' />
         </View>

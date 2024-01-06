@@ -56,6 +56,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: COLOR_WHITE,
     fontWeight: '400'
+  },
+  text: {
+    color: COLOR_BLACK,
+    fontSize: 14,
+    fontFamily: 'WorkSans-Regular'
   }
 });
 

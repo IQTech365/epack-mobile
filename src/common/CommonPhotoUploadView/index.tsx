@@ -167,13 +167,13 @@ const CommonPhotoUploadView: React.FC<IProps> = ({
       <View style={styles.photoCaptureContainer}>
         <TouchableOpacity style={styles.button} onPress={handleLaunchGallery}>
           <>
-            <Text>Gallery</Text>
+            <Text style={styles.text}>Gallery</Text>
             <GalleryIcon width={50} height={50} />
           </>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={handleLaunchCamera}>
           <>
-            <Text>Camera</Text>
+            <Text style={styles.text}>Camera</Text>
             <CameraIcon width={50} height={50} />
           </>
         </TouchableOpacity>
