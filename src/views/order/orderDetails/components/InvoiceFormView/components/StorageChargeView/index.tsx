@@ -9,9 +9,10 @@ import DropdownComponent from '../../../../../../../common/DropdownComponent';
 import {approvalAuthorityOptions, transitInsuranceOptions} from '../../utils';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {useInvoiceFormContextHook} from '../../../../../../../provider/InvoiceFormContextProvider';
-import { TDropdownItem } from '../../../../../../../type/TDropdownItem';
+import {TDropdownItem} from '../../../../../../../type/TDropdownItem';
 import DatePickerComponent from '../../../../../../../common/DatePickerComponent';
-
+import storageDurationOptions from '../../../../../../../data/storageDurationOptions.json';
+import {formatDate4} from '../../../../../../../utils/formatter';
 interface Props {}
 
 const StorageChargeView: React.FC<Props> = () => {
@@ -48,39 +49,55 @@ const StorageChargeView: React.FC<Props> = () => {
           />
         ))}
       </View>
-      <Spacer height={4} />
-      <View style={styles.fullWidthCompContainer}>
-        <Label text="Storage Duration" style={styles.label} />
-        <DropdownComponent
-          data={approvalAuthorityOptions}
-          onSelect={(item:TDropdownItem) => {
-            setStorageDuration(item.label);
-          }}
-        />
-      </View>
-      <Spacer height={4} />
-      <View style={styles.halfWidthCompContainer}>
-        <View style={styles.compContainer}>
-          <Label text="From Date" style={styles.label} />
-          <DatePickerComponent onDateSelect={() => {}} />
-        </View>
-        <View style={styles.compContainer}>
-          <Label text="To Date" style={styles.label} />
-          <DatePickerComponent onDateSelect={() => {}} />
-        </View>
-      </View>
-      <Spacer height={4} />
-      <View style={styles.fullWidthCompContainer}>
-        <Label text="Amount" style={styles.label} />
-        <Input
-          onChangeText={(text:string) => {
-            setStorageAmount(text);
-          }}
-          containerStyle={styles.inputContainer}
-          inputStyle={styles.input}
-          selectionColor={COLOR_BLACK}
-        />
-      </View>
+      {state.storage == transitInsuranceOptions[0] ? (
+        <>
+          <Spacer height={4} />
+          <View style={styles.fullWidthCompContainer}>
+            <Label text="Storage Duration" style={styles.label} />
+            <DropdownComponent
+              data={storageDurationOptions}
+              onSelect={(item: TDropdownItem) => {
+                setStorageDuration(item.label);
+              }}
+            />
+          </View>
+          {state.storage_duration == storageDurationOptions[2].label ? (
+            <>
+              <Spacer height={4} />
+              <View style={styles.halfWidthCompContainer}>
+                <View style={styles.compContainer}>
+                  <Label text="From Date" style={styles.label} />
+                  <DatePickerComponent
+                    onDateSelect={(date: Date) => {
+                      setStorageFromDate(formatDate4(date));
+                    }}
+                  />
+                </View>
+                <View style={styles.compContainer}>
+                  <Label text="To Date" style={styles.label} />
+                  <DatePickerComponent
+                    onDateSelect={(date: Date) => {
+                      setStorageToDate(formatDate4(date));
+                    }}
+                  />
+                </View>
+              </View>
+            </>
+          ) : null}
+          <Spacer height={4} />
+          <View style={styles.fullWidthCompContainer}>
+            <Label text="Amount" style={styles.label} />
+            <Input
+              onChangeText={(text: string) => {
+                setStorageAmount(text);
+              }}
+              containerStyle={styles.inputContainer}
+              inputStyle={styles.input}
+              selectionColor={COLOR_BLACK}
+            />
+          </View>
+        </>
+      ) : null}
     </>
   );
 };

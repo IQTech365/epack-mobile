@@ -10,6 +10,7 @@ import {
   initialState,
   ACTION,
   IOtherCharge,
+  ITransitCharge,
 } from '../views/order/orderDetails/components/InvoiceFormView/InvoiceReducer2';
 
 const useInvoiceFormContext = () => {
@@ -387,16 +388,6 @@ const useInvoiceFormContext = () => {
     [state.transit_insurance],
   );
 
-  const setTransitLuggage = useCallback(
-    (text: string) => {
-      dispatch({
-        type: ACTION.TRANSIT_LUGGAGE,
-        payload: text,
-      });
-    },
-    [state.transit_luggage],
-  );
-
   const setTransitInsuranceType = useCallback(
     (text: string) => {
       dispatch({
@@ -407,34 +398,14 @@ const useInvoiceFormContext = () => {
     [state.transit_insurance_type],
   );
 
-  const setTransitInsuranceCharge = useCallback(
-    (text: string) => {
+  const setTransitCharges = useCallback(
+    (charges: ITransitCharge[]) => {
       dispatch({
-        type: ACTION.TRANSIT_INSURANCE_CHARGE,
-        payload: text,
+        type: ACTION.TRANSIT_INSURANCE_CHARGES,
+        payload: charges,
       });
     },
-    [state.transit_insurance_charge],
-  );
-
-  const setTransitInsuranceGST = useCallback(
-    (text: string) => {
-      dispatch({
-        type: ACTION.TRANSIT_INSURANCE_GST,
-        payload: text,
-      });
-    },
-    [state.transit_insurance_gst],
-  );
-
-  const setTransitGoodsValue = useCallback(
-    (text: string) => {
-      dispatch({
-        type: ACTION.TRANSIT_GOODS_VALUE,
-        payload: text,
-      });
-    },
-    [state.transit_goods_value],
+    [state.transit_charges],
   );
 
   // **** Storage Charge ****
@@ -697,11 +668,8 @@ const useInvoiceFormContext = () => {
     setGSTPaidBy,
     // Transit Insurance
     setTransitInsurance,
-    setTransitLuggage,
     setTransitInsuranceType,
-    setTransitInsuranceCharge,
-    setTransitInsuranceGST,
-    setTransitGoodsValue,
+    setTransitCharges,
     // Storage
     setStorage,
     setStorageDuration,
@@ -789,11 +757,8 @@ const initInvoiceFormContextState: UseInvoiceFormContextType = {
   setGSTPaidBy: (text: string) => {},
   // Transit Insurance
   setTransitInsurance: (text: string) => {},
-  setTransitLuggage: (text: string) => {},
+  setTransitCharges: (charges: ITransitCharge[]) => {},
   setTransitInsuranceType: (text: string) => {},
-  setTransitInsuranceCharge: (text: string) => {},
-  setTransitInsuranceGST: (text: string) => {},
-  setTransitGoodsValue: (text: string) => {},
   // Storage
   setStorage: (text: string) => {},
   setStorageDuration: (text: string) => {},

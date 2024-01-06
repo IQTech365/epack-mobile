@@ -634,6 +634,7 @@ export const OrderSlice = createSlice({
       state.createInvoiceSuccess = false;
       state.createInvoiceFailure = false;
       state.createInvoiceError = null;
+      state.createInvoiceInfo = null;
     },
      // Create Packing Material
      createPackingMaterialsRequest: (

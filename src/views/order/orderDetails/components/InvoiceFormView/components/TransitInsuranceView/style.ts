@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import {COLOR_BLACK, COLOR_GRAY2} from '../../../../../../../utils/colors';
+import {COLOR_BLACK, COLOR_BLUE, COLOR_GRAY, COLOR_GRAY2, COLOR_WHITE} from '../../../../../../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -74,6 +74,49 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center'
   },
+  buttonStyle: {
+    backgroundColor: COLOR_BLUE,
+    width: width * 0.3,
+  },
+  buttonText: {
+    color: COLOR_WHITE,
+  },
+  transitChargeContainer: {
+    width: width * 0.9,
+    flexDirection: 'row',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    borderWidth: 0.5,
+    borderColor: COLOR_GRAY,
+    padding: 8,
+    borderRadius: 5,
+  },
+  transitChargeContentWrapper: {
+    width: '85%',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
+  transitChargeContentContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
+  transitChargeDeleteIconContainer: {
+    width: '15%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  labelText: {
+    color: COLOR_BLACK,
+    fontFamily: 'WorkSans-Medium',
+    fontSize: 14,
+  },
+  ValueText: {
+    color: COLOR_BLACK,
+    fontFamily: 'WorkSans-Regualr',
+    fontSize: 14,
+  }
 });
 
 export default styles;

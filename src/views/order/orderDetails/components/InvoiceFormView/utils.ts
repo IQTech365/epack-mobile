@@ -138,3 +138,18 @@ export const gstTypeOptions = [
 export const gstPaidByOptions:string[] = ['Consignee', 'Consigner', 'Moving Company'];
 
 export const transitInsuranceOptions:string[] = ['Required', 'Not Required'];
+
+export const modeOfMovingOptions = [
+  {
+    label: 'By Surface',
+    value: '1',
+  },
+  {
+    label: 'By Air',
+    value: '2',
+  },
+  {
+    label: 'By Sea',
+    value: '3',
+  }
+]

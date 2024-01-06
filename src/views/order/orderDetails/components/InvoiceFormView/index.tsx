@@ -1,4 +1,4 @@
-import React, {useReducer, useState} from 'react';
+import React from 'react';
 import {View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
@@ -12,7 +12,7 @@ import {COLOR_BLACK, COLOR_BLUE} from '../../../../../utils/colors';
 import styles from './style';
 import shiftingLuggages from '../../../../../data/shiftingLuggage.json';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import {billingByOptions} from './utils';
+import {billingByOptions, modeOfMovingOptions} from './utils';
 import InvoiceToIndividualView from './components/InvoiceToIndividualView';
 import InvoiceToCompanyView from './components/InvoiceToCompanyView';
 import FreightDetailsView from './components/FreightDetailsView';
@@ -20,13 +20,23 @@ import {useInvoiceFormContextHook} from '../../../../../provider/InvoiceFormCont
 import TransitInsuranceView from './components/TransitInsuranceView';
 import StorageChargeView from './components/StorageChargeView';
 import Button from '../../../../../common/Button';
+import {
+  ICreateInvoiceRequest,
+  IInvoiceBillingInfo,
+  IInvoiceOtherCharge,
+  IInvoicePickupAddress,
+  IInvoiceStorageCharge,
+  IInvoiceTransitInsurance,
+  IInvoiceTransitInsuranceCharge,
+} from '../../../../../interface/order/ICreateInvoiceRequest';
+import { IOtherCharge, ITransitCharge } from './InvoiceReducer2';
+import { formatDate4 } from '../../../../../utils/formatter';
 
 interface IInvoiceFormViewProps {
-  orderId: string | undefined;
+  orderId: string;
 }
 
-const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({}) => {
-  const [switchState, setSwitchState] = useState<boolean>(false);
+const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId}) => {
   const {
     state,
     setSameAsClientAddress,
@@ -37,13 +47,159 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({}) => {
     setModeOfMoving,
     setVehicleNo,
     setConsignmentNo,
+    setShiftingLuggage,
   } = useInvoiceFormContextHook();
   console.log('InvoiceFormView--', JSON.stringify(state, null, ' '));
 
-  const handleCreateInvoice = () => {
-
+  const _transformTransitCharge = ():IInvoiceTransitInsuranceCharge[] => {
+    let list:IInvoiceTransitInsuranceCharge[] = [];
+    if(state.transit_charges.length > 0) {
+      list = state.transit_charges.map((d:ITransitCharge) => {
+        const item:IInvoiceTransitInsuranceCharge = {
+          luggageType: d.transit_luggage,
+          insurancePerc: d.transit_insurance_charge,
+          gst: d.transit_insurance_gst,
+          value: d.transit_goods_value,
+        }
+        return item;
+      })
+    }
+    return list;
   }
 
+  const _getTransitInsurance = (): IInvoiceTransitInsurance => {
+    const transitInsurance: IInvoiceTransitInsurance = {
+      isRequired: state.transit_insurance,
+      transitType: state.transit_insurance_type,
+      charges: _transformTransitCharge(),
+    };
+    return transitInsurance;
+  };
+
+  const _getOtherCharges = (): IInvoiceOtherCharge[] => {
+    let otherCharges: IInvoiceOtherCharge[] = [];
+    if(state.other_charges.length > 0) {
+      otherCharges = state.other_charges.map((d:IOtherCharge) => {
+        const item:IInvoiceOtherCharge = {
+          item: d.particular_name,
+          HSNCode: d.hsn_code,
+          qty: d.quantity,
+          rate: d.rate_per_item,
+          amount: d.amount,
+        }
+        return item;
+      })
+    }
+    return otherCharges;
+  };
+
+  const _getStorageCharge = (): IInvoiceStorageCharge => {
+    let storgeCharge: IInvoiceStorageCharge = {
+      isRequired: state.storage,
+      storageChargesType: state.storage_duration,
+      fromDate: state.storage_from_date,
+      toDate: state.storage_to_date,
+      amount: state.storage_amount,
+    };
+    return storgeCharge;
+  };
+
+  const handleCreateInvoice = () => {
+    const billingInfo: IInvoiceBillingInfo = {
+      companyName: state.company_name,
+      approvalAuthority: state.approval_authority,
+      authorityPersonName: state.authority_person_name,
+      authorityPersonMobile: state.authority_mobile_no,
+      companyAddress: state.company_address,
+      companyGST: state.company_gst,
+      employeeName: state.employee_name,
+      employeeDesignation: state.employee_designation,
+      employeeMobile: state.employee_mobile_no,
+      state: '',
+      city: '',
+      pincode: '',
+    };
+
+    const pickupAddress: IInvoicePickupAddress = {
+      shiftingFrom: state.city,
+      state: state.state,
+      city: state.city,
+      address: state.address,
+      pincode: state.pincode,
+      landmark: '',
+      locality: '',
+      floor: '',
+      isLiftAvailable: '',
+    };
+    const payload: ICreateInvoiceRequest = {
+      enquiryId: orderId,
+      branchId: '',
+      serialNo: state.invoice_no,
+      shiftingLuggage: state.shifting_luggage,
+      templateId: '',
+      invoiceData: state.date_of_invoice,
+      vehicleNo: state.vehicle_no,
+      consignmentNo: state.consignment_no,
+      movingMode: state.mode_of_moving,
+      deliveryDate: state.date_of_delivery,
+      vehicleType: '',
+      manufacture: '',
+      model: '',
+      partyName: state.party_name,
+      mobile: state.party_mobile_no,
+      billingBy: state.billing_type,
+      billingDetails:
+        state.billing_type == billingByOptions[1] ? billingInfo : '',
+      pickupAddress: pickupAddress,
+      openBody: false,
+      closeBody: false,
+      seperate: '',
+      sharing: '',
+      isPartLoad: state.freight_load_type,
+      isFullLoad: state.freight_load_type,
+      freightCharges: state.freight_charges,
+      freightHSNCode: state.freight_hsn,
+
+      pickupChargesStatus: state.pickup_charge,
+      pickupChargesAmount: state.pickup_charge_amount,
+      pickupHSNCode: state.pickup_charge_hsn,
+
+      doorDeliveryStatus: state.door_delivery_charge,
+      doorDeliveryAmount: state.door_delivery_amount,
+      doorDeliveryHSNCode: state.door_delivery_hsn,
+
+      packagingChargesStatus: state.packing_charge,
+      packagingChargesAmount: state.packing_amount,
+      packagingHSNCode: state.packing_hsn,
+
+      packingMaterialChargesStatus: state.packing_material_charge,
+      packingMaterialChargesAmount: state.packing_material_amount,
+      packingMaterialHSNCode: state.packing_material_hsn,
+
+      loadingChargesStatus: state.loading_charge,
+      loadingChargesAmount: state.loading_amount,
+      loadingHSNCode: state.loading_hsn,
+
+      unLoadingChargesStatus: state.unloading_charge,
+      unLoadingChargesAmount: state.unloading_amount,
+      unLoadingHSNCode: state.unloading_hsn,
+
+      unPackagingChargesStatus: state.unpacking_charge,
+      unPackagingChargesAmount: state.unpacking_amount,
+      unPackagingHSNCode: state.unpakcing_hsn,
+
+      otherCharges: _getOtherCharges(),
+      surchargeCharges: state.surcharge_percent,
+      discountType: state.discount_in_invoice,
+      discountAmount: state.discount_value_or_percent,
+      gstStatus: state.gst_on_invoice,
+      gstType: state.gst_type,
+      gstPercentage: state.gst_percent,
+      gstPaidBy: state.gst_paid_by,
+      transitInsurance: _getTransitInsurance(),
+      storageCharges: _getStorageCharge(),
+    };
+  };
 
   return (
     <AvoidSoftInputViewHOC>
@@ -63,7 +219,9 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({}) => {
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Date of Invoice" style={styles.label} />
-                <DatePickerComponent onDateSelect={() => {}} />
+                <DatePickerComponent onDateSelect={(date:Date) => {
+                  setDateOfInvoice(formatDate4(date));
+                }} />
               </View>
             </View>
             <View style={styles.elementContainer}>
@@ -71,12 +229,16 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({}) => {
                 <Label text="Shifting Luggage" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
-                  onSelect={() => {}}
+                  onSelect={(item:TDropdownItem) => {
+                    setShiftingLuggage(item.label);
+                  }}
                 />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Date of Delivery" style={styles.label} />
-                <DatePickerComponent onDateSelect={() => {}} />
+                <DatePickerComponent onDateSelect={(date:Date) => {
+                  setDateOfDelivery(formatDate4(date));
+                }} />
               </View>
             </View>
             <Spacer height={4} />
@@ -93,8 +255,10 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({}) => {
               <View style={styles.itemContainer}>
                 <Label text="Mode of Moving" style={styles.label} />
                 <DropdownComponent
-                  data={shiftingLuggages}
-                  onSelect={() => {}}
+                  data={modeOfMovingOptions}
+                  onSelect={(item:TDropdownItem) => {
+                    setModeOfMoving(item.label);
+                  }}
                 />
               </View>
             </View>

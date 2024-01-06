@@ -88,6 +88,7 @@ export enum ACTION {
   TRANSIT_INSURANCE_CHARGE = 'TRANSIT_INSURANCE_CHARGE',
   TRANSIT_INSURANCE_GST = 'TRANSIT_INSURANCE_GST',
   TRANSIT_GOODS_VALUE = 'TRANSIT_GOODS_VALUE',
+  TRANSIT_INSURANCE_CHARGES = 'TRANSIT_INSURANCE_CHARGES',
   //
   STORAGE = 'STORAGE',
   STORAGE_DURATION = 'STORAGE_DURATION',
@@ -102,6 +103,13 @@ export interface IOtherCharge {
   rate_per_item: string;
   amount: string;
   hsn_code: string;
+}
+
+export interface ITransitCharge {
+  transit_insurance_charge: string;
+  transit_luggage: string;
+  transit_insurance_gst: string;
+  transit_goods_value: string;
 }
 
 interface State {
@@ -180,11 +188,8 @@ interface State {
   gst_paid_by: string;
   // **** Insurace ****
   transit_insurance: string;
-  transit_luggage: string;
   transit_insurance_type: string;
-  transit_insurance_charge: string;
-  transit_insurance_gst: string;
-  transit_goods_value: string;
+  transit_charges: ITransitCharge[];
   // **** Storage ****
   storage: string;
   storage_duration: string;
@@ -195,7 +200,7 @@ interface State {
 
 interface Action {
   type: ACTION;
-  payload: string | boolean | IOtherCharge[];
+  payload: string | boolean | IOtherCharge[] | ITransitCharge[];
 }
 
 export const initialState: State = {
@@ -273,11 +278,8 @@ export const initialState: State = {
   gst_paid_by: '',
   // **** Insurace ****
   transit_insurance: '',
-  transit_luggage: '',
   transit_insurance_type: '',
-  transit_insurance_charge: '',
-  transit_insurance_gst: '',
-  transit_goods_value: '',
+  transit_charges: [],
   // **** Storage ****
   storage: '',
   storage_duration: '',
@@ -422,16 +424,10 @@ export const invoiceReducer = (state: State, action: Action) => {
     // **** Insurace ****
     case ACTION.TRANSIT_INSURANCE:
       return {...state, transit_insurance: payload as string};
-    case ACTION.TRANSIT_LUGGAGE:
-      return {...state, transit_luggage: payload as string};
     case ACTION.TRANSIT_INSURANCE_TYPE:
       return {...state, transit_insurance_type: payload as string};
-    case ACTION.TRANSIT_INSURANCE_CHARGE:
-      return {...state, transit_insurance_charge: payload as string};
-    case ACTION.TRANSIT_INSURANCE_GST:
-      return {...state, transit_insurance_gst: payload as string};
-    case ACTION.TRANSIT_GOODS_VALUE:
-      return {...state, transit_goods_value: payload as string};
+    case ACTION.TRANSIT_INSURANCE_CHARGES:
+        return {...state, transit_charges: payload as ITransitCharge[]};
     // **** Storage ****
     case ACTION.STORAGE:
       return {...state, storage: payload as string};
