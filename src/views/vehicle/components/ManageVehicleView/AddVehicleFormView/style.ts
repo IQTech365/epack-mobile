@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   label: {
     color: COLOR_BLACK,
     fontSize: 14,
-    zIndex: 1,
+    fontFamily: 'WorkSans-Medium'
   },
   inputContainer: {
     width: '100%',
@@ -139,7 +139,8 @@ const styles = StyleSheet.create({
   },
   cameraText: {
     textAlign: 'center',
-    color: COLOR_BLUE,
+    color: COLOR_BLACK,
+    fontFamily: 'WorkSans-Regular'
   },
   mainPhotoViewContainer: {
     width: width * 0.9,
@@ -199,6 +200,23 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: COLOR_WHITE,
     fontWeight: '400'
+  },
+  iconStyle:{
+    borderColor: 'red',
+    borderRadius: 0,
+    width: 18,
+    height: 18,
+  },
+  innerIconStyle:{
+    borderWidth: 1,
+    borderRadius: 0,
+    width: 18,
+    height: 18,
+  },
+  textStyle2:{
+    fontFamily: 'WorkSans-Regular',
+    textDecorationLine: 'none',
+    color: COLOR_BLACK,
   }
 });
 

@@ -41,13 +41,13 @@ const styles = StyleSheet.create({
   labelText: {
     color: COLOR_BLACK,
     fontSize: 16,
-    fontWeight: '500',
+    fontFamily: 'WorkSans-Medium',
     marginRight: 8,
   },
   valueText: {
     color: COLOR_BLACK,
     fontSize: 15,
-    fontWeight: '400',
+    fontFamily: 'WorkSans-Regular',
   }
 });
 

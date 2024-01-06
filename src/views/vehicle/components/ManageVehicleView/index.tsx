@@ -63,7 +63,7 @@ const ManageVehicleView: React.FC<IAddLorryDetailViewProps> = ({navigation}) => 
   const showEmptyView = () => {
     return (
       <View style={styles.emptyContainer}>
-        <Text>No AddLorryDetail Found!</Text>
+        <Text style={styles.text}>No Vehicle List Found!</Text>
       </View>
     );
   };

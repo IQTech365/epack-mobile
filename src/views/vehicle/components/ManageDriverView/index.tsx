@@ -62,7 +62,7 @@ const ManageDriverView: React.FC<IAddDriverDetailViewProps> = ({}) => {
   const showEmptyView = () => {
     return (
       <View style={styles.emptyContainer}>
-        <Text>No AddDriverDetail Found!</Text>
+        <Text style={styles.text}>No Driver List Found!</Text>
       </View>
     );
   };

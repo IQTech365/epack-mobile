@@ -124,13 +124,13 @@ const UploadAadharPhoto: React.FC<IProps> = ({imageSide}) => {
         <View style={styles.photoItemContainer}>
           <TouchableOpacity style={styles.button} onPress={handleLaunchGallery}>
             <>
-              <Text>Gallery</Text>
+              <Text style={styles.cameraText}>Gallery</Text>
               <GalleryIcon width={35} height={35} />
             </>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={handleLaunchCamera}>
             <>
-              <Text>Camera</Text>
+              <Text style={styles.cameraText}>Camera</Text>
               <CameraIcon width={35} height={35} />
             </>
           </TouchableOpacity>

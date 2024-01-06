@@ -84,22 +84,9 @@ const DriverCurrentAddressView: React.FC<Props> = ({}) => {
         <BouncyCheckbox
           text={'Same as permanent address'}
           fillColor={COLOR_BLUE}
-          iconStyle={{
-            borderColor: 'red',
-            borderRadius: 0,
-            width: 16,
-            height: 16,
-          }}
-          innerIconStyle={{
-            borderWidth: 1,
-            borderRadius: 0,
-            width: 16,
-            height: 16,
-          }}
-          textStyle={{
-            fontFamily: 'JosefinSans-Regular',
-            textDecorationLine: 'none',
-          }}
+          iconStyle={styles.iconStyle}
+          innerIconStyle={styles.innerIconStyle}
+          textStyle={styles.textStyle2}
           style={{marginRight: 15, marginBottom: 10}}
           textContainerStyle={{paddingLeft: 0}}
           onPress={(isChecked: boolean) => {
@@ -122,13 +109,14 @@ const DriverCurrentAddressView: React.FC<Props> = ({}) => {
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
+                placeholder='Enter Pincode'
               />
             </View>
             <View style={styles.textContainer}>
               <Label text="State" style={styles.label} />
               <EpackDropdown
                 data={states}
-                placeholder={'please select or enter'}
+                placeholder={'Please select or enter'}
                 hanldeData={setCurrentAddState}
                 //@ts-ignore
                 ref={stateDropdownCompRef}
@@ -141,7 +129,7 @@ const DriverCurrentAddressView: React.FC<Props> = ({}) => {
               <Label text="City" style={styles.label} />
               <EpackDropdown
                 data={cities}
-                placeholder={'please select or enter'}
+                placeholder={'Please select or enter'}
                 hanldeData={setCurrentAddCity}
                 //@ts-ignore
                 ref={cityDropdownCompRef}
@@ -151,7 +139,7 @@ const DriverCurrentAddressView: React.FC<Props> = ({}) => {
               <Label text="Locality" style={styles.label} />
               <EpackDropdown
                 data={localities}
-                placeholder={'please select or enter'}
+                placeholder={'Please select or enter'}
                 hanldeData={setCurrentAddLocality}
                 //@ts-ignore
                 ref={localityDropdownCompRef}

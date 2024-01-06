@@ -156,13 +156,13 @@ const UploadPhotoView: React.FC<Props> = ({title, photo}) => {
       <View style={styles.photoCaptureContainer}>
         <TouchableOpacity style={styles.button} onPress={handleLaunchGallery}>
           <>
-            <Text>Gallery</Text>
+            <Text style={styles.cameraText}>Gallery</Text>
             <GalleryIcon width={50} height={50} />
           </>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={handleLaunchCamera}>
           <>
-            <Text>Camera</Text>
+            <Text style={styles.cameraText}>Camera</Text>
             <CameraIcon width={50} height={50} />
           </>
         </TouchableOpacity>

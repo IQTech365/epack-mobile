@@ -81,13 +81,14 @@ const DriverPermanentAddressView: React.FC<Props> = ({}) => {
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
+            placeholder='Enter Pincode'
           />
         </View>
         <View style={styles.textContainer}>
           <Label text="State" style={styles.label} />
           <EpackDropdown
             data={states}
-            placeholder={'please select or enter'}
+            placeholder={'Please select or enter'}
             hanldeData={setPermanentAddState}
             //@ts-ignore
             ref={stateDropdownCompRef}
@@ -100,7 +101,7 @@ const DriverPermanentAddressView: React.FC<Props> = ({}) => {
           <Label text="City" style={styles.label} />
           <EpackDropdown
             data={cities}
-            placeholder={'please select or enter'}
+            placeholder={'Please select or enter'}
             hanldeData={setPermanentAddCity}
             //@ts-ignore
             ref={cityDropdownCompRef}
@@ -110,7 +111,7 @@ const DriverPermanentAddressView: React.FC<Props> = ({}) => {
           <Label text="Locality" style={styles.label} />
           <EpackDropdown
             data={localities}
-            placeholder={'please select or enter'}
+            placeholder={'Please select or enter'}
             hanldeData={setPermanentAddLocality}
             //@ts-ignore
             ref={localityDropdownCompRef}
