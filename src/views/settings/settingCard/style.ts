@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
     color: COLOR_BLUE,
     zIndex: 999,
     marginTop: 10,
+    fontFamily: 'WorkSans-Bold'
   },
   gearContainer: {
     position: 'absolute',

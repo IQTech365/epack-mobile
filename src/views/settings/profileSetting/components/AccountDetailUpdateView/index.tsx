@@ -21,6 +21,7 @@ import { addPaymentMethodRequest, getBanksRequest, resetAddPaymentMethodRequest 
 import Spinner from '../../../../../common/Spinner';
 import { ISubmoduleData } from '../../../../../interface/setting/packerProfile/ISubmodule';
 import useCompanyId from '../../../../../hooks/useCompanyId';
+import { ToastType, showToast } from '../../../../../utils/utility';
 interface IAccountDetailsProps {}
 
 interface IAccountOptions {
@@ -122,18 +123,10 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
 
   useEffect(() => {
     if (!addPaymentMethodRequesting && addPaymentMethodSuccess) {
-      Toast.show({
-        type: 'success',
-        text1: 'Account Detail',
-        text2: 'Account Detail has been added successfully',
-      });
+      showToast('Account Detail Added.', ToastType.SUCCESS);
       dispatch(resetAddPaymentMethodRequest());
     } else if (!addPaymentMethodRequesting && addPaymentMethodFailure) {
-      Toast.show({
-        type: 'error',
-        text1: 'Account Detail',
-        text2: 'Error in adding Account Detail. Please try again!',
-      });
+      showToast('Account Detail Not Added.', ToastType.ERROR);
       dispatch(resetAddPaymentMethodRequest());
     }
   }, [addPaymentMethodRequesting, addPaymentMethodSuccess, addPaymentMethodFailure]);
@@ -242,22 +235,9 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
                   fillColor={COLOR_BLUE}
                   unfillColor="#FFFFFF"
                   text={item.submoduleName}
-                  iconStyle={{
-                    borderColor: 'red',
-                    borderRadius: 0,
-                    width: 18,
-                    height: 18,
-                  }}
-                  innerIconStyle={{
-                    borderWidth: 1,
-                    borderRadius: 0,
-                    width: 18,
-                    height: 18,
-                  }}
-                  textStyle={{
-                    fontFamily: 'JosefinSans-Regular',
-                    textDecorationLine: 'none',
-                  }}
+                  iconStyle={styles.iconStyle}
+                  innerIconStyle={styles.innerIconStyle}
+                  textStyle={styles.textStyle2}
                   style={{marginRight: 15}}
                   textContainerStyle={{paddingLeft: 0}}
                   onPress={(isChecked: boolean) => {

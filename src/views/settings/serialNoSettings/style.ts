@@ -65,6 +65,11 @@ const styles = StyleSheet.create({
         backgroundColor: COLOR_BLUE,
         borderRadius: 5,
     },
+    text: {
+        fontFamily: 'WorkSans-Regular',
+        color: COLOR_BLACK,
+        fontSize: 14,
+    }
 });
 
 export default styles;

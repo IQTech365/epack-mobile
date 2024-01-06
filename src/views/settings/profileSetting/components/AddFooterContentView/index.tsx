@@ -38,7 +38,7 @@ const AddFooterContentView = () => {
   const showEmptyView = () => {
     return (
       <View style={styles.emptyContainer2}>
-        <Text>No content Found!</Text>
+        <Text style={styles.text}>No content Found!</Text>
       </View>
     );
   };

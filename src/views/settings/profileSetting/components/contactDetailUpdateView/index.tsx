@@ -185,22 +185,9 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
                   fillColor={COLOR_BLUE}
                   unfillColor="#FFFFFF"
                   text={item.submoduleName}
-                  iconStyle={{
-                    borderColor: 'red',
-                    borderRadius: 0,
-                    width: 18,
-                    height: 18,
-                  }}
-                  innerIconStyle={{
-                    borderWidth: 1,
-                    borderRadius: 0,
-                    width: 18,
-                    height: 18,
-                  }}
-                  textStyle={{
-                    fontFamily: 'JosefinSans-Regular',
-                    textDecorationLine: 'none',
-                  }}
+                  iconStyle={styles.iconStyle}
+                  innerIconStyle={styles.innerIconStyle}
+                  textStyle={styles.textStyle2}
                   style={{marginRight: 15}}
                   textContainerStyle={{paddingLeft: 0}}
                   onPress={(isChecked: boolean) => {

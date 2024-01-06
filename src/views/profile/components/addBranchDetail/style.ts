@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import { COLOR_GRAY, COLOR_GRAY2 } from '../../../../utils/colors';
+import { COLOR_BLACK, COLOR_GRAY, COLOR_GRAY2 } from '../../../../utils/colors';
 const {width} = Dimensions.get('window');
 const styles = StyleSheet.create({
     container:{
@@ -32,8 +32,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
       },
       text: {
-        color: COLOR_GRAY,
+        color: COLOR_BLACK,
         fontSize: 14,
+        fontFamily: 'WorkSans-Regular'
       },
 });
 

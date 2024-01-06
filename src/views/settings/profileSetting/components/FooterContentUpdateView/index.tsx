@@ -28,6 +28,7 @@ import Toast from 'react-native-toast-message';
 import Spinner from '../../../../../common/Spinner';
 import { ISubmoduleData } from '../../../../../interface/setting/packerProfile/ISubmodule';
 import useCompanyId from '../../../../../hooks/useCompanyId';
+import { ToastType, showToast } from '../../../../../utils/utility';
 
 interface IContentUpdateProps {}
 
@@ -82,20 +83,12 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({}) => {
 
   useEffect(() => {
     if (!addFooterContentRequesting && addFooterContentSuccess) {
-      Toast.show({
-        type: 'success',
-        text1: 'Footer Content',
-        text2: 'Footer content has been added successfully',
-      });
+      showToast('Footer Content Added', ToastType.SUCCESS);
       dispatch(resetFooterContentRequest());
       // dispatch(getEnquiriesRequest(companyId));
       // navigation.goBack();
     } else if (!addFooterContentRequesting && addFooterContentFailure) {
-      Toast.show({
-        type: 'error',
-        text1: 'Footer Content',
-        text2: 'Error in adding Footer Content. Please try again!',
-      });
+      showToast('Footer Content Not Added', ToastType.ERROR);
       dispatch(resetFooterContentRequest());
     }
   }, [addFooterContentRequesting, addFooterContentSuccess, addFooterContentFailure]);
@@ -163,22 +156,9 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({}) => {
                   fillColor={COLOR_BLUE}
                   unfillColor="#FFFFFF"
                   text={item.submoduleName}
-                  iconStyle={{
-                    borderColor: 'red',
-                    borderRadius: 0,
-                    width: 18,
-                    height: 18,
-                  }}
-                  innerIconStyle={{
-                    borderWidth: 1,
-                    borderRadius: 0,
-                    width: 18,
-                    height: 18,
-                  }}
-                  textStyle={{
-                    fontFamily: 'JosefinSans-Regular',
-                    textDecorationLine: 'none',
-                  }}
+                  iconStyle={styles.iconStyle}
+                  innerIconStyle={styles.innerIconStyle}
+                  textStyle={styles.textStyle2}
                   style={{marginRight: 15}}
                   textContainerStyle={{paddingLeft: 0}}
                   onPress={(isChecked: boolean) => {

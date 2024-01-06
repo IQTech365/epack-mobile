@@ -42,6 +42,7 @@ import {
   ISubmoduleFeature,
 } from '../../../interface/setting/role/IModule';
 import useCompanyId from '../../../hooks/useCompanyId';
+import { ToastType, showToast } from '../../../utils/utility';
 
 const RoleManagementView: React.FC<{}> = ({}) => {
   const [entityType, setEntityType] = useState<string>(entityOptions[0].label);
@@ -244,11 +245,7 @@ const RoleManagementView: React.FC<{}> = ({}) => {
       };
       dispatch(checkUsernameAvailabilityRequest(payload));
     } else {
-      Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: 'Please type keywords to find username.',
-      });
+      showToast('Pleae type another keywords!', ToastType.ERROR);
     }
   };
 
@@ -260,22 +257,9 @@ const RoleManagementView: React.FC<{}> = ({}) => {
             <BouncyCheckbox
               text={submodFeat.feature}
               fillColor={COLOR_BLUE}
-              iconStyle={{
-                borderColor: 'red',
-                borderRadius: 0,
-                width: 16,
-                height: 16,
-              }}
-              innerIconStyle={{
-                borderWidth: 1,
-                borderRadius: 0,
-                width: 16,
-                height: 16,
-              }}
-              textStyle={{
-                fontFamily: 'JosefinSans-Regular',
-                textDecorationLine: 'none',
-              }}
+              iconStyle={styles.iconStyle}
+              innerIconStyle={styles.innerIconStyle}
+              textStyle={styles.textStyle2}
               style={{marginRight: 15, marginBottom: 10}}
               textContainerStyle={{paddingLeft: 0}}
               onPress={(isChecked: boolean) => {
@@ -294,7 +278,7 @@ const RoleManagementView: React.FC<{}> = ({}) => {
       return submodulename.map((submod: ISubmodule, index: number) => {
         return (
           <View style={styles.submoduleContainer}>
-            <Text>{submod.subModuleName}</Text>
+            <Text style={styles.label}>{submod.subModuleName}</Text>
             <View style={styles.submoduleFeaturesContainer}>
               {showSubmoduleFeatures(submod.submodulesfeatures)}
             </View>
@@ -349,29 +333,17 @@ const RoleManagementView: React.FC<{}> = ({}) => {
       !checkUsernameAvailabilityRequesting &&
       checkUsernameAvailabilityFailure
     ) {
-      Toast.show({
-        type: 'error',
-        text1: 'Username',
-        text2: 'Error in checking username availability. Please try again!',
-      });
+      showToast('Error checking username. Try again!', ToastType.ERROR);
       dispatch(resetCheckUsernameAvailabilityRequest());
     }
   }, [checkUsernameAvailabilityRequesting, checkUsernameAvailabilityFailure]);
 
   useEffect(() => {
     if (!addUserRoleRequesting && addUserRoleSuccess) {
-      Toast.show({
-        type: 'success',
-        text1: 'User Role',
-        text2: 'User role has been added successfully. Please try again!',
-      });
+      showToast('User Role Added.', ToastType.SUCCESS);
       dispatch(resetAddUserRoleRequest());
     } else if (!addUserRoleRequesting && addUserRoleFailure) {
-      Toast.show({
-        type: 'error',
-        text1: 'User Role',
-        text2: 'Error in adding new User Role. Please try again!',
-      });
+      showToast('User Role Not Added.', ToastType.ERROR);
       dispatch(resetAddUserRoleRequest());
     }
   }, [addUserRoleRequesting, addUserRoleSuccess, addUserRoleFailure]);
@@ -466,22 +438,9 @@ const RoleManagementView: React.FC<{}> = ({}) => {
                     key={`${index}`}
                     text={role.roleType}
                     fillColor={COLOR_BLUE}
-                    iconStyle={{
-                      borderColor: 'red',
-                      borderRadius: 0,
-                      width: 16,
-                      height: 16,
-                    }}
-                    innerIconStyle={{
-                      borderWidth: 1,
-                      borderRadius: 0,
-                      width: 16,
-                      height: 16,
-                    }}
-                    textStyle={{
-                      fontFamily: 'JosefinSans-Regular',
-                      textDecorationLine: 'none',
-                    }}
+                    iconStyle={styles.iconStyle}
+                    innerIconStyle={styles.innerIconStyle}
+                    textStyle={styles.textStyle2}
                     style={{marginRight: 15, marginBottom: 10}}
                     textContainerStyle={{paddingLeft: 0}}
                     onPress={(isChecked: boolean) => {

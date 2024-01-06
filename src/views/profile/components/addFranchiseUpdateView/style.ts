@@ -2,7 +2,6 @@ import {StyleSheet, Dimensions} from 'react-native';
 import {
   COLOR_BLACK,
   COLOR_BLUE,
-  COLOR_GRAY,
   COLOR_GRAY2,
   COLOR_WHITE,
 } from '../../../../utils/colors';
@@ -39,6 +38,7 @@ const styles = StyleSheet.create({
   label: {
     color: COLOR_BLACK,
     fontSize: 14,
+    fontFamily: 'WorkSans-Medium'
   },
   inputContainer: {
     width: '100%',

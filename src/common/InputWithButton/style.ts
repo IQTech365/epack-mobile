@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   buttonText: {
       fontSize: 16,
       color: COLOR_WHITE,
-      fontWeight: '500',
+      fontFamily: 'WorkSans-Bold'
   },
 });
 

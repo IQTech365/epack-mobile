@@ -82,7 +82,7 @@ const AddSerialNoView = () => {
   const showEmptyView = () => {
     return (
       <View style={styles.emptyContainer2}>
-        <Text>No Serial No.# Found!</Text>
+        <Text style={styles.text}>No Serial No.# Found!</Text>
       </View>
     );
   };

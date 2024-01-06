@@ -25,6 +25,7 @@ import Spinner from '../../../../common/Spinner';
 import usePincodeHook from '../../../../hooks/usePincodeHook';
 import {getCities, getLocalities, getStates} from '../../../../utils/formatter';
 import useCompanyId from '../../../../hooks/useCompanyId';
+import { ToastType, showToast } from '../../../../utils/utility';
 
 const AddBranchUpdateView: React.FC<{}> = ({}) => {
   const [state, dispatch] = useReducer(addBranchReducer, initialState);
@@ -159,18 +160,10 @@ const AddBranchUpdateView: React.FC<{}> = ({}) => {
 
   useEffect(() => {
     if (!addBranchRequesting && addBranchSuccess) {
-      Toast.show({
-        type: 'success',
-        text1: 'Add Branch',
-        text2: 'Branch has been added successfully',
-      });
+      showToast('New Branch Added.', ToastType.SUCCESS);
       dispatch2(restAddBranchRequest());
     } else if (!addBranchRequesting && addBranchFailure) {
-      Toast.show({
-        type: 'error',
-        text1: 'Add Branch',
-        text2: 'Error in adding Branch. Please try again!',
-      });
+      showToast('New Branch Not Added. Try again!', ToastType.ERROR);
       dispatch2(restAddBranchRequest());
     }
   }, [addBranchRequesting, addBranchSuccess, addBranchFailure]);

@@ -39,8 +39,7 @@ const styles = StyleSheet.create({
   label: {
     color: COLOR_BLACK,
     fontSize: 14,
-    zIndex: 1, 
-  
+    fontFamily: 'WorkSans-Medium',
   },
   inputContainer: {
     width: '100%',

@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
   label: {
     color: COLOR_BLACK,
     fontSize: 14,
+    fontFamily: 'WorkSans-Medium'
   },
   innerCircleStyle: {
     width: '80%',
@@ -96,6 +97,23 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLOR_GRAY2,
   },
+  iconStyle:{
+    borderColor: 'red',
+    borderRadius: 0,
+    width: 18,
+    height: 18,
+  },
+  innerIconStyle:{
+    borderWidth: 1,
+    borderRadius: 0,
+    width: 18,
+    height: 18,
+  },
+  textStyle2:{
+    fontFamily: 'WorkSans-Regular',
+    textDecorationLine: 'none',
+    color: COLOR_BLACK,
+  }
 });
 
 export default styles;

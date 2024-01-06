@@ -3,7 +3,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SettingStackRoute } from '../utils/constants';
 import PackersProfileSetting from '../views/settings/profileSetting';
 import SettingsView from '../views/settings';
-import SerialNoSettingPageView from '../views/company/serialNoSettings';
 import AddSerialNoView from '../views/settings/serialNoSettings';
 import RoleManagementView from '../views/settings/roleManagement';
 import TemplateSettingPageView from '../views/settings/templateSettings';

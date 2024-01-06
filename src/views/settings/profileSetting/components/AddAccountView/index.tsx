@@ -132,7 +132,7 @@ const AddAccountView = () => {
   const showEmptyView = () => {
     return (
       <View style={styles.emptyContainer2}>
-        <Text>No Payment Method Found!</Text>
+        <Text style={styles.text}>No Payment Info Found!</Text>
       </View>
     );
   };

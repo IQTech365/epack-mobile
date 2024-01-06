@@ -50,11 +50,12 @@ const styles = StyleSheet.create({
   labelText: {
     color: COLOR_GRAY,
     fontSize: 13,
-    fontWeight: '600',
+    fontFamily: 'WorkSans-Medium'
   },
   valueText: {
     color: COLOR_GRAY,
     fontSize: 12,
+    fontFamily: 'WorkSans-Regular'
   },
 });
 

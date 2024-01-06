@@ -50,7 +50,7 @@ const AddContactView = () => {
   const showEmptyView = () => {
     return (
       <View style={styles.emptyContainer2}>
-        <Text>No contact Info Found!</Text>
+        <Text style={styles.text}>No contact Info Found!</Text>
       </View>
     );
   };

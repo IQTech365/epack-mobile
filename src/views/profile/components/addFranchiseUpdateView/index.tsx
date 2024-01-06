@@ -6,7 +6,6 @@ import React, {
   useState,
 } from 'react';
 import {View, TextInput} from 'react-native';
-import Toast from 'react-native-toast-message';
 import AvoidSoftInputViewHOC from '../../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../../common/Spacer';
 import styles from './style';
@@ -31,6 +30,7 @@ import {
 } from '../../../../redux/slices/MyProfile';
 import EpackDropdown from '../../../../common/DropdownComponent2';
 import useCompanyId from '../../../../hooks/useCompanyId';
+import { ToastType, showToast } from '../../../../utils/utility';
 
 const AddFranchiseUpdateView: React.FC<{}> = ({}) => {
   const [state, dispatch] = useReducer(addFranchiseReducer, initialState);
@@ -181,18 +181,11 @@ const AddFranchiseUpdateView: React.FC<{}> = ({}) => {
 
   useEffect(() => {
     if (!addFranchiseRequesting && addFranchiseuccess) {
-      Toast.show({
-        type: 'success',
-        text1: 'Add Franchise',
-        text2: 'Add Franchise has been added successfully',
-      });
+      showToast('New Franchise Added.', ToastType.SUCCESS);
       dispatch2(restAddFranchiseRequest());
     } else if (!addFranchiseRequesting && addFranchiseFailure) {
-      Toast.show({
-        type: 'error',
-        text1: 'Add Franchise',
-        text2: 'Error in adding Franchise. Please try again!',
-      });
+     
+      showToast('New Franchise Not Added. Try again!', ToastType.ERROR);
       dispatch2(restAddFranchiseRequest());
     }
   }, [addFranchiseRequesting, addFranchiseuccess, addFranchiseFailure]);
