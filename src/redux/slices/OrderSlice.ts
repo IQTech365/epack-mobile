@@ -629,7 +629,7 @@ export const OrderSlice = createSlice({
       state.createInvoiceFailure = true;
       state.createInvoiceError = action.payload;
     },
-    resetCreateInvoiceRequest: (state, action: PayloadAction<any>) => {
+    resetCreateInvoiceRequest: (state) => {
       state.createInvoiceRequesting = false;
       state.createInvoiceSuccess = false;
       state.createInvoiceFailure = false;
@@ -790,6 +790,7 @@ export const {
   createInvoiceRequest,
   createInvoiceSuccess,
   createInvoiceFailure,
+  resetCreateInvoiceRequest,
   // Create Packing Material
   createPackingMaterialsRequest,
   createPackingMaterialsSuccess,

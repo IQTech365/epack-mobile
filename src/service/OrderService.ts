@@ -4,6 +4,7 @@ import {
   ADD_ENQUIRY,
   CREATE_BILTY,
   CREATE_CAR_CONDITION,
+  CREATE_INVOICE,
   CREATE_MONEY_RECEIPT,
   CREATE_PACKING_LIST,
   DELETE_PACKING_LIST_ITEM,
@@ -100,7 +101,7 @@ export const EditMoneyReceiptListService = async (id:string, requestBody: any): 
 export const CreateInvoiceService = async (payload: ICreateInvoiceRequest): Promise<ICreateInvoiceResponse> => {
     console.log('CreateInvoiceService--payload--', JSON.stringify(payload));
     const api = Api.getInstance();
-    return await api.post<ICreateInvoiceRequest, AxiosResponse<ICreateInvoiceResponse>>(payload, ADD_ENQUIRY);
+    return await api.post<ICreateInvoiceRequest, AxiosResponse<ICreateInvoiceResponse>>(payload, CREATE_INVOICE);
 }
 
 // TODO: refactor code once in use

@@ -11,6 +11,9 @@ import {
   createCarConditionFailure,
   createCarConditionRequest,
   createCarConditionSuccess,
+  createInvoiceFailure,
+  createInvoiceRequest,
+  createInvoiceSuccess,
   createMoneyReceiptFailure,
   createMoneyReceiptRequest,
   createMoneyReceiptSuccess,
@@ -70,6 +73,8 @@ import { ISingleOrderRequest } from '../interface/order/ISingleOrderRequest';
 import { ISingleEnquiryResponse } from '../interface/enquiry/ISingleEnquiryResponse';
 import { IHtmlTemplateRequest, IHtmlTemplateResponse } from '../interface/order/templates/ITemplateResponse';
 import { ICreatePackingMaterialRequest, ICreatePackingMaterialResponse, IDeletePackingListItemResponse, IGetPackingListRequest, IPackingListResponse } from '../interface/order/IPackingMaterialResponse';
+import { ICreateInvoiceRequest } from '../interface/order/ICreateInvoiceRequest';
+import { ICreateInvoiceResponse } from '../interface/order/ICreateInvoiceResponse';
 
 export function* addOrderSaga(action: PayloadAction<IAddOrderRequest>) {
   console.log('addOrderSaga--action--', JSON.stringify(action));
@@ -290,6 +295,17 @@ export function* createCarConditionSaga(
     }
   }
 
+  export function* createInvoiceSaga(action: PayloadAction<ICreateInvoiceRequest>) {
+    try {
+        const response: ICreateInvoiceResponse = yield call(OrderService.CreateInvoiceService, action.payload);
+        console.log('createInvoiceSaga-response----', JSON.stringify(response));
+        yield put(createInvoiceSuccess(response));
+    } catch (error) {
+        console.log('createInvoiceSaga-error----', JSON.stringify(error));
+        yield put(createInvoiceFailure(error));
+    }
+  }
+
 export function* watcherOrderSaga() {
   yield takeLatest(addOrderRequest.type, addOrderSaga);
   yield takeLatest(getOrdersRequest.type, getOrderListSaga);
@@ -308,4 +324,5 @@ export function* watcherOrderSaga() {
   yield takeLatest(createPackingMaterialsRequest.type, createPackingListSaga);
   yield takeLatest(getPackingMaterialsRequest.type, getPackingListSaga);
   yield takeLatest(deletePackingMaterialItemRequest.type, deletePackingListItemSaga);
+  yield takeLatest(createInvoiceRequest.type, createInvoiceSaga);
 }

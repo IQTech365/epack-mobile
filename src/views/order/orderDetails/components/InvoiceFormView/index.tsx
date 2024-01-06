@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
@@ -31,6 +31,10 @@ import {
 } from '../../../../../interface/order/ICreateInvoiceRequest';
 import { IOtherCharge, ITransitCharge } from './InvoiceReducer2';
 import { formatDate4 } from '../../../../../utils/formatter';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
+import { createInvoiceRequest, resetCreateInvoiceRequest } from '../../../../../redux/slices/OrderSlice';
+import Spinner from '../../../../../common/Spinner';
+import { ToastType, showToast } from '../../../../../utils/utility';
 
 interface IInvoiceFormViewProps {
   orderId: string;
@@ -50,6 +54,8 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId}) => {
     setShiftingLuggage,
   } = useInvoiceFormContextHook();
   console.log('InvoiceFormView--', JSON.stringify(state, null, ' '));
+  const dispatch = useAppDispatch();
+  const {createInvoiceRequesting, createInvoiceSuccess, createInvoiceFailure} = useAppSelector(state => state.Order);
 
   const _transformTransitCharge = ():IInvoiceTransitInsuranceCharge[] => {
     let list:IInvoiceTransitInsuranceCharge[] = [];
@@ -199,7 +205,18 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId}) => {
       transitInsurance: _getTransitInsurance(),
       storageCharges: _getStorageCharge(),
     };
+    dispatch(createInvoiceRequest(payload));
   };
+
+  useEffect(() => {
+    if(!createInvoiceRequesting && createInvoiceSuccess) {
+      showToast('New Invoice Created', ToastType.SUCCESS);
+      dispatch(resetCreateInvoiceRequest());
+    } else if(!createInvoiceRequesting && createInvoiceFailure) {
+      showToast('New Invoice Not Created. Try again!', ToastType.ERROR);
+      dispatch(resetCreateInvoiceRequest());
+    }
+  }, [createInvoiceRequesting, createInvoiceSuccess, createInvoiceFailure]);
 
   return (
     <AvoidSoftInputViewHOC>
@@ -352,6 +369,7 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId}) => {
           textStyle={styles.textStyle2}
         />
         <Spacer height={12} />
+        <Spinner show={createInvoiceRequesting} />
       </View>
     </AvoidSoftInputViewHOC>
   );
