@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   FlatList,
@@ -15,14 +15,19 @@ import CreateIcon from '../../../../../images/icons/create_icon.svg';
 import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
 import InvoiceFormView from '../InvoiceFormView';
 import {InvoiceFormContextProvider} from '../../../../../provider/InvoiceFormContextProvider';
+import { ISingleEnquiryData } from '../../../../../interface/enquiry/ISingleEnquiryResponse';
+import { getInvoiceListRequest } from '../../../../../redux/slices/OrderSlice';
+import Spinner from '../../../../../common/Spinner';
+import { IInvoice } from '../../../../../interface/order/IGetInvoiceListResponse';
 
 interface IInvoiceViewProps {
   orderId: string;
+  item: ISingleEnquiryData;
 }
 
-const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId}) => {
+const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item}) => {
   const dispatch = useAppDispatch();
-  const {} = useAppSelector(state => state.Order);
+  const {getInvoicesRequesting, invoices} = useAppSelector(state => state.Order);
 
   const [showInvoiceList, setShowInvoiceList] = useState<boolean>(false);
   const [createNewInvoice, setCreateNewInvoice] = useState<boolean>(true);
@@ -45,15 +50,28 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId}) => {
     );
   };
 
+  const _getInvoiceList = ():IInvoice[] => {
+    let list:IInvoice[] = [];
+    const {data} = invoices || {};
+    if(data && Array.isArray(data) && data.length > 0) {
+      list = data;
+    }
+    return list;
+  }
+
+  useEffect(() => {
+    dispatch(getInvoiceListRequest(orderId));
+  }, []);
+
   const handleOnRefresh = useCallback(() => {
-    // dispatch(getQuotationsRequest(enquiryId));
+    dispatch(getInvoiceListRequest(orderId));
   }, []);
 
   const showForm = () => {
     if (createNewInvoice) {
       return (
         <InvoiceFormContextProvider>
-          <InvoiceFormView orderId={orderId} />
+          <InvoiceFormView orderId={orderId} item={item} />
         </InvoiceFormContextProvider>
       );
     }
@@ -65,7 +83,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId}) => {
       return (
         <FlatList
           contentContainerStyle={{alignItems: 'center', paddingVertical: 10}}
-          data={[]}
+          data={_getInvoiceList()}
           refreshControl={
             <RefreshControl refreshing={false} onRefresh={handleOnRefresh} />
           }
@@ -102,6 +120,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId}) => {
       </View>
       {showForm()}
       {showList()}
+      <Spinner show={getInvoicesRequesting} />
     </>
   );
 };

@@ -22,6 +22,7 @@ import {
   IHtmlTemplateResponse,
 } from '../../interface/order/templates/ITemplateResponse';
 import { ICreatePackingMaterialRequest, ICreatePackingMaterialResponse, IDeletePackingListItemResponse, IGetPackingListRequest, IPackingListResponse } from '../../interface/order/IPackingMaterialResponse';
+import { IGetInvoiceListResponse } from '../../interface/order/IGetInvoiceListResponse';
 
 interface IOrderState {
   // Add Order
@@ -122,6 +123,11 @@ interface IOrderState {
   createInvoiceSuccess: boolean;
   createInvoiceFailure: boolean;
   createInvoiceError: any;
+  invoices: IGetInvoiceListResponse | null;
+  getInvoicesRequesting: boolean;
+  getInvoicesSuccess: boolean;
+  getInvoicesFailure:boolean;
+  getInvoiceError: any;
   // Create Packing Material
   createPackingMaterialInfo: ICreatePackingMaterialResponse | null;
   createPackingMaterialRequesting:boolean;
@@ -240,6 +246,11 @@ const initialState: IOrderState = {
   createInvoiceSuccess: false,
   createInvoiceFailure: false,
   createInvoiceError: null,
+  invoices: null,
+  getInvoicesRequesting: false,
+  getInvoicesSuccess: false,
+  getInvoicesFailure:false,
+  getInvoiceError: null,
   // Create Packing Material
   createPackingMaterialInfo: null,
   createPackingMaterialRequesting:false,
@@ -636,6 +647,27 @@ export const OrderSlice = createSlice({
       state.createInvoiceError = null;
       state.createInvoiceInfo = null;
     },
+    // Get Invoice List
+    getInvoiceListRequest: (
+      state,
+      action: PayloadAction<string>,
+    ) => {
+      state.getInvoicesRequesting = true;
+    },
+    getInvoiceListSuccess: (
+      state,
+      action: PayloadAction<IGetInvoiceListResponse>,
+    ) => {
+      state.getInvoicesRequesting = false;
+      state.getInvoicesSuccess = true;
+      state.invoices = action.payload;
+    },
+    getInvoiceListFailure: (state, action: PayloadAction<any>) => {
+      state.getInvoicesRequesting = false;
+      state.getInvoicesSuccess = false;
+      state.getInvoicesFailure = true;
+      state.getInvoiceError = action.payload;
+    },
      // Create Packing Material
      createPackingMaterialsRequest: (
       state,
@@ -791,6 +823,10 @@ export const {
   createInvoiceSuccess,
   createInvoiceFailure,
   resetCreateInvoiceRequest,
+  // Get Invoice List
+  getInvoiceListRequest,
+  getInvoiceListSuccess,
+  getInvoiceListFailure,
   // Create Packing Material
   createPackingMaterialsRequest,
   createPackingMaterialsSuccess,

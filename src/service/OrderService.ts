@@ -43,6 +43,7 @@ import { ISingleOrderRequest } from '../interface/order/ISingleOrderRequest';
 import { ISingleEnquiryResponse } from '../interface/enquiry/ISingleEnquiryResponse';
 import { IHtmlTemplateResponse } from '../interface/order/templates/ITemplateResponse';
 import { ICreatePackingMaterialRequest, ICreatePackingMaterialResponse, IDeletePackingListItemResponse, IGetPackingListRequest, IPackingListResponse } from '../interface/order/IPackingMaterialResponse';
+import { IGetInvoiceListResponse } from '../interface/order/IGetInvoiceListResponse';
 
 export const GetOrderDetailsService = async (payload: string): Promise<IOrderDetailsResponse> => {
     console.log('GetOrderDetailsService--payload--', JSON.stringify(payload));
@@ -105,10 +106,10 @@ export const CreateInvoiceService = async (payload: ICreateInvoiceRequest): Prom
 }
 
 // TODO: refactor code once in use
-export const GetInvoiceListService = async (payload: string): Promise<IGetMoneyReceiptsResponse> => {
+export const GetInvoiceListService = async (payload: string): Promise<IGetInvoiceListResponse> => {
     console.log('GetInvoiceListService--payload--', JSON.stringify(payload));
     const api = Api.getInstance();
-    return await api.get<IGetMoneyReceiptsResponse>(GET_INVOICE_LIST(payload));
+    return await api.get<IGetInvoiceListResponse>(GET_INVOICE_LIST(payload));
 }
 
 // TODO: refactor code once in use

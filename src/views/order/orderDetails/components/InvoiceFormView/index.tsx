@@ -35,12 +35,14 @@ import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import { createInvoiceRequest, resetCreateInvoiceRequest } from '../../../../../redux/slices/OrderSlice';
 import Spinner from '../../../../../common/Spinner';
 import { ToastType, showToast } from '../../../../../utils/utility';
+import { ISingleEnquiryData } from '../../../../../interface/enquiry/ISingleEnquiryResponse';
 
 interface IInvoiceFormViewProps {
   orderId: string;
+  item: ISingleEnquiryData;
 }
 
-const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId}) => {
+const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item}) => {
   const {
     state,
     setSameAsClientAddress,
@@ -53,7 +55,6 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId}) => {
     setConsignmentNo,
     setShiftingLuggage,
   } = useInvoiceFormContextHook();
-  console.log('InvoiceFormView--', JSON.stringify(state, null, ' '));
   const dispatch = useAppDispatch();
   const {createInvoiceRequesting, createInvoiceSuccess, createInvoiceFailure} = useAppSelector(state => state.Order);
 
@@ -127,11 +128,11 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId}) => {
     };
 
     const pickupAddress: IInvoicePickupAddress = {
-      shiftingFrom: state.city,
-      state: state.state,
-      city: state.city,
-      address: state.address,
-      pincode: state.pincode,
+      shiftingFrom: state.same_as_client_address ? item.pickupAddress.city : state.city,
+      state: state.same_as_client_address ? item.pickupAddress.state : state.state,
+      city: state.same_as_client_address ? item.pickupAddress.city : state.city,
+      address: state.same_as_client_address ? item.pickupAddress.address : state.address,
+      pincode: state.same_as_client_address ? item.pickupAddress.pincode : state.pincode,
       landmark: '',
       locality: '',
       floor: '',

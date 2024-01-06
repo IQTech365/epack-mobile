@@ -41,6 +41,9 @@ import {
   getCarConditionListFailure,
   getCarConditionListRequest,
   getCarConditionListSuccess,
+  getInvoiceListFailure,
+  getInvoiceListRequest,
+  getInvoiceListSuccess,
   getMoneyReceiptHtmlFailure,
   getMoneyReceiptHtmlRequest,
   getMoneyReceiptHtmlSuccess,
@@ -75,6 +78,7 @@ import { IHtmlTemplateRequest, IHtmlTemplateResponse } from '../interface/order/
 import { ICreatePackingMaterialRequest, ICreatePackingMaterialResponse, IDeletePackingListItemResponse, IGetPackingListRequest, IPackingListResponse } from '../interface/order/IPackingMaterialResponse';
 import { ICreateInvoiceRequest } from '../interface/order/ICreateInvoiceRequest';
 import { ICreateInvoiceResponse } from '../interface/order/ICreateInvoiceResponse';
+import { IGetInvoiceListResponse } from '../interface/order/IGetInvoiceListResponse';
 
 export function* addOrderSaga(action: PayloadAction<IAddOrderRequest>) {
   console.log('addOrderSaga--action--', JSON.stringify(action));
@@ -306,6 +310,17 @@ export function* createCarConditionSaga(
     }
   }
 
+  export function* getInvoiceListSaga(action: PayloadAction<string>) {
+    try {
+        const response: IGetInvoiceListResponse = yield call(OrderService.GetInvoiceListService, action.payload);
+        console.log('getInvoiceListSaga-response----', JSON.stringify(response));
+        yield put(getInvoiceListSuccess(response));
+    } catch (error) {
+        console.log('getInvoiceListSaga-error----', JSON.stringify(error));
+        yield put(getInvoiceListFailure(error));
+    }
+  }
+
 export function* watcherOrderSaga() {
   yield takeLatest(addOrderRequest.type, addOrderSaga);
   yield takeLatest(getOrdersRequest.type, getOrderListSaga);
@@ -325,4 +340,5 @@ export function* watcherOrderSaga() {
   yield takeLatest(getPackingMaterialsRequest.type, getPackingListSaga);
   yield takeLatest(deletePackingMaterialItemRequest.type, deletePackingListItemSaga);
   yield takeLatest(createInvoiceRequest.type, createInvoiceSaga);
+  yield takeLatest(getInvoiceListRequest.type, getInvoiceListSaga);
 }
