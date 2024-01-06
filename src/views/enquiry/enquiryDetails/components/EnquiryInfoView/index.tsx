@@ -23,6 +23,7 @@ import { NavigationProp } from '@react-navigation/native';
 import { IGetOrdersRequest } from '../../../../../interface/order/IGetOrdersRequest';
 import { getOrdersRequest } from '../../../../../redux/slices/OrderSlice';
 import { IEnquiry } from '../../../../../interface/quotation/IGetQuotationsResponse';
+import { ToastType, showToast } from '../../../../../utils/utility';
 
 interface IEnquiryInfoViewProps {
   item: IEnquiry|undefined;
@@ -98,11 +99,7 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId, navi
 
   useEffect(() => {
     if(!updateEnquiryStatusRequesting && updateEnquiryStatusSuccess) {
-      Toast.show({
-        type: 'success',
-        text1: 'Enquiry Status',
-        text2: `Enquiry status has been updated to ${enquiryStatus.toUpperCase()}`,
-      });
+      showToast('Enquiry Status Changed.', ToastType.SUCCESS);
       dispatch(resetUpdateEnquiryStatusRequest());
       _getEnquiriesRequest();
       if(enquiryStatus == 'Approved') {
@@ -110,11 +107,7 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId, navi
         navigation.goBack();
       }
     } else if(!updateEnquiryStatusRequesting && updateEnquiryStatusFailure) {
-      Toast.show({
-        type: 'error',
-        text1: 'Enquiry Status',
-        text2: 'Error in updating enquriy status. Please try again!',
-      });
+      showToast('Enquiry Status Not Changed. Try again!', ToastType.ERROR);
       setEnquiryStatus(item?.status as string);
       dispatch(resetUpdateEnquiryStatusRequest());
     }

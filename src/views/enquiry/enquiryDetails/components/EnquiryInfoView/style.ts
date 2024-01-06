@@ -42,19 +42,22 @@ const styles = StyleSheet.create({
     nameText: {
         color: COLOR_WHITE,
         fontSize: 18,
-        fontWeight: '600',
+        fontFamily: 'WorkSans-Bold'
     },
     labelText: {
         color: COLOR_WHITE,
-        fontSize: 12,
+        fontSize: 14,
+        fontFamily: 'WorkSans-Regular'
     },
     valueText: {
         color: COLOR_WHITE,
-        fontSize: 14, 
+        fontSize: 14,
+        fontFamily: 'WorkSans-Regular'
     },
     normalText: {
         color: COLOR_WHITE,
         fontSize: 14,
+        fontFamily: 'WorkSans-Medium'
     },
     hyphenText: {
         color: COLOR_WHITE,

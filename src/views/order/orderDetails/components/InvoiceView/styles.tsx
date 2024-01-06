@@ -27,6 +27,36 @@ const styles = StyleSheet.create({
         color: COLOR_BLACK,
         fontSize: 14,
         fontFamily: 'WorkSans-Regular'
+    },
+    itemMainWrapper: {
+        width: width * 0.9,
+        alignSelf: 'center',
+        justifyContent: 'center',
+    },
+    itemContentContainer: {
+        width: '100%',
+        alignSelf: 'center',
+        justifyContent: 'center',
+    },
+    labelContainer: {
+        width: '45%',
+        alignItems:'center',
+        justifyContent: 'flex-start',
+    },
+    valueContainer: {
+        width: '55%',
+        alignItems:'center',
+        justifyContent: 'flex-start',
+    },
+    label: {
+        color: COLOR_BLACK,
+        fontFamily: 'WorkSans-Medium',
+        fontSize: 14,
+    },
+    value: {
+        color: COLOR_BLACK,
+        fontFamily: 'WorkSans-Regular',
+        fontSize: 14,
     }
 });
 

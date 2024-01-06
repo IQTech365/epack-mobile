@@ -78,6 +78,21 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item}) => {
     return null;
   };
 
+  const renderInvoiceItem = (item:IInvoice, index: number) => {
+    return (
+      <View style={styles.itemMainWrapper} key={`${index}`}>
+        <View style={styles.itemContentContainer}>
+          <View style={styles.labelContainer}>
+            <Text style={styles.label}>Name</Text>
+          </View>
+          <View style={styles.labelContainer}>
+            <Text style={styles.value}>{item.partyName}</Text>
+          </View>
+        </View>
+      </View>
+    );
+  }
+
   const showList = () => {
     if (showInvoiceList) {
       return (
@@ -87,10 +102,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item}) => {
           refreshControl={
             <RefreshControl refreshing={false} onRefresh={handleOnRefresh} />
           }
-          //   renderItem={({item, index}) => (
-          //     <QuotationListItem item={item} index={1} onPress={() => {}} />
-          //   )}
-          renderItem={({item, index}) => <Text>Bilty item</Text>}
+            renderItem={({item, index}) => renderInvoiceItem(item, index)}
           ListEmptyComponent={showEmptyView()}
         />
       );
