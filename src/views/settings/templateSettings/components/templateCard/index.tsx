@@ -1,35 +1,21 @@
-import React from 'react';
-import {TouchableOpacity, Image} from 'react-native';
+import React, { FC, useState } from "react";
+import {Text, View, TouchableOpacity} from 'react-native';
 import styles from './style';
-import TemplatePlaceholder from '../../../../../images/logo_placeholder.png';
+import { ITemplate } from "../../../../../interface/setting/template/template";
 
-export interface ITemplate {
-  uri: string;
-  plan_name: string;
+interface IProps {
+    item:ITemplate;
+    index: number;
 }
 
-interface ITemplateCard {
-  data: ITemplate;
-  onPress: (index: number, parentIndex: number, planName: string) => void;
-  parentIndex: number;
-  currentParentIndex: number;
-  index: number;
-  selectedTemplateIndex: number;
-}
+const TemplateCard:FC<IProps> = ({item, index}) => {
+    const [activeIndex, setActiveIndex] = useState<number>(0);
 
-const TemplateCard: React.FC<ITemplateCard> = ({data, onPress, index, parentIndex, currentParentIndex, selectedTemplateIndex}) => {
+    const container = index == activeIndex ? styles.activeContainer : styles.container;
 
-  const imageUrl = data.uri ? {uri: data.uri} : TemplatePlaceholder;
-  const imageContainer = (selectedTemplateIndex === index && currentParentIndex === parentIndex) ? styles.activeContainer : styles.container;
-
-  return (
-    <TouchableOpacity
-      style={imageContainer}
-      onPress={() => onPress(index, parentIndex, data.plan_name)}
-      key={`${index}`}>
-      <Image source={imageUrl} style={styles.template} />
+    return <TouchableOpacity style={container} key={`${index}`}>
+        <Text style={styles.text}>{item.templateName}</Text>
     </TouchableOpacity>
-  );
-};
+}
 
 export default TemplateCard;

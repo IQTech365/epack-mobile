@@ -1,12 +1,6 @@
 import {takeLatest, put, call} from 'redux-saga/effects';
 import {PayloadAction} from '@reduxjs/toolkit';
 import * as SettingService from '../service/SettingService';
-import { 
-    verifyOtpSuccess, 
-    verifyOtpFailure, 
- } from '../redux/slices/OtpSlice';
-import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
-import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
 import { IAddFooterContentRequest } from '../interface/setting/packerProfile/footerContent/IAddFooterContentRequest';
 import { IAddFooterContentResponse } from '../interface/setting/packerProfile/footerContent/IAddFooterContentResponse';
 import { addContactFailure, addContactRequest, addContactSuccess, addDocumentFailure, addDocumentRequest, addDocumentSuccess, addFooterContentFailure, addFooterContentRequest, addFooterContentSuccess, addPaymentMethodFailure, addPaymentMethodRequest, addPaymentMethodSuccess, getContactsFailure, getContactsRequest, getContactsSuccess, getDocumentsFailure, getDocumentsRequest, getDocumentsSuccess, getFooterContentsFailure, getFooterContentsRequest, getFooterContentsSuccess, getPaymentMethodsFailure, getPaymentMethodsRequest, getPaymentMethodsSuccess, getSubmodulesFailure, getSubmodulesRequest, getSubmodulesSuccess, getUnitTypeFailure, getUnitTypeRequest, getUnitTypeSuccess } from '../redux/slices/ProfileSettingSlice';
@@ -29,6 +23,8 @@ import { ICreateSerialNoResponse } from '../interface/setting/serialNo/ICreateSe
 import { createSerialNoFailure, createSerialNoRequest, createSerialNoSuccess, getSerialNoFailure, getSerialNoRequest, getSerialNoSuccess } from '../redux/slices/SerialNoSettingSlice';
 import { IGetModulesResponse } from '../interface/setting/role/IModule';
 import { IGetUnitTypeResponse } from '../interface/setting/unitType/IGetunitTypeResponse';
+import { ITemplateListResponse } from '../interface/setting/template/template';
+import { getTemplateListFailure, getTemplateListRequest, getTemplateListSuccess } from '../redux/slices/TemplateSettingSlice';
 
 export function* addFooterContentSaga(action: PayloadAction<IAddFooterContentRequest>) {
     console.log('addFooterContentSaga--action--', JSON.stringify(action));
@@ -228,6 +224,17 @@ export function* getUnitTypeSaga(action: PayloadAction) {
     }
 }
 
+export function* getTemplateListSaga(action: PayloadAction) {
+    try {
+        const response: ITemplateListResponse = yield call(SettingService.GetTemplateListService);
+        console.log('getTemplateListSaga-response----', JSON.stringify(response));
+        yield put(getTemplateListSuccess(response));
+    } catch (error) {
+        console.log('getTemplateListSaga-error----', error);
+        yield put(getTemplateListFailure(JSON.stringify(error)));
+    }
+}
+
 export function* watcherSettingSaga() {
     yield takeLatest(addFooterContentRequest.type, addFooterContentSaga);
     yield takeLatest(getFooterContentsRequest.type, getFooterContentsSaga);
@@ -245,4 +252,5 @@ export function* watcherSettingSaga() {
     yield takeLatest(getModulesRequest.type, getModulesSaga);
     yield takeLatest(getSerialNoRequest.type, getSerialNoSaga);
     yield takeLatest(getUnitTypeRequest.type, getUnitTypeSaga);
+    yield takeLatest(getTemplateListRequest.type, getTemplateListSaga);
 }

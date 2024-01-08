@@ -1,22 +1,15 @@
 import React, {useCallback, useEffect} from 'react';
-import {Alert, View, useWindowDimensions} from 'react-native';
-import mockTemplateData2 from '../../../data/mockTemplateData2.json';
-import QuotationTemplateView from './components/quotationTemplateView';
-import BiltyTemplateView from './components/BiltyTemplateView';
-import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
-import InvoiceTemplateView from './components/InvoiceTemplateView';
-import CarConditionTemplateView from './components/CarConditionTemplateView';
-import MoneyReceiptTemplateView from './components/MoneyReceiptTemplateView';
-import {useCompanyRegistrationContextHook} from '../../../provider/CompanyRegistrationContextProvider';
+import {View, useWindowDimensions} from 'react-native';
+import {TabView, SceneMap, TabBar, Route} from 'react-native-tab-view';
 import styles from './style';
 import Button from '../../../common/Button';
 import {useAppDispatch, useAppSelector} from '../../../redux/hooks';
-import {
-  setIsRegistrationComplete,
-  setLoginStatus,
-} from '../../../utils/storage';
 import Spinner from '../../../common/Spinner';
 import Header from '../../../common/Header';
+import { getTemplateListRequest } from '../../../redux/slices/TemplateSettingSlice';
+import { ISubmodule } from '../../../interface/common/common';
+import { getSubmoduleRequest } from '../../../redux/slices/CommonSlice';
+import TemplatePageView from './components/TemplatePageView';
 
 interface ITemplateSettingPageViewProps {
   // currentStep: number;
@@ -27,142 +20,66 @@ const TemplateSettingPageView: React.FC<
   ITemplateSettingPageViewProps
 > = ({}) => {
   const layout = useWindowDimensions();
-  const {state, setDocumentTemplates} = useCompanyRegistrationContextHook();
   const [index, setIndex] = React.useState(0);
+  const [routes, setRoutes] = React.useState<Route[]>([]);
   const dispatch = useAppDispatch();
-  const {requesting, success, error, failure, companyInfo} = useAppSelector(
-    state => state.Company,
-  );
-  const {otpData} = useAppSelector(state => state.OTP);
+  const {getTemplatesRequesting} = useAppSelector(state => state.Template);
+  const {
+    getSubmodulesRequesting,
+    submodules,
+    getSubmodulesSuccess,
+    getSubmoduleFailure,
+  } = useAppSelector(state => state.Common);
 
-  const handleQuotationTemplateSelect = (
-    planCategory: string,
-    planIndex: number,
-    planName: string,
-  ) => {
-    const {documentTemplates} = state;
-    const tempObj = {
-      ...documentTemplates,
-      quotation: {planType: planCategory, templateId: planName},
-    };
-    // setDocumentTemplates(tempObj as IDocumentTemplate);
-  };
-
-  const handleBiltyTemplateSelect = (
-    planCategory: string,
-    planIndex: number,
-    planName: string,
-  ) => {
-    const {documentTemplates} = state;
-    const tempObj = {
-      ...documentTemplates,
-      bilty: {planType: planCategory, templateId: planName},
-    };
-    // setDocumentTemplates(tempObj as IDocumentTemplate);
-  };
-
-  const handleInvoiceTemplateSelect = (
-    planCategory: string,
-    planIndex: number,
-    planName: string,
-  ) => {
-    const {documentTemplates} = state;
-    const tempObj = {
-      ...documentTemplates,
-      invoice: {planType: planCategory, templateId: planName},
-    };
-    // setDocumentTemplates(tempObj as IDocumentTemplate);
-  };
-
-  const handleCarConditionTemplateSelect = (
-    planCategory: string,
-    planIndex: number,
-    planName: string,
-  ) => {
-    const {documentTemplates} = state;
-    const tempObj = {
-      ...documentTemplates,
-      car_condition: {planType: planCategory, templateId: planName},
-    };
-    // setDocumentTemplates(tempObj as IDocumentTemplate);
-  };
-
-  const handleMoneyReceiptTemplateSelect = (
-    planCategory: string,
-    planIndex: number,
-    planName: string,
-  ) => {
-    const {documentTemplates} = state;
-    const tempObj = {
-      ...documentTemplates,
-      money_receipt: {planType: planCategory, templateId: planName},
-    };
-    // setDocumentTemplates(tempObj as IDocumentTemplate);
-  };
-
-  const QuotationTemplateRoute = () => (
-    <QuotationTemplateView
-      data={mockTemplateData2}
-      onTemplateSelect={handleQuotationTemplateSelect}
-    />
-  );
-  const BiltyTemplateRoute = () => (
-    <BiltyTemplateView
-      data={mockTemplateData2}
-      onTemplateSelect={handleBiltyTemplateSelect}
-    />
-  );
-  const InvoiceTemplateRoute = () => (
-    <InvoiceTemplateView
-      data={mockTemplateData2}
-      onTemplateSelect={handleInvoiceTemplateSelect}
-    />
-  );
-  const CarConditionTemplateRoute = () => (
-    <CarConditionTemplateView
-      data={mockTemplateData2}
-      onTemplateSelect={handleCarConditionTemplateSelect}
-    />
-  );
-  const MoneyReceiptTemplateRoute = () => (
-    <MoneyReceiptTemplateView
-      data={mockTemplateData2}
-      onTemplateSelect={handleMoneyReceiptTemplateSelect}
-    />
-  );
-
-  const renderScene = SceneMap({
-    first: QuotationTemplateRoute,
-    second: BiltyTemplateRoute,
-    third: InvoiceTemplateRoute,
-    fourth: CarConditionTemplateRoute,
-    fifth: MoneyReceiptTemplateRoute,
-  });
-
-  const [routes] = React.useState([
-    {key: 'first', title: 'Quotation'},
-    {key: 'second', title: 'Bilty'},
-    {key: 'third', title: 'Invoice'},
-    {key: 'fourth', title: 'Car Condition'},
-    {key: 'fifth', title: 'Money Receipt'},
-  ]);
-
-  const completeRegistration = async () => {
-    await setIsRegistrationComplete();
-    await setLoginStatus();
-  };
-
-  useEffect(() => {
-    if (!requesting && success && !error) {
-      completeRegistration();
-    } else if (!requesting && !success && error) {
-      Alert.alert('Error in registering the company');
+  const _getSubmodules = (): ISubmodule[] => {
+    let items: ISubmodule[] = [];
+    const {data} = submodules || {};
+    if (data && Array.isArray(data) && data.length > 0) {
+      items = data;
     }
-  }, [requesting, success, error]);
+    return items;
+  };
+
+  const _getRoutes = ():Route[] => {
+    let tabs:Route[] = [];
+    tabs = _getSubmodules().map((d:ISubmodule, i:number) => {
+      const item = {
+        key: `${i}`,
+        title: d.subModuleName.toUpperCase(),
+        data: d,
+      }
+      return item;
+    });
+    return tabs;
+  }
+
+  const _setRoutes = () => {
+    setRoutes(_getRoutes());
+  }
+
+
+  const _renderScene = () => {
+    const scenes:any = {};
+    _getSubmodules().forEach((_, i) => {
+      scenes[`${i}`] = TemplatePageView;
+    })
+    return SceneMap({...scenes});
+  }
 
   const handleSaveClick = useCallback(() => {
     //
-  }, [state]);
+  }, []);
+
+  useEffect(() => {
+    dispatch(getSubmoduleRequest());
+    dispatch(getTemplateListRequest());
+  }, []);
+
+  useEffect(() => {
+    if(!getSubmodulesRequesting && getSubmodulesSuccess) {
+      _setRoutes();
+    }
+  }, [getSubmodulesRequesting, getSubmodulesSuccess, getSubmoduleFailure]);
 
   return (
     <>
@@ -171,8 +88,10 @@ const TemplateSettingPageView: React.FC<
         <View style={styles.contentContainer}>
           <TabView
             navigationState={{index, routes}}
-            renderScene={renderScene}
-            onIndexChange={setIndex}
+            renderScene={_renderScene()}
+            onIndexChange={(indx:number) => {
+              setIndex(indx);
+            }}
             initialLayout={{width: layout.width}}
             overScrollMode="always"
             renderTabBar={props => (
@@ -191,7 +110,7 @@ const TemplateSettingPageView: React.FC<
           </View>
         </View>
       </View>
-      <Spinner show={requesting} />
+      <Spinner show={getTemplatesRequesting} />
     </>
   );
 };

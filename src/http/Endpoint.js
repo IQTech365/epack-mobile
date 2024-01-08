@@ -155,3 +155,5 @@ export const ADD_PURCHASE = `/purchase/add`;
 export const GET_BANNERS = `/setting/banner-image/all`;
 // Razorpay Order
 export const CREATE_RAZORPAY_ORDER = `/purchase/order`;
+// Template List
+export const GET_TEPLATE_LIST = `/template/all`;

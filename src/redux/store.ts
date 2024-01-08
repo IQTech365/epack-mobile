@@ -28,6 +28,7 @@ import VehicleSlice from './slices/VehicleSlice';
 import CommonSlice from './slices/CommonSlice';
 import CustomerSlice from './slices/CustomerSlice';
 import SubscriptionSlice from './slices/SubscriptionSlice';
+import TemplateSettingSlice from './slices/TemplateSettingSlice';
 
 const persistConfig = {
   key: 'root',
@@ -52,6 +53,7 @@ const appReducer = combineReducers({
   Common: CommonSlice,
   Customer: CustomerSlice,
   Subscription: SubscriptionSlice,
+  Template: TemplateSettingSlice,
 });
 
 const rootReducer: Reducer = (state: RootState, action: AnyAction) => {
