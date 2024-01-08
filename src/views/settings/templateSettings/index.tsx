@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, useWindowDimensions} from 'react-native';
 import {TabView, SceneMap, TabBar, Route} from 'react-native-tab-view';
 import styles from './style';
@@ -9,7 +9,7 @@ import {getTemplateListRequest} from '../../../redux/slices/TemplateSettingSlice
 import {ISubmodule} from '../../../interface/common/common';
 import {getSubmoduleRequest} from '../../../redux/slices/CommonSlice';
 import TemplatePageView from './components/TemplatePageView';
-import { COLOR_BLUE, COLOR_GRAY } from '../../../utils/colors';
+import {COLOR_GRAY} from '../../../utils/colors';
 
 interface IProps {}
 
@@ -17,8 +17,10 @@ const TemplateSettingPageView: React.FC<IProps> = ({}) => {
   const layout = useWindowDimensions();
   const [index, setIndex] = React.useState(0);
   const [routes, setRoutes] = React.useState<Route[]>([]);
+  const [showView, setShowView] = useState<boolean>(false);
   const dispatch = useAppDispatch();
-  const {getTemplatesRequesting} = useAppSelector(state => state.Template);
+  const {getTemplatesRequesting, getTemplatesSuccess, getTemplatesFailure} =
+    useAppSelector(state => state.Template);
   const {
     getSubmodulesRequesting,
     submodules,
@@ -37,14 +39,17 @@ const TemplateSettingPageView: React.FC<IProps> = ({}) => {
 
   const _getRoutes = (): Route[] => {
     let tabs: Route[] = [];
-    tabs = _getSubmodules().map((d: ISubmodule, i: number) => {
-      const item = {
-        key: `${i}`,
-        title: d.subModuleName.toUpperCase(),
-        data: d,
-      };
-      return item;
-    });
+    const modules: ISubmodule[] = _getSubmodules();
+    if (modules && modules.length > 0) {
+      tabs = _getSubmodules().map((d: ISubmodule, i: number) => {
+        const item = {
+          key: `${i}`,
+          title: d.subModuleName.toUpperCase(),
+          data: d,
+        };
+        return item;
+      });
+    }
     return tabs;
   };
 
@@ -66,10 +71,33 @@ const TemplateSettingPageView: React.FC<IProps> = ({}) => {
   }, []);
 
   useEffect(() => {
-    if (!getSubmodulesRequesting && getSubmodulesSuccess) {
+    if (
+      !getSubmodulesRequesting &&
+      getSubmodulesSuccess &&
+      !getTemplatesRequesting &&
+      getTemplatesSuccess
+    ) {
       _setRoutes();
+      setShowView(true);
     }
-  }, [getSubmodulesRequesting, getSubmodulesSuccess, getSubmoduleFailure]);
+  }, [
+    getSubmodulesRequesting,
+    getSubmodulesSuccess,
+    getSubmoduleFailure,
+    getTemplatesRequesting,
+    getTemplatesSuccess,
+    getTemplatesFailure,
+  ]);
+
+  useEffect(() => {
+    return () => {
+      setShowView(false);
+    };
+  }, []);
+
+  if (getSubmodulesRequesting && getTemplatesRequesting && !showView) {
+    return <Spinner show={!showView} />;
+  }
 
   return (
     <>
@@ -88,8 +116,7 @@ const TemplateSettingPageView: React.FC<IProps> = ({}) => {
               <TabBar
                 {...props}
                 scrollEnabled={true}
-                style={{height: 44,}}
-                tabStyle={{width: 'auto'}}
+                style={{height: 44}}
                 labelStyle={{fontFamily: 'WorkSans-SemiBold'}}
                 indicatorStyle={{backgroundColor: COLOR_GRAY, height: 4}}
               />
