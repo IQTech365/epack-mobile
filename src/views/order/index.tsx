@@ -146,7 +146,7 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
 
   useEffect(() => {
     _fetchOrders();
-  }, []);
+  }, [companyId]);
 
   return (
     <View style={styles.container}>

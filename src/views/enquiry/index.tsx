@@ -91,7 +91,7 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
 
   useEffect(() => {
     _getEnquiriesRequest();
-  }, []);
+  }, [companyId]);
 
   return (
     <View style={styles.container}>

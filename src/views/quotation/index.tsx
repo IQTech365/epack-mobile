@@ -244,7 +244,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
 
   useEffect(() => {
     _getQuotationsRequest();
-  }, []);
+  }, [companyId]);
 
   useEffect(() => {
     if (

@@ -57,7 +57,7 @@ const ClientPageView: React.FC<IClientPageViewProps> = ({navigation}) => {
 
   useEffect(() => {
     _fetchCustomers();
-  }, []);
+  }, [companyId]);
 
   const handleClientDetailsClick = (item: any) => {
     navigation.navigate(ClientStackRoute.ClientDetails, {item: item});
