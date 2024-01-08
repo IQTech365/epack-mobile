@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {SectionList, Text, View} from 'react-native';
 import {useAppSelector} from '../../../../../redux/hooks';
 import styles from './styles';
@@ -7,6 +7,7 @@ import {
   ITemplateData,
 } from '../../../../../interface/setting/template/template';
 import TemplateCard from '../TemplateCard';
+import TemplateEmptyView from '../TemplateEmptyView';
 
 interface ISectionData {
   title: string;
@@ -16,6 +17,8 @@ interface ISectionData {
 //@ts-ignore
 const TemplatePageView = ({route}) => {
   const {templates} = useAppSelector(state => state.Template);
+  const [activeCategory, setActiveCategory] = useState<string>('');
+  const [activeTemplateId, setActiveTemplateId] = useState<string>('');
 
   const _getTemplatesByModuleId = () => {
     let list: ITemplate[] = [];
@@ -30,10 +33,7 @@ const TemplatePageView = ({route}) => {
     }
     return list;
   };
-  // console.log(
-  //   'templates-bymodule---',
-  //   JSON.stringify(_getTemplatesByModuleId()),
-  // );
+  
   const _getUniqueTemplateCategories = () => {
     const templateVersions: string[] = _getTemplatesByModuleId().map(
       (d: ITemplate) => d.templateVersion,
@@ -60,18 +60,58 @@ const TemplatePageView = ({route}) => {
     return sectionData;
   };
 
+  const _setActiveCategory = () => {
+    const categories:string[] = _getUniqueTemplateCategories();
+    if(categories && categories.length > 0) {
+      setActiveCategory(categories[0]);
+    }
+  }
+
+  const _setActiveTemplateIndex = () => {
+    const sectionData:ISectionData[] = _prepareTemplateListWithCategory();
+    if(sectionData && sectionData.length > 0) {
+      const firstSection:ISectionData = sectionData[0];
+      const templates:ITemplate[] = firstSection.data;
+      if(templates && templates.length > 0) {
+        const firstTemplate:ITemplate = templates[0];
+        setActiveTemplateId(firstTemplate._id);
+      }
+    }
+  }
+
+  const handleChangeCategory = (category:string) => {
+    setActiveCategory(category);
+  }
+
+  const handleChangeTemplateId = (id:string) => {
+    setActiveTemplateId(id)
+  }
+
+  useEffect(() => {
+    _setActiveCategory();
+    _setActiveTemplateIndex();
+  }, []);
+
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <SectionList
         sections={_prepareTemplateListWithCategory()}
         renderItem={({item, index}) => (
-          <TemplateCard item={item} index={index} />
+          <TemplateCard
+            item={item}
+            index={index}
+            category={activeCategory}
+            activeTemplateId={activeTemplateId}
+            onChangeCategory={handleChangeCategory}
+            onChangeTemplateId={handleChangeTemplateId}
+          />
         )}
         renderSectionHeader={({section}) => (
           <View style={styles.sectionHeaderContainer}>
             <Text style={styles.taskTitle}>{section.title}</Text>
           </View>
         )}
+        ListEmptyComponent={TemplateEmptyView}
         keyExtractor={item => item._id}
         stickySectionHeadersEnabled
       />

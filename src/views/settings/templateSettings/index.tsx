@@ -1,24 +1,19 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {View, useWindowDimensions} from 'react-native';
 import {TabView, SceneMap, TabBar, Route} from 'react-native-tab-view';
 import styles from './style';
-import Button from '../../../common/Button';
 import {useAppDispatch, useAppSelector} from '../../../redux/hooks';
 import Spinner from '../../../common/Spinner';
 import Header from '../../../common/Header';
-import { getTemplateListRequest } from '../../../redux/slices/TemplateSettingSlice';
-import { ISubmodule } from '../../../interface/common/common';
-import { getSubmoduleRequest } from '../../../redux/slices/CommonSlice';
+import {getTemplateListRequest} from '../../../redux/slices/TemplateSettingSlice';
+import {ISubmodule} from '../../../interface/common/common';
+import {getSubmoduleRequest} from '../../../redux/slices/CommonSlice';
 import TemplatePageView from './components/TemplatePageView';
+import { COLOR_BLUE, COLOR_GRAY } from '../../../utils/colors';
 
-interface ITemplateSettingPageViewProps {
-  // currentStep: number;
-  // setCurrentStep: (step: number) => void;
-}
+interface IProps {}
 
-const TemplateSettingPageView: React.FC<
-  ITemplateSettingPageViewProps
-> = ({}) => {
+const TemplateSettingPageView: React.FC<IProps> = ({}) => {
   const layout = useWindowDimensions();
   const [index, setIndex] = React.useState(0);
   const [routes, setRoutes] = React.useState<Route[]>([]);
@@ -40,35 +35,30 @@ const TemplateSettingPageView: React.FC<
     return items;
   };
 
-  const _getRoutes = ():Route[] => {
-    let tabs:Route[] = [];
-    tabs = _getSubmodules().map((d:ISubmodule, i:number) => {
+  const _getRoutes = (): Route[] => {
+    let tabs: Route[] = [];
+    tabs = _getSubmodules().map((d: ISubmodule, i: number) => {
       const item = {
         key: `${i}`,
         title: d.subModuleName.toUpperCase(),
         data: d,
-      }
+      };
       return item;
     });
     return tabs;
-  }
+  };
 
   const _setRoutes = () => {
     setRoutes(_getRoutes());
-  }
-
+  };
 
   const _renderScene = () => {
-    const scenes:any = {};
+    const scenes: any = {};
     _getSubmodules().forEach((_, i) => {
       scenes[`${i}`] = TemplatePageView;
-    })
+    });
     return SceneMap({...scenes});
-  }
-
-  const handleSaveClick = useCallback(() => {
-    //
-  }, []);
+  };
 
   useEffect(() => {
     dispatch(getSubmoduleRequest());
@@ -76,7 +66,7 @@ const TemplateSettingPageView: React.FC<
   }, []);
 
   useEffect(() => {
-    if(!getSubmodulesRequesting && getSubmodulesSuccess) {
+    if (!getSubmodulesRequesting && getSubmodulesSuccess) {
       _setRoutes();
     }
   }, [getSubmodulesRequesting, getSubmodulesSuccess, getSubmoduleFailure]);
@@ -89,25 +79,22 @@ const TemplateSettingPageView: React.FC<
           <TabView
             navigationState={{index, routes}}
             renderScene={_renderScene()}
-            onIndexChange={(indx:number) => {
+            onIndexChange={(indx: number) => {
               setIndex(indx);
             }}
             initialLayout={{width: layout.width}}
             overScrollMode="always"
             renderTabBar={props => (
-              <TabBar {...props} scrollEnabled={true} style={{height: 44}} />
+              <TabBar
+                {...props}
+                scrollEnabled={true}
+                style={{height: 44,}}
+                tabStyle={{width: 'auto'}}
+                labelStyle={{fontFamily: 'WorkSans-SemiBold'}}
+                indicatorStyle={{backgroundColor: COLOR_GRAY, height: 4}}
+              />
             )}
           />
-        </View>
-        <View style={styles.buttonContainer}>
-          <View style={styles.nextButtonContainer}>
-            <Button
-              text={'Save'}
-              onPress={handleSaveClick}
-              style={styles.buttonStyle2}
-              textStyle={styles.buttonTextStyle}
-            />
-          </View>
         </View>
       </View>
       <Spinner show={getTemplatesRequesting} />
