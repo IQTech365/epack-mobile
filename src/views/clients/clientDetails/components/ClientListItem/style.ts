@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import {COLOR_BLUE, COLOR_GRAY, COLOR_GRAY2, COLOR_GRAY3, COLOR_GRAY6, COLOR_ORANGE, COLOR_WHITE} from '../../../../../utils/colors';
+import {COLOR_BLACK, COLOR_BLUE, COLOR_GRAY, COLOR_GRAY2, COLOR_GRAY3, COLOR_GRAY6, COLOR_ORANGE, COLOR_WHITE} from '../../../../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
   nameText: {
       color: COLOR_GRAY,
       fontSize: 16,
-      fontWeight: '600'
+      fontFamily: 'WorkSans-SemiBold',
   },
   amountText: {
     color: COLOR_GRAY,
@@ -101,14 +101,14 @@ const styles = StyleSheet.create({
     fontWeight: '600'
   },
   labelText: {
-      color: COLOR_GRAY,
-      fontSize: 13,
-      fontWeight: '600'
+      color: COLOR_BLACK,
+      fontSize: 14,
+      fontFamily: 'WorkSans-Medium',
   },
   valueText: {
-    color: COLOR_GRAY,
-    fontSize: 12,
-    // fontWeight: '500'
+    color: COLOR_BLACK,
+    fontSize: 14,
+    fontFamily: 'WorkSans-Regular',
   },
   viewDetailsContainer: {
     width: '100%',

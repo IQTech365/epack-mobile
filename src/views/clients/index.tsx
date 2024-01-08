@@ -13,6 +13,7 @@ import Spinner from '../../common/Spinner';
 import ClientListItem from './clientDetails/components/ClientListItem';
 import { IGetOrdersRequest } from '../../interface/order/IGetOrdersRequest';
 import { getOrdersRequest } from '../../redux/slices/OrderSlice';
+import Label from '../../common/Label';
 
 interface IClientPageViewProps {
   navigation: NavigationProp<any, any>;
@@ -56,8 +57,7 @@ const ClientPageView: React.FC<IClientPageViewProps> = ({navigation}) => {
 
   useEffect(() => {
     _fetchCustomers();
-    // _fetchOrders();
-  }, [dispatch]);
+  }, []);
 
   const handleClientDetailsClick = (item: any) => {
     navigation.navigate(ClientStackRoute.ClientDetails, {item: item});
@@ -67,8 +67,7 @@ const ClientPageView: React.FC<IClientPageViewProps> = ({navigation}) => {
     <View style={styles.container}>
       <Header label="Clients" canGoBack={true} showDrawerIcon={true} />
       <Spacer height={4} />
-      {/* <AddNew countLabel="Total Orders" count="1200" onPress={handleAddNew} /> */}
-      <Spacer height={12} />
+      <Label text={`Total Clients: ${_getCustomerList().length}`} style={styles.clientCount} />
       <FlatList
         contentContainerStyle={styles.listContent}
         data={_getCustomerList()}
@@ -85,7 +84,7 @@ const ClientPageView: React.FC<IClientPageViewProps> = ({navigation}) => {
             onPress={() => handleClientDetailsClick(item)}
           />
         )}
-        ListEmptyComponent={() => <Text>No Clients available</Text>}
+        ListEmptyComponent={() => <Text style={styles.text}>No Clients available!</Text>}
       />
       <Spinner show={getCustomersRequesting} />
     </View>

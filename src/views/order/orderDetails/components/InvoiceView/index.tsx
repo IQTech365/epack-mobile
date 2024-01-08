@@ -15,10 +15,15 @@ import CreateIcon from '../../../../../images/icons/create_icon.svg';
 import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
 import InvoiceFormView from '../InvoiceFormView';
 import {InvoiceFormContextProvider} from '../../../../../provider/InvoiceFormContextProvider';
-import { ISingleEnquiryData } from '../../../../../interface/enquiry/ISingleEnquiryResponse';
-import { getInvoiceListRequest } from '../../../../../redux/slices/OrderSlice';
+import {ISingleEnquiryData} from '../../../../../interface/enquiry/ISingleEnquiryResponse';
+import {getInvoiceHtmlRequest, getInvoiceListRequest, resetGetInvoiceHtmlRequest} from '../../../../../redux/slices/OrderSlice';
 import Spinner from '../../../../../common/Spinner';
-import { IInvoice } from '../../../../../interface/order/IGetInvoiceListResponse';
+import {IInvoice} from '../../../../../interface/order/IGetInvoiceListResponse';
+import InvoiceListItem from './InvoiceListItem';
+import { IHtmlTemplateRequest } from '../../../../../interface/order/templates/ITemplateResponse';
+import ModalHOC from '../../../../../common/ModalHOC';
+import TemplateViewer from '../../../../../common/TemplateViewer';
+import { startShare } from '../../../../../utils/utility';
 
 interface IInvoiceViewProps {
   orderId: string;
@@ -27,10 +32,20 @@ interface IInvoiceViewProps {
 
 const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item}) => {
   const dispatch = useAppDispatch();
-  const {getInvoicesRequesting, invoices} = useAppSelector(state => state.Order);
+  const {
+    getInvoicesRequesting,
+    invoices,
+    getInvoiceHtmlRequesting,
+    invoiceTemplateHtml,
+    getInvoiceHtmlSuccess,
+    getInvoiceHtmlFailure,
+  } = useAppSelector(state => state.Order);
 
   const [showInvoiceList, setShowInvoiceList] = useState<boolean>(false);
   const [createNewInvoice, setCreateNewInvoice] = useState<boolean>(true);
+  const [showPreview, setShowPreview] = useState<boolean>(false);
+  const [showShare, setShowShare] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   const handleCreateNewInvoice = () => {
     setShowInvoiceList(false);
@@ -42,6 +57,21 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item}) => {
     setCreateNewInvoice(false);
   };
 
+  const handleShowPreviewModalClose = () => {
+    dispatch(resetGetInvoiceHtmlRequest());
+    setShowPreview(false);
+  };
+
+  const handleDocDownload = (docId:string) => {
+    const payload: IHtmlTemplateRequest = {
+      templateId: '657d77534a69ca45d2255096',
+      docId: docId,
+    };
+    dispatch(getInvoiceHtmlRequest(payload));
+  }
+
+  const onEdit = () => {};
+
   const showEmptyView = () => {
     return (
       <View style={styles.emptyContainer}>
@@ -50,14 +80,14 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item}) => {
     );
   };
 
-  const _getInvoiceList = ():IInvoice[] => {
-    let list:IInvoice[] = [];
+  const _getInvoiceList = (): IInvoice[] => {
+    let list: IInvoice[] = [];
     const {data} = invoices || {};
-    if(data && Array.isArray(data) && data.length > 0) {
+    if (data && Array.isArray(data) && data.length > 0) {
       list = data;
     }
     return list;
-  }
+  };
 
   useEffect(() => {
     dispatch(getInvoiceListRequest(orderId));
@@ -78,37 +108,77 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item}) => {
     return null;
   };
 
-  const renderInvoiceItem = (item:IInvoice, index: number) => {
-    return (
-      <View style={styles.itemMainWrapper} key={`${index}`}>
-        <View style={styles.itemContentContainer}>
-          <View style={styles.labelContainer}>
-            <Text style={styles.label}>Name</Text>
-          </View>
-          <View style={styles.labelContainer}>
-            <Text style={styles.value}>{item.partyName}</Text>
-          </View>
-        </View>
-      </View>
-    );
-  }
-
   const showList = () => {
     if (showInvoiceList) {
       return (
+        <View style={{flex: 1}}>
         <FlatList
           contentContainerStyle={{alignItems: 'center', paddingVertical: 10}}
           data={_getInvoiceList()}
           refreshControl={
             <RefreshControl refreshing={false} onRefresh={handleOnRefresh} />
           }
-            renderItem={({item, index}) => renderInvoiceItem(item, index)}
+          renderItem={({item, index}) => (
+            <InvoiceListItem
+              item={item}
+              index={index}
+              onPress={() => {
+                // presentModal(item.id)
+              }}
+              onShare={() => {
+                setShowPreview(false);
+                setShowShare(true);
+                handleDocDownload(item._id);
+              }}
+              onDownload={() => {
+                //
+              }}
+              onPreview={() => {
+                setShowPreview(true);
+                setShowShare(false);
+                handleDocDownload(item._id);
+              }}
+              onEdit={() => {}}
+            />
+          )}
           ListEmptyComponent={showEmptyView()}
         />
+        <ModalHOC
+            visible={showModal}
+            onClose={handleShowPreviewModalClose}
+            title="Preview">
+            <View style={{flex: 1}}>
+              <TemplateViewer html={invoiceTemplateHtml} />
+            </View>
+          </ModalHOC>
+        </View>
       );
     }
     return null;
   };
+
+  useEffect(() => {
+    if (!getInvoiceHtmlRequesting && getInvoiceHtmlSuccess) {
+      if (showPreview) {
+        setShowModal(true);
+      } else if (showShare) {
+        startShare(
+          invoiceTemplateHtml,
+          'Invoice',
+          dispatch(resetGetInvoiceHtmlRequest()),
+        );
+      }
+    } else if (!getInvoiceHtmlRequesting && getInvoiceHtmlFailure) {
+      setShowPreview(false);
+      setShowShare(false);
+      // setShowDownload(false);
+      dispatch(resetGetInvoiceHtmlRequest());
+    }
+  }, [
+    getInvoiceHtmlRequesting,
+    getInvoiceHtmlSuccess,
+    getInvoiceHtmlFailure,
+  ]);
 
   return (
     <>

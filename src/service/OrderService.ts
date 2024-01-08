@@ -15,6 +15,7 @@ import {
   GET_CAR_CONDITION_LIST,
   GET_CAR_CONDITION_TEMPLATE_HTML,
   GET_INVOICE_LIST,
+  GET_INVOICE_TEMPLATE_HTML,
   GET_MONEY_RECEIPT_LIST,
   GET_MONEY_RECEIPT_TEMPLATE_HTML,
   GET_ORDER_DETAILS,
@@ -105,14 +106,18 @@ export const CreateInvoiceService = async (payload: ICreateInvoiceRequest): Prom
     return await api.post<ICreateInvoiceRequest, AxiosResponse<ICreateInvoiceResponse>>(payload, CREATE_INVOICE);
 }
 
-// TODO: refactor code once in use
 export const GetInvoiceListService = async (payload: string): Promise<IGetInvoiceListResponse> => {
     console.log('GetInvoiceListService--payload--', JSON.stringify(payload));
     const api = Api.getInstance();
     return await api.get<IGetInvoiceListResponse>(GET_INVOICE_LIST(payload));
 }
 
-// TODO: refactor code once in use
+export const GetInvoiceTemplateHtmlService = async (templateId:string, docId:string): Promise<IHtmlTemplateResponse> => {
+    console.log('GetInvoiceTemplateHtmlService--payload--', JSON.stringify(templateId));
+    const api = Api.getInstance();
+    return await api.get<IHtmlTemplateResponse>(GET_INVOICE_TEMPLATE_HTML(templateId, docId));
+}
+
 export const EditEnquiryService = async (payload: IOtpVerifyRequest): Promise<IOtpVerifyResponse> => {
     const api = Api.getInstance();
     return await api.update<IOtpVerifyRequest, AxiosResponse<IOtpVerifyResponse>>(payload, EDIT_COMPANY);

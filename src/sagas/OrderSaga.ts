@@ -41,6 +41,9 @@ import {
   getCarConditionListFailure,
   getCarConditionListRequest,
   getCarConditionListSuccess,
+  getInvoiceHtmlFailure,
+  getInvoiceHtmlRequest,
+  getInvoiceHtmlSuccess,
   getInvoiceListFailure,
   getInvoiceListRequest,
   getInvoiceListSuccess,
@@ -321,6 +324,18 @@ export function* createCarConditionSaga(
     }
   }
 
+  export function* getInvoiceTemplateHtmlSaga(action: PayloadAction<IHtmlTemplateRequest>) {
+    try {
+        const {templateId, docId} = action.payload;
+        const response: IHtmlTemplateResponse = yield call(OrderService.GetInvoiceTemplateHtmlService, templateId, docId);
+        console.log('getInvoiceTemplateHtmlSaga-response----', JSON.stringify(response));
+        yield put(getInvoiceHtmlSuccess(response));
+    } catch (error) {
+        console.log('getInvoiceTemplateHtmlSaga-error----', JSON.stringify(error));
+        yield put(getInvoiceHtmlFailure(error));
+    }
+  }
+
 export function* watcherOrderSaga() {
   yield takeLatest(addOrderRequest.type, addOrderSaga);
   yield takeLatest(getOrdersRequest.type, getOrderListSaga);
@@ -341,4 +356,5 @@ export function* watcherOrderSaga() {
   yield takeLatest(deletePackingMaterialItemRequest.type, deletePackingListItemSaga);
   yield takeLatest(createInvoiceRequest.type, createInvoiceSaga);
   yield takeLatest(getInvoiceListRequest.type, getInvoiceListSaga);
+  yield takeLatest(getInvoiceHtmlRequest.type, getInvoiceTemplateHtmlSaga);
 }

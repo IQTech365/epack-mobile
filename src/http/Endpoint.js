@@ -114,6 +114,7 @@ export const GET_MONEY_RECEIPT_TEMPLATE_HTML = (templateId, receiptId) => `templ
 export const GET_QUOTATION_TEMPLATE_HTML = (templateId, docId) => `template/create-quotation-template/${templateId}/${docId}`;
 export const GET_BILTY_TEMPLATE_HTML = (templateId, docId) => `template/create-bilty-template/${templateId}/${docId}`;
 export const GET_CAR_CONDITION_TEMPLATE_HTML = (templateId, docId) => `template/create-car-condition-template/${templateId}/${docId}`;
+export const GET_INVOICE_TEMPLATE_HTML = (templateId, docId) => `template/create-invoice-template/${templateId}/${docId}`;
 
 // Vehicle types
 export const GET_VEHICLE_TYPES = `/vehicle-management/vehicle-type/getAll`;

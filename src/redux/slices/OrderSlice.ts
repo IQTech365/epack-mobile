@@ -123,11 +123,18 @@ interface IOrderState {
   createInvoiceSuccess: boolean;
   createInvoiceFailure: boolean;
   createInvoiceError: any;
+  // Invoice List
   invoices: IGetInvoiceListResponse | null;
   getInvoicesRequesting: boolean;
   getInvoicesSuccess: boolean;
   getInvoicesFailure:boolean;
   getInvoiceError: any;
+  // Invoice Template Html
+  invoiceTemplateHtml: IHtmlTemplateResponse | null;
+  getInvoiceHtmlRequesting: boolean;
+  getInvoiceHtmlSuccess: boolean;
+  getInvoiceHtmlFailure: boolean;
+  getInvoiceTemplateHtmlError: any;
   // Create Packing Material
   createPackingMaterialInfo: ICreatePackingMaterialResponse | null;
   createPackingMaterialRequesting:boolean;
@@ -246,11 +253,18 @@ const initialState: IOrderState = {
   createInvoiceSuccess: false,
   createInvoiceFailure: false,
   createInvoiceError: null,
+  // Invoice List
   invoices: null,
   getInvoicesRequesting: false,
   getInvoicesSuccess: false,
   getInvoicesFailure:false,
   getInvoiceError: null,
+  // Invoice Template Html
+  invoiceTemplateHtml: null,
+  getInvoiceHtmlRequesting: false,
+  getInvoiceHtmlSuccess: false,
+  getInvoiceHtmlFailure: false,
+  getInvoiceTemplateHtmlError: null,
   // Create Packing Material
   createPackingMaterialInfo: null,
   createPackingMaterialRequesting:false,
@@ -668,6 +682,36 @@ export const OrderSlice = createSlice({
       state.getInvoicesFailure = true;
       state.getInvoiceError = action.payload;
     },
+    // Invoice Template Html
+    getInvoiceHtmlRequest: (
+      state,
+      action: PayloadAction<IHtmlTemplateRequest>,
+    ) => {
+      state.getInvoiceHtmlRequesting = true;
+    },
+    getInvoiceHtmlSuccess: (
+      state,
+      action: PayloadAction<IHtmlTemplateResponse>,
+    ) => {
+      state.getInvoiceHtmlRequesting = false;
+      state.getInvoiceHtmlSuccess = true;
+      state.getInvoiceHtmlFailure = false;
+      state.getInvoiceTemplateHtmlError = null;
+      state.invoiceTemplateHtml = action.payload;
+    },
+    getInvoiceHtmlFailure: (state, action: PayloadAction<any>) => {
+      state.getInvoiceHtmlRequesting = false;
+      state.getInvoiceHtmlSuccess = false;
+      state.getInvoiceHtmlFailure = true;
+      state.getInvoiceTemplateHtmlError = action.payload;
+    },
+    resetGetInvoiceHtmlRequest: state => {
+      state.getInvoiceHtmlRequesting = false;
+      state.getInvoiceHtmlSuccess = false;
+      state.getInvoiceHtmlFailure = false;
+      state.getInvoiceTemplateHtmlError = null;
+      state.invoiceTemplateHtml = null;
+    },
      // Create Packing Material
      createPackingMaterialsRequest: (
       state,
@@ -827,6 +871,11 @@ export const {
   getInvoiceListRequest,
   getInvoiceListSuccess,
   getInvoiceListFailure,
+  // Invoice Html Template
+  getInvoiceHtmlRequest,
+  getInvoiceHtmlSuccess,
+  getInvoiceHtmlFailure,
+  resetGetInvoiceHtmlRequest,
   // Create Packing Material
   createPackingMaterialsRequest,
   createPackingMaterialsSuccess,

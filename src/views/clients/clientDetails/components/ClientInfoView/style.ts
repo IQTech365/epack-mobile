@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     nameText: {
         color: COLOR_WHITE,
         fontSize: 16,
-        fontWeight: '400',
+        fontFamily: 'WorkSans-SemiBold'
     },
     labelText: {
         color: COLOR_WHITE,
@@ -52,10 +52,12 @@ const styles = StyleSheet.create({
     valueText: {
         color: COLOR_WHITE,
         fontSize: 14, 
+        fontFamily: 'WorkSans-Medium'
     },
     normalText: {
         color: COLOR_WHITE,
         fontSize: 16,
+        fontFamily: 'WorkSans-Medium'
     },
     hyphenText: {
         color: COLOR_WHITE,
