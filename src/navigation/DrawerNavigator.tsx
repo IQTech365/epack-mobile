@@ -197,8 +197,8 @@ export const DrawerNavigator = () => {
       />
       <Drawer.Screen
         name="Vehicle Management"
-        component={VehicleMangementStacknavigator}
-        // component={SubscriptionPlanView}
+        // component={VehicleMangementStacknavigator}
+        component={SubscriptionPlanView}
         options={{
           drawerIcon: () => <VehicleMgmtIcon width={24} height={24} />,
         }}

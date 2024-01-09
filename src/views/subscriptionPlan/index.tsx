@@ -195,8 +195,8 @@ const SubscriptionPlanView = (props: any) => {
         width={width}
         mode="parallax"
         // autoPlay={true}
-        // data={_prepareSubscriptionPlanList()}
-        data={subscriptions}
+        data={_prepareSubscriptionPlanList()}
+        // data={subscriptions}
         scrollAnimationDuration={1000}
         panGestureHandlerProps={{
           activeOffsetX: [-10, 10],
@@ -204,11 +204,11 @@ const SubscriptionPlanView = (props: any) => {
         onSnapToItem={index => console.log('current index:', index)}
         renderItem={({item, index}) => {
           return (
-            <ScrollView showsVerticalScrollIndicator={false}>
-              <SubscriptionPlanCard item={item} onPress={() => {}}/>
-              {/* <SubscriptionPlanCard2 item={item} onPress={handleByPlan} /> */}
+            <View>
+              {/* <SubscriptionPlanCard item={item} onPress={() => {}}/> */}
+              <SubscriptionPlanCard2 item={item} onPress={handleByPlan} />
               <Spinner show={paymentProcessing || addPurchaseRequesting} />
-            </ScrollView>
+            </View>
           );
         }}
       />

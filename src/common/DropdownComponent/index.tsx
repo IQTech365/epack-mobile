@@ -1,5 +1,5 @@
 import React, {forwardRef, useEffect, useState} from 'react';
-import {Text, View} from 'react-native';
+import {Text, TextStyle, View, ViewStyle} from 'react-native';
 import {Dropdown} from 'react-native-element-dropdown';
 import {TDropdownItem} from '../../type/TDropdownItem';
 import {COLOR_BLUE} from '../../utils/colors';
@@ -11,6 +11,10 @@ interface IDropdownProps {
   showSearchInput?: boolean;
   disable?: boolean;
   error?: string;
+  dropDownStyle?: ViewStyle;
+  container?:ViewStyle;
+  containerStyle?:ViewStyle;
+  selectedTextStyle?:TextStyle;
 }
 
 const DropdownComponent: React.FC<IDropdownProps> = forwardRef(
@@ -22,6 +26,10 @@ const DropdownComponent: React.FC<IDropdownProps> = forwardRef(
       showSearchInput = false,
       disable = false,
       error,
+      dropDownStyle,
+      container,
+      containerStyle,
+      selectedTextStyle
     },
     ref,
   ) => {
@@ -46,23 +54,25 @@ const DropdownComponent: React.FC<IDropdownProps> = forwardRef(
       : null;
 
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, container]}>
         <Dropdown
           style={[
             styles.dropdown,
-            isFocus && {borderColor: COLOR_BLUE, borderWidth: 1},
+            dropDownStyle,
+            isFocus && {borderColor: COLOR_BLUE, borderWidth: 1, borderRadius: 5},
             errorBorderColor,
           ]}
           //@ts-ignore
           ref={ref}
           placeholderStyle={styles.placeholderStyle}
           itemTextStyle={styles.itemText}
-          selectedTextStyle={styles.selectedTextStyle}
+          selectedTextStyle={[styles.selectedTextStyle, selectedTextStyle]}
           inputSearchStyle={styles.inputSearchStyle}
           iconStyle={styles.iconStyle}
+          containerStyle={containerStyle}
           data={data}
           search={showSearchInput}
-          maxHeight={300}
+          maxHeight={250}
           labelField="label"
           valueField="value"
           placeholder={!isFocus ? 'Select item' : '...'}

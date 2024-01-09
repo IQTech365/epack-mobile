@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
 import styles from './style';
 import LinearGradient from 'react-native-linear-gradient';
 import {
@@ -13,10 +13,13 @@ import CloseTickIcon from '../../../../images/icons/close_icon3.svg';
 import Spacer from '../../../../common/Spacer';
 import {Shadow} from 'react-native-shadow-2';
 import {
+  IPlan,
   IPlanFeature,
   ISubmoduleFeatureWithActions,
   ISubscriptionPlan,
 } from '../../../../interface/subscription/subscription';
+import DropdownComponent from '../../../../common/DropdownComponent';
+import {TDropdownItem} from '../../../../type/TDropdownItem';
 
 interface ISubscriptionPlanCardProps {
   item: ISubscriptionPlan;
@@ -69,8 +72,21 @@ const SubscriptionPlanCard2: React.FC<ISubscriptionPlanCardProps> = ({
     }
     return gradientColors;
   };
+
+  const preparePlanDurationData = () => {
+    const planDurations: TDropdownItem[] = plans.map((p: IPlan) => {
+      const plan: TDropdownItem = {
+        label: `₹ ${p.amount}.00 / ${p.duration}`.toUpperCase(),
+        value: p.amount,
+      };
+      return plan;
+    });
+    return planDurations;
+  };
+
+  const handlePlanDuration = (plan: TDropdownItem) => {};
   return (
-    <Shadow style={styles.cardWrapper} distance={2}>
+    <Shadow distance={2}>
       <View style={styles.container}>
         <View style={styles.contentContainer}>
           <LinearGradient
@@ -82,63 +98,64 @@ const SubscriptionPlanCard2: React.FC<ISubscriptionPlanCardProps> = ({
               {subscriptionType.charAt(0).toUpperCase() +
                 subscriptionType.substring(1)}
             </Text>
-            <Text style={styles.planPriceText}>{'1000'}</Text>
-            <Text style={styles.planDurationText}>{'3 Months'}</Text>
+            <View style={styles.planDurationContainer}>
+              <DropdownComponent
+                data={preparePlanDurationData()}
+                onSelect={handlePlanDuration}
+                dropDownStyle={styles.dropDownStyle}
+                container={styles.dropDownContainer}
+                containerStyle={{width: '80%', marginTop: 0}}
+                selectedTextStyle={styles.selectedTextStyle}
+              />
+            </View>
           </LinearGradient>
-
-          {planFeatures.map((planFeature: IPlanFeature, index: number) => {
-            return (
-              <View key={`${index}`} style={styles.featureWrapper}>
-                <Spacer height={5} />
-                <View style={styles.featureWrapper}>
-                  <View style={styles.planFeatureContainer}>
-                    {getTickIcon(planFeature.moduleName)}
-                    <Text style={styles.featureTitleText}>
-                      {planFeature.moduleName}
-                    </Text>
-                  </View>
-                  {planFeature.moduleFeatures.map(
-                    (
-                      subSubFeature: ISubmoduleFeatureWithActions,
-                      indx: number,
-                    ) => {
-                      return (
-                        <View key={`${indx}`}>
-                          <View style={styles.featureValuesContainer}>
-                            <TickIcon width={10} height={10} />
-                            <Text style={styles.featuresText2}>
-                              {subSubFeature.moduleFeature}
-                            </Text>
+          <ScrollView style={{width: '95%'}}>
+            {planFeatures.map((planFeature: IPlanFeature, index: number) => {
+              return (
+                <View key={`${index}`}>
+                  <Spacer height={5} />
+                  <View style={styles.featureWrapper}>
+                    <View style={styles.planFeatureContainer}>
+                      {getTickIcon(planFeature.moduleName)}
+                      <Text style={styles.featureTitleText}>
+                        {planFeature.moduleName}
+                      </Text>
+                    </View>
+                    {planFeature.moduleFeatures.map(
+                      (
+                        subSubFeature: ISubmoduleFeatureWithActions,
+                        indx: number,
+                      ) => {
+                        return (
+                          <View key={`${indx}`}>
+                            <View style={styles.featureValuesContainer}>
+                              <TickIcon width={10} height={10} />
+                              <Text style={styles.featuresText2}>
+                                {subSubFeature.moduleFeature}
+                              </Text>
+                            </View>
+                            <View style={styles.featureValuesContainer2}>
+                              <View style={styles.dot} />
+                              <Text style={styles.featuresText}>
+                                {subSubFeature.actions.join('/')}
+                              </Text>
+                            </View>
                           </View>
-                          {subSubFeature.actions.map(
-                            (subSubSubFeature: string, i: number) => {
-                              return (
-                                <View
-                                  style={styles.featureValuesContainer2}
-                                  key={`${i}`}>
-                                  <View style={styles.dot} />
-                                  <Text style={styles.featuresText}>
-                                    {subSubSubFeature}
-                                  </Text>
-                                </View>
-                              );
-                            },
-                          )}
-                        </View>
-                      );
-                    },
-                  )}
+                        );
+                      },
+                    )}
+                  </View>
                 </View>
-              </View>
-            );
-          })}
+              );
+            })}
+          </ScrollView>
           <TouchableOpacity activeOpacity={0.6} onPress={() => onPress(item)}>
             <LinearGradient
               colors={getPlanGradientColors()}
               style={styles.buttonContainer}
               useAngle={true}
               angle={45}>
-              <Text style={styles.planPriceText}>BY NOW</Text>
+              <Text style={styles.planPriceText}>BUY NOW</Text>
             </LinearGradient>
           </TouchableOpacity>
         </View>

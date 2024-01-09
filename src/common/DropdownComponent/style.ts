@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
   selectedTextStyle: {
     fontSize: 16,
     color: COLOR_BLACK,
+    fontFamily: 'WorkSans-Medium'
   },
   iconStyle: {
     width: 20,
@@ -55,6 +56,7 @@ const styles = StyleSheet.create({
   },
   itemText: {
     color: COLOR_BLACK,
+    fontFamily: 'WorkSans-Medium'
   }
 });
 
