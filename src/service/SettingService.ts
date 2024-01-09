@@ -1,6 +1,6 @@
 import {AxiosResponse} from 'axios';
 import {Api} from '../http/Api';
-import {ADD_CONTACT_DETAIL, ADD_DOCUMENT, ADD_FOOTER_CONTENT, ADD_PAYMENT_METHOD, ADD_USER_ROLE, CHECK_USERNAME_AVAILABLITY, GET_BANKS, GET_CONTACTS, GET_DOCUMENTS, GET_FOOTER_CONTENTS, GET_OTP, GET_PAYMENT_METHODS, GET_ROLE_TYPES, GET_SERIAL_NO, GET_SUBMODULES, GET_TEPLATE_LIST, GET_UNIT_TYPES, MODULES, SERIAL_NO, VERIFY_OTP} from '../http/Endpoint';
+import {ADD_CONTACT_DETAIL, ADD_DOCUMENT, ADD_FOOTER_CONTENT, ADD_PAYMENT_METHOD, ADD_USER_ROLE, CHECK_USERNAME_AVAILABLITY, GET_BANKS, GET_CONTACTS, GET_DOCUMENTS, GET_FOOTER_CONTENTS, GET_OTP, GET_PAYMENT_METHODS, GET_ROLE_TYPES, GET_SAVED_DOCUMENT_TEMPLATE_ID_LIST, GET_SERIAL_NO, GET_SUBMODULES, GET_TEPLATE_LIST, GET_UNIT_TYPES, MODULES, SAVE_DOCUMENT_TEMPLATE_ID, SERIAL_NO, VERIFY_OTP} from '../http/Endpoint';
 import { IAddContactDetailRequest } from '../interface/setting/packerProfile/contactDetail/IAddContactDetailRequest';
 import { IAddContactDetailResponse } from '../interface/setting/packerProfile/contactDetail/IAddContactDetailResponse';
 import { IGetContactDetailsResponse } from '../interface/setting/packerProfile/contactDetail/IGetContactDetailsResponse';
@@ -20,7 +20,8 @@ import { IAddUserRoleRequest, IAddUserRoleResponse, IRoleTypeResponse } from '..
 import { ICreateSerialNoRequest } from '../interface/setting/serialNo/ICreateSerialNoRequest';
 import { ICreateSerialNoResponse } from '../interface/setting/serialNo/ICreateSerialNoResponse';
 import { IGetPaymentMethodsResponse } from '../interface/setting/packerProfile/paymentMethod/IGetPaymentMethodsResponse';
-import { ITemplateListResponse } from '../interface/setting/template/template';
+import { ISaveDocumentTemplateIdPayload, ISaveDocumentTemplateIdResponse, ISavedDocumentTemplateIdResponse, ITemplateListResponse } from '../interface/setting/template/template';
+//@ts-ignore
 import { IGetUnitTypeResponse } from '../interface/setting/unitType/IGetunitTypeResponse';
 
 // PAYMENT
@@ -124,4 +125,16 @@ export const GetUnitTypeService = async (): Promise<IGetUnitTypeResponse> => {
 export const GetTemplateListService = async (): Promise<ITemplateListResponse> => {
     const api = Api.getInstance();
     return await api.get<ITemplateListResponse>(GET_TEPLATE_LIST);
+}
+
+// SAVE DOCUMENT TEMPLATE ID
+export const SaveDocumentTemplateIdService = async (payload: ISaveDocumentTemplateIdPayload): Promise<ISaveDocumentTemplateIdResponse> => {
+    const api = Api.getInstance();
+    return await api.update<ISaveDocumentTemplateIdPayload, AxiosResponse<ISaveDocumentTemplateIdResponse>>(payload, SAVE_DOCUMENT_TEMPLATE_ID);
+}
+
+// Get Saved Document Template ID List
+export const GetSavedTemplateIdListService = async (payload:string): Promise<ISavedDocumentTemplateIdResponse> => {
+    const api = Api.getInstance();
+    return await api.get<ISavedDocumentTemplateIdResponse>(GET_SAVED_DOCUMENT_TEMPLATE_ID_LIST(payload));
 }

@@ -30,6 +30,7 @@ import {useAuthContext} from '../../provider/AuthProvider';
 import CompanyListModal from '../../common/CompanyListModal';
 import {ICompanyInfoData} from '../../interface/companyRegistration/IGetCompaniesResponse';
 import { ToastType, showToast } from '../../utils/utility';
+import { getSavedDocumentTemplateIdListRequest } from '../../redux/slices/TemplateSettingSlice';
 
 const OTPPageView = (props: any) => {
   const {navigation} = props;
@@ -128,6 +129,7 @@ const OTPPageView = (props: any) => {
     await setIsRegistrationComplete();
     await setLoginStatus();
     setLoggedIn(true);
+    dispatch(getSavedDocumentTemplateIdListRequest(companyId));
   };
 
   const closeModal = () => {

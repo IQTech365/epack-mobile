@@ -23,8 +23,8 @@ import { ICreateSerialNoResponse } from '../interface/setting/serialNo/ICreateSe
 import { createSerialNoFailure, createSerialNoRequest, createSerialNoSuccess, getSerialNoFailure, getSerialNoRequest, getSerialNoSuccess } from '../redux/slices/SerialNoSettingSlice';
 import { IGetModulesResponse } from '../interface/setting/role/IModule';
 import { IGetUnitTypeResponse } from '../interface/setting/unitType/IGetunitTypeResponse';
-import { ITemplateListResponse } from '../interface/setting/template/template';
-import { getTemplateListFailure, getTemplateListRequest, getTemplateListSuccess } from '../redux/slices/TemplateSettingSlice';
+import { ISaveDocumentTemplateIdPayload, ISaveDocumentTemplateIdResponse, ISavedDocumentTemplateIdResponse, ITemplateListResponse } from '../interface/setting/template/template';
+import { getSavedDocumentTemplateIdListFailure, getSavedDocumentTemplateIdListRequest, getSavedDocumentTemplateIdListSuccess, getTemplateListFailure, getTemplateListRequest, getTemplateListSuccess, saveDocumentTemplateIdFailure, saveDocumentTemplateIdRequest, saveDocumentTemplateIdSuccess } from '../redux/slices/TemplateSettingSlice';
 
 export function* addFooterContentSaga(action: PayloadAction<IAddFooterContentRequest>) {
     console.log('addFooterContentSaga--action--', JSON.stringify(action));
@@ -235,6 +235,28 @@ export function* getTemplateListSaga(action: PayloadAction) {
     }
 }
 
+export function* saveDocumentTemplateIdSaga(action: PayloadAction<ISaveDocumentTemplateIdPayload>) {
+    try {
+        const response: ISaveDocumentTemplateIdResponse = yield call(SettingService.SaveDocumentTemplateIdService, action.payload);
+        console.log('saveDocumentTemplateIdSaga-response----', JSON.stringify(response));
+        yield put(saveDocumentTemplateIdSuccess(response));
+    } catch (error) {
+        console.log('saveDocumentTemplateIdSaga-error----', error);
+        yield put(saveDocumentTemplateIdFailure(JSON.stringify(error)));
+    }
+}
+
+export function* getSavedDocumentTemplateIdListSaga(action: PayloadAction<string>) {
+    try {
+        const response: ISavedDocumentTemplateIdResponse = yield call(SettingService.GetSavedTemplateIdListService, action.payload);
+        console.log('getSavedDocumentTemplateIdListSaga-response----', JSON.stringify(response));
+        yield put(getSavedDocumentTemplateIdListSuccess(response));
+    } catch (error) {
+        console.log('getSavedDocumentTemplateIdListSaga-error----', error);
+        yield put(getSavedDocumentTemplateIdListFailure(JSON.stringify(error)));
+    }
+}
+
 export function* watcherSettingSaga() {
     yield takeLatest(addFooterContentRequest.type, addFooterContentSaga);
     yield takeLatest(getFooterContentsRequest.type, getFooterContentsSaga);
@@ -253,4 +275,6 @@ export function* watcherSettingSaga() {
     yield takeLatest(getSerialNoRequest.type, getSerialNoSaga);
     yield takeLatest(getUnitTypeRequest.type, getUnitTypeSaga);
     yield takeLatest(getTemplateListRequest.type, getTemplateListSaga);
+    yield takeLatest(saveDocumentTemplateIdRequest.type, saveDocumentTemplateIdSaga);
+    yield takeLatest(getSavedDocumentTemplateIdListRequest.type, getSavedDocumentTemplateIdListSaga);
 }

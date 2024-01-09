@@ -8,17 +8,15 @@ interface IProps {
     index: number;
     category:string;
     activeTemplateId:string;
-    onChangeCategory: (category:string) => void;
-    onChangeTemplateId: (id:string) => void;
+    onChangeTemplateId: (category: string, moduleId:string, templateId:string) => void;
 }
 
-const TemplateCard:FC<IProps> = ({item, index, category, activeTemplateId, onChangeCategory, onChangeTemplateId}) => {
+const TemplateCard:FC<IProps> = ({item, index, category, activeTemplateId, onChangeTemplateId}) => {
 
     const container = (category == item.templateVersion && activeTemplateId == item._id) ? styles.activeContainer : styles.container;
 
     const handleChange = () => {
-        onChangeCategory(item.templateVersion);
-        onChangeTemplateId(item._id);
+        onChangeTemplateId(item.templateVersion, item.moduleId, item._id);
     }
 
     return <TouchableOpacity style={container} key={`${index}`} onPress={handleChange}>

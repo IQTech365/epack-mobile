@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import {SectionList, Text, View} from 'react-native';
-import {useAppSelector} from '../../../../../redux/hooks';
+import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import styles from './styles';
 import {
+  ISaveDocumentTemplateIdPayload,
   ITemplate,
   ITemplateData,
 } from '../../../../../interface/setting/template/template';
 import TemplateCard from '../TemplateCard';
 import TemplateEmptyView from '../TemplateEmptyView';
+import useCompanyId from '../../../../../hooks/useCompanyId';
+import { resetSaveDocumentTemplateIdRequest, saveDocumentTemplateIdRequest } from '../../../../../redux/slices/TemplateSettingSlice';
+import { ToastType, showToast } from '../../../../../utils/utility';
+import Spinner from '../../../../../common/Spinner';
 
 interface ISectionData {
   title: string;
@@ -16,7 +21,14 @@ interface ISectionData {
 
 //@ts-ignore
 const TemplatePageView = ({route}) => {
-  const {templates} = useAppSelector(state => state.Template);
+  const companyId = useCompanyId();
+  const dispatch = useAppDispatch();
+  const {
+    templates,
+    saveDocTemplateIdRequesting,
+    saveDocTemplateIdSuccess,
+    saveDocTemplateIdFailure,
+  } = useAppSelector(state => state.Template);
   const [activeCategory, setActiveCategory] = useState<string>('');
   const [activeTemplateId, setActiveTemplateId] = useState<string>('');
 
@@ -79,18 +91,31 @@ const TemplatePageView = ({route}) => {
     }
   }
 
-  const handleChangeCategory = (category:string) => {
+  const handleChangeTemplateId = (category: string, moduleId:string, templateId:string) => {
     setActiveCategory(category);
-  }
-
-  const handleChangeTemplateId = (id:string) => {
-    setActiveTemplateId(id)
+    setActiveTemplateId(templateId)
+    const payload:ISaveDocumentTemplateIdPayload = {
+      companyId: companyId,
+      templateId: templateId,
+      moduleId: moduleId,
+    }
+    dispatch(saveDocumentTemplateIdRequest(payload));
   }
 
   useEffect(() => {
     _setActiveCategory();
     _setActiveTemplateIndex();
   }, []);
+
+  useEffect(() => {
+    if(!saveDocTemplateIdRequesting && saveDocTemplateIdSuccess) {
+      showToast('Template Id Saved.', ToastType.SUCCESS);
+      dispatch(resetSaveDocumentTemplateIdRequest());
+    } else if(!saveDocTemplateIdRequesting && saveDocTemplateIdFailure) {
+      showToast('Template Id Not Saved. Try again!', ToastType.ERROR);
+      dispatch(resetSaveDocumentTemplateIdRequest());
+    }
+  }, [saveDocTemplateIdRequesting, saveDocTemplateIdSuccess, saveDocTemplateIdFailure]);
 
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
@@ -102,7 +127,6 @@ const TemplatePageView = ({route}) => {
             index={index}
             category={activeCategory}
             activeTemplateId={activeTemplateId}
-            onChangeCategory={handleChangeCategory}
             onChangeTemplateId={handleChangeTemplateId}
           />
         )}
@@ -115,6 +139,7 @@ const TemplatePageView = ({route}) => {
         keyExtractor={item => item._id}
         stickySectionHeadersEnabled
       />
+      <Spinner show={saveDocTemplateIdRequesting} />
     </View>
   );
 };
