@@ -13,13 +13,12 @@ import {
 import {IAppSetting, ISubmodule} from '../../../interface/common/common';
 import SerialNoListItem from './SerialNoSettingListItem';
 import SerilaNoSettingFormView from './SerialNoSettingFormView';
-import useCompanyId from '../../../hooks/useCompanyId';
+import { getCurrentCompanyId } from '../../../utils/storage';
 
 const AddSerialNoView = () => {
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
   const [selectedSubmodule, setSelectedSubmodule] = useState<ISubmodule>();
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
 
   const {
     getSubmodulesRequesting,
@@ -61,7 +60,9 @@ const AddSerialNoView = () => {
   };
 
   const _getAppSettingsRequest = () => {
-    dispatch(getAppSettingsRequest(companyId));
+    getCurrentCompanyId().then(id => {
+      dispatch(getAppSettingsRequest(id as string));
+    }).catch(err => console.log(err));
   }
 
   const handleOnRefresh = () => {

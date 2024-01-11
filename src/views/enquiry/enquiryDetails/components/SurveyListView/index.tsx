@@ -15,8 +15,8 @@ import Spinner from '../../../../../common/Spinner';
 import Toast from 'react-native-toast-message';
 import { IAddSurveyItemRequest } from '../../../../../interface/enquiry/IAddSurveyItemRequest';
 import { addSurveyItemRequest, getSurveyItemListRequest, resetAddSurveyItemRequest } from '../../../../../redux/slices/EnquirySlice';
-import useCompanyId from '../../../../../hooks/useCompanyId';
 import useAuthId from '../../../../../hooks/useAuthId';
+import { getCurrentCompanyId } from '../../../../../utils/storage';
 
 interface ISurveyListViewProps {
   enquiryId:string
@@ -39,7 +39,6 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({ enquiryId}) => {
   const authId = useAuthId();
 
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
 
   const handleSurveyListInputTextChange = (text: string) => {
     setServeyList(text);
@@ -67,25 +66,29 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({ enquiryId}) => {
 
 
   const handleCreate = () => {
-   const payload:IAddSurveyItemRequest = {
-      companyId: companyId,
-      enquiryId: enquiryId,
-      surveyListNo: surveyList,
-      surveyDate:date,
-      itemName: itemName,
-      quantity:quantity,
-      valueOfGoods: goods,
-      remarks: remarks,
-      addedBy:authId,
-  }
-  dispatch(addSurveyItemRequest(payload))
+    getCurrentCompanyId().then(id => {
+      const payload:IAddSurveyItemRequest = {
+        companyId: id as string,
+        enquiryId: enquiryId,
+        surveyListNo: surveyList,
+        surveyDate:date,
+        itemName: itemName,
+        quantity:quantity,
+        valueOfGoods: goods,
+        remarks: remarks,
+        addedBy:authId,
+    }
+      dispatch(addSurveyItemRequest(payload))
+    }).catch(err => console.log(err));
   };
 
   const _getSurveyItemListRequest = () => {
-    const payload :any= {
-      companyId:companyId
-    }
-    dispatch(getSurveyItemListRequest(payload));
+    getCurrentCompanyId().then(id => {
+      const payload :any= {
+        companyId:id as string
+      }
+      dispatch(getSurveyItemListRequest(payload));
+    }).catch(err => console.log(err));
   }
 
   useEffect(() => {

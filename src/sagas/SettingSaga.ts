@@ -205,7 +205,7 @@ export function* getSerialNoSaga(action: PayloadAction<string>) {
 export function* getModulesSaga(action: PayloadAction) {
     try {
         const response: IGetModulesResponse = yield call(SettingService.GetModulesService);
-        console.log('getModulesSaga-response----', JSON.stringify(response));
+        // console.log('getModulesSaga-response----', JSON.stringify(response));
         yield put(getModulesSuccess(response));
     } catch (error) {
         console.log('getModulesSaga-error----', error);

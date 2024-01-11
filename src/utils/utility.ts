@@ -1,6 +1,7 @@
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import Share from 'react-native-share';
 import Toast from 'react-native-toast-message';
+import { getCurrentCompanyId } from './storage';
 
 export const startShare = async (html:any, docName:string, action:any) => {
     let options = {
@@ -56,5 +57,4 @@ export const startShare = async (html:any, docName:string, action:any) => {
       text2: message,
     });
   }
-  
   

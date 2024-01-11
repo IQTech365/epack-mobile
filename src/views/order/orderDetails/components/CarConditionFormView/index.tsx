@@ -25,7 +25,6 @@ import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import {createCarConditionRequest, resetCreateCarConditionRequest} from '../../../../../redux/slices/OrderSlice';
 import Spinner from '../../../../../common/Spinner';
 import Toast from 'react-native-toast-message';
-import useCompanyId from '../../../../../hooks/useCompanyId';
 import {
   getVehicleAccessoryList,
   getVehicleColorList,
@@ -34,6 +33,7 @@ import {
   getVehicleTypeList,
 } from './utils';
 import useAuthId from '../../../../../hooks/useAuthId';
+import { getCurrentCompanyId } from '../../../../../utils/storage';
 
 interface ICarConditionFormViewProps {
   orderId: string | undefined;
@@ -64,7 +64,6 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
   } = useAppSelector(state => state.Common);
   const dispatch2 = useAppDispatch();
   const authId = useAuthId();
-  const companyId = useCompanyId();
 
   const handleCarConditionNo = (text: string) => {
     dispatch({
@@ -224,36 +223,39 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
   }
 
   const handleCreateCarCondition = () => {
-    const payload: ICreateCarConditionRequest = {
-      companyId: companyId,
-      orderId: orderId as string,
-      templateId: '32423erer',
-      carConditionNumber: reducerState.carConditionNumber,
-      dateOfCarCondition: reducerState.dateOfCarCondition,
-      vehicleType: reducerState.vehicleType,
-      manufacturer: reducerState.manufacturer,
-      model: reducerState.model,
-      yearOfManufacturing: reducerState.yearOfManufacturing,
-      vehicleAccessories: reducerState.vehicleAccessories,
-      color: reducerState.color,
-      vehicleRegistrationNumber: reducerState.vehicleRegistrationNumber,
-      vehicleCoveredDistanceInKM: reducerState.vehicleCoveredDistanceInKM,
-      vehicleValue: reducerState.vehicleValue,
-      insurancePolicyNumber: reducerState.insurancePolicyNumber,
-      insuranceCompany: reducerState.insuranceCompany,
-      chasisNumber: reducerState.chasisNumber,
-      engineNumber: reducerState.engineNumber,
-      batteryNumber: reducerState.batteryNumber,
-      tyreNumber: reducerState.tyreNumber,
-      anyOtherAccessorie: reducerState.anyOtherAccessorie,
-      scratches: reducerState.scaratches,
-      dent: reducerState.dent,
-      visibleObservation: reducerState.visibleObservation,
-      remarks: reducerState.remarks,
-      addedBy: authId,
-    };
-    console.log(payload, 'payload carconditon req');
-    dispatch2(createCarConditionRequest(payload));
+    getCurrentCompanyId().then(id => {
+      const payload: ICreateCarConditionRequest = {
+        companyId: id as string,
+        orderId: orderId as string,
+        templateId: '32423erer',
+        carConditionNumber: reducerState.carConditionNumber,
+        dateOfCarCondition: reducerState.dateOfCarCondition,
+        vehicleType: reducerState.vehicleType,
+        manufacturer: reducerState.manufacturer,
+        model: reducerState.model,
+        yearOfManufacturing: reducerState.yearOfManufacturing,
+        vehicleAccessories: reducerState.vehicleAccessories,
+        color: reducerState.color,
+        vehicleRegistrationNumber: reducerState.vehicleRegistrationNumber,
+        vehicleCoveredDistanceInKM: reducerState.vehicleCoveredDistanceInKM,
+        vehicleValue: reducerState.vehicleValue,
+        insurancePolicyNumber: reducerState.insurancePolicyNumber,
+        insuranceCompany: reducerState.insuranceCompany,
+        chasisNumber: reducerState.chasisNumber,
+        engineNumber: reducerState.engineNumber,
+        batteryNumber: reducerState.batteryNumber,
+        tyreNumber: reducerState.tyreNumber,
+        anyOtherAccessorie: reducerState.anyOtherAccessorie,
+        scratches: reducerState.scaratches,
+        dent: reducerState.dent,
+        visibleObservation: reducerState.visibleObservation,
+        remarks: reducerState.remarks,
+        addedBy: authId,
+      };
+      console.log(payload, 'payload carconditon req');
+      dispatch2(createCarConditionRequest(payload));
+    }).catch(err => console.log(err));
+    
   };
 
   useEffect(() => {

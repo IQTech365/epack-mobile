@@ -27,8 +27,8 @@ import { addFooterContentRequest, resetFooterContentRequest } from '../../../../
 import Toast from 'react-native-toast-message';
 import Spinner from '../../../../../common/Spinner';
 import { ISubmoduleData } from '../../../../../interface/setting/packerProfile/ISubmodule';
-import useCompanyId from '../../../../../hooks/useCompanyId';
 import { ToastType, showToast } from '../../../../../utils/utility';
+import { getCurrentCompanyId } from '../../../../../utils/storage';
 
 interface IContentUpdateProps {}
 
@@ -41,7 +41,6 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({}) => {
   const [content, setContent] = useState<string>('');
   const [modules, setModules] = useState<string[]>(['']);
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
 
   const {addFooterContentRequesting, addFooterContentSuccess, addFooterContentFailure, submodules} = useAppSelector(state => state.Setting);
   const richText = React.useRef();
@@ -70,15 +69,17 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({}) => {
   }
 
   const handleSave = () => {
-    const payload: IAddFooterContentRequest = {
-      companyId: companyId,
-      modulesView: modules,
-      accountType: accountType,
-      title: title,
-      content: content,
-    }
-    console.log('FooterContent-payload--', JSON.stringify(payload));
-    dispatch(addFooterContentRequest(payload));
+    getCurrentCompanyId().then(id => {
+      const payload: IAddFooterContentRequest = {
+        companyId: id as string,
+        modulesView: modules,
+        accountType: accountType,
+        title: title,
+        content: content,
+      }
+      console.log('FooterContent-payload--', JSON.stringify(payload));
+      dispatch(addFooterContentRequest(payload));
+    }).catch(err => console.log(err));
   }
 
   useEffect(() => {

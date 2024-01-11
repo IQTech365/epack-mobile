@@ -19,7 +19,6 @@ import {
   getBranchsRequest,
   getFranchiseRequest,
 } from '../../../../../redux/slices/MyProfile';
-import useCompanyId from '../../../../../hooks/useCompanyId';
 import UploadPhotoView, { PHOTO } from './components/UploadPhotoView';
 import {useAddLorryFormContextHook} from '../../../../../provider/AddLorryFormContextProvider';
 import useAuthId from '../../../../../hooks/useAuthId';
@@ -39,6 +38,7 @@ import {
 } from '../../../../order/orderDetails/components/CarConditionFormView/utils';
 import {getBranchList, getFirstVehicleType, getFranchiseList} from '../../utils';
 import { ToastType, showToast } from '../../../../../utils/utility';
+import { getCurrentCompanyId } from '../../../../../utils/storage';
 
 const AddLorryView: React.FC<{}> = ({}) => {
   const {
@@ -79,7 +79,6 @@ const AddLorryView: React.FC<{}> = ({}) => {
   const [vehicleCompanyId, setVehicleCompanyId] = useState<string>('');
 
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
 
   const authId = useAuthId();
 
@@ -108,11 +107,15 @@ const AddLorryView: React.FC<{}> = ({}) => {
   }
 
   const _getBranchsRequest = () => {
-    dispatch(getBranchsRequest(companyId));
+    getCurrentCompanyId().then(id => {
+      dispatch(getBranchsRequest(id as string));
+    }).catch(err => console.log(err));
   }
 
   const _getFranchiseRequest = () => {
-    dispatch(getFranchiseRequest(companyId));
+    getCurrentCompanyId().then(id => {
+      dispatch(getFranchiseRequest(id as string));
+    }).catch(err => console.log(err));
   }
 
   useEffect(() => {
@@ -140,29 +143,32 @@ const AddLorryView: React.FC<{}> = ({}) => {
     vehicleModelsRequesting;
 
   const handleSubmit = () => {
-    const payload: IAddLorryRequest = {
-      companyId: companyId,
-      entityType: state.entity,
-      entityId: state.entity == entityOptions[0].label ? companyId : state.sub_entity_id,
-      vehicleCompanyName: state.lorry_company_name,
-      vehicleManufacturingYear: state.manufacturing_year,
-      vehicleType: state.lorry_type,
-      vehicleModel: state.vehicle_model,
-      vehicleRegistrationNo: state.reg_number,
-      rcDoc: state.vehicle_rc_photo,
-      vehicleChassisNo: state.vehicle_chasis_no,
-      vehicleEngineNo: state.vehicle_engine_no,
-      permitNo: state.permit_no,
-      pollutionDoc: state.pollution_certificate_photo,
-      permitRenewalDate: state.permit_no_renewal_date,
-      vehicleRCNo: state.vehicle_rc_no,
-      pollutionCertificateNo: state.pollution_certificate_no,
-      permitDoc: state.permit_photo,
-      pollutionRenewalDate: state.pollution_certificate_renewal_date,
-      addedBy: authId,
-    };
-    console.log(payload, 'add Lorry..');
-    dispatch(addLorryRequest(payload));
+    getCurrentCompanyId().then(id => {
+      const payload: IAddLorryRequest = {
+        companyId: id as string,
+        entityType: state.entity,
+        entityId: state.entity == entityOptions[0].label ? id as string : state.sub_entity_id,
+        vehicleCompanyName: state.lorry_company_name,
+        vehicleManufacturingYear: state.manufacturing_year,
+        vehicleType: state.lorry_type,
+        vehicleModel: state.vehicle_model,
+        vehicleRegistrationNo: state.reg_number,
+        rcDoc: state.vehicle_rc_photo,
+        vehicleChassisNo: state.vehicle_chasis_no,
+        vehicleEngineNo: state.vehicle_engine_no,
+        permitNo: state.permit_no,
+        pollutionDoc: state.pollution_certificate_photo,
+        permitRenewalDate: state.permit_no_renewal_date,
+        vehicleRCNo: state.vehicle_rc_no,
+        pollutionCertificateNo: state.pollution_certificate_no,
+        permitDoc: state.permit_photo,
+        pollutionRenewalDate: state.pollution_certificate_renewal_date,
+        addedBy: authId,
+      };
+      console.log(payload, 'add Lorry..');
+      dispatch(addLorryRequest(payload));
+    }).catch(err => console.log(err));
+    
   };
 
   useEffect(() => {

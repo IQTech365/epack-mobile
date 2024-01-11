@@ -5,7 +5,7 @@ export const PINCODE = (pincode) => `https://api.postalpincode.in/pincode/${pinc
 // Company Registration Module
 export const ADD_COMPANY = `/company/add`;
 export const GET_COMPANIES = (company_id) => `/company/${company_id}`;
-export const EDIT_COMPANY = `/company/edit`;
+export const EDIT_COMPANY = (company_id) => `/company/edit/${company_id}`;
 export const GET_COMPANY = (company_id) => `/company/${company_id}`;
 export const DELETE_COMPANY = (company_id) => `/company/${company_id}`;
 export const UPLOAD_COMPANY_LOGO = `/company/upload-logo`;
@@ -154,7 +154,7 @@ export const ADD_PURCHASE = `/purchase/add`;
 // Banners
 export const GET_BANNERS = `/setting/banner-image/all`;
 // Razorpay Order
-export const CREATE_RAZORPAY_ORDER = `/purchase/order`;
+export const CREATE_RAZORPAY_ORDER = `/purchase/createOrder`;
 // Template List
 export const GET_TEPLATE_LIST = `/template/all`;
 // Save Document Template ID

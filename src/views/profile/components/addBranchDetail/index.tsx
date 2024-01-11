@@ -18,7 +18,7 @@ import AddBranchUpdateView from '../addBranchUpdateView';
 import {getBranchsRequest} from '../../../../redux/slices/MyProfile';
 import Spinner from '../../../../common/Spinner';
 import AddBranchListItem from '../addBranchList';
-import useCompanyId from '../../../../hooks/useCompanyId';
+import { getCurrentCompanyId } from '../../../../utils/storage';
 
 const AddBranchView = () => {
   const [showBranchList, setshowBranchList] = useState<boolean>(false);
@@ -28,7 +28,6 @@ const AddBranchView = () => {
   );
   const {data: BranchsData = []} = Branchs || {};
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
 
   const handleCreateNewContent = () => {
     setshowBranchList(false);
@@ -80,7 +79,9 @@ const AddBranchView = () => {
   };
 
   const _getBranchsRequest = () => {
-    dispatch(getBranchsRequest(companyId));
+    getCurrentCompanyId().then(id => {
+      dispatch(getBranchsRequest(id as string));
+    }).catch(err => console.log(err));
   }
 
   const handleOnRefresh = useCallback(async () => {

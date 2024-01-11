@@ -28,13 +28,13 @@ import {
   resetCreateMoneyReceiptRequest,
 } from '../../../../../redux/slices/OrderSlice';
 import Spinner from '../../../../../common/Spinner';
-import useCompanyId from '../../../../../hooks/useCompanyId';
 import useAuthId from '../../../../../hooks/useAuthId';
 import { getQuotationsRequest } from '../../../../../redux/slices/QuotationSlice';
 import { IGetQuotationRequest } from '../../../../../interface/quotation/IGetQuotationRequest';
 import { IGetQuotationData } from '../../../../../interface/quotation/IGetQuotationsResponse';
 import EpackDropdown from '../../../../../common/DropdownComponent2';
 import { ToastType, showToast } from '../../../../../utils/utility';
+import { getCurrentCompanyId } from '../../../../../utils/storage';
 
 interface IMoneyReceiptFormViewProps {
   orderId: string | undefined;
@@ -61,7 +61,6 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
   } = useAppSelector(state => state.Order);
   
   const authId = useAuthId();
-  const companyId = useCompanyId();
   const {quotations, getQuotationsRequesting} = useAppSelector(
     state => state.Quotation,
   );
@@ -178,59 +177,64 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
   };
 
   const handleCreate = () => {
-    const payload: ICreateMoneyReceiptRequest = {
-      companyId: companyId,
-      orderId: orderId as string,
-      receiptNumber: reducerState.receiptNumber,
-      receiptDate: reducerState.receiptDate,
-      arivalDate: reducerState.arivalDate,
-      templateId: '12121124232323',
-      receiptAgainst:
-        reducerState.receiptAgainst || receiptAgainstOptions[0].label,
-      billNumber: reducerState.billQuotationNo,
-      quotationNumber: reducerState.billQuotationNo,
-      consignmentNumber: '',
-      numbersOfArticles: reducerState.numbersOfArticles,
-      paymentMode: reducerState.paymentMode || modeOfPaymentOptions[0].label,
-      paymentType: reducerState.paymentType || paymentTypeOptions[0].label,
-      paymentAmount: reducerState.paymentAmount,
-      referenceNumber: reducerState.referenceNumber,
-      status: 'NEW',
-      addedBy: authId,
-    };
-
-    const editPayload: any = {
-      receiptNumber: reducerState.receiptNumber,
-      receiptDate: reducerState.receiptDate,
-      arivalDate: reducerState.arivalDate,
-      templateId: '1112222',
-      receiptAgainst: reducerState.receiptAgainst,
-      billNumber: reducerState.billQuotationNo,
-      quotationNumber: reducerState.billQuotationNo,
-      consignmentNumber: '',
-      numbersOfArticles: reducerState.numbersOfArticles,
-      paymentMode: reducerState.paymentMode,
-      paymentType: reducerState.paymentType,
-      paymentAmount: reducerState.paymentAmount,
-    };
-    console.log(payload, 'payload create money', isEdit);
-    if (isEdit == true) {
-      dispatch2(
-        editMoneyReceiptListRequest({
-          id: editData._id,
-          requestBody: editPayload,
-        }),
-      );
-    } else {
-      dispatch2(createMoneyReceiptRequest(payload));
-    }
+    getCurrentCompanyId().then(id => {
+      const payload: ICreateMoneyReceiptRequest = {
+        companyId: id as string,
+        orderId: orderId as string,
+        receiptNumber: reducerState.receiptNumber,
+        receiptDate: reducerState.receiptDate,
+        arivalDate: reducerState.arivalDate,
+        templateId: '12121124232323',
+        receiptAgainst:
+          reducerState.receiptAgainst || receiptAgainstOptions[0].label,
+        billNumber: reducerState.billQuotationNo,
+        quotationNumber: reducerState.billQuotationNo,
+        consignmentNumber: '',
+        numbersOfArticles: reducerState.numbersOfArticles,
+        paymentMode: reducerState.paymentMode || modeOfPaymentOptions[0].label,
+        paymentType: reducerState.paymentType || paymentTypeOptions[0].label,
+        paymentAmount: reducerState.paymentAmount,
+        referenceNumber: reducerState.referenceNumber,
+        status: 'NEW',
+        addedBy: authId,
+      };
+  
+      const editPayload: any = {
+        receiptNumber: reducerState.receiptNumber,
+        receiptDate: reducerState.receiptDate,
+        arivalDate: reducerState.arivalDate,
+        templateId: '1112222',
+        receiptAgainst: reducerState.receiptAgainst,
+        billNumber: reducerState.billQuotationNo,
+        quotationNumber: reducerState.billQuotationNo,
+        consignmentNumber: '',
+        numbersOfArticles: reducerState.numbersOfArticles,
+        paymentMode: reducerState.paymentMode,
+        paymentType: reducerState.paymentType,
+        paymentAmount: reducerState.paymentAmount,
+      };
+      console.log(payload, 'payload create money', isEdit);
+      if (isEdit == true) {
+        dispatch2(
+          editMoneyReceiptListRequest({
+            id: editData._id,
+            requestBody: editPayload,
+          }),
+        );
+      } else {
+        dispatch2(createMoneyReceiptRequest(payload));
+      }
+    }).catch(err => console.log(err));
+    
   };
 
   const _getQuotationsRequest = () => {
-    const payload: IGetQuotationRequest = {
-      companyId:companyId
-    };
-    dispatch2(getQuotationsRequest(payload));
+    getCurrentCompanyId().then(id => {
+      const payload: IGetQuotationRequest = {
+        companyId:id as string
+      };
+      dispatch2(getQuotationsRequest(payload));
+    }).catch(err => console.log(err));
   }
 
   useEffect(() => {

@@ -17,7 +17,7 @@ import CreateIcon from '../../../../../images/icons/create_icon.svg';
 import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import { getPaymentMethodsRequest } from '../../../../../redux/slices/ProfileSettingSlice';
-import useCompanyId from '../../../../../hooks/useCompanyId';
+import { getCurrentCompanyId } from '../../../../../utils/storage';
 
 const AddAccountView = () => {
   const [showPaymentMethodList, setShowPaymentMethodList] =
@@ -25,7 +25,6 @@ const AddAccountView = () => {
   const [showAddPaymentMehod, setShowAddPaymentMethod] =
     useState<boolean>(true);
     const dispatch = useAppDispatch();
-    const companyId = useCompanyId();
 
   const rederItemBankAccount = (index: number) => {
     return (
@@ -122,7 +121,9 @@ const AddAccountView = () => {
   };
 
   const _getPaymentMethodsRequest = () => {
-    dispatch(getPaymentMethodsRequest(companyId));
+    getCurrentCompanyId().then(id => {
+      dispatch(getPaymentMethodsRequest(id as string));
+    }).catch(err => console.log(err));
   }
 
   useEffect(() => {

@@ -20,9 +20,9 @@ import {
   ICustomerBillingInfo,
   ICustomersRequest,
 } from '../../../../../interface/common/common';
-import useCompanyId from '../../../../../hooks/useCompanyId';
 import {Validator} from '../../../../../utils/validation';
 import CompanyAddressView from '../CompanyAddressView';
+import { getCurrentCompanyId } from '../../../../../utils/storage';
 
 interface Props {
   //
@@ -54,7 +54,6 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
   const companyAddressInputCompRef = useRef(null);
 
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
 
   const {
     customers,
@@ -69,11 +68,13 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
   const handleCompanyName = (text: string) => {
     setCompanyName(text);
     if (!Validator.isEmpty(text)) {
-      const payload: ICustomersRequest = {
-        companyId: companyId,
-        searchKey: text,
-      };
-      debounce(dispatch(getCustomersRequest(payload)), 3000);
+      getCurrentCompanyId().then(id => {
+        const payload: ICustomersRequest = {
+          companyId: id as string,
+          searchKey: text,
+        };
+        debounce(dispatch(getCustomersRequest(payload)), 3000);
+      }).catch(err => console.log(err));
     }
   };
 

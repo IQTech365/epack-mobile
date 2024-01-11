@@ -24,8 +24,8 @@ import {
 import Spinner from '../../../../common/Spinner';
 import usePincodeHook from '../../../../hooks/usePincodeHook';
 import {getCities, getLocalities, getStates} from '../../../../utils/formatter';
-import useCompanyId from '../../../../hooks/useCompanyId';
 import { ToastType, showToast } from '../../../../utils/utility';
+import { getCurrentCompanyId } from '../../../../utils/storage';
 
 const AddBranchUpdateView: React.FC<{}> = ({}) => {
   const [state, dispatch] = useReducer(addBranchReducer, initialState);
@@ -37,8 +37,6 @@ const AddBranchUpdateView: React.FC<{}> = ({}) => {
   const {addBranchRequesting, addBranchSuccess, addBranchFailure} =
     useAppSelector(state => state.Myprofile);
   const dispatch2 = useAppDispatch();
-  const companyId = useCompanyId();
-
   const {result, fetching, setPincode} = usePincodeHook(
     () => {},
     () => {},
@@ -111,21 +109,24 @@ const AddBranchUpdateView: React.FC<{}> = ({}) => {
   };
 
   const handleSave = useCallback(() => {
-    const payload: IAddBranchRequest = {
-      companyId: companyId,
-      branchName: state.branchName,
-      registeredMobile: state.registeredMobile,
-      pincode: state.pincode,
-      state: state.state,
-      city: state.city,
-      locality: state.locality,
-      landmark: state.landmark,
-      email: state.email,
-      address: state.address,
-      createdBy: otpData?.data.id as string,
-    };
-    console.log(payload, 'add branch..');
-    dispatch2(addBranchRequest(payload));
+    getCurrentCompanyId().then(id => {
+      const payload: IAddBranchRequest = {
+        companyId: id as string,
+        branchName: state.branchName,
+        registeredMobile: state.registeredMobile,
+        pincode: state.pincode,
+        state: state.state,
+        city: state.city,
+        locality: state.locality,
+        landmark: state.landmark,
+        email: state.email,
+        address: state.address,
+        createdBy: otpData?.data.id as string,
+      };
+      console.log(payload, 'add branch..');
+      dispatch2(addBranchRequest(payload));
+    }).catch(err => console.log(err));
+    
   }, [state]);
 
   useEffect(() => {

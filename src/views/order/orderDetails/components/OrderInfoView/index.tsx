@@ -28,10 +28,10 @@ import Toast from 'react-native-toast-message';
 import {formatDate} from '../../../../../utils/formatter';
 import { IUpdateEnquiryStatusRequest } from '../../../../../interface/enquiry/IUpdateEnquiryStatusRequest';
 import { ISingleEnquiryData } from '../../../../../interface/enquiry/ISingleEnquiryResponse';
-import useCompanyId from '../../../../../hooks/useCompanyId';
 import { IGetOrdersRequest } from '../../../../../interface/order/IGetOrdersRequest';
 import { getOrdersRequest } from '../../../../../redux/slices/OrderSlice';
 import { NavigationProp } from '@react-navigation/native';
+import { getCurrentCompanyId } from '../../../../../utils/storage';
 interface IOrderInfoViewProps {
   orderId: string;
   item: ISingleEnquiryData | null;
@@ -40,7 +40,6 @@ interface IOrderInfoViewProps {
 
 const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item, navigation}) => {
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
 
   const [orderStatus, setOrderStatus] = useState<string>(item?.status as string);
   const {
@@ -66,10 +65,12 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item, navigation
   };
 
   const refetchOrderList = () => {
-    const payload: Partial<IGetOrdersRequest> = {
-      companyId: companyId,
-    }
-    dispatch(getOrdersRequest(payload));
+    getCurrentCompanyId().then(id => {
+      const payload: Partial<IGetOrdersRequest> = {
+        companyId: id as string,
+      }
+      dispatch(getOrdersRequest(payload));
+    }).catch(err => console.log(err));
   }
 
   useEffect(() => {

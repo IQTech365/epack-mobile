@@ -19,7 +19,7 @@ import DropdownComponent from '../../../../../common/DropdownComponent';
 import { ICompanyInfoData } from '../../../../../interface/companyRegistration/IGetCompaniesResponse';
 import { ICompanyEditRequest } from '../../../../../interface/companyRegistration/ICompanyEditRequest';
 import { editCompanyRequest } from '../../../../../redux/slices/CompanySlice';
-import useCompanyId from '../../../../../hooks/useCompanyId';
+import { getCurrentCompanyId } from '../../../../../utils/storage';
 
 export enum ADDRESS_TYPE {
   PICKUP,
@@ -35,8 +35,8 @@ const UpdateComanyAddressForm: React.FC<IUpdateComanyAddressFormProps> = ({
 }) => {
   
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
   const {updateAddressRequesting, updateAddressSuccess, updateAddressFailure} = useAppSelector(state => state.Enquiry);
+  const [company, setCompany] = useState<ICompanyInfoData>();
   const [states, setStates] = useState<TDropdownItem[]>([]);
   const [cities, setCities] = useState<TDropdownItem[]>([]);
   const [isInit, setIsInit] = useState<boolean>(true);
@@ -66,14 +66,13 @@ const UpdateComanyAddressForm: React.FC<IUpdateComanyAddressFormProps> = ({
   const { data: companiesData } = companies || {};
 
   const getCompany = () => {
-    let company: ICompanyInfoData | null = null;
-    if (companiesData && Array.isArray(companiesData) && companiesData.length > 0) {
-      company = companiesData.find((d:ICompanyInfoData) => d._id == companyId);
-    }
-    return company;
+    getCurrentCompanyId().then(id => {
+      if (companiesData && Array.isArray(companiesData) && companiesData.length > 0) {
+        const company = companiesData.find((d:ICompanyInfoData) => d._id == id as string);
+        setCompany(company);
+      }
+    }).catch(err => console.log(err));
   }
-
-  const firstCompany = getCompany();
 
   const handleAddressTextChange = useCallback(
     (text: string) => {
@@ -142,6 +141,7 @@ const UpdateComanyAddressForm: React.FC<IUpdateComanyAddressFormProps> = ({
   }
 
   useEffect(() => {
+    getCompany();
     initFormValues();
   }, []);
 
@@ -209,26 +209,29 @@ const UpdateComanyAddressForm: React.FC<IUpdateComanyAddressFormProps> = ({
     // };
 
     const payload: ICompanyEditRequest = {
-      _id: firstCompany?._id as string,
-      authId: firstCompany?.authId as string,
-      companyName: firstCompany?.companyName as string,
-      contactPerson: firstCompany?.contactPerson as string,
-      email: firstCompany?.email as string,
-      companyMobile: firstCompany?.companyMobile as string,
+      companyId: company?._id as string,
+      payload: {
+        _id: company?._id as string,
+      authId: company?.authId as string,
+      companyName: company?.companyName as string,
+      contactPerson: company?.contactPerson as string,
+      email: company?.email as string,
+      companyMobile: company?.companyMobile as string,
       companyAddress: address,
       state: state,
       city:city,
       pincode: pin,
-      ibaApprovalCode: firstCompany?.govRegdDetails?.IBAcode as string,
+      ibaApprovalCode: company?.govRegdDetails?.IBAcode as string,
       ibaValidDate: "2023-10-25",
-      companyWebite: firstCompany?.companyWebite as string,
-      CINNumber: firstCompany?.govRegdDetails?.incorporationNumber as string,
+      companyWebite: company?.companyWebite as string,
+      CINNumber: company?.govRegdDetails?.incorporationNumber as string,
       companyLogo: "",
-      punchLine: firstCompany?.punchLine as string,
+      punchLine: company?.punchLine as string,
       companyProfile: "",
       district: "",
       postOffice: "",
-      companySignature: firstCompany?.companySignature as string
+      companySignature: company?.companySignature as string
+      }
     };
     dispatch(editCompanyRequest(payload));
     // dispatch(updateAddressRequest({id: enquiryId, requestBody: payload}));
@@ -264,7 +267,7 @@ const UpdateComanyAddressForm: React.FC<IUpdateComanyAddressFormProps> = ({
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
-              value={firstCompany?.pincode}
+              value={company?.pincode}
             />
           </View>
           <View style={styles.itemContainer}>
@@ -295,7 +298,7 @@ const UpdateComanyAddressForm: React.FC<IUpdateComanyAddressFormProps> = ({
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
-            value={firstCompany?.companyAddress}
+            value={company?.companyAddress}
           />
         </View>
         <Spacer height={4} />
@@ -306,7 +309,7 @@ const UpdateComanyAddressForm: React.FC<IUpdateComanyAddressFormProps> = ({
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
-            value={firstCompany?.companyAddress}
+            value={company?.companyAddress}
           />
         </View>
         <Spacer height={4} />
@@ -317,7 +320,7 @@ const UpdateComanyAddressForm: React.FC<IUpdateComanyAddressFormProps> = ({
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
-            value={firstCompany?.companyAddress}
+            value={company?.companyAddress}
           />
         </View>
         <Spacer height={20} />

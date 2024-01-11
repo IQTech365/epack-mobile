@@ -10,13 +10,12 @@ import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import { getFooterContentsRequest } from '../../../../../redux/slices/ProfileSettingSlice';
 import Spinner from '../../../../../common/Spinner';
-import useCompanyId from '../../../../../hooks/useCompanyId';
+import { getCurrentCompanyId } from '../../../../../utils/storage';
 
 const AddFooterContentView = () => {
   const [showContentList, setShowContentList] = useState<boolean>(false);
   const [showAddContent, setShowAddContent] = useState<boolean>(true);
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
   const {
     footerContents,
     getFooterContentsRequesting,
@@ -64,8 +63,9 @@ const AddFooterContentView = () => {
   };
 
   const _getFooterContentsRequest = () => {
-    
-    dispatch(getFooterContentsRequest(companyId));
+    getCurrentCompanyId().then(id => {
+      dispatch(getFooterContentsRequest(id as string));
+    }).catch(err => console.log(err));
   }
 
   useEffect(() => {

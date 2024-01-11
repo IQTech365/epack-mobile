@@ -21,7 +21,7 @@ import { IAddDocumentRequest } from '../../../../../interface/setting/packerProf
 import { addDocumentRequest, resetAddDocumentRequest } from '../../../../../redux/slices/ProfileSettingSlice';
 import Toast from 'react-native-toast-message';
 import Spinner from '../../../../../common/Spinner';
-import useCompanyId from '../../../../../hooks/useCompanyId';
+import { getCurrentCompanyId } from '../../../../../utils/storage';
 
 interface IDocumentUpdateProps {}
 
@@ -35,7 +35,6 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
   const [documentTitle, setDocumentTitle] = useState<string>('');
   const [modules, setModules] = useState<string[]>(['']);
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
 
   const {otpData} = useAppSelector(state => state.OTP);
   const {submodules, addDocumentRequesting, addDocumentSuccess, addDocumentFailure} = useAppSelector(state => state.Setting);
@@ -102,16 +101,19 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
   }
 
   const handleSave = () => {
-    const payload:IAddDocumentRequest = {
-      companyId: companyId,
-      moduleId: modules,
-      documentType: documentType,
-      documentTypeValue: getDocumentValue(),
-      documentTypeTitle: getDocumentTitle(),
-      ibaValidTillDate: ibaValidTillDate,
-      createdBy: otpData?.data.id as string,
-    }
-    dispatch(addDocumentRequest(payload));
+    getCurrentCompanyId().then(id => {
+      const payload:IAddDocumentRequest = {
+        companyId: id as string,
+        moduleId: modules,
+        documentType: documentType,
+        documentTypeValue: getDocumentValue(),
+        documentTypeTitle: getDocumentTitle(),
+        ibaValidTillDate: ibaValidTillDate,
+        createdBy: otpData?.data.id as string,
+      }
+      dispatch(addDocumentRequest(payload));
+    }).catch(err => console.log(err));
+    
   }
 
   useEffect(() => {

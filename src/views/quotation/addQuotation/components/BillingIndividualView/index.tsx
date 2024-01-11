@@ -8,7 +8,6 @@ import {COLOR_BLACK} from '../../../../../utils/colors';
 import Spacer from '../../../../../common/Spacer';
 import SearchIcon from '../../../../../images/icons/search.svg';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
-import useCompanyId from '../../../../../hooks/useCompanyId';
 import {
   getCustomersRequest,
   resetGetCustomersRequest,
@@ -19,6 +18,7 @@ import {
 } from '../../../../../interface/common/common';
 import { debounce } from '../../../../../utils/utility';
 import { Validator } from '../../../../../utils/validation';
+import { getCurrentCompanyId } from '../../../../../utils/storage';
 
 interface Props {
   //
@@ -31,7 +31,6 @@ const BillingIndividualView: React.FC<Props> = ({}) => {
   const [showCompanyList, setShowCompanyList] = useState<boolean>(false);
   const [selectedCompanyOption, setSelectedCompanyOption] = useState<ICustomer | null>(null);
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
 
   const {
     customers,
@@ -43,11 +42,13 @@ const BillingIndividualView: React.FC<Props> = ({}) => {
   const handleMobileNo = (text: string) => {
     setPartyMobileNo(text);
     if(!Validator.isEmpty(text) && text.length == 10){
-      const payload: ICustomersRequest = {
-        companyId: companyId,
-        searchKey: text,
-      };
-      debounce(dispatch(getCustomersRequest(payload)), 3000);
+      getCurrentCompanyId().then(id => {
+        const payload: ICustomersRequest = {
+          companyId: id as string,
+          searchKey: text,
+        };
+        debounce(dispatch(getCustomersRequest(payload)), 3000);
+      }).catch(err => console.log(err));
     }
   };
 

@@ -6,7 +6,6 @@ import Spacer from '../../common/Spacer';
 import {ClientStackRoute} from '../../utils/constants';
 import styles from './style';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
-import useCompanyId from '../../hooks/useCompanyId';
 import {ICustomer, ICustomerRequest} from '../../interface/customer/customer';
 import {getCustomersRequest} from '../../redux/slices/CustomerSlice';
 import Spinner from '../../common/Spinner';
@@ -14,6 +13,7 @@ import ClientListItem from './clientDetails/components/ClientListItem';
 import { IGetOrdersRequest } from '../../interface/order/IGetOrdersRequest';
 import { getOrdersRequest } from '../../redux/slices/OrderSlice';
 import Label from '../../common/Label';
+import { getCurrentCompanyId } from '../../utils/storage';
 
 interface IClientPageViewProps {
   navigation: NavigationProp<any, any>;
@@ -26,20 +26,21 @@ const ClientPageView: React.FC<IClientPageViewProps> = ({navigation}) => {
   );
   const {orders, getOrdersRequesting} = useAppSelector(state => state.Order);
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
 
   const _fetchCustomers = () => {
-    const payload: ICustomerRequest = {
-      companyId: companyId,
-    };
-    dispatch(getCustomersRequest(payload));
+    getCurrentCompanyId().then(id => {
+      const payload: ICustomerRequest = {
+        companyId: id as string,
+      };
+      dispatch(getCustomersRequest(payload));
+    }).catch(err => console.log('api-error', err));
   };
 
   const _fetchOrders = () => {
-    const payload: Partial<IGetOrdersRequest> = {
-      companyId: companyId,
-    };
-    dispatch(getOrdersRequest(payload));
+    // const payload: Partial<IGetOrdersRequest> = {
+    //   companyId: companyId,
+    // };
+    // dispatch(getOrdersRequest(payload));
   }
 
   const handleOnRefresh = useCallback(() => {
@@ -57,7 +58,7 @@ const ClientPageView: React.FC<IClientPageViewProps> = ({navigation}) => {
 
   useEffect(() => {
     _fetchCustomers();
-  }, [companyId]);
+  }, []);
 
   const handleClientDetailsClick = (item: any) => {
     navigation.navigate(ClientStackRoute.ClientDetails, {item: item});

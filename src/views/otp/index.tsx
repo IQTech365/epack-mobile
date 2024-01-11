@@ -146,11 +146,13 @@ const OTPPageView = (props: any) => {
     return list;
   };
 
-  const _doCompleteRegistration = () => {
+  const _doCompleteRegistration = (step: number) => {
     setShowCompaniesModal(false);
-    navigation.navigate(AuthStackRoute.RegisterCompany, {
-          registrationStep: 3,
-    });
+    if(step == 2) {
+      navigation.navigate("CompanyLogo");
+    } else if(step == 3) {
+      navigation.navigate("CompanySignature");
+    }
   }
 
   const _displayOTP = () => {
@@ -162,12 +164,12 @@ const OTPPageView = (props: any) => {
     return otp;
   }
 
-  const _setCompanyIdAndDoCompleteRegistration = async (id:string) => {
-    await setCurrentCompanyId(id);
-    navigation.navigate(AuthStackRoute.RegisterCompany, {
-      registrationStep: 3,
-    });
-  }
+  // const _setCompanyIdAndDoCompleteRegistration = async (id:string) => {
+  //   await setCurrentCompanyId(id);
+  //   navigation.navigate(AuthStackRoute.RegisterCompany, {
+  //     registrationStep: 3,
+  //   });
+  // }
 
   useEffect(() => {
     if (!verifyOtpRequesting && verifyOtpSuccess) {
@@ -188,19 +190,10 @@ const OTPPageView = (props: any) => {
       const {data} = companies || {};
       console.log('data-data----', JSON.stringify(data));
       if (data && Array.isArray(data) && data.length > 0) {
-        const firstCompany = data[0];
-        if (firstCompany.companySignature) {
-          completeRegistrationAndLoggedIn(firstCompany._id);
-        } else {
-          _setCompanyIdAndDoCompleteRegistration(firstCompany._id);
-        }
-        // setShowCompaniesModal(true);
+        setShowCompaniesModal(true);
       } else {
-        // setShowCompaniesModal(false);
-        // navigation.replace("Subscription");
-        navigation.navigate(AuthStackRoute.RegisterCompany, {
-          registrationStep: 1,
-        });
+        setShowCompaniesModal(false);
+        navigation.replace("Subscription");
       }
     } else if (!getCompaniesRequesting && getCompaniesFailure) {
       showToast('Error in Getting companies details.', ToastType.ERROR);
@@ -276,9 +269,7 @@ const OTPPageView = (props: any) => {
           visible={showCompaniesModal}
           onPress={closeModal}
           data={_getCompaniesList()}
-          doCompleteRegistration={() => {
-            _doCompleteRegistration()
-          }}
+          doCompleteRegistration={_doCompleteRegistration}
         />
       </LinearGradient>
     </AvoidSoftInputViewHOC>

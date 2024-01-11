@@ -9,7 +9,7 @@ import {
   registrationReducer,
   initialState,
   ACTION,
-} from '../views/company/registrationReducer2';
+} from '../views/company/registrationReducer';
 
 const useCompanyRegistrationContext = () => {
   const [state, dispatch] = useReducer(registrationReducer, initialState);

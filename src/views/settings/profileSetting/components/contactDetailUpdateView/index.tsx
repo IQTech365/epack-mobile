@@ -19,7 +19,7 @@ import { addContactRequest, getContactsRequest, resetAddContactRequest } from '.
 import { IAddContactDetailRequest } from '../../../../../interface/setting/packerProfile/contactDetail/IAddContactDetailRequest';
 import Spinner from '../../../../../common/Spinner';
 import { ISubmoduleData } from '../../../../../interface/setting/packerProfile/ISubmodule';
-import useCompanyId from '../../../../../hooks/useCompanyId';
+import { getCurrentCompanyId } from '../../../../../utils/storage';
 
 interface IContactDetailsProps {}
 
@@ -37,7 +37,6 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
   const {data: submodulesData = []} = submodules || {};
   const {otpData} = useAppSelector(state => state.OTP);
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
 
   const handleTextInputChange = (text: string) => {
     if(contactNumberError) {
@@ -112,16 +111,18 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
   const handleSave = () => {
     if(contactNumber && modules.length > 0) {
       setContactNumberError('');
-      const payload: IAddContactDetailRequest = {
-        companyId: companyId,
-        modulesView: modules,
-        contactType: contactType || contactDetail[0].label,
-        contactNumber: contactNumber,
-        otherTitle: '',
-        createdBy: otpData?.data.id as string,
-      }
-      console.log('Contact-payload--', JSON.stringify(payload));
-      dispatch(addContactRequest(payload));
+      getCurrentCompanyId().then(id => {
+        const payload: IAddContactDetailRequest = {
+          companyId: id as string,
+          modulesView: modules,
+          contactType: contactType || contactDetail[0].label,
+          contactNumber: contactNumber,
+          otherTitle: '',
+          createdBy: otpData?.data.id as string,
+        }
+        console.log('Contact-payload--', JSON.stringify(payload));
+        dispatch(addContactRequest(payload));
+      }).catch(err => console.log(err));
     } else if(contactNumber == '') {
       setContactNumberError(`${contactType} field is required.`);
     } else if(modules.length == 0) {
@@ -135,7 +136,9 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
   }
 
   const _getContactsRequest = () => {
-    dispatch(getContactsRequest(companyId));
+    getCurrentCompanyId().then(id => {
+      dispatch(getContactsRequest(id as string));
+    }).catch(err => console.log(err));
   }
 
   useEffect(() => {

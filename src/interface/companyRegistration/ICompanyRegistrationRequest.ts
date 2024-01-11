@@ -39,4 +39,5 @@ export interface ICompanyRegistrationRequest {
   accountDetails?: IAccountDetail[] | [];
   packerSignature: string;
   termsconditions: string;
+  _id?:string;
 }

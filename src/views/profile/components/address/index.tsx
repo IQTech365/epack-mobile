@@ -13,39 +13,48 @@ import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
 import { ICompanyInfoData } from '../../../../interface/companyRegistration/IGetCompaniesResponse';
 import Spinner from '../../../../common/Spinner';
 import { getCompaniesRequest } from '../../../../redux/slices/CompanySlice';
-import useCompanyId from '../../../../hooks/useCompanyId';
+import { getCurrentCompanyId } from '../../../../utils/storage';
 interface IAddressViewProps {
   showEditIcon?: boolean;
 }
 
 const AddressView: React.FC<IAddressViewProps> = ({showEditIcon = true}) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const [company, setCompany] = useState<ICompanyInfoData>();
   const {companies, getCompaniesRequesting} = useAppSelector(state => state.Company);
   const {data: companiesData} = companies || {};
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
 
-  const getCompany = () => {
-    let company:ICompanyInfoData | null  = null;
-    if(companiesData && Array.isArray(companiesData) && companiesData.length > 0) {
-      company = companiesData.find((d:ICompanyInfoData) => d._id == companyId);
-    }
-    return company;
+  const _getCompany = () => {
+    getCurrentCompanyId().then(id => {
+      if(companiesData && Array.isArray(companiesData) && companiesData.length > 0) {
+        const company = companiesData.find((d:ICompanyInfoData) => d._id == id as string);
+        setCompany(company);
+      }
+    }).catch(err => console.log(err));
   }
-
-  const firstCompany = getCompany();
 
   const handleModalOpen = () => {
     setOpenModal(true);
   };
 
+  const _getCompanesRequest = () => {
+    getCurrentCompanyId().then(id => {
+    if(companiesData && Array.isArray(companiesData) && companiesData.length > 0) {
+      const company:ICompanyInfoData = companiesData.find((d:ICompanyInfoData) => d._id == id as string);
+      dispatch(getCompaniesRequest(company?.authId as string));
+    }
+    }).catch(err => console.log(err));
+  }
+
   const handleModalClose = () => {
     setOpenModal(false);
-    dispatch(getCompaniesRequest(firstCompany?.authId as string));
+    _getCompanesRequest();
   };
   useEffect(() => {
-    dispatch(getCompaniesRequest(firstCompany?.authId as string));
-  }, [dispatch]);
+    _getCompany();
+    _getCompanesRequest();
+  }, []);
 
   return (
     <AvoidSoftInputViewHOC>
@@ -60,12 +69,12 @@ const AddressView: React.FC<IAddressViewProps> = ({showEditIcon = true}) => {
         </View>
         <Spacer height={8} />
         <View style={styles.elementContainer}>
-          <EnquiryDetailListItem label='Pincode' value={firstCompany?.pincode} />
-          <EnquiryDetailListItem label='State' value={firstCompany?.state} />
-          <EnquiryDetailListItem label='City' value={firstCompany?.city} />
-          <EnquiryDetailListItem label='Locality' value={firstCompany?.companyAddress} />
-          <EnquiryDetailListItem label='Landmark' value={firstCompany?.companyAddress} />
-          <EnquiryDetailListItem label='Address' value={firstCompany?.companyAddress} />
+          <EnquiryDetailListItem label='Pincode' value={company?.pincode} />
+          <EnquiryDetailListItem label='State' value={company?.state} />
+          <EnquiryDetailListItem label='City' value={company?.city} />
+          <EnquiryDetailListItem label='Locality' value={company?.companyAddress} />
+          <EnquiryDetailListItem label='Landmark' value={company?.companyAddress} />
+          <EnquiryDetailListItem label='Address' value={company?.companyAddress} />
           <EnquiryDetailListItem label='Country' value='India' />
         </View>
         <Spacer height={8} />

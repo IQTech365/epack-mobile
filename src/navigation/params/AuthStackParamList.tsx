@@ -4,6 +4,8 @@ export type AuthStackParamList = {
     OTPInput: undefined,
     ForgotPassword: undefined,
     Intro: undefined,
-    RegisterCompany: {registrationStep: number},
+    CompanyBasicInfo: undefined;
+    CompanyLogo: undefined;
+    CompanySignature:undefined;
     Subscription: undefined,
 }

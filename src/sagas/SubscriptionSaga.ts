@@ -7,7 +7,7 @@ import { addPurchaseFailure, addPurchaseRequest, addPurchaseSuccess, createRazor
 export function* getSubscriptionPlanListSaga(action: PayloadAction<any>) {
   try {
     const response: ISubscriptionPlanListResponse = yield call(SubscriptionService.GetSubscriptionPlanListService);
-    console.log('getSubscriptionPlanListSaga-response----', JSON.stringify(response));
+    // console.log('getSubscriptionPlanListSaga-response----', JSON.stringify(response));
     yield put(getSubscriptionPlansSuccess(response));
   } catch (error) {
     console.log('getSubscriptionPlanListSaga-error----', error);
@@ -18,7 +18,7 @@ export function* getSubscriptionPlanListSaga(action: PayloadAction<any>) {
 export function* getSubmoduleFeatureListSaga(action: PayloadAction<any>) {
   try {
     const response: ISubmoduleFeatureListResponse = yield call(SubscriptionService.GetSubmoduleFeaturesListService);
-    console.log('getSubmoduleFeatureListSaga-response----', JSON.stringify(response));
+    // console.log('getSubmoduleFeatureListSaga-response----', JSON.stringify(response));
     yield put(getSubmoduleFeaturesSuccess(response));
   } catch (error) {
     console.log('getSubmoduleFeatureListSaga-error----', error);
@@ -29,7 +29,7 @@ export function* getSubmoduleFeatureListSaga(action: PayloadAction<any>) {
 export function* getSubmoduleListSaga(action: PayloadAction<any>) {
   try {
     const response: ISubmoduleListResponse = yield call(SubscriptionService.GetSubmoduleListService);
-    console.log('getSubmoduleListSaga-response----', JSON.stringify(response));
+    // console.log('getSubmoduleListSaga-response----', JSON.stringify(response));
     yield put(getSubmodulesSuccess(response));
   } catch (error) {
     console.log('getSubmoduleListSaga-error----', error);

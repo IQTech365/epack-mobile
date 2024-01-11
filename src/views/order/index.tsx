@@ -14,8 +14,8 @@ import OrderListItem, {
   IOrderItem,
 } from './orderDetails/components/OrderListItem';
 import styles from './style';
-import useCompanyId from '../../hooks/useCompanyId';
 import {ISingleEnquiryData} from '../../interface/enquiry/ISingleEnquiryResponse';
+import { getCurrentCompanyId } from '../../utils/storage';
 
 interface IOrderPageViewProps {
   navigation: NavigationProp<any, any>;
@@ -23,7 +23,6 @@ interface IOrderPageViewProps {
 
 const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
   const {orders, getOrdersRequesting, getOrdersSuccess, getOrdersFailure} =
     useAppSelector(state => state.Order);
   const {data: ordersArr} = orders || {};
@@ -134,10 +133,12 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
   };
 
   const _fetchOrders = () => {
-    const payload: Partial<IGetOrdersRequest> = {
-      companyId: companyId,
-    };
-    dispatch(getOrdersRequest(payload));
+    getCurrentCompanyId().then(id => {
+      const payload: Partial<IGetOrdersRequest> = {
+        companyId: id as string,
+      };
+      dispatch(getOrdersRequest(payload));
+    }).catch(err => console.log(err));
   }
 
   const handleOnRefresh = useCallback(() => {
@@ -146,7 +147,7 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
 
   useEffect(() => {
     _fetchOrders();
-  }, [companyId]);
+  }, []);
 
   return (
     <View style={styles.container}>

@@ -17,7 +17,6 @@ import {
   IStorageCharges,
   ITransitInsurance,
 } from '../../../../interface/quotation/IAddQuotationRequest';
-import useCompanyId from '../../../../hooks/useCompanyId';
 import useAuthId from '../../../../hooks/useAuthId';
 import {options2} from './FreightDetailsView/components/utils';
 import {useAppDispatch, useAppSelector} from '../../../../redux/hooks';
@@ -37,6 +36,7 @@ import {
 } from '../../../../redux/slices/CommonSlice';
 import {ToastType, showToast} from '../../../../utils/utility';
 import { getVehicleSizeRequest } from '../../../../redux/slices/VehicleSlice';
+import { getCurrentCompanyId } from '../../../../utils/storage';
 
 interface Props {
   fromEnquiry?: boolean;
@@ -62,8 +62,6 @@ const AddQuotationForm: React.FC<Props> = ({
     setDropPincodeError,
   } = useQuotationFormContextHook();
   const authId = useAuthId();
-  const companyId = useCompanyId();
-
   const dispatch = useAppDispatch();
   const {
     addQuotationRequesting,
@@ -191,117 +189,122 @@ const AddQuotationForm: React.FC<Props> = ({
   };
 
   const hanldeSubmit = () => {
-    const billingDetails = {
-      companyName: state.company_name,
-      approvalAuthority: state.approval_authority,
-      authorityPersonName: state.authority_person_name,
-      authorityPersonMobile: state.authority_mobile_no,
-      companyAddress: state.company_address,
-      companyGST: state.company_gst,
-      employeeName: state.employee_name,
-      employeeDesignation: state.employee_designation,
-      employeeMobile: state.employee_mobile_no,
-      companyPincode: state.company_pincode,
-      companyState: state.company_state,
-      companyCity: state.company_city,
-    };
-    const payload: IAddQuotationRequest = {
-      companyId: companyId,
-      customerId: state.customer_id,
-      enquiryId: enquiryId || '',
-      authId: authId,
-      shiftingType: state.shifting_type.toUpperCase(),
-      shiftingLuggage: state.shifting_luggage,
-      vehicleType: state.vehicle_type,
-      manufacture: state.vehicle_manufacturer,
-      model: state.vehicle_model,
-      templateId: '5555',
-      quotationDate: state.date_of_quotation,
-      quotationNumber: state.quotation_no,
-      enquirySource: '',
-      partyCompanyName: billingDetails.companyName,
-      partyName: state.party_name,
-      email: '',
-      mobile: state.party_mobile_no,
-      shiftingDate: state.date_of_moving,
-      pickupAddress: {
-        shiftingFrom: state.pickup_city,
-        state: state.pickup_state,
-        city: state.pickup_city,
-        pincode: state.pickup_pincode,
-        locality: '',
-        landmark: '',
-        floor: state.pickup_current_floor,
-        isLiftAvailable: state.pickup_lift_status,
-      },
-      dropAddress: {
-        shiftingTo: state.drop_city as string,
-        state: state.drop_state as string,
-        city: state.drop_city as string,
-        locality: '',
-        pincode: state.drop_pincode as string,
-        landmark: '',
-        floor: state.drop_current_floor as string,
-        isLiftAvailable: state.drop_lift_status,
-      },
-      partLoad: state?.freight_part_load,
-      fullLoad: state?.freight_full_load,
-      openBody: true,
-      closeBody: true,
-      lorryType: state.lorry_type,
-      freightChargesStatus: 'NOT_REQUIRED',
-      partLoadCharge: state.freight_part_charge,
-      fullLoadCharge: state.freight_full_charge,
-      packagingChargesStatus: state.packing_charge,
-      packagingPartLoadCharges: state.packing_charge_part_load,
-      packagingFullLoadCharges: state.packing_charge_full_load,
-      unPackagingChargesStatus: state.unpacking_charge,
-      unPackagingPartLoadCharges: state.unpacking_charge_part_load,
-      unPackagingFullLoadCharges: state.unpacking_charge_full_load,
-      unLoadingChargesStatus: state.unloading_charge,
-      unLoadingPartLoadCharges: state.unloading_charge_part_load,
-      unLoadingFullLoadCharges: state.unloading_charge_full_load,
-      packingMaterialChargesStatus: state.packing_material_charge,
-      packingMaterialPartLoadCharges: state.packing_material_charge_part_load,
-      packingMaterialFullLoadCharges: state.packing_material_charge_full_load,
-      loadingChargesStatus: state.loading_charge,
-      loadingPartLoadCharges: state.loading_charge_part_load,
-      loadingFullLoadCharges: state.loading_charge_full_load,
-      gstStatus: state.gst_in_quotation,
-      gstType: state?.gst_type,
-      gstPercentage: state.gst_percent,
-      surchargeIsRequired: state.surcharge,
-      surchargeCharges: state.surcharge_percent,
-      discountType: state.discount_in_quotation,
-      discountAmount: state.discount_percent_or_value,
-      transitInsurance:
-        state.transit_insurance == options2[0] ? transitInsurance : null,
-      storageCharges: state.storage == options2[0] ? storage : null,
-      otherCharges: prepareOtherCharges(),
-      quotationAmount: '1000', // README: Mock quotation amount
-      advanceAmount: state.advance_amount,
-      billingBy: state.billing_by,
-      billingDetails:
-        state.billing_by == billingByOptions[1].label ? billingDetails : {},
-      otherDetail1: state.other_detail_1,
-      otherDetail2: state.other_detail_2,
-      easy_access_for_loading_unloading: state.other_detail_3,
-      any_restrcition_for_loading_unloading: state.other_detail_4,
-      addedBy: authId,
-    };
-    resetError();
-    if (doValidation()) {
-      dispatch(addQuotationRequest(payload));
-    } else {
-      showToast('Form is not filled properly. Please check!', ToastType.ERROR);
-    }
+    getCurrentCompanyId().then(id => {
+      const billingDetails = {
+        companyName: state.company_name,
+        approvalAuthority: state.approval_authority,
+        authorityPersonName: state.authority_person_name,
+        authorityPersonMobile: state.authority_mobile_no,
+        companyAddress: state.company_address,
+        companyGST: state.company_gst,
+        employeeName: state.employee_name,
+        employeeDesignation: state.employee_designation,
+        employeeMobile: state.employee_mobile_no,
+        companyPincode: state.company_pincode,
+        companyState: state.company_state,
+        companyCity: state.company_city,
+      };
+      const payload: IAddQuotationRequest = {
+        companyId: id as string,
+        customerId: state.customer_id,
+        enquiryId: enquiryId || '',
+        authId: authId,
+        shiftingType: state.shifting_type.toUpperCase(),
+        shiftingLuggage: state.shifting_luggage,
+        vehicleType: state.vehicle_type,
+        manufacture: state.vehicle_manufacturer,
+        model: state.vehicle_model,
+        templateId: '5555',
+        quotationDate: state.date_of_quotation,
+        quotationNumber: state.quotation_no,
+        enquirySource: '',
+        partyCompanyName: billingDetails.companyName,
+        partyName: state.party_name,
+        email: '',
+        mobile: state.party_mobile_no,
+        shiftingDate: state.date_of_moving,
+        pickupAddress: {
+          shiftingFrom: state.pickup_city,
+          state: state.pickup_state,
+          city: state.pickup_city,
+          pincode: state.pickup_pincode,
+          locality: '',
+          landmark: '',
+          floor: state.pickup_current_floor,
+          isLiftAvailable: state.pickup_lift_status,
+        },
+        dropAddress: {
+          shiftingTo: state.drop_city as string,
+          state: state.drop_state as string,
+          city: state.drop_city as string,
+          locality: '',
+          pincode: state.drop_pincode as string,
+          landmark: '',
+          floor: state.drop_current_floor as string,
+          isLiftAvailable: state.drop_lift_status,
+        },
+        partLoad: state?.freight_part_load,
+        fullLoad: state?.freight_full_load,
+        openBody: true,
+        closeBody: true,
+        lorryType: state.lorry_type,
+        freightChargesStatus: 'NOT_REQUIRED',
+        partLoadCharge: state.freight_part_charge,
+        fullLoadCharge: state.freight_full_charge,
+        packagingChargesStatus: state.packing_charge,
+        packagingPartLoadCharges: state.packing_charge_part_load,
+        packagingFullLoadCharges: state.packing_charge_full_load,
+        unPackagingChargesStatus: state.unpacking_charge,
+        unPackagingPartLoadCharges: state.unpacking_charge_part_load,
+        unPackagingFullLoadCharges: state.unpacking_charge_full_load,
+        unLoadingChargesStatus: state.unloading_charge,
+        unLoadingPartLoadCharges: state.unloading_charge_part_load,
+        unLoadingFullLoadCharges: state.unloading_charge_full_load,
+        packingMaterialChargesStatus: state.packing_material_charge,
+        packingMaterialPartLoadCharges: state.packing_material_charge_part_load,
+        packingMaterialFullLoadCharges: state.packing_material_charge_full_load,
+        loadingChargesStatus: state.loading_charge,
+        loadingPartLoadCharges: state.loading_charge_part_load,
+        loadingFullLoadCharges: state.loading_charge_full_load,
+        gstStatus: state.gst_in_quotation,
+        gstType: state?.gst_type,
+        gstPercentage: state.gst_percent,
+        surchargeIsRequired: state.surcharge,
+        surchargeCharges: state.surcharge_percent,
+        discountType: state.discount_in_quotation,
+        discountAmount: state.discount_percent_or_value,
+        transitInsurance:
+          state.transit_insurance == options2[0] ? transitInsurance : null,
+        storageCharges: state.storage == options2[0] ? storage : null,
+        otherCharges: prepareOtherCharges(),
+        quotationAmount: '1000', // README: Mock quotation amount
+        advanceAmount: state.advance_amount,
+        billingBy: state.billing_by,
+        billingDetails:
+          state.billing_by == billingByOptions[1].label ? billingDetails : {},
+        otherDetail1: state.other_detail_1,
+        otherDetail2: state.other_detail_2,
+        easy_access_for_loading_unloading: state.other_detail_3,
+        any_restrcition_for_loading_unloading: state.other_detail_4,
+        addedBy: authId,
+      };
+      resetError();
+      if (doValidation()) {
+        dispatch(addQuotationRequest(payload));
+      } else {
+        showToast('Form is not filled properly. Please check!', ToastType.ERROR);
+      }
+    }).catch(err => console.log(err));
+    
   };
 
   const _getQuotationsRequest = () => {
-    const payload: IGetQuotationRequest = {
-      companyId: companyId,
-    };
-    dispatch(getQuotationsRequest(payload));
+    getCurrentCompanyId().then(id => {
+      const payload: IGetQuotationRequest = {
+        companyId: id as string,
+      };
+      dispatch(getQuotationsRequest(payload));
+    }).catch(err => console.log(err));
   };
 
   useEffect(() => {

@@ -29,8 +29,8 @@ import {
   restAddFranchiseRequest,
 } from '../../../../redux/slices/MyProfile';
 import EpackDropdown from '../../../../common/DropdownComponent2';
-import useCompanyId from '../../../../hooks/useCompanyId';
 import { ToastType, showToast } from '../../../../utils/utility';
+import { getCurrentCompanyId } from '../../../../utils/storage';
 
 const AddFranchiseUpdateView: React.FC<{}> = ({}) => {
   const [state, dispatch] = useReducer(addFranchiseReducer, initialState);
@@ -42,7 +42,6 @@ const AddFranchiseUpdateView: React.FC<{}> = ({}) => {
   const {addFranchiseRequesting, addFranchiseuccess, addFranchiseFailure} =
     useAppSelector(state => state.Myprofile);
   const dispatch2 = useAppDispatch();
-  const companyId = useCompanyId();
 
   const cityDropdownCompRef = useRef(null);
   const stateDropdownCompRef = useRef(null);
@@ -130,22 +129,24 @@ const AddFranchiseUpdateView: React.FC<{}> = ({}) => {
   };
 
   const handleSubmit = useCallback(() => {
-    const payload: IAddFranchiseRequest = {
-      companyId: companyId,
-      franchiseName: state.franchiseName,
-      franchiseOwnerName: state.franchiseOwner,
-      registeredMobile: state.registeredMobile,
-      pincode: state.pincode,
-      state: state.state,
-      city: state.city,
-      locality: state.locality,
-      landmark: state.landmark,
-      email: state.email,
-      address: state.address,
-      createdBy: otpData?.data.id as string,
-    };
-    console.log(payload, 'add Franchise..');
-    dispatch2(addFranchiseRequest(payload));
+    getCurrentCompanyId().then(id => {
+      const payload: IAddFranchiseRequest = {
+        companyId: id as string,
+        franchiseName: state.franchiseName,
+        franchiseOwnerName: state.franchiseOwner,
+        registeredMobile: state.registeredMobile,
+        pincode: state.pincode,
+        state: state.state,
+        city: state.city,
+        locality: state.locality,
+        landmark: state.landmark,
+        email: state.email,
+        address: state.address,
+        createdBy: otpData?.data.id as string,
+      };
+      console.log(payload, 'add Franchise..');
+      dispatch2(addFranchiseRequest(payload));
+    }).catch(err => console.log(err));
   }, [state]);
 
   useEffect(() => {

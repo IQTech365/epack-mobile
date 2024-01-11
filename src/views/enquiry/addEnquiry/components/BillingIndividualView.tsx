@@ -16,14 +16,13 @@ import {
   resetGetCustomersRequest,
 } from '../../../../redux/slices/CommonSlice';
 import {Validator} from '../../../../utils/validation';
-import useCompanyId from '../../../../hooks/useCompanyId';
 import {debounce} from '../../../../utils/utility';
+import { getCurrentCompanyId } from '../../../../utils/storage';
 
 interface IProps {}
 
 const BillingIndividualView: FC<IProps> = ({}) => {
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
   const {state, setPartyMobileNo, setPartyName, setCustomerId} = useEnquiryFormContextHook();
   const [showCompanyList, setShowCompanyList] = useState<boolean>(false);
   const [selectedCompanyOption, setSelectedCompanyOption] = useState<ICustomer | null>(null);
@@ -37,11 +36,13 @@ const BillingIndividualView: FC<IProps> = ({}) => {
   const handleMobileNo = (text: string) => {
     setPartyMobileNo(text);
     if (!Validator.isEmpty(text) && text.length == 10) {
-      const payload: ICustomersRequest = {
-        companyId: companyId,
-        searchKey: text,
-      };
-      debounce(dispatch(getCustomersRequest(payload)), 3000);
+      getCurrentCompanyId().then(id => {
+        const payload: ICustomersRequest = {
+          companyId: id as string,
+          searchKey: text,
+        };
+        debounce(dispatch(getCustomersRequest(payload)), 3000);
+      }).catch(err => console.log(err));
     }
   };
 

@@ -1,39 +1,37 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {FC, useCallback, useEffect, useRef, useState} from 'react';
 import {Alert, Text, View} from 'react-native';
 import styles from './style';
-import AvoidSoftInputViewHOC from '../../../../common/AvoidSoftInputViewHOC';
-import Spacer from '../../../../common/Spacer';
-import Label from '../../../../common/Label';
-import Input from '../../../../common/Input';
-import {useCompanyRegistrationContextHook} from '../../../../provider/CompanyRegistrationContextProvider';
-import {COLOR_BLACK, COLOR_BLUE} from '../../../../utils/colors';
-import EpackDropdown from '../../../../common/DropdownComponent2';
-import {useAppDispatch, useAppSelector} from '../../../../redux/hooks';
-import useAuthId from '../../../../hooks/useAuthId';
-import {IError, getError, ibaApprovalOptions, validate} from '../../utils';
+import AvoidSoftInputViewHOC from '../../../common/AvoidSoftInputViewHOC';
+import Spacer from '../../../common/Spacer';
+import Label from '../../../common/Label';
+import Input from '../../../common/Input';
+import {formatDate4, getCities2, getStates2} from '../../../utils/formatter';
+import {ICompanyInfoData} from '../../../interface/companyRegistration/IGetCompaniesResponse';
+import {setCurrentCompanyId} from '../../../utils/storage';
+import {addCompanyRequest} from '../../../redux/slices/CompanySlice';
+import {ICompanyRegistrationRequest} from '../../../interface/companyRegistration/ICompanyRegistrationRequest';
+import {IError, getError, ibaApprovalOptions, validate} from '../utils';
+import companyTypeOptions from '../../../data/companyType.json';
+import useAuthId from '../../../hooks/useAuthId';
+import usePincodeHook from '../../../hooks/usePincodeHook';
+import {useAppDispatch, useAppSelector} from '../../../redux/hooks';
+import {useCompanyRegistrationContextHook} from '../../../provider/CompanyRegistrationContextProvider';
+import {NavigationProp} from '@react-navigation/native';
+import {COLOR_BLACK, COLOR_BLUE} from '../../../utils/colors';
+import EpackDropdown from '../../../common/DropdownComponent2';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import DatePickerComponent from '../../../../common/DatePickerComponent';
-import {formatDate4, getCities2, getStates2} from '../../../../utils/formatter';
-import DropdownComponent from '../../../../common/DropdownComponent';
-import {TDropdownItem} from '../../../../type/TDropdownItem';
-import Spinner from '../../../../common/Spinner';
-import usePincodeHook from '../../../../hooks/usePincodeHook';
-import companyTypeOptions from '../../../../data/companyType.json';
-import Button from '../../../../common/Button';
-import {ICompanyRegistrationRequest} from '../../../../interface/companyRegistration/ICompanyRegistrationRequest';
-import {addCompanyRequest} from '../../../../redux/slices/CompanySlice';
-import { ICompanyInfoData } from '../../../../interface/companyRegistration/IGetCompaniesResponse';
-import { setCurrentCompanyId } from '../../../../utils/storage';
+import DatePickerComponent from '../../../common/DatePickerComponent';
+import DropdownComponent from '../../../common/DropdownComponent';
+import {TDropdownItem} from '../../../type/TDropdownItem';
+import Spinner from '../../../common/Spinner';
+import Button from '../../../common/Button';
+import Header from '../../../common/Header';
 
 interface IProps {
-  currentStep: number;
-  setCurrentStep: (step: number) => void;
+  navigation: NavigationProp<any, any>;
 }
 
-const CompanyBasicDetailsView: React.FC<IProps> = ({
-  currentStep,
-  setCurrentStep,
-}) => {
+const CompanyBasicDetailsForm: FC<IProps> = ({navigation}) => {
   const {
     state,
     setCompanyName,
@@ -105,47 +103,44 @@ const CompanyBasicDetailsView: React.FC<IProps> = ({
   };
 
   const handleSave = useCallback(() => {
-    // return setCurrentStep(currentStep + 1);
-    if (currentStep >= 1 && currentStep < 5) {
-      setShouldValidate(true);
-      const hasErrors:boolean = validate(state).some((d:IError) => !d.valid);
-      if (!hasErrors) {
-        setShouldValidate(false);
-        const data: ICompanyRegistrationRequest = {
-          authId: authId,
-          companyName: state.company_name,
-          contactPerson: state.contact_person,
-          email: state.email,
-          companyMobile: state.mobile,
-          companyAddress: state.address,
-          state: state.state,
-          city: state.city,
-          pincode: state.pincode,
-          companyWebite: 'www.abc.com',
-          companyLogo: '',
-          punchLine: 'NA',
-          companyProfile: '',
-          district: '',
-          postOffice: '',
-          govRegdDetails: {
-            companyType: state.company_type,
-            companyPAN: _getCompanyPAN(),
-            companyGST: '',
-            incorporationNumber: _getCompanyCinOrIncorporationNo(),
-            IBAStatus: state.iba_approval_status,
-            IBAcode: state.iba_approval_code,
-            IBAExpiry: state.iba_expiry_date,
-            udyamRegdNumber: '',
-            shopActNumber: '',
-            ISONumber: '',
-          },
-          accountDetails: [],
-          packerSignature: '',
-          termsconditions: 'NA',
-        };
-        console.log('data----------', JSON.stringify(data), null, ' ');
-        dispatch(addCompanyRequest(data));
-      }
+    setShouldValidate(true);
+    const hasErrors: boolean = validate(state).some((d: IError) => !d.valid);
+    if (!hasErrors) {
+      setShouldValidate(false);
+      const data: ICompanyRegistrationRequest = {
+        authId: authId,
+        companyName: state.company_name,
+        contactPerson: state.contact_person,
+        email: state.email,
+        companyMobile: state.mobile,
+        companyAddress: state.address,
+        state: state.state,
+        city: state.city,
+        pincode: state.pincode,
+        companyWebite: 'www.abc.com',
+        companyLogo: '',
+        punchLine: 'NA',
+        companyProfile: '',
+        district: '',
+        postOffice: '',
+        govRegdDetails: {
+          companyType: state.company_type,
+          companyPAN: _getCompanyPAN(),
+          companyGST: '',
+          incorporationNumber: _getCompanyCinOrIncorporationNo(),
+          IBAStatus: state.iba_approval_status,
+          IBAcode: state.iba_approval_code,
+          IBAExpiry: state.iba_expiry_date,
+          udyamRegdNumber: '',
+          shopActNumber: '',
+          ISONumber: '',
+        },
+        accountDetails: [],
+        packerSignature: '',
+        termsconditions: 'NA',
+      };
+      console.log('data----------', JSON.stringify(data), null, ' ');
+      dispatch(addCompanyRequest(data));
     }
   }, [state]);
 
@@ -160,13 +155,18 @@ const CompanyBasicDetailsView: React.FC<IProps> = ({
     }
   }, []);
 
+  const _setCompanyIdAndMoveToNextStep = async (companyId: string) => {
+    await setCurrentCompanyId(companyId);
+    //@ts-ignore
+    navigation.replace('CompanyLogo');
+  };
+
   useEffect(() => {
     if (!requesting && success && !error) {
-      const {data} = addCompanyInfo || {}
-      if(data) {
-        const company:ICompanyInfoData = data as ICompanyInfoData;
-        setCurrentCompanyId(company._id);
-        setCurrentStep(currentStep + 1);
+      const {data} = addCompanyInfo || {};
+      if (data) {
+        const company: ICompanyInfoData = data as ICompanyInfoData;
+        _setCompanyIdAndMoveToNextStep(company._id);
       }
     } else if (!requesting && !success && error) {
       Alert.alert('Error in registering the company');
@@ -193,6 +193,7 @@ const CompanyBasicDetailsView: React.FC<IProps> = ({
 
   return (
     <View style={styles.container}>
+      <Header canGoBack={false} label="Register Company Basic Info" />
       <AvoidSoftInputViewHOC>
         <View style={styles.contentContainer}>
           <View>
@@ -417,28 +418,8 @@ const CompanyBasicDetailsView: React.FC<IProps> = ({
           <Spinner show={fetching} />
         </View>
       </AvoidSoftInputViewHOC>
-      <View
-        style={
-          currentStep > 1
-            ? styles.twoButtonContainer
-            : styles.oneButtonContainer
-        }>
-        {currentStep > 1 ? (
-          <View style={styles.prevButtonContainer}>
-            <Button
-              text="Previous"
-              onPress={() => {}}
-              style={styles.buttonStyle}
-              textStyle={styles.buttonTextStyle}
-            />
-          </View>
-        ) : null}
-        <View
-          style={
-            currentStep > 1
-              ? styles.nextButtonContainer
-              : styles.nextButtonContainer2
-          }>
+      <View style={styles.oneButtonContainer}>
+        <View style={styles.nextButtonContainer2}>
           <Button
             text="Save"
             onPress={handleSave}
@@ -451,4 +432,4 @@ const CompanyBasicDetailsView: React.FC<IProps> = ({
   );
 };
 
-export default CompanyBasicDetailsView;
+export default CompanyBasicDetailsForm;

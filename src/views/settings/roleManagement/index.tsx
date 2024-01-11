@@ -41,8 +41,8 @@ import {
   ISubmodule,
   ISubmoduleFeature,
 } from '../../../interface/setting/role/IModule';
-import useCompanyId from '../../../hooks/useCompanyId';
 import { ToastType, showToast } from '../../../utils/utility';
+import { getCurrentCompanyId } from '../../../utils/storage';
 
 const RoleManagementView: React.FC<{}> = ({}) => {
   const [entityType, setEntityType] = useState<string>(entityOptions[0].label);
@@ -80,7 +80,6 @@ const RoleManagementView: React.FC<{}> = ({}) => {
   const {data: franchiseData = []} = Franchises || {};
 
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
 
   const transformBranchData = () => {
     let _data: TDropdownItem[] = [];
@@ -177,22 +176,23 @@ const RoleManagementView: React.FC<{}> = ({}) => {
   );
 
   const handleSubmit = () => {
-    const payload: IAddUserRoleRequest = {
-      companyId: companyId,
-      roleTypeId: roleType,
-      entityType: entityType,
-      entityId: subEntityType,
-      name: employeeName,
-      email: email,
-      mobile: mobile,
-      username: username,
-      password: password,
-      permissions: permissions,
-      createdBy: otpData?.data.id as string,
-    };
-    console.log('add-role-payload--', JSON.stringify(payload));
-
-    dispatch(addUserRoleRequest(payload));
+    getCurrentCompanyId().then(id => {
+      const payload: IAddUserRoleRequest = {
+        companyId: id as string,
+        roleTypeId: roleType,
+        entityType: entityType,
+        entityId: subEntityType,
+        name: employeeName,
+        email: email,
+        mobile: mobile,
+        username: username,
+        password: password,
+        permissions: permissions,
+        createdBy: otpData?.data.id as string,
+      };
+      console.log('add-role-payload--', JSON.stringify(payload));
+      dispatch(addUserRoleRequest(payload));
+    }).catch(err => console.log(err));
   };
 
   const getSubEntityDropdownOptionsLabel = () => {
@@ -308,11 +308,15 @@ const RoleManagementView: React.FC<{}> = ({}) => {
   };
 
   const _getBranchesRequest = () => {
-    dispatch(getBranchsRequest(companyId));
+    getCurrentCompanyId().then(id => {
+      dispatch(getBranchsRequest(id as string));
+    }).catch(err => console.log(err));
   }
 
   const _getFranchiseRequest = () => {
-    dispatch(getFranchiseRequest(companyId));
+    getCurrentCompanyId().then(id => {
+      dispatch(getFranchiseRequest(id as string));
+    }).catch(err => console.log(err));
   }
 
   useEffect(() => {

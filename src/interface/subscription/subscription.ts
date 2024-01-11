@@ -138,11 +138,14 @@ export interface IRazorPayOrderResponse {
 
 // Add Purchase
 export interface IAddPurchaseRequest {
-  authId: string;
+  purchaseOrderId:string;
   subscriptionId: string;
-  purchaseDate: string;
-  expiryDate: string;
-  purchaseAmount: string;
+  authId: string;
+  subscriptionPlan:string;
+  amountPaid:string;
+  expiryDate?: string;
+  discountAmount:string;
+  couponCode:string;
   status: string;
 }
 

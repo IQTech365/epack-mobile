@@ -20,8 +20,8 @@ import { IAddPaymentMethodRequest } from '../../../../../interface/setting/packe
 import { addPaymentMethodRequest, getBanksRequest, resetAddPaymentMethodRequest } from '../../../../../redux/slices/ProfileSettingSlice';
 import Spinner from '../../../../../common/Spinner';
 import { ISubmoduleData } from '../../../../../interface/setting/packerProfile/ISubmodule';
-import useCompanyId from '../../../../../hooks/useCompanyId';
 import { ToastType, showToast } from '../../../../../utils/utility';
+import { getCurrentCompanyId } from '../../../../../utils/storage';
 interface IAccountDetailsProps {}
 
 interface IAccountOptions {
@@ -40,7 +40,6 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
   const [accountOptions, setAccountOptions] = useState<IAccountOptions[]>(bankNameOptions);
   const [modules, setModules] = useState<string[]>(['']);
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
 
   const {
     addPaymentMethodRequesting,
@@ -94,19 +93,21 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
 
   
   const handleSave = () => {
-    const payload: IAddPaymentMethodRequest = {
-      companyId: companyId,
-      accountType: accountType,
-      bankId: selectedUPI,
-      accountHolderName: accountHolder,
-      accountNumber: accountNumber,
-      ifscCode:ifscCode,
-      upiType:selectedUPI,
-      upiId:upiId,
-      createdBy:otpData?.data.id as string,
-    }
-    console.log('payment method-payload--', JSON.stringify(payload));
-    dispatch(addPaymentMethodRequest(payload));
+    getCurrentCompanyId().then(id => {
+      const payload: IAddPaymentMethodRequest = {
+        companyId: id as string,
+        accountType: accountType,
+        bankId: selectedUPI,
+        accountHolderName: accountHolder,
+        accountNumber: accountNumber,
+        ifscCode:ifscCode,
+        upiType:selectedUPI,
+        upiId:upiId,
+        createdBy:otpData?.data.id as string,
+      }
+      console.log('payment method-payload--', JSON.stringify(payload));
+      dispatch(addPaymentMethodRequest(payload));
+    }).catch(err => console.log(err));
   };
 
   useEffect(() => {

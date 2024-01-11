@@ -7,14 +7,14 @@ import {
   getSurveyItemListRequest,
   getSurveyListRequest,
 } from '../../../../../redux/slices/EnquirySlice';
-import {formatDate, formatDate3} from '../../../../../utils/formatter';
+import {formatDate3} from '../../../../../utils/formatter';
 import FollowupListHeaderComponent from '../FollowupListHeaderComponent';
 import FollowupListItem from '../FollowupListItem';
 import styles from './style';
 import SurveyItemListView from '../SurveyItemListView';
-import useCompanyId from '../../../../../hooks/useCompanyId';
 import Button from '../../../../../common/Button';
 import Spacer from '../../../../../common/Spacer';
+import { getCurrentCompanyId } from '../../../../../utils/storage';
 interface IFollowupViewProps {
   taskName: string;
   assigneeRole: string;
@@ -27,8 +27,6 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
   enquiryId,
 }) => {
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
-
   const {followups, getFollowupsRequesting, surveyItemList} = useAppSelector(
     state => state.Enquiry,
   );
@@ -41,10 +39,12 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
   const [taskData, setTaskData] = useState<string>('');
 
   const _getSurveyItemListRequest = () => {
-    const payload: any = {
-      companyId: companyId,
-    };
-    dispatch(getSurveyItemListRequest(payload));
+    getCurrentCompanyId().then(id => {
+      const payload: any = {
+        companyId: id as string,
+      };
+      dispatch(getSurveyItemListRequest(payload));
+    }).catch(err => console.log(err));
   }
 
   useEffect(() => {

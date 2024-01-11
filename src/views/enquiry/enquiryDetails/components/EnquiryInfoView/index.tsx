@@ -16,14 +16,13 @@ import {COLOR_GRAY, COLOR_GRAY2, COLOR_WHITE} from '../../../../../utils/colors'
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import { IUpdateEnquiryStatusRequest } from '../../../../../interface/enquiry/IUpdateEnquiryStatusRequest';
 import { getEnquiriesRequest, resetUpdateEnquiryStatusRequest, updateEnquiryStatusRequest } from '../../../../../redux/slices/EnquirySlice';
-import Toast from 'react-native-toast-message';
 import enquiryStatusOptions from '../../../../../data/enquiryStatusOptions.json';
-import useCompanyId from '../../../../../hooks/useCompanyId';
 import { NavigationProp } from '@react-navigation/native';
 import { IGetOrdersRequest } from '../../../../../interface/order/IGetOrdersRequest';
 import { getOrdersRequest } from '../../../../../redux/slices/OrderSlice';
 import { IEnquiry } from '../../../../../interface/quotation/IGetQuotationsResponse';
 import { ToastType, showToast } from '../../../../../utils/utility';
+import { getCurrentCompanyId } from '../../../../../utils/storage';
 
 interface IEnquiryInfoViewProps {
   item: IEnquiry|undefined;
@@ -33,7 +32,6 @@ interface IEnquiryInfoViewProps {
 
 const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId, navigation}) => {
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
 
   const {
     updateEnquiryStatusRequesting,
@@ -87,14 +85,18 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId, navi
   }
 
   const refreshOrders = () => {
-    const payload: Partial<IGetOrdersRequest> = {
-      companyId: companyId,
-    };
-    dispatch(getOrdersRequest(payload));
+    getCurrentCompanyId().then(id => {
+      const payload: Partial<IGetOrdersRequest> = {
+        companyId: id as string,
+      };
+      dispatch(getOrdersRequest(payload));
+    }).catch(err => console.log(err));
   }
 
   const _getEnquiriesRequest = () => {
-    dispatch(getEnquiriesRequest(companyId));
+    getCurrentCompanyId().then(id => {
+      dispatch(getEnquiriesRequest(id as string));
+    }).catch(err => console.log(err));
   }
 
   useEffect(() => {

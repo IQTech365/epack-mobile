@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
 import styles from './style';
 import LinearGradient from 'react-native-linear-gradient';
@@ -23,13 +23,15 @@ import {TDropdownItem} from '../../../../type/TDropdownItem';
 
 interface ISubscriptionPlanCardProps {
   item: ISubscriptionPlan;
-  onPress: (plan: ISubscriptionPlan) => void;
+  onPress: (plan: ISubscriptionPlan, amount: number, duration: string) => void;
 }
 
 const SubscriptionPlanCard2: React.FC<ISubscriptionPlanCardProps> = ({
   item,
   onPress,
 }) => {
+  const [planDuration, setPlanDuration] = useState<string>('');
+  const [planAmount, setPlanAmount] = useState<number>(0);
   const {plans, list, subscriptionType, planFeatures} = item;
 
   const getTickIcon = (featureName: string) => {
@@ -77,14 +79,20 @@ const SubscriptionPlanCard2: React.FC<ISubscriptionPlanCardProps> = ({
     const planDurations: TDropdownItem[] = plans.map((p: IPlan) => {
       const plan: TDropdownItem = {
         label: `₹ ${p.amount}.00 / ${p.duration}`.toUpperCase(),
-        value: p.amount,
+        value: `${p.amount}|${p.duration}`,
       };
       return plan;
     });
     return planDurations;
   };
 
-  const handlePlanDuration = (plan: TDropdownItem) => {};
+  const handlePlanDuration = (item: TDropdownItem) => {
+    const splitValue = item.value.split('|');
+    const amount = splitValue[0];
+    const duration = splitValue[1];
+    setPlanAmount(parseInt(amount));
+    setPlanDuration(duration);
+  };
   return (
     <Shadow distance={2}>
       <View style={styles.container}>
@@ -149,7 +157,9 @@ const SubscriptionPlanCard2: React.FC<ISubscriptionPlanCardProps> = ({
               );
             })}
           </ScrollView>
-          <TouchableOpacity activeOpacity={0.6} onPress={() => onPress(item)}>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            onPress={() => onPress(item, planAmount, planDuration)}>
             <LinearGradient
               colors={getPlanGradientColors()}
               style={styles.buttonContainer}

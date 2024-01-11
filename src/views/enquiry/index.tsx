@@ -14,7 +14,7 @@ import EnquiryListItem, {
   IEnquiryItem,
 } from './enquiryList/components/EnquiryListItem';
 import styles from './style';
-import useCompanyId from '../../hooks/useCompanyId';
+import { getCurrentCompanyId } from '../../utils/storage';
 
 interface IEnquiryPageViewProps {
   navigation: NavigationProp<any, any>;
@@ -22,7 +22,6 @@ interface IEnquiryPageViewProps {
 
 const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
   const {enquiries, getEnquiriesRequesting} = useAppSelector(
     state => state.Enquiry,
   );
@@ -82,7 +81,9 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
   };
 
   const _getEnquiriesRequest = () => {
-    dispatch(getEnquiriesRequest(companyId));
+    getCurrentCompanyId().then(id => {
+      dispatch(getEnquiriesRequest(id as string));
+    }).catch(err => console.log(err));
   }
 
   const handleOnRefresh = useCallback(() => {
@@ -91,7 +92,7 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
 
   useEffect(() => {
     _getEnquiriesRequest();
-  }, [companyId]);
+  }, []);
 
   return (
     <View style={styles.container}>

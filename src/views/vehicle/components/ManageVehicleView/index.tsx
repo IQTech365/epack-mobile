@@ -19,11 +19,11 @@ import Header from '../../../../common/Header';
 import {getLorryRequest} from '../../../../redux/slices/VehicleSlice';
 import VehicleListItem from './AddVehicleListView/components/VehicleListItem';
 import Spinner from '../../../../common/Spinner';
-import useCompanyId from '../../../../hooks/useCompanyId';
 import {AddLorryFormContextProvider} from '../../../../provider/AddLorryFormContextProvider';
 import {COLOR_WHITE} from '../../../../utils/colors';
 import { IVehicle } from '../../../../interface/vehicle/IGetLorryResponse';
 import { NavigationProp } from '@react-navigation/native';
+import { getCurrentCompanyId } from '../../../../utils/storage';
 
 interface IAddLorryDetailViewProps {
   navigation: NavigationProp<any, any>;
@@ -31,7 +31,6 @@ interface IAddLorryDetailViewProps {
 
 const ManageVehicleView: React.FC<IAddLorryDetailViewProps> = ({navigation}) => {
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
   const {lorryData, getLorryRequesting} = useAppSelector(
     state => state.Vehicle,
   );
@@ -53,7 +52,9 @@ const ManageVehicleView: React.FC<IAddLorryDetailViewProps> = ({navigation}) => 
   };
 
   const _getLorryRequest = () => {
-    dispatch(getLorryRequest(companyId));
+    getCurrentCompanyId().then(id => {
+      dispatch(getLorryRequest(id as string));
+    }).catch(err => console.log(err));
   }
 
   useEffect(() => {

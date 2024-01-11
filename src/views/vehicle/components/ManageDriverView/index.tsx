@@ -19,15 +19,14 @@ import AddDriverView from './AddDriverFormView';
 import AddDriverListItem from './AddDriverListView';
 import Spinner from '../../../../common/Spinner';
 import {getDriverRequest} from '../../../../redux/slices/VehicleSlice';
-import useCompanyId from '../../../../hooks/useCompanyId';
 import {AddDriverFormContextProvider} from '../../../../provider/AddDriverFormContextProvider';
 import {COLOR_WHITE} from '../../../../utils/colors';
+import { getCurrentCompanyId } from '../../../../utils/storage';
 
 interface IAddDriverDetailViewProps {}
 
 const ManageDriverView: React.FC<IAddDriverDetailViewProps> = ({}) => {
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
 
   const {Drivers, getDriversRequesting} = useAppSelector(
     state => state.Vehicle,
@@ -52,7 +51,9 @@ const ManageDriverView: React.FC<IAddDriverDetailViewProps> = ({}) => {
   };
 
   const _getDriverRequest = () => {
-    dispatch(getDriverRequest(companyId));
+    getCurrentCompanyId().then(id => {
+      dispatch(getDriverRequest(id as string));
+    }).catch(err => console.log(err));
   }
 
   useEffect(() => {

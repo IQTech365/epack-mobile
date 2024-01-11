@@ -18,10 +18,9 @@ import CreateIcon from '../../../../../images/icons/create_icon.svg';
 import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
 import Spacer from '../../../../../common/Spacer';
 import {getQuotationsRequest} from '../../../../../redux/slices/QuotationSlice';
-import {NavigationProp} from '@react-navigation/native';
 import { IGetQuotationRequest } from '../../../../../interface/quotation/IGetQuotationRequest';
 import { IEnquiry, IGetQuotationData } from '../../../../../interface/quotation/IGetQuotationsResponse';
-import useCompanyId from '../../../../../hooks/useCompanyId';
+import { getCurrentCompanyId } from '../../../../../utils/storage';
 
 interface IQuotationViewProps {
   enquiryId: string;
@@ -39,8 +38,6 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
   );
   const {data: quotationData} = quotations || {};
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
-
   const [showQuotationList, setShowQuotationList] = useState<boolean>(false);
   const [createNewQuotation, setCreateNewQuotation] = useState<boolean>(true);
 
@@ -166,11 +163,13 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
   };
 
   const handleOnRefresh = useCallback(() => {
-    const payload: IGetQuotationRequest = {
-      // id: enquiryId,
-      companyId:companyId
-    };
-    dispatch(getQuotationsRequest(payload));
+    getCurrentCompanyId().then(id => {
+      const payload: IGetQuotationRequest = {
+        // id: enquiryId,
+        companyId:id as string
+      };
+      dispatch(getQuotationsRequest(payload));
+    }).catch(err => console.log(err));
   }, []);
 
   const showEmptyView = () => {

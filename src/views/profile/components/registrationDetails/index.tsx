@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {Text, View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../../common/Spacer';
@@ -7,24 +7,27 @@ import styles from './style';
 import Header from '../../../../common/Header';
 import { useAppSelector } from '../../../../redux/hooks';
 import { ICompanyInfoData } from '../../../../interface/companyRegistration/IGetCompaniesResponse';
-import useCompanyId from '../../../../hooks/useCompanyId';
+import { getCurrentCompanyId } from '../../../../utils/storage';
 
 interface IRegistrationDetailsViewProps {}
 
 const RegistrationDetailsView: React.FC<IRegistrationDetailsViewProps> = ({}) => {
+  const [company, setCompany] = useState<ICompanyInfoData>();
   const {companies} = useAppSelector(state => state.Company);
   const {data: companiesData} = companies || {};
-  const companyId = useCompanyId();
 
-  const getCompany = () => {
-    let company:ICompanyInfoData | null  = null;
-    if(companiesData && Array.isArray(companiesData) && companiesData.length > 0) {
-      company = companiesData.find((d:ICompanyInfoData) => d._id == companyId);
-    }
-    return company;
+  const _getCompany = () => {
+    getCurrentCompanyId().then(id => {
+      if(companiesData && Array.isArray(companiesData) && companiesData.length > 0) {
+        const company = companiesData.find((d:ICompanyInfoData) => d._id == id as string);
+        setCompany(company);
+      }
+    }).catch(err => console.log(err));
   }
 
-  const firstCompany = getCompany();
+  useEffect(() => {
+    _getCompany();
+  }, []);
 
   return (
     <AvoidSoftInputViewHOC>
@@ -36,11 +39,11 @@ const RegistrationDetailsView: React.FC<IRegistrationDetailsViewProps> = ({}) =>
         </View>
         <Spacer height={8} />
         <View style={styles.elementContainer}>
-          <EnquiryDetailListItem  label='GST No' value={firstCompany?.govRegdDetails.companyGST}/>
-          <EnquiryDetailListItem  label='PAN No' value={firstCompany?.govRegdDetails.companyPAN}/>
-          <EnquiryDetailListItem  label='Iba No' value={firstCompany?.govRegdDetails.IBAcode}/>
-          <EnquiryDetailListItem  label='Cin No' value={firstCompany?.govRegdDetails.incorporationNumber}/>
-          <EnquiryDetailListItem  label='Company Type' value={firstCompany?.govRegdDetails.companyType}/>
+          <EnquiryDetailListItem  label='GST No' value={company?.govRegdDetails.companyGST}/>
+          <EnquiryDetailListItem  label='PAN No' value={company?.govRegdDetails.companyPAN}/>
+          <EnquiryDetailListItem  label='Iba No' value={company?.govRegdDetails.IBAcode}/>
+          <EnquiryDetailListItem  label='Cin No' value={company?.govRegdDetails.incorporationNumber}/>
+          <EnquiryDetailListItem  label='Company Type' value={company?.govRegdDetails.companyType}/>
         </View>
         <Spacer height={8} />
       </View>

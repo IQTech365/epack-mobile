@@ -5,9 +5,11 @@ import SignUpPageView from "../views/signup";
 import ForgotPasswordPageView from "../views/forgotPassword";
 import IntroPageView from "../views/intro";
 import OTPPageView from "../views/otp";
-import RegistrationPageView from "../views/company";
 import { AuthStackParamList } from "./params/AuthStackParamList";
 import SubscriptionPlanView from "../views/subscriptionPlan";
+import CompanyBasicDetailsView from "../views/company/CompanyBasicDetailsView";
+import CompanyLogoPageView from "../views/company/CompanyLogoView";
+import SignatureViewPage from "../views/company/CompanySignatureView";
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 
@@ -20,8 +22,10 @@ const AuthStackNavigator = () => {
             <AuthStack.Screen name="OTPInput" component={OTPPageView} />
             <AuthStack.Screen name="ForgotPassword" component={ForgotPasswordPageView} />
             <AuthStack.Screen name="Intro" component={IntroPageView} />
-            <AuthStack.Screen name="RegisterCompany" component={RegistrationPageView} initialParams={{registrationStep: 1}} />
             <AuthStack.Screen name="Subscription" component={SubscriptionPlanView} />
+            <AuthStack.Screen name="CompanyBasicInfo" component={CompanyBasicDetailsView} />
+            <AuthStack.Screen name="CompanyLogo" component={CompanyLogoPageView} />
+            <AuthStack.Screen name="CompanySignature" component={SignatureViewPage} />
         </AuthStack.Navigator>
     );
 }

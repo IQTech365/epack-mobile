@@ -1,4 +1,4 @@
-export interface ICompanyEditRequest {
+export interface ICompanyUpdatePayload {
     _id?: string;
     authId?: string;
     companyName?: string;
@@ -19,6 +19,12 @@ export interface ICompanyEditRequest {
     district?: string;
     postOffice?: string;
     companySignature?: string;
+}
+
+export interface ICompanyEditRequest {
+    companyId: string;
+    payload:ICompanyUpdatePayload;
+    
 }
 
 interface ICompaniesEditData {

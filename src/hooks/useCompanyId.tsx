@@ -13,7 +13,6 @@ const useCompanyId = () => {
   const {data} = addCompanyInfo || {};
   const {data: companiesData} = companies || {};
   if (data && Object.keys(data).length > 0) {
-    // companyId = data._id;
     setCompanyId(data._id);
   } else if (
     companiesData &&

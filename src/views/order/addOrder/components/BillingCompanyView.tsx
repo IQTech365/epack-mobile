@@ -20,17 +20,16 @@ import {
   getCustomersRequest,
   resetGetCustomersRequest,
 } from '../../../../redux/slices/CommonSlice';
-import useCompanyId from '../../../../hooks/useCompanyId';
 import approvalAuthorityOptions from '../../../../data/ApprovalAuthorityOptions.json';
 import EpackDropdown from '../../../../common/DropdownComponent2';
 import usePincodeHook from '../../../../hooks/usePincodeHook';
 import {getCities2, getStates2} from '../../../../utils/formatter';
+import { getCurrentCompanyId } from '../../../../utils/storage';
 
 interface IProps {}
 
 const BillingCompanyView: FC<IProps> = ({}) => {
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
   const {
     state,
     setCompanyName,
@@ -71,11 +70,13 @@ const BillingCompanyView: FC<IProps> = ({}) => {
   const handleCompanyName = (text: string) => {
     setCompanyName(text);
     if (!Validator.isEmpty(text)) {
-      const payload: ICustomersRequest = {
-        companyId: companyId,
-        searchKey: text,
-      };
-      debounce(dispatch(getCustomersRequest(payload)), 3000);
+      getCurrentCompanyId().then(id => {
+        const payload: ICustomersRequest = {
+          companyId: id as string,
+          searchKey: text,
+        };
+        debounce(dispatch(getCustomersRequest(payload)), 3000);
+      }).catch(err => console.log(err));
     }
   };
 

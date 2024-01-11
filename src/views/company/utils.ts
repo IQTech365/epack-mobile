@@ -1,5 +1,5 @@
 import { Validator } from "../../utils/validation";
-import { IState } from "./registrationReducer2";
+import { IState } from "./registrationReducer";
 
 export const ibaApprovalOptions:string[] = ['Not Approved', 'Approved'];
 

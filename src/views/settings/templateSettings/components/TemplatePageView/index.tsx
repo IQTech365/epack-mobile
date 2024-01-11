@@ -9,10 +9,10 @@ import {
 } from '../../../../../interface/setting/template/template';
 import TemplateCard from '../TemplateCard';
 import TemplateEmptyView from '../TemplateEmptyView';
-import useCompanyId from '../../../../../hooks/useCompanyId';
 import { resetSaveDocumentTemplateIdRequest, saveDocumentTemplateIdRequest } from '../../../../../redux/slices/TemplateSettingSlice';
 import { ToastType, showToast } from '../../../../../utils/utility';
 import Spinner from '../../../../../common/Spinner';
+import { getCurrentCompanyId } from '../../../../../utils/storage';
 
 interface ISectionData {
   title: string;
@@ -21,7 +21,6 @@ interface ISectionData {
 
 //@ts-ignore
 const TemplatePageView = ({route}) => {
-  const companyId = useCompanyId();
   const dispatch = useAppDispatch();
   const {
     templates,
@@ -94,12 +93,14 @@ const TemplatePageView = ({route}) => {
   const handleChangeTemplateId = (category: string, moduleId:string, templateId:string) => {
     setActiveCategory(category);
     setActiveTemplateId(templateId)
-    const payload:ISaveDocumentTemplateIdPayload = {
-      companyId: companyId,
-      templateId: templateId,
-      moduleId: moduleId,
-    }
-    dispatch(saveDocumentTemplateIdRequest(payload));
+    getCurrentCompanyId().then(id => {
+      const payload:ISaveDocumentTemplateIdPayload = {
+        companyId: id as string,
+        templateId: templateId,
+        moduleId: moduleId,
+      }
+      dispatch(saveDocumentTemplateIdRequest(payload));
+    }).catch(err => console.log(err));
   }
 
   useEffect(() => {

@@ -1,7 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {Modal, Text, View, FlatList, TouchableOpacity} from 'react-native';
-import Button from '../Button';
-import Spacer from '../Spacer';
 import styles from './style';
 import {ICompanyInfoData} from '../../interface/companyRegistration/IGetCompaniesResponse';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
@@ -14,7 +12,7 @@ import { useAuthContext } from '../../provider/AuthProvider';
 interface IProps {
   visible: boolean;
   onPress: () => void;
-  doCompleteRegistration: () => void;
+  doCompleteRegistration: (step: number) => void;
   message?: string;
   data: ICompanyInfoData[];
 }
@@ -76,9 +74,9 @@ const CompanyListModal: React.FC<IProps> = ({
     setLoggedIn(true);
   };
 
-  const _setCompanyIdAndDoCompleteRegistration = async () => {
+  const _setCompanyIdAndDoCompleteRegistration = async (step: number) => {
     await setCurrentCompanyId(selectedCompany?._id as string);
-    doCompleteRegistration && doCompleteRegistration();
+    doCompleteRegistration && doCompleteRegistration(step);
   }
 
   useEffect(() => {
@@ -99,16 +97,20 @@ const CompanyListModal: React.FC<IProps> = ({
       getPurchasedSubscriptionsSuccess
     ) {
       const {data} = purchasedSubscriptions || {};
+      console.log('purchasedSubscriptions----', JSON.stringify(data));
+      
       if (data && Array.isArray(data) && data.length > 0) {
         //TODO: find subscription for given company_id
         // If subscription found close the modal and send user to the Dashbaord
         // else ask to subscribe
         let isSubscribed: boolean = true;
         if(isSubscribed) {
-          if(selectedCompany?.companySignature) {
+          if(selectedCompany?.companyLogo && selectedCompany?.companySignature) {
             completeRegistrationAndLoggedIn();
-          } else {
-            _setCompanyIdAndDoCompleteRegistration();
+          } else if(!selectedCompany?.companyLogo) {
+            _setCompanyIdAndDoCompleteRegistration(2);
+          } else if(!selectedCompany?.companySignature) {
+            _setCompanyIdAndDoCompleteRegistration(3);
           }
         } else {
           // Close modal and send user to subscribe first

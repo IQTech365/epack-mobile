@@ -9,12 +9,12 @@ import {useOrderFormContextHook} from '../../../../provider/OrderFormContextProv
 import {useAppDispatch, useAppSelector} from '../../../../redux/hooks';
 import {addOrderRequest, getOrdersRequest, resetAddOrderRequest} from '../../../../redux/slices/OrderSlice';
 import {IAddOrderRequest} from '../../../../interface/order/IAddOrderRequest';
-import useCompanyId from '../../../../hooks/useCompanyId';
 import useAuthId from '../../../../hooks/useAuthId';
 import Button from '../../../../common/Button';
 import { ToastType, showToast } from '../../../../utils/utility';
 import { NavigationProp } from '@react-navigation/native';
 import { IGetOrdersRequest } from '../../../../interface/order/IGetOrdersRequest';
+import { getCurrentCompanyId } from '../../../../utils/storage';
 
 interface IProps {
     navigation: NavigationProp<any, any>;
@@ -22,7 +22,6 @@ interface IProps {
 
 const AddOrderFormView: FC<IProps> = ({navigation}) => {
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
   const authId = useAuthId();
   const {state} = useOrderFormContextHook();
 
@@ -30,10 +29,12 @@ const AddOrderFormView: FC<IProps> = ({navigation}) => {
     useAppSelector(state => state.Order);
 
     const _fetchOrders = async () => {
+      getCurrentCompanyId().then(id => {
         const payload: Partial<IGetOrdersRequest> = {
-          companyId: companyId,
+          companyId: id as string,
         };
         dispatch(getOrdersRequest(payload));
+      }).catch(err => console.log(err));
       }
 
   const handleAddOrder = async () => {
@@ -47,69 +48,71 @@ const AddOrderFormView: FC<IProps> = ({navigation}) => {
     //   showToast('Form is not valid. Please check!', ToastType.ERROR);
     //   return;
     // }
-    const data: IAddOrderRequest = {
-      companyId: companyId,
-      customerId: state.customer_id,
-      authId: authId,
-      enquiryManager: '',
-      shiftingType: state.shifting_type.toUpperCase(),
-      partyCompanyName: '',
-      partyName: state.party_name,
-      email: '',
-      mobile: state.party_mobile_no,
-      phone: '',
-      orderAmount: state.order_amount,
-      tokenAmount: state.token_amount,
-      shiftingLuggage: state.shifting_luggages,
-      enquirySource: '',
-      gstNumber: '',
-      alternateNumbers: [],
-      landline: '',
-      deliveryDate: '',
-      deliveredDate: '',
-      shiftingDate: state.date_of_moving,
-      pickupAddress: {
-        shiftingFrom: state.p_city,
-        state: state.p_state,
-        city: state.p_city,
-        address: state.p_address,
-        pincode: state.p_pincode,
-        locality: 'Not Available',
-        landmark: 'Not Available',
-        floor: state.p_current_floor,
-        isLiftAvailable: state.p_lift_status.toUpperCase(),
-      },
-      dropAddress: {
-        shiftingTo: state.d_city,
-        state: state.d_state,
-        city: state.d_city,
-        address: state.d_address,
-        pincode: state.d_pincode,
-        locality: 'Not Available',
-        landmark: 'Not Available',
-        floor: state.d_current_floor,
-        isLiftAvailable: state.d_lift_status.toUpperCase(),
-      },
-      billingBy: state.billing_by,
-      billingDetails:
-        state.billing_by == 'by Company'
-          ? {
-              companyName: state.company_name,
-              approvalAuthority: state.approval_authority,
-              authorityPersonName: state.authority_person_name,
-              authorityPersonMobile: state.authority_mobile_no,
-              companyAddress: state.company_address,
-              companyGST: state.company_gst,
-              employeeName: state.employee_name,
-              employeeDesignation: state.employee_designation,
-              employeeMobile: state.employee_mobile_no,
-            }
-          : {},
-      status: 'NEW ORDER',
-    };
-    console.log('AddOrder-payload----', JSON.stringify(data));
-
-    dispatch(addOrderRequest(data));
+    getCurrentCompanyId().then(id => {
+      const data: IAddOrderRequest = {
+        companyId: id as string,
+        customerId: state.customer_id,
+        authId: authId,
+        enquiryManager: '',
+        shiftingType: state.shifting_type.toUpperCase(),
+        partyCompanyName: '',
+        partyName: state.party_name,
+        email: '',
+        mobile: state.party_mobile_no,
+        phone: '',
+        orderAmount: state.order_amount,
+        tokenAmount: state.token_amount,
+        shiftingLuggage: state.shifting_luggages,
+        enquirySource: '',
+        gstNumber: '',
+        alternateNumbers: [],
+        landline: '',
+        deliveryDate: '',
+        deliveredDate: '',
+        shiftingDate: state.date_of_moving,
+        pickupAddress: {
+          shiftingFrom: state.p_city,
+          state: state.p_state,
+          city: state.p_city,
+          address: state.p_address,
+          pincode: state.p_pincode,
+          locality: 'Not Available',
+          landmark: 'Not Available',
+          floor: state.p_current_floor,
+          isLiftAvailable: state.p_lift_status.toUpperCase(),
+        },
+        dropAddress: {
+          shiftingTo: state.d_city,
+          state: state.d_state,
+          city: state.d_city,
+          address: state.d_address,
+          pincode: state.d_pincode,
+          locality: 'Not Available',
+          landmark: 'Not Available',
+          floor: state.d_current_floor,
+          isLiftAvailable: state.d_lift_status.toUpperCase(),
+        },
+        billingBy: state.billing_by,
+        billingDetails:
+          state.billing_by == 'by Company'
+            ? {
+                companyName: state.company_name,
+                approvalAuthority: state.approval_authority,
+                authorityPersonName: state.authority_person_name,
+                authorityPersonMobile: state.authority_mobile_no,
+                companyAddress: state.company_address,
+                companyGST: state.company_gst,
+                employeeName: state.employee_name,
+                employeeDesignation: state.employee_designation,
+                employeeMobile: state.employee_mobile_no,
+              }
+            : {},
+        status: 'NEW ORDER',
+      };
+      console.log('AddOrder-payload----', JSON.stringify(data));
+      dispatch(addOrderRequest(data));
+    }).catch(err => console.log(err));
+    
   };
 
   useEffect(() => {

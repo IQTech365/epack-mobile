@@ -34,12 +34,12 @@ import {
   IEnquiry,
   IGetQuotationData,
 } from '../../interface/quotation/IGetQuotationsResponse';
-import useCompanyId from '../../hooks/useCompanyId';
 import {sortItemByDate} from '../../utils/formatter';
 import {IHtmlTemplateRequest} from '../../interface/order/templates/ITemplateResponse';
 import ModalHOC from '../../common/ModalHOC';
 import TemplateViewer from '../../common/TemplateViewer';
 import {startShare} from '../../utils/utility';
+import { getCurrentCompanyId } from '../../utils/storage';
 interface IQuotationPageViewProps {
   navigation: NavigationProp<any, any>;
 }
@@ -48,7 +48,6 @@ const downloadOptions = ['With Sign. & Stamp', 'Without Sign. & Stamp'];
 
 const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
 
   const {
     quotations = [],
@@ -232,10 +231,12 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
   };
 
   const _getQuotationsRequest = () => {
-    const payload: IGetQuotationRequest = {
-      companyId: companyId,
-    };
-    dispatch(getQuotationsRequest(payload));
+    getCurrentCompanyId().then(id => {
+      const payload: IGetQuotationRequest = {
+        companyId: id as string,
+      };
+      dispatch(getQuotationsRequest(payload));
+    }).catch(err => console.log(err));
   }
 
   const handleOnRefresh = useCallback(() => {
@@ -244,7 +245,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
 
   useEffect(() => {
     _getQuotationsRequest();
-  }, [companyId]);
+  }, []);
 
   useEffect(() => {
     if (

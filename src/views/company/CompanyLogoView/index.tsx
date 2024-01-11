@@ -1,7 +1,7 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import styles from './style';
-import LogoPlaceholder from '../../../../images/logo_placeholder.png';
+import LogoPlaceholder from '../../../images/logo_placeholder.png';
 import {
   launchCamera,
   launchImageLibrary,
@@ -9,24 +9,21 @@ import {
   MediaType,
   PhotoQuality,
 } from 'react-native-image-picker';
-import CameraIcon from '../../../../images/icons/camera.svg';
-import GalleryIcon from '../../../../images/icons/gallery.svg';
-import Spacer from '../../../../common/Spacer';
-import {useCompanyRegistrationContextHook} from '../../../../provider/CompanyRegistrationContextProvider';
-import Button from '../../../../common/Button';
-import {useAppDispatch, useAppSelector} from '../../../../redux/hooks';
+import CameraIcon from '../../../images/icons/camera.svg';
+import GalleryIcon from '../../../images/icons/gallery.svg';
+import Spacer from '../../../common/Spacer';
+import Button from '../../../common/Button';
+import {useAppDispatch, useAppSelector} from '../../../redux/hooks';
 import {
   editCompanyRequest,
-  getCompaniesRequest,
   reseteditCompanyRequest,
-} from '../../../../redux/slices/CompanySlice';
-import Spinner from '../../../../common/Spinner';
-import useCompanyId from '../../../../hooks/useCompanyId';
-import {ToastType, showToast} from '../../../../utils/utility';
-import { imageUploadRequest, resetImageUploadRequest } from '../../../../redux/slices/CommonSlice';
-import { ICompanyEditRequest } from '../../../../interface/companyRegistration/ICompanyEditRequest';
-import useAuthId from '../../../../hooks/useAuthId';
-import { ICompanyInfoData } from '../../../../interface/companyRegistration/IGetCompaniesResponse';
+} from '../../../redux/slices/CompanySlice';
+import Spinner from '../../../common/Spinner';
+import {ToastType, showToast} from '../../../utils/utility';
+import { imageUploadRequest, resetImageUploadRequest } from '../../../redux/slices/CommonSlice';
+import { ICompanyEditRequest } from '../../../interface/companyRegistration/ICompanyEditRequest';
+import Header from '../../../common/Header';
+import { getCurrentCompanyId } from '../../../utils/storage';
 
 interface IOptions {
   mediaType: MediaType;
@@ -44,26 +41,15 @@ const options: IOptions = {
   cameraType: 'back',
 };
 
-interface ICompanyLogoPageViewProps {
-  currentStep: number;
-  setCurrentStep: (step: number) => void;
+interface IProps {
 }
 
-const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
-  currentStep,
-  setCurrentStep,
-}) => {
-  const {state, setCompanyLogo: setCompanyLogo2} = useCompanyRegistrationContextHook();
-  const [companyLogo, setCompanyLogo] = useState<string>(
-    state.company_logo_url,
-  );
+const CompanyLogoPageView: React.FC<IProps> = (props:any) => {
+  const {navigation} = props;
   const [imageFile, setImageFile] = useState<any>(null);
-  
-  const authId = useAuthId();
-  const companyId = useCompanyId();
+  const [imageUri, setImageUri] = useState<string>('');
 
   const {
-    companies,
     editCompanyRequesting,
     editCompanySuccess,
     editCompanyFailure,
@@ -75,25 +61,6 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
     imageUploadFailure,
     uploadedImage,
   } = useAppSelector(state => state.Common);
-  const {data: companiesData} = companies || {};
-  const {otpData} = useAppSelector(state => state.OTP);
-
-  const getFirstCompany = () => {
-    let company: ICompanyInfoData | null = null;
-    if (
-      companiesData &&
-      Array.isArray(companiesData) &&
-      companiesData.length > 0
-    ) {
-      company = companiesData[0];
-    } else if (companiesData && companiesData.hasOwnProperty('authId')) {
-      company = companiesData;
-    }
-    return company;
-  };
-
-  const firstCompany = getFirstCompany();
-  
 
   const _getUploadedImagePath = () => {
     let path: string = '';
@@ -115,8 +82,7 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
         if (assets && Array.isArray(assets) && assets.length > 0) {
           const imageObj = assets[0];
           setImageFile(imageObj);
-          setCompanyLogo(imageObj.uri as string);
-          setCompanyLogo2(imageObj.uri as string);
+          setImageUri(imageObj.uri as string);
         }
       }
     } catch (error) {
@@ -133,8 +99,7 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
         if (assets && Array.isArray(assets) && assets.length > 0) {
           const imageObj = assets[0];
           setImageFile(imageObj);
-          setCompanyLogo(imageObj.uri as string);
-          setCompanyLogo2(imageObj.uri as string);
+          setImageUri(imageObj.uri as string);
         }
       }
     } catch (error) {
@@ -142,36 +107,19 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
     }
   };
 
-  const handleNextClick = () => {
-    if (currentStep >= 1 && currentStep < 3) {
-      setCurrentStep(currentStep + 1);
-    }
-  };
-
   const handleCompanyLogoUriUpdate = () => {
     const imagePath = _getUploadedImagePath();
-    
-    setCompanyLogo2(imagePath);
-    const payload: ICompanyEditRequest = {
-      _id: companyId,
-      authId: authId,
-      companyName: state.company_name || firstCompany?.companyName,
-      contactPerson: state.contact_person || firstCompany?.contactPerson,
-      email: state.email || firstCompany?.email,
-      companyMobile: state.mobile || firstCompany?.companyMobile,
-      companyAddress: state.address || firstCompany?.companyAddress,
-      state: state.state || firstCompany?.state,
-      city: state.city || firstCompany?.city,
-      pincode: state.pincode || firstCompany?.pincode,
-      companyWebite: 'abc@xyz.com' || firstCompany?.companyWebite,
-      companyLogo: imagePath,
-      punchLine: '',
-      companyProfile: '',
-      district: '',
-      postOffice: '',
-      companySignature: state.company_signature_url || firstCompany?.companySignature,
-    };
-    dispatch(editCompanyRequest(payload));
+    getCurrentCompanyId().then(id => {
+      const payload: ICompanyEditRequest = {
+        companyId: id as string,
+        payload: {
+          companyLogo: imagePath,
+        }
+      };
+      dispatch(editCompanyRequest(payload));
+    }).catch(err => {
+      console.log('api-error-', err);
+    });
   };
 
   const handleUploadClick = () => {
@@ -183,13 +131,6 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
     });
     dispatch(imageUploadRequest(formData));
   };
-
-  useEffect(() => {
-    if (otpData) {
-      const {data = {}} = otpData || {};
-      dispatch(getCompaniesRequest(data?.id as string));
-    }
-  }, []);
 
   useEffect(() => {
     if (!imageUploading && imageUploadSuccess) {
@@ -205,10 +146,10 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
 
   useEffect(() => {
     if (!editCompanyRequesting && editCompanySuccess) {
-      showToast('Company Info updated successful.', ToastType.SUCCESS);
+      showToast('Company Info updated successfuly.', ToastType.SUCCESS);
       dispatch(resetImageUploadRequest());
       dispatch(reseteditCompanyRequest());
-      setCurrentStep(currentStep + 1);
+      navigation.replace("CompanySignature");
     } else if (!editCompanyRequesting && editCompanyFailure) {
       showToast('Company Info update failed. Try again!', ToastType.ERROR);
       dispatch(resetImageUploadRequest());
@@ -218,6 +159,7 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
 
   return (
     <View style={styles.container}>
+      <Header canGoBack={false} label="Provide Company Logo" />
       <View style={styles.contentContainer}>
         <Spacer />
         <View>
@@ -225,9 +167,9 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
         </View>
         <Spacer />
         <View style={styles.logoContainer}>
-          {companyLogo ? (
+          {imageUri ? (
             <Image
-              source={companyLogo ? {uri: companyLogo} : LogoPlaceholder}
+              source={imageUri ? {uri: imageUri} : LogoPlaceholder}
               style={styles.logo}
             />
           ) : (
@@ -253,20 +195,10 @@ const CompanyLogoPageView: React.FC<ICompanyLogoPageViewProps> = ({
         </View>
       </View>
       <View style={styles.buttonContainer}>
-        <View style={styles.prevButtonContainer}>
-          {currentStep > 1 ? (
-            <Button
-              text="Upload"
-              onPress={handleUploadClick}
-              style={styles.buttonStyle}
-              textStyle={styles.buttonTextStyle}
-            />
-          ) : null}
-        </View>
         <View style={styles.nextButtonContainer}>
           <Button
-            text={currentStep == 5 ? 'Save' : 'Skip'}
-            onPress={handleNextClick}
+            text={'Upload'}
+            onPress={handleUploadClick}
             style={styles.skipButtonStyle}
             textStyle={styles.buttonTextStyle}
           />

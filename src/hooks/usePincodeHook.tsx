@@ -28,13 +28,11 @@ const usePincodeHook = (setError: () => void, resetError: () => void) => {
     setPincode('');
   };
 
-  // console.log('pincode---------', pincode);
   const getAddressByPincode = async () => {
     try {
       resetPincodeHookState();
       setFetching(true);
       const result = await PincodeService(PINCODE(pincode));
-      console.log('result---------', JSON.stringify(result));
       setFetching(false);
       if (result && Array.isArray(result) && result.length > 0) {
         const pinCodeApiResult = result[0];

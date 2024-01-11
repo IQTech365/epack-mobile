@@ -4,7 +4,7 @@ import styles from './style';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import {IGetPackingListRequest, IPackingListData} from '../../../../../interface/order/IPackingMaterialResponse';
 import { getPackingMaterialsRequest } from '../../../../../redux/slices/OrderSlice';
-import useCompanyId from '../../../../../hooks/useCompanyId';
+import { getCurrentCompanyId } from '../../../../../utils/storage';
 
 interface Props {
   orderId: string;
@@ -12,7 +12,6 @@ interface Props {
 
 const PackingListView: React.FC<Props> = ({orderId}) => {
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
 
   const {getPackingMaterialsRequesting, packingMaterials} = useAppSelector(
     state => state.Order,
@@ -37,11 +36,13 @@ const PackingListView: React.FC<Props> = ({orderId}) => {
   };
 
   const _getPackingMaterialsRequest = () => {
-    const payload:IGetPackingListRequest = {
-      companyId: companyId,
-      enquiryId: orderId
-  }
-  dispatch(getPackingMaterialsRequest(payload));
+    getCurrentCompanyId().then(id => {
+      const payload:IGetPackingListRequest = {
+        companyId: id as string,
+        enquiryId: orderId
+    }
+      dispatch(getPackingMaterialsRequest(payload));
+    }).catch(err => console.log(err));
   }
 
   useEffect(() => {

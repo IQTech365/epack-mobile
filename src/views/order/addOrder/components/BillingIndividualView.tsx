@@ -10,7 +10,6 @@ import {
   ICustomersRequest,
 } from '../../../../interface/common/common';
 import {useOrderFormContextHook} from '../../../../provider/OrderFormContextProvider';
-import useCompanyId from '../../../../hooks/useCompanyId';
 import {useAppDispatch, useAppSelector} from '../../../../redux/hooks';
 import {debounce} from '../../../../utils/utility';
 import {
@@ -18,11 +17,11 @@ import {
   resetGetCustomersRequest,
 } from '../../../../redux/slices/CommonSlice';
 import {Validator} from '../../../../utils/validation';
+import { getCurrentCompanyId } from '../../../../utils/storage';
 
 interface IProps {}
 
 const BillingIndividualView: FC<IProps> = ({}) => {
-  const companyId = useCompanyId();
   const dispatch = useAppDispatch();
   const {state, setPartyMobileNo, setPartyName} = useOrderFormContextHook();
 
@@ -51,11 +50,13 @@ const BillingIndividualView: FC<IProps> = ({}) => {
   const handleMobileNo = async (text: string) => {
     setPartyMobileNo(text);
     if (!Validator.isEmpty(text) && text.length == 10) {
-      const payload: ICustomersRequest = {
-        companyId: companyId,
-        searchKey: text,
-      };
-      debounce(dispatch(getCustomersRequest(payload)), 3000);
+      getCurrentCompanyId().then(id => {
+        const payload: ICustomersRequest = {
+          companyId: id as string,
+          searchKey: text,
+        };
+        debounce(dispatch(getCustomersRequest(payload)), 3000);
+      }).catch(err => console.log(err));
     }
   };
 

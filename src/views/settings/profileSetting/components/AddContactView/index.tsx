@@ -12,13 +12,12 @@ import { getContactsRequest } from '../../../../../redux/slices/ProfileSettingSl
 import Spinner from '../../../../../common/Spinner';
 import ContactListItem, { IContactListItem } from './components/ContactDetailListItem';
 import { IGetContactDetailsData } from '../../../../../interface/setting/packerProfile/contactDetail/IGetContactDetailsResponse';
-import useCompanyId from '../../../../../hooks/useCompanyId';
+import { getCurrentCompanyId } from '../../../../../utils/storage';
 
 const AddContactView = () => {
   const [showContactList, setShowContactList] = useState<boolean>(false);
   const [showAddContact, setShowAddContact] = useState<boolean>(true);
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
   const {getContactsRequesting, contacts} = useAppSelector(state => state.Setting);
   const {data: contactsData} = contacts || {};
   
@@ -76,8 +75,9 @@ const AddContactView = () => {
   };
 
   const _getContactsRequest = () => {
-    
-    dispatch(getContactsRequest(companyId));
+    getCurrentCompanyId().then(id => {
+      dispatch(getContactsRequest(id as string));
+    }).catch(err => console.log(err));
   }
 
   useEffect(() => {

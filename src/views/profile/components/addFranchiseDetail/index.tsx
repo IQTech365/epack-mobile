@@ -18,7 +18,7 @@ import AddFranchiseUpdateView from '../addFranchiseUpdateView';
 import {getFranchiseRequest} from '../../../../redux/slices/MyProfile';
 import AddFranchiseListItem from '../addFranchiseList';
 import Spinner from '../../../../common/Spinner';
-import useCompanyId from '../../../../hooks/useCompanyId';
+import { getCurrentCompanyId } from '../../../../utils/storage';
 
 const AddFranchiseView = () => {
   const [showFranchiseList, setshowFranchiseList] = useState<boolean>(false);
@@ -27,8 +27,6 @@ const AddFranchiseView = () => {
     state => state.Myprofile,
   );
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
-
   const {data: franchiseData = []} = Franchises || {};
 
   const handleCreateNewContent = () => {
@@ -37,7 +35,9 @@ const AddFranchiseView = () => {
   };
 
   const _getFranchiseRequest = () => {
-    dispatch(getFranchiseRequest(companyId));
+    getCurrentCompanyId().then(id => {
+      dispatch(getFranchiseRequest(id as string));
+    }).catch(err => console.log(err));
   }
 
   const handleShowContent = () => {

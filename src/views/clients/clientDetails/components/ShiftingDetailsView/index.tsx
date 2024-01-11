@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
 import {View, FlatList} from 'react-native';
-import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
 import Spacer from '../../../../../common/Spacer';
 import EnquiryDetailListItem from '../../../../enquiry/enquiryDetails/components/EnquiryDetailListItem';
@@ -8,11 +7,11 @@ import styles from './style';
 import {ICustomer} from '../../../../../interface/customer/customer';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import {IGetOrdersRequest} from '../../../../../interface/order/IGetOrdersRequest';
-import useCompanyId from '../../../../../hooks/useCompanyId';
 import {getOrdersRequest} from '../../../../../redux/slices/OrderSlice';
 import Spinner from '../../../../../common/Spinner';
 import {IGetOrdersData} from '../../../../../interface/order/IGetOrdersResponse';
 import {formatDate4} from '../../../../../utils/formatter';
+import { getCurrentCompanyId } from '../../../../../utils/storage';
 
 interface IShiftingDetailsViewProps {
   item: ICustomer;
@@ -23,14 +22,15 @@ const ShiftingDetailsView: React.FC<IShiftingDetailsViewProps> = ({item}) => {
   console.log('ShiftingDetailsView--orders--', JSON.stringify(orders));
 
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
 
   const _fetchOrders = () => {
+    getCurrentCompanyId().then(id => {
+      const payload: Partial<IGetOrdersRequest> = {
+        companyId: id as string,
+      };
+      dispatch(getOrdersRequest(payload));
+    }).catch(err => console.log(err));
     
-    const payload: Partial<IGetOrdersRequest> = {
-      companyId: companyId,
-    };
-    dispatch(getOrdersRequest(payload));
   };
 
   const _getOrderList = (): IGetOrdersData[] => {

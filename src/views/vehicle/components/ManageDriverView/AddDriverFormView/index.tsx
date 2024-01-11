@@ -15,7 +15,6 @@ import {
   getBranchsRequest,
   getFranchiseRequest,
 } from '../../../../../redux/slices/MyProfile';
-import useCompanyId from '../../../../../hooks/useCompanyId';
 import BasicDetailsView from './components/BasicDetailsView';
 import UploadPhotoView, { PHOTO } from './components/UploadPhotoView';
 import UploadAadharPhotoView from './components/UploadAadharPhotoView';
@@ -29,6 +28,7 @@ import {COLOR_BLACK} from '../../../../../utils/colors';
 import useAuthId from '../../../../../hooks/useAuthId';
 import entityOptions from '../../../../../data/entityOptions.json';
 import { ToastType, showToast } from '../../../../../utils/utility';
+import { getCurrentCompanyId } from '../../../../../utils/storage';
 
 const AddDriverView: React.FC<{}> = ({}) => {
   const {state, setAadharCardNo} = useAddDriverFormContextHook();
@@ -38,16 +38,19 @@ const AddDriverView: React.FC<{}> = ({}) => {
   );
   
   const dispatch = useAppDispatch();
-  const companyId = useCompanyId();
   
   const authId = useAuthId();
 
   const _getBranchsRequest = () => {
-    dispatch(getBranchsRequest(companyId));
+    getCurrentCompanyId().then(id => {
+      dispatch(getBranchsRequest(id as string));
+    }).catch(err => console.log(err));
   }
 
   const _getFranchiseRequest = () => {
-    dispatch(getFranchiseRequest(companyId));
+    getCurrentCompanyId().then(id => {
+      dispatch(getFranchiseRequest(id as string));
+    }).catch(err => console.log(err));
   }
 
   useEffect(() => {
@@ -56,44 +59,46 @@ const AddDriverView: React.FC<{}> = ({}) => {
   }, []);
 
   const handleSubmit = () => {
-    const payload: IAddDriverRequest = {
-      companyId: companyId,
-      entityType: state.entity,
-      entityId: state.entity == entityOptions[0].label ? companyId : state.sub_entity,
-      driverName: state.driver_name,
-      driverPhoto: state.driver_photo,
-      mobile: state.driver_mobile_no,
-      licenceNo: state.driver_license_no,
-      driverLicence: state.license_photo,
-      aadharNo: state.aadhar_card_no,
-      aadharFront: state.aadhar_front_photo,
-      aadharBack: state.aadhar_back_photo,
-      permanentAddress: {
-        pincode: state.permanent_add_pincode,
-        address: state.permanent_add_address,
-        city: state.permanent_add_city,
-        state: state.permanent_add_state,
-        locality: state.permanent_add_locality,
-      },
-      currentAddress: state.is_current_add_same_as_permanent
-        ? {
-            pincode: state.permanent_add_pincode,
-            address: state.permanent_add_address,
-            city: state.permanent_add_city,
-            state: state.permanent_add_state,
-            locality: state.permanent_add_locality,
-          }
-        : {
-            pincode: state.current_add_pincode,
-            address: state.current_add_address,
-            city: state.current_add_city,
-            state: state.current_add_state,
-            locality: state.current_add_locality,
-          },
-      addedBy: authId,
-    };
-    console.log(payload, 'add Driver..');
-    dispatch(addDriverRequest(payload));
+    getCurrentCompanyId().then(id => {
+      const payload: IAddDriverRequest = {
+        companyId: id as string,
+        entityType: state.entity,
+        entityId: state.entity == entityOptions[0].label ? id as string : state.sub_entity,
+        driverName: state.driver_name,
+        driverPhoto: state.driver_photo,
+        mobile: state.driver_mobile_no,
+        licenceNo: state.driver_license_no,
+        driverLicence: state.license_photo,
+        aadharNo: state.aadhar_card_no,
+        aadharFront: state.aadhar_front_photo,
+        aadharBack: state.aadhar_back_photo,
+        permanentAddress: {
+          pincode: state.permanent_add_pincode,
+          address: state.permanent_add_address,
+          city: state.permanent_add_city,
+          state: state.permanent_add_state,
+          locality: state.permanent_add_locality,
+        },
+        currentAddress: state.is_current_add_same_as_permanent
+          ? {
+              pincode: state.permanent_add_pincode,
+              address: state.permanent_add_address,
+              city: state.permanent_add_city,
+              state: state.permanent_add_state,
+              locality: state.permanent_add_locality,
+            }
+          : {
+              pincode: state.current_add_pincode,
+              address: state.current_add_address,
+              city: state.current_add_city,
+              state: state.current_add_state,
+              locality: state.current_add_locality,
+            },
+        addedBy: authId,
+      };
+      console.log(payload, 'add Driver..');
+      dispatch(addDriverRequest(payload));
+    }).catch(err => console.log(err));
   };
 
   useEffect(() => {

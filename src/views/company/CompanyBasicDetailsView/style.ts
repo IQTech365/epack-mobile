@@ -4,7 +4,7 @@ import {
   COLOR_BLUE,
   COLOR_GRAY2,
   COLOR_WHITE,
-} from '../../../../utils/colors';
+} from '../../../utils/colors';
 const {width} = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
