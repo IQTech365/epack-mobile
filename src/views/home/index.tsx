@@ -8,11 +8,21 @@ import TaskView from './components/TaskView';
 import {FEATURE_TYPE, TASK_NAME} from './utils';
 import BannerView from './components/BannerView';
 import FeatureView from './components/FeatureView';
+import { useNavigation } from '@react-navigation/native';
 
 const HomePageView = () => {
-
+  const navigation = useNavigation();
   const handleFeatureClick = (featureType: FEATURE_TYPE) => {
-    //
+    if(featureType == FEATURE_TYPE.BRANCHES) {
+      //@ts-ignore
+      navigation.navigate('Branch Management');
+    } else if(featureType == FEATURE_TYPE.VEHICLE_MANAGEMENT) {
+      //@ts-ignore
+      navigation.navigate('Vehicle Management');
+    } else if(featureType == FEATURE_TYPE.FRANCHIES) {
+      //@ts-ignore
+      navigation.navigate('Franchise Management');
+    }
   }
 
   return (
