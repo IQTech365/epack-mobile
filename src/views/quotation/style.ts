@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import { COLOR_BLUE, COLOR_GRAY5, COLOR_WHITE } from '../../utils/colors';
+import { COLOR_BLACK, COLOR_BLUE, COLOR_GRAY5, COLOR_WHITE } from '../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -37,6 +37,11 @@ const styles = StyleSheet.create({
     },
     downloadText: {
         color: COLOR_WHITE,
+        fontSize: 14,
+    },
+    text: {
+        color: COLOR_BLACK,
+        fontFamily: 'WorkSans-Regular',
         fontSize: 14,
     }
 });

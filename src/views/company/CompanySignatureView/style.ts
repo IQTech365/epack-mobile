@@ -10,7 +10,7 @@ const {width} = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 20,
+    // paddingVertical: 20,
   },
   signatureWrapper: {
     width: width * 0.95,

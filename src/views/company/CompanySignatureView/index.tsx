@@ -320,6 +320,7 @@ const SignatureViewPage: React.FC<IProps> = (props: any) => {
     <>
       <View style={style.container}>
         <Header canGoBack={false} label="Provide Admin Signature" />
+        <Spacer height={10} />
         <Text style={style.titleText}>
           Please select signature type you want to uplod.
         </Text>

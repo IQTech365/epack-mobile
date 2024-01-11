@@ -348,6 +348,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
             onEdit={() => handleEditClick(item)}
           />
         )}
+        ListEmptyComponent={() => <Text style={styles.text}>No Quotations available!</Text>}
       />
       <FormModal ref={bottomSheetRef} onClose={dismissModal}>
         <>
