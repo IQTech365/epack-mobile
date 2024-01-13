@@ -11,7 +11,8 @@ import {
   options2,
 } from './components/FreightDetailsView/components/utils';
 import * as Utils from './components/OtherDetailsView/utils';
-import { formatDate4 } from '../../../utils/formatter';
+import {formatDate4} from '../../../utils/formatter';
+import {IGetQuotationData} from '../../../interface/quotation/IGetQuotationsResponse';
 
 export enum ACTION {
   SHIFTING_TYPE = 'SHIFTING_TYPE',
@@ -129,6 +130,9 @@ export enum ACTION {
   RESET_ERROR = 'RESET_ERROR',
   VALIDATE_FORM = 'VALIDATE_FORM',
   VALID_FORM = 'VALID_FORM',
+  // item : Note:- This will be used only in edit quottion form
+  QUOTATION_ITEM = 'QUOTATION_ITEM',
+  IS_EDIT_QUOTATION = 'IS_EDIT_QUOTATION',
 }
 
 export type TInsuranceDetails = {
@@ -262,11 +266,13 @@ export interface IState {
   };
   validate_form: boolean;
   valid_form: boolean;
+  item: IGetQuotationData | null;
+  editQuotation: boolean;
 }
 
 export interface IAction {
   type: ACTION;
-  payload: string | boolean | IOtherCharge[];
+  payload: string | boolean | IOtherCharge[] | IGetQuotationData;
 }
 
 export const initialState: IState = {
@@ -382,6 +388,9 @@ export const initialState: IState = {
   },
   validate_form: false,
   valid_form: false,
+  // item : Note:- This will be used only in edit quotation form
+  item: null,
+  editQuotation: false,
 };
 
 export const quotationReducer: Reducer<IState, IAction> = (
@@ -656,6 +665,16 @@ export const quotationReducer: Reducer<IState, IAction> = (
       return {
         ...state,
         valid_form: payload as boolean,
+      };
+    case ACTION.QUOTATION_ITEM:
+      return {
+        ...state,
+        item: payload as IGetQuotationData,
+      };
+    case ACTION.IS_EDIT_QUOTATION:
+      return {
+        ...state,
+        editQuotation: payload as boolean,
       };
     default:
       return state;

@@ -23,6 +23,7 @@ import {
 import {Validator} from '../../../../../utils/validation';
 import CompanyAddressView from '../CompanyAddressView';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
+import { IEnquiry } from '../../../../../interface/quotation/IGetQuotationsResponse';
 
 interface Props {
   //
@@ -134,6 +135,38 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
       }
     }
   }, [selectedCompanyOption]);
+
+  useEffect(() => {
+    if(state.editQuotation && state.item) {
+      const {item} = state;
+      if(item) {
+        const enquiries:IEnquiry[] = item.enquiries;
+        if(enquiries.length > 0) {
+          const enquiry:IEnquiry = enquiries[0];
+          if(enquiry.billingBy == "by Company") {
+            const billingInfo:ICustomerBillingInfo = enquiry.billingDetails as ICustomerBillingInfo;
+            if(billingInfo) {
+              setCompanyName(billingInfo.companyName);
+              setApprovalAuthority(billingInfo.approvalAuthority);
+              const approvalAuthorityItem:TDropdownItem = approvalAuthorityOptions.find((d:TDropdownItem) => d.label == billingInfo.approvalAuthority) as TDropdownItem;
+              if(approvalAuthorityItem) {
+                //@ts-ignore
+                approvalAuthorityDropdownCompRef && approvalAuthorityDropdownCompRef?.current?.setDefaultValue(approvalAuthorityItem);
+              }
+              setAuthorityPersonName(billingInfo.authorityPersonName);
+              setAuthorityMobileNo(billingInfo.authorityPersonMobile);
+              setCompanyGSt(billingInfo.companyGST);
+              setEmployeeName(billingInfo.employeeName);
+              setEmployeeDesignation(billingInfo.employeeDesignation);
+              setEmployeeMobileNo(billingInfo.employeeMobile);
+              setCompanyAddress(billingInfo.companyAddress);
+          
+            }
+          }
+        }
+      }
+    }
+  }, [state.editQuotation, state.item]);
 
   return (
     <>

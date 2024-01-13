@@ -21,6 +21,7 @@ import {ToastType, showToast} from '../../../../../utils/utility';
 import {signatureTypeOptions} from '../utils';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import SignatureCaptureView from '../../../../../common/SignatureCaptureView';
+import { getCurrentCompanyId } from '../../../../../utils/storage';
 
 interface IUpdateBasicDetailsFormProps {
   //
@@ -41,7 +42,7 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({
   const [signatureType, setSignatureType] = useState<string>(
     signatureTypeOptions[0],
   );
-  const [uploadType, setUploadType] = useState<DOCUMENT>(DOCUMENT.COMPANY_LOGO);
+  const [company, setCompany] = useState<ICompanyInfoData>();
   
   const {
     companies,
@@ -52,19 +53,19 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({
   const {data: companiesData} = companies || {};
   const dispatch = useAppDispatch();
 
-  const getFirstCompany = () => {
-    let company: ICompanyInfoData | null = null;
-    if (
-      companiesData &&
-      Array.isArray(companiesData) &&
-      companiesData.length > 0
-    ) {
-      company = companiesData[0];
-    }
-    return company;
+  const _getCompany = () => {
+    getCurrentCompanyId().then(id => {
+      if (
+        companiesData &&
+        Array.isArray(companiesData) &&
+        companiesData.length > 0
+      ) {
+        const company = companiesData.find((d:ICompanyInfoData) => d._id == id as string);
+        setCompany(company);
+      }
+    }).catch(err => console.log('storage-error', err));
   };
 
-  const firstCompany = getFirstCompany();
   const handleCompnyPunchLineInput = (text: string) => {
     setCompanyPunch(text);
   };
@@ -78,29 +79,30 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({
   };
 
   const handleUpdate = () => {
-    const payload: ICompanyEditRequest = {
-      _id: firstCompany?._id as string,
-      authId: firstCompany?.authId as string,
-      companyName: firstCompany?.companyName as string,
-      contactPerson: contactPerson || firstCompany?.contactPerson as string,
-      email: firstCompany?.email as string,
-      companyMobile: firstCompany?.companyMobile as string,
-      companyAddress: firstCompany?.companyAddress as string,
-      state: firstCompany?.state as string,
-      city: firstCompany?.city as string,
-      pincode: firstCompany?.pincode as string,
-      companyWebite: website || firstCompany?.companyWebite as string,
-      companyLogo: companyLogoImage || (firstCompany?.companyLogo as string),
-      punchLine: comapnyPunch || firstCompany?.punchLine as string,
-      companyProfile: '',
-      district: '',
-      postOffice: '',
-      companySignature:
-        companySignatureImage || (firstCompany?.companySignature as string),
-    };
-    dispatch(editCompanyRequest(payload));
-    // dispatch(getCompaniesRequest(firstCompany?.authId as string));
+    getCurrentCompanyId().then(id => {
+      const payload: ICompanyEditRequest = {
+        companyId: id as string,
+        payload: {
+          contactPerson: contactPerson || company?.contactPerson as string,
+          companyWebite: website || company?.companyWebite as string,
+          companyLogo: companyLogoImage || (company?.companyLogo as string),
+          punchLine: comapnyPunch || company?.punchLine as string,
+          companyProfile: '',
+          district: '',
+          postOffice: '',
+          companySignature:
+            companySignatureImage || (company?.companySignature as string),
+        }
+      };
+      dispatch(editCompanyRequest(payload));
+      // dispatch(getCompaniesRequest(firstCompany?.authId as string));
+    }).catch(err => console.log('storage-error--', err));
+    
   };
+
+  useEffect(()=> {
+    _getCompany();
+  }, []);
 
   useEffect(() => {
     if (!editCompanyRequesting && editCompanySuccess) {
@@ -144,7 +146,7 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
-              value={firstCompany?.punchLine}
+              value={company?.punchLine}
             />
           </View>
           <Spacer height={4} />
@@ -155,7 +157,7 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
-              value={firstCompany?.contactPerson}
+              value={company?.contactPerson}
             />
           </View>
           <Spacer height={4} />
@@ -166,7 +168,7 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
-              value={firstCompany?.companyWebite}
+              value={company?.companyWebite}
             />
           </View>
           <Spacer height={20} />
@@ -176,7 +178,7 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({
           <Spacer height={10} />
           <CommonPhotoUploadView
             onUploadSuccess={onImageUploadSuccess}
-            previousImageUri={firstCompany?.companyLogo as string}
+            previousImageUri={company?.companyLogo as string}
             onChageImage={onChangeImage}
           />
           <Spacer height={20} />
@@ -212,14 +214,14 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({
           {signatureType == signatureTypeOptions[0] ? (
             <SignatureCaptureView
               onSave={onImageUploadSuccess}
-              previousSignatureUri={firstCompany?.companySignature as string}
+              previousSignatureUri={company?.companySignature as string}
               updateSignature={changeSignature}
               onChangeSignature={onChangeSignature}
             />
           ) : (
             <CommonPhotoUploadView
               onUploadSuccess={onImageUploadSuccess}
-              previousImageUri={firstCompany?.companySignature as string}
+              previousImageUri={company?.companySignature as string}
               onChageImage={onChangeSignature}
             />
           )}

@@ -37,18 +37,25 @@ import {
 import {ToastType, showToast} from '../../../../utils/utility';
 import { getVehicleSizeRequest } from '../../../../redux/slices/VehicleSlice';
 import { getCurrentCompanyId } from '../../../../utils/storage';
+import { IGetQuotationData } from '../../../../interface/quotation/IGetQuotationsResponse';
 
 interface Props {
   fromEnquiry?: boolean;
   enquiryId?: string;
   navigation: any;
+  item?:IGetQuotationData;
+  isEdit?:boolean;
 }
 
 const AddQuotationForm: React.FC<Props> = ({
   fromEnquiry,
   enquiryId,
   navigation,
+  isEdit,
+  item
 }) => {
+  console.log('AddQuotationForm--item--', JSON.stringify(item));
+  console.log('AddQuotationForm--isEdit--', JSON.stringify(isEdit));
   const {
     state,
     resetError,
@@ -60,6 +67,8 @@ const AddQuotationForm: React.FC<Props> = ({
     setEmployeeMobileNoError,
     setPickupPincodeError,
     setDropPincodeError,
+    setItem,
+    setIsEditQuotation,
   } = useQuotationFormContextHook();
   const authId = useAuthId();
   const dispatch = useAppDispatch();
@@ -308,6 +317,10 @@ const AddQuotationForm: React.FC<Props> = ({
   };
 
   useEffect(() => {
+    if(isEdit) {
+      setItem(item as IGetQuotationData)
+      setIsEditQuotation(isEdit);
+    }
     dispatch(getVehicleCompanyRequest());
     dispatch(getVehicleModelsRequest());
     dispatch(getVehicleTypesRequest());

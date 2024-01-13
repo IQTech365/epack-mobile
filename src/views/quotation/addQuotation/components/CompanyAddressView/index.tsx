@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {View} from 'react-native';
 import styles from './style';
-import CollapsibleView from '../../../../../common/CollapsibleView';
 import Label from '../../../../../common/Label';
 import Input from '../../../../../common/Input';
 import {COLOR_BLACK} from '../../../../../utils/colors';
@@ -11,6 +10,8 @@ import Spacer from '../../../../../common/Spacer';
 import usePincodeHook from '../../../../../hooks/usePincodeHook';
 import {getCities2, getStates2} from '../../../../../utils/formatter';
 import Spinner from '../../../../../common/Spinner';
+import { IEnquiry } from '../../../../../interface/quotation/IGetQuotationsResponse';
+import { ICustomerBillingInfo } from '../../../../../interface/common/common';
 
 interface Props {
   //
@@ -67,6 +68,40 @@ const CompanyAddressView: React.FC<Props> = ({}) => {
     }
   }, [states, cities]);
 
+  useEffect(() => {
+    if(state.editQuotation && state.item) {
+      const {item} = state;
+      if(item) {
+        const enquiries:IEnquiry[] = item.enquiries;
+        if(enquiries.length > 0) {
+          const enquiry:IEnquiry = enquiries[0];
+          if(enquiry.billingBy == "by Company") {
+            const billingInfo:ICustomerBillingInfo = enquiry.billingDetails as ICustomerBillingInfo;
+            if(billingInfo) {
+              setCompanyPincode(billingInfo.companyPincode);
+              setCompanyState(billingInfo.companyState);
+              //@ts-ignore
+              stateDropdownCompRef && stateDropdownCompRef?.current?.setValue(billingInfo.companyState);
+              // const stateItem:string = states.find((d:string) => d == billingInfo.companyState) as string;
+              // if(stateItem) {
+              //   //@ts-ignore
+              //   stateDropdownCompRef && stateDropdownCompRef?.current?.setValue(stateItem);
+              // }
+              setCompanyCity(billingInfo.companyCity);
+              //@ts-ignore
+              cityDropdownCompRef && cityDropdownCompRef?.current?.setValue(billingInfo.companyCity);
+              // const cityItem:string = cities.find((d:string) => d == billingInfo.companyCity) as string;
+              // if(cityItem) {
+              //   //@ts-ignore
+              //   cityDropdownCompRef && cityDropdownCompRef?.current?.setValue(cityItem);
+              // }
+            }
+          }
+        }
+      }
+    }
+  }, [state.editQuotation, state.item]);
+
   return (
       <View>
         <View style={styles.twoColumnContainer}>
@@ -82,7 +117,7 @@ const CompanyAddressView: React.FC<Props> = ({}) => {
               ref={pincodeInputCompRef}
               //@ts-ignore
               error={state.errors.pickup_pincode}
-              value={state?.pickup_pincode}
+              value={state?.company_pincode}
               inputType="numeric"
               required={true}
             />

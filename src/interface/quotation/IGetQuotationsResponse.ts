@@ -1,3 +1,5 @@
+import { ICustomerBillingInfo } from "../common/common";
+
 interface IPickupAddress {
   shiftingFrom: string;
   state: string;
@@ -42,6 +44,7 @@ export interface IEnquiry {
   dropAddress: IDropAddress;
   alternateNumbers: string[];
   billingBy: string;
+  billingDetails: ICustomerBillingInfo | null;
   orderAmount: string;
   tokenAmount: string;
   deliveryDate: string | null;

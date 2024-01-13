@@ -1,12 +1,11 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {FlatList, Text, TouchableOpacity, View} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 import styles from './style';
 import {useQuotationFormContextHook} from '../../../../../provider/QuotationFormContextProvider';
 import Label from '../../../../../common/Label';
 import Input from '../../../../../common/Input';
 import {COLOR_BLACK} from '../../../../../utils/colors';
 import Spacer from '../../../../../common/Spacer';
-import SearchIcon from '../../../../../images/icons/search.svg';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import {
   getCustomersRequest,
@@ -19,6 +18,7 @@ import {
 import { debounce } from '../../../../../utils/utility';
 import { Validator } from '../../../../../utils/validation';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
+import { IEnquiry } from '../../../../../interface/quotation/IGetQuotationsResponse';
 
 interface Props {
   //
@@ -90,6 +90,22 @@ const BillingIndividualView: React.FC<Props> = ({}) => {
       }
     }
   }, [selectedCompanyOption]);
+
+  useEffect(() => {
+    if(state.editQuotation && state.item) {
+      const {item} = state;
+      if(item) {
+        const enquiries:IEnquiry[] = item.enquiries;
+        if(enquiries.length > 0) {
+          const enquiry:IEnquiry = enquiries[0];
+          if(enquiry.billingBy == "by Individual") {
+            setPartyName(enquiry.partyName);
+            setPartyMobileNo(enquiry.mobile);
+          }
+        }
+      }
+    }
+  }, [state.editQuotation, state.item]);
 
   return (
     <>

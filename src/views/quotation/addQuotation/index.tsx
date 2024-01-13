@@ -8,6 +8,7 @@ import Header from '../../../common/Header';
 import Spacer from '../../../common/Spacer';
 import {QuotationFormContextProvider} from '../../../provider/QuotationFormContextProvider';
 import AddQuotationForm from './components/AddQuotationForm';
+import { IGetQuotationData } from '../../../interface/quotation/IGetQuotationsResponse';
 
 interface Props
   extends NativeStackScreenProps<QuotationStackParamList, 'AddQuotation'> {
@@ -24,6 +25,7 @@ const AddQuotationView: React.FC<Props> = ({
   route,
 }) => {
   const isEdit: boolean | undefined = route?.params?.isEdit;
+  const item:IGetQuotationData = route?.params?.item as IGetQuotationData;
   const headerText = isEdit ? 'UPDATE QUOTATION' : 'CREATE QUOTATION';
   return (
     <QuotationFormContextProvider>
@@ -35,6 +37,8 @@ const AddQuotationView: React.FC<Props> = ({
             fromEnquiry={fromEnquiry}
             enquiryId={enquiryId}
             navigation={navigation}
+            isEdit={isEdit}
+            item={item}
           />
         </View>
       </AvoidSoftInputViewHOC>

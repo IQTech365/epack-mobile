@@ -98,11 +98,8 @@ const CompanyListModal: React.FC<IProps> = ({
     ) {
       const {data} = purchasedSubscriptions || {};
       console.log('purchasedSubscriptions----', JSON.stringify(data));
-      
+      // completeRegistrationAndLoggedIn();
       if (data && Array.isArray(data) && data.length > 0) {
-        //TODO: find subscription for given company_id
-        // If subscription found close the modal and send user to the Dashbaord
-        // else ask to subscribe
         let isSubscribed: boolean = true;
         if(isSubscribed) {
           if(selectedCompany?.companyLogo && selectedCompany?.companySignature) {

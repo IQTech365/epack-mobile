@@ -18,6 +18,7 @@ import {formatDate4} from '../../../../../utils/formatter';
 import BillingIndividualView from '../BillingIndividualView';
 import BillingCompanyView from '../BillingCompanyView';
 import VehicleInfoView from '../VehicleInfoView';
+import { IEnquiry } from '../../../../../interface/quotation/IGetQuotationsResponse';
 interface Props {
   //
 }
@@ -68,6 +69,40 @@ const BasicDetails: React.FC<Props> = ({}) => {
       setCompanyAddress('');
     }
   }, [state.billing_by]);
+
+  useEffect(() => {
+    if(state.editQuotation && state.item) {
+      const {item} = state;
+      if(item) {
+        const shiftingLuggageItem:TDropdownItem = shiftingLuggages.find((d:TDropdownItem) => d.label == item.shiftingLuggage) as TDropdownItem;
+        if(shiftingLuggageItem) {
+          //@ts-ignore
+          shiftingLuggageDropdownCompRef && shiftingLuggageDropdownCompRef?.current?.setDefaultValue(shiftingLuggageItem);
+        }
+        setQuotationNo(item.quotationNumber);
+        //@ts-ignore
+        dateOfQuotationCompRef && dateOfQuotationCompRef?.current?.setDefaultValue(new Date(item.quotationData));
+        const enquiries:IEnquiry[] = item.enquiries;
+        if(enquiries.length > 0) {
+          const enquiry:IEnquiry = enquiries[0];
+          setShiftingType(enquiry.shiftingType);
+          const shiftingTypeItem:TDropdownItem = shiftingTypes.find((d:TDropdownItem) => d.label == enquiry.shiftingType) as TDropdownItem;
+          if(shiftingTypeItem) {
+            //@ts-ignore
+            shiftingTypeDropdownCompRef && shiftingTypeDropdownCompRef?.current?.setDefaultValue(shiftingTypeItem);
+          }
+          //@ts-ignore
+          dateOfMovingCompRef && dateOfMovingCompRef?.current?.setDefaultValue(new Date(enquiry.shiftingDate));
+          setBillingBy(enquiry.billingBy);
+          const billingByItem:TDropdownItem = billingByOptions.find((d:TDropdownItem) => d.label == enquiry.billingBy) as TDropdownItem;
+          if(billingByItem) {
+            //@ts-ignore
+            billingByDropdownCompRef && billingByDropdownCompRef?.current?.setDefaultValue(billingByItem);
+          }
+        }
+      }
+    }
+  }, [state.editQuotation, state.item]);
 
   return (
     <CollapsibleView title="BASIC DETAILS" collapsed={false}>
@@ -123,6 +158,7 @@ const BasicDetails: React.FC<Props> = ({}) => {
               containerStyle={styles.switchInputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
+              value={state.quotation_no}
               placeholder='Serial#'
               editable={!switchState}
               //@ts-ignore
