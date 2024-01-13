@@ -158,6 +158,6 @@ export const CREATE_RAZORPAY_ORDER = `/purchase/createOrder`;
 // Template List
 export const GET_TEPLATE_LIST = `/template/all`;
 // Save Document Template ID
-export const SAVE_DOCUMENT_TEMPLATE_ID = `/template/edit`;
+export const SAVE_DOCUMENT_TEMPLATE_ID = (template_id) => `/template/edit/${template_id}`;
 // Get Saved Document Template ID List
 export const GET_SAVED_DOCUMENT_TEMPLATE_ID_LIST = (company_id) => `/template/company/${company_id}`;

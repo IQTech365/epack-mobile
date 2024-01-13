@@ -95,9 +95,13 @@ const TemplatePageView = ({route}) => {
     setActiveTemplateId(templateId)
     getCurrentCompanyId().then(id => {
       const payload:ISaveDocumentTemplateIdPayload = {
-        companyId: id as string,
-        templateId: templateId,
-        moduleId: moduleId,
+        params: {
+          templateId: templateId,
+        },
+        payload: {
+          companyId: id as string,
+          moduleId: moduleId,
+        }
       }
       dispatch(saveDocumentTemplateIdRequest(payload));
     }).catch(err => console.log(err));

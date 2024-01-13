@@ -20,7 +20,7 @@ import { IAddUserRoleRequest, IAddUserRoleResponse, IRoleTypeResponse } from '..
 import { ICreateSerialNoRequest } from '../interface/setting/serialNo/ICreateSerialNoRequest';
 import { ICreateSerialNoResponse } from '../interface/setting/serialNo/ICreateSerialNoResponse';
 import { IGetPaymentMethodsResponse } from '../interface/setting/packerProfile/paymentMethod/IGetPaymentMethodsResponse';
-import { ISaveDocumentTemplateIdPayload, ISaveDocumentTemplateIdResponse, ISavedDocumentTemplateIdResponse, ITemplateListResponse } from '../interface/setting/template/template';
+import { ISaveDocumentTemplateIdPayload, ISaveDocumentTemplateIdRequestPayload, ISaveDocumentTemplateIdResponse, ISavedDocumentTemplateIdResponse, ITemplateListResponse } from '../interface/setting/template/template';
 //@ts-ignore
 import { IGetUnitTypeResponse } from '../interface/setting/unitType/IGetunitTypeResponse';
 
@@ -129,8 +129,9 @@ export const GetTemplateListService = async (): Promise<ITemplateListResponse> =
 
 // SAVE DOCUMENT TEMPLATE ID
 export const SaveDocumentTemplateIdService = async (payload: ISaveDocumentTemplateIdPayload): Promise<ISaveDocumentTemplateIdResponse> => {
+    const {params, payload:data} = payload;
     const api = Api.getInstance();
-    return await api.update<ISaveDocumentTemplateIdPayload, AxiosResponse<ISaveDocumentTemplateIdResponse>>(payload, SAVE_DOCUMENT_TEMPLATE_ID);
+    return await api.update<ISaveDocumentTemplateIdRequestPayload, AxiosResponse<ISaveDocumentTemplateIdResponse>>(data, SAVE_DOCUMENT_TEMPLATE_ID(params.templateId));
 }
 
 // Get Saved Document Template ID List

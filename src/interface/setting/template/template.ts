@@ -21,11 +21,19 @@ export interface ITemplateListResponse {
   error: boolean;
 }
 
+export interface ISaveDocumentTemplateIdParams {
+  templateId: string;
+}
+
+export interface ISaveDocumentTemplateIdRequestPayload {
+  companyId:string,
+	moduleId:string,
+}
+
 // Save Template ID
 export interface ISaveDocumentTemplateIdPayload {
-  templateId:string,
-	companyId:string,
-	moduleId:string,
+  params:ISaveDocumentTemplateIdParams;
+	payload: ISaveDocumentTemplateIdRequestPayload;
 }
 
 export interface ISaveDocumentTemplateIdResponse {
