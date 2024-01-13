@@ -59,12 +59,14 @@ const CompanyAddressView: React.FC<Props> = ({}) => {
       stateDropdownCompRef &&
       cityDropdownCompRef
     ) {
-      //@ts-ignore
-      stateDropdownCompRef?.current?.setValue(states[0]);
-      setCompanyState(states[0]);
-      //@ts-ignore
-      cityDropdownCompRef?.current?.setValue(cities[0]);
-      setCompanyCity(cities[0]);
+      if(!state.editQuotation && !state.item){
+        //@ts-ignore
+        stateDropdownCompRef?.current?.setValue(states[0]);
+        setCompanyState(states[0]);
+        //@ts-ignore
+        cityDropdownCompRef?.current?.setValue(cities[0]);
+        setCompanyCity(cities[0]);
+      }
     }
   }, [states, cities]);
 
@@ -79,22 +81,13 @@ const CompanyAddressView: React.FC<Props> = ({}) => {
             const billingInfo:ICustomerBillingInfo = enquiry.billingDetails as ICustomerBillingInfo;
             if(billingInfo) {
               setCompanyPincode(billingInfo.companyPincode);
+              setPincode(billingInfo.companyPincode);
               setCompanyState(billingInfo.companyState);
               //@ts-ignore
-              stateDropdownCompRef && stateDropdownCompRef?.current?.setValue(billingInfo.companyState);
-              // const stateItem:string = states.find((d:string) => d == billingInfo.companyState) as string;
-              // if(stateItem) {
-              //   //@ts-ignore
-              //   stateDropdownCompRef && stateDropdownCompRef?.current?.setValue(stateItem);
-              // }
+              stateDropdownCompRef?.current?.setValue(billingInfo.companyState);
               setCompanyCity(billingInfo.companyCity);
               //@ts-ignore
-              cityDropdownCompRef && cityDropdownCompRef?.current?.setValue(billingInfo.companyCity);
-              // const cityItem:string = cities.find((d:string) => d == billingInfo.companyCity) as string;
-              // if(cityItem) {
-              //   //@ts-ignore
-              //   cityDropdownCompRef && cityDropdownCompRef?.current?.setValue(cityItem);
-              // }
+              cityDropdownCompRef?.current?.setValue(billingInfo.companyCity);
             }
           }
         }

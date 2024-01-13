@@ -1,6 +1,6 @@
 import { ICustomerBillingInfo } from "../common/common";
 
-interface IPickupAddress {
+export interface IPickupAddress {
   shiftingFrom: string;
   state: string;
   city: string;
@@ -11,7 +11,7 @@ interface IPickupAddress {
   isLiftAvailable: string;
 }
 
-interface IDropAddress {
+export interface IDropAddress {
   shiftingTo: string;
   state: string;
   city: string;

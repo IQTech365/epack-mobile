@@ -15,6 +15,7 @@ import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import usePincodeHook from '../../../../../hooks/usePincodeHook';
 import { getCities2, getStates2 } from '../../../../../utils/formatter';
 import Spinner from '../../../../../common/Spinner';
+import { IDropAddress, IEnquiry } from '../../../../../interface/quotation/IGetQuotationsResponse';
 
 interface Props {
   //
@@ -68,14 +69,51 @@ const DropAddressView: React.FC<Props> = ({}) => {
       stateDropdownCompRef &&
       cityDropdownCompRef
     ) {
-      //@ts-ignore
-      stateDropdownCompRef?.current?.setValue(states[0]);
-      setDropState(states[0]);
-      //@ts-ignore
-      cityDropdownCompRef?.current?.setValue(cities[0]);
-      setDropCity(cities[0]);
+      if(!state.editQuotation && !state.item) {
+        //@ts-ignore
+        stateDropdownCompRef?.current?.setValue(states[0]);
+        setDropState(states[0]);
+        //@ts-ignore
+        cityDropdownCompRef?.current?.setValue(cities[0]);
+        setDropCity(cities[0]);
+      }
     }
   }, [states, cities]);
+
+  useEffect(() => {
+    if(state.editQuotation && state.item) {
+      const {item} = state;
+      if(item) {
+        const enquiries:IEnquiry[] = item.enquiries;
+        if(enquiries.length > 0) {
+          const enquiry:IEnquiry = enquiries[0];
+          const dropAddress:IDropAddress = enquiry.dropAddress as IDropAddress;
+          if(dropAddress) {
+            setDropPincode(dropAddress.pincode);
+            setPincode(dropAddress.pincode);
+            setDropState(dropAddress.state);
+            //@ts-ignore
+            stateDropdownCompRef?.current?.setValue(dropAddress.state);
+            setDropCity(dropAddress.city);
+            //@ts-ignore
+            cityDropdownCompRef?.current?.setValue(dropAddress.city);
+            setDropCurrentFloor(dropAddress.floor);
+            const floorItem:TDropdownItem = floorOptions.find((d:TDropdownItem) => d.label == dropAddress.floor) as TDropdownItem;
+              if(floorItem) {
+                //@ts-ignore
+                floorDropdownCompRef && floorDropdownCompRef?.current?.setDefaultValue(floorItem);
+            }
+            setDropLiftStatus(dropAddress.isLiftAvailable);
+            const liftItem:TDropdownItem = liftStatusOptions.find((d:TDropdownItem) => d.label == dropAddress.isLiftAvailable) as TDropdownItem;
+              if(liftItem) {
+                //@ts-ignore
+                liftDropdownCompRef && liftDropdownCompRef?.current?.setDefaultValue(liftItem);
+            }
+          }
+        }
+      }
+    }
+  }, [state.editQuotation, state.item]);
 
   return (
     <CollapsibleView title="DROP ADDRESS" collapsed={true}>
