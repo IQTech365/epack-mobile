@@ -125,7 +125,7 @@ const SubscriptionPlanView = (props: any) => {
       RazorpayCheckout.open(options)
         .then((data: any) => {
           console.log('Payment-Success----', data.razorpay_payment_id);
-          showToast(data.razorpay_payment_id, ToastType.SUCCESS);
+          showToast("Payment Success", ToastType.SUCCESS);
           setPaymentProcessing(false);
           setPaymentDone(true);
           _addPurchase(plan, orderId);
@@ -180,6 +180,7 @@ const SubscriptionPlanView = (props: any) => {
       dispatch(resetAddPurchaseRequest());
       navigation.replace("CompanyBasicInfo");
     } else if (!addPurchaseRequesting && addPurchaseFailure) {
+      dispatch(resetAddPurchaseRequest());
       // README: If payment is done and plan is not activated due to server issue. 
       // Then needs to activte the plan from backend. 
     }

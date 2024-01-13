@@ -52,7 +52,7 @@ export const UpdateSubscriptionInfoService = async (req: IUpdateSubscriptionRequ
     const api = Api.getInstance();
     const {params, payload} = req;
     const {authId, purchaseId} = params;
-    return await api.post<IUpdateSubscriptionPayload, AxiosResponse<IUpdateSubscriptionResponse>>(payload, UPDATE_SUBSCRIPTION_INFO(authId, purchaseId));
+    return await api.update<IUpdateSubscriptionPayload, AxiosResponse<IUpdateSubscriptionResponse>>(payload, UPDATE_SUBSCRIPTION_INFO(authId, purchaseId));
 }
 
 // Create Order on Server before `payment` (RazorPay)

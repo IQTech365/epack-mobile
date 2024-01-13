@@ -181,12 +181,12 @@ export const SubscriptionSlice = createSlice({
       state.getPurchasedSubscriptionsFailure = true;
       state.getPurchasedSubscriptionsError = action.payload;
     },
-    resetGetPurchasedSubscriptionRequest: (state, action: PayloadAction<any>) => {
+    resetGetPurchasedSubscriptionRequest: (state) => {
       state.getPurchasedSubscriptionsRequesting = false;
       state.getPurchasedSubscriptionsSuccess = false;
       state.getPurchasedSubscriptionsFailure = true;
       state.getPurchasedSubscriptionsError = null;
-      state.purchasedSubscriptions = null;
+      // state.purchasedSubscriptions = null;
     },
     // Update Subscription info with company_id
     updateSubscriptionRequest: (state, action: PayloadAction<IUpdateSubscriptionRequest>) => {
@@ -236,7 +236,7 @@ export const SubscriptionSlice = createSlice({
       state.addPurchaseSuccess = false;
       state.addPurchaseFailure = false;
       state.addPurchaseError = null;
-      state.addPurchaseInfo = null;
+      // state.addPurchaseInfo = null;
     },
     // Razorpay Order
     createRazorpayRequest: (state, action: PayloadAction<IRazorPayCreateOrderPayload>) => {
@@ -244,7 +244,7 @@ export const SubscriptionSlice = createSlice({
     },
     createRazorpaySuccess: (
       state,
-      action: PayloadAction<IAddPurchaseResponse>,
+      action: PayloadAction<IRazorPayOrderResponse>,
     ) => {
       state.createRazorpayOrderRequesting = false;
       state.createRazorpayOrderSuccess = true;

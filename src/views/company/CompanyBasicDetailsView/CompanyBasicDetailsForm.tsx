@@ -26,6 +26,9 @@ import {TDropdownItem} from '../../../type/TDropdownItem';
 import Spinner from '../../../common/Spinner';
 import Button from '../../../common/Button';
 import Header from '../../../common/Header';
+import { resetUpdateSubscriptionRequest, updateSubscriptionRequest } from '../../../redux/slices/SubscriptionSlice';
+import { IPurchase, IUpdateSubscriptionRequest } from '../../../interface/subscription/subscription';
+import { ToastType, showToast } from '../../../utils/utility';
 
 interface IProps {
   navigation: NavigationProp<any, any>;
@@ -58,6 +61,12 @@ const CompanyBasicDetailsForm: FC<IProps> = ({navigation}) => {
   const {requesting, success, error, failure, addCompanyInfo} = useAppSelector(
     state => state.Company,
   );
+  const {
+    updateSubscriptionRequesting,
+    updateSubscriptionSuccess,
+    updateSubscriptionFailure,
+    addPurchaseInfo,
+  } = useAppSelector(state => state.Subscription);
   const {result, fetching, setPincode} = usePincodeHook(
     () => {},
     () => {},
@@ -139,7 +148,6 @@ const CompanyBasicDetailsForm: FC<IProps> = ({navigation}) => {
         packerSignature: '',
         termsconditions: 'NA',
       };
-      console.log('data----------', JSON.stringify(data), null, ' ');
       dispatch(addCompanyRequest(data));
     }
   }, [state]);
@@ -164,14 +172,39 @@ const CompanyBasicDetailsForm: FC<IProps> = ({navigation}) => {
   useEffect(() => {
     if (!requesting && success && !error) {
       const {data} = addCompanyInfo || {};
+      const {data:purchaseData} = addPurchaseInfo || {};
       if (data) {
         const company: ICompanyInfoData = data as ICompanyInfoData;
-        _setCompanyIdAndMoveToNextStep(company._id);
+        const purchase: IPurchase = purchaseData as IPurchase;
+        const payload: IUpdateSubscriptionRequest = {
+          params: {
+            authId: authId,
+            purchaseId: purchase.purchase._id,
+          },
+          payload: {
+            companyId: company._id,
+          }
+        }
+        dispatch(updateSubscriptionRequest(payload));
       }
     } else if (!requesting && !success && error) {
       Alert.alert('Error in registering the company');
     }
   }, [requesting, success, error]);
+
+  useEffect(() => {
+    if (!updateSubscriptionRequesting && updateSubscriptionSuccess) {
+        const {data} = addCompanyInfo || {};
+        if (data) {
+          const company: ICompanyInfoData = data as ICompanyInfoData;
+          _setCompanyIdAndMoveToNextStep(company._id);
+          dispatch(resetUpdateSubscriptionRequest());
+        }
+    } else if (!updateSubscriptionRequesting && updateSubscriptionFailure) {
+      showToast('Error in updating company id', ToastType.ERROR);
+      dispatch(resetUpdateSubscriptionRequest());
+    }
+  }, [updateSubscriptionRequesting, updateSubscriptionSuccess, updateSubscriptionFailure]);
 
   useEffect(() => {
     if (result && result.Status != 'Error') {
@@ -428,6 +461,7 @@ const CompanyBasicDetailsForm: FC<IProps> = ({navigation}) => {
           />
         </View>
       </View>
+      <Spinner show={updateSubscriptionRequesting || requesting} />
     </View>
   );
 };

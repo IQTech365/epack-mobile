@@ -84,7 +84,40 @@ export interface IGetPurchasedSubscriptionParams {
   companyId: string;
 }
 
-export interface IPurchasedSubscription {}
+export interface IList {
+  featureId: string;
+  moduleId: string;
+  subModuleId: string;
+  qty: string;
+}
+
+export interface ISubscription {
+  _id: string;
+  subscriptionType: string;
+  plans: IPlan[];
+  isActive: boolean;
+  isDeleted: boolean;
+  list: IList[];
+  created: string;
+  __v: number;
+}
+
+export interface IPurchasedSubscription {
+  _id: string;
+  subscriptionId: string;
+  authId: string;
+  purchaseOrderId: string;
+  subscriptionPlan: string;
+  expiryDate: string;
+  amountPaid: string;
+  discountAmount: string;
+  couponCode: string;
+  status: string;
+  createdDate: string;
+  __v: number;
+  companyId: string;
+  subscription: ISubscription[];
+}
 export interface IGetPurchasedSubscriptionListResponse {
   data: IPurchasedSubscription[];
   status: number;
@@ -131,26 +164,46 @@ export interface IRazorPayCreateOrderPayload {
 }
 
 export interface IRazorPayOrderResponse {
-  data: IRazorPayOrder,
+  data: IRazorPayOrder;
   status: number;
   error: boolean;
 }
 
 // Add Purchase
 export interface IAddPurchaseRequest {
-  purchaseOrderId:string;
+  purchaseOrderId: string;
   subscriptionId: string;
   authId: string;
-  subscriptionPlan:string;
-  amountPaid:string;
+  subscriptionPlan: string;
+  amountPaid: string;
   expiryDate?: string;
-  discountAmount:string;
-  couponCode:string;
+  discountAmount: string;
+  couponCode: string;
   status: string;
 }
 
+// Add Purchase Result Data
+export interface IAddPurchaseResultData {
+  subscriptionId: string;
+  authId: string;
+  purchaseOrderId: string;
+  subscriptionPlan: string;
+  expiryDate: string;
+  amountPaid: string;
+  discountAmount: string;
+  couponCode: string;
+  status: string;
+  _id: string;
+  createdDate: string;
+  __v: number;
+}
+
+export interface IPurchase {
+  purchase: IAddPurchaseResultData;
+}
+
 export interface IAddPurchaseResponse {
-  data: any;
+  data: IPurchase;
   status: number;
   error: boolean;
 }

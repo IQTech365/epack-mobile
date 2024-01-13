@@ -3,8 +3,8 @@ import {Modal, Text, View, FlatList, TouchableOpacity} from 'react-native';
 import styles from './style';
 import {ICompanyInfoData} from '../../interface/companyRegistration/IGetCompaniesResponse';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
-import {IGetPurchasedSubscriptionParams} from '../../interface/subscription/subscription';
-import {getPurchasedSubscriptionRequest} from '../../redux/slices/SubscriptionSlice';
+import {IGetPurchasedSubscriptionParams, IPurchasedSubscription, ISubscription} from '../../interface/subscription/subscription';
+import {getPurchasedSubscriptionRequest, resetGetPurchasedSubscriptionRequest} from '../../redux/slices/SubscriptionSlice';
 import Spinner from '../Spinner';
 import { setCurrentCompanyId, setIsRegistrationComplete, setLoginStatus } from '../../utils/storage';
 import { useAuthContext } from '../../provider/AuthProvider';
@@ -71,11 +71,13 @@ const CompanyListModal: React.FC<IProps> = ({
     await setIsRegistrationComplete();
     await setCurrentCompanyId(selectedCompany?._id as string);
     await setLoginStatus();
+    dispatch(resetGetPurchasedSubscriptionRequest());
     setLoggedIn(true);
   };
 
   const _setCompanyIdAndDoCompleteRegistration = async (step: number) => {
     await setCurrentCompanyId(selectedCompany?._id as string);
+    dispatch(resetGetPurchasedSubscriptionRequest());
     doCompleteRegistration && doCompleteRegistration(step);
   }
 
@@ -97,11 +99,9 @@ const CompanyListModal: React.FC<IProps> = ({
       getPurchasedSubscriptionsSuccess
     ) {
       const {data} = purchasedSubscriptions || {};
-      console.log('purchasedSubscriptions----', JSON.stringify(data));
-      // completeRegistrationAndLoggedIn();
       if (data && Array.isArray(data) && data.length > 0) {
-        let isSubscribed: boolean = true;
-        if(isSubscribed) {
+        const subscription:IPurchasedSubscription = data.find((d:IPurchasedSubscription) => d.companyId == selectedCompany?._id);
+        if(subscription && subscription.status == 'active') {
           if(selectedCompany?.companyLogo && selectedCompany?.companySignature) {
             completeRegistrationAndLoggedIn();
           } else if(!selectedCompany?.companyLogo) {
@@ -121,7 +121,7 @@ const CompanyListModal: React.FC<IProps> = ({
       !getPurchasedSubscriptionsRequesting &&
       getPurchasedSubscriptionsFailure
     ) {
-      //
+      dispatch(resetGetPurchasedSubscriptionRequest());
     }
   }, [
     getPurchasedSubscriptionsRequesting,

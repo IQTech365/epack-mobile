@@ -60,6 +60,7 @@ export interface IAddQuotationRequest {
     landmark: string;
     floor: string;
     isLiftAvailable: string;
+    address: string;
   };
   dropAddress: {
     shiftingTo: string;
@@ -70,6 +71,7 @@ export interface IAddQuotationRequest {
     landmark: string;
     floor: string;
     isLiftAvailable: string;
+    address: string;
   };
 
   partLoad: boolean;
