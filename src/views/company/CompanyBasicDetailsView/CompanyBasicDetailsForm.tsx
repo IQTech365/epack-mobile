@@ -8,7 +8,7 @@ import Input from '../../../common/Input';
 import {formatDate4, getCities2, getStates2} from '../../../utils/formatter';
 import {ICompanyInfoData} from '../../../interface/companyRegistration/IGetCompaniesResponse';
 import {setCurrentCompanyId} from '../../../utils/storage';
-import {addCompanyRequest} from '../../../redux/slices/CompanySlice';
+import {addCompanyRequest, resetAddCompanyRequest} from '../../../redux/slices/CompanySlice';
 import {ICompanyRegistrationRequest} from '../../../interface/companyRegistration/ICompanyRegistrationRequest';
 import {IError, getError, ibaApprovalOptions, validate} from '../utils';
 import companyTypeOptions from '../../../data/companyType.json';
@@ -187,8 +187,10 @@ const CompanyBasicDetailsForm: FC<IProps> = ({navigation}) => {
         }
         dispatch(updateSubscriptionRequest(payload));
       }
+      dispatch(resetAddCompanyRequest());
     } else if (!requesting && !success && error) {
       Alert.alert('Error in registering the company');
+      dispatch(resetAddCompanyRequest());
     }
   }, [requesting, success, error]);
 
@@ -448,7 +450,7 @@ const CompanyBasicDetailsForm: FC<IProps> = ({navigation}) => {
             </View>
           </View>
           <Spacer height={12} />
-          <Spinner show={fetching} />
+          <Spinner show={fetching || requesting || updateSubscriptionRequesting} />
         </View>
       </AvoidSoftInputViewHOC>
       <View style={styles.oneButtonContainer}>
@@ -461,7 +463,6 @@ const CompanyBasicDetailsForm: FC<IProps> = ({navigation}) => {
           />
         </View>
       </View>
-      <Spinner show={updateSubscriptionRequesting || requesting} />
     </View>
   );
 };

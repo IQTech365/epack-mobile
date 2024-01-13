@@ -124,14 +124,6 @@ const OTPPageView = (props: any) => {
 
   const disabled = !otp1 || !otp2 || !otp3 || !otp4 || !otp5 || !otp6;
 
-  const completeRegistrationAndLoggedIn = async (companyId:string) => {
-    await setCurrentCompanyId(companyId);
-    await setIsRegistrationComplete();
-    await setLoginStatus();
-    setLoggedIn(true);
-    dispatch(getSavedDocumentTemplateIdListRequest(companyId));
-  };
-
   const closeModal = () => {
     setShowCompaniesModal(false);
     navigation.navigate("Subscription");
@@ -163,13 +155,6 @@ const OTPPageView = (props: any) => {
     }
     return otp;
   }
-
-  // const _setCompanyIdAndDoCompleteRegistration = async (id:string) => {
-  //   await setCurrentCompanyId(id);
-  //   navigation.navigate(AuthStackRoute.RegisterCompany, {
-  //     registrationStep: 3,
-  //   });
-  // }
 
   useEffect(() => {
     if (!verifyOtpRequesting && verifyOtpSuccess) {
