@@ -161,3 +161,11 @@ export const GET_TEPLATE_LIST = `/template/all`;
 export const SAVE_DOCUMENT_TEMPLATE_ID = (template_id) => `/template/edit/${template_id}`;
 // Get Saved Document Template ID List
 export const GET_SAVED_DOCUMENT_TEMPLATE_ID_LIST = (company_id) => `/template/company/${company_id}`;
+
+// Serial No#'s
+export const GET_QUOTATION_SERIAL_NO = `/quotation/get/serialNo`;
+export const GET_BILTY_SERIAL_NO = `/bilty/get/serialNo`;
+export const GET_CAR_CONDITION_SERIAL_NO = `/car-condition/get/serialNo`;
+export const GET_INVOICE_SERIAL_NO = `/invoice/get/serialNo`;
+export const GET_MONEY_RECEIPT_SERIAL_NO = `/money-receipt/get/serialNo`;
+export const GET_SURVEY_ITEM_SERIAL_NO = `/survey/survey-item/get/serialNo`;

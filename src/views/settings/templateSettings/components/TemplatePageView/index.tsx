@@ -9,7 +9,7 @@ import {
 } from '../../../../../interface/setting/template/template';
 import TemplateCard from '../TemplateCard';
 import TemplateEmptyView from '../TemplateEmptyView';
-import { resetSaveDocumentTemplateIdRequest, saveDocumentTemplateIdRequest } from '../../../../../redux/slices/TemplateSettingSlice';
+import { getSavedDocumentTemplateIdListRequest, resetSaveDocumentTemplateIdRequest, saveDocumentTemplateIdRequest } from '../../../../../redux/slices/TemplateSettingSlice';
 import { ToastType, showToast } from '../../../../../utils/utility';
 import Spinner from '../../../../../common/Spinner';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
@@ -90,6 +90,12 @@ const TemplatePageView = ({route}) => {
     }
   }
 
+  const _getSavedTemplateId = () => {
+    getCurrentCompanyId().then(id => {
+      dispatch(getSavedDocumentTemplateIdListRequest(id as string));
+    }).catch(err => console.log(err));
+  }
+
   const handleChangeTemplateId = (category: string, moduleId:string, templateId:string) => {
     setActiveCategory(category);
     setActiveTemplateId(templateId)
@@ -116,6 +122,7 @@ const TemplatePageView = ({route}) => {
     if(!saveDocTemplateIdRequesting && saveDocTemplateIdSuccess) {
       showToast('Template Id Saved.', ToastType.SUCCESS);
       dispatch(resetSaveDocumentTemplateIdRequest());
+      _getSavedTemplateId();
     } else if(!saveDocTemplateIdRequesting && saveDocTemplateIdFailure) {
       showToast('Template Id Not Saved. Try again!', ToastType.ERROR);
       dispatch(resetSaveDocumentTemplateIdRequest());

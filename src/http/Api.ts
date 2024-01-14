@@ -1,4 +1,4 @@
-import {AxiosResponse} from 'axios';
+import {AxiosRequestConfig, AxiosResponse} from 'axios';
 import {HttpClient} from './HttpClient';
 
 export class Api extends HttpClient {
@@ -32,6 +32,17 @@ export class Api extends HttpClient {
     console.info('Method-', 'Get');
     console.info('Uri-', uri);
     return this.instance.get<R>(uri);
+  };
+
+  // ** GET with body **
+  public getWithBody = async <R,D>(uri: string, data: D): Promise<R> => {
+    console.info('Method-', 'Get');
+    console.info('Uri-', uri);
+    console.log('config-data--', JSON.stringify(data));
+    const config:AxiosRequestConfig = {
+      data: data,
+    }
+    return this.instance.get<R>(uri, config);
   };
 
   // ** PATCH **

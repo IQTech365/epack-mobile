@@ -1,141 +1,271 @@
-import {AxiosResponse} from 'axios';
+import {AxiosRequestConfig, AxiosResponse} from 'axios';
 import {Api} from '../http/Api';
-import {ADD_CONTACT_DETAIL, ADD_DOCUMENT, ADD_FOOTER_CONTENT, ADD_PAYMENT_METHOD, ADD_USER_ROLE, CHECK_USERNAME_AVAILABLITY, GET_BANKS, GET_CONTACTS, GET_DOCUMENTS, GET_FOOTER_CONTENTS, GET_OTP, GET_PAYMENT_METHODS, GET_ROLE_TYPES, GET_SAVED_DOCUMENT_TEMPLATE_ID_LIST, GET_SERIAL_NO, GET_SUBMODULES, GET_TEPLATE_LIST, GET_UNIT_TYPES, MODULES, SAVE_DOCUMENT_TEMPLATE_ID, SERIAL_NO, VERIFY_OTP} from '../http/Endpoint';
-import { IAddContactDetailRequest } from '../interface/setting/packerProfile/contactDetail/IAddContactDetailRequest';
-import { IAddContactDetailResponse } from '../interface/setting/packerProfile/contactDetail/IAddContactDetailResponse';
-import { IGetContactDetailsResponse } from '../interface/setting/packerProfile/contactDetail/IGetContactDetailsResponse';
-import { IAddDocumentRequest } from '../interface/setting/packerProfile/document/IAddDocumentRequest';
-import { IAddDocumentResponse } from '../interface/setting/packerProfile/document/IAddDocumentResponse';
-import { IGetDocumentsResponse } from '../interface/setting/packerProfile/document/IGetDocumentsResponse';
-import { IAddFooterContentRequest } from '../interface/setting/packerProfile/footerContent/IAddFooterContentRequest';
-import { IAddFooterContentResponse } from '../interface/setting/packerProfile/footerContent/IAddFooterContentResponse';
-import { IGetFooterContentsResponse } from '../interface/setting/packerProfile/footerContent/IGetFooterContentsResponse';
-import { IBankResponse } from '../interface/setting/packerProfile/IBank';
-import { ISubmoduleResponse } from '../interface/setting/packerProfile/ISubmodule';
-import { IAddPaymentMethodRequest } from '../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodRequest';
-import { IAddPaymentMethodResponse } from '../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodResponse';
-import { ICheckUsernameAvailablilityRequest, ICheckUsernameAvailablilityResponse } from '../interface/setting/role/ICheckUsername';
-import { IGetModulesResponse } from '../interface/setting/role/IModule';
-import { IAddUserRoleRequest, IAddUserRoleResponse, IRoleTypeResponse } from '../interface/setting/role/IUserRole';
-import { ICreateSerialNoRequest } from '../interface/setting/serialNo/ICreateSerialNoRequest';
-import { ICreateSerialNoResponse } from '../interface/setting/serialNo/ICreateSerialNoResponse';
-import { IGetPaymentMethodsResponse } from '../interface/setting/packerProfile/paymentMethod/IGetPaymentMethodsResponse';
-import { ISaveDocumentTemplateIdPayload, ISaveDocumentTemplateIdRequestPayload, ISaveDocumentTemplateIdResponse, ISavedDocumentTemplateIdResponse, ITemplateListResponse } from '../interface/setting/template/template';
+import {
+  ADD_CONTACT_DETAIL,
+  ADD_DOCUMENT,
+  ADD_FOOTER_CONTENT,
+  ADD_PAYMENT_METHOD,
+  ADD_USER_ROLE,
+  CHECK_USERNAME_AVAILABLITY,
+  GET_BANKS,
+  GET_BILTY_SERIAL_NO,
+  GET_CAR_CONDITION_SERIAL_NO,
+  GET_CONTACTS,
+  GET_DOCUMENTS,
+  GET_FOOTER_CONTENTS,
+  GET_INVOICE_SERIAL_NO,
+  GET_MONEY_RECEIPT_SERIAL_NO,
+  GET_OTP,
+  GET_PAYMENT_METHODS,
+  GET_QUOTATION_SERIAL_NO,
+  GET_ROLE_TYPES,
+  GET_SAVED_DOCUMENT_TEMPLATE_ID_LIST,
+  GET_SERIAL_NO,
+  GET_SUBMODULES,
+  GET_SURVEY_ITEM_SERIAL_NO,
+  GET_TEPLATE_LIST,
+  GET_UNIT_TYPES,
+  MODULES,
+  SAVE_DOCUMENT_TEMPLATE_ID,
+  SERIAL_NO,
+  VERIFY_OTP,
+} from '../http/Endpoint';
+import {IAddContactDetailRequest} from '../interface/setting/packerProfile/contactDetail/IAddContactDetailRequest';
+import {IAddContactDetailResponse} from '../interface/setting/packerProfile/contactDetail/IAddContactDetailResponse';
+import {IGetContactDetailsResponse} from '../interface/setting/packerProfile/contactDetail/IGetContactDetailsResponse';
+import {IAddDocumentRequest} from '../interface/setting/packerProfile/document/IAddDocumentRequest';
+import {IAddDocumentResponse} from '../interface/setting/packerProfile/document/IAddDocumentResponse';
+import {IGetDocumentsResponse} from '../interface/setting/packerProfile/document/IGetDocumentsResponse';
+import {IAddFooterContentRequest} from '../interface/setting/packerProfile/footerContent/IAddFooterContentRequest';
+import {IAddFooterContentResponse} from '../interface/setting/packerProfile/footerContent/IAddFooterContentResponse';
+import {IGetFooterContentsResponse} from '../interface/setting/packerProfile/footerContent/IGetFooterContentsResponse';
+import {IBankResponse} from '../interface/setting/packerProfile/IBank';
+import {ISubmoduleResponse} from '../interface/setting/packerProfile/ISubmodule';
+import {IAddPaymentMethodRequest} from '../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodRequest';
+import {IAddPaymentMethodResponse} from '../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodResponse';
+import {
+  ICheckUsernameAvailablilityRequest,
+  ICheckUsernameAvailablilityResponse,
+} from '../interface/setting/role/ICheckUsername';
+import {IGetModulesResponse} from '../interface/setting/role/IModule';
+import {
+  IAddUserRoleRequest,
+  IAddUserRoleResponse,
+  IRoleTypeResponse,
+} from '../interface/setting/role/IUserRole';
+import {IGetPaymentMethodsResponse} from '../interface/setting/packerProfile/paymentMethod/IGetPaymentMethodsResponse';
+import {
+  ISaveDocumentTemplateIdPayload,
+  ISaveDocumentTemplateIdRequestPayload,
+  ISaveDocumentTemplateIdResponse,
+  ISavedDocumentTemplateIdResponse,
+  ITemplateListResponse,
+} from '../interface/setting/template/template';
 //@ts-ignore
-import { IGetUnitTypeResponse } from '../interface/setting/unitType/IGetunitTypeResponse';
+import {IGetUnitTypeResponse} from '../interface/setting/unitType/IGetunitTypeResponse';
+import {
+  DOCUMENT_TYPE,
+  ICreateSerialNoRequest,
+  ICreateSerialNoResponse,
+  IGetSerialNoPayload,
+  IGetSerialNoRequest,
+  IGetSerialNoResponse,
+} from '../interface/setting/serialNo/serialNo';
 
 // PAYMENT
-export const AddPaymentMethodService = async (payload: IAddPaymentMethodRequest): Promise<IAddPaymentMethodResponse> => {
-    const api = Api.getInstance();
-    return await api.post<IAddPaymentMethodRequest, AxiosResponse<IAddPaymentMethodResponse>>(payload, ADD_PAYMENT_METHOD);
-}
+export const AddPaymentMethodService = async (
+  payload: IAddPaymentMethodRequest,
+): Promise<IAddPaymentMethodResponse> => {
+  const api = Api.getInstance();
+  return await api.post<
+    IAddPaymentMethodRequest,
+    AxiosResponse<IAddPaymentMethodResponse>
+  >(payload, ADD_PAYMENT_METHOD);
+};
 
-export const GetPaymentMethodService = async (payload: IAddPaymentMethodRequest): Promise<IAddPaymentMethodResponse> => {
-    const api = Api.getInstance();
-    return await api.get<IAddPaymentMethodResponse>(GET_PAYMENT_METHODS(payload));
-}
+export const GetPaymentMethodService = async (
+  payload: IAddPaymentMethodRequest,
+): Promise<IAddPaymentMethodResponse> => {
+  const api = Api.getInstance();
+  return await api.get<IAddPaymentMethodResponse>(GET_PAYMENT_METHODS(payload));
+};
 
 // FOOTER CONTENT
-export const AddFooterContentService = async (payload: IAddFooterContentRequest): Promise<IAddFooterContentResponse> => {
-    const api = Api.getInstance();
-    return await api.post<IAddFooterContentRequest, AxiosResponse<IAddFooterContentResponse>>(payload, ADD_FOOTER_CONTENT);
-}
+export const AddFooterContentService = async (
+  payload: IAddFooterContentRequest,
+): Promise<IAddFooterContentResponse> => {
+  const api = Api.getInstance();
+  return await api.post<
+    IAddFooterContentRequest,
+    AxiosResponse<IAddFooterContentResponse>
+  >(payload, ADD_FOOTER_CONTENT);
+};
 
-export const GetFooterContentsService = async (payload: string): Promise<IGetFooterContentsResponse> => {
-    const api = Api.getInstance();
-    return await api.get<IGetFooterContentsResponse>(GET_FOOTER_CONTENTS(payload));
-}
+export const GetFooterContentsService = async (
+  payload: string,
+): Promise<IGetFooterContentsResponse> => {
+  const api = Api.getInstance();
+  return await api.get<IGetFooterContentsResponse>(
+    GET_FOOTER_CONTENTS(payload),
+  );
+};
 
 // PAYMENT
-export const AddContactDetailService = async (payload: IAddContactDetailRequest): Promise<IAddContactDetailResponse> => {
-    const api = Api.getInstance();
-    return await api.post<IAddContactDetailRequest, AxiosResponse<IAddContactDetailResponse>>(payload, ADD_CONTACT_DETAIL);
-}
+export const AddContactDetailService = async (
+  payload: IAddContactDetailRequest,
+): Promise<IAddContactDetailResponse> => {
+  const api = Api.getInstance();
+  return await api.post<
+    IAddContactDetailRequest,
+    AxiosResponse<IAddContactDetailResponse>
+  >(payload, ADD_CONTACT_DETAIL);
+};
 
-export const GetContactDetailsService = async (payload: string): Promise<IGetContactDetailsResponse> => {
-    const api = Api.getInstance();
-    return await api.get<IGetContactDetailsResponse>(GET_CONTACTS(payload));
-}
+export const GetContactDetailsService = async (
+  payload: string,
+): Promise<IGetContactDetailsResponse> => {
+  const api = Api.getInstance();
+  return await api.get<IGetContactDetailsResponse>(GET_CONTACTS(payload));
+};
 
 // COMPANY DOCUMENT
-export const AddCompanyDocumentService = async (payload: IAddDocumentRequest): Promise<IAddDocumentResponse> => {
-    const api = Api.getInstance();
-    return await api.post<IAddDocumentRequest, AxiosResponse<IAddDocumentResponse>>(payload, ADD_DOCUMENT);
-}
+export const AddCompanyDocumentService = async (
+  payload: IAddDocumentRequest,
+): Promise<IAddDocumentResponse> => {
+  const api = Api.getInstance();
+  return await api.post<
+    IAddDocumentRequest,
+    AxiosResponse<IAddDocumentResponse>
+  >(payload, ADD_DOCUMENT);
+};
 
-export const GetCompanyDocumentsService = async (payload: string): Promise<IGetDocumentsResponse> => {
-    const api = Api.getInstance();
-    return await api.get<IGetDocumentsResponse>(GET_DOCUMENTS(payload));
-}
+export const GetCompanyDocumentsService = async (
+  payload: string,
+): Promise<IGetDocumentsResponse> => {
+  const api = Api.getInstance();
+  return await api.get<IGetDocumentsResponse>(GET_DOCUMENTS(payload));
+};
 
 // USER ROLE
-export const AddUserRoleService = async (payload: IAddUserRoleRequest): Promise<IAddUserRoleResponse> => {
-    const api = Api.getInstance();
-    return await api.post<IAddUserRoleRequest, AxiosResponse<IAddUserRoleResponse>>(payload, ADD_USER_ROLE);
-}
+export const AddUserRoleService = async (
+  payload: IAddUserRoleRequest,
+): Promise<IAddUserRoleResponse> => {
+  const api = Api.getInstance();
+  return await api.post<
+    IAddUserRoleRequest,
+    AxiosResponse<IAddUserRoleResponse>
+  >(payload, ADD_USER_ROLE);
+};
 
 // CHECK USERNAME AVAILABILITY
-export const CheckUsernameAvailabilityService = async (payload: ICheckUsernameAvailablilityRequest): Promise<ICheckUsernameAvailablilityResponse> => {
-    const api = Api.getInstance();
-    return await api.post<ICheckUsernameAvailablilityRequest, AxiosResponse<ICheckUsernameAvailablilityResponse>>(payload, CHECK_USERNAME_AVAILABLITY);
-}
+export const CheckUsernameAvailabilityService = async (
+  payload: ICheckUsernameAvailablilityRequest,
+): Promise<ICheckUsernameAvailablilityResponse> => {
+  const api = Api.getInstance();
+  return await api.post<
+    ICheckUsernameAvailablilityRequest,
+    AxiosResponse<ICheckUsernameAvailablilityResponse>
+  >(payload, CHECK_USERNAME_AVAILABLITY);
+};
 
 // ROLE TYPES
 export const GetRoleTypesService = async (): Promise<IRoleTypeResponse> => {
-    const api = Api.getInstance();
-    return await api.get<IRoleTypeResponse>(GET_ROLE_TYPES);
-}
+  const api = Api.getInstance();
+  return await api.get<IRoleTypeResponse>(GET_ROLE_TYPES);
+};
 
 // SUB MODULES
 export const GetSubmodulesService = async (): Promise<ISubmoduleResponse> => {
-    const api = Api.getInstance();
-    return await api.get<ISubmoduleResponse>(GET_SUBMODULES);
-}
+  const api = Api.getInstance();
+  return await api.get<ISubmoduleResponse>(GET_SUBMODULES);
+};
 
 //  Banks
 export const GetBanksService = async (): Promise<IBankResponse> => {
-    const api = Api.getInstance();
-    return await api.get<IBankResponse>(GET_BANKS);
-}
+  const api = Api.getInstance();
+  return await api.get<IBankResponse>(GET_BANKS);
+};
 
 // SERIAL NO'S
-export const CreateSerialNoService = async (payload: ICreateSerialNoRequest): Promise<ICreateSerialNoResponse> => {
-    const api = Api.getInstance();
-    return await api.post<ICreateSerialNoRequest, AxiosResponse<ICreateSerialNoResponse>>(payload, SERIAL_NO);
-}
+export const CreateSerialNoService = async (
+  payload: ICreateSerialNoRequest,
+): Promise<ICreateSerialNoResponse> => {
+  const api = Api.getInstance();
+  return await api.post<
+    ICreateSerialNoRequest,
+    AxiosResponse<ICreateSerialNoResponse>
+  >(payload, SERIAL_NO);
+};
 
-export const GetSerialNoService = async (payload: string): Promise<IGetPaymentMethodsResponse> => {
-    const api = Api.getInstance();
-    return await api.get<AxiosResponse<IGetPaymentMethodsResponse>>( GET_SERIAL_NO(payload));
-}
+export const GetSerialNoService = async (
+  req: IGetSerialNoRequest,
+): Promise<IGetSerialNoResponse> => {
+  console.log('config-req-', JSON.stringify(req));
+  const {document, payload} = req;
+  let uri: string = '';
+  switch (document) {
+    case DOCUMENT_TYPE.QUOTATION:
+      uri = GET_QUOTATION_SERIAL_NO;
+      break;
+    case DOCUMENT_TYPE.BILTY:
+      uri = GET_BILTY_SERIAL_NO;
+      break;
+    case DOCUMENT_TYPE.CAR_CONDITION:
+      uri = GET_CAR_CONDITION_SERIAL_NO;
+      break;
+    case DOCUMENT_TYPE.MONEY_RECEIPT:
+      uri = GET_MONEY_RECEIPT_SERIAL_NO;
+      break;
+    case DOCUMENT_TYPE.INVOICE:
+      uri = GET_INVOICE_SERIAL_NO;
+      break;
+    case DOCUMENT_TYPE.SURVEY_ITEM:
+      uri = GET_SURVEY_ITEM_SERIAL_NO;
+      break;
+    default:
+      break;
+  }
+  const api = Api.getInstance();
+  return await api.getWithBody<IGetSerialNoResponse, IGetSerialNoPayload>(uri, payload);
+};
 
 // MODULES
 export const GetModulesService = async (): Promise<IGetModulesResponse> => {
-    const api = Api.getInstance();
-    return await api.get<IGetModulesResponse>(MODULES);
-}
+  const api = Api.getInstance();
+  return await api.get<IGetModulesResponse>(MODULES);
+};
 
 // UNIT TYPE
 export const GetUnitTypeService = async (): Promise<IGetUnitTypeResponse> => {
-    const api = Api.getInstance();
-    return await api.get<IGetUnitTypeResponse>(GET_UNIT_TYPES);
-}
+  const api = Api.getInstance();
+  return await api.get<IGetUnitTypeResponse>(GET_UNIT_TYPES);
+};
 
 // TEMPLATE LIST
-export const GetTemplateListService = async (): Promise<ITemplateListResponse> => {
+export const GetTemplateListService =
+  async (): Promise<ITemplateListResponse> => {
     const api = Api.getInstance();
     return await api.get<ITemplateListResponse>(GET_TEPLATE_LIST);
-}
+  };
 
 // SAVE DOCUMENT TEMPLATE ID
-export const SaveDocumentTemplateIdService = async (payload: ISaveDocumentTemplateIdPayload): Promise<ISaveDocumentTemplateIdResponse> => {
-    const {params, payload:data} = payload;
-    const api = Api.getInstance();
-    return await api.update<ISaveDocumentTemplateIdRequestPayload, AxiosResponse<ISaveDocumentTemplateIdResponse>>(data, SAVE_DOCUMENT_TEMPLATE_ID(params.templateId));
-}
+export const SaveDocumentTemplateIdService = async (
+  payload: ISaveDocumentTemplateIdPayload,
+): Promise<ISaveDocumentTemplateIdResponse> => {
+  const {params, payload: data} = payload;
+  const api = Api.getInstance();
+  return await api.update<
+    ISaveDocumentTemplateIdRequestPayload,
+    AxiosResponse<ISaveDocumentTemplateIdResponse>
+  >(data, SAVE_DOCUMENT_TEMPLATE_ID(params.templateId));
+};
 
 // Get Saved Document Template ID List
-export const GetSavedTemplateIdListService = async (payload:string): Promise<ISavedDocumentTemplateIdResponse> => {
-    const api = Api.getInstance();
-    return await api.get<ISavedDocumentTemplateIdResponse>(GET_SAVED_DOCUMENT_TEMPLATE_ID_LIST(payload));
-}
+export const GetSavedTemplateIdListService = async (
+  payload: string,
+): Promise<ISavedDocumentTemplateIdResponse> => {
+  const api = Api.getInstance();
+  return await api.get<ISavedDocumentTemplateIdResponse>(
+    GET_SAVED_DOCUMENT_TEMPLATE_ID_LIST(payload),
+  );
+};

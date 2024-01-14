@@ -44,7 +44,11 @@ export interface ISaveDocumentTemplateIdResponse {
 
 // Get Saved Document Template Id List
 export interface ISavedDocumentTemplateId {
-
+  _id: string;
+  templateId: string;
+  companyId: string;
+  moduleId: string;
+  template: ITemplate;
 }
 
 export interface ISavedDocumentTemplateIdResponse {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {View, Text} from 'react-native';
 import styles from './style';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -9,6 +9,10 @@ import Spacer from '../../../common/Spacer';
 import {QuotationFormContextProvider} from '../../../provider/QuotationFormContextProvider';
 import AddQuotationForm from './components/AddQuotationForm';
 import { IGetQuotationData } from '../../../interface/quotation/IGetQuotationsResponse';
+import { getCurrentCompanyId } from '../../../utils/storage';
+import { useAppDispatch } from '../../../redux/hooks';
+import { getSerialNoRequest } from '../../../redux/slices/SerialNoSettingSlice';
+import { DOCUMENT_TYPE, IGetSerialNoRequest } from '../../../interface/setting/serialNo/serialNo';
 
 interface Props
   extends NativeStackScreenProps<QuotationStackParamList, 'AddQuotation'> {
@@ -27,6 +31,25 @@ const AddQuotationView: React.FC<Props> = ({
   const isEdit: boolean | undefined = route?.params?.isEdit;
   const item:IGetQuotationData = route?.params?.item as IGetQuotationData;
   const headerText = isEdit ? 'UPDATE QUOTATION' : 'CREATE QUOTATION';
+  const dispatch = useAppDispatch();
+
+  const _getQuotationSerialNoRequest = () => {
+    getCurrentCompanyId().then(id => {
+      const payload: IGetSerialNoRequest = {
+        document: DOCUMENT_TYPE.QUOTATION,
+        payload: {
+          activeCount: '201',//TODO: get this active count dynamically and assign
+          companyId: id as string,
+        }
+      }
+      dispatch(getSerialNoRequest(payload));
+    }).catch(err => console.log('err--', err));
+  }
+
+  useEffect(() => {
+    _getQuotationSerialNoRequest();
+  }, []);
+  
   return (
     <QuotationFormContextProvider>
       <AvoidSoftInputViewHOC>

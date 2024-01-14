@@ -18,13 +18,12 @@ import { IAddUserRoleRequest, IAddUserRoleResponse, IRoleTypeResponse } from '..
 import { addUserRoleFailure, addUserRoleRequest, addUserRoleSuccess, checkUsernameAvailabilityFailure, checkUsernameAvailabilityRequest, checkUsernameAvailabilitySuccess, getModulesFailure, getModulesRequest, getModulesSuccess, getRoleTypesFailure, getRoleTypesRequest, getRoleTypesSuccess } from '../redux/slices/UserRoleManagementSlice';
 import { ISubmoduleResponse } from '../interface/setting/packerProfile/ISubmodule';
 import { ICheckUsernameAvailablilityRequest, ICheckUsernameAvailablilityResponse } from '../interface/setting/role/ICheckUsername';
-import { ICreateSerialNoRequest } from '../interface/setting/serialNo/ICreateSerialNoRequest';
-import { ICreateSerialNoResponse } from '../interface/setting/serialNo/ICreateSerialNoResponse';
 import { createSerialNoFailure, createSerialNoRequest, createSerialNoSuccess, getSerialNoFailure, getSerialNoRequest, getSerialNoSuccess } from '../redux/slices/SerialNoSettingSlice';
 import { IGetModulesResponse } from '../interface/setting/role/IModule';
 import { IGetUnitTypeResponse } from '../interface/setting/unitType/IGetunitTypeResponse';
 import { ISaveDocumentTemplateIdPayload, ISaveDocumentTemplateIdResponse, ISavedDocumentTemplateIdResponse, ITemplateListResponse } from '../interface/setting/template/template';
 import { getSavedDocumentTemplateIdListFailure, getSavedDocumentTemplateIdListRequest, getSavedDocumentTemplateIdListSuccess, getTemplateListFailure, getTemplateListRequest, getTemplateListSuccess, saveDocumentTemplateIdFailure, saveDocumentTemplateIdRequest, saveDocumentTemplateIdSuccess } from '../redux/slices/TemplateSettingSlice';
+import { ICreateSerialNoRequest, ICreateSerialNoResponse, IGetSerialNoRequest, IGetSerialNoResponse } from '../interface/setting/serialNo/serialNo';
 
 export function* addFooterContentSaga(action: PayloadAction<IAddFooterContentRequest>) {
     console.log('addFooterContentSaga--action--', JSON.stringify(action));
@@ -191,9 +190,9 @@ export function* createSerialNoSaga(action: PayloadAction<ICreateSerialNoRequest
     }
 }
 
-export function* getSerialNoSaga(action: PayloadAction<string>) {
+export function* getSerialNoSaga(action: PayloadAction<IGetSerialNoRequest>) {
     try {
-        const response: IGetPaymentMethodsResponse = yield call(SettingService.GetSerialNoService, action.payload);
+        const response: IGetSerialNoResponse = yield call(SettingService.GetSerialNoService, action.payload);
         console.log('getSerialNoSaga-response----', JSON.stringify(response));
         yield put(getSerialNoSuccess(response));
     } catch (error) {

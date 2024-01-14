@@ -135,6 +135,18 @@ export interface ISerialNo {
   __v: 0;
 }
 
+export interface ISubmodule2 {
+  _id: string;
+  moduleId: string;
+  subModuleName: string;
+  availableOnDocument: boolean;
+  description: string;
+  isActive: boolean;
+  isDeleted: boolean;
+  createdDate: string;
+  __v: 0;
+}
+
 export interface IAppSetting {
   _id: string;
   companyId: string;
@@ -147,11 +159,11 @@ export interface IAppSetting {
   isActive: boolean;
   isDeleted: boolean;
   __v: number;
-  submodules: ISerialNo[];
+  submodules: ISubmodule2[];
 }
 
 export interface IAppSettingResponse {
-  data: ISubmodule[];
+  data: IAppSetting[];
   status: number;
   error: boolean;
 }

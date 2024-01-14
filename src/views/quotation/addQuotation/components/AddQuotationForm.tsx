@@ -54,8 +54,6 @@ const AddQuotationForm: React.FC<Props> = ({
   isEdit,
   item
 }) => {
-  console.log('AddQuotationForm--item--', JSON.stringify(item));
-  console.log('AddQuotationForm--isEdit--', JSON.stringify(isEdit));
   const {
     state,
     resetError,
