@@ -222,6 +222,7 @@ const BillingCompanyView: FC<IProps> = ({}) => {
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
             type="mobile"
+            inputType="numeric"
           />
         </View>
       </View>
@@ -271,6 +272,7 @@ const BillingCompanyView: FC<IProps> = ({}) => {
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
+            inputType="numeric"
             type="mobile"
             //@ts-ignore
             //   error={showErrors ? errors?.employeeMobile : ''}
@@ -308,6 +310,7 @@ const BillingCompanyView: FC<IProps> = ({}) => {
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
+            inputType="numeric"
           />
         </View>
         <View style={styles.textContainer}>

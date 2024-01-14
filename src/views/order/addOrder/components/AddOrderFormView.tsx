@@ -109,7 +109,6 @@ const AddOrderFormView: FC<IProps> = ({navigation}) => {
             : {},
         status: 'NEW ORDER',
       };
-      console.log('AddOrder-payload----', JSON.stringify(data));
       dispatch(addOrderRequest(data));
     }).catch(err => console.log(err));
     
@@ -117,7 +116,7 @@ const AddOrderFormView: FC<IProps> = ({navigation}) => {
 
   useEffect(() => {
     if (!addOrderRequesting && addOrderSuccess) {
-      showToast("New Order created successfully.", ToastType.SUCCESS);
+      showToast("New Order Created.", ToastType.SUCCESS);
       dispatch(resetAddOrderRequest());
       _fetchOrders();
     //   fetchCompletedOrders();

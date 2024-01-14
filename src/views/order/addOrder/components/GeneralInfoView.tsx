@@ -98,6 +98,7 @@ const GeneralInfoView: FC<IProps> = ({}) => {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
+              inputType="numeric"
             />
           </View>
           <View style={styles.textContainer}>
@@ -107,6 +108,7 @@ const GeneralInfoView: FC<IProps> = ({}) => {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
+              inputType="numeric"
             />
           </View>
         </View>

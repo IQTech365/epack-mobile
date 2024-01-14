@@ -87,6 +87,7 @@ const BillingIndividualView: FC<IProps> = ({}) => {
           //@ts-ignore
         //   error={showErrors ? errors?.mobile : ''}
           type="mobile"
+          inputType="numeric"
           required={true}
           value={state.party_mobile_no}
         />

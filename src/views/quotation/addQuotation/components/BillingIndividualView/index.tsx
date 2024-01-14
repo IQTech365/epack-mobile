@@ -124,6 +124,7 @@ const BillingIndividualView: React.FC<Props> = ({}) => {
             error={state.errors.party_mobile_no}
             type="text"
             required={true}
+            inputType="numeric"
           />
         </View>
         <Spacer height={4} />
