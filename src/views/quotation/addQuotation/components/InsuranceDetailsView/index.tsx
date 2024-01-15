@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {View} from 'react-native';
 import styles from './style';
 import CollapsibleView from '../../../../../common/CollapsibleView';
@@ -16,6 +16,7 @@ import gstPercentOptions from '../../../../../data/gstPercentOptions.json';
 import Spacer from '../../../../../common/Spacer';
 import Input from '../../../../../common/Input';
 import EpackDropdown from '../../../../../common/DropdownComponent2';
+import { ICharge, IQuotationFreight, IStorage, ITransitInsurance } from '../../../../../interface/quotation/IGetSingleQuotationResponse';
 
 interface Props {
   //
@@ -36,6 +37,49 @@ const InsuranceDetailsView: React.FC<Props> = ({}) => {
   const insuranceChargeDropdownCompRef = useRef(null);
   const insuranceGstDropdownCompRef = useRef(null);
   const insuranceGoodsValueInputCompRef = useRef(null);
+
+  useEffect(() => {
+    if(state.editQuotation && state.item) {
+      const {item} = state;
+      if(item) {
+        const quotationfreight:IQuotationFreight = item.quotationfreights;
+        if(quotationfreight) {
+          const transitInsurance:ITransitInsurance = quotationfreight.transitInsurance;
+          if(transitInsurance) {
+            setTransitInsurance(transitInsurance.isRequired);
+            const insuraceTypeItem:TDropdownItem = insuranceTypeOptions.find((d:TDropdownItem) => d.label == transitInsurance.transitType) as TDropdownItem;
+            setTransitInsuranceType(insuraceTypeItem.label);
+            //@ts-ignore
+            insuranceTypeDropdownCompRef && insuranceTypeDropdownCompRef?.current?.setDefaultValue(insuraceTypeItem);
+            if(transitInsurance.charges.length > 0) {
+              const charge:ICharge = transitInsurance.charges[0];
+              if(charge) {
+                const shiftingLuggageItem:string = shiftingLuggageOptions.map(({label}) => label).find((d:string) => d == charge.luggageType) as string;
+                setTransitShiftingLuggage(shiftingLuggageItem);
+                if(shiftingLuggageItem) {
+                  //@ts-ignore
+                  shiftingLuggageDropdownCompRef && shiftingLuggageDropdownCompRef?.current?.setValue(shiftingLuggageItem);
+                }
+                const insurancePercentItem:TDropdownItem = insurancePercentOptions.find((d:TDropdownItem) => d.label == charge.insurancePerc) as TDropdownItem;
+                setTransitInsuranceCharge(insurancePercentItem.label);
+                //@ts-ignore
+                insuranceChargeDropdownCompRef && insuranceChargeDropdownCompRef?.current?.setDefaultValue(insurancePercentItem);
+                const gstPercentItem:TDropdownItem = gstPercentOptions.find((d:TDropdownItem) => d.label == charge.gst) as TDropdownItem;
+                setTransitInsuranceGst(gstPercentItem.label);
+                //@ts-ignore
+                insuranceGstDropdownCompRef && insuranceGstDropdownCompRef?.current?.setDefaultValue(gstPercentItem);
+                setTransitGoodsValue(charge.value);
+              }
+            }
+          }
+          const storageCharge:IStorage = quotationfreight.storageCharges;
+          if(storageCharge) {
+            
+          }
+        }
+      }
+    }
+  }, [state.editQuotation, state.item]);
 
   return (
     <CollapsibleView title="TRANSIT INSURANCE DETAILS" collapsed={true}>

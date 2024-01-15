@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {View} from 'react-native';
 import styles from './style';
 import CollapsibleView from '../../../../../common/CollapsibleView';
@@ -14,6 +14,7 @@ import Input from '../../../../../common/Input';
 import storageDurationOptions from '../../../../../data/storageDurationOptions.json';
 import DatePickerComponent from '../../../../../common/DatePickerComponent';
 import {formatDate4} from '../../../../../utils/formatter';
+import { IQuotationFreight, IStorage } from '../../../../../interface/quotation/IGetSingleQuotationResponse';
 
 interface Props {
   //
@@ -32,6 +33,34 @@ const StorageChargesView: React.FC<Props> = ({}) => {
   const fromDateDropdownCompRef = useRef(null);
   const toDateDropdownCompRef = useRef(null);
   const amountInputCompRef = useRef(null);
+
+  useEffect(() => {
+    if(state.editQuotation && state.item) {
+      const {item} = state;
+      if(item) {
+        const quotationfreight:IQuotationFreight = item.quotationfreights;
+        if(quotationfreight) {
+          const storageCharge:IStorage = quotationfreight.storageCharges;
+          if(storageCharge) {
+            setStorage(storageCharge.isRequired);
+            const storageDurationItem:TDropdownItem = storageDurationOptions.find((d:TDropdownItem) => d.label == storageCharge.storageChargesType) as TDropdownItem;
+            setStorageDuration(storageDurationItem.label);
+            //@ts-ignore
+            storageDurationDropdownCompRef && storageDurationDropdownCompRef?.current?.setDefaultValue(storageDurationItem);
+            setStorageAmount(storageCharge.amount);
+            if(storageCharge.storageChargesType == storageDurationOptions[2].label) {
+              //@ts-ignore
+              fromDateDropdownCompRef && fromDateDropdownCompRef?.current?.setDefaultValue(new Date(storageCharge.fromDate));
+              setStorageFromDate(formatDate4(new Date(storageCharge.fromDate)));
+              //@ts-ignore
+              toDateDropdownCompRef && toDateDropdownCompRef?.current?.setDefaultValue(new Date(storageCharge.toDate));
+              setStorageToDate(formatDate4(new Date(storageCharge.toDate)));
+            }
+          }
+        }
+      }
+    }
+  }, [state.editQuotation, state.item]);
 
   return (
     <CollapsibleView title="STORAGE CHARGES" collapsed={true}>

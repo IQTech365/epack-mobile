@@ -11,7 +11,7 @@ import {
   ACTION,
   IOtherCharge,
 } from '../views/quotation/addQuotation/quotationReducer2';
-import { IGetQuotationData } from '../interface/quotation/IGetQuotationsResponse';
+import { ISingleQuotationData } from '../interface/quotation/IGetSingleQuotationResponse';
 
 const useQuotationFormContext = () => {
   const [state, dispatch] = useReducer(quotationReducer, initialState);
@@ -921,7 +921,7 @@ const useQuotationFormContext = () => {
     [state.valid_form],
   );
 
-  const setItem = (item: IGetQuotationData) => {
+  const setItem = (item: ISingleQuotationData) => {
     dispatch({
       type: ACTION.QUOTATION_ITEM,
       payload: item,
@@ -1176,7 +1176,7 @@ const initQuotationFormContextState: UseQuotationFormContextType = {
   resetError: () => {},
   validateForm: (validate: boolean) => {},
   validForm: (valid: boolean) => {},
-  setItem: (item:IGetQuotationData) => {},
+  setItem: (item:ISingleQuotationData) => {},
   setIsEditQuotation: (isEdit: boolean) => {},
 };
 

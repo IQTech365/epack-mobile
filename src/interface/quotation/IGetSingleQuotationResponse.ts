@@ -1,28 +1,30 @@
-import { TOtherCharges } from "../../views/quotation/addQuotation/quotationReducer";
+import { IEnquiry } from "./IGetQuotationsResponse";
 
-interface ICharge {
+export interface ICharge {
   luggageType: string;
   insurancePerc: string;
   gst: string;
   value: string;
 }
-interface ITransitInsurance {
+export interface ITransitInsurance {
   isRequired: string;
   transitType: string;
   charges: ICharge[];
 }
 
-interface IStorage {
+export interface IStorage {
   isRequired: string;
   storageChargesType: string;
   amount: string;
+  fromDate:string;
+  toDate:string;
 }
 
-interface ILoad {
+export interface ILoad {
   ratePerItem: string;
   amount: string;
 }
-interface IOtherCharge {
+export interface IOtherCharge {
   jobType: string;
   qty: string;
   partLoad: ILoad;
@@ -63,9 +65,11 @@ export interface IQuotationFreight {
   discountAmount: string;
   transitInsurance: ITransitInsurance;
   storageCharges: IStorage;
-  otherCharges: TOtherCharges;
+  otherCharges: IOtherCharge[];
   otherDetail1: string;
   otherDetail2: string;
+  easy_access_for_loading_unloading: string;
+  any_restrcition_for_loading_unloading: string;
   isActive: boolean;
   isDeleted: boolean;
   createdAt: string;
@@ -83,7 +87,8 @@ export interface ISingleQuotationData {
   isActive: boolean;
   isDeleted: boolean;
   createdAt: string;
-  quotationfreights: IQuotationFreight[];
+  quotationfreights: IQuotationFreight;
+  enquiries: IEnquiry;
 }
 
 export interface IGetSingleQuotationResponse {

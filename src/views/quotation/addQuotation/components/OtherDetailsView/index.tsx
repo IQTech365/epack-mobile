@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {View} from 'react-native';
 import styles from './style';
 import CollapsibleView from '../../../../../common/CollapsibleView';
@@ -8,6 +8,7 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {COLOR_BLACK, COLOR_BLUE} from '../../../../../utils/colors';
 import {useQuotationFormContextHook} from '../../../../../provider/QuotationFormContextProvider';
 import Input from '../../../../../common/Input';
+import { IQuotationFreight } from '../../../../../interface/quotation/IGetSingleQuotationResponse';
 
 interface Props {
   //
@@ -23,6 +24,21 @@ const OtherDetailsView: React.FC<Props> = ({}) => {
   } = useQuotationFormContextHook();
   const otherDetail2InputCompRef = useRef(null);
   const otherDetail4InputCompRef = useRef(null);
+
+  useEffect(() => {
+    if(state.editQuotation && state.item) {
+      const {item} = state;
+      if(item) {
+        const quotationfreight:IQuotationFreight = item.quotationfreights;
+        if(quotationfreight) {
+          setOtherDetail1(quotationfreight.otherDetail1);
+          setOtherDetail2(quotationfreight.otherDetail2);
+          setOtherDetail3(quotationfreight.easy_access_for_loading_unloading);
+          setOtherDetail4(quotationfreight.any_restrcition_for_loading_unloading);
+        }
+      }
+    }
+  }, [state.editQuotation, state.item]);
 
   return (
     <CollapsibleView title="OTHER DETAILS" collapsed={true}>

@@ -95,9 +95,8 @@ const BillingIndividualView: React.FC<Props> = ({}) => {
     if(state.editQuotation && state.item) {
       const {item} = state;
       if(item) {
-        const enquiries:IEnquiry[] = item.enquiries;
-        if(enquiries.length > 0) {
-          const enquiry:IEnquiry = enquiries[0];
+        const enquiry:IEnquiry = item.enquiries;
+        if(enquiry) {
           if(enquiry.billingBy == "by Individual") {
             setPartyName(enquiry.partyName);
             setPartyMobileNo(enquiry.mobile);

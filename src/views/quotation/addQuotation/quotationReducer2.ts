@@ -12,7 +12,7 @@ import {
 } from './components/FreightDetailsView/components/utils';
 import * as Utils from './components/OtherDetailsView/utils';
 import {formatDate4} from '../../../utils/formatter';
-import {IGetQuotationData} from '../../../interface/quotation/IGetQuotationsResponse';
+import { ISingleQuotationData } from '../../../interface/quotation/IGetSingleQuotationResponse';
 
 export enum ACTION {
   SHIFTING_TYPE = 'SHIFTING_TYPE',
@@ -266,13 +266,13 @@ export interface IState {
   };
   validate_form: boolean;
   valid_form: boolean;
-  item: IGetQuotationData | null;
+  item: ISingleQuotationData | null;
   editQuotation: boolean;
 }
 
 export interface IAction {
   type: ACTION;
-  payload: string | boolean | IOtherCharge[] | IGetQuotationData;
+  payload: string | boolean | IOtherCharge[] | ISingleQuotationData;
 }
 
 export const initialState: IState = {
@@ -669,7 +669,7 @@ export const quotationReducer: Reducer<IState, IAction> = (
     case ACTION.QUOTATION_ITEM:
       return {
         ...state,
-        item: payload as IGetQuotationData,
+        item: payload as ISingleQuotationData,
       };
     case ACTION.IS_EDIT_QUOTATION:
       return {

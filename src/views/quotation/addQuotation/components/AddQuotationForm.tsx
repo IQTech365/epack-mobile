@@ -38,6 +38,7 @@ import {ToastType, showToast} from '../../../../utils/utility';
 import { getVehicleSizeRequest } from '../../../../redux/slices/VehicleSlice';
 import { getCurrentCompanyId } from '../../../../utils/storage';
 import { IGetQuotationData } from '../../../../interface/quotation/IGetQuotationsResponse';
+import { ISingleQuotationData } from '../../../../interface/quotation/IGetSingleQuotationResponse';
 
 interface Props {
   fromEnquiry?: boolean;
@@ -195,6 +196,15 @@ const AddQuotationForm: React.FC<Props> = ({
     return valid;
   };
 
+  const _getQuotationItem = () => {
+    let _quotation:ISingleQuotationData|undefined = undefined;
+    const {data} = quotation || {};
+    if(data) {
+      _quotation = data as ISingleQuotationData;
+    }
+    return _quotation;
+  }
+
   const hanldeSubmit = () => {
     getCurrentCompanyId().then(id => {
       const billingDetails = {
@@ -318,7 +328,7 @@ const AddQuotationForm: React.FC<Props> = ({
 
   useEffect(() => {
     if(isEdit) {
-      setItem(item as IGetQuotationData)
+      setItem(_getQuotationItem() as ISingleQuotationData)
       setIsEditQuotation(isEdit);
     }
     dispatch(getVehicleCompanyRequest());

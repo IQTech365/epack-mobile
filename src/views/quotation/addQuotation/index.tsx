@@ -10,9 +10,10 @@ import {QuotationFormContextProvider} from '../../../provider/QuotationFormConte
 import AddQuotationForm from './components/AddQuotationForm';
 import { IGetQuotationData } from '../../../interface/quotation/IGetQuotationsResponse';
 import { getCurrentCompanyId } from '../../../utils/storage';
-import { useAppDispatch } from '../../../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import { getSerialNoRequest } from '../../../redux/slices/SerialNoSettingSlice';
 import { DOCUMENT_TYPE, IGetSerialNoRequest } from '../../../interface/setting/serialNo/serialNo';
+import { getSingleQuotationRequest } from '../../../redux/slices/QuotationSlice';
 
 interface Props
   extends NativeStackScreenProps<QuotationStackParamList, 'AddQuotation'> {
@@ -48,6 +49,9 @@ const AddQuotationView: React.FC<Props> = ({
 
   useEffect(() => {
     _getQuotationSerialNoRequest();
+    if(isEdit) {
+      dispatch(getSingleQuotationRequest(item._id));
+    }
   }, []);
   
   return (

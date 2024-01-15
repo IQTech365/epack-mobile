@@ -15,6 +15,7 @@ import {getCompaniesRequest} from '../../../../redux/slices/CompanySlice';
 import Spinner from '../../../../common/Spinner';
 import {COLOR_BLACK, COLOR_GREEN} from '../../../../utils/colors';
 import Label from '../../../../common/Label';
+import {getCurrentCompanyId} from '../../../../utils/storage';
 
 interface IBasicDetailsViewProps {}
 
@@ -23,6 +24,7 @@ const BasicDetailsView: React.FC<IBasicDetailsViewProps> = ({}) => {
     state => state.Company,
   );
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const [company, setCompany] = useState<ICompanyInfoData>();
   const {data: companiesData} = companies || {};
   const dispatch = useAppDispatch();
 
@@ -62,21 +64,24 @@ const BasicDetailsView: React.FC<IBasicDetailsViewProps> = ({}) => {
     ),
   };
 
-  const getFirstCompany = () => {
-    let company: ICompanyInfoData | null = null;
-    if (
-      companiesData &&
-      Array.isArray(companiesData) &&
-      companiesData.length > 0
-    ) {
-      company = companiesData[0];
-    } else if (companiesData && companiesData.hasOwnProperty('authId')) {
-      company = companiesData;
-    }
-    return company;
+  const _getCompany = () => {
+    getCurrentCompanyId()
+      .then(id => {
+        if (
+          companiesData &&
+          Array.isArray(companiesData) &&
+          companiesData.length > 0
+        ) {
+          const _company = companiesData.find(
+            (d: ICompanyInfoData) => d._id == id,
+          );
+          setCompany(_company);
+        } else if (companiesData && companiesData.hasOwnProperty('authId')) {
+          setCompany(companiesData);
+        }
+      })
+      .catch(err => console.log('storage-err', err));
   };
-
-  const firstCompany = getFirstCompany();
 
   const handleModalOpen = () => {
     setOpenModal(true);
@@ -84,12 +89,18 @@ const BasicDetailsView: React.FC<IBasicDetailsViewProps> = ({}) => {
 
   const handleModalClose = () => {
     setOpenModal(false);
-    dispatch(getCompaniesRequest(firstCompany?.authId as string));
+    dispatch(getCompaniesRequest(company?.authId as string));
   };
 
   useEffect(() => {
-    dispatch(getCompaniesRequest(firstCompany?.authId as string));
+    dispatch(getCompaniesRequest(company?.authId as string));
   }, [dispatch]);
+
+  useEffect(() => {
+    if (companies) {
+      _getCompany();
+    }
+  }, [companies]);
 
   return (
     <>
@@ -107,41 +118,45 @@ const BasicDetailsView: React.FC<IBasicDetailsViewProps> = ({}) => {
           <View style={styles.elementContainer}>
             <EnquiryDetailListItem
               label="Company Name"
-              value={firstCompany?.companyName}
+              value={company?.companyName}
             />
             <EnquiryDetailListItem
               label="Punch Line"
-              value={firstCompany?.punchLine || 'Not Available'}
+              value={company?.punchLine || 'Not Available'}
             />
             <EnquiryDetailListItem
               label="Contact Person"
-              value={firstCompany?.contactPerson}
+              value={company?.contactPerson}
             />
             <EnquiryDetailListItem
               label="Website"
-              value={firstCompany?.companyWebite || 'Not Available'}
+              value={company?.companyWebite || 'Not Available'}
             />
-            <EnquiryDetailListItem label="Email" value={firstCompany?.email} />
+            <EnquiryDetailListItem label="Email" value={company?.email} />
             <EnquiryDetailListItem
               label="Reg. Mobile No."
-              value={firstCompany?.companyMobile}
+              value={company?.companyMobile}
             />
           </View>
           <Spacer height={8} />
-          <Label text='Company Logo' style={styles.labelText2} />
+          <Label text="Company Logo" style={styles.labelText2} />
           <View style={styles.companyLogoContainer}>
-          <Image
-              source={{uri: firstCompany?.companyLogo}}
-              style={{width: '100%', height: 100, resizeMode: 'contain'}}
-            />
+            {company?.companyLogo ? (
+              <Image
+                source={{uri: company?.companyLogo}}
+                style={{width: '100%', height: 100, resizeMode: 'contain'}}
+              />
+            ) : null}
           </View>
           <Spacer height={8} />
-          <Label text='Admin Signature' style={styles.labelText2} />
+          <Label text="Admin Signature" style={styles.labelText2} />
           <View style={styles.companyLogoContainer}>
-            <Image
-              source={{uri: firstCompany?.companySignature}}
-              style={{width: '100%', height: 100, resizeMode: "contain"}}
-            />
+            {company?.companySignature ? (
+              <Image
+                source={{uri: company?.companySignature}}
+                style={{width: '100%', height: 100, resizeMode: 'contain'}}
+              />
+            ) : null}
           </View>
           <Spacer height={8} />
           <ModalHOC
