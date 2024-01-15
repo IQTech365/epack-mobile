@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {Text, View} from 'react-native';
 import styles from './style';
 import Spacer from '../../../../../../../common/Spacer';
@@ -10,6 +10,7 @@ import DropdownComponent from '../../../../../../../common/DropdownComponent';
 import {TDropdownItem} from '../../../../../../../type/TDropdownItem';
 import gstPercentOptions from '../../../../../../../data/gstPercentOptions.json';
 import gstTypeOptions from '../../../../../../../data/gstTypeOptions.json';
+import { IQuotationFreight } from '../../../../../../../interface/quotation/IGetSingleQuotationResponse';
 
 interface Props {}
 
@@ -49,6 +50,26 @@ const GstView: React.FC<Props> = ({}) => {
     }
     return null;
   };
+
+  useEffect(() => {
+    if(state.editQuotation && state.item) {
+      const {item} = state;
+      if(item) {
+        const quotationfreight:IQuotationFreight = item.quotationfreights;
+        if(quotationfreight) {
+          setGstInQuotation(quotationfreight.gstStatus);
+          const gstPercentItem:TDropdownItem = gstPercentOptions.find((d:TDropdownItem) => d.label == quotationfreight.gstPercentage) as TDropdownItem;
+          //@ts-ignore
+          gstPercentDropdownCompRef && gstPercentDropdownCompRef?.current?.setDefaultValue(gstPercentItem);
+          setGstPercent(gstPercentItem.label);
+          const gstTypeItem:TDropdownItem = gstTypeOptions.find((d:TDropdownItem) => d.label == quotationfreight.gstType) as TDropdownItem;
+          //@ts-ignore
+          gstPercentDropdownCompRef && gstPercentDropdownCompRef?.current?.setDefaultValue(gstPercentItem);
+          setGstType(gstTypeItem.label);
+        }
+      }
+    }
+  }, [state.editQuotation, state.item]);
 
   return (
     <View style={styles.mainWrapper}>

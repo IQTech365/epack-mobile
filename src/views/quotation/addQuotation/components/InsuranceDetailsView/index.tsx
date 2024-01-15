@@ -72,10 +72,6 @@ const InsuranceDetailsView: React.FC<Props> = ({}) => {
               }
             }
           }
-          const storageCharge:IStorage = quotationfreight.storageCharges;
-          if(storageCharge) {
-            
-          }
         }
       }
     }

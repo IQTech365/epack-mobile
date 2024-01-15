@@ -29,7 +29,6 @@ const FreightDetailsView: React.FC<Props> = ({}) => {
   return (
     <CollapsibleView title="FREIGHT DETAILS" collapsed={true}>
       <View style={{alignItems: 'center'}}>
-        <VehicleLoadSizeView />
         <FreightTypeView
           options={
             state.shifting_luggage == shiftingLuggages[3].label
@@ -38,6 +37,7 @@ const FreightDetailsView: React.FC<Props> = ({}) => {
           }
           freightType={FREIGHT_TYPE.LOAD_TYPE}
         />
+        <VehicleLoadSizeView />
         <Spacer height={4} />
         <FreightTypeView
           options={options}

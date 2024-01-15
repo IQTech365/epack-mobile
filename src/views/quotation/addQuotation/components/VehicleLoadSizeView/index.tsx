@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {View} from 'react-native';
 import styles from './style';
 import {useAppSelector} from '../../../../../redux/hooks';
@@ -9,6 +9,7 @@ import Label from '../../../../../common/Label';
 import {useQuotationFormContextHook} from '../../../../../provider/QuotationFormContextProvider';
 import Spacer from '../../../../../common/Spacer';
 import shiftingLuggages from '../../../../../data/shiftingLuggage.json';
+import { IQuotationFreight } from '../../../../../interface/quotation/IGetSingleQuotationResponse';
 interface IProps {
   //
 }
@@ -16,6 +17,7 @@ interface IProps {
 const VehicleLoadSizeView: React.FC<IProps> = ({}) => {
   const {vehicleSizeData} = useAppSelector(state => state.Vehicle);
   const {state, setLorryType} = useQuotationFormContextHook();
+  const lorryTypeDropdownRef = useRef(null);
 
   if (!state.freight_full_load || (state.shifting_luggage == shiftingLuggages[3].label)) return null;
 
@@ -34,6 +36,21 @@ const VehicleLoadSizeView: React.FC<IProps> = ({}) => {
     return vehicleSizes;
   };
 
+  useEffect(() => {
+    if(state.editQuotation && state.item) {
+      const {item} = state;
+      if(item) {
+        const quotationfreight:IQuotationFreight = item.quotationfreights;
+        if(quotationfreight && quotationfreight.lorryType) {
+          const lorryTypeItem:TDropdownItem = _getVehicleSizes().find((d:TDropdownItem) => d.label == quotationfreight.lorryType) as TDropdownItem;
+          //@ts-ignore
+          lorryTypeDropdownRef && lorryTypeDropdownRef?.current?.setDefaultValue(lorryTypeItem);
+          setLorryType(lorryTypeItem.label);
+        }
+      }
+    }
+  }, [state.editQuotation, state.item]);
+
   return (
     <>
       <Spacer height={4} />
@@ -44,6 +61,8 @@ const VehicleLoadSizeView: React.FC<IProps> = ({}) => {
           onSelect={(item: TDropdownItem) => {
             setLorryType(item.label);
           }}
+          //@ts-ignore
+          ref={lorryTypeDropdownRef}
         />
       </View>
     </>

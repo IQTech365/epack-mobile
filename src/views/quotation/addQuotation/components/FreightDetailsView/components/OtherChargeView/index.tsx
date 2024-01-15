@@ -15,6 +15,7 @@ import {Shadow} from 'react-native-shadow-2';
 import EpackDropdown from '../../../../../../../common/DropdownComponent2';
 import { particularOptions } from '../utils';
 import { ToastType, showToast } from '../../../../../../../utils/utility';
+import * as SQuotation from '../../../../../../../interface/quotation/IGetSingleQuotationResponse';
 
 interface Props {}
 
@@ -59,10 +60,6 @@ const OtherChargeView: React.FC<Props> = ({}) => {
   }
 
   const handleAddItem = () => {
-    console.log('particularName----', particularName);
-    console.log('partLoadAmount----', partLoadAmount);
-    console.log('partLoadRatePerItem----', partLoadRatePerItem);
-    
     if(!particularName) {
       return showToast('Please Select or Enter particular name', ToastType.ERROR);
     } else if(state.freight_part_load && state.freight_full_load) {
@@ -237,6 +234,31 @@ const OtherChargeView: React.FC<Props> = ({}) => {
   const toggleShouldAddItem = () => {
     setShouldAdd(!shouldAdd);
   };
+
+  useEffect(() => {
+    if(state.editQuotation && state.item) {
+      const {item} = state;
+      if(item) {
+        const quotationfreight:SQuotation.IQuotationFreight = item.quotationfreights;
+        if(quotationfreight) {
+          const otherCharges:SQuotation.IOtherCharge[] = quotationfreight.otherCharges;
+          let localOtherCharges:IOtherCharge[] = otherCharges.map((d: SQuotation.IOtherCharge) => {
+            const item:IOtherCharge = {
+              particular_name: d.jobType,
+              quantity: d.qty,
+              part_load_rate_per_item: d.partLoad.ratePerItem,
+              part_load_amount: d.partLoad.amount,
+              full_load_rate_per_item: d.fullLoad.ratePerItem,
+              full_load_amount: d.fullLoad.amount,
+            }
+            return item;
+          });
+          setOtherCharges(localOtherCharges);
+          setItems(localOtherCharges);
+        }
+      }
+    }
+  }, [state.editQuotation, state.item]);
 
   return (
     <>

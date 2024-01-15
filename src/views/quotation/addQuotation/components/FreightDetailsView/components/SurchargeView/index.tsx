@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {View} from 'react-native';
 import styles from './style';
 import Label from '../../../../../../../common/Label';
@@ -7,11 +7,34 @@ import {TDropdownItem} from '../../../../../../../type/TDropdownItem';
 import surchargeOptions from '../../../../../../../data/surchargeOptions.json';
 import surchargePercentOptions from '../../../../../../../data/surchargePercentOptions.json';
 import {useQuotationFormContextHook} from '../../../../../../../provider/QuotationFormContextProvider';
+import { IQuotationFreight } from '../../../../../../../interface/quotation/IGetSingleQuotationResponse';
 
 interface Props {}
 
 const SurchargeView: React.FC<Props> = ({}) => {
-  const {setSurcharge, setSurchargePercent} = useQuotationFormContextHook();
+  const {state, setSurcharge, setSurchargePercent} = useQuotationFormContextHook();
+  const surchargeTypeDropdownRef = useRef(null);
+  const surchargePercentDropdownRef = useRef(null);
+
+  useEffect(() => {
+    if(state.editQuotation && state.item) {
+      const {item} = state;
+      if(item) {
+        const quotationfreight:IQuotationFreight = item.quotationfreights;
+        if(quotationfreight) {
+          const surchargeTypeItem:TDropdownItem = surchargeOptions.find((d:TDropdownItem) => d.label == quotationfreight.surchargeIsRequired) as TDropdownItem;
+          //@ts-ignore
+          surchargeTypeDropdownRef && surchargeTypeDropdownRef?.current?.setDefaultValue(surchargeTypeItem);
+          setSurcharge(surchargeTypeItem.label);
+          const surchargePercentItem:TDropdownItem = surchargePercentOptions.find((d:TDropdownItem) => d.label == quotationfreight.surchargeCharges) as TDropdownItem;
+          //@ts-ignore
+          surchargePercentDropdownRef && surchargePercentDropdownRef?.current?.setDefaultValue(surchargePercentItem);
+          setSurchargePercent(surchargePercentItem.label);
+        }
+      }
+    }
+  }, [state.editQuotation, state.item]);
+
   return (
     <>
       <View style={styles.fullWidthContainer}>
@@ -25,6 +48,8 @@ const SurchargeView: React.FC<Props> = ({}) => {
               setSurcharge(item.label);
             }}
             defaultValue={surchargeOptions[0]}
+            //@ts-ignore
+            ref={surchargeTypeDropdownRef}
           />
         </View>
         <View style={styles.compContainer}>
@@ -34,6 +59,8 @@ const SurchargeView: React.FC<Props> = ({}) => {
               setSurchargePercent(item.label);
             }}
             defaultValue={surchargePercentOptions[0]}
+            //@ts-ignore
+            ref={surchargePercentDropdownRef}
           />
         </View>
       </View>
