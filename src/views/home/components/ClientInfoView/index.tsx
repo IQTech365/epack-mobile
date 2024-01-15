@@ -1,36 +1,37 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {View, Text, Image} from 'react-native';
 import styles from './style';
 import {Shadow} from 'react-native-shadow-2';
 import { useAppSelector } from '../../../../redux/hooks';
 import { ICompanyInfoData } from '../../../../interface/companyRegistration/IGetCompaniesResponse';
+import { getCurrentCompanyId } from '../../../../utils/storage';
 
 const ClientInfoView = () => {
   const {companies} = useAppSelector(state => state.Company);
   const {data: companiesData} = companies || {};
+  const [company, setCompany] = useState<ICompanyInfoData>();
 
-  const getFirstCompany = () => {
-    let company: ICompanyInfoData | null = null;
-    if (
-      companiesData &&
-      Array.isArray(companiesData) &&
-      companiesData.length > 0
-    ) {
-      company = companiesData[0];
-    } else if (companiesData && companiesData.hasOwnProperty('authId')) {
-      company = companiesData;
-    }
-    return company;
+  const _getCompany = () => {
+    getCurrentCompanyId().then(id => {
+      if (
+        companiesData &&
+        Array.isArray(companiesData) &&
+        companiesData.length > 0
+      ) {
+        const _company = companiesData.find((d:ICompanyInfoData) => d._id == id);
+        setCompany(_company);
+      } else if (companiesData && companiesData.hasOwnProperty('authId')) {
+        setCompany(companiesData);
+      }
+    }).catch(err => console.log('storage-err', err));
   };
 
-  const firstCompany = getFirstCompany();
-
   const _getCompanyNameOrLogo = () => {
-    const {companyLogo, companyName} = firstCompany || {};
+    const {companyLogo, companyName} = company || {};
     if (companyLogo) {
       return (
         <Image
-          source={{uri: firstCompany?.companyLogo}}
+          source={{uri: company?.companyLogo}}
           resizeMode="contain"
           style={styles.logo}
         />
@@ -45,6 +46,10 @@ const ClientInfoView = () => {
     }
   };
 
+  useEffect(()=> {
+    _getCompany();
+  }, []);
+
   return (
     <Shadow style={styles.cardWrapper} distance={6}>
       <View style={styles.clientInfoContainer}>
@@ -54,8 +59,8 @@ const ClientInfoView = () => {
           </View>
         </View>
         <View style={styles.clientDetailContainer}>
-          <Text style={styles.nameText}>{firstCompany?.companyName}</Text>
-          <Text style={styles.idText}>{`Cust ID: ${firstCompany?._id}`}</Text>
+          <Text style={styles.nameText}>{company?.companyName}</Text>
+          <Text style={styles.idText}>{`Cust ID: ${company?._id}`}</Text>
         </View>
       </View>
     </Shadow>

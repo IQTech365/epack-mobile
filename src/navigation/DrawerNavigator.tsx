@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -47,6 +47,7 @@ import {getCompaniesRequest} from '../redux/slices/CompanySlice';
 import {ICompanyInfoData} from '../interface/companyRegistration/IGetCompaniesResponse';
 import AddFranchiseView from '../views/profile/components/addFranchiseDetail';
 import AddBranchView from '../views/profile/components/addBranchDetail';
+import { getCurrentCompanyId } from '../utils/storage';
 
 const Drawer = createDrawerNavigator();
 
@@ -57,27 +58,27 @@ const DrawerContent = (props: any) => {
   const {companies} = useAppSelector(state => state.Company);
   const {data: companiesData} = companies || {};
   const {otpData} = useAppSelector(state => state.OTP);
+  const [company, setCompany] = useState<ICompanyInfoData>();
 
-  const getFirstCompany = () => {
-    let company: ICompanyInfoData | null = null;
-    if (
-      companiesData &&
-      Array.isArray(companiesData) &&
-      companiesData.length > 0
-    ) {
-      company = companiesData[0];
-    } else if (companiesData && companiesData.hasOwnProperty('authId')) {
-      company = companiesData;
-    }
-    return company;
+  const getCompany = () => {
+    getCurrentCompanyId().then(id => {
+      if (
+        companiesData &&
+        Array.isArray(companiesData) &&
+        companiesData.length > 0
+      ) {
+        const _company = companiesData.find((d:ICompanyInfoData) => d._id == id);
+        setCompany(_company);
+      } else if (companiesData && companiesData.hasOwnProperty('authId')) {
+        setCompany(companiesData);
+      }
+    }).catch(err => console.log('storage-err', err));
   };
 
   const handleLogout = () => {
     setLoggedIn(false);
     dispatch(logout());
   };
-  const firstCompany = getFirstCompany();
-
   useEffect(() => {
     if (otpData) {
       const {data = {}} = otpData || {};
@@ -85,12 +86,18 @@ const DrawerContent = (props: any) => {
     }
   }, [dispatch]);
 
+  useEffect(() => {
+    if(companies) {
+      getCompany();
+    }
+  }, [companies]);
+
   const _getCompanyNameOrLogo = () => {
-    const {companyLogo, companyName} = firstCompany || {};
+    const {companyLogo, companyName} = company || {};
     if (companyLogo) {
       return (
         <Image
-          source={{uri: firstCompany?.companyLogo}}
+          source={{uri: companyLogo}}
           resizeMode="contain"
           style={styles.avatar}
         />
@@ -119,13 +126,13 @@ const DrawerContent = (props: any) => {
             <View style={styles.avatarContainer}>
               {_getCompanyNameOrLogo()}
             </View>
-            <Text style={styles.nameText}>{firstCompany?.companyName}</Text>
-            <Text style={styles.text}>{`User ID: ${firstCompany?._id}`}</Text>
+            <Text style={styles.nameText}>{company?.companyName}</Text>
+            <Text style={styles.text}>{`User ID: ${company?._id}`}</Text>
             <Text
               style={
                 styles.text
-              }>{`Mobile: ${firstCompany?.companyMobile}`}</Text>
-            <Text style={styles.text}>{`Email: ${firstCompany?.email}`}</Text>
+              }>{`Mobile: ${company?.companyMobile}`}</Text>
+            <Text style={styles.text}>{`Email: ${company?.email}`}</Text>
             <Spacer height={8} />
           </View>
         </ImageBackground>
