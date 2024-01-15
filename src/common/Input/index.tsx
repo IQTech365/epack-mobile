@@ -68,11 +68,16 @@ const Input: React.FC<InputProps> = forwardRef(
 
     React.useImperativeHandle(ref, () => ({
       reset,
+      setValue,
     }));
 
     const reset = () => {
       _handleTextChange('');
     };
+
+    const setValue = (text:string) => {
+      setText(text);
+    }
 
     const _handleTextChange = (text: string) => {
       setText(text);

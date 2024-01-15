@@ -9,6 +9,7 @@ import {useQuotationFormContextHook} from '../../../../../../../provider/Quotati
 import SingleChargeInputView from '../SingleChargeInputView';
 import BothChargeInputView from '../BothChargeInputView';
 import shiftingLuggages from '../../../../../../../data/shiftingLuggage.json';
+import { IQuotationFreight } from '../../../../../../../interface/quotation/IGetSingleQuotationResponse';
 interface Props {
   freightType: FREIGHT_TYPE;
   options: string[];
@@ -170,6 +171,26 @@ const FreightTypeView: React.FC<Props> = ({freightType, options}) => {
         }
     }
   }, [state.freight_part_load, state.freight_full_load]);
+
+  useEffect(() => {
+    if(state.editQuotation && state.item) {
+      const {item} = state;
+      if(item) {
+        const quotationfreight:IQuotationFreight = item.quotationfreights;
+        if(quotationfreight) {
+          const isPartLoad = quotationfreight.isPartLoad == 'true';
+          setFreightPartLoad(isPartLoad);
+          const isFullLoad = quotationfreight.isFullLoad == 'true';
+          setFreightFullLoad(isFullLoad);
+          setPackingCharge(quotationfreight.packagingChargesStatus);
+          setPackingMaterialCharge(quotationfreight.packingMaterialChargesStatus);
+          setLoadingCharge(quotationfreight.loadingChargesStatus);
+          setUnloadingCharge(quotationfreight.unLoadingChargesStatus);
+          setUnpackingCharge(quotationfreight.unPackagingChargesStatus);
+        }
+      }
+    }
+  }, [state.editQuotation, state.item]);
 
   return (
     <View style={styles.mainWrapper}>

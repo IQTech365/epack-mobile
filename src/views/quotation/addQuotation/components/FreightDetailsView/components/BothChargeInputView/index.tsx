@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {View} from 'react-native';
 import styles from './style';
 import {COLOR_BLACK} from '../../../../../../../utils/colors';
@@ -7,12 +7,16 @@ import Input from '../../../../../../../common/Input';
 import {useQuotationFormContextHook} from '../../../../../../../provider/QuotationFormContextProvider';
 import {FREIGHT_TYPE, options} from '../utils';
 import shiftingLuggages from '../../../../../../../data/shiftingLuggage.json';
+import { IQuotationFreight } from '../../../../../../../interface/quotation/IGetSingleQuotationResponse';
 
 interface Props {
   freightType: FREIGHT_TYPE;
 }
 
 const BothChargeInputView: React.FC<Props> = ({freightType}) => {
+  const input1Ref = useRef(null);
+  const input2Ref = useRef(null);
+
   const {
     state,
     setFreightPartCharge,
@@ -72,6 +76,42 @@ const BothChargeInputView: React.FC<Props> = ({freightType}) => {
     return {handler1, handler2};
   };
 
+  const _inputValue = (quotationfreight:IQuotationFreight) => {
+    let value1: string = '';
+    let value2: string = '';
+    if (freightType == FREIGHT_TYPE.LOAD_TYPE) {
+      //@ts-ignore
+      input1Ref && input1Ref?.current?.setValue(quotationfreight.partLoadCharge);
+      //@ts-ignore
+      input2Ref && input2Ref?.current?.setValue(quotationfreight.fullLoadCharge);
+    } else if (freightType == FREIGHT_TYPE.PACKING_CHARGE) {
+      //@ts-ignore
+      input1Ref && input1Ref?.current?.setValue(quotationfreight.packagingPartLoadCharges);
+      //@ts-ignore
+      input2Ref && input2Ref?.current?.setValue(quotationfreight.packagingFullLoadCharges);
+    } else if (freightType == FREIGHT_TYPE.PACKING_MATERIAL_CHARGE) {
+     //@ts-ignore
+     input1Ref && input1Ref?.current?.setValue(quotationfreight.packingMaterialPartLoadCharges);
+     //@ts-ignore
+     input2Ref && input2Ref?.current?.setValue(quotationfreight.packingMaterialFullLoadCharges);
+    } else if (freightType == FREIGHT_TYPE.LOADING_CHARGE) {
+      //@ts-ignore
+      input1Ref && input1Ref?.current?.setValue(quotationfreight.loadingPartLoadCharges);
+      //@ts-ignore
+      input2Ref && input2Ref?.current?.setValue(quotationfreight.loadingFullLoadCharges);
+    } else if (freightType == FREIGHT_TYPE.UNLOADING_CHARGE) {
+     //@ts-ignore
+     input1Ref && input1Ref?.current?.setValue(quotationfreight.unLoadingPartLoadCharges);
+     //@ts-ignore
+     input2Ref && input2Ref?.current?.setValue(quotationfreight.unLoadingFullLoadCharges);
+    } else if (freightType == FREIGHT_TYPE.UNPACKING_CHARGE) {
+      //@ts-ignore
+      input1Ref && input1Ref?.current?.setValue(quotationfreight.unPackagingPartLoadCharges);
+      //@ts-ignore
+      input2Ref && input2Ref?.current?.setValue(quotationfreight.unPackagingFullLoadCharges);
+    }
+  };
+
   const _shouldHideView = () => {
     let hideView:boolean = false;
     if(freightType == FREIGHT_TYPE.PACKING_CHARGE && state.packing_charge !== options[1]) {
@@ -92,6 +132,30 @@ const BothChargeInputView: React.FC<Props> = ({freightType}) => {
     return null;
   }
 
+  useEffect(() => {
+    if(state.editQuotation && state.item) {
+      const {item} = state;
+      if(item) {
+        const quotationfreight:IQuotationFreight = item.quotationfreights;
+        if(quotationfreight) {
+          setFreightPartCharge(quotationfreight.partLoadCharge);
+          setFreightFullCharge(quotationfreight.fullLoadCharge);
+          setPackingChargePartLoad(quotationfreight.packagingPartLoadCharges);
+          setPackingChargeFullLoad(quotationfreight.packagingFullLoadCharges);
+          setPackingMaterialChargePartLoad(quotationfreight.packingMaterialPartLoadCharges);
+          setPackingMaterialChargeFullLoad(quotationfreight.packingMaterialFullLoadCharges);
+          setLoadingChargePartLoad(quotationfreight.loadingPartLoadCharges);
+          setLoadingChargeFullLoad(quotationfreight.loadingFullLoadCharges);
+          setUnloadingChargePartLoad(quotationfreight.unLoadingPartLoadCharges);
+          setUnloadingChargeFullLoad(quotationfreight.unLoadingFullLoadCharges);
+          setUnpackingChargePartLoad(quotationfreight.unPackagingPartLoadCharges);
+          setUnpackingChargeFullLoad(quotationfreight.unPackagingFullLoadCharges);
+          _inputValue(quotationfreight);
+        }
+      }
+    }
+  }, [state.editQuotation, state.item]);
+
   return (
     <View style={styles.twoColumnContainer}>
       <View style={styles.compContainer}>
@@ -101,10 +165,9 @@ const BothChargeInputView: React.FC<Props> = ({freightType}) => {
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
-          // value={state.authority_person_name}
-          //@ts-ignore
-          //error={showErrors && errors.dropPincode}
           inputType="numeric"
+          //@ts-ignore
+          ref={input1Ref}
         />
       </View>
       <View style={styles.compContainer}>
@@ -114,10 +177,9 @@ const BothChargeInputView: React.FC<Props> = ({freightType}) => {
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
-          // value={state.authority_person_name}
-          //@ts-ignore
-          //error={showErrors && errors.dropPincode}
           inputType="numeric"
+          //@ts-ignore
+          ref={input2Ref}
         />
       </View>
     </View>
