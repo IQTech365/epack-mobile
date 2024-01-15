@@ -86,6 +86,7 @@ const DeliveryAddressView: React.FC<Props> = ({}) => {
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
+          inputType="numeric"
         />
       </View>
       <Spacer height={4} />

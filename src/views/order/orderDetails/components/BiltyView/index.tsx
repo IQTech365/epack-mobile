@@ -32,6 +32,7 @@ import {IHtmlTemplateRequest} from '../../../../../interface/order/templates/ITe
 import ModalHOC from '../../../../../common/ModalHOC';
 import TemplateViewer from '../../../../../common/TemplateViewer';
 import { startShare } from '../../../../../utils/utility';
+import useTemplateIdHook from '../../../../../hooks/useTemplateIdHook';
 
 interface IBiltyViewProps {
   orderId: string;
@@ -58,6 +59,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
   const [showDownload, setShowDownload] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [documentId, setDocumentId] = useState<string>('');
+  const templateId = useTemplateIdHook('658d3cb5585e3dde644da97e');
 
   const bottomSheetRef = useRef<BottomSheet>(null);
 
@@ -121,6 +123,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
 
   const handleShowPreviewModalClose = () => {
     dispatch(resetGetBiltyHtmlRequest());
+    setShowPreview(false);
     setShowModal(false);
   };
 
@@ -156,7 +159,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
 
   const handleDocumentDownload = async () => {
     const payload: IHtmlTemplateRequest = {
-      templateId: '6578288c93cd6fcba42676d5',
+      templateId: templateId,
       docId: documentId,
     };
     dispatch(getBiltyHtmlRequest(payload));

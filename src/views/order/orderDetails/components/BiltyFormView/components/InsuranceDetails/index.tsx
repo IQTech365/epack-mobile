@@ -70,6 +70,7 @@ const InsuranceDetails: React.FC<{}> = ({}) => {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
+              inputType="numeric"
             />
           </View>
         </View>

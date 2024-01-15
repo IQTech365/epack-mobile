@@ -110,7 +110,7 @@ export const GET_UNIT_TYPES = `/setting/unit-type/all`;
 export const GET_PACKING_MATERIALS = `/enquiry/get-packing-material`;
 
 // Templates
-export const GET_MONEY_RECEIPT_TEMPLATE_HTML = (templateId, receiptId) => `template/money-receipt-template/create/${templateId}/${receiptId}`;
+export const GET_MONEY_RECEIPT_TEMPLATE_HTML = (templateId, receiptId) => `/template/create-money-receipt-template/${templateId}/${receiptId}`;
 export const GET_QUOTATION_TEMPLATE_HTML = (templateId, docId) => `template/create-quotation-template/${templateId}/${docId}`;
 export const GET_BILTY_TEMPLATE_HTML = (templateId, docId) => `template/create-bilty-template/${templateId}/${docId}`;
 export const GET_CAR_CONDITION_TEMPLATE_HTML = (templateId, docId) => `template/create-car-condition-template/${templateId}/${docId}`;

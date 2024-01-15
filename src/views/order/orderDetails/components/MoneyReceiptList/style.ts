@@ -1,8 +1,11 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import {COLOR_BLACK, COLOR_BLUE, COLOR_GRAY, COLOR_GRAY2, COLOR_ORANGE, COLOR_WHITE} from '../../../../../utils/colors';
+import {COLOR_BLACK, COLOR_BLUE, COLOR_GRAY, COLOR_GRAY2, COLOR_GRAY3, COLOR_ORANGE, COLOR_WHITE} from '../../../../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
+  mainWrapper: {
+    alignItems: 'center',
+  },
   cardWrapper: {
     borderRadius: 8,
     alignItems: 'center',
@@ -34,7 +37,7 @@ const styles = StyleSheet.create({
     marginLeft: 8
   },
   container: {
-    width: '90%',
+    width: '100%',
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',
@@ -75,19 +78,28 @@ const styles = StyleSheet.create({
       width: '100%',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      paddingVertical: 4,
+      // paddingVertical: 4,
   },
   rowItemContainer: {
     width: '40%',
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: COLOR_GRAY3,
+    paddingVertical: 8,
+    borderBottomWidth: 0.5,
+    borderBottomColor: COLOR_GRAY2,
+    paddingLeft: 8,
   },
   rowItemContainer2: {
     width: '60%',
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingVertical: 8,
+    borderBottomWidth: 0.5,
+    borderBottomColor: COLOR_GRAY2,
+    paddingLeft: 8,
   },
   nameText: {
       color: COLOR_GRAY,
@@ -100,18 +112,18 @@ const styles = StyleSheet.create({
     fontWeight: '500'
   },
   viewDetailsText: {
-    color: COLOR_GRAY,
+    color: COLOR_BLACK,
     fontSize: 13,
     fontFamily: 'WorkSans-SemiBold'
   },
   labelText: {
-      color: COLOR_GRAY,
-      fontSize: 13,
+      color: COLOR_BLACK,
+      fontSize: 14,
       fontFamily: 'WorkSans-Medium'
   },
   valueText: {
-    color: COLOR_GRAY,
-    fontSize: 12,
+    color: COLOR_BLACK,
+    fontSize: 14,
     fontFamily: 'WorkSans-Regular'
   },
   viewDetailsContainer: {
@@ -122,9 +134,10 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 8,
     borderTopWidth: 1,
-    borderTopColor: COLOR_BLUE,
+    borderTopColor: COLOR_GRAY2,
     borderBottomLeftRadius: 8,
     borderBottomRightRadius: 8,
+    backgroundColor: COLOR_GRAY2,
 },
 });
 

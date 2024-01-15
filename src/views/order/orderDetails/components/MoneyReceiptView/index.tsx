@@ -29,8 +29,10 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {IHtmlTemplateRequest} from '../../../../../interface/order/templates/ITemplateResponse';
 import ModalHOC from '../../../../../common/ModalHOC';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
-import { startShare } from '../../../../../utils/utility';
+import { getTemplateIdBySubModuleId, startShare } from '../../../../../utils/utility';
 import TemplateViewer from '../../../../../common/TemplateViewer';
+import { ISavedDocumentTemplateId } from '../../../../../interface/setting/template/template';
+import useTemplateIdHook from '../../../../../hooks/useTemplateIdHook';
 
 interface IMoneyReceiptViewProps {
   orderId: string;
@@ -64,6 +66,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
   const [showModal, setShowModal] = useState<boolean>(false);
   const [shouldDownload, setShouldDownload] = useState<boolean>(false);
   const [moneyReceiptId, setMoneyReceiptId] = useState<string>('');
+  const templateId = useTemplateIdHook('658d3c9c585e3dde644da970');
 
   const handleCreateNewMoneyReceipt = () => {
     setShowMoneyReceiptList(false);
@@ -99,15 +102,16 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
   const handleShowPreviewModalClose = () => {
     dispatch(clearMoneyReceiptHtmlDocument());
     setOpenPreview(false);
-    
+    setShowModal(false);
   };
 
   const handleShareClick = async (moneyReceiptId: string) => {
     setOpenPreview(false);
     setShouldDownload(false);
     setOpenShare(true);
+    //658d3c9c585e3dde644da970
     const payload: IHtmlTemplateRequest = {
-      templateId: '6561d45bec79daeb0af1b793',
+      templateId: templateId,
       docId: moneyReceiptId,
     };
     dispatch(getMoneyReceiptHtmlRequest(payload));
@@ -117,7 +121,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
     setOpenShare(false);
     setShouldDownload(true);
     const payload: IHtmlTemplateRequest = {
-      templateId: '6561d45bec79daeb0af1b793',
+      templateId: templateId,
       docId: moneyReceiptId,
     };
     dispatch(getMoneyReceiptHtmlRequest(payload));
@@ -138,7 +142,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
     setShouldDownload(false);
     setOpenPreview(true);
     const payload: IHtmlTemplateRequest = {
-      templateId: '6561d45bec79daeb0af1b793',
+      templateId: templateId,
       docId: moneyReceiptId,
     };
     dispatch(getMoneyReceiptHtmlRequest(payload));
@@ -302,6 +306,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
         </TouchableOpacity>
         <Spacer width={10} />
       </View>
+      <Spacer height={2} />
       {showForm()}
       {showList()}
       <Spinner

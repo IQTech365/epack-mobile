@@ -99,6 +99,7 @@ const ConsignerDetails: React.FC<{}> = ({}) => {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
+              inputType="numeric"
             />
           </View>
         </View>
@@ -120,6 +121,7 @@ const ConsignerDetails: React.FC<{}> = ({}) => {
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
+            inputType="numeric"
           />
         </View>
         <Spacer height={4} />

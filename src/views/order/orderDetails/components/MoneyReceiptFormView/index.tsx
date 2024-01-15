@@ -67,7 +67,6 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
   const {data: quotationData} = quotations || {};
   const dispatch2 = useAppDispatch();
   const handleReceiptDate = (date: Date) => {
-    // console.log('receipt-date---', date.toISOString());
     dispatch({
       type: MONEYRECEIPT_FORM_ACTION.RECEIPT_DATE,
       payload: date.toISOString(),
@@ -139,7 +138,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
   const handleArivalDate = (date: Date) => {
     dispatch({
       type: MONEYRECEIPT_FORM_ACTION.DATE_OF_ARRIVAL,
-      payload: formatDate(date),
+      payload: date.toISOString(),
     });
   };
   const handleTemplate = (item: TDropdownItem) => {
@@ -353,6 +352,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 value={isEdit ? editData.paymentAmount : ''}
+                inputType="numeric"
               />
             </View>
           </View>
@@ -379,6 +379,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
                   value={isEdit ? editData.numbersOfArticles : ''}
+                  inputType="numeric"
                 />
               </View>
               <View style={styles.itemContainer}>

@@ -24,6 +24,7 @@ import { IHtmlTemplateRequest } from '../../../../../interface/order/templates/I
 import ModalHOC from '../../../../../common/ModalHOC';
 import TemplateViewer from '../../../../../common/TemplateViewer';
 import { startShare } from '../../../../../utils/utility';
+import useTemplateIdHook from '../../../../../hooks/useTemplateIdHook';
 
 interface IInvoiceViewProps {
   orderId: string;
@@ -46,6 +47,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item}) => {
   const [showPreview, setShowPreview] = useState<boolean>(false);
   const [showShare, setShowShare] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
+  const templateId = useTemplateIdHook('658d3ce2585e3dde644da98c');
 
   const handleCreateNewInvoice = () => {
     setShowInvoiceList(false);
@@ -64,7 +66,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item}) => {
 
   const handleDocDownload = (docId:string) => {
     const payload: IHtmlTemplateRequest = {
-      templateId: '657d77534a69ca45d2255096',
+      templateId: templateId,
       docId: docId,
     };
     dispatch(getInvoiceHtmlRequest(payload));

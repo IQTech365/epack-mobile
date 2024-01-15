@@ -22,6 +22,7 @@ const AdvanceAmountView: React.FC<Props> = ({}) => {
         value={state.advance_amount}
         //@ts-ignore
         ref={advanceAmountCompRef}
+        inputType="numeric"
       />
     </View>
   );

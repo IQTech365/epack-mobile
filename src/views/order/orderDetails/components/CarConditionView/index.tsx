@@ -34,6 +34,7 @@ import ModalHOC from '../../../../../common/ModalHOC';
 import TemplateViewer from '../../../../../common/TemplateViewer';
 import {startShare} from '../../../../../utils/utility';
 import { IHtmlTemplateRequest } from '../../../../../interface/order/templates/ITemplateResponse';
+import useTemplateIdHook from '../../../../../hooks/useTemplateIdHook';
 
 interface ICarConditionViewProps {
   orderId: string;
@@ -70,6 +71,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId}) => {
   const [showPreview, setShowPreview] = useState<boolean>(false);
   const [showShare, setShowShare] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
+  const templateId = useTemplateIdHook('658d3cab585e3dde644da977');
 
   const _getListData = () => {
     const {data} = carConditionList || {};
@@ -104,6 +106,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId}) => {
   const handleShowPreviewModalClose = () => {
     dispatch(resetGetCarConditionHtmlRequest());
     setShowPreview(false);
+    setShowModal(false);
   };
 
   const onEdit = () => {};
@@ -131,7 +134,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId}) => {
 
   const handleDocDownload = (docId:string) => {
     const payload: IHtmlTemplateRequest = {
-      templateId: '657d77534a69ca45d2255096',
+      templateId: templateId,
       docId: docId,
     };
     dispatch(getCarConditionHtmlRequest(payload));

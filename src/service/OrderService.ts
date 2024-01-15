@@ -120,7 +120,7 @@ export const GetInvoiceTemplateHtmlService = async (templateId:string, docId:str
 
 export const EditEnquiryService = async (payload: IOtpVerifyRequest): Promise<IOtpVerifyResponse> => {
     const api = Api.getInstance();
-    return await api.update<IOtpVerifyRequest, AxiosResponse<IOtpVerifyResponse>>(payload, EDIT_COMPANY);
+    return await api.update<IOtpVerifyRequest, AxiosResponse<IOtpVerifyResponse>>(payload, EDIT_COMPANY(''));
 }
 
 export const GetOrdersService = async (payload: Partial<IGetOrdersRequest>): Promise<IGetOrdersResponse> => {

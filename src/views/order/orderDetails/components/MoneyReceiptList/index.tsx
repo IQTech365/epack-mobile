@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, TouchableOpacity, Linking} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import {Shadow} from 'react-native-shadow-2';
 import styles from './style';
 import Spacer from '../../../../../common/Spacer';
 import DocumentActionView from '../../../../../common/DocumentActionView';
+import { formatDate4 } from '../../../../../utils/formatter';
 
 export interface IAddMoneyReceiptItem {
   receiptNumber: string;
@@ -44,98 +45,99 @@ const AddMoneyReceiptListItem: React.FC<IAddMoneyReceiptListItemProps> = ({
 
   useEffect(() => {
     if (show) {
-      setLabel('HIDE DETAILS');
+      setLabel('HIDE');
     } else {
-      setLabel('SHOW DETAILS');
+      setLabel('MORE...');
     }
   }, [show]);
 
   return (
-    <Shadow style={styles.cardWrapper} distance={8}>
-      <TouchableOpacity style={styles.container} activeOpacity={0.6}>
-        <Spacer height={6} />
-        <View style={styles.rowContainer}>
-          <View style={styles.rowItemContainer}>
-            <Text style={styles.labelText}>Receipt Number</Text>
+    <View style={styles.mainWrapper}>
+      <Shadow style={styles.cardWrapper} distance={1.5}>
+        <TouchableOpacity style={styles.container} activeOpacity={0.6}>
+          <View style={styles.rowContainer}>
+            <View style={[styles.rowItemContainer, {borderTopLeftRadius: 5}]}>
+              <Text style={styles.labelText}>Receipt Number</Text>
+            </View>
+            <View style={[styles.rowItemContainer2, {borderTopRightRadius: 5}]}>
+              <Text style={styles.valueText}>{item.receiptNumber}</Text>
+            </View>
           </View>
-          <View style={styles.rowItemContainer2}>
-            <Text style={styles.valueText}>{item.receiptNumber}</Text>
+          <Spacer height={2} />
+          <View style={styles.rowContainer}>
+            <View style={styles.rowItemContainer}>
+              <Text style={styles.labelText}>Receipt Date</Text>
+            </View>
+            <View style={styles.rowItemContainer2}>
+              <Text style={styles.valueText}>{formatDate4(new Date(item.receiptDate))}</Text>
+            </View>
           </View>
-        </View>
-        <Spacer height={2} />
-        <View style={styles.rowContainer}>
-          <View style={styles.rowItemContainer}>
-            <Text style={styles.labelText}>Receipt Date</Text>
+          <Spacer height={2} />
+          <View style={styles.rowContainer}>
+            <View style={styles.rowItemContainer}>
+              <Text style={styles.labelText}>Arival Date</Text>
+            </View>
+            <View style={styles.rowItemContainer2}>
+              <Text style={styles.valueText}>{formatDate4(new Date(item.arivalDate))}</Text>
+            </View>
           </View>
-          <View style={styles.rowItemContainer2}>
-            <Text style={styles.valueText}>{item.receiptDate}</Text>
+          <Spacer height={2} />
+          <View style={styles.rowContainer}>
+            <View style={styles.rowItemContainer}>
+              <Text style={styles.labelText}>Receipt Against</Text>
+            </View>
+            <View style={styles.rowItemContainer2}>
+              <Text style={styles.valueText}>{item.receiptAgainst}</Text>
+            </View>
           </View>
-        </View>
-        <Spacer height={2} />
-        <View style={styles.rowContainer}>
-          <View style={styles.rowItemContainer}>
-            <Text style={styles.labelText}>Arival Date</Text>
+          <View style={styles.rowContainer}>
+            <View style={styles.rowItemContainer}>
+              <Text style={styles.labelText}>Bill Number</Text>
+            </View>
+            <View style={styles.rowItemContainer2}>
+              <Text style={styles.valueText}>{item.billNumber}</Text>
+            </View>
           </View>
-          <View style={styles.rowItemContainer2}>
-            <Text style={styles.valueText}>{item.arivalDate}</Text>
+          <View style={styles.rowContainer}>
+            <View style={styles.rowItemContainer}>
+              <Text style={styles.labelText}>Quotation Number</Text>
+            </View>
+            <View style={styles.rowItemContainer2}>
+              <Text style={styles.valueText}>{item.quotationNumber}</Text>
+            </View>
           </View>
-        </View>
-        <Spacer height={2} />
-        <View style={styles.rowContainer}>
-          <View style={styles.rowItemContainer}>
-            <Text style={styles.labelText}>Receipt Against</Text>
+          <View style={styles.rowContainer}>
+            <View style={styles.rowItemContainer}>
+              <Text style={styles.labelText}>Numbers Of Articles</Text>
+            </View>
+            <View style={styles.rowItemContainer2}>
+              <Text style={styles.valueText}>{item.numbersOfArticles}</Text>
+            </View>
           </View>
-          <View style={styles.rowItemContainer2}>
-            <Text style={styles.valueText}>{item.receiptAgainst}</Text>
+          <View style={styles.rowContainer}>
+            <View style={styles.rowItemContainer}>
+              <Text style={styles.labelText}>Payment Amount</Text>
+            </View>
+            <View style={styles.rowItemContainer2}>
+              <Text style={styles.valueText}>{item.paymentAmount}</Text>
+            </View>
           </View>
-        </View>
-        <View style={styles.rowContainer}>
-          <View style={styles.rowItemContainer}>
-            <Text style={styles.labelText}>Bill Number</Text>
-          </View>
-          <View style={styles.rowItemContainer2}>
-            <Text style={styles.valueText}>{item.billNumber}</Text>
-          </View>
-        </View>
-        <View style={styles.rowContainer}>
-          <View style={styles.rowItemContainer}>
-            <Text style={styles.labelText}>Quotation Number</Text>
-          </View>
-          <View style={styles.rowItemContainer2}>
-            <Text style={styles.valueText}>{item.quotationNumber}</Text>
-          </View>
-        </View>
-        <View style={styles.rowContainer}>
-          <View style={styles.rowItemContainer}>
-            <Text style={styles.labelText}>Numbers Of Articles</Text>
-          </View>
-          <View style={styles.rowItemContainer2}>
-            <Text style={styles.valueText}>{item.numbersOfArticles}</Text>
-          </View>
-        </View>
-        <View style={styles.rowContainer}>
-          <View style={styles.rowItemContainer}>
-            <Text style={styles.labelText}>Payment Amount</Text>
-          </View>
-          <View style={styles.rowItemContainer2}>
-            <Text style={styles.valueText}>{item.paymentAmount}</Text>
-          </View>
-        </View>
-        <Spacer height={6} />
-      </TouchableOpacity>
-      <View style={styles.viewDetailsContainer}>
-        <TouchableOpacity activeOpacity={0.6} onPress={handleShowDetail}>
-          <Text style={styles.viewDetailsText}>{label}</Text>
         </TouchableOpacity>
-      </View>
-      <DocumentActionView
-        onShare={onShare}
-        onDownload={onDownload}
-        onPreview={onPreview}
-        onEdit={onEdit}
-        show={show}
-      />
-    </Shadow>
+        <View style={styles.viewDetailsContainer}>
+          <TouchableOpacity activeOpacity={0.6} onPress={handleShowDetail}>
+            <Text style={styles.viewDetailsText}>{label}</Text>
+          </TouchableOpacity>
+        </View>
+        <DocumentActionView
+          onShare={onShare}
+          onDownload={onDownload}
+          onPreview={onPreview}
+          onEdit={onEdit}
+          show={show}
+        />
+      </Shadow>
+      <Spacer height={20} />
+    </View>
   );
 };
 

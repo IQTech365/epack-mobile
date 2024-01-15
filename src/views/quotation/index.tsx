@@ -40,6 +40,7 @@ import ModalHOC from '../../common/ModalHOC';
 import TemplateViewer from '../../common/TemplateViewer';
 import {startShare} from '../../utils/utility';
 import { getCurrentCompanyId } from '../../utils/storage';
+import useTemplateIdHook from '../../hooks/useTemplateIdHook';
 interface IQuotationPageViewProps {
   navigation: NavigationProp<any, any>;
 }
@@ -63,6 +64,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
   const [openPreview, setOpenPreview] = useState<boolean>(false);
   const [openShare, setOpenShare] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
+  const templateId = useTemplateIdHook('658d3c6f585e3dde644da95b');
 
   const getTotalQuotations = () => {
     let _count = 0;
@@ -286,7 +288,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
     setOpenPreview(true);
     setOpenShare(false);
     const payload: IHtmlTemplateRequest = {
-      templateId: '657716243e3f2f19e00f4db4',
+      templateId: templateId,
       docId: docId,
     };
     dispatch(getQuotationHtmlRequest(payload));
@@ -296,7 +298,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
     setOpenPreview(false);
     setOpenShare(true);
     const payload: IHtmlTemplateRequest = {
-      templateId: '657716243e3f2f19e00f4db4',
+      templateId: templateId,
       docId: docId,
     };
     dispatch(getQuotationHtmlRequest(payload));

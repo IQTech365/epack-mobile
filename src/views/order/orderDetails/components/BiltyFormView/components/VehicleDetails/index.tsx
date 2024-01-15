@@ -119,6 +119,7 @@ const VehicleDetails: React.FC<{}> = ({}) => {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
+              inputType="numeric"
             />
           </View>
           <View style={styles.itemContainer}>
@@ -169,6 +170,7 @@ const VehicleDetails: React.FC<{}> = ({}) => {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
+              inputType="numeric"
             />
           </View>
           <View style={styles.itemContainer}>
