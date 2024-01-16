@@ -35,6 +35,10 @@ import { IGetQuotationData } from '../../../../../interface/quotation/IGetQuotat
 import EpackDropdown from '../../../../../common/DropdownComponent2';
 import { ToastType, showToast } from '../../../../../utils/utility';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
+import useInitialValueHook from '../../../../../hooks/useInitialValueHook';
+import { DOCUMENT_TYPE, IGetSerialNoRequest } from '../../../../../interface/setting/serialNo/serialNo';
+import { getSerialNoRequest } from '../../../../../redux/slices/SerialNoSettingSlice';
+import useSerialNoHook from '../../../../../hooks/useSerialNo';
 
 interface IMoneyReceiptFormViewProps {
   orderId: string | undefined;
@@ -66,6 +70,21 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
   );
   const {data: quotationData} = quotations || {};
   const dispatch2 = useAppDispatch();
+  const initialValue:string = useInitialValueHook('658d3c9c585e3dde644da970');
+  const serialNo:number = useSerialNoHook();
+
+  const _getSerialNoRequest = () => {
+    getCurrentCompanyId().then(id => {
+      const payload: IGetSerialNoRequest = {
+        document: DOCUMENT_TYPE.MONEY_RECEIPT,
+        payload: {
+          activeCount: initialValue,
+          companyId: id as string,
+        }
+      }
+      dispatch2(getSerialNoRequest(payload));
+    }).catch(err => console.log('err--', err));
+  }
   const handleReceiptDate = (date: Date) => {
     dispatch({
       type: MONEYRECEIPT_FORM_ACTION.RECEIPT_DATE,
@@ -237,8 +256,15 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
   }
 
   useEffect(() => {
+    _getSerialNoRequest();
     _getQuotationsRequest();
   }, []);
+
+  useEffect(() => {
+    if(serialNo){
+      handleReceiptNoInputTextChange(serialNo.toString());
+    }
+  }, [serialNo]);
 
   useEffect(() => {
     if (
@@ -274,7 +300,8 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
-                  value={isEdit ? editData.receiptNumber : ''}
+                  value={reducerState.receiptNumber}
+                  editable={false}
                 />
               </View>
               <View style={styles.itemContainer}>

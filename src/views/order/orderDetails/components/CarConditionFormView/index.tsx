@@ -34,6 +34,10 @@ import {
 } from './utils';
 import useAuthId from '../../../../../hooks/useAuthId';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
+import useInitialValueHook from '../../../../../hooks/useInitialValueHook';
+import useSerialNoHook from '../../../../../hooks/useSerialNo';
+import { DOCUMENT_TYPE, IGetSerialNoRequest } from '../../../../../interface/setting/serialNo/serialNo';
+import { getSerialNoRequest } from '../../../../../redux/slices/SerialNoSettingSlice';
 
 interface ICarConditionFormViewProps {
   orderId: string | undefined;
@@ -64,6 +68,21 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
   } = useAppSelector(state => state.Common);
   const dispatch2 = useAppDispatch();
   const authId = useAuthId();
+  const initialValue:string = useInitialValueHook('658d3cab585e3dde644da977');
+  const serialNo:number = useSerialNoHook();
+
+  const _getSerialNoRequest = () => {
+    getCurrentCompanyId().then(id => {
+      const payload: IGetSerialNoRequest = {
+        document: DOCUMENT_TYPE.CAR_CONDITION,
+        payload: {
+          activeCount: initialValue,
+          companyId: id as string,
+        }
+      }
+      dispatch2(getSerialNoRequest(payload));
+    }).catch(err => console.log('err--', err));
+  }
 
   const handleCarConditionNo = (text: string) => {
     dispatch({
@@ -259,6 +278,16 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
   };
 
   useEffect(() => {
+    _getSerialNoRequest();
+  }, []);
+
+  useEffect(() => {
+    if(serialNo){
+      handleCarConditionNo(serialNo.toString());
+    }
+  }, [serialNo]);
+
+  useEffect(() => {
     if (!createCarConditionRequesting && createCarConditionSuccess) {
       Toast.show({
         type: 'success',
@@ -294,6 +323,8 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
+                  value={reducerState.carConditionNumber}
+                  editable={false}
                 />
               </View>
               <View style={styles.itemContainer}>

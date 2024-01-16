@@ -121,7 +121,6 @@ const SingleChargeInputView: React.FC<Props> = ({freightType}) => {
         containerStyle={styles.inputContainer}
         inputStyle={styles.input}
         selectionColor={COLOR_BLACK}
-        // value={state.authority_person_name}
         //@ts-ignore
         //error={showErrors && errors.dropPincode}
         inputType="numeric"

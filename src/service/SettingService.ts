@@ -226,7 +226,8 @@ export const GetSerialNoService = async (
       break;
   }
   const api = Api.getInstance();
-  return await api.getWithBody<IGetSerialNoResponse, IGetSerialNoPayload>(uri, payload);
+  // return await api.getWithBody<IGetSerialNoResponse, IGetSerialNoPayload>(uri, payload);
+  return await api.post<IGetSerialNoPayload, AxiosResponse<IGetSerialNoResponse>>(payload, uri);
 };
 
 // MODULES

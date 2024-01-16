@@ -19,12 +19,14 @@ import BillingIndividualView from '../BillingIndividualView';
 import BillingCompanyView from '../BillingCompanyView';
 import VehicleInfoView from '../VehicleInfoView';
 import { IEnquiry } from '../../../../../interface/quotation/IGetQuotationsResponse';
+import useSerialNoHook from '../../../../../hooks/useSerialNo';
 interface Props {
   //
 }
 
 const BasicDetails: React.FC<Props> = ({}) => {
   const [switchState, setSwitchState] = useState<boolean>(true);
+  const serialNo:number = useSerialNoHook();
   
   const switchWrapperStyle = switchState ? styles.switchMainWrapper : styles.switchMainWrapper2;
   const {
@@ -55,6 +57,22 @@ const BasicDetails: React.FC<Props> = ({}) => {
   const billingByDropdownCompRef = useRef(null);
 
   useEffect(() => {
+    setQuotationNo(serialNo.toString());
+  }, []);
+
+  useEffect(() => {
+      if(switchState) {
+        setQuotationNo(serialNo.toString());
+        //@ts-ignore
+        quotationNoInputCompRef && quotationNoInputCompRef?.current?.setValue(serialNo);
+      } else {
+        setQuotationNo('');
+        //@ts-ignore
+        quotationNoInputCompRef && quotationNoInputCompRef?.current?.setValue('');
+      }
+  }, [switchState]);
+
+  useEffect(() => {
     if(state.billing_by == billingByOptions[1].label) {
       setPartyName('');
       setPartyMobileNo('');
@@ -82,9 +100,8 @@ const BasicDetails: React.FC<Props> = ({}) => {
         setQuotationNo(item.quotationNumber);
         //@ts-ignore
         dateOfQuotationCompRef && dateOfQuotationCompRef?.current?.setDefaultValue(new Date(item.quotationData));
-        const enquiries:IEnquiry[] = item.enquiries;
-        if(enquiries.length > 0) {
-          const enquiry:IEnquiry = enquiries[0];
+        const enquiry:IEnquiry = item.enquiries;
+        if(enquiry) {
           setShiftingType(enquiry.shiftingType);
           const shiftingTypeItem:TDropdownItem = shiftingTypes.find((d:TDropdownItem) => d.label == enquiry.shiftingType) as TDropdownItem;
           if(shiftingTypeItem) {
@@ -163,7 +180,6 @@ const BasicDetails: React.FC<Props> = ({}) => {
               editable={!switchState}
               //@ts-ignore
               ref={quotationNoInputCompRef}
-              // value={isEdit ? quotationserialNo : ''}
             />
           </View>
         </View>

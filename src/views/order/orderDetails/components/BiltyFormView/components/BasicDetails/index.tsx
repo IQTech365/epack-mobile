@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {View} from 'react-native';
 import CollapsibleView from '../../../../../../../common/CollapsibleView';
 import Label from '../../../../../../../common/Label';
@@ -10,14 +10,35 @@ import Spacer from '../../../../../../../common/Spacer';
 import {COLOR_BLACK} from '../../../../../../../utils/colors';
 import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
 import {formatDate4} from '../../../../../../../utils/formatter';
+import useSerialNoHook from '../../../../../../../hooks/useSerialNo';
 
 const BasicDetails: React.FC<{}> = ({}) => {
   const [switchState, setSwitchState] = useState<boolean>(false);
   const switchWrapperStyle = switchState
     ? styles.switchMainWrapper
     : styles.switchMainWrapper2;
-  const {state, setBiltyLrCrNo, setDateOfBiltyLrCrNo} =
-    useBiltyFormContextHook();
+  const {state, setBiltyLrCrNo, setDateOfBiltyLrCrNo} =  useBiltyFormContextHook();
+  const serialNo:number = useSerialNoHook();
+  const biltyNoInputCompRef = useRef(null);
+
+  useEffect(() => {
+    if(serialNo){
+      setBiltyLrCrNo(serialNo.toString());
+    }
+  }, [serialNo]);
+
+  useEffect(() => {
+    if(switchState) {
+      setBiltyLrCrNo(serialNo.toString());
+      //@ts-ignore
+      biltyNoInputCompRef && biltyNoInputCompRef?.current?.setValue(serialNo);
+    } else {
+      setBiltyLrCrNo('');
+      //@ts-ignore
+      biltyNoInputCompRef && biltyNoInputCompRef?.current?.setValue('');
+    }
+}, [switchState]);
+
   return (
     <CollapsibleView title="BASIC DETAILS" collapsed={false}>
       <View>
@@ -46,6 +67,10 @@ const BasicDetails: React.FC<{}> = ({}) => {
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
               editable={!switchState}
+              value={state.bilty_lr_cr_no}
+              placeholder='Bilty / LR / CN No.'
+              //@ts-ignore
+              ref={biltyNoInputCompRef}
             />
           </View>
         </View>

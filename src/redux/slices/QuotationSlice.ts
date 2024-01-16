@@ -31,6 +31,12 @@ interface IQuotationState {
   getQuotationTemplateHtmlSuccess: boolean,
   getQuotationTemplateHtmlFailure: boolean,
   getQuotatiionTemplateHtmlError: any,
+  // Update Quotation
+  updateQuotationInfo: IAddQuotationResponse | null;
+  updateQuotationRequesting: boolean;
+  updateQuotationSuccess: boolean;
+  updateQuotationFailure: boolean;
+  updateQuotationError: any;
 }
 
 const initialState: IQuotationState = {
@@ -58,6 +64,12 @@ const initialState: IQuotationState = {
   getQuotationTemplateHtmlSuccess: false,
   getQuotationTemplateHtmlFailure: false,
   getQuotatiionTemplateHtmlError: null,
+   // Update Quotation
+   updateQuotationInfo: null,
+   updateQuotationRequesting: false,
+   updateQuotationSuccess: false,
+   updateQuotationFailure: false,
+   updateQuotationError: null,
 };
 
 export const QuotationSlice = createSlice({

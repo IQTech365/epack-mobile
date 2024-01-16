@@ -29,6 +29,7 @@ export const ADD_PACKING_MATERIAL = `/enquiry/add-packing-material`;
 //README:- id = `company_id` or `enquiry_id`
 export const GET_QUOTATION_LIST = `/quotation/getquotation`;
 export const GET_QUOTATION = (quotation_id) => `/quotation/${quotation_id}`;
+export const UPDATE_QUOTATION = (quotation_id) => `/quotation/update/${quotation_id}`;
 
 // Order Module
 export const GET_ORDER_LIST = `/enquiry/orderlist`;

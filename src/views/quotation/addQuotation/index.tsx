@@ -14,6 +14,7 @@ import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import { getSerialNoRequest } from '../../../redux/slices/SerialNoSettingSlice';
 import { DOCUMENT_TYPE, IGetSerialNoRequest } from '../../../interface/setting/serialNo/serialNo';
 import { getSingleQuotationRequest } from '../../../redux/slices/QuotationSlice';
+import useInitialValueHook from '../../../hooks/useInitialValueHook';
 
 interface Props
   extends NativeStackScreenProps<QuotationStackParamList, 'AddQuotation'> {
@@ -33,13 +34,14 @@ const AddQuotationView: React.FC<Props> = ({
   const item:IGetQuotationData = route?.params?.item as IGetQuotationData;
   const headerText = isEdit ? 'UPDATE QUOTATION' : 'CREATE QUOTATION';
   const dispatch = useAppDispatch();
+  const initialValue:string = useInitialValueHook('658d3c6f585e3dde644da95b');
 
   const _getQuotationSerialNoRequest = () => {
     getCurrentCompanyId().then(id => {
       const payload: IGetSerialNoRequest = {
         document: DOCUMENT_TYPE.QUOTATION,
         payload: {
-          activeCount: '201',//TODO: get this active count dynamically and assign
+          activeCount: initialValue,
           companyId: id as string,
         }
       }

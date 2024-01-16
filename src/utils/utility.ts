@@ -2,6 +2,7 @@ import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import Share from 'react-native-share';
 import Toast from 'react-native-toast-message';
 import {ISavedDocumentTemplateId} from '../interface/setting/template/template';
+import { IAppSetting } from '../interface/common/common';
 
 export const startShare = async (html: any, docName: string, action: any) => {
   let options = {
@@ -73,3 +74,12 @@ export const getTemplateIdBySubModuleId = (
   }
   return templateId;
 };
+
+export const getSubmoduleInitialValue = (subModuleId:string, appSettings:IAppSetting[]) => {
+  let initialValue:string = '';
+  if(appSettings && appSettings.length > 0) {
+    const appSetting:IAppSetting = appSettings.find((d:IAppSetting) => d.subModuleId == subModuleId) as IAppSetting;
+    initialValue = appSetting?.initialValue;
+  }
+  return initialValue;
+}

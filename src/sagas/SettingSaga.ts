@@ -193,7 +193,7 @@ export function* createSerialNoSaga(action: PayloadAction<ICreateSerialNoRequest
 export function* getSerialNoSaga(action: PayloadAction<IGetSerialNoRequest>) {
     try {
         const response: IGetSerialNoResponse = yield call(SettingService.GetSerialNoService, action.payload);
-        // console.log('getSerialNoSaga-response----', JSON.stringify(response));
+        console.log('getSerialNoSaga-response----', JSON.stringify(response));
         yield put(getSerialNoSuccess(response));
     } catch (error) {
         console.log('getSerialNoSaga-error----', error);

@@ -31,6 +31,9 @@ import { getUnitTypeRequest } from '../../../../../redux/slices/ProfileSettingSl
 import { getPackingTypesRequest } from '../../../../../redux/slices/CommonSlice';
 import { ToastType, showToast } from '../../../../../utils/utility';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
+import useInitialValueHook from '../../../../../hooks/useInitialValueHook';
+import { DOCUMENT_TYPE, IGetSerialNoRequest } from '../../../../../interface/setting/serialNo/serialNo';
+import { getSerialNoRequest } from '../../../../../redux/slices/SerialNoSettingSlice';
 
 interface IBiltyFormViewProps {
   orderId: string | undefined;
@@ -51,6 +54,21 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
 
   
   const authId = useAuthId();
+
+  const initialValue:string = useInitialValueHook('658d3cb5585e3dde644da97e');
+
+  const _getSerialNoRequest = () => {
+    getCurrentCompanyId().then(id => {
+      const payload: IGetSerialNoRequest = {
+        document: DOCUMENT_TYPE.BILTY,
+        payload: {
+          activeCount: initialValue,
+          companyId: id as string,
+        }
+      }
+      dispatch(getSerialNoRequest(payload));
+    }).catch(err => console.log('err--', err));
+  }
 
   const handleCreateBilty = useCallback(() => {
     getCurrentCompanyId().then(id => {
@@ -223,6 +241,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
   const {packingTypesRequesting} = useAppSelector(state => state.Vehicle);
 
   useEffect(() => {
+    _getSerialNoRequest();
     dispatch(getVehicleSizeRequest());
     dispatch(getUnitTypeRequest());
     dispatch(getPackingTypesRequest());

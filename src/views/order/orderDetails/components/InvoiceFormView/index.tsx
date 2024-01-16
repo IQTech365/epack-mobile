@@ -36,6 +36,11 @@ import { createInvoiceRequest, resetCreateInvoiceRequest } from '../../../../../
 import Spinner from '../../../../../common/Spinner';
 import { ToastType, showToast } from '../../../../../utils/utility';
 import { ISingleEnquiryData } from '../../../../../interface/enquiry/ISingleEnquiryResponse';
+import useInitialValueHook from '../../../../../hooks/useInitialValueHook';
+import { getCurrentCompanyId } from '../../../../../utils/storage';
+import { DOCUMENT_TYPE, IGetSerialNoRequest } from '../../../../../interface/setting/serialNo/serialNo';
+import { getSerialNoRequest } from '../../../../../redux/slices/SerialNoSettingSlice';
+import useSerialNoHook from '../../../../../hooks/useSerialNo';
 
 interface IInvoiceFormViewProps {
   orderId: string;
@@ -57,6 +62,22 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item}) => {
   } = useInvoiceFormContextHook();
   const dispatch = useAppDispatch();
   const {createInvoiceRequesting, createInvoiceSuccess, createInvoiceFailure} = useAppSelector(state => state.Order);
+
+  const initialValue:string = useInitialValueHook('658d3ce2585e3dde644da98c');
+  const serialNo:number = useSerialNoHook();
+
+  const _getSerialNoRequest = () => {
+    getCurrentCompanyId().then(id => {
+      const payload: IGetSerialNoRequest = {
+        document: DOCUMENT_TYPE.INVOICE,
+        payload: {
+          activeCount: initialValue,
+          companyId: id as string,
+        }
+      }
+      dispatch(getSerialNoRequest(payload));
+    }).catch(err => console.log('err--', err));
+  }
 
   const _transformTransitCharge = ():IInvoiceTransitInsuranceCharge[] => {
     let list:IInvoiceTransitInsuranceCharge[] = [];
@@ -210,6 +231,16 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item}) => {
   };
 
   useEffect(() => {
+    _getSerialNoRequest();
+  }, []);
+
+  useEffect(() => {
+    if(serialNo){
+      setInvoiceNo(serialNo.toString());
+    }
+  }, [serialNo]);
+
+  useEffect(() => {
     if(!createInvoiceRequesting && createInvoiceSuccess) {
       showToast('New Invoice Created', ToastType.SUCCESS);
       dispatch(resetCreateInvoiceRequest());
@@ -233,6 +264,9 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item}) => {
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
+                  value={state.invoice_no}
+                  placeholder='Invoice#'
+                  editable={false}
                 />
               </View>
               <View style={styles.itemContainer}>
