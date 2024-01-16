@@ -17,7 +17,7 @@ import { IUpdateCompanyContactDetailRequest, IUpdateContactDetailResponse, IUpda
 import { IUpdateShiftingInfoRequest, IUpdateShiftingInfoResponse } from '../../interface/enquiry/IUpdateShiftingInfo';
 import { IUpdateEnquiryStatusRequest } from '../../interface/enquiry/IUpdateEnquiryStatusRequest';
 import { IAddSurveyItemRequest } from '../../interface/enquiry/IAddSurveyItemRequest';
-import { IGetSurveyItemListResponse } from '../../interface/enquiry/IGetSurveyItemListResponse';
+import { IGetSurveyItemListResponse, IGetSurvyeItemListRequestPayload } from '../../interface/enquiry/IGetSurveyItemListResponse';
 import { ISingleEnquiryResponse } from '../../interface/enquiry/ISingleEnquiryResponse';
 import { IAddPackingMaterialResponse } from '../../interface/enquiry/IAddPackingMaterialResponse';
 import { IAddPackingMaterialRequest } from '../../interface/enquiry/IAddPackingMaterialRequest';
@@ -460,7 +460,7 @@ export const EnquirySlice = createSlice({
     // Get Survey List
     getSurveyItemListRequest: (
       state,
-      action: PayloadAction<string>,
+      action: PayloadAction<IGetSurvyeItemListRequestPayload>,
     ) => {
       state.getSurveyItemListRequesting = true;
     },

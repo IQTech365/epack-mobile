@@ -7,6 +7,11 @@ export interface IGetSurveyItemListData extends IAddSurveyItemRequest {
     createdAt: string;
 }
 
+export interface IGetSurvyeItemListRequestPayload {
+    enquiryId: string;
+    id: string;
+}
+
 export interface IGetSurveyItemListResponse {
     data: IGetSurveyItemListData;
     status: number;

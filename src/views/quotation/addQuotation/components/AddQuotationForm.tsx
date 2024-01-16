@@ -316,6 +316,8 @@ const AddQuotationForm: React.FC<Props> = ({
       resetError();
       if (doValidation()) {
         if(isEdit) {
+          delete payload.customerId;
+          delete payload.enquiryId;
           const updatePayload:IUpdateQuotationRequest = {
             params: item?._id as string,
             payload: payload,

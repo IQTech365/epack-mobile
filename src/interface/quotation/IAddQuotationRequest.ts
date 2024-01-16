@@ -34,7 +34,7 @@ export interface IOtherCharges {
 }
 export interface IAddQuotationRequest {
   companyId: string;
-  customerId: string;
+  customerId?: string;
   enquiryId?:string;
   authId: string;
   shiftingType: string;

@@ -63,7 +63,7 @@ import { IUpdateCompanyContactDetailRequest, IUpdateContactDetailResponse, IUpda
 import { IUpdateShiftingInfoRequest, IUpdateShiftingInfoResponse } from '../interface/enquiry/IUpdateShiftingInfo';
 import { IUpdateEnquiryStatusRequest } from '../interface/enquiry/IUpdateEnquiryStatusRequest';
 import { IAddSurveyItemRequest } from '../interface/enquiry/IAddSurveyItemRequest';
-import { IGetSurveyItemListResponse } from '../interface/enquiry/IGetSurveyItemListResponse';
+import { IGetSurveyItemListResponse, IGetSurvyeItemListRequestPayload } from '../interface/enquiry/IGetSurveyItemListResponse';
 import { ISingleEnquiryResponse } from '../interface/enquiry/ISingleEnquiryResponse';
 import { IAddPackingMaterialRequest } from '../interface/enquiry/IAddPackingMaterialRequest';
 import { IAddPackingMaterialResponse } from '../interface/enquiry/IAddPackingMaterialResponse';
@@ -156,7 +156,7 @@ export function* addSurveyItemSaga(action: PayloadAction<IAddSurveyItemRequest>)
     }
 }
 
-export function* getSurveyItemListSaga(action: PayloadAction<string>) {
+export function* getSurveyItemListSaga(action: PayloadAction<IGetSurvyeItemListRequestPayload>) {
     try {
         const response: IGetSurveyItemListResponse = yield call(EnquiryService.GetSurveyItemListService, action.payload);
         console.log('getSurveyItemListSaga-response----', JSON.stringify(response));

@@ -19,7 +19,7 @@ import { IUpdateAddressResponse } from '../interface/order/IUpdateAddressRespons
 import { IUpdateCompanyContactDetailRequest, IUpdateContactDetailResponse, IUpdateIndividualContactDetailRequest } from '../interface/order/IUpdateContactDetails';
 import { IUpdateShiftingInfoRequest, IUpdateShiftingInfoResponse } from '../interface/enquiry/IUpdateShiftingInfo';
 import { IAddSurveyItemRequest } from '../interface/enquiry/IAddSurveyItemRequest';
-import { IGetSurveyItemListResponse } from '../interface/enquiry/IGetSurveyItemListResponse';
+import { IGetSurveyItemListResponse, IGetSurvyeItemListRequestPayload } from '../interface/enquiry/IGetSurveyItemListResponse';
 import { ISingleEnquiryResponse } from '../interface/enquiry/ISingleEnquiryResponse';
 import { IAddPackingMaterialRequest } from '../interface/enquiry/IAddPackingMaterialRequest';
 import { IAddPackingMaterialResponse } from '../interface/enquiry/IAddPackingMaterialResponse';
@@ -33,7 +33,7 @@ export const AddEnquiryService = async (payload: IAddEnquiryRequest): Promise<IA
 // TODO: refactor code once in use
 export const EditEnquiryService = async (payload: IOtpVerifyRequest): Promise<IOtpVerifyResponse> => {
     const api = Api.getInstance();
-    return await api.update<IOtpVerifyRequest, AxiosResponse<IOtpVerifyResponse>>(payload, EDIT_COMPANY);
+    return await api.update<IOtpVerifyRequest, AxiosResponse<IOtpVerifyResponse>>(payload, EDIT_COMPANY(''));
 }
 
 export const GetEnquiriesService = async (payload: string): Promise<IGetEnquiriesResponse> => {
@@ -71,9 +71,9 @@ export const AddSurveyItemService = async (payload: IAddSurveyItemRequest): Prom
     return await api.post<IAddSurveyItemRequest, AxiosResponse<IAddSurveyResponse>>(payload, ADD_SURVEY_ITEM);
 }
 
-export const GetSurveyItemListService = async (payload: string): Promise<IGetSurveyItemListResponse> => {
+export const GetSurveyItemListService = async (payload: IGetSurvyeItemListRequestPayload): Promise<IGetSurveyItemListResponse> => {
     const api = Api.getInstance();
-    return await api.post<string, AxiosResponse<IGetSurveyItemListResponse>>(payload, GET_SURVEY_ITEM);
+    return await api.post<IGetSurvyeItemListRequestPayload, AxiosResponse<IGetSurveyItemListResponse>>(payload, GET_SURVEY_ITEM);
 }
 
 export const UpdateEnquiryStatusService = async (id:string, requestBody:IUpdateEnquiryStatusRequest ): Promise<IUpdateEnquiryStatusResponse> => {

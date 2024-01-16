@@ -15,6 +15,7 @@ import SurveyItemListView from '../SurveyItemListView';
 import Button from '../../../../../common/Button';
 import Spacer from '../../../../../common/Spacer';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
+import { IGetSurvyeItemListRequestPayload } from '../../../../../interface/enquiry/IGetSurveyItemListResponse';
 interface IFollowupViewProps {
   taskName: string;
   assigneeRole: string;
@@ -40,9 +41,10 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
 
   const _getSurveyItemListRequest = () => {
     getCurrentCompanyId().then(id => {
-      const payload: any = {
-        companyId: id as string,
-      };
+      const payload :IGetSurvyeItemListRequestPayload= {
+        enquiryId:enquiryId,
+        id: id as string,
+      }
       dispatch(getSurveyItemListRequest(payload));
     }).catch(err => console.log(err));
   }

@@ -17,6 +17,7 @@ import { IAddSurveyItemRequest } from '../../../../../interface/enquiry/IAddSurv
 import { addSurveyItemRequest, getSurveyItemListRequest, resetAddSurveyItemRequest } from '../../../../../redux/slices/EnquirySlice';
 import useAuthId from '../../../../../hooks/useAuthId';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
+import { IGetSurvyeItemListRequestPayload } from '../../../../../interface/enquiry/IGetSurveyItemListResponse';
 
 interface ISurveyListViewProps {
   enquiryId:string
@@ -84,8 +85,9 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({ enquiryId}) => {
 
   const _getSurveyItemListRequest = () => {
     getCurrentCompanyId().then(id => {
-      const payload :any= {
-        companyId:id as string
+      const payload :IGetSurvyeItemListRequestPayload= {
+        enquiryId:enquiryId,
+        id: id as string,
       }
       dispatch(getSurveyItemListRequest(payload));
     }).catch(err => console.log(err));
