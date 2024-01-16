@@ -23,7 +23,9 @@ import {useAppDispatch, useAppSelector} from '../../../../redux/hooks';
 import {
   addQuotationRequest,
   getQuotationsRequest,
+  resetUpdateQuotationRequest,
   resetaddQuotationRequest,
+  updateQuotationRequest,
 } from '../../../../redux/slices/QuotationSlice';
 import {IGetQuotationRequest} from '../../../../interface/quotation/IGetQuotationRequest';
 import billingByOptions from '../../../../data/billingByOptions.json';
@@ -39,6 +41,7 @@ import { getVehicleSizeRequest } from '../../../../redux/slices/VehicleSlice';
 import { getCurrentCompanyId } from '../../../../utils/storage';
 import { IGetQuotationData } from '../../../../interface/quotation/IGetQuotationsResponse';
 import { ISingleQuotationData } from '../../../../interface/quotation/IGetSingleQuotationResponse';
+import { IUpdateQuotationRequest } from '../../../../interface/quotation/quotation';
 
 interface Props {
   fromEnquiry?: boolean;
@@ -78,6 +81,9 @@ const AddQuotationForm: React.FC<Props> = ({
     addQuotationInfo,
     quotation,
     getQuotationRequesting,
+    updateQuotationRequesting,
+    updateQuotationSuccess,
+    updateQuotationFailure,
   } = useAppSelector(state => state.Quotation);
 
   const {
@@ -309,7 +315,15 @@ const AddQuotationForm: React.FC<Props> = ({
       };
       resetError();
       if (doValidation()) {
-        dispatch(addQuotationRequest(payload));
+        if(isEdit) {
+          const updatePayload:IUpdateQuotationRequest = {
+            params: item?._id as string,
+            payload: payload,
+          }
+          dispatch(updateQuotationRequest(updatePayload));
+        } else {
+          dispatch(addQuotationRequest(payload));
+        }
       } else {
         showToast('Form is not filled properly. Please check!', ToastType.ERROR);
       }
@@ -344,10 +358,22 @@ const AddQuotationForm: React.FC<Props> = ({
       _getQuotationsRequest();
       navigation?.goBack();
     } else if (!addQuotationRequesting && addQuotationFailure) {
-      showToast('New Quotation not Created. Try again!', ToastType.ERROR);
+      showToast('Quotation Not Created. Try again!', ToastType.ERROR);
       dispatch(resetaddQuotationRequest());
     }
   }, [addQuotationRequesting, addQuotationSuccess, addQuotationFailure]);
+
+  useEffect(() => {
+    if (!updateQuotationRequesting && updateQuotationSuccess) {
+      showToast('Quotation Updated.', ToastType.SUCCESS);
+      dispatch(resetUpdateQuotationRequest());
+      _getQuotationsRequest();
+      navigation?.goBack();
+    } else if (!updateQuotationRequesting && updateQuotationFailure) {
+      showToast('Quotation Not Updated. Try again!', ToastType.ERROR);
+      dispatch(resetUpdateQuotationRequest());
+    }
+  }, [updateQuotationRequesting, updateQuotationSuccess, updateQuotationFailure]);
 
   return (
     <>
@@ -366,7 +392,7 @@ const AddQuotationForm: React.FC<Props> = ({
       <OtherDetailsView />
       <Spacer height={12} />
       <Button
-        text="CREATE"
+        text={isEdit ? 'UPDATE' : 'CREATE'}
         onPress={hanldeSubmit}
         disabled={false}
         style={styles.previewButtonStyle}

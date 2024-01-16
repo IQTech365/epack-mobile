@@ -2,12 +2,13 @@ import {takeLatest, put, call} from 'redux-saga/effects';
 import {PayloadAction} from '@reduxjs/toolkit';
 import * as QuotationService from '../service/QuotationService';
 import { IAddQuotationRequest } from '../interface/quotation/IAddQuotationRequest';
-import { aaddQuotationSuccess, addQuotationFailure, addQuotationRequest, getQuotationHtmlFailure, getQuotationHtmlRequest, getQuotationHtmlSuccess, getQuotationsFailure, getQuotationsRequest, getQuotationsSuccess, getSingleQuotationFailure, getSingleQuotationRequest, getSingleQuotationSuccess } from '../redux/slices/QuotationSlice';
+import { aaddQuotationSuccess, addQuotationFailure, addQuotationRequest, getQuotationHtmlFailure, getQuotationHtmlRequest, getQuotationHtmlSuccess, getQuotationsFailure, getQuotationsRequest, getQuotationsSuccess, getSingleQuotationFailure, getSingleQuotationRequest, getSingleQuotationSuccess, updateQuotationFailure, updateQuotationRequest, updateQuotationSuccess } from '../redux/slices/QuotationSlice';
 import { IAddQuotationResponse } from '../interface/quotation/IAddQuotationResponse';
 import { IGetQuotationsResponse } from '../interface/quotation/IGetQuotationsResponse';
 import { IGetQuotationRequest } from '../interface/quotation/IGetQuotationRequest';
 import { IGetSingleQuotationResponse } from '../interface/quotation/IGetSingleQuotationResponse';
 import { IHtmlTemplateRequest, IHtmlTemplateResponse } from '../interface/order/templates/ITemplateResponse';
+import { IUpdateQuotationRequest, IUpdateQuotationResponse } from '../interface/quotation/quotation';
 
 export function* addQuotationSaga(action: PayloadAction<IAddQuotationRequest>) {
     try {
@@ -17,6 +18,17 @@ export function* addQuotationSaga(action: PayloadAction<IAddQuotationRequest>) {
     } catch (error) {
         console.log('addQuotationSaga-error----', error);
         yield put(addQuotationFailure(error));
+    }
+}
+
+export function* updateQuotationSaga(action: PayloadAction<IUpdateQuotationRequest>) {
+    try {
+        const response: IUpdateQuotationResponse = yield call(QuotationService.UpdateQuotationService, action.payload);
+        console.log('updateQuotationSaga-response----', JSON.stringify(response));
+        yield put(updateQuotationSuccess(response));
+    } catch (error) {
+        console.log('updateQuotationSaga-error----', error);
+        yield put(updateQuotationFailure(error));
     }
 }
 
@@ -60,4 +72,5 @@ export function* watcherQuotationSaga() {
     yield takeLatest(getQuotationsRequest.type, getQuotationsSaga);
     yield takeLatest(getSingleQuotationRequest.type, getSingleQuotationSaga);
     yield takeLatest(getQuotationHtmlRequest.type, getQuotationTemplateHtmlSaga);
+    yield takeLatest(updateQuotationRequest.type, updateQuotationSaga);
 }

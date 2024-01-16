@@ -57,10 +57,13 @@ const BasicDetails: React.FC<Props> = ({}) => {
   const billingByDropdownCompRef = useRef(null);
 
   useEffect(() => {
-    setQuotationNo(serialNo.toString());
+    if(!state.editQuotation) {
+      setQuotationNo(serialNo.toString());
+    }
   }, []);
 
   useEffect(() => {
+    if(!state.editQuotation) {
       if(switchState) {
         setQuotationNo(serialNo.toString());
         //@ts-ignore
@@ -70,6 +73,7 @@ const BasicDetails: React.FC<Props> = ({}) => {
         //@ts-ignore
         quotationNoInputCompRef && quotationNoInputCompRef?.current?.setValue('');
       }
+    }
   }, [switchState]);
 
   useEffect(() => {

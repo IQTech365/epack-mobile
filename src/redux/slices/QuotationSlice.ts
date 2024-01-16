@@ -5,6 +5,7 @@ import { IGetQuotationRequest } from '../../interface/quotation/IGetQuotationReq
 import { IGetQuotationsResponse } from '../../interface/quotation/IGetQuotationsResponse';
 import { IGetSingleQuotationResponse } from '../../interface/quotation/IGetSingleQuotationResponse';
 import { IHtmlTemplateRequest, IHtmlTemplateResponse } from '../../interface/order/templates/ITemplateResponse';
+import { IUpdateQuotationRequest, IUpdateQuotationResponse } from '../../interface/quotation/quotation';
 
 interface IQuotationState {
   // Add Quotation
@@ -32,7 +33,7 @@ interface IQuotationState {
   getQuotationTemplateHtmlFailure: boolean,
   getQuotatiionTemplateHtmlError: any,
   // Update Quotation
-  updateQuotationInfo: IAddQuotationResponse | null;
+  updateQuotationInfo: IUpdateQuotationResponse | null;
   updateQuotationRequesting: boolean;
   updateQuotationSuccess: boolean;
   updateQuotationFailure: boolean;
@@ -179,6 +180,34 @@ export const QuotationSlice = createSlice({
     clearQuotationHtmlDocument: (state) => {
       state.quotationTemplateHtml = null;
     },
+    // Update Quotation
+    updateQuotationRequest: (
+      state,
+      action: PayloadAction<IUpdateQuotationRequest>,
+    ) => {
+      state.updateQuotationRequesting = true;
+    },
+    updateQuotationSuccess: (
+      state,
+      action: PayloadAction<IUpdateQuotationResponse>,
+    ) => {
+      state.updateQuotationRequesting = false;
+      state.updateQuotationSuccess = true;
+      state.updateQuotationInfo = action.payload;
+    },
+    updateQuotationFailure: (state, action: PayloadAction<any>) => {
+      state.updateQuotationRequesting = false;
+      state.updateQuotationSuccess = false;
+      state.updateQuotationFailure = true;
+      state.updateQuotationError = action.payload;
+    },
+    resetUpdateQuotationRequest: (state, action: PayloadAction) => {
+      state.updateQuotationRequesting = false;
+      state.updateQuotationSuccess = false;
+      state.updateQuotationFailure = false;
+      state.updateQuotationInfo = null;
+      state.updateQuotationError = null;
+    },
    },
 });
 
@@ -207,5 +236,10 @@ export const {
   getQuotationHtmlFailure,
   resetGetQuotationHtmlRequest,
   clearQuotationHtmlDocument,
+  // Update Quotation
+  updateQuotationRequest,
+  updateQuotationSuccess,
+  updateQuotationFailure,
+  resetUpdateQuotationRequest,
 
 } = QuotationSlice.actions;
