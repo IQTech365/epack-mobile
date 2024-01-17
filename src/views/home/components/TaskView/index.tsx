@@ -92,7 +92,7 @@ const TaskView: React.FC<Props> = ({taskName, count}) => {
     <Shadow distance={6}>
       <View style={styles.container}>
         <View style={styles.countContainer}>
-          <Text style={styles.countText}>{count}</Text>
+          <Text style={styles.countText}>{count ?? 0}</Text>
         </View>
         <Svg style={{position: 'absolute'}} fill="none">
           <Circle

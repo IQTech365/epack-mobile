@@ -24,6 +24,9 @@ import {
   getCustomersFailure,
   getCustomersRequest,
   getCustomersSuccess,
+  getDashboardDataFailure,
+  getDashboardDataRequest,
+  getDashboardDataSuccess,
   getPackingTypesFailure,
   getPackingTypesRequest,
   getPackingTypesSuccess,
@@ -173,6 +176,18 @@ export function* getBannersSaga(action: PayloadAction<any>) {
     }
 }
 
+export function* getDashboardSaga(action: PayloadAction<any>) {
+    try {
+        //@ts-ignore
+        const response: any = yield call(CommonService.GetDashboardService);
+        console.log('getDashboardSaga-response----', JSON.stringify(response));
+        yield put(getDashboardDataSuccess(response));
+    } catch (error) {
+        console.log('getDashboardSaga-error----', error);
+        yield put(getDashboardDataFailure(error));
+    }
+}
+
 export function* watcherCommonSaga() {
     yield takeLatest(getPackingTypesRequest.type, getPackingTypesSaga);
     yield takeLatest(getVehicleTypesRequest.type, getVehicleTypesSaga);
@@ -185,4 +200,5 @@ export function* watcherCommonSaga() {
     yield takeLatest(getCustomersRequest.type, getCustomersSaga);
     yield takeLatest(imageUploadRequest.type, imageUploadSaga);
     yield takeLatest(getBannersRequest.type, getBannersSaga);
+    yield takeLatest(getDashboardDataRequest.type, getDashboardSaga);
 }

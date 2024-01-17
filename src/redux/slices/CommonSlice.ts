@@ -11,6 +11,7 @@ import {
   ICustomersResponse,
   ICustomersRequest,
   IBannerListResponse,
+  IDashboardDataResponse,
 } from '../../interface/common/common';
 
 interface ICommonState {
@@ -80,6 +81,12 @@ interface ICommonState {
   getBannersSuccess: boolean;
   getBannersFailure: boolean;
   getBannersError: any;
+  // Dashboard
+  dashboard: IDashboardDataResponse | null;
+  getDashboardDataRequesting: boolean;
+  getDashboardDataSuccess:boolean;
+  getDashboardDataFailure: boolean;
+  getDashboardDataError: any;
 }
 
 const initialState: ICommonState = {
@@ -149,6 +156,12 @@ const initialState: ICommonState = {
   getBannersSuccess: false,
   getBannersFailure: false,
   getBannersError: null,
+  // Dashboard
+  dashboard: null,
+  getDashboardDataRequesting: false,
+  getDashboardDataSuccess:false,
+  getDashboardDataFailure: false,
+  getDashboardDataError: null,
 };
 
 export const CommonSlice = createSlice({
@@ -367,6 +380,24 @@ export const CommonSlice = createSlice({
       state.getBannersFailure = true;
       state.getBannersError = action.payload;
     },
+    // Dashbaord
+    getDashboardDataRequest: state => {
+      state.getDashboardDataRequesting = true;
+    },
+    getDashboardDataSuccess: (
+      state,
+      action: PayloadAction<IDashboardDataResponse>,
+    ) => {
+      state.getDashboardDataRequesting = false;
+      state.getDashboardDataSuccess = true;
+      state.dashboard = action.payload;
+    },
+    getDashboardDataFailure: (state, action: PayloadAction<any>) => {
+      state.getDashboardDataRequesting = false;
+      state.getDashboardDataSuccess = false;
+      state.getDashboardDataFailure = true;
+      state.getDashboardDataError = action.payload;
+    },
   },
 });
 
@@ -419,5 +450,9 @@ export const {
   getBannersRequest,
   getBannersSuccess,
   getBannersFailure,
+  // Dashboard
+  getDashboardDataRequest,
+  getDashboardDataSuccess,
+  getDashboardDataFailure,
 } = CommonSlice.actions;
 

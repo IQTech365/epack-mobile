@@ -170,3 +170,6 @@ export const GET_CAR_CONDITION_SERIAL_NO = `/car-condition/get/serialNo`;
 export const GET_INVOICE_SERIAL_NO = `/invoice/get/serialNo`;
 export const GET_MONEY_RECEIPT_SERIAL_NO = `/money-receipt/get/serialNo`;
 export const GET_SURVEY_ITEM_SERIAL_NO = `/survey/survey-item/get/serialNo`;
+
+// Dashboard
+export const GET_DASHBOARD_DATA = `/enquiry/total-enquiry`;

@@ -239,3 +239,17 @@ export interface IBannerListResponse {
   status: number;
   error: boolean;
 }
+
+// Dashboard content
+export interface IDashboardData {
+  newEnquiry: number;
+  newOrder:number;
+  deliveredOrder:number;
+  totalCustomer:number;
+}
+
+export interface IDashboardDataResponse {
+  data: IDashboardData;
+  status:number;
+  error:boolean;
+};
