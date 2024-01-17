@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {} from 'react-native';
 import styles from '../style';
 import Spacer from '../../../../common/Spacer';
@@ -15,6 +15,7 @@ import { ToastType, showToast } from '../../../../utils/utility';
 import { NavigationProp } from '@react-navigation/native';
 import billingByOptions from '../../../../data/billingByOptions.json';
 import { getCurrentCompanyId } from '../../../../utils/storage';
+import EnquiryDropAddressView from './EnquiryDropAddressView';
 
 interface IProps {
   navigation: NavigationProp<any, any>;
@@ -37,22 +38,11 @@ const AddEnquiryFormView: React.FC<IProps> = ({navigation}) => {
     setCompanyGST,
     setCompanyAddress
   } = useEnquiryFormContextHook();
+  
   const {addEnquiryRequesting, addEnquirySuccess, addEnquiryFailure} =
     useAppSelector(state => state.Enquiry);
 
-  const handleSubmit = useCallback(() => {
-    // setShowErrors(true);
-    // if (!isFormValid) {
-    //   if (showMobileNumberError) {
-    //     Alert.alert(
-    //       'Message',
-    //       'Enter either Authority Mobile number or Employee Mobile number',
-    //     );
-    //   } else {
-    //     showToast("Form data incorrect. Please correct!", ToastType.ERROR);
-    //   }
-    //   return;
-    // }
+  const handleSubmit = () => {
     getCurrentCompanyId().then(id => {
       const payload: IAddEnquiryRequest = {
         companyId: id as string,
@@ -110,7 +100,7 @@ const AddEnquiryFormView: React.FC<IProps> = ({navigation}) => {
       console.log('NewEnquiry-paylaod--', JSON.stringify(payload));
       dispatch(addEnquiryRequest(payload));
     }).catch(err => console.log(err));
-  }, [state]);
+  };
 
   const _getEnquiriesRequest = () => {
     getCurrentCompanyId().then(id => {
@@ -153,7 +143,7 @@ const AddEnquiryFormView: React.FC<IProps> = ({navigation}) => {
       <Spacer height={4} />
       <EnquiryPickupAddressView />
       <Spacer height={4} />
-      <EnquiryPickupAddressView />
+      <EnquiryDropAddressView />
       <Spacer height={12} />
       <Button
         text="SUBMIT"

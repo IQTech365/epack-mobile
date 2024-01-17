@@ -181,8 +181,6 @@ export const DrawerNavigator = () => {
       <Drawer.Screen
         name="User Subscription"
         component={SubscriptionView}
-        // component={SubscriptionPlanView}
-        // component={PaymentMethodView}
         options={{
           title: 'Subscription',
           drawerIcon: () => <SubscriptionIcon width={24} height={24} />,
@@ -195,13 +193,13 @@ export const DrawerNavigator = () => {
           drawerIcon: () => <HelpIcon width={22} height={22} />,
         }}
       />
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name="News Room"
         component={NewsRoomView}
         options={{
           drawerIcon: () => <NewsRoomIcon width={24} height={24} />,
         }}
-      />
+      /> */}
       <Drawer.Screen
         name="Vehicle Management"
         component={VehicleMangementStacknavigator}

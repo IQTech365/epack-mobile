@@ -66,7 +66,7 @@ const HelpCenterView = props => {
           );
         }}>
         <YouTubeIcon width={30} height={30} />
-        <Text style={styles.callText}>YouTube Tutorial</Text>
+        <Text style={styles.callText}>YouTube Channel</Text>
         <Text style={styles.emailText}>https://www.youtube.com/@ePackBook</Text>
       </TouchableOpacity>
     </View>

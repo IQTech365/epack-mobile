@@ -70,7 +70,7 @@ const EnquiryDropAddressView: FC<IProps> = ({}) => {
   }, [states, cities]);
 
   return (
-    <CollapsibleView title="PICKUP ADDRESS" collapsed={true}>
+    <CollapsibleView title="DELIVERY ADDRESS" collapsed={true}>
       <View>
         <View style={styles.twoColumnWrapper}>
           <View style={styles.textContainer}>
