@@ -58,7 +58,9 @@ const BasicDetails: React.FC<Props> = ({}) => {
 
   useEffect(() => {
     if(!state.editQuotation) {
-      setQuotationNo(serialNo.toString());
+      if(serialNo) {
+        setQuotationNo(serialNo.toString());
+      }
     }
   }, []);
 
