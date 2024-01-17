@@ -23,13 +23,9 @@ import {IDurationConverter, getDurationConverter, getNextRenewableDate, prepareS
 import BackgroundImage from '../../images/subscription_bg.png';
 import SubscriptionPlanCard2 from './components/subscriptionPlanCard2';
 import RazorpayCheckout from 'react-native-razorpay';
-import * as SubscriptionService from '../../service/SubscriptionService';
 import {ToastType, showToast} from '../../utils/utility';
 import Spinner from '../../common/Spinner';
-import {AuthStackRoute} from '../../utils/constants';
 import useAuthId from '../../hooks/useAuthId';
-import {formatDate4} from '../../utils/formatter';
-import subscriptions from '../../data/subscrptionplans.json';
 
 const SubscriptionPlanView = (props: any) => {
   const {navigation} = props;
@@ -206,9 +202,7 @@ const SubscriptionPlanView = (props: any) => {
         loop
         width={width}
         mode="parallax"
-        // autoPlay={true}
         data={_prepareSubscriptionPlanList()}
-        // data={subscriptions}
         scrollAnimationDuration={1000}
         panGestureHandlerProps={{
           activeOffsetX: [-10, 10],
@@ -217,7 +211,6 @@ const SubscriptionPlanView = (props: any) => {
         renderItem={({item, index}) => {
           return (
             <View>
-              {/* <SubscriptionPlanCard item={item} onPress={() => {}}/> */}
               <SubscriptionPlanCard2 item={item} onPress={handleByPlan} />
               <Spinner show={paymentProcessing || addPurchaseRequesting} />
             </View>
