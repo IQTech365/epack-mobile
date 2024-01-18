@@ -31,8 +31,10 @@ export interface IGetSerialNoRequest {
 export interface IGetSerialNoPayload {
     activeCount: string;
     companyId?: string;
-    orderId?: string;
-    enquiryId?: string;
+    branchId?: string;
+    franchiseId?: string;
+    isAuto?:boolean;
+    isHeadOffice?:boolean;
 }
 
 export interface IGetSerialNoResponse {

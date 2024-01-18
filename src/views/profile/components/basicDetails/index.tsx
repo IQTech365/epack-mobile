@@ -16,6 +16,7 @@ import Spinner from '../../../../common/Spinner';
 import {COLOR_BLACK, COLOR_GREEN} from '../../../../utils/colors';
 import Label from '../../../../common/Label';
 import {getCurrentCompanyId} from '../../../../utils/storage';
+import useAuthId from '../../../../hooks/useAuthId';
 
 interface IBasicDetailsViewProps {}
 
@@ -26,6 +27,9 @@ const BasicDetailsView: React.FC<IBasicDetailsViewProps> = ({}) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [company, setCompany] = useState<ICompanyInfoData>();
   const {data: companiesData} = companies || {};
+  const authId = useAuthId();
+  console.log('companiesData-----', JSON.stringify(companiesData));
+  
   const dispatch = useAppDispatch();
 
   const toastConfig = {
@@ -89,11 +93,11 @@ const BasicDetailsView: React.FC<IBasicDetailsViewProps> = ({}) => {
 
   const handleModalClose = () => {
     setOpenModal(false);
-    dispatch(getCompaniesRequest(company?.authId as string));
+    dispatch(getCompaniesRequest(authId));
   };
 
   useEffect(() => {
-    dispatch(getCompaniesRequest(company?.authId as string));
+    dispatch(getCompaniesRequest(authId));
   }, [dispatch]);
 
   useEffect(() => {

@@ -25,8 +25,8 @@ interface Props {
 const OtherChargeListItem: React.FC<Props> = ({data, index, onDelete}) => {
   return (
     <>
-      <Shadow distance={1}>
-        <View style={styles.container} key={`${index}`}>
+      <Shadow distance={1} key={`${index}`}>
+        <View style={styles.container}>
           <View style={styles.contentContainer}>
             <View style={styles.rowContainer}>
               <Text style={styles.labelText}>Item Name:</Text>

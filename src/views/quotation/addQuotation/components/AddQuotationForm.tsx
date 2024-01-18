@@ -231,6 +231,8 @@ const AddQuotationForm: React.FC<Props> = ({
         companyId: id as string,
         customerId: state.customer_id,
         enquiryId: enquiryId || '',
+        isAuto: state.is_serial_no_automatic,
+        isHeadOffice: true,
         authId: authId,
         shiftingType: state.shifting_type.toUpperCase(),
         shiftingLuggage: state.shifting_luggage,

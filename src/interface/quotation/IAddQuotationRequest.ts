@@ -36,6 +36,8 @@ export interface IAddQuotationRequest {
   companyId: string;
   customerId?: string;
   enquiryId?:string;
+  isHeadOffice?:boolean;
+  isAuto:boolean;
   authId: string;
   shiftingType: string;
   shiftingLuggage: string;

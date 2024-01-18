@@ -153,6 +153,7 @@ export function* getCustomersSaga(action: PayloadAction<ICustomersRequest>) {
 }
 
 export function* imageUploadSaga(action: PayloadAction<any>) {
+    console.log('imageUploadSaga-action', JSON.stringify(action));
     try {
         //@ts-ignore
         const response: any = yield call(CommonService.ImageUploadService, action.payload);

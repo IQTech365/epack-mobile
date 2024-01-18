@@ -47,6 +47,7 @@ const BasicDetails: React.FC<Props> = ({}) => {
     setEmployeeMobileNo,
     setEmployeeDesignation,
     setCompanyAddress,
+    setIsSerialNoAutomatic,
   } = useQuotationFormContextHook();
 
   const shiftingTypeDropdownCompRef = useRef(null);
@@ -57,20 +58,28 @@ const BasicDetails: React.FC<Props> = ({}) => {
   const billingByDropdownCompRef = useRef(null);
 
   useEffect(() => {
+    setIsSerialNoAutomatic(switchState);
+  }, []);
+
+  useEffect(() => {
     if(!state.editQuotation) {
       if(serialNo) {
         setQuotationNo(serialNo.toString());
       }
     }
-  }, []);
+  }, [serialNo]);
 
   useEffect(() => {
     if(!state.editQuotation) {
       if(switchState) {
-        setQuotationNo(serialNo.toString());
-        //@ts-ignore
-        quotationNoInputCompRef && quotationNoInputCompRef?.current?.setValue(serialNo);
+        setIsSerialNoAutomatic(true);
+        if(serialNo) {
+          setQuotationNo(serialNo.toString());
+          //@ts-ignore
+          quotationNoInputCompRef && quotationNoInputCompRef?.current?.setValue(serialNo);
+        }
       } else {
+        setIsSerialNoAutomatic(false);
         setQuotationNo('');
         //@ts-ignore
         quotationNoInputCompRef && quotationNoInputCompRef?.current?.setValue('');
@@ -165,7 +174,9 @@ const BasicDetails: React.FC<Props> = ({}) => {
             <Switch
               containerStyle={styles.switchStyle}
               value={switchState}
-              onValueChange={val => setSwitchState(val)}
+              onValueChange={val => {
+                setSwitchState(val);
+              }}
               // disabled={isEdit}
               activeText={'Auto'}
               inActiveText={'Manual'}

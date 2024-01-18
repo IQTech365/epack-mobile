@@ -23,7 +23,6 @@ import Alert, {STATUS_CODE} from '../../../common/Alert';
 import {useAppDispatch, useAppSelector} from '../../../redux/hooks';
 import {
   editCompanyRequest,
-  getCompaniesRequest,
   reseteditCompanyRequest,
 } from '../../../redux/slices/CompanySlice';
 import {
@@ -92,8 +91,10 @@ const SignatureViewPage: React.FC<IProps> = (props: any) => {
     imageUploadFailure,
     uploadedImage,
   } = useAppSelector(state => state.Common);
-
-  const {otpData} = useAppSelector(state => state.OTP);
+  console.log('[imageUploading]--', imageUploading);
+  console.log('[imageUploadSuccess]--', imageUploadSuccess);
+  console.log('[imageUploadFailure]--', imageUploadFailure);
+  console.log('[uploadedImage]--', JSON.stringify(uploadedImage));
 
   const _getUploadedImagePath = () => {
     let path: string = '';
@@ -151,15 +152,17 @@ const SignatureViewPage: React.FC<IProps> = (props: any) => {
 
   const handleCompanySignatureUriUpdate = () => {
     const imagePath = _getUploadedImagePath();
-    getCurrentCompanyId().then(id => {
-      const payload: ICompanyEditRequest = {
-        companyId: id as string,
-        payload: {
-          companySignature: imagePath,
-        },
-      };
-      dispatch(editCompanyRequest(payload));
-    }).catch(err => console.log('api-error', err));
+    getCurrentCompanyId()
+      .then(id => {
+        const payload: ICompanyEditRequest = {
+          companyId: id as string,
+          payload: {
+            companySignature: imagePath,
+          },
+        };
+        dispatch(editCompanyRequest(payload));
+      })
+      .catch(err => console.log('api-error', err));
   };
 
   const handleUploadClick = () => {
@@ -171,13 +174,6 @@ const SignatureViewPage: React.FC<IProps> = (props: any) => {
     });
     dispatch(imageUploadRequest(formData));
   };
-
-  useEffect(() => {
-    if (otpData) {
-      const {data = {}} = otpData || {};
-      dispatch(getCompaniesRequest(data?.id as string));
-    }
-  }, []);
 
   useEffect(() => {
     if (!imageUploading && imageUploadSuccess) {
@@ -193,7 +189,7 @@ const SignatureViewPage: React.FC<IProps> = (props: any) => {
 
   useEffect(() => {
     if (!editCompanyRequesting && editCompanySuccess) {
-      showToast('Company Info updated successful.', ToastType.SUCCESS);
+      showToast('Company Info Update successful.', ToastType.SUCCESS);
       dispatch(resetImageUploadRequest());
       dispatch(reseteditCompanyRequest());
       completeRegistrationAndLoggedIn();
@@ -283,7 +279,7 @@ const SignatureViewPage: React.FC<IProps> = (props: any) => {
               console.log('dragged');
               setIsDigitalSignatureProvided(true);
             }}
-            saveImageFileInExtStorage={false}
+            saveImageFileInExtStorage={true}
             showNativeButtons={false}
             showTitleLabel={false}
             backgroundColor="#ffffff"

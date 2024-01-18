@@ -3,7 +3,7 @@ import { IState } from "./registrationReducer";
 
 export const ibaApprovalOptions:string[] = ['Not Approved', 'Approved'];
 
-export const signatureOptions:string[] = ['Digital Signature', 'Image Upload'];
+export const signatureOptions:string[] = ['Digital Signature', 'Signature Upload'];
 
 export interface IError {
     valid:boolean;

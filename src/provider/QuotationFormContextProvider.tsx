@@ -935,6 +935,13 @@ const useQuotationFormContext = () => {
     });
   }
 
+  const setIsSerialNoAutomatic = (isAuto: boolean) => {
+    dispatch({
+      type: ACTION.IS_SERIAL_NO_AUTOMATIC,
+      payload: isAuto,
+    });
+  }
+
   return {
     state,
     // **** Basic Details ****
@@ -1054,6 +1061,7 @@ const useQuotationFormContext = () => {
     validForm,
     setItem,
     setIsEditQuotation,
+    setIsSerialNoAutomatic,
   };
 };
 
@@ -1178,6 +1186,7 @@ const initQuotationFormContextState: UseQuotationFormContextType = {
   validForm: (valid: boolean) => {},
   setItem: (item:ISingleQuotationData) => {},
   setIsEditQuotation: (isEdit: boolean) => {},
+  setIsSerialNoAutomatic: (isAuto: boolean) => {},
 };
 
 const QuotationFormContext = createContext<UseQuotationFormContextType>(

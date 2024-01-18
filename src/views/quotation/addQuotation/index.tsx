@@ -43,6 +43,8 @@ const AddQuotationView: React.FC<Props> = ({
         payload: {
           activeCount: initialValue,
           companyId: id as string,
+          isAuto: true,
+          isHeadOffice: true,
         }
       }
       dispatch(getSerialNoRequest(payload));

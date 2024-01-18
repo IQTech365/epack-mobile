@@ -41,8 +41,8 @@ const RegistrationDetailsView: React.FC<IRegistrationDetailsViewProps> = ({}) =>
         <View style={styles.elementContainer}>
           <EnquiryDetailListItem  label='GST No' value={company?.govRegdDetails.companyGST}/>
           <EnquiryDetailListItem  label='PAN No' value={company?.govRegdDetails.companyPAN}/>
-          <EnquiryDetailListItem  label='Iba No' value={company?.govRegdDetails.IBAcode}/>
-          <EnquiryDetailListItem  label='Cin No' value={company?.govRegdDetails.incorporationNumber}/>
+          <EnquiryDetailListItem  label='IBA No' value={company?.govRegdDetails.IBAcode}/>
+          <EnquiryDetailListItem  label='CIN No' value={company?.govRegdDetails.incorporationNumber}/>
           <EnquiryDetailListItem  label='Company Type' value={company?.govRegdDetails.companyType}/>
         </View>
         <Spacer height={8} />

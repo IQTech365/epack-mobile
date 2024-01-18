@@ -14,6 +14,7 @@ import { ICompanyInfoData } from '../../../../interface/companyRegistration/IGet
 import Spinner from '../../../../common/Spinner';
 import { getCompaniesRequest } from '../../../../redux/slices/CompanySlice';
 import { getCurrentCompanyId } from '../../../../utils/storage';
+import useAuthId from '../../../../hooks/useAuthId';
 interface IAddressViewProps {
   showEditIcon?: boolean;
 }
@@ -24,6 +25,7 @@ const AddressView: React.FC<IAddressViewProps> = ({showEditIcon = true}) => {
   const {companies, getCompaniesRequesting} = useAppSelector(state => state.Company);
   const {data: companiesData} = companies || {};
   const dispatch = useAppDispatch();
+  const authId = useAuthId();
 
   const _getCompany = () => {
     getCurrentCompanyId().then(id => {
@@ -38,23 +40,20 @@ const AddressView: React.FC<IAddressViewProps> = ({showEditIcon = true}) => {
     setOpenModal(true);
   };
 
-  const _getCompanesRequest = () => {
-    getCurrentCompanyId().then(id => {
-    if(companiesData && Array.isArray(companiesData) && companiesData.length > 0) {
-      const company:ICompanyInfoData = companiesData.find((d:ICompanyInfoData) => d._id == id as string);
-      dispatch(getCompaniesRequest(company?.authId as string));
-    }
-    }).catch(err => console.log(err));
-  }
-
   const handleModalClose = () => {
     setOpenModal(false);
-    _getCompanesRequest();
+    dispatch(getCompaniesRequest(authId));
   };
   useEffect(() => {
     _getCompany();
-    _getCompanesRequest();
+    dispatch(getCompaniesRequest(authId));
   }, []);
+
+  useEffect(() => {
+    if (companies) {
+      _getCompany();
+    }
+  }, [companies]);
 
   return (
     <AvoidSoftInputViewHOC>
@@ -72,8 +71,8 @@ const AddressView: React.FC<IAddressViewProps> = ({showEditIcon = true}) => {
           <EnquiryDetailListItem label='Pincode' value={company?.pincode} />
           <EnquiryDetailListItem label='State' value={company?.state} />
           <EnquiryDetailListItem label='City' value={company?.city} />
-          <EnquiryDetailListItem label='Locality' value={company?.companyAddress} />
-          <EnquiryDetailListItem label='Landmark' value={company?.companyAddress} />
+          {/* <EnquiryDetailListItem label='Locality' value={company?.companyAddress} />
+          <EnquiryDetailListItem label='Landmark' value={company?.companyAddress} /> */}
           <EnquiryDetailListItem label='Address' value={company?.companyAddress} />
           <EnquiryDetailListItem label='Country' value='India' />
         </View>
