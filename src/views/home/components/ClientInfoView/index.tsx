@@ -9,6 +9,8 @@ import { getCurrentCompanyId } from '../../../../utils/storage';
 const ClientInfoView = () => {
   const {companies} = useAppSelector(state => state.Company);
   const {data: companiesData} = companies || {};
+  console.log('companiesData--', JSON.stringify(companiesData));
+  
   const [company, setCompany] = useState<ICompanyInfoData>();
 
   const _getCompany = () => {
@@ -48,7 +50,7 @@ const ClientInfoView = () => {
 
   useEffect(()=> {
     _getCompany();
-  }, []);
+  }, [companies]);
 
   return (
     <Shadow style={styles.cardWrapper} distance={6}>
