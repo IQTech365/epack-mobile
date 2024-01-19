@@ -21,10 +21,10 @@ import { getCurrentCompanyId } from '../../../../../utils/storage';
 import { IEnquiry } from '../../../../../interface/quotation/IGetQuotationsResponse';
 
 interface Props {
-  //
+  fromEnquiry?:boolean
 }
 
-const BillingIndividualView: React.FC<Props> = ({}) => {
+const BillingIndividualView: React.FC<Props> = ({fromEnquiry = false}) => {
   const {state, setPartyName, setPartyMobileNo, setCustomerId} = useQuotationFormContextHook();
   const partyNameInputCompRef = useRef(null);
   const partyMobileNoInputCompRef = useRef(null);
@@ -90,6 +90,16 @@ const BillingIndividualView: React.FC<Props> = ({}) => {
       }
     }
   }, [selectedCompanyOption]);
+
+  useEffect(() => {
+    if (fromEnquiry && state.enquiryItem) {
+      const {enquiryItem} = state;
+      if(enquiryItem.billingBy == "by Individual") {
+        setPartyName(enquiryItem.partyName);
+        setPartyMobileNo(enquiryItem.mobile);
+      }
+    }
+  }, [state.enquiryItem]);
 
   useEffect(() => {
     if(state.editQuotation && state.item) {

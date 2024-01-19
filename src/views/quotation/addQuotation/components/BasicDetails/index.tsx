@@ -21,10 +21,10 @@ import VehicleInfoView from '../VehicleInfoView';
 import { IEnquiry } from '../../../../../interface/quotation/IGetQuotationsResponse';
 import useSerialNoHook from '../../../../../hooks/useSerialNo';
 interface Props {
-  //
+  fromEnquiry?:boolean;
 }
 
-const BasicDetails: React.FC<Props> = ({}) => {
+const BasicDetails: React.FC<Props> = ({fromEnquiry = false}) => {
   const [switchState, setSwitchState] = useState<boolean>(true);
   const serialNo:number = useSerialNoHook();
   
@@ -102,6 +102,25 @@ const BasicDetails: React.FC<Props> = ({}) => {
       setCompanyAddress('');
     }
   }, [state.billing_by]);
+
+  useEffect(() => {
+    if (fromEnquiry && state.enquiryItem) {
+      const {enquiryItem} = state;
+      setShiftingType(enquiryItem.shiftingType);
+      const shiftingTypeItem:TDropdownItem = shiftingTypes.find((d:TDropdownItem) => d.label == enquiryItem.shiftingType) as TDropdownItem;
+      if(shiftingTypeItem) {
+        //@ts-ignore
+        shiftingTypeDropdownCompRef && shiftingTypeDropdownCompRef?.current?.setDefaultValue(shiftingTypeItem);
+      }
+      setBillingBy(enquiryItem.billingBy);
+      const billingByItem:TDropdownItem = billingByOptions.find((d:TDropdownItem) => d.label == enquiryItem.billingBy) as TDropdownItem;
+      if(billingByItem) {
+       //@ts-ignore
+       billingByDropdownCompRef && billingByDropdownCompRef?.current?.setDefaultValue(billingByItem);
+      }
+      
+    }
+  }, [state.enquiryItem]);
 
   useEffect(() => {
     if(state.editQuotation && state.item) {
@@ -193,7 +212,7 @@ const BasicDetails: React.FC<Props> = ({}) => {
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
               value={state.quotation_no}
-              placeholder='Serial#'
+              placeholder="Serial#"
               editable={!switchState}
               //@ts-ignore
               ref={quotationNoInputCompRef}
@@ -235,7 +254,11 @@ const BasicDetails: React.FC<Props> = ({}) => {
           />
         </View>
         <Spacer height={4} />
-        {state.billing_by == billingByOptions[0].label ? <BillingIndividualView /> : <BillingCompanyView />}
+        {state.billing_by == billingByOptions[0].label ? (
+          <BillingIndividualView fromEnquiry={fromEnquiry} />
+        ) : (
+          <BillingCompanyView fromEnquiry={fromEnquiry} />
+        )}
       </View>
     </CollapsibleView>
   );

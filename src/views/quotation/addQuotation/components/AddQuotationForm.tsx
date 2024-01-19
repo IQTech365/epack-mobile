@@ -42,6 +42,7 @@ import { getCurrentCompanyId } from '../../../../utils/storage';
 import { IGetQuotationData } from '../../../../interface/quotation/IGetQuotationsResponse';
 import { ISingleQuotationData } from '../../../../interface/quotation/IGetSingleQuotationResponse';
 import { IUpdateQuotationRequest } from '../../../../interface/quotation/quotation';
+import { ISingleEnquiryData } from '../../../../interface/enquiry/ISingleEnquiryResponse';
 
 interface Props {
   fromEnquiry?: boolean;
@@ -71,6 +72,7 @@ const AddQuotationForm: React.FC<Props> = ({
     setDropPincodeError,
     setItem,
     setIsEditQuotation,
+    setEnquiryItem,
   } = useQuotationFormContextHook();
   const authId = useAuthId();
   const dispatch = useAppDispatch();
@@ -93,6 +95,8 @@ const AddQuotationForm: React.FC<Props> = ({
   } = useAppSelector(state => state.Common);
 
   const {getVehicleSizeRequesting} = useAppSelector(state => state.Vehicle);
+
+  const {enquiry} = useAppSelector(state => state.Enquiry);
 
   const transitInsurance: ITransitInsurance = {
     isRequired: state.transit_insurance,
@@ -344,10 +348,23 @@ const AddQuotationForm: React.FC<Props> = ({
     }).catch(err => console.log(err));
   };
 
+  const _getSingleEnquiry = () => {
+    let _enquiry:ISingleEnquiryData;
+    const {data} = enquiry || {};
+    if(data && Array.isArray(data) && data.length > 0) {
+      _enquiry = data[0];
+    }
+    //@ts-ignore
+    return _enquiry;
+  }
+
   useEffect(() => {
     if(isEdit) {
       setItem(_getQuotationItem() as ISingleQuotationData)
       setIsEditQuotation(isEdit);
+    }
+    if(fromEnquiry) {
+      setEnquiryItem(_getSingleEnquiry());
     }
     dispatch(getVehicleCompanyRequest());
     dispatch(getVehicleModelsRequest());
@@ -381,11 +398,11 @@ const AddQuotationForm: React.FC<Props> = ({
 
   return (
     <>
-      <BasicDetails />
+      <BasicDetails fromEnquiry={fromEnquiry} />
       <Spacer height={4} />
-      <PickupAddressView />
+      <PickupAddressView fromEnquiry={fromEnquiry} />
       <Spacer height={4} />
-      <DropAddressView />
+      <DropAddressView fromEnquiry={fromEnquiry} />
       <Spacer height={4} />
       <FreightDetailsView />
       <Spacer height={4} />

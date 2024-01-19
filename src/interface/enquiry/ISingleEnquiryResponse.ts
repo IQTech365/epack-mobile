@@ -22,7 +22,7 @@ interface IDropAddress {
     address: string;
 }
 
-interface IBillingInfo {
+export interface IBillingInfo {
     companyName: string;
     approvalAuthority: string;
     authorityPersonName: string;

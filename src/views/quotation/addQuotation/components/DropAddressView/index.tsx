@@ -18,10 +18,10 @@ import Spinner from '../../../../../common/Spinner';
 import { IDropAddress, IEnquiry } from '../../../../../interface/quotation/IGetQuotationsResponse';
 
 interface Props {
-  //
+  fromEnquiry?:boolean;
 }
 
-const DropAddressView: React.FC<Props> = ({}) => {
+const DropAddressView: React.FC<Props> = ({fromEnquiry = false}) => {
   const {
     state,
     setDropPincode,
@@ -79,6 +79,23 @@ const DropAddressView: React.FC<Props> = ({}) => {
       }
     }
   }, [states, cities]);
+
+  useEffect(() => {
+    if (fromEnquiry && state.enquiryItem) {
+      const dropAddress = state.enquiryItem.dropAddress;
+      if (dropAddress) {
+        setDropPincode(dropAddress.pincode);
+        setPincode(dropAddress.pincode);
+        setDropState(dropAddress.state);
+        setDropAddress(dropAddress.address);
+        //@ts-ignore
+        stateDropdownCompRef?.current?.setValue(dropAddress.state);
+        setDropCity(dropAddress.city);
+        //@ts-ignore
+        cityDropdownCompRef?.current?.setValue(dropAddress.city);
+      }
+    }
+  }, [state.enquiryItem]);
 
   useEffect(() => {
     if(state.editQuotation && state.item) {

@@ -12,6 +12,7 @@ import {
   IOtherCharge,
 } from '../views/quotation/addQuotation/quotationReducer2';
 import { ISingleQuotationData } from '../interface/quotation/IGetSingleQuotationResponse';
+import { ISingleEnquiryData } from '../interface/enquiry/ISingleEnquiryResponse';
 
 const useQuotationFormContext = () => {
   const [state, dispatch] = useReducer(quotationReducer, initialState);
@@ -942,6 +943,13 @@ const useQuotationFormContext = () => {
     });
   }
 
+  const setEnquiryItem = (item: ISingleEnquiryData) => {
+    dispatch({
+      type: ACTION.SET_ENQUIRY_ITEM,
+      payload: item,
+    });
+  }
+
   return {
     state,
     // **** Basic Details ****
@@ -1062,6 +1070,7 @@ const useQuotationFormContext = () => {
     setItem,
     setIsEditQuotation,
     setIsSerialNoAutomatic,
+    setEnquiryItem,
   };
 };
 
@@ -1187,6 +1196,7 @@ const initQuotationFormContextState: UseQuotationFormContextType = {
   setItem: (item:ISingleQuotationData) => {},
   setIsEditQuotation: (isEdit: boolean) => {},
   setIsSerialNoAutomatic: (isAuto: boolean) => {},
+  setEnquiryItem: (item:ISingleEnquiryData) => {},
 };
 
 const QuotationFormContext = createContext<UseQuotationFormContextType>(

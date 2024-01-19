@@ -12,7 +12,8 @@ import {
 } from './components/FreightDetailsView/components/utils';
 import * as Utils from './components/OtherDetailsView/utils';
 import {formatDate4} from '../../../utils/formatter';
-import { ISingleQuotationData } from '../../../interface/quotation/IGetSingleQuotationResponse';
+import {ISingleQuotationData} from '../../../interface/quotation/IGetSingleQuotationResponse';
+import {ISingleEnquiryData} from '../../../interface/enquiry/ISingleEnquiryResponse';
 
 export enum ACTION {
   SHIFTING_TYPE = 'SHIFTING_TYPE',
@@ -134,6 +135,7 @@ export enum ACTION {
   // item : Note:- This will be used only in edit quotation form
   QUOTATION_ITEM = 'QUOTATION_ITEM',
   IS_EDIT_QUOTATION = 'IS_EDIT_QUOTATION',
+  SET_ENQUIRY_ITEM = 'SET_ENQUIRY_ITEM',
 }
 
 export type TInsuranceDetails = {
@@ -269,12 +271,13 @@ export interface IState {
   valid_form: boolean;
   item: ISingleQuotationData | null;
   editQuotation: boolean;
-  is_serial_no_automatic:boolean;
+  is_serial_no_automatic: boolean;
+  enquiryItem: ISingleEnquiryData | null;
 }
 
 export interface IAction {
   type: ACTION;
-  payload: string | boolean | IOtherCharge[] | ISingleQuotationData;
+  payload: string | boolean | IOtherCharge[] | ISingleQuotationData | ISingleEnquiryData
 }
 
 export const initialState: IState = {
@@ -394,6 +397,7 @@ export const initialState: IState = {
   item: null,
   editQuotation: false,
   is_serial_no_automatic: true,
+  enquiryItem: null,
 };
 
 export const quotationReducer: Reducer<IState, IAction> = (
@@ -680,10 +684,15 @@ export const quotationReducer: Reducer<IState, IAction> = (
         editQuotation: payload as boolean,
       };
     case ACTION.IS_SERIAL_NO_AUTOMATIC:
-        return {
-          ...state,
-          is_serial_no_automatic: payload as boolean,
-        };
+      return {
+        ...state,
+        is_serial_no_automatic: payload as boolean,
+      };
+    case ACTION.SET_ENQUIRY_ITEM:
+      return {
+        ...state,
+        enquiryItem: payload as ISingleEnquiryData,
+      };
     default:
       return state;
   }

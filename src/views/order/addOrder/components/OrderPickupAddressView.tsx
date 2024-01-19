@@ -10,11 +10,11 @@ import usePincodeHook from '../../../../hooks/usePincodeHook';
 import Spacer from '../../../../common/Spacer';
 import DropdownComponent from '../../../../common/DropdownComponent';
 import liftStatusOptions from '../../../../data/liftStatusOptions.json';
-import floorOptions from '../../../../data/floorOptions.json';
 import { useOrderFormContextHook } from '../../../../provider/OrderFormContextProvider';
 import { TDropdownItem } from '../../../../type/TDropdownItem';
 import { getCities2, getStates2 } from '../../../../utils/formatter';
 import Spinner from '../../../../common/Spinner';
+import useUtilityHook from '../../../../hooks/useUtilityHook';
 
 interface IProps {}
 
@@ -32,6 +32,9 @@ const OrderPickupAddressView: FC<IProps> = ({}) => {
   const cityDropdownRef = useRef(null);
   const [states, setStates] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
+
+  const {getFloorsList} = useUtilityHook();
+  const floorOptions = getFloorsList();
 
   const {result, fetching, setPincode} = usePincodeHook(
     () => {},

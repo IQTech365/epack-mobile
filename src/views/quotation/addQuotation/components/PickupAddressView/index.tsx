@@ -15,13 +15,17 @@ import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import usePincodeHook from '../../../../../hooks/usePincodeHook';
 import {getCities2, getStates2} from '../../../../../utils/formatter';
 import Spinner from '../../../../../common/Spinner';
-import { IEnquiry, IPickupAddress, IDropAddress} from '../../../../../interface/quotation/IGetQuotationsResponse';
+import {
+  IEnquiry,
+  IPickupAddress,
+  IDropAddress,
+} from '../../../../../interface/quotation/IGetQuotationsResponse';
 
 interface Props {
-  //
+  fromEnquiry?: boolean;
 }
 
-const PickupAddressView: React.FC<Props> = ({}) => {
+const PickupAddressView: React.FC<Props> = ({fromEnquiry = false}) => {
   const {
     state,
     setPickupPincode,
@@ -69,7 +73,7 @@ const PickupAddressView: React.FC<Props> = ({}) => {
       stateDropdownCompRef &&
       cityDropdownCompRef
     ) {
-      if(!state.editQuotation && !state.item) {
+      if (!state.editQuotation && !state.item) {
         //@ts-ignore
         stateDropdownCompRef?.current?.setValue(states[0]);
         setPickupState(states[0]);
@@ -81,13 +85,31 @@ const PickupAddressView: React.FC<Props> = ({}) => {
   }, [states, cities]);
 
   useEffect(() => {
-    if(state.editQuotation && state.item) {
+    if (fromEnquiry && state.enquiryItem) {
+      const pickupAddress = state.enquiryItem.pickupAddress;
+      if (pickupAddress) {
+        setPickupPincode(pickupAddress.pincode);
+        setPincode(pickupAddress.pincode);
+        setPickupState(pickupAddress.state);
+        setPickupAddress(pickupAddress.address);
+        //@ts-ignore
+        stateDropdownCompRef?.current?.setValue(pickupAddress.state);
+        setPickupCity(pickupAddress.city);
+        //@ts-ignore
+        cityDropdownCompRef?.current?.setValue(pickupAddress.city);
+      }
+    }
+  }, [state.enquiryItem]);
+
+  useEffect(() => {
+    if (state.editQuotation && state.item) {
       const {item} = state;
-      if(item) {
-        const enquiry:IEnquiry = item.enquiries;
-        if(enquiry) {
-          const pickupAddress:IPickupAddress = enquiry.pickupAddress as IPickupAddress;
-          if(pickupAddress) {
+      if (item) {
+        const enquiry: IEnquiry = item.enquiries;
+        if (enquiry) {
+          const pickupAddress: IPickupAddress =
+            enquiry.pickupAddress as IPickupAddress;
+          if (pickupAddress) {
             setPickupPincode(pickupAddress.pincode);
             setPincode(pickupAddress.pincode);
             setPickupState(pickupAddress.state);
@@ -97,16 +119,20 @@ const PickupAddressView: React.FC<Props> = ({}) => {
             //@ts-ignore
             cityDropdownCompRef?.current?.setValue(pickupAddress.city);
             setPickupCurrentFloor(pickupAddress.floor);
-            const floorItem:TDropdownItem = floorOptions.find((d:TDropdownItem) => d.label == pickupAddress.floor) as TDropdownItem;
-              if(floorItem) {
-                //@ts-ignore
-                floorDropdownCompRef && floorDropdownCompRef?.current?.setDefaultValue(floorItem);
+            const floorItem: TDropdownItem = floorOptions.find(
+              (d: TDropdownItem) => d.label == pickupAddress.floor,
+            ) as TDropdownItem;
+            if (floorItem) {
+              //@ts-ignore
+              floorDropdownCompRef && floorDropdownCompRef?.current?.setDefaultValue(floorItem);
             }
             setPickupLiftStatus(pickupAddress.isLiftAvailable);
-            const liftItem:TDropdownItem = liftStatusOptions.find((d:TDropdownItem) => d.label == pickupAddress.isLiftAvailable) as TDropdownItem;
-              if(liftItem) {
-                //@ts-ignore
-                liftDropdownCompRef && liftDropdownCompRef?.current?.setDefaultValue(liftItem);
+            const liftItem: TDropdownItem = liftStatusOptions.find(
+              (d: TDropdownItem) => d.label == pickupAddress.isLiftAvailable,
+            ) as TDropdownItem;
+            if (liftItem) {
+              //@ts-ignore
+              liftDropdownCompRef && liftDropdownCompRef?.current?.setDefaultValue(liftItem);
             }
           }
         }

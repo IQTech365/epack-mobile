@@ -24,12 +24,14 @@ import {Validator} from '../../../../../utils/validation';
 import CompanyAddressView from '../CompanyAddressView';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
 import { IEnquiry } from '../../../../../interface/quotation/IGetQuotationsResponse';
+import { IBillingInfo } from '../../../../../interface/enquiry/ISingleEnquiryResponse';
+
 
 interface Props {
-  //
+  fromEnquiry?:boolean;
 }
 
-const BillingCompanyView: React.FC<Props> = ({}) => {
+const BillingCompanyView: React.FC<Props> = ({fromEnquiry = false}) => {
   const {
     state,
     setCompanyName,
@@ -107,6 +109,32 @@ const BillingCompanyView: React.FC<Props> = ({}) => {
     getCustomersSuccess,
     getCustomersFailure,
   ]);
+
+  useEffect(() => {
+    if (fromEnquiry && state.enquiryItem) {
+      const {enquiryItem} = state;
+      if(enquiryItem.billingBy == "by Company") {
+        const billingInfo:IBillingInfo = enquiryItem.billingDetails as IBillingInfo;
+        if(billingInfo) {
+          setCompanyName(billingInfo.companyName);
+          setApprovalAuthority(billingInfo.approvalAuthority);
+          const approvalAuthorityItem:TDropdownItem = approvalAuthorityOptions.find((d:TDropdownItem) => d.label == billingInfo.approvalAuthority) as TDropdownItem;
+          if(approvalAuthorityItem) {
+            //@ts-ignore
+            approvalAuthorityDropdownCompRef && approvalAuthorityDropdownCompRef?.current?.setDefaultValue(approvalAuthorityItem);
+          }
+          setAuthorityPersonName(billingInfo.authorityPersonName);
+          setAuthorityMobileNo(billingInfo.authorityPersonMobile);
+          setCompanyGSt(billingInfo.companyGST);
+          setEmployeeName(billingInfo.employeeName);
+          setEmployeeDesignation(billingInfo.employeeDesignation);
+          setEmployeeMobileNo(billingInfo.employeeMobile);
+          setCompanyAddress(billingInfo.companyAddress);
+      
+        }
+      }
+    }
+  }, [state.enquiryItem]);
 
   useEffect(() => {
     if (selectedCompanyOption) {
