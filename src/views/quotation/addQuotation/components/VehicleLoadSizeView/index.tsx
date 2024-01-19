@@ -19,6 +19,21 @@ const VehicleLoadSizeView: React.FC<IProps> = ({}) => {
   const {state, setLorryType} = useQuotationFormContextHook();
   const lorryTypeDropdownRef = useRef(null);
 
+  useEffect(() => {
+    if(state.editQuotation && state.item) {
+      const {item} = state;
+      if(item) {
+        const quotationfreight:IQuotationFreight = item.quotationfreights;
+        if(quotationfreight && quotationfreight.lorryType) {
+          const lorryTypeItem:TDropdownItem = _getVehicleSizes().find((d:TDropdownItem) => d.label == quotationfreight.lorryType) as TDropdownItem;
+          //@ts-ignore
+          lorryTypeDropdownRef && lorryTypeDropdownRef?.current?.setDefaultValue(lorryTypeItem);
+          setLorryType(lorryTypeItem.label);
+        }
+      }
+    }
+  }, [state.editQuotation, state.item]);
+
   if (!state.freight_full_load || (state.shifting_luggage == shiftingLuggages[3].label)) return null;
 
   const _getVehicleSizes = () => {
@@ -35,21 +50,6 @@ const VehicleLoadSizeView: React.FC<IProps> = ({}) => {
     }
     return vehicleSizes;
   };
-
-  // useEffect(() => {
-  //   if(state.editQuotation && state.item) {
-  //     const {item} = state;
-  //     if(item) {
-  //       const quotationfreight:IQuotationFreight = item.quotationfreights;
-  //       if(quotationfreight && quotationfreight.lorryType) {
-  //         const lorryTypeItem:TDropdownItem = _getVehicleSizes().find((d:TDropdownItem) => d.label == quotationfreight.lorryType) as TDropdownItem;
-  //         //@ts-ignore
-  //         lorryTypeDropdownRef && lorryTypeDropdownRef?.current?.setDefaultValue(lorryTypeItem);
-  //         setLorryType(lorryTypeItem.label);
-  //       }
-  //     }
-  //   }
-  // }, [state.editQuotation, state.item]);
 
   return (
     <>

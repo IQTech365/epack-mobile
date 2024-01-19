@@ -84,8 +84,14 @@ const HomePageView = () => {
             taskName={TASK_NAME.NEW_ENQUIRIES}
             count={_getTaskCountDataObj()?.newEnquiry as number}
           />
-          <TaskView taskName={TASK_NAME.TODAY_FOLLOW_UPS} count={35} />
-          <TaskView taskName={TASK_NAME.TODAY_SURVEY} count={5} />
+          <TaskView
+            taskName={TASK_NAME.TODAY_FOLLOW_UPS}
+            count={_getTaskCountDataObj()?.todayFollowup as number}
+          />
+          <TaskView
+            taskName={TASK_NAME.TODAY_SURVEY}
+            count={_getTaskCountDataObj()?.todaySurvey as number}
+          />
           <TaskView
             taskName={TASK_NAME.NEW_ORDERS}
             count={_getTaskCountDataObj()?.newOrder as number}

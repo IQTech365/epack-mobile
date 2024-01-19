@@ -19,6 +19,26 @@ const DiscountView: React.FC<Props> = ({}) => {
   const flatDiscountInputCompRef = useRef(null);
   const discountPercentDropdownCompRef = useRef(null);
 
+  useEffect(() => {
+    if(state.editQuotation && state.item) {
+      const {item} = state;
+      if(item) {
+        const quotationfreight:IQuotationFreight = item.quotationfreights;
+        if(quotationfreight) {
+          setDiscountInQuotation(quotationfreight.discountType);
+          if(quotationfreight.discountType == discountInQuotationOptions[0]) {
+            const discountPercentItem:TDropdownItem = discountPercentOptions.find((d:TDropdownItem) => d.label == quotationfreight.discountAmount) as TDropdownItem;
+            //@ts-ignore
+            discountPercentDropdownCompRef && discountPercentDropdownCompRef?.current?.setDefaultValue(discountPercentItem);
+            setDiscountPercentOrValue(discountPercentItem.label);
+          } else if(quotationfreight.discountType == discountInQuotationOptions[1]) {
+            setDiscountPercentOrValue(quotationfreight.discountAmount);
+          }
+        }
+      }
+    }
+  }, [state.editQuotation, state.item]);
+
   const _renderDiscountPercentDropdownView = () => {
     if (state.discount_in_quotation == discountInQuotationOptions[0]) {
       return (
@@ -58,25 +78,7 @@ const DiscountView: React.FC<Props> = ({}) => {
     return null;
   };
 
-  useEffect(() => {
-    if(state.editQuotation && state.item) {
-      const {item} = state;
-      if(item) {
-        const quotationfreight:IQuotationFreight = item.quotationfreights;
-        if(quotationfreight) {
-          setDiscountInQuotation(quotationfreight.discountType);
-          if(quotationfreight.discountType == discountInQuotationOptions[0]) {
-            const discountPercentItem:TDropdownItem = discountPercentOptions.find((d:TDropdownItem) => d.label == quotationfreight.discountAmount) as TDropdownItem;
-            //@ts-ignore
-            discountPercentDropdownCompRef && discountPercentDropdownCompRef?.current?.setDefaultValue(discountPercentItem);
-            setDiscountPercentOrValue(discountPercentItem.label);
-          } else if(quotationfreight.discountType == discountInQuotationOptions[1]) {
-            setDiscountPercentOrValue(quotationfreight.discountAmount);
-          }
-        }
-      }
-    }
-  }, [state.editQuotation, state.item]);
+  
 
   return (
     <View style={styles.mainWrapper}>

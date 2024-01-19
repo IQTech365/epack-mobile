@@ -24,6 +24,10 @@ export abstract class HttpClient {
   }
 
   private _handleRequest = async (config: AxiosRequestConfig) => {
+    if(config.url == '/auth/authenticate') {
+      //@ts-ignore
+      config.headers['platform'] = 'mobile';
+    }
     const authToken = await getAuthToken();
     console.log('authToken----', authToken);
     if(authToken) {

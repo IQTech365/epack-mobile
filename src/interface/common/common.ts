@@ -246,6 +246,8 @@ export interface IDashboardData {
   newOrder: number;
   deliveredOrder: number;
   totalCustomer: number;
+  todaySurvey:number;
+  todayFollowup:number;
 }
 
 export interface IDashboardDataResponse {

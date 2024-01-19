@@ -33,6 +33,30 @@ const BothChargeInputView: React.FC<Props> = ({freightType}) => {
     setUnpackingChargeFullLoad,
   } = useQuotationFormContextHook();
 
+  useEffect(() => {
+    if(state.editQuotation && state.item) {
+      const {item} = state;
+      if(item) {
+        const quotationfreight:IQuotationFreight = item.quotationfreights;
+        if(quotationfreight) {
+          setFreightPartCharge(quotationfreight.partLoadCharge);
+          setFreightFullCharge(quotationfreight.fullLoadCharge);
+          setPackingChargePartLoad(quotationfreight.packagingPartLoadCharges);
+          setPackingChargeFullLoad(quotationfreight.packagingFullLoadCharges);
+          setPackingMaterialChargePartLoad(quotationfreight.packingMaterialPartLoadCharges);
+          setPackingMaterialChargeFullLoad(quotationfreight.packingMaterialFullLoadCharges);
+          setLoadingChargePartLoad(quotationfreight.loadingPartLoadCharges);
+          setLoadingChargeFullLoad(quotationfreight.loadingFullLoadCharges);
+          setUnloadingChargePartLoad(quotationfreight.unLoadingPartLoadCharges);
+          setUnloadingChargeFullLoad(quotationfreight.unLoadingFullLoadCharges);
+          setUnpackingChargePartLoad(quotationfreight.unPackagingPartLoadCharges);
+          setUnpackingChargeFullLoad(quotationfreight.unPackagingFullLoadCharges);
+          _inputValue(quotationfreight);
+        }
+      }
+    }
+  }, [state.editQuotation, state.item]);
+
   const _getLabelText = () => {
     let label1: string = 'Part Load', label2: string = 'Full Load';
     if(state.shifting_luggage == shiftingLuggages[3].label) {
@@ -132,29 +156,7 @@ const BothChargeInputView: React.FC<Props> = ({freightType}) => {
     return null;
   }
 
-  useEffect(() => {
-    if(state.editQuotation && state.item) {
-      const {item} = state;
-      if(item) {
-        const quotationfreight:IQuotationFreight = item.quotationfreights;
-        if(quotationfreight) {
-          setFreightPartCharge(quotationfreight.partLoadCharge);
-          setFreightFullCharge(quotationfreight.fullLoadCharge);
-          setPackingChargePartLoad(quotationfreight.packagingPartLoadCharges);
-          setPackingChargeFullLoad(quotationfreight.packagingFullLoadCharges);
-          setPackingMaterialChargePartLoad(quotationfreight.packingMaterialPartLoadCharges);
-          setPackingMaterialChargeFullLoad(quotationfreight.packingMaterialFullLoadCharges);
-          setLoadingChargePartLoad(quotationfreight.loadingPartLoadCharges);
-          setLoadingChargeFullLoad(quotationfreight.loadingFullLoadCharges);
-          setUnloadingChargePartLoad(quotationfreight.unLoadingPartLoadCharges);
-          setUnloadingChargeFullLoad(quotationfreight.unLoadingFullLoadCharges);
-          setUnpackingChargePartLoad(quotationfreight.unPackagingPartLoadCharges);
-          setUnpackingChargeFullLoad(quotationfreight.unPackagingFullLoadCharges);
-          _inputValue(quotationfreight);
-        }
-      }
-    }
-  }, [state.editQuotation, state.item]);
+  
 
   return (
     <View style={styles.twoColumnContainer}>

@@ -19,6 +19,26 @@ const GstView: React.FC<Props> = ({}) => {
   const gstPercentDropdownCompRef = useRef(null);
   const gstTypeDropdownCompRef = useRef(null);
 
+  useEffect(() => {
+    if(state.editQuotation && state.item) {
+      const {item} = state;
+      if(item) {
+        const quotationfreight:IQuotationFreight = item.quotationfreights;
+        if(quotationfreight) {
+          setGstInQuotation(quotationfreight.gstStatus);
+          const gstPercentItem:TDropdownItem = gstPercentOptions.find((d:TDropdownItem) => d.label == quotationfreight.gstPercentage) as TDropdownItem;
+          //@ts-ignore
+          gstPercentDropdownCompRef && gstPercentDropdownCompRef?.current?.setDefaultValue(gstPercentItem);
+          setGstPercent(gstPercentItem.label);
+          const gstTypeItem:TDropdownItem = gstTypeOptions.find((d:TDropdownItem) => d.label == quotationfreight.gstType) as TDropdownItem;
+          //@ts-ignore
+          gstPercentDropdownCompRef && gstPercentDropdownCompRef?.current?.setDefaultValue(gstPercentItem);
+          setGstType(gstTypeItem.label);
+        }
+      }
+    }
+  }, [state.editQuotation, state.item]);
+
   const _renderGstDropdownView = () => {
     if (state.gst_in_quotation == gstInQuotationOptions[0]) {
       return (
@@ -50,26 +70,6 @@ const GstView: React.FC<Props> = ({}) => {
     }
     return null;
   };
-
-  useEffect(() => {
-    if(state.editQuotation && state.item) {
-      const {item} = state;
-      if(item) {
-        const quotationfreight:IQuotationFreight = item.quotationfreights;
-        if(quotationfreight) {
-          setGstInQuotation(quotationfreight.gstStatus);
-          const gstPercentItem:TDropdownItem = gstPercentOptions.find((d:TDropdownItem) => d.label == quotationfreight.gstPercentage) as TDropdownItem;
-          //@ts-ignore
-          gstPercentDropdownCompRef && gstPercentDropdownCompRef?.current?.setDefaultValue(gstPercentItem);
-          setGstPercent(gstPercentItem.label);
-          const gstTypeItem:TDropdownItem = gstTypeOptions.find((d:TDropdownItem) => d.label == quotationfreight.gstType) as TDropdownItem;
-          //@ts-ignore
-          gstPercentDropdownCompRef && gstPercentDropdownCompRef?.current?.setDefaultValue(gstPercentItem);
-          setGstType(gstTypeItem.label);
-        }
-      }
-    }
-  }, [state.editQuotation, state.item]);
 
   return (
     <View style={styles.mainWrapper}>
