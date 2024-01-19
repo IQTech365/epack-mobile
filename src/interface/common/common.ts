@@ -243,13 +243,45 @@ export interface IBannerListResponse {
 // Dashboard content
 export interface IDashboardData {
   newEnquiry: number;
-  newOrder:number;
-  deliveredOrder:number;
-  totalCustomer:number;
+  newOrder: number;
+  deliveredOrder: number;
+  totalCustomer: number;
 }
 
 export interface IDashboardDataResponse {
   data: IDashboardData;
-  status:number;
-  error:boolean;
-};
+  status: number;
+  error: boolean;
+}
+
+// Insurance Percentage
+export interface IInsurancePercentage {
+  _id: string;
+  insurancePercentage: string;
+  isActive: boolean;
+  isDeleted: boolean;
+  createdDate: string;
+  __v: number;
+}
+
+export interface IInsurancePercentageResponse {
+  data: IInsurancePercentage[];
+  status: number;
+  error: boolean;
+}
+
+// Floors
+export interface IFloor {
+  _id: string;
+  floor: string;
+  isActive: boolean;
+  isDeleted: boolean;
+  createdDate: string;
+  __v: number;
+}
+
+export interface IFloorResponse {
+  data: IFloor[];
+  status: number;
+  error: boolean;
+}

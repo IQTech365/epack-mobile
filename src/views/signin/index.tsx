@@ -170,7 +170,7 @@ const SignInPageView = (props: any) => {
           iconStyle={{borderColor: 'white', borderRadius: 0}}
           innerIconStyle={{borderWidth: 1, borderRadius: 0}}
           textStyle={{
-            fontFamily: 'JosefinSans-Regular',
+            fontFamily: 'WorkSans-Regular',
             textDecorationLine: 'none',
             color: '#FFFFFF',
           }}

@@ -9,6 +9,7 @@ const styles = StyleSheet.create({
     text: {
         color: COLOR_WHITE,
         fontSize: 14,
+        fontFamily: 'WorkSans-Regular'
     },
     required: {
         color: 'red',

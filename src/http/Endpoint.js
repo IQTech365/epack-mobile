@@ -173,3 +173,7 @@ export const GET_SURVEY_ITEM_SERIAL_NO = `/survey/survey-item/get/serialNo`;
 
 // Dashboard
 export const GET_DASHBOARD_DATA = `/enquiry/total-enquiry`;
+// Insurance Percentages
+export const GET_INSURANCE_PERCENTAGE_LIST = `/shifting-management/insurance-percentage/getAll`;
+// Floors
+export const GET_FLOOR_LIST = `/shifting-management/floors/getAll`;

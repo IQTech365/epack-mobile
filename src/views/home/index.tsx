@@ -15,6 +15,8 @@ import {getSavedDocumentTemplateIdListRequest} from '../../redux/slices/Template
 import {
   getAppSettingsRequest,
   getDashboardDataRequest,
+  getFloorsRequest,
+  getInsurancePercentagesRequest,
 } from '../../redux/slices/CommonSlice';
 import {IDashboardData} from '../../interface/common/common';
 
@@ -66,6 +68,8 @@ const HomePageView = () => {
     _getAppSettingsRequest();
     _getSavedTemplateId();
     dispatch(getDashboardDataRequest());
+    dispatch(getInsurancePercentagesRequest());
+    dispatch(getFloorsRequest());
   }, []);
 
   return (

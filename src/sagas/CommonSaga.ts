@@ -27,6 +27,12 @@ import {
   getDashboardDataFailure,
   getDashboardDataRequest,
   getDashboardDataSuccess,
+  getFloorsFailure,
+  getFloorsRequest,
+  getFloorsSuccess,
+  getInsurancePercentagesFailure,
+  getInsurancePercentagesRequest,
+  getInsurancePercentagesSuccess,
   getPackingTypesFailure,
   getPackingTypesRequest,
   getPackingTypesSuccess,
@@ -189,6 +195,30 @@ export function* getDashboardSaga(action: PayloadAction<any>) {
     }
 }
 
+export function* getInsurancePercentageListSaga(action: PayloadAction<any>) {
+    try {
+        //@ts-ignore
+        const response: any = yield call(CommonService.GetInsurancePercentageListService);
+        console.log('getInsurancePercentageListSaga-response----', JSON.stringify(response));
+        yield put(getInsurancePercentagesSuccess(response));
+    } catch (error) {
+        console.log('getInsurancePercentageListSaga-error----', error);
+        yield put(getInsurancePercentagesFailure(error));
+    }
+}
+
+export function* getFloorListSaga(action: PayloadAction<any>) {
+    try {
+        //@ts-ignore
+        const response: any = yield call(CommonService.GetFloorListService);
+        console.log('getFloorListSaga-response----', JSON.stringify(response));
+        yield put(getFloorsSuccess(response));
+    } catch (error) {
+        console.log('getFloorListSaga-error----', error);
+        yield put(getFloorsFailure(error));
+    }
+}
+
 export function* watcherCommonSaga() {
     yield takeLatest(getPackingTypesRequest.type, getPackingTypesSaga);
     yield takeLatest(getVehicleTypesRequest.type, getVehicleTypesSaga);
@@ -202,4 +232,6 @@ export function* watcherCommonSaga() {
     yield takeLatest(imageUploadRequest.type, imageUploadSaga);
     yield takeLatest(getBannersRequest.type, getBannersSaga);
     yield takeLatest(getDashboardDataRequest.type, getDashboardSaga);
+    yield takeLatest(getInsurancePercentagesRequest.type, getInsurancePercentageListSaga);
+    yield takeLatest(getFloorsRequest.type, getFloorListSaga);
 }

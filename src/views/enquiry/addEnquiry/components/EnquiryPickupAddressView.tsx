@@ -8,13 +8,13 @@ import EpackDropdown from '../../../../common/DropdownComponent2';
 import Spacer from '../../../../common/Spacer';
 import DropdownComponent from '../../../../common/DropdownComponent';
 import liftStatusOptions from '../../../../data/liftStatusOptions.json';
-import floorOptions from '../../../../data/floorOptions.json';
 import {TDropdownItem} from '../../../../type/TDropdownItem';
 import {COLOR_BLACK} from '../../../../utils/colors';
 import usePincodeHook from '../../../../hooks/usePincodeHook';
 import {getCities2, getStates2} from '../../../../utils/formatter';
 import {useEnquiryFormContextHook} from '../../../../provider/EnquiryFormContextProvider';
 import Spinner from '../../../../common/Spinner';
+import useUtilityHook from '../../../../hooks/useUtilityHook';
 
 interface IProps {}
 
@@ -36,6 +36,8 @@ const EnquiryPickupAddressView: FC<IProps> = ({}) => {
     () => {},
     () => {},
   );
+  const {getFloorsList} = useUtilityHook();
+  const floorOptions = getFloorsList();
 
   const handlePincodeChange = useCallback(
     (text: string) => {

@@ -11,12 +11,13 @@ import DropdownComponent from '../../../../../common/DropdownComponent';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import shiftingLuggageOptions from '../../../../../data/shiftingLuggage.json';
 import insuranceTypeOptions from '../../../../../data/insuranceTypeOptions.json';
-import insurancePercentOptions from '../../../../../data/insurancePercentOptions.json';
+// import insurancePercentOptions from '../../../../../data/insurancePercentOptions.json';
 import gstPercentOptions from '../../../../../data/gstPercentOptions.json';
 import Spacer from '../../../../../common/Spacer';
 import Input from '../../../../../common/Input';
 import EpackDropdown from '../../../../../common/DropdownComponent2';
 import { ICharge, IQuotationFreight, IStorage, ITransitInsurance } from '../../../../../interface/quotation/IGetSingleQuotationResponse';
+import useUtilityHook from '../../../../../hooks/useUtilityHook';
 
 interface Props {
   //
@@ -37,6 +38,8 @@ const InsuranceDetailsView: React.FC<Props> = ({}) => {
   const insuranceChargeDropdownCompRef = useRef(null);
   const insuranceGstDropdownCompRef = useRef(null);
   const insuranceGoodsValueInputCompRef = useRef(null);
+  const {getInsurancePercentageList} = useUtilityHook();
+  const insurancePercentOptions = getInsurancePercentageList();
 
   useEffect(() => {
     if(state.editQuotation && state.item) {

@@ -12,6 +12,8 @@ import {
   ICustomersRequest,
   IBannerListResponse,
   IDashboardDataResponse,
+  IInsurancePercentageResponse,
+  IFloorResponse,
 } from '../../interface/common/common';
 
 interface ICommonState {
@@ -87,6 +89,18 @@ interface ICommonState {
   getDashboardDataSuccess:boolean;
   getDashboardDataFailure: boolean;
   getDashboardDataError: any;
+  // Insurance Percentages
+  insurancePercentages: IInsurancePercentageResponse | null;
+  getInsurancePercentagesRequesting:boolean;
+  getInsurancePercentagesSuccess:boolean;
+  getInsurancePercentagesFailure:boolean;
+  getInsurancePercentagesError: any;
+  // Floors
+  floors: IFloorResponse | null;
+  getFloorsRequesting:boolean;
+  getFloorsSuccess:boolean;
+  getFloorsFailure:boolean;
+  getFloorsError:any;
 }
 
 const initialState: ICommonState = {
@@ -162,6 +176,18 @@ const initialState: ICommonState = {
   getDashboardDataSuccess:false,
   getDashboardDataFailure: false,
   getDashboardDataError: null,
+  // Insurance Percentages
+  insurancePercentages: null,
+  getInsurancePercentagesRequesting:false,
+  getInsurancePercentagesSuccess:false,
+  getInsurancePercentagesFailure:false,
+  getInsurancePercentagesError: null,
+  // Floors
+  floors: null,
+  getFloorsRequesting:false,
+  getFloorsSuccess:false,
+  getFloorsFailure:false,
+  getFloorsError:null,
 };
 
 export const CommonSlice = createSlice({
@@ -398,6 +424,42 @@ export const CommonSlice = createSlice({
       state.getDashboardDataFailure = true;
       state.getDashboardDataError = action.payload;
     },
+    // Insurance Percentages
+    getInsurancePercentagesRequest: state => {
+      state.getInsurancePercentagesRequesting = true;
+    },
+    getInsurancePercentagesSuccess: (
+      state,
+      action: PayloadAction<IInsurancePercentageResponse>,
+    ) => {
+      state.getInsurancePercentagesRequesting = false;
+      state.getInsurancePercentagesSuccess = true;
+      state.insurancePercentages = action.payload;
+    },
+    getInsurancePercentagesFailure: (state, action: PayloadAction<any>) => {
+      state.getInsurancePercentagesRequesting = false;
+      state.getInsurancePercentagesSuccess = false;
+      state.getInsurancePercentagesFailure = true;
+      state.getInsurancePercentagesError = action.payload;
+    },
+    // Floors
+    getFloorsRequest: state => {
+      state.getFloorsRequesting = true;
+    },
+    getFloorsSuccess: (
+      state,
+      action: PayloadAction<IFloorResponse>,
+    ) => {
+      state.getFloorsRequesting = false;
+      state.getFloorsSuccess = true;
+      state.floors = action.payload;
+    },
+    getFloorsFailure: (state, action: PayloadAction<any>) => {
+      state.getFloorsRequesting = false;
+      state.getFloorsSuccess = false;
+      state.getFloorsFailure = true;
+      state.getFloorsError = action.payload;
+    },
   },
 });
 
@@ -454,5 +516,13 @@ export const {
   getDashboardDataRequest,
   getDashboardDataSuccess,
   getDashboardDataFailure,
+  // Insurance Percentages
+  getInsurancePercentagesRequest,
+  getInsurancePercentagesSuccess,
+  getInsurancePercentagesFailure,
+  // Floors
+  getFloorsRequest,
+  getFloorsSuccess,
+  getFloorsFailure,
 } = CommonSlice.actions;
 
