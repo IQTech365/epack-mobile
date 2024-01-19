@@ -5,6 +5,7 @@ import EnquiryPageView from "../views/enquiry";
 import AddEnquiryView from "../views/enquiry/addEnquiry";
 import EnquiryDetailsView from "../views/enquiry/enquiryDetails";
 import { EnquiryStackParamList } from "./params/EnquiryStackParamList";
+import EditSurveyItemsView from "../views/enquiry/editSurveyItemsView";
 
 const EnquiryStack = createNativeStackNavigator<EnquiryStackParamList>();
 
@@ -15,6 +16,7 @@ const EnquiryStackNavigator = () => {
             <EnquiryStack.Screen name="EnquiryRoot" component={EnquiryPageView} />
             <EnquiryStack.Screen name="AddEnquiry" component={AddEnquiryView} />
             <EnquiryStack.Screen name="EnquiryDetails" component={EnquiryDetailsView} />
+            <EnquiryStack.Screen name="EditSurveyItems" component={EditSurveyItemsView} />
         </EnquiryStack.Navigator>
     );
 }

@@ -228,6 +228,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
+              placeholder='Enter particular/item name'
             />
           </View>
           <Spacer height={4} />
@@ -239,16 +240,17 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
+                placeholder='Enter quantity'
               />
             </View>
             <View style={styles.itemContainer}>
-              <Label text="Value Of valueOfGoods" style={styles.label} />
+              <Label text="Value Of Goods" style={styles.label} />
               <Input
                 onChangeText={handleGoodsInputTextChange}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
-                placeholder="2000"
+                placeholder="Enter goods value"
               />
             </View>
           </View>
@@ -260,6 +262,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
+              placeholder='Enter remarks'
             />
           </View>
         </View>

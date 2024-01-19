@@ -4,6 +4,10 @@ import {
   COLOR_BLUE,
   COLOR_GRAY,
   COLOR_GRAY2,
+  COLOR_GRAY3,
+  COLOR_GRAY4,
+  COLOR_GRAY5,
+  COLOR_GRAY6,
   COLOR_WHITE,
 } from '../../../../../utils/colors';
 const {width} = Dimensions.get('window');
@@ -26,11 +30,15 @@ const styles = StyleSheet.create({
   },
   surveyDateAndNumberContainer: {
     width: width * 0.9,
-    paddingVertical: 9,
-    paddingHorizontal: 12,
+    // paddingVertical: 9,
+    // paddingHorizontal: 12,
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
+    borderWidth: 0.5,
+    borderColor: COLOR_GRAY,
+    borderRadius: 5,
+    marginBottom: 8,
   },
   rightContentContainer: {
     width: '100%',
@@ -56,9 +64,10 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     alignSelf: 'center',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'flex-start',
-    paddingVertical: 4,
+    paddingVertical: 6,
+    paddingHorizontal: 8,
   },
   contentLabelText: {
     color: COLOR_BLACK,
@@ -74,6 +83,27 @@ const styles = StyleSheet.create({
     color: COLOR_BLUE,
     fontSize: 14,
   },
+  actionContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 8,
+    backgroundColor: COLOR_GRAY6,
+    borderBottomLeftRadius: 5,
+    borderBottomRightRadius: 5,
+  },
+  actionText: {
+    color: COLOR_BLACK,
+    fontSize: 16,
+    fontFamily: 'WorkSans-Regular',
+  },
+  action: {
+    width: '25%',
+    alignItems: 'center',
+    justifyContent: 'center',
+},
 });
 
 export default styles;

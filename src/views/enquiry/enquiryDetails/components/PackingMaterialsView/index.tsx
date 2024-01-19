@@ -29,6 +29,8 @@ import PlusIcon from '../../../../../images/icons/plus_icon.svg';
 import MinusIcon from '../../../../../images/icons/minus_icon.svg';
 import ModalHOC from '../../../../../common/ModalHOC';
 import PackingMaterials from './PackingMaterials';
+import useAuthId from '../../../../../hooks/useAuthId';
+import { ToastType, showToast } from '../../../../../utils/utility';
 
 interface packingitems {
   name: string;
@@ -41,6 +43,7 @@ interface packingMaterialprop {
 
 const PackingMaterialsView: React.FC<packingMaterialprop> = ({enquiryId}) => {
   const [state, dispatch] = useReducer(packingMaterialReducer, initialState);
+  const authId = useAuthId();
   const [inputText, setInputText] = useState('');
   const [vehicleLoadSize, setVehicleLoadSize] = useState('');
   const [items, setItems] = useState<packingitems[]>([]);
@@ -82,18 +85,10 @@ const PackingMaterialsView: React.FC<packingMaterialprop> = ({enquiryId}) => {
     dispatch2(getUnitTypeRequest());
     dispatch2(getVehicleSizeRequest());
     if (!addPackingMaterialsRequesting && addPackingMaterialsSuccess) {
-      Toast.show({
-        type: 'success',
-        text1: 'packing matreial',
-        text2: 'packing matreial has been added successfully',
-      });
+      showToast('Packing Materials Added.', ToastType.SUCCESS);
       dispatch2(resetPackingMaterialRequest());
     } else if (!addPackingMaterialsRequesting && addPackingMaterialsFailure) {
-      Toast.show({
-        type: 'error',
-        text1: 'Enquriy',
-        text2: 'Error in adding enquiry. Please try again!',
-      });
+      showToast('Packing Materials Not Addded.', ToastType.ERROR);
       dispatch2(resetPackingMaterialRequest());
     }
   }, [
@@ -483,6 +478,7 @@ const PackingMaterialsView: React.FC<packingMaterialprop> = ({enquiryId}) => {
         state.WoodenFrame,
         ...items,
       ],
+      addedBy: authId
     };
     console.log(payload, 'data...payload');
 

@@ -147,20 +147,6 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
                 taskNameCallback={taskNameCallback}
               />
             }
-            ListFooterComponent={() =>
-              taskData == 'SURVEY ITEM' && getDataSet().length > 0 ? (
-                <View>
-                  <Button
-                    text="Preview"
-                    onPress={() => {}}
-                    disabled={false}
-                    style={styles.previewButtonStyle}
-                    textStyle={styles.textStyle}
-                  />
-                  <Spacer height={10} />
-                </View>
-              ) : null
-            }
           />
         </View>
       )}
