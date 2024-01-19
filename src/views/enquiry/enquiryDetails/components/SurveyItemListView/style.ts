@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: COLOR_GRAY2,
+    borderColor: COLOR_BLACK,
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
@@ -61,13 +61,14 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   contentLabelText: {
-    color: COLOR_GRAY,
+    color: COLOR_BLACK,
     fontSize: 14,
+    fontFamily: 'WorkSans-Regular',
   },
   contentLabelText2: {
-    color: COLOR_GRAY,
+    color: COLOR_BLACK,
     fontSize: 14,
-    fontWeight: '500',
+    fontFamily: 'WorkSans-Medium',
   },
   nameText: {
     color: COLOR_BLUE,

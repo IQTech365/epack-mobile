@@ -3,9 +3,11 @@ import {View, Text} from 'react-native';
 import Spacer from '../../../../../common/Spacer';
 import styles from './style';
 import {formatDate5, formatPrice} from '../../../../../utils/formatter';
+import {ISurveyListItem} from '../../../../../interface/enquiry/IAddSurveyItemRequest';
+import {IGetSurveyItemListData} from '../../../../../interface/enquiry/IGetSurveyItemListResponse';
 
 interface ISurveyItemListViewProps {
-  item: any;
+  item: IGetSurveyItemListData;
   index: number;
 }
 
@@ -13,25 +15,22 @@ const SurveyItemListView: React.FC<ISurveyItemListViewProps> = ({
   item,
   index,
 }) => {
+  const items: ISurveyListItem[] = item.surveyItems;
+
   const showSurveyDateAndNumber = () => {
     if (index == 0) {
       return (
         <View style={styles.surveyDateAndNumberContainer}>
           <View style={styles.contentContainer}>
             <Text style={styles.contentLabelText2}>SURVEY DATE: </Text>
-            {/* <ClockIcon width={22} height={22} /> */}
             <Spacer width={4} />
             <Text style={styles.contentLabelText}>
-              {formatDate5(item.surveyDate)}
+              {formatDate5(new Date(item.surveyDate))}
             </Text>
           </View>
           <View style={styles.contentContainer}>
-            <Text style={styles.contentLabelText2}>
-              {`SURVEY NO#: `}
-            </Text>
-            <Text style={styles.contentLabelText}>
-              {item.surveyListNo}
-            </Text>
+            <Text style={styles.contentLabelText2}>{`SURVEY NO#: `}</Text>
+            <Text style={styles.contentLabelText}>{item.surveyListNo}</Text>
           </View>
         </View>
       );
@@ -39,41 +38,36 @@ const SurveyItemListView: React.FC<ISurveyItemListViewProps> = ({
     return null;
   };
 
-  
-
   return (
     <>
       {showSurveyDateAndNumber()}
-      <View style={styles.container}>
-        <View style={styles.rightContentContainer}>
-          <View style={styles.contentContainer}>
-            <Text style={styles.contentLabelText2}>
-              {`Item Name: `} 
-            </Text>
-            <Text style={styles.contentLabelText}>
-              {item.itemName}
-            </Text>
-          </View>
-          <View style={styles.contentContainer}>
-            <Text style={styles.contentLabelText2}>
-              {`Quantity: `}
-            </Text>
-            <Text style={styles.contentLabelText}>
-              {item.quantity}
-            </Text>
-          </View>
-         
-          <View style={styles.contentContainer}>
-            <Text style={styles.contentLabelText2}>
-              {`Value Of Goods: `}
-            </Text>
-            <Text style={styles.contentLabelText}>
-              {formatPrice(item.valueOfGoods)}
-            </Text>
-          </View>
-        </View>
-      </View>
-      <Spacer height={6} />
+      {items.map((d: ISurveyListItem) => {
+        return (
+          <>
+            <View style={styles.container}>
+              <View style={styles.rightContentContainer}>
+                <View style={styles.contentContainer}>
+                  <Text style={styles.contentLabelText2}>{`Item Name: `}</Text>
+                  <Text style={styles.contentLabelText}>{d.itemName}</Text>
+                </View>
+                <View style={styles.contentContainer}>
+                  <Text style={styles.contentLabelText2}>{`Quantity: `}</Text>
+                  <Text style={styles.contentLabelText}>{d.quantity}</Text>
+                </View>
+                <View style={styles.contentContainer}>
+                  <Text style={styles.contentLabelText2}>
+                    {`Value Of Goods: `}
+                  </Text>
+                  <Text style={styles.contentLabelText}>
+                    {formatPrice(d.valueOfGoods)}
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <Spacer height={6} />
+          </>
+        );
+      })}
     </>
   );
 };

@@ -43,7 +43,7 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
     getCurrentCompanyId().then(id => {
       const payload :IGetSurvyeItemListRequestPayload= {
         enquiryId:enquiryId,
-        id: id as string,
+        // id: id as string,
       }
       dispatch(getSurveyItemListRequest(payload));
     }).catch(err => console.log(err));
@@ -133,7 +133,7 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
                   {taskName == 'FOLLOW UP'
                     ? 'No Followups found!'
                     : taskData == 'SURVEY ITEM'
-                    ? 'No Survey Item found!'
+                    ? 'No Survey List Items found!'
                     : 'No Survey found!'}
                 </Text>
               </View>

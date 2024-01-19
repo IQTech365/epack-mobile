@@ -9,11 +9,11 @@ export interface IGetSurveyItemListData extends IAddSurveyItemRequest {
 
 export interface IGetSurvyeItemListRequestPayload {
     enquiryId: string;
-    id: string;
+    // id: string;
 }
 
 export interface IGetSurveyItemListResponse {
-    data: IGetSurveyItemListData;
+    data: IGetSurveyItemListData[];
     status: number;
     error: boolean;
 }
