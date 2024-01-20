@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import {COLOR_BLACK, COLOR_GRAY, COLOR_GRAY2} from '../../utils/colors';
+import {COLOR_BLACK, COLOR_GRAY, COLOR_GRAY2, COLOR_GRAY3} from '../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -7,6 +7,15 @@ const styles = StyleSheet.create({
     width: width * 0.44,
     borderWidth: 0.5,
     borderColor: COLOR_GRAY,
+    paddingVertical: 12,
+    borderRadius: 5,
+    paddingHorizontal: 8,
+  },
+  disabledContainer: {
+    width: width * 0.44,
+    borderWidth: 0.5,
+    borderColor: COLOR_GRAY,
+    backgroundColor: COLOR_GRAY3,
     paddingVertical: 12,
     borderRadius: 5,
     paddingHorizontal: 8,

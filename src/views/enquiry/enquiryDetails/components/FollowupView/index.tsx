@@ -117,7 +117,7 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
             showsVerticalScrollIndicator={false}
             renderItem={({item, index}) =>
               taskData == 'SURVEY ITEM' ? (
-                <SurveyItemListView item={item} index={index} />
+                <SurveyItemListView item={item} index={index} enquiryId={enquiryId} />
               ) : (
                 <FollowupListItem
                   comment={item?.comment}

@@ -30,8 +30,6 @@ const styles = StyleSheet.create({
   },
   surveyDateAndNumberContainer: {
     width: width * 0.9,
-    // paddingVertical: 9,
-    // paddingHorizontal: 12,
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',

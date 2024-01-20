@@ -46,7 +46,10 @@ import {
     updateEnquiryStatusSuccess,
     updateShiftingInfoFailure,
     updateShiftingInfoRequest,
-    updateShiftingInfoSuccess
+    updateShiftingInfoSuccess,
+    updateSurveryItemListFailure,
+    updateSurveryItemListRequest,
+    updateSurveryItemListSuccess
 } from '../redux/slices/EnquirySlice';
 import { IGetEnquiriesResponse } from '../interface/enquiry/IGetEnquiriesResponse';
 import { IAddFollowupRequest } from '../interface/enquiry/IAddFollowupRequest';
@@ -68,6 +71,7 @@ import { ISingleEnquiryResponse } from '../interface/enquiry/ISingleEnquiryRespo
 import { IAddPackingMaterialRequest } from '../interface/enquiry/IAddPackingMaterialRequest';
 import { IAddPackingMaterialResponse } from '../interface/enquiry/IAddPackingMaterialResponse';
 import { IGetPackingMaterialsRequest, IPackingMaterialsResponse } from '../interface/enquiry/IPackingMaterialsResponse';
+import { IUpdateSurveyItemRequest, IUpdateSurveyItemResponse } from '../interface/enquiry/enquiry';
 
 export function* addEnquirySaga(action: PayloadAction<IAddEnquiryRequest>) {
     try {
@@ -237,6 +241,17 @@ export function* getPackingMaterialsSaga(action: PayloadAction<IGetPackingMateri
     }
 }
 
+export function* updateSurveyItemListSaga(action: PayloadAction<IUpdateSurveyItemRequest>) {
+    try {
+        const response: IUpdateSurveyItemResponse = yield call(EnquiryService.UpdateSurveyItemListService, action.payload);
+        console.log('updateSurveyItemListSaga-response----', JSON.stringify(response));
+        yield put(updateSurveryItemListSuccess(response));
+    } catch (error) {
+        console.log('updateSurveyItemListSaga-error----', JSON.stringify(error));
+        yield put(updateSurveryItemListFailure(error));
+    }
+}
+
 export function* watcherEnquirySaga() {
     yield takeLatest(addEnquiryRequest.type, addEnquirySaga);
     yield takeLatest(getEnquiriesRequest.type, getEnquiriesSaga);
@@ -253,4 +268,5 @@ export function* watcherEnquirySaga() {
     yield takeLatest(updateShiftingInfoRequest.type, updateShiftingInfoSaga);
     yield takeLatest(addPackingMaterialRequest.type, addPackingMaterialSaga);
     yield takeLatest(getPackingMaterialsRequest.type, getPackingMaterialsSaga);
+    yield takeLatest(updateSurveryItemListRequest.type, updateSurveyItemListSaga);
 }

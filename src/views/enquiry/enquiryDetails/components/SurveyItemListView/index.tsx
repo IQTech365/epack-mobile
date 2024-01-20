@@ -14,103 +14,69 @@ import {useNavigation} from '@react-navigation/native';
 interface ISurveyItemListViewProps {
   item: IGetSurveyItemListData;
   index: number;
+  enquiryId:string;
 }
 
 const SurveyItemListView: React.FC<ISurveyItemListViewProps> = ({
   item,
   index,
+  enquiryId,
 }) => {
-  const items: ISurveyListItem[] = item.surveyItems;
   const navigation = useNavigation();
 
-  const showSurveyDateAndNumber = () => {
-    return (
-      <View style={styles.surveyDateAndNumberContainer}>
-        <View style={styles.contentContainer}>
-          <Text style={styles.contentLabelText2}>SURVEY DATE: </Text>
-          <Spacer width={4} />
-          <Text style={styles.contentLabelText}>
-            {formatDate5(new Date(item.surveyDate))}
-          </Text>
-        </View>
-        <View style={styles.contentContainer}>
-          <Text style={styles.contentLabelText2}>{`SURVEY NO#: `}</Text>
-          <Spacer width={4} />
-          <Text style={styles.contentLabelText}>{item.surveyListNo}</Text>
-        </View>
-        <View style={styles.contentContainer}>
-          <Text style={styles.contentLabelText2}>{`TOTAL ITEMS: `}</Text>
-          <Spacer width={4} />
-          <Text style={styles.contentLabelText}>{item.surveyItems.length}</Text>
-        </View>
-        <View style={styles.actionContainer}>
-          <TouchableOpacity
-            style={styles.action}
-            onPress={() => {}}
-            activeOpacity={0.6}>
-            <ShareIcon width={24} height={24} />
-            <Text style={styles.actionText}>Share</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.action}
-            onPress={() => {}}
-            activeOpacity={0.6}>
-            <DownloadIcon width={24} height={24} />
-            <Text style={styles.actionText}>Download</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.action}
-            onPress={() => {}}
-            activeOpacity={0.6}>
-            <PreviewIcon width={24} height={24} />
-            <Text style={styles.actionText}>Preview</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.action}
-            onPress={() => {
-              //@ts-ignore
-              navigation.navigate("EditSurveyItems", {item: item})
-            }}
-            activeOpacity={0.6}>
-            <EditIcon width={24} height={24} />
-            <Text style={styles.actionText}>Edit</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  };
-
   return (
-    <>
-      {showSurveyDateAndNumber()}
-      {/* {items.map((d: ISurveyListItem) => {
-        return (
-          <>
-            <View style={styles.container}>
-              <View style={styles.rightContentContainer}>
-                <View style={styles.contentContainer}>
-                  <Text style={styles.contentLabelText2}>{`Item Name: `}</Text>
-                  <Text style={styles.contentLabelText}>{d.itemName}</Text>
-                </View>
-                <View style={styles.contentContainer}>
-                  <Text style={styles.contentLabelText2}>{`Quantity: `}</Text>
-                  <Text style={styles.contentLabelText}>{d.quantity}</Text>
-                </View>
-                <View style={styles.contentContainer}>
-                  <Text style={styles.contentLabelText2}>
-                    {`Value Of Goods: `}
-                  </Text>
-                  <Text style={styles.contentLabelText}>
-                    {formatPrice(d.valueOfGoods)}
-                  </Text>
-                </View>
-              </View>
-            </View>
-            <Spacer height={6} />
-          </>
-        );
-      })} */}
-    </>
+    <View style={styles.surveyDateAndNumberContainer} key={`${index}`}>
+      <View style={styles.contentContainer}>
+        <Text style={styles.contentLabelText2}>SURVEY DATE: </Text>
+        <Spacer width={4} />
+        <Text style={styles.contentLabelText}>
+          {formatDate5(new Date(item.surveyDate))}
+        </Text>
+      </View>
+      <View style={styles.contentContainer}>
+        <Text style={styles.contentLabelText2}>{`SURVEY NO#: `}</Text>
+        <Spacer width={4} />
+        <Text style={styles.contentLabelText}>{item.surveyListNo}</Text>
+      </View>
+      <View style={styles.contentContainer}>
+        <Text style={styles.contentLabelText2}>{`TOTAL ITEMS: `}</Text>
+        <Spacer width={4} />
+        <Text style={styles.contentLabelText}>{item.surveyItems.length}</Text>
+      </View>
+      <View style={styles.actionContainer}>
+        <TouchableOpacity
+          style={styles.action}
+          onPress={() => {}}
+          activeOpacity={0.6}>
+          <ShareIcon width={24} height={24} />
+          <Text style={styles.actionText}>Share</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.action}
+          onPress={() => {}}
+          activeOpacity={0.6}>
+          <DownloadIcon width={24} height={24} />
+          <Text style={styles.actionText}>Download</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.action}
+          onPress={() => {}}
+          activeOpacity={0.6}>
+          <PreviewIcon width={24} height={24} />
+          <Text style={styles.actionText}>Preview</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.action}
+          onPress={() => {
+            //@ts-ignore
+            navigation.navigate('EditSurveyItems', {item: item, enquiryId: enquiryId});
+          }}
+          activeOpacity={0.6}>
+          <EditIcon width={24} height={24} />
+          <Text style={styles.actionText}>Edit</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 };
 

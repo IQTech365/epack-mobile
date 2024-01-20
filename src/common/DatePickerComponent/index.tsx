@@ -12,6 +12,7 @@ interface IDatePickerProps {
   showTime?: boolean;
   defaultValue?: Date;
   mode?: 'date' | 'time' | 'datetime';
+  disabled?: boolean;
 }
 
 const DatePickerComponent: React.FC<IDatePickerProps> = forwardRef(
@@ -23,6 +24,7 @@ const DatePickerComponent: React.FC<IDatePickerProps> = forwardRef(
       showTime = false,
       defaultValue,
       mode = 'datetime',
+      disabled = false,
     },
     ref,
   ) => {
@@ -34,6 +36,7 @@ const DatePickerComponent: React.FC<IDatePickerProps> = forwardRef(
     }));
 
     const errorBorderStyle = error ? styles.errorBorderColor : null;
+    const containerStyle = disabled ? styles.disabledContainer : styles.container;
 
     const getDateAndTime = () => {
       if (showTime) {
@@ -54,10 +57,11 @@ const DatePickerComponent: React.FC<IDatePickerProps> = forwardRef(
 
     return (
       <>
-        <View style={[styles.container, errorBorderStyle, style]}>
+        <View style={[containerStyle, errorBorderStyle, style]}>
           <TouchableOpacity
             activeOpacity={0.4}
             onPress={() => setOpen(true)}
+            disabled={disabled}
             style={styles.contentContainer}>
             <Text style={styles.dateText}>{getDateAndTime()}</Text>
             <CalendarIcon width={18} height={18} />

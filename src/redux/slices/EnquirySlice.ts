@@ -22,6 +22,7 @@ import { ISingleEnquiryResponse } from '../../interface/enquiry/ISingleEnquiryRe
 import { IAddPackingMaterialResponse } from '../../interface/enquiry/IAddPackingMaterialResponse';
 import { IAddPackingMaterialRequest } from '../../interface/enquiry/IAddPackingMaterialRequest';
 import { IGetPackingMaterialsRequest, IPackingMaterialsResponse } from '../../interface/enquiry/IPackingMaterialsResponse';
+import { IUpdateSurveyItemRequest, IUpdateSurveyItemResponse } from '../../interface/enquiry/enquiry';
 
 interface IEnquiryState {
   // Get Enquiries
@@ -126,6 +127,12 @@ interface IEnquiryState {
    getPackingMaterialsSuccess: boolean;
    getPackingMaterialsFailure: boolean;
    getPackingMaterialsError: any;
+   // Update Survey Item List
+   updateSurveyItemInfo: IUpdateSurveyItemResponse | null;
+   updateSurveyItemRequesting: boolean;
+   updateSurveyItemSuccess:boolean;
+   updateSurveyItemFailure:boolean;
+   updateSurveyItemError: any;
 }
 
 const initialState: IEnquiryState = {
@@ -231,6 +238,12 @@ const initialState: IEnquiryState = {
    getPackingMaterialsSuccess: false,
    getPackingMaterialsFailure: false,
    getPackingMaterialsError: null,
+    // Update Survey Item List
+    updateSurveyItemInfo: null,
+    updateSurveyItemRequesting: false,
+    updateSurveyItemSuccess:false,
+    updateSurveyItemFailure:false,
+    updateSurveyItemError: null,
 };
 
 export const EnquirySlice = createSlice({
@@ -631,6 +644,27 @@ export const EnquirySlice = createSlice({
         state.getPackingMaterialsSuccess = false;
         state.getPackingMaterialsFailure = false;
         state.getPackingMaterialsError = null;
+      },
+      // Update Survey Item List
+      updateSurveryItemListRequest: (state, action: PayloadAction<IUpdateSurveyItemRequest>) => {
+        state.updateSurveyItemRequesting = true;
+      },
+      updateSurveryItemListSuccess: (state, action: PayloadAction<IUpdateSurveyItemResponse>) => {
+        state.updateSurveyItemRequesting = false;
+        state.updateSurveyItemSuccess = true;
+        state.updateSurveyItemInfo = action.payload;
+      },
+      updateSurveryItemListFailure: (state, action: PayloadAction<any>) => {
+        state.updateSurveyItemRequesting = false;
+        state.updateSurveyItemFailure = true;
+        state.updateSurveyItemError = action.payload;
+      },
+      resetUpdateSurveryItemListRequest: (state) => {
+        state.updateSurveyItemRequesting = false;
+        state.updateSurveyItemSuccess = false;
+        state.updateSurveyItemFailure = false;
+        state.updateSurveyItemError = null;
+        state.updateSurveyItemInfo = null;
       }
   },
 });
@@ -717,4 +751,9 @@ export const {
    getPackingMaterialsSuccess,
    getPackingMaterialsFailure,
    resetGetPackingMaterialsRequest,
+   // Update Survey Item List
+   updateSurveryItemListRequest,
+   updateSurveryItemListSuccess,
+   updateSurveryItemListFailure,
+   resetUpdateSurveryItemListRequest,
 } = EnquirySlice.actions;
