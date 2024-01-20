@@ -5,4 +5,5 @@ export type EnquiryStackParamList = {
     AddEnquiry: undefined,
     EnquiryDetails: {enquiryId: string, item: IEnquiry} | undefined,
     EditSurveyItems: {item:IGetSurveyItemListData, enquiryId: string} | undefined,
+    EditPackingMaterials: {enquiryId: string} | undefined,
 }

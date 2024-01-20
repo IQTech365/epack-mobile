@@ -98,12 +98,15 @@ const SignInPageView = (props: any) => {
 
   useEffect(() => {
     if (!requesting && success) {
+      console.log('Block-success--success--', success);
       if(isStaffLogin) {
+        console.log('Block-success--success2--', success);
         setAuthToken(otpData?.data?.jwtToken);
         dispatch(restGetOtpRequest());
         const uri = `companyId/${getCompanyId()}`;
         dispatch(getCompaniesRequest(uri));
       } else {
+        console.log('Block-success--success3--', success);
         dispatch(restGetOtpRequest());
         navigation.navigate(AuthStackRoute.OTPInput);
       }

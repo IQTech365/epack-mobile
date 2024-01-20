@@ -36,15 +36,15 @@ const styles = StyleSheet.create({
 },
 label: {
     color: COLOR_BLACK,
-    fontSize: 14,
-    textAlign:'center'
+    fontSize: 16,
+    textAlign:'center',
+    fontFamily: 'WorkSans-Medium'
 },
 mainWrapper: {
     width: width * 0.9,
     alignSelf: 'center',
     flexDirection: 'row',
     alignItems: 'center',
-    // justifyContent: 'space-between',
 },
 textContainer: {
     width: width * 0.44,
@@ -127,6 +127,9 @@ counterContainer: {
     color: COLOR_BLACK,
     fontSize: 14,
     fontWeight: '400',
+  },
+  modalStyle: {
+    width: width * 0.9,
   }
 });
 

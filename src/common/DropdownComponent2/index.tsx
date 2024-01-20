@@ -8,21 +8,27 @@ import {
   Dimensions,
   TouchableWithoutFeedback,
   ScrollView,
+  ViewStyle,
 } from 'react-native';
 import styles from './style';
 import CloseIcon from '../../images/icons/close_icon.svg';
 import DownArrowIcon from '../../images/icons/down-arrow.svg';
-import { COLOR_GRAY } from '../../utils/colors';
+import {COLOR_GRAY} from '../../utils/colors';
 
 interface IEpackDropdownProps {
   placeholder: string;
   data: string[];
   hanldeData: (data: string) => void;
   inputDefaultValue?: string;
+  wrapperStyle?: ViewStyle;
+  disabled?: boolean;
 }
 
 const EpackDropdown: React.FC<IEpackDropdownProps> = forwardRef(
-  ({placeholder, data, hanldeData, inputDefaultValue}, ref) => {
+  (
+    {placeholder, data, hanldeData, inputDefaultValue, wrapperStyle, disabled},
+    ref,
+  ) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedValue, setSelectedValue] = useState<string | null>(null);
     const [inputValue, setInputValue] = useState(data && data[0]);
@@ -31,6 +37,7 @@ const EpackDropdown: React.FC<IEpackDropdownProps> = forwardRef(
     const {width: windowWidth} = Dimensions.get('window');
     const [modalWidth, setModalWidth] = useState(windowWidth);
     const [modalPosition, setModalPosition] = useState({top: 0, left: 0});
+    const mainStyle = disabled ? styles.disabled : {};
 
     const toggleDropdown = () => {
       setIsOpen(!isOpen);
@@ -62,12 +69,12 @@ const EpackDropdown: React.FC<IEpackDropdownProps> = forwardRef(
     };
 
     React.useImperativeHandle(ref, () => ({
-        setValue
+      setValue,
     }));
 
     const setValue = (value: string) => {
-        setInputValue(value);
-    }
+      setInputValue(value);
+    };
 
     useEffect(() => {
       setOptions(data);
@@ -80,7 +87,7 @@ const EpackDropdown: React.FC<IEpackDropdownProps> = forwardRef(
     }, [inputDefaultValue]);
 
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, mainStyle, wrapperStyle]}>
         <TextInput
           style={styles.input}
           placeholder={placeholder}
@@ -90,8 +97,12 @@ const EpackDropdown: React.FC<IEpackDropdownProps> = forwardRef(
           // onFocus={toggleDropdown}
           onChangeText={text => setInputValue(text)}
           onBlur={addCustomOption}
+          editable={!disabled}
         />
-        <TouchableOpacity onPress={toggleDropdown} style={styles.dropdownIcon}>
+        <TouchableOpacity
+          onPress={toggleDropdown}
+          style={styles.dropdownIcon}
+          disabled={disabled}>
           <Text>
             {isOpen ? null : <DownArrowIcon width={15} height={20} />}
           </Text>
@@ -116,18 +127,18 @@ const EpackDropdown: React.FC<IEpackDropdownProps> = forwardRef(
                 <CloseIcon width={20} height={20} />
               </TouchableOpacity>
             </View>
-            <ScrollView  style={{ maxHeight: 200 }}>
-            <View>
-              {data &&
-                data.map(option => (
-                  <TouchableOpacity
-                    key={option}
-                    onPress={() => selectOption(option)}
-                    style={styles.optionItem}>
-                    <Text style={styles.optionItemText}>{option}</Text>
-                  </TouchableOpacity>
-                ))}
-            </View>
+            <ScrollView style={{maxHeight: 200}}>
+              <View>
+                {data &&
+                  data.map(option => (
+                    <TouchableOpacity
+                      key={option}
+                      onPress={() => selectOption(option)}
+                      style={styles.optionItem}>
+                      <Text style={styles.optionItemText}>{option}</Text>
+                    </TouchableOpacity>
+                  ))}
+              </View>
             </ScrollView>
           </View>
         </Modal>

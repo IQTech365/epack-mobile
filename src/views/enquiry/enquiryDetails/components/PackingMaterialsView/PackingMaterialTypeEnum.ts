@@ -1,0 +1,15 @@
+export enum EPackingMaterialType {
+    LABOUR,
+    PACKING_TAPES,
+    BUBBLE_WRAPES,
+    CORRUGATE_SHEET,
+    WATERPROOF_LAMINATION,
+    THERMOCOL,
+    CARTON_BOXES,
+    AIR_BUBBLE,
+    NEW_PAPER,
+    FOAM_SHEET,
+    PLASTIC_CARATE,
+    WOODEN_FRAME,
+    EXTRA,
+}

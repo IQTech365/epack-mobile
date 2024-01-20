@@ -1,25 +1,27 @@
 import React, {useEffect} from 'react';
 import {FlatList, View, Text} from 'react-native';
 import styles from './style';
-import {useAppDispatch, useAppSelector} from '../../../../../../redux/hooks';
+import {useAppDispatch, useAppSelector} from '../../../redux/hooks';
 import {
   getPackingMaterialsRequest,
   resetGetPackingMaterialsRequest,
-} from '../../../../../../redux/slices/EnquirySlice';
+} from '../../../redux/slices/EnquirySlice';
 import {
   IGetPackingMaterialsRequest,
   IMaterial,
   IPackingMaterial,
-} from '../../../../../../interface/enquiry/IPackingMaterialsResponse';
-import Spacer from '../../../../../../common/Spacer';
-import {formatDate5} from '../../../../../../utils/formatter';
-import Spinner from '../../../../../../common/Spinner';
+} from '../../../interface/enquiry/IPackingMaterialsResponse';
+import Spacer from '../../../common/Spacer';
+import {formatDate5} from '../../../utils/formatter';
+import Spinner from '../../../common/Spinner';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { EnquiryStackParamList } from '../../../navigation/params/EnquiryStackParamList';
+import Header from '../../../common/Header';
 
-interface Props {
-  enquiryId: string;
-}
+type IProps = NativeStackScreenProps<EnquiryStackParamList, 'EditPackingMaterials'>;
 
-const PackingMaterials: React.FC<Props> = ({enquiryId}) => {
+const PackingMaterialListView: React.FC<IProps> = ({route, navigation}) => {
+  const enquiryId: string | undefined = route.params?.enquiryId;
   const dispatch = useAppDispatch();
   const {
     packingMaterials,
@@ -70,13 +72,13 @@ const PackingMaterials: React.FC<Props> = ({enquiryId}) => {
     return (
       <View style={styles.itemContainer} key={`{${index}`}>
         <View style={styles.itemNameContainer}>
-          <Text>{item.name}</Text>
+          <Text style={styles.text}>{item.name}</Text>
         </View>
         <View style={styles.itemQuantityContainer}>
-          <Text>{item.quantity}</Text>
+          <Text style={styles.text}>{item.quantity}</Text>
         </View>
         <View style={styles.itemUnitContainer}>
-          <Text>{item.type}</Text>
+          <Text style={styles.text}>{item.type}</Text>
         </View>
       </View>
     );
@@ -139,6 +141,7 @@ const PackingMaterials: React.FC<Props> = ({enquiryId}) => {
 
   return (
     <View style={styles.container}>
+      <Header canGoBack={true} label='PACKING MATERIALS' />
       <Spacer height={10} />
       <FlatList
         data={_getPackingMaterials()}
@@ -150,4 +153,4 @@ const PackingMaterials: React.FC<Props> = ({enquiryId}) => {
   );
 };
 
-export default PackingMaterials;
+export default PackingMaterialListView;

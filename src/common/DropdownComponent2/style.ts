@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import { COLOR_BLACK, COLOR_GRAY, COLOR_GRAY4, COLOR_GRAY5 } from '../../utils/colors';
+import { COLOR_BLACK, COLOR_BLUE3, COLOR_GRAY, COLOR_GRAY3, COLOR_GRAY4, COLOR_GRAY5 } from '../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -20,6 +20,9 @@ const styles = StyleSheet.create({
   container: {
     // position: 'relative',
     // backgroundColor: 'red'
+  },
+  disabled: {
+    backgroundColor: COLOR_GRAY3,
   },
   optionsContainer: {
     // left: 0,
