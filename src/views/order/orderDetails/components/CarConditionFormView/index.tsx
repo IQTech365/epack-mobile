@@ -24,7 +24,6 @@ import {ICreateCarConditionRequest} from '../../../../../interface/order/ICreate
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import {createCarConditionRequest, resetCreateCarConditionRequest} from '../../../../../redux/slices/OrderSlice';
 import Spinner from '../../../../../common/Spinner';
-import Toast from 'react-native-toast-message';
 import {
   getVehicleAccessoryList,
   getVehicleColorList,
@@ -38,6 +37,7 @@ import useInitialValueHook from '../../../../../hooks/useInitialValueHook';
 import useSerialNoHook from '../../../../../hooks/useSerialNo';
 import { DOCUMENT_TYPE, IGetSerialNoRequest } from '../../../../../interface/setting/serialNo/serialNo';
 import { getSerialNoRequest, resetGetSerialNoRequest } from '../../../../../redux/slices/SerialNoSettingSlice';
+import { ToastType, showToast } from '../../../../../utils/utility';
 
 interface ICarConditionFormViewProps {
   orderId: string | undefined;
@@ -291,19 +291,11 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
 
   useEffect(() => {
     if (!createCarConditionRequesting && createCarConditionSuccess) {
-      Toast.show({
-        type: 'success',
-        text1: 'Car condition',
-        text2: 'Car Condition has been added successfully',
-      });
+      showToast('Car Conditiion Created.', ToastType.SUCCESS);
       dispatch2(resetCreateCarConditionRequest());
       dispatch2(resetGetSerialNoRequest());
     } else if (!createCarConditionRequesting && createCarConditionError) {
-      Toast.show({
-        type: 'error',
-        text1: 'Car condition',
-        text2: 'Error in adding Car Condition. Please try again!',
-      });
+      showToast('Car Condition Not Created. Try again!', ToastType.ERROR);
       dispatch2(resetCreateCarConditionRequest());
     }
   }, [
