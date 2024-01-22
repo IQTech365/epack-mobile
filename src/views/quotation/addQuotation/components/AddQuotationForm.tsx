@@ -323,7 +323,7 @@ const AddQuotationForm: React.FC<Props> = ({
       if (doValidation()) {
         if(isEdit) {
           delete payload.customerId;
-          delete payload.enquiryId;
+          // delete payload.enquiryId;
           const updatePayload:IUpdateQuotationRequest = {
             params: item?._id as string,
             payload: payload,
@@ -360,6 +360,7 @@ const AddQuotationForm: React.FC<Props> = ({
 
   useEffect(() => {
     if(isEdit) {
+      console.log('Edit-Quotation--', isEdit);
       setItem(_getQuotationItem() as ISingleQuotationData)
       setIsEditQuotation(isEdit);
     }

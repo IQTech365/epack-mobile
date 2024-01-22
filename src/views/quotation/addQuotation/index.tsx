@@ -52,9 +52,10 @@ const AddQuotationView: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    _getQuotationSerialNoRequest();
     if(isEdit) {
       dispatch(getSingleQuotationRequest(item._id));
+    } else {
+      _getQuotationSerialNoRequest();
     }
   }, []);
   
@@ -66,7 +67,7 @@ const AddQuotationView: React.FC<Props> = ({
           <Spacer height={4} />
           <AddQuotationForm
             fromEnquiry={fromEnquiry}
-            enquiryId={enquiryId}
+            enquiryId={enquiryId || item.enquiryId}
             navigation={navigation}
             isEdit={isEdit}
             item={item}

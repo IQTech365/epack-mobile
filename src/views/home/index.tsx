@@ -70,11 +70,17 @@ const HomePageView = () => {
   useEffect(() => {
     _getAppSettingsRequest();
     _getSavedTemplateId();
-    dispatch(getCompaniesRequest(authId));
+    
     dispatch(getDashboardDataRequest());
     dispatch(getInsurancePercentagesRequest());
     dispatch(getFloorsRequest());
   }, []);
+
+  useEffect(() => {
+    if(authId) {
+      dispatch(getCompaniesRequest(authId));
+    }
+  }, [authId]);
 
   return (
     <View style={styles.container}>

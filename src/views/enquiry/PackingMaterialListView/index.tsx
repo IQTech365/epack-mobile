@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {FlatList, View, Text} from 'react-native';
+import {FlatList, View, Text, TouchableOpacity} from 'react-native';
 import styles from './style';
 import {useAppDispatch, useAppSelector} from '../../../redux/hooks';
 import {
@@ -14,11 +14,16 @@ import {
 import Spacer from '../../../common/Spacer';
 import {formatDate5} from '../../../utils/formatter';
 import Spinner from '../../../common/Spinner';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { EnquiryStackParamList } from '../../../navigation/params/EnquiryStackParamList';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {EnquiryStackParamList} from '../../../navigation/params/EnquiryStackParamList';
 import Header from '../../../common/Header';
+import EditIcon from '../../../images/icons/edit2.svg';
+import DeleteIcon from '../../../images/icons/delete.svg';
 
-type IProps = NativeStackScreenProps<EnquiryStackParamList, 'EditPackingMaterials'>;
+type IProps = NativeStackScreenProps<
+  EnquiryStackParamList,
+  'EditPackingMaterials'
+>;
 
 const PackingMaterialListView: React.FC<IProps> = ({route, navigation}) => {
   const enquiryId: string | undefined = route.params?.enquiryId;
@@ -71,14 +76,28 @@ const PackingMaterialListView: React.FC<IProps> = ({route, navigation}) => {
   const renderItem = (item: IMaterial, index: number) => {
     return (
       <View style={styles.itemContainer} key={`{${index}`}>
-        <View style={styles.itemNameContainer}>
-          <Text style={styles.text}>{item.name}</Text>
+        <View style={styles.itemContentContainer}>
+          <View style={styles.item}>
+            <Text style={styles.label}>{`Material: `}</Text>
+            <Text style={styles.text}>{item.name}</Text>
+          </View>
+          <View style={styles.item}>
+            <Text style={styles.label}>{"Quantity: "}</Text>
+            <Text style={styles.text}>{item.quantity}</Text>
+          </View>
+          <View style={styles.item}>
+            <Text style={styles.label}>{"Unit: "}</Text>
+            <Text style={styles.text}>{item.type ?? 'NA'}</Text>
+          </View>
         </View>
-        <View style={styles.itemQuantityContainer}>
-          <Text style={styles.text}>{item.quantity}</Text>
-        </View>
-        <View style={styles.itemUnitContainer}>
-          <Text style={styles.text}>{item.type}</Text>
+        <View style={styles.itemActionContainer}>
+          <TouchableOpacity>
+            <EditIcon width={24} height={24} />
+          </TouchableOpacity>
+          <Spacer height={10} />
+          <TouchableOpacity>
+            <DeleteIcon width={24} height={24} />
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -141,12 +160,12 @@ const PackingMaterialListView: React.FC<IProps> = ({route, navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Header canGoBack={true} label='PACKING MATERIALS' />
+      <Header canGoBack={true} label="PACKING MATERIALS" />
       <Spacer height={10} />
       <FlatList
         data={_getPackingMaterials()}
         renderItem={({item, index}) => renderItem(item, index)}
-        ListHeaderComponent={renderHeaderComponent(_getHeaderData())}
+        // ListHeaderComponent={renderHeaderComponent(_getHeaderData())}
         ListEmptyComponent={_renderEmptyView()}
       />
     </View>
