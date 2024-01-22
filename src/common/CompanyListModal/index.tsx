@@ -8,6 +8,7 @@ import {getPurchasedSubscriptionRequest, resetGetPurchasedSubscriptionRequest} f
 import Spinner from '../Spinner';
 import { setCurrentCompanyId, setIsRegistrationComplete, setLoginStatus } from '../../utils/storage';
 import { useAuthContext } from '../../provider/AuthProvider';
+import useAuthId from '../../hooks/useAuthId';
 
 interface IProps {
   visible: boolean;
@@ -25,8 +26,8 @@ const CompanyListModal: React.FC<IProps> = ({
   doCompleteRegistration,
 }) => {
   const dispatch = useAppDispatch();
+  const authId = useAuthId();
   const [selectedCompany, setSelectedCompany] = useState<ICompanyInfoData|null>(null);
-  const {verifiedData} = useAppSelector(state => state.OTP);
   const {
     getPurchasedSubscriptionsRequesting,
     getPurchasedSubscriptionsSuccess,
@@ -37,9 +38,8 @@ const CompanyListModal: React.FC<IProps> = ({
   const {setLoggedIn} = authContext;
 
   const _getSubscriptionList = () => {
-    const {data} = verifiedData || {};
     const payload: IGetPurchasedSubscriptionParams = {
-      authId: data?.id,
+      authId: authId,
       companyId: selectedCompany?._id as string,
     };
     dispatch(getPurchasedSubscriptionRequest(payload));

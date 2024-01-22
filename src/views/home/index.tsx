@@ -19,10 +19,13 @@ import {
   getInsurancePercentagesRequest,
 } from '../../redux/slices/CommonSlice';
 import {IDashboardData} from '../../interface/common/common';
+import { getCompaniesRequest } from '../../redux/slices/CompanySlice';
+import useAuthId from '../../hooks/useAuthId';
 
 const HomePageView = () => {
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
+  const authId = useAuthId();
   const {getDashboardDataRequesting, dashboard} = useAppSelector(
     state => state.Common,
   );
@@ -67,6 +70,7 @@ const HomePageView = () => {
   useEffect(() => {
     _getAppSettingsRequest();
     _getSavedTemplateId();
+    dispatch(getCompaniesRequest(authId));
     dispatch(getDashboardDataRequest());
     dispatch(getInsurancePercentagesRequest());
     dispatch(getFloorsRequest());

@@ -1,31 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, Image} from 'react-native';
 import styles from './style';
 import {Shadow} from 'react-native-shadow-2';
-import { useAppSelector } from '../../../../redux/hooks';
-import { ICompanyInfoData } from '../../../../interface/companyRegistration/IGetCompaniesResponse';
-import { getCurrentCompanyId } from '../../../../utils/storage';
+import {useAppSelector} from '../../../../redux/hooks';
+import {ICompanyInfoData} from '../../../../interface/companyRegistration/IGetCompaniesResponse';
+import {getCurrentCompanyId} from '../../../../utils/storage';
 
 const ClientInfoView = () => {
   const {companies} = useAppSelector(state => state.Company);
-  const {data: companiesData} = companies || {};
-  console.log('companiesData--', JSON.stringify(companiesData));
-  
   const [company, setCompany] = useState<ICompanyInfoData>();
 
   const _getCompany = () => {
-    getCurrentCompanyId().then(id => {
-      if (
-        companiesData &&
-        Array.isArray(companiesData) &&
-        companiesData.length > 0
-      ) {
-        const _company = companiesData.find((d:ICompanyInfoData) => d._id == id);
-        setCompany(_company);
-      } else if (companiesData && companiesData.hasOwnProperty('authId')) {
-        setCompany(companiesData);
-      }
-    }).catch(err => console.log('storage-err', err));
+    getCurrentCompanyId()
+      .then(id => {
+        console.log('currentCompanyId-', id);
+        const {data} = companies || {};
+        console.log('companiesData-rrr-', JSON.stringify(data));
+        if (data && Array.isArray(data) && data.length > 0) {
+          const _company = data.find((d: ICompanyInfoData) => d._id == id);
+          setCompany(_company);
+        } else if (data && data.hasOwnProperty('authId')) {
+          setCompany(data);
+        }
+      })
+      .catch(err => console.log('storage-err', err));
   };
 
   const _getCompanyNameOrLogo = () => {
@@ -39,16 +37,18 @@ const ClientInfoView = () => {
         />
       );
     } else {
-      if(!companyName) return null;
+      if (!companyName) return null;
       return (
         <View style={styles.logo}>
-          <Text style={styles.nameText2}>{companyName?.substring(0, 1).toUpperCase()}</Text>
+          <Text style={styles.nameText2}>
+            {companyName?.substring(0, 1).toUpperCase()}
+          </Text>
         </View>
       );
     }
   };
 
-  useEffect(()=> {
+  useEffect(() => {
     _getCompany();
   }, [companies]);
 
@@ -56,9 +56,7 @@ const ClientInfoView = () => {
     <Shadow style={styles.cardWrapper} distance={6}>
       <View style={styles.clientInfoContainer}>
         <View style={styles.clientLogoContainer}>
-          <View style={styles.logoContainer}>
-          {_getCompanyNameOrLogo()}
-          </View>
+          <View style={styles.logoContainer}>{_getCompanyNameOrLogo()}</View>
         </View>
         <View style={styles.clientDetailContainer}>
           <Text style={styles.nameText}>{company?.companyName}</Text>

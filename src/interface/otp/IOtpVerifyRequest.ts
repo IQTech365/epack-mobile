@@ -1,4 +1,4 @@
 export interface IOtpVerifyRequest {
-    id: string,
+    _id: string,
     otp: string,
 }

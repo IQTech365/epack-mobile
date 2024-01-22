@@ -20,6 +20,7 @@ import {
 import Header from '../../common/Header';
 import {IOtpVerifyRequest} from '../../interface/otp/IOtpVerifyRequest';
 import {
+  removeCurrentCompanyId,
   setAuthToken,
   setCurrentCompanyId,
   setIsRegistrationComplete,
@@ -116,7 +117,7 @@ const OTPPageView = (props: any) => {
 
   const onVerifyOtpPress = useCallback(() => {
     const payload: IOtpVerifyRequest = {
-      id: otpData?.data.id as string,
+      _id: otpData?.data?._id as string,
       otp: `${otp1}${otp2}${otp3}${otp4}${otp5}${otp6}`,
     };
     dispatch(verifyOtpRequest(payload));
@@ -124,7 +125,8 @@ const OTPPageView = (props: any) => {
 
   const disabled = !otp1 || !otp2 || !otp3 || !otp4 || !otp5 || !otp6;
 
-  const closeModal = () => {
+  const closeModal = async () => {
+    await removeCurrentCompanyId();
     setShowCompaniesModal(false);
     navigation.navigate("Subscription");
   };
@@ -159,9 +161,9 @@ const OTPPageView = (props: any) => {
   useEffect(() => {
     if (!verifyOtpRequesting && verifyOtpSuccess) {
       const {data} = verifiedData || {};
-      if (data?.id) {
+      if (data?.token) {
         setAuthToken(data.token);
-        dispatch(getCompaniesRequest(data?.id));
+        dispatch(getCompaniesRequest(otpData?.data?._id as string));
         dispatch(resetVerifyOtpRequest());
       }
     } else if (!verifyOtpRequesting && verifyOtpFailure) {
