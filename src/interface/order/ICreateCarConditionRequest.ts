@@ -1,11 +1,13 @@
 export interface IAccessory {
-  accessoryName:string;
-  present:boolean;
+  accessoryName: string;
+  present: boolean;
 }
 
 export interface ICreateCarConditionRequest {
   companyId: string;
   orderId: string;
+  isAuto: boolean;
+  isHeadOffice: boolean;
   templateId: string;
   carConditionNumber: string;
   dateOfCarCondition: string;
@@ -14,7 +16,7 @@ export interface ICreateCarConditionRequest {
   model: string;
   yearOfManufacturing: string;
   color: string;
-  vehicleAccessories:IAccessory[],
+  vehicleAccessories: IAccessory[];
   vehicleRegistrationNumber: string;
   vehicleCoveredDistanceInKM: string;
   vehicleValue: string;

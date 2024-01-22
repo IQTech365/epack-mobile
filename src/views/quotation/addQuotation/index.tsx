@@ -67,7 +67,7 @@ const AddQuotationView: React.FC<Props> = ({
           <Spacer height={4} />
           <AddQuotationForm
             fromEnquiry={fromEnquiry}
-            enquiryId={enquiryId || item.enquiryId}
+            enquiryId={enquiryId || item?.enquiryId}
             navigation={navigation}
             isEdit={isEdit}
             item={item}

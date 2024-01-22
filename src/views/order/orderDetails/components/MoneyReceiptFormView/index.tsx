@@ -37,7 +37,7 @@ import { ToastType, showToast } from '../../../../../utils/utility';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
 import useInitialValueHook from '../../../../../hooks/useInitialValueHook';
 import { DOCUMENT_TYPE, IGetSerialNoRequest } from '../../../../../interface/setting/serialNo/serialNo';
-import { getSerialNoRequest } from '../../../../../redux/slices/SerialNoSettingSlice';
+import { getSerialNoRequest, resetGetSerialNoRequest } from '../../../../../redux/slices/SerialNoSettingSlice';
 import useSerialNoHook from '../../../../../hooks/useSerialNo';
 
 interface IMoneyReceiptFormViewProps {
@@ -199,6 +199,8 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
       const payload: ICreateMoneyReceiptRequest = {
         companyId: id as string,
         orderId: orderId as string,
+        isAuto: true,
+        isHeadOffice: true,
         receiptNumber: reducerState.receiptNumber,
         receiptDate: reducerState.receiptDate,
         arivalDate: reducerState.arivalDate,
@@ -273,6 +275,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
     ) {
       showToast('Money Receipt Created.', ToastType.SUCCESS);
       dispatch2(resetCreateMoneyReceiptRequest());
+      dispatch2(resetGetSerialNoRequest());
     } else if (
       (!createMoneyReceiptRequesting && createMoneyReceiptError) ||
       (!editMoneyReceiptListRequesting && editMoneyReceiptListSuccess)

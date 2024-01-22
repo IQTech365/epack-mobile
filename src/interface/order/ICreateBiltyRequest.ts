@@ -13,6 +13,8 @@ export interface IMaterial {
 export interface ICreateBiltyRequest {
   companyId: string;
   enquiryId: string;
+  isAuto: boolean;
+  isHeadOffice: boolean;
   templateId: string;
   biltyNumber: string;
   biltyDate: string;

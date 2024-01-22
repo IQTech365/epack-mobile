@@ -33,7 +33,7 @@ import { ToastType, showToast } from '../../../../../utils/utility';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
 import useInitialValueHook from '../../../../../hooks/useInitialValueHook';
 import { DOCUMENT_TYPE, IGetSerialNoRequest } from '../../../../../interface/setting/serialNo/serialNo';
-import { getSerialNoRequest } from '../../../../../redux/slices/SerialNoSettingSlice';
+import { getSerialNoRequest, resetGetSerialNoRequest } from '../../../../../redux/slices/SerialNoSettingSlice';
 
 interface IBiltyFormViewProps {
   orderId: string | undefined;
@@ -75,6 +75,8 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
       const payload: ICreateBiltyRequest = {
         companyId: id as string,
         enquiryId: orderId as string,
+        isAuto: true,
+        isHeadOffice: true,
         templateId: 'fds32131',
         biltyNumber: state.bilty_lr_cr_no,
         biltyDate: state.date_of_bilty_lr_cr_no,
@@ -251,6 +253,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
     if (!createBiltyRequesting && createBiltySuccess) {
       showToast('New Bilty Created', ToastType.SUCCESS);
       dispatch(resetCreateBiltyRequest());
+      dispatch(resetGetSerialNoRequest());
     } else if (!createBiltyRequesting && createBiltyError) {
       showToast('New Bilty Not Created. Try again!', ToastType.ERROR);
       dispatch(resetCreateBiltyRequest());

@@ -37,7 +37,7 @@ import { getCurrentCompanyId } from '../../../../../utils/storage';
 import useInitialValueHook from '../../../../../hooks/useInitialValueHook';
 import useSerialNoHook from '../../../../../hooks/useSerialNo';
 import { DOCUMENT_TYPE, IGetSerialNoRequest } from '../../../../../interface/setting/serialNo/serialNo';
-import { getSerialNoRequest } from '../../../../../redux/slices/SerialNoSettingSlice';
+import { getSerialNoRequest, resetGetSerialNoRequest } from '../../../../../redux/slices/SerialNoSettingSlice';
 
 interface ICarConditionFormViewProps {
   orderId: string | undefined;
@@ -246,6 +246,8 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
       const payload: ICreateCarConditionRequest = {
         companyId: id as string,
         orderId: orderId as string,
+        isAuto: true,
+        isHeadOffice: true,
         templateId: '32423erer',
         carConditionNumber: reducerState.carConditionNumber,
         dateOfCarCondition: reducerState.dateOfCarCondition,
@@ -295,6 +297,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
         text2: 'Car Condition has been added successfully',
       });
       dispatch2(resetCreateCarConditionRequest());
+      dispatch2(resetGetSerialNoRequest());
     } else if (!createCarConditionRequesting && createCarConditionError) {
       Toast.show({
         type: 'error',

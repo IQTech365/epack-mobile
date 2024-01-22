@@ -39,7 +39,7 @@ import { ISingleEnquiryData } from '../../../../../interface/enquiry/ISingleEnqu
 import useInitialValueHook from '../../../../../hooks/useInitialValueHook';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
 import { DOCUMENT_TYPE, IGetSerialNoRequest } from '../../../../../interface/setting/serialNo/serialNo';
-import { getSerialNoRequest } from '../../../../../redux/slices/SerialNoSettingSlice';
+import { getSerialNoRequest, resetGetSerialNoRequest } from '../../../../../redux/slices/SerialNoSettingSlice';
 import useSerialNoHook from '../../../../../hooks/useSerialNo';
 
 interface IInvoiceFormViewProps {
@@ -161,6 +161,8 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item}) => {
     };
     const payload: ICreateInvoiceRequest = {
       enquiryId: orderId,
+      isAuto: true,
+      isHeadOffice: true,
       branchId: '',
       serialNo: state.invoice_no,
       shiftingLuggage: state.shifting_luggage,
@@ -244,6 +246,7 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item}) => {
     if(!createInvoiceRequesting && createInvoiceSuccess) {
       showToast('New Invoice Created', ToastType.SUCCESS);
       dispatch(resetCreateInvoiceRequest());
+      dispatch(resetGetSerialNoRequest());
     } else if(!createInvoiceRequesting && createInvoiceFailure) {
       showToast('New Invoice Not Created. Try again!', ToastType.ERROR);
       dispatch(resetCreateInvoiceRequest());

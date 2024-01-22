@@ -1,6 +1,8 @@
 export interface ICreateMoneyReceiptRequest {
   companyId: string;
   orderId: string;
+  isAuto: boolean;
+  isHeadOffice: boolean;
   receiptNumber: string;
   receiptDate: string;
   arivalDate: string;

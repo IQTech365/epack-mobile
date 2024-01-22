@@ -43,6 +43,7 @@ import { IGetQuotationData } from '../../../../interface/quotation/IGetQuotation
 import { ISingleQuotationData } from '../../../../interface/quotation/IGetSingleQuotationResponse';
 import { IUpdateQuotationRequest } from '../../../../interface/quotation/quotation';
 import { ISingleEnquiryData } from '../../../../interface/enquiry/ISingleEnquiryResponse';
+import { resetGetSerialNoRequest } from '../../../../redux/slices/SerialNoSettingSlice';
 
 interface Props {
   fromEnquiry?: boolean;
@@ -377,6 +378,7 @@ const AddQuotationForm: React.FC<Props> = ({
     if (!addQuotationRequesting && addQuotationSuccess) {
       showToast('New Quotation Created.', ToastType.SUCCESS);
       dispatch(resetaddQuotationRequest());
+      dispatch(resetGetSerialNoRequest());
       _getQuotationsRequest();
       navigation?.goBack();
     } else if (!addQuotationRequesting && addQuotationFailure) {

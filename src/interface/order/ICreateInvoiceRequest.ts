@@ -56,6 +56,8 @@ export interface IInvoiceStorageCharge {
 
 export interface ICreateInvoiceRequest {
   enquiryId: string;
+  isAuto: boolean;
+  isHeadOffice: boolean;
   branchId: string;
   serialNo: string;
   shiftingLuggage: string;

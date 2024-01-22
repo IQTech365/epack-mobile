@@ -77,6 +77,7 @@ export const SNSettingSlice = createSlice({
             state.getSerialNumberSuccess = false;
             state.getSerialNumberFailure = false;
             state.getSerialNumberError = null;
+            state.serialNo = null;
         },
     }
 });

@@ -68,7 +68,7 @@ const OrderPickupAddressView: FC<IProps> = ({}) => {
       setPickupState(states[0]);
       //@ts-ignore
       cityDropdownRef?.current?.setValue(cities[0]);
-      setPickupPincode(cities[0]);
+      setPickupCity(cities[0]);
     }
   }, [states, cities]);
 
