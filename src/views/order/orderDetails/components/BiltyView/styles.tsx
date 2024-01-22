@@ -8,7 +8,7 @@ import {
   COLOR_GRAY5,
   COLOR_WHITE,
 } from '../../../../../utils/colors';
-const {width} = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     width: width * 0.95,
@@ -118,6 +118,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 20,
     backgroundColor: COLOR_BLUE,
+  },
+  modalStyle: {
+    width: width,
+    height: height,
+  },
+  headerStyle: {
+    width: width,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
   },
 });
 

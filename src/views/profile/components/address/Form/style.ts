@@ -4,7 +4,7 @@ const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
-    width: width * 0.95,
+    width: width * 0.85,
     alignSelf: 'center',
     alignItems: 'center',
     backgroundColor: COLOR_WHITE,
@@ -14,14 +14,14 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   elementContainer: {
-    width: width * 0.9,
+    width: width * 0.8,
     alignSelf: 'center',
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   itemContainer: {
-    width: width * 0.44,
+    width: width * 0.38,
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     alignSelf: 'center',
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   elementContainer3: {
-    width: width * 0.9,
+    width: width * 0.8,
     alignSelf: 'center',
     alignItems: 'flex-start',
     justifyContent: 'center',
@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
   previewButtonStyle: {
     backgroundColor: COLOR_BLUE,
     borderRadius: 5,
+    width: width * 0.7
   },
   addMoreContainer: {
     borderWidth: 1,

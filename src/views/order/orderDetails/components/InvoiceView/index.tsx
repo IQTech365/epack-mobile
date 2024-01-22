@@ -148,6 +148,8 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item}) => {
         <ModalHOC
             visible={showModal}
             onClose={handleShowPreviewModalClose}
+            modalStyle={styles.modalStyle}
+            headerStyle={styles.headerStyle}
             title="Preview">
             <View style={{flex: 1}}>
               <TemplateViewer html={invoiceTemplateHtml} />

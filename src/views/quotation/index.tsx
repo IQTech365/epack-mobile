@@ -393,6 +393,8 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
       <ModalHOC
         visible={showModal}
         onClose={_hanldeCloseShowPreviewModal}
+        modalStyle={styles.modalStyle}
+        headerStyle={styles.headerStyle}
         title="Preview">
         <View style={{flex: 1}}>
           <TemplateViewer html={quotationTemplateHtml} />

@@ -14,6 +14,7 @@ import {
   IDashboardDataResponse,
   IInsurancePercentageResponse,
   IFloorResponse,
+  IDashboardPaylod,
 } from '../../interface/common/common';
 
 interface ICommonState {
@@ -407,7 +408,7 @@ export const CommonSlice = createSlice({
       state.getBannersError = action.payload;
     },
     // Dashbaord
-    getDashboardDataRequest: state => {
+    getDashboardDataRequest: (state, action: PayloadAction<IDashboardPaylod>) => {
       state.getDashboardDataRequesting = true;
     },
     getDashboardDataSuccess: (

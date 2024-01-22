@@ -166,11 +166,13 @@ const BasicDetailsView: React.FC<IBasicDetailsViewProps> = ({}) => {
           <ModalHOC
             visible={openModal}
             onClose={handleModalClose}
+            modalStyle={styles.modalWrapper}
             title="UPDATE COMPANY BASIC DETAILS">
-            <>
+            <View style={styles.modalStyle}>
               <UpdateBasicDetailsForm onClose={handleModalClose} />
               <Toast config={toastConfig} />
-            </>
+              <Spacer height={10} />
+            </View>
           </ModalHOC>
         </View>
       </AvoidSoftInputViewHOC>

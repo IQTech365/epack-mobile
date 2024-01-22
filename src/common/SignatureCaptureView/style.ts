@@ -3,7 +3,7 @@ import {COLOR_BLACK, COLOR_BLUE, COLOR_GRAY2, COLOR_WHITE} from '../../utils/col
 const {width} = Dimensions.get('window');
 const styles = StyleSheet.create({
   signatureWrapper: {
-    width: width * 0.9,
+    width: width * 0.8,
     height: 150,
     alignSelf: 'center',
     alignItems: 'center',
@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   signature: {
-    width: width * 0.88,
+    width: width * 0.78,
     height: 140,
     alignSelf: 'center',
     borderColor: COLOR_BLACK,

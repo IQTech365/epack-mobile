@@ -250,6 +250,11 @@ export interface IDashboardData {
   todayFollowup:number;
 }
 
+// Dashbaord Payload
+export interface IDashboardPaylod {
+  companyId:string;
+}
+
 export interface IDashboardDataResponse {
   data: IDashboardData;
   status: number;

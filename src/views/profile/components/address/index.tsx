@@ -80,11 +80,13 @@ const AddressView: React.FC<IAddressViewProps> = ({showEditIcon = true}) => {
         <ModalHOC
           visible={openModal}
           onClose={handleModalClose}
+          modalStyle={styles.modalWrapper}
           title="UPDATE COMPANY ADDRESS">
-          <>
+          <View style={styles.modalStyle}>
             <UpdateComanyAddressForm />
             <Toast />
-          </>
+            <Spacer height={8} />
+          </View>
         </ModalHOC>
         <Spinner show={getCompaniesRequesting} />
       </View>

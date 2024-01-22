@@ -273,6 +273,8 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
           <ModalHOC
             visible={showModal}
             onClose={handleShowPreviewModalClose}
+            modalStyle={styles.modalStyle}
+            headerStyle={styles.headerStyle}
             title="Preview">
             <View style={{flex: 1}}>
               <TemplateViewer html={moneyReceiptTemplateHtml} />

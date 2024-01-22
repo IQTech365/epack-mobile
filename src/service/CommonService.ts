@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 import {Api} from '../http/Api';
 import { GET_APP_SETTINGS, GET_BANNERS, GET_DASHBOARD_DATA, GET_FLOOR_LIST, GET_INSURANCE_PERCENTAGE_LIST, GET_PACKING_TYPES, GET_SERIAL_NO_SUBMODULES, GET_VEHICLE_ACCESSORIES, GET_VEHICLE_COLORS, GET_VEHICLE_COMPANIES, GET_VEHICLE_MODELS, GET_VEHICLE_TYPES, IMAGE_UPLOAD, SEARCH_CUSTOMER } from '../http/Endpoint';
-import { IAppSettingResponse, IBannerListResponse, ICustomersRequest, ICustomersResponse, IDashboardDataResponse, IFloorResponse, IInsurancePercentageResponse, IPackingTypeResponse, ISubmoduleResponse, IVehicleAccessoryResponse, IVehicleColorResponse, IVehicleCompanyResponse, IVehicleModelResponse, IVehicleTypesResponse } from '../interface/common/common';
+import { IAppSettingResponse, IBannerListResponse, ICustomersRequest, ICustomersResponse, IDashboardDataResponse, IDashboardPaylod, IFloorResponse, IInsurancePercentageResponse, IPackingTypeResponse, ISubmoduleResponse, IVehicleAccessoryResponse, IVehicleColorResponse, IVehicleCompanyResponse, IVehicleModelResponse, IVehicleTypesResponse } from '../interface/common/common';
 
 export const GetPackingTypesService = async (): Promise<IPackingTypeResponse> => {
     const api = Api.getInstance();
@@ -69,9 +69,9 @@ export const GetBannersService = async (): Promise<IBannerListResponse> => {
 }
 
 // Dashboard
-export const GetDashboardService = async (): Promise<IDashboardDataResponse> => {
+export const GetDashboardService = async (payload:IDashboardPaylod): Promise<IDashboardDataResponse> => {
     const api = Api.getInstance();
-    return await api.get<IDashboardDataResponse>(GET_DASHBOARD_DATA);
+    return await api.post<IDashboardPaylod, AxiosResponse<IDashboardDataResponse>>(payload, GET_DASHBOARD_DATA);
 }
 
 // Insurance Percentages

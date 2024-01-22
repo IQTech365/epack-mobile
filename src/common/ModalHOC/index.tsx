@@ -9,6 +9,7 @@ interface IModalProps {
   onClose: () => void;
   title: string;
   modalStyle?: ViewStyle;
+  headerStyle?:ViewStyle;
 }
 
 const ModalHOC: React.FC<IModalProps> = ({
@@ -17,6 +18,7 @@ const ModalHOC: React.FC<IModalProps> = ({
   title,
   onClose,
   modalStyle,
+  headerStyle,
 }) => {
   return (
     <View style={styles.container}>
@@ -26,8 +28,8 @@ const ModalHOC: React.FC<IModalProps> = ({
         visible={visible}
         onRequestClose={() => {}}>
         <View style={[styles.centeredView]}>
-          <View style={styles.modalView}>
-            <View style={styles.header}>
+          <View style={[styles.modalView, modalStyle]}>
+            <View style={[styles.header, headerStyle]}>
               <Text style={styles.titleText}>{title}</Text>
               <TouchableOpacity onPress={onClose}>
                 <CloseIcon width={25} height={25} />

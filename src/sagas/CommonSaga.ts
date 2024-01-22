@@ -6,6 +6,7 @@ import {
     IAppSettingResponse,
   ICustomersRequest,
   ICustomersResponse,
+  IDashboardPaylod,
   IPackingTypeResponse,
   ISubmoduleResponse,
   IVehicleAccessoryResponse,
@@ -183,10 +184,10 @@ export function* getBannersSaga(action: PayloadAction<any>) {
     }
 }
 
-export function* getDashboardSaga(action: PayloadAction<any>) {
+export function* getDashboardSaga(action: PayloadAction<IDashboardPaylod>) {
     try {
         //@ts-ignore
-        const response: any = yield call(CommonService.GetDashboardService);
+        const response: any = yield call(CommonService.GetDashboardService, action.payload);
         console.log('getDashboardSaga-response----', JSON.stringify(response));
         yield put(getDashboardDataSuccess(response));
     } catch (error) {

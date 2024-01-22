@@ -4,7 +4,7 @@ const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
-    width: width * 0.95,
+    width: width * 0.85,
     alignSelf: 'center',
     alignItems: 'center',
     backgroundColor: COLOR_WHITE,
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   elementContainer3: {
-    width: width * 0.9,
+    width: width * 0.8,
     alignSelf: 'center',
     alignItems: 'flex-start',
     justifyContent: 'center',
@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
   previewButtonStyle: {
     backgroundColor: COLOR_BLUE,
     borderRadius: 5,
+    width: width * 0.8
   },
   photoCaptureContainer: {
     width: width * 0.9,
@@ -87,7 +88,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   checkboxContainer: {
-    width: width * 0.9,
+    width: width * 0.8,
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignSelf: 'center',
