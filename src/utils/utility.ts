@@ -77,9 +77,12 @@ export const getTemplateIdBySubModuleId = (
 
 export const getSubmoduleInitialValue = (subModuleId:string, appSettings:IAppSetting[]) => {
   let initialValue:string = '';
+  let prefix:string = '';
   if(appSettings && appSettings.length > 0) {
     const appSetting:IAppSetting = appSettings.find((d:IAppSetting) => d.subModuleId == subModuleId) as IAppSetting;
     initialValue = appSetting?.initialValue;
+    prefix = appSetting?.prefix;
+
   }
-  return initialValue;
+  return {initialValue, prefix};
 }

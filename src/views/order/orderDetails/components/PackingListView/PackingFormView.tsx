@@ -169,7 +169,7 @@ const ListHeaderView: React.FC<Props> = ({orderId}) => {
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
-                placeholder="HR 55 hY 2259"
+                placeholder="Serial#"
               />
             </View>
             <View style={styles.itemContainer}>

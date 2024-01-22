@@ -44,6 +44,7 @@ import { ISingleQuotationData } from '../../../../interface/quotation/IGetSingle
 import { IUpdateQuotationRequest } from '../../../../interface/quotation/quotation';
 import { ISingleEnquiryData } from '../../../../interface/enquiry/ISingleEnquiryResponse';
 import { resetGetSerialNoRequest } from '../../../../redux/slices/SerialNoSettingSlice';
+import useInitialValueHook from '../../../../hooks/useInitialValueHook';
 
 interface Props {
   fromEnquiry?: boolean;
@@ -94,6 +95,7 @@ const AddQuotationForm: React.FC<Props> = ({
     vehicleCompaniesRequesting,
     vehicleModelsRequesting,
   } = useAppSelector(state => state.Common);
+  const {prefix} = useInitialValueHook('658d3c6f585e3dde644da95b');
 
   const {getVehicleSizeRequesting} = useAppSelector(state => state.Vehicle);
 

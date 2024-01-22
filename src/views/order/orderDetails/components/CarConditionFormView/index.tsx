@@ -68,7 +68,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
   } = useAppSelector(state => state.Common);
   const dispatch2 = useAppDispatch();
   const authId = useAuthId();
-  const initialValue:string = useInitialValueHook('658d3cab585e3dde644da977');
+  const {initialValue, prefix} = useInitialValueHook('658d3cab585e3dde644da977');
   const serialNo:number = useSerialNoHook();
 
   const _getSerialNoRequest = () => {
@@ -78,6 +78,8 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
         payload: {
           activeCount: initialValue,
           companyId: id as string,
+          isAuto: true,
+          isHeadOffice: true,
         }
       }
       dispatch2(getSerialNoRequest(payload));

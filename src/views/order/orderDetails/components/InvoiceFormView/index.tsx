@@ -63,7 +63,7 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item}) => {
   const dispatch = useAppDispatch();
   const {createInvoiceRequesting, createInvoiceSuccess, createInvoiceFailure} = useAppSelector(state => state.Order);
 
-  const initialValue:string = useInitialValueHook('658d3ce2585e3dde644da98c');
+  const {initialValue, prefix} = useInitialValueHook('658d3ce2585e3dde644da98c');
   const serialNo:number = useSerialNoHook();
 
   const _getSerialNoRequest = () => {
@@ -73,6 +73,8 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item}) => {
         payload: {
           activeCount: initialValue,
           companyId: id as string,
+          isAuto: true,
+          isHeadOffice: true,
         }
       }
       dispatch(getSerialNoRequest(payload));

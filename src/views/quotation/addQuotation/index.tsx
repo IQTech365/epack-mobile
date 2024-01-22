@@ -34,7 +34,7 @@ const AddQuotationView: React.FC<Props> = ({
   const item:IGetQuotationData = route?.params?.item as IGetQuotationData;
   const headerText = isEdit ? 'UPDATE QUOTATION' : 'CREATE QUOTATION';
   const dispatch = useAppDispatch();
-  const initialValue:string = useInitialValueHook('658d3c6f585e3dde644da95b');
+  const {initialValue, prefix} = useInitialValueHook('658d3c6f585e3dde644da95b');
 
   const _getQuotationSerialNoRequest = () => {
     getCurrentCompanyId().then(id => {

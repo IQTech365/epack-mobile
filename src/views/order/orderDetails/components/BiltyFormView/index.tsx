@@ -55,7 +55,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
   
   const authId = useAuthId();
 
-  const initialValue:string = useInitialValueHook('658d3cb5585e3dde644da97e');
+  const {initialValue, prefix} = useInitialValueHook('658d3cb5585e3dde644da97e');
 
   const _getSerialNoRequest = () => {
     getCurrentCompanyId().then(id => {
@@ -64,6 +64,8 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
         payload: {
           activeCount: initialValue,
           companyId: id as string,
+          isAuto: true,
+          isHeadOffice: true,
         }
       }
       dispatch(getSerialNoRequest(payload));

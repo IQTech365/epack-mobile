@@ -49,7 +49,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
   const [surveyItems, setSurveyItems] = useState<ISurveyListItem[]>([]);
   const authId = useAuthId();
   const serialNo: number = useSerialNoHook();
-  const initialValue: string = useInitialValueHook('658d3d2f585e3dde644da9b2');
+  const {initialValue, prefix} = useInitialValueHook('658d3d2f585e3dde644da9b2');
 
   const _getSerialNoRequest = () => {
     getCurrentCompanyId()

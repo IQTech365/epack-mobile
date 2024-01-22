@@ -4,6 +4,7 @@ import { getSubmoduleInitialValue } from "../utils/utility";
 
 const useInitialValueHook = (submoduleId:string) => {
     let initialValue:string = "";
+    let prefix:string = "";
     const {appSettings} = useAppSelector(state => state.Common);
 
     const _getAppSettingList = () => {
@@ -14,9 +15,11 @@ const useInitialValueHook = (submoduleId:string) => {
         }
         return list;
     }
-    initialValue = getSubmoduleInitialValue(submoduleId, _getAppSettingList());
-    console.log('initialValue----', initialValue);
-    return initialValue;
+    const {initialValue:iniital, prefix:pfx} = getSubmoduleInitialValue(submoduleId, _getAppSettingList());
+    initialValue = iniital;
+    prefix = pfx;
+    console.log('prefix, initialValue----', prefix, initialValue);
+    return {initialValue, prefix};
 }
 
 export default useInitialValueHook;

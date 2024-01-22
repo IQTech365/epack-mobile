@@ -70,7 +70,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
   );
   const {data: quotationData} = quotations || {};
   const dispatch2 = useAppDispatch();
-  const initialValue:string = useInitialValueHook('658d3c9c585e3dde644da970');
+  const {initialValue, prefix} = useInitialValueHook('658d3c9c585e3dde644da970');
   const serialNo:number = useSerialNoHook();
 
   const _getSerialNoRequest = () => {
@@ -80,6 +80,8 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
         payload: {
           activeCount: initialValue,
           companyId: id as string,
+          isAuto: true,
+          isHeadOffice: true,
         }
       }
       dispatch2(getSerialNoRequest(payload));
