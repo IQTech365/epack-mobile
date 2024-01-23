@@ -492,11 +492,14 @@ export const CommonSlice = createSlice({
       state.getPendingRegistrationFailure = true;
       state.getPendingRegistrationError = action.payload;
     },
-    resetGetPendingRegisrationRequest: (state, action: PayloadAction<any>) => {
+    resetGetPendingRegisrationRequest: (state) => {
       state.getPendingRegistrationRequesting = false;
       state.getPendingRegistrationSuccess = false;
-      state.getPendingRegistrationFailure = true;
-      state.getPendingRegistrationError = action.payload;
+      state.getPendingRegistrationFailure = false;
+      state.getPendingRegistrationError = null;
+    },
+    resetPendingRegistrationInfoPayload: (state) => {
+      state.pendingRegistrationInfo = null;
     },
   },
 });
@@ -567,5 +570,6 @@ export const {
   getPendingRegisrationSuccess,
   getPendingRegisrationFailure,
   resetGetPendingRegisrationRequest,
+  resetPendingRegistrationInfoPayload,
 } = CommonSlice.actions;
 

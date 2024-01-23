@@ -135,6 +135,12 @@ export const CompanySlice = createSlice({
       state.getCompaniesFailure = true;
       state.error = action.payload;
     },
+    resetGetCompaniesRequest: (state) => {
+      state.getCompaniesRequesting = false;
+      state.getCompaniesSuccess = false;
+      state.getCompaniesFailure = false;
+      state.companies = null;
+    },
     // Edit Company
     editCompanyRequest: (
       state,
@@ -254,6 +260,7 @@ export const {
   getCompaniesRequest,
   getCompaniesSuccess,
   getCompaniesFailure,
+  resetGetCompaniesRequest,
   // Edit Company
   editCompanyRequest,
   editCompanySuccess,

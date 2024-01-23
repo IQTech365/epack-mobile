@@ -95,7 +95,6 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({
         }
       };
       dispatch(editCompanyRequest(payload));
-      // dispatch(getCompaniesRequest(firstCompany?.authId as string));
     }).catch(err => console.log('storage-error--', err));
     
   };

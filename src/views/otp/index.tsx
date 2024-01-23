@@ -32,6 +32,8 @@ import CompanyListModal from '../../common/CompanyListModal';
 import {ICompanyInfoData} from '../../interface/companyRegistration/IGetCompaniesResponse';
 import { ToastType, showToast } from '../../utils/utility';
 import { getSavedDocumentTemplateIdListRequest } from '../../redux/slices/TemplateSettingSlice';
+import { getPendingRegisrationRequest, resetGetPendingRegisrationRequest } from '../../redux/slices/CommonSlice';
+import { IPendingRegistration } from '../../interface/common/common';
 
 const OTPPageView = (props: any) => {
   const {navigation} = props;
@@ -52,6 +54,13 @@ const OTPPageView = (props: any) => {
     getCompaniesFailure,
     companies,
   } = useAppSelector(state => state.Company);
+
+  const {
+    pendingRegistrationInfo,
+    getPendingRegistrationRequesting,
+    getPendingRegistrationSuccess,
+    getPendingRegistrationFailure,
+  } = useAppSelector(state => state.Common);
 
 
   const [otp1, setOtp1] = useState<string>('');
@@ -163,7 +172,7 @@ const OTPPageView = (props: any) => {
       const {data} = verifiedData || {};
       if (data?.token) {
         setAuthToken(data.token);
-        dispatch(getCompaniesRequest(otpData?.data?._id as string));
+        dispatch(getPendingRegisrationRequest(otpData?.data?._id as string))
         dispatch(resetVerifyOtpRequest());
       }
     } else if (!verifyOtpRequesting && verifyOtpFailure) {
@@ -173,8 +182,33 @@ const OTPPageView = (props: any) => {
   }, [verifyOtpRequesting, verifyOtpSuccess, verifyOtpFailure]);
 
   useEffect(() => {
+    if (!getPendingRegistrationRequesting && getPendingRegistrationSuccess) {
+      const {data} = pendingRegistrationInfo;
+      if(data !== null) {
+        const pendingRegistrationData:IPendingRegistration = data as IPendingRegistration;
+        //@ts-ignore
+        if(pendingRegistrationData.purchase && (pendingRegistrationData.purchase?.companyId == undefined || pendingRegistrationData.purchase?.companyId == null)) {
+          navigation.replace("CompanyBasicInfo");
+          dispatch(resetGetPendingRegisrationRequest());
+        } else {
+          dispatch(getCompaniesRequest(otpData?.data?._id as string));
+          dispatch(resetGetPendingRegisrationRequest());
+        }
+      } else {
+        dispatch(getCompaniesRequest(otpData?.data?._id as string));
+        dispatch(resetGetPendingRegisrationRequest());
+      }
+    } else if (!getPendingRegistrationRequesting && getPendingRegistrationFailure) {
+      dispatch(resetGetPendingRegisrationRequest());
+      showToast('Error Getting Incomplete Subscription. Try again!', ToastType.ERROR);
+    }
+  }, [getPendingRegistrationRequesting, getPendingRegistrationSuccess, getPendingRegistrationFailure]);
+
+  useEffect(() => {
     if (!getCompaniesRequesting && getCompaniesSuccess) {
       const {data} = companies || {};
+      console.log('getCompaniesRequesting---', getCompaniesRequesting);
+      console.log('getCompaniesSuccess---', getCompaniesSuccess);
       console.log('data-data----', JSON.stringify(data));
       if (data && Array.isArray(data) && data.length > 0) {
         setShowCompaniesModal(true);

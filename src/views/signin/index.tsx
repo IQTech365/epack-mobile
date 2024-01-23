@@ -98,7 +98,6 @@ const SignInPageView = (props: any) => {
 
   useEffect(() => {
     if (!requesting && success) {
-      console.log('Block-success--success--', success);
       if(isStaffLogin) {
         console.log('Block-success--success2--', success);
         setAuthToken(otpData?.data?.jwtToken);
@@ -108,7 +107,7 @@ const SignInPageView = (props: any) => {
       } else {
         console.log('Block-success--success3--', success);
         dispatch(restGetOtpRequest());
-        navigation.navigate(AuthStackRoute.OTPInput);
+        navigation.replace(AuthStackRoute.OTPInput);
       }
     } else if (!requesting && error) {
       Alert.alert('Something went wrong. Please try again!');

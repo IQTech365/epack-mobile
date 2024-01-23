@@ -41,9 +41,6 @@ import {logout} from '../redux/slices/OtpSlice';
 import {useAppDispatch, useAppSelector} from '../redux/hooks';
 import {useAuthContext} from '../provider/AuthProvider';
 import VehicleMangementStacknavigator from './VehicleMangementStacknavigator';
-import SubscriptionPlanView from '../views/subscriptionPlan';
-import PaymentMethodView from '../views/paymentMethod';
-import {getCompaniesRequest} from '../redux/slices/CompanySlice';
 import {ICompanyInfoData} from '../interface/companyRegistration/IGetCompaniesResponse';
 import AddFranchiseView from '../views/profile/components/addFranchiseDetail';
 import AddBranchView from '../views/profile/components/addBranchDetail';
@@ -79,12 +76,6 @@ const DrawerContent = (props: any) => {
     setLoggedIn(false);
     dispatch(logout());
   };
-  // useEffect(() => {
-  //   if (otpData) {
-  //     const {data = {}} = otpData || {};
-  //     dispatch(getCompaniesRequest(data?.id as string));
-  //   }
-  // }, [dispatch]);
 
   useEffect(() => {
     if(companies) {

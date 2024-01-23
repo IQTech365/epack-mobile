@@ -29,6 +29,8 @@ import Header from '../../../common/Header';
 import { resetUpdateSubscriptionRequest, updateSubscriptionRequest } from '../../../redux/slices/SubscriptionSlice';
 import { IPurchase, IUpdateSubscriptionRequest } from '../../../interface/subscription/subscription';
 import { ToastType, showToast } from '../../../utils/utility';
+import { IPendingRegistration } from '../../../interface/common/common';
+import { resetPendingRegistrationInfoPayload } from '../../../redux/slices/CommonSlice';
 
 interface IProps {
   navigation: NavigationProp<any, any>;
@@ -61,6 +63,7 @@ const CompanyBasicDetailsForm: FC<IProps> = ({navigation}) => {
   const {requesting, success, error, failure, addCompanyInfo} = useAppSelector(
     state => state.Company,
   );
+  const {pendingRegistrationInfo} = useAppSelector(state => state.Common);
   const {
     updateSubscriptionRequesting,
     updateSubscriptionSuccess,
@@ -173,13 +176,21 @@ const CompanyBasicDetailsForm: FC<IProps> = ({navigation}) => {
     if (!requesting && success && !error) {
       const {data} = addCompanyInfo || {};
       const {data:purchaseData} = addPurchaseInfo || {};
+      const {data:pendingPurchaseData} =  pendingRegistrationInfo || {};
       if (data) {
         const company: ICompanyInfoData = data as ICompanyInfoData;
         const purchase: IPurchase = purchaseData as IPurchase;
+        const pendingPurchase: IPendingRegistration = pendingPurchaseData as IPendingRegistration;
+        let purchaseId:string = '';
+        if(purchase && purchase?.purchase?._id) {
+          purchaseId = purchase?.purchase?._id;
+        } else if(pendingPurchase && pendingPurchase?.purchase?._id) {
+          purchaseId = pendingPurchase?.purchase?._id;
+        }
         const payload: IUpdateSubscriptionRequest = {
           params: {
             authId: authId,
-            purchaseId: purchase.purchase._id,
+            purchaseId: purchaseId,
           },
           payload: {
             companyId: company._id,
@@ -188,9 +199,11 @@ const CompanyBasicDetailsForm: FC<IProps> = ({navigation}) => {
         dispatch(updateSubscriptionRequest(payload));
       }
       dispatch(resetAddCompanyRequest());
+      dispatch(resetPendingRegistrationInfoPayload());
     } else if (!requesting && !success && error) {
       Alert.alert('Error in registering the company');
       dispatch(resetAddCompanyRequest());
+      dispatch(resetPendingRegistrationInfoPayload());
     }
   }, [requesting, success, error]);
 
