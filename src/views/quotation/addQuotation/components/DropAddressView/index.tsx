@@ -10,12 +10,12 @@ import EpackDropdown from '../../../../../common/DropdownComponent2';
 import Spacer from '../../../../../common/Spacer';
 import DropdownComponent from '../../../../../common/DropdownComponent';
 import liftStatusOptions from '../../../../../data/liftStatusOptions.json';
-import floorOptions from '../../../../../data/floorOptions.json';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import usePincodeHook from '../../../../../hooks/usePincodeHook';
 import { getCities2, getStates2 } from '../../../../../utils/formatter';
 import Spinner from '../../../../../common/Spinner';
 import { IDropAddress, IEnquiry } from '../../../../../interface/quotation/IGetQuotationsResponse';
+import useUtilityHook from '../../../../../hooks/useUtilityHook';
 
 interface Props {
   fromEnquiry?:boolean;
@@ -36,6 +36,9 @@ const DropAddressView: React.FC<Props> = ({fromEnquiry = false}) => {
     () => {},
     () => {},
   );
+
+  const {getFloorsList} = useUtilityHook();
+  const floorOptions = getFloorsList();
 
   const pincodeInputCompRef = useRef(null);
   const addressInputCompRef = useRef(null);

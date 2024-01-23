@@ -26,7 +26,7 @@ import {
   setIsRegistrationComplete,
   setLoginStatus,
 } from '../../utils/storage';
-import {getCompaniesRequest} from '../../redux/slices/CompanySlice';
+import {getCompaniesRequest, resetGetCompaniesRequest} from '../../redux/slices/CompanySlice';
 import {useAuthContext} from '../../provider/AuthProvider';
 import CompanyListModal from '../../common/CompanyListModal';
 import {ICompanyInfoData} from '../../interface/companyRegistration/IGetCompaniesResponse';
@@ -168,15 +168,19 @@ const OTPPageView = (props: any) => {
   }
 
   useEffect(() => {
+    dispatch(resetGetCompaniesRequest());
+  }, []);
+
+  useEffect(() => {
     if (!verifyOtpRequesting && verifyOtpSuccess) {
       const {data} = verifiedData || {};
       if (data?.token) {
         setAuthToken(data.token);
         dispatch(getPendingRegisrationRequest(otpData?.data?._id as string))
-        dispatch(resetVerifyOtpRequest());
+        // dispatch(resetVerifyOtpRequest());
       }
     } else if (!verifyOtpRequesting && verifyOtpFailure) {
-      dispatch(resetVerifyOtpRequest());
+      // dispatch(resetVerifyOtpRequest());
       showToast('Otp verification failed. Try again!', ToastType.ERROR);
     }
   }, [verifyOtpRequesting, verifyOtpSuccess, verifyOtpFailure]);
@@ -205,21 +209,23 @@ const OTPPageView = (props: any) => {
   }, [getPendingRegistrationRequesting, getPendingRegistrationSuccess, getPendingRegistrationFailure]);
 
   useEffect(() => {
-    if (!getCompaniesRequesting && getCompaniesSuccess) {
+    if (!getCompaniesRequesting && getCompaniesSuccess && verifyOtpSuccess) {
+      console.log('getCompaniesRequesting----', getCompaniesRequesting);
+      console.log('getCompaniesSuccess----', getCompaniesSuccess);
+      
       const {data} = companies || {};
-      console.log('getCompaniesRequesting---', getCompaniesRequesting);
-      console.log('getCompaniesSuccess---', getCompaniesSuccess);
-      console.log('data-data----', JSON.stringify(data));
       if (data && Array.isArray(data) && data.length > 0) {
         setShowCompaniesModal(true);
       } else {
         setShowCompaniesModal(false);
         navigation.replace("Subscription");
       }
+      dispatch(resetVerifyOtpRequest());
     } else if (!getCompaniesRequesting && getCompaniesFailure) {
+      dispatch(resetVerifyOtpRequest());
       showToast('Error in Getting companies details.', ToastType.ERROR);
     }
-  }, [getCompaniesRequesting, getCompaniesSuccess, getCompaniesFailure]);
+  }, [getCompaniesRequesting, getCompaniesSuccess, getCompaniesFailure, verifyOtpSuccess]);
 
   return (
     <AvoidSoftInputViewHOC>
