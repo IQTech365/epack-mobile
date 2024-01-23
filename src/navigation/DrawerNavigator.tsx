@@ -79,12 +79,12 @@ const DrawerContent = (props: any) => {
     setLoggedIn(false);
     dispatch(logout());
   };
-  useEffect(() => {
-    if (otpData) {
-      const {data = {}} = otpData || {};
-      dispatch(getCompaniesRequest(data?.id as string));
-    }
-  }, [dispatch]);
+  // useEffect(() => {
+  //   if (otpData) {
+  //     const {data = {}} = otpData || {};
+  //     dispatch(getCompaniesRequest(data?.id as string));
+  //   }
+  // }, [dispatch]);
 
   useEffect(() => {
     if(companies) {

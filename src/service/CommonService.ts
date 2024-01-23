@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 import {Api} from '../http/Api';
-import { GET_APP_SETTINGS, GET_BANNERS, GET_DASHBOARD_DATA, GET_FLOOR_LIST, GET_INSURANCE_PERCENTAGE_LIST, GET_PACKING_TYPES, GET_SERIAL_NO_SUBMODULES, GET_VEHICLE_ACCESSORIES, GET_VEHICLE_COLORS, GET_VEHICLE_COMPANIES, GET_VEHICLE_MODELS, GET_VEHICLE_TYPES, IMAGE_UPLOAD, SEARCH_CUSTOMER } from '../http/Endpoint';
-import { IAppSettingResponse, IBannerListResponse, ICustomersRequest, ICustomersResponse, IDashboardDataResponse, IDashboardPaylod, IFloorResponse, IInsurancePercentageResponse, IPackingTypeResponse, ISubmoduleResponse, IVehicleAccessoryResponse, IVehicleColorResponse, IVehicleCompanyResponse, IVehicleModelResponse, IVehicleTypesResponse } from '../interface/common/common';
+import { GET_APP_SETTINGS, GET_BANNERS, GET_DASHBOARD_DATA, GET_FLOOR_LIST, GET_INSURANCE_PERCENTAGE_LIST, GET_PACKING_TYPES, GET_PENDING_REGISTRATION, GET_SERIAL_NO_SUBMODULES, GET_VEHICLE_ACCESSORIES, GET_VEHICLE_COLORS, GET_VEHICLE_COMPANIES, GET_VEHICLE_MODELS, GET_VEHICLE_TYPES, IMAGE_UPLOAD, SEARCH_CUSTOMER } from '../http/Endpoint';
+import { IAppSettingResponse, IBannerListResponse, ICustomersRequest, ICustomersResponse, IDashboardDataResponse, IDashboardPaylod, IFloorResponse, IInsurancePercentageResponse, IPackingTypeResponse, IPendingRegistrationResponse, ISubmoduleResponse, IVehicleAccessoryResponse, IVehicleColorResponse, IVehicleCompanyResponse, IVehicleModelResponse, IVehicleTypesResponse } from '../interface/common/common';
 
 export const GetPackingTypesService = async (): Promise<IPackingTypeResponse> => {
     const api = Api.getInstance();
@@ -84,4 +84,10 @@ export const GetInsurancePercentageListService = async (): Promise<IInsurancePer
 export const GetFloorListService = async (): Promise<IFloorResponse> => {
     const api = Api.getInstance();
     return await api.get<IFloorResponse>(GET_FLOOR_LIST);
+}
+
+// Floors
+export const GetPendingRegistrationService = async (payload:string): Promise<IPendingRegistrationResponse> => {
+    const api = Api.getInstance();
+    return await api.get<IPendingRegistrationResponse>(GET_PENDING_REGISTRATION(payload));
 }

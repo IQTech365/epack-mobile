@@ -18,7 +18,7 @@ import {
   getFloorsRequest,
   getInsurancePercentagesRequest,
 } from '../../redux/slices/CommonSlice';
-import {IDashboardData} from '../../interface/common/common';
+import {IDashboardData, IDashboardPaylod} from '../../interface/common/common';
 import { getCompaniesRequest } from '../../redux/slices/CompanySlice';
 import useAuthId from '../../hooks/useAuthId';
 
@@ -67,11 +67,20 @@ const HomePageView = () => {
     return taskCountData;
   };
 
+  const _getDashboardData = () => {
+    getCurrentCompanyId().then(id => {
+      const payload:IDashboardPaylod = {
+        companyId: id as string,
+      }
+      dispatch(getDashboardDataRequest(payload));
+    }).catch(err => console.log('local-storage-error', err));
+    
+  }
+
   useEffect(() => {
     _getAppSettingsRequest();
     _getSavedTemplateId();
-    
-    dispatch(getDashboardDataRequest());
+    _getDashboardData();
     dispatch(getInsurancePercentagesRequest());
     dispatch(getFloorsRequest());
   }, []);

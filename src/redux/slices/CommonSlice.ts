@@ -15,6 +15,7 @@ import {
   IInsurancePercentageResponse,
   IFloorResponse,
   IDashboardPaylod,
+  IPendingRegistrationResponse,
 } from '../../interface/common/common';
 
 interface ICommonState {
@@ -102,6 +103,12 @@ interface ICommonState {
   getFloorsSuccess:boolean;
   getFloorsFailure:boolean;
   getFloorsError:any;
+  // Pending Registration
+  pendingRegistrationInfo:IPendingRegistrationResponse | null;
+  getPendingRegistrationRequesting:boolean;
+  getPendingRegistrationSuccess:boolean;
+  getPendingRegistrationFailure:boolean;
+  getPendingRegistrationError:any;
 }
 
 const initialState: ICommonState = {
@@ -189,6 +196,12 @@ const initialState: ICommonState = {
   getFloorsSuccess:false,
   getFloorsFailure:false,
   getFloorsError:null,
+  // Pending Registration
+  pendingRegistrationInfo: null,
+  getPendingRegistrationRequesting:false,
+  getPendingRegistrationSuccess:false,
+  getPendingRegistrationFailure:false,
+  getPendingRegistrationError:null,
 };
 
 export const CommonSlice = createSlice({
@@ -461,6 +474,30 @@ export const CommonSlice = createSlice({
       state.getFloorsFailure = true;
       state.getFloorsError = action.payload;
     },
+    // Pending Registration
+    getPendingRegisrationRequest: (state, action: PayloadAction<string>) => {
+      state.getPendingRegistrationRequesting = true;
+    },
+    getPendingRegisrationSuccess: (
+      state,
+      action: PayloadAction<IPendingRegistrationResponse>,
+    ) => {
+      state.getPendingRegistrationRequesting = false;
+      state.getPendingRegistrationSuccess = true;
+      state.pendingRegistrationInfo = action.payload;
+    },
+    getPendingRegisrationFailure: (state, action: PayloadAction<any>) => {
+      state.getPendingRegistrationRequesting = false;
+      state.getPendingRegistrationSuccess = false;
+      state.getPendingRegistrationFailure = true;
+      state.getPendingRegistrationError = action.payload;
+    },
+    resetGetPendingRegisrationRequest: (state, action: PayloadAction<any>) => {
+      state.getPendingRegistrationRequesting = false;
+      state.getPendingRegistrationSuccess = false;
+      state.getPendingRegistrationFailure = true;
+      state.getPendingRegistrationError = action.payload;
+    },
   },
 });
 
@@ -525,5 +562,10 @@ export const {
   getFloorsRequest,
   getFloorsSuccess,
   getFloorsFailure,
+  // Pending Registration
+  getPendingRegisrationRequest,
+  getPendingRegisrationSuccess,
+  getPendingRegisrationFailure,
+  resetGetPendingRegisrationRequest,
 } = CommonSlice.actions;
 

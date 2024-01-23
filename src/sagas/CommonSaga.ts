@@ -37,6 +37,9 @@ import {
   getPackingTypesFailure,
   getPackingTypesRequest,
   getPackingTypesSuccess,
+  getPendingRegisrationFailure,
+  getPendingRegisrationRequest,
+  getPendingRegisrationSuccess,
   getSubmoduleFailure,
   getSubmoduleRequest,
   getSubmoduleSuccess,
@@ -220,6 +223,18 @@ export function* getFloorListSaga(action: PayloadAction<any>) {
     }
 }
 
+export function* getPendingRegistrationSaga(action: PayloadAction<string>) {
+    try {
+        //@ts-ignore
+        const response: any = yield call(CommonService.GetPendingRegistrationService, action.payload);
+        console.log('getPendingRegistrationSaga-response----', JSON.stringify(response));
+        yield put(getPendingRegisrationSuccess(response));
+    } catch (error) {
+        console.log('getPendingRegistrationSaga-error----', error);
+        yield put(getPendingRegisrationFailure(error));
+    }
+}
+
 export function* watcherCommonSaga() {
     yield takeLatest(getPackingTypesRequest.type, getPackingTypesSaga);
     yield takeLatest(getVehicleTypesRequest.type, getVehicleTypesSaga);
@@ -235,4 +250,5 @@ export function* watcherCommonSaga() {
     yield takeLatest(getDashboardDataRequest.type, getDashboardSaga);
     yield takeLatest(getInsurancePercentagesRequest.type, getInsurancePercentageListSaga);
     yield takeLatest(getFloorsRequest.type, getFloorListSaga);
+    yield takeLatest(getPendingRegisrationRequest.type, getPendingRegistrationSaga);
 }

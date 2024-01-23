@@ -246,13 +246,13 @@ export interface IDashboardData {
   newOrder: number;
   deliveredOrder: number;
   totalCustomer: number;
-  todaySurvey:number;
-  todayFollowup:number;
+  todaySurvey: number;
+  todayFollowup: number;
 }
 
 // Dashbaord Payload
 export interface IDashboardPaylod {
-  companyId:string;
+  companyId: string;
 }
 
 export interface IDashboardDataResponse {
@@ -290,5 +290,41 @@ export interface IFloor {
 export interface IFloorResponse {
   data: IFloor[];
   status: number;
+  error: boolean;
+}
+
+export interface IPendingPurchase {
+  _id: string;
+  subscriptionId: string;
+  authId: string;
+  purchaseOrderId: string;
+  subscriptionPlan: string;
+  expiryDate: string;
+  amountPaid: string;
+  discountAmount: string;
+  couponCode: string;
+  status: string;
+  createdDate: string;
+  __v: number;
+}
+
+// Pending Registration
+export interface IPendingRegistration {
+  _id: string;
+  email: string;
+  mobile: string;
+  username: string;
+  password: string;
+  otp: string;
+  verifyOtpStatus: boolean;
+  userType: string;
+  createdAt: string;
+  __v: number;
+  purchase: IPendingPurchase;
+}
+
+export interface IPendingRegistrationResponse {
+  data:IPendingRegistration;
+  status:number;
   error: boolean;
 }

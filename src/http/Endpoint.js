@@ -178,3 +178,5 @@ export const GET_DASHBOARD_DATA = `/enquiry/total-enquiry`;
 export const GET_INSURANCE_PERCENTAGE_LIST = `/shifting-management/insurance-percentage/getAll`;
 // Floors
 export const GET_FLOOR_LIST = `/shifting-management/floors/getAll`;
+// Pending Registration
+export const GET_PENDING_REGISTRATION = (auth_id) => `/auth/incomplete-subscription/${auth_id}`;
