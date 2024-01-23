@@ -165,6 +165,7 @@ const OtherChargeView: React.FC<Props> = ({}) => {
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 value={partLoadRatePerItem}
+                placeholder='Enter rate'
                 //@ts-ignore
                 ref={partLoadRatePerItemInputCompRef}
                 inputType="numeric"
@@ -178,6 +179,7 @@ const OtherChargeView: React.FC<Props> = ({}) => {
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 value={_calculatePartLoadAmount()}
+                placeholder='Enter amount'
                 //@ts-ignore
                 ref={partLoadAmountInputCompRef}
                 inputType="numeric"
@@ -205,6 +207,7 @@ const OtherChargeView: React.FC<Props> = ({}) => {
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 value={fullLoadRatePerItem}
+                placeholder='Enter rate'
                 //@ts-ignore
                 ref={fullLoadRatePerItemInputCompRef}
                 inputType="numeric"
@@ -218,6 +221,7 @@ const OtherChargeView: React.FC<Props> = ({}) => {
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 value={_calculateFullLoadAmount()}
+                placeholder='Enter amount'
                 //@ts-ignore
                 ref={fullLoadAmountInputCompRef}
                 inputType="numeric"
@@ -283,7 +287,7 @@ const OtherChargeView: React.FC<Props> = ({}) => {
                 <Label text="Particulars/Items" style={styles.label} />
                 <EpackDropdown
                   data={particularOptions}
-                  placeholder={'Select State'}
+                  placeholder={'Enter item name'}
                   hanldeData={setParticularName}
                   //@ts-ignore
                   ref={particularsInputCompRef}
@@ -297,6 +301,7 @@ const OtherChargeView: React.FC<Props> = ({}) => {
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
+                  placeholder={'Enter quantity'}
                   value={quantity}
                   //@ts-ignore
                   ref={quantityInputCompRef}

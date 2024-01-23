@@ -390,6 +390,8 @@ const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
             editPickupAddress ||
             editDropAddress
           }
+          modalStyle={styles.modalStyle}
+          headerStyle={styles.headerStyle}
           onClose={handleModalClose}
           title={getModalTitle()}>
           <>

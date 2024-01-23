@@ -34,7 +34,7 @@ const TemplateSettingPageView: React.FC<IProps> = ({}) => {
     if (data && Array.isArray(data) && data.length > 0) {
       items = data;
     }
-    return items;
+    return items.filter((d:ISubmodule) => d.availableOnDocument);
   };
 
   const _getRoutes = (): Route[] => {
@@ -116,7 +116,7 @@ const TemplateSettingPageView: React.FC<IProps> = ({}) => {
               <TabBar
                 {...props}
                 scrollEnabled={true}
-                style={{height: 44}}
+                style={{height: 52}}
                 labelStyle={{fontFamily: 'WorkSans-SemiBold'}}
                 indicatorStyle={{backgroundColor: COLOR_GRAY, height: 4}}
               />

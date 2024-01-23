@@ -94,7 +94,7 @@ const Header: React.FC<IHeaderProps> = ({
             )}
           </TouchableOpacity>
         )}
-        <Text style={styles.text}>{label}</Text>
+        <Text style={styles.text}>{label?.toLocaleUpperCase()}</Text>
       </View>
       <View style={styles.actionContainer}>
         <TouchableOpacity activeOpacity={0.6} onPress={handleProfileClick}>

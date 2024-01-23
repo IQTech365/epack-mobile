@@ -37,7 +37,7 @@ const AddSerialNoView = () => {
     if (data && Array.isArray(data) && data.length > 0) {
       items = data;
     }
-    return items;
+    return items.filter((d:ISubmodule) => d.availableOnDocument);
   };
 
   const _setSubmoduleByIndex = (index: number) => {
@@ -90,7 +90,7 @@ const AddSerialNoView = () => {
 
   return (
     <View style={{flex: 1, backgroundColor: '#ffff', alignItems: 'center'}}>
-      <Header canGoBack={true} label="Serial No Setting" />
+      <Header canGoBack={true} label="SERIAL NO SETTINGS" />
       <Spacer height={10} />
       <View style={styles.tabsContainer}>
         <FlatList
