@@ -74,13 +74,13 @@ const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
   const getModalTitle = () => {
     let title: string = '';
     if (editShiftingDetail) {
-      title = 'Edit - Shifting Detail Info';
+      title = 'UPDATE - SHIFTING DETAIL INFO';
     } else if (editContactDetail) {
-      title = 'Edit - Contact Detail Info';
+      title = 'UPDATE - CONTACT DETAIL INFO';
     } else if (editPickupAddress) {
-      title = 'Edit - Pickup Address';
+      title = 'UPDATE - PICKUP ADDRESS';
     } else if (editDropAddress) {
-      title = 'Edit - Delivery Address';
+      title = 'UPDATE - DELIVERY ADDRESS';
     }
     return title;
   };
@@ -474,6 +474,8 @@ const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
             editPickupAddress ||
             editDropAddress
           }
+          modalStyle={styles.modalStyle}
+          headerStyle={styles.headerStyle}
           onClose={handleModalClose}
           title={getModalTitle()}>
           <>
