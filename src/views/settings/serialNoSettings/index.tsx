@@ -43,7 +43,8 @@ const AddSerialNoView = () => {
   const _setSubmoduleByIndex = (index: number) => {
     const {data} = submodules || {};
     if (data && Array.isArray(data) && data.length > 0) {
-      const firstSubmodule: ISubmodule = data[index];
+      const filterOnDocumentSubmodules:ISubmodule[] = data.filter((d:ISubmodule) => d.availableOnDocument);
+      const firstSubmodule: ISubmodule = filterOnDocumentSubmodules[index];
       setSelectedSubmodule(firstSubmodule);
     }
   };

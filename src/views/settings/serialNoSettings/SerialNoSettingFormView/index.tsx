@@ -14,7 +14,6 @@ import {
   getBranchsRequest,
   getFranchiseRequest,
 } from '../../../../redux/slices/MyProfile';
-import {ICreateSerialNoRequest} from '../../../../interface/setting/serialNo/ICreateSerialNoRequest';
 import {
   createSerialNoRequest,
   resetCreateSerialNoRequest,
@@ -23,6 +22,7 @@ import Toast from 'react-native-toast-message';
 import Spinner from '../../../../common/Spinner';
 import {getAppSettingsRequest} from '../../../../redux/slices/CommonSlice';
 import { getCurrentCompanyId } from '../../../../utils/storage';
+import { ICreateSerialNoRequest } from '../../../../interface/setting/serialNo/serialNo';
 
 interface IMoneyReceiptSNProps {
   moduleId: string;

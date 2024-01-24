@@ -40,6 +40,7 @@ interface IOrderInfoViewProps {
 
 const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item, navigation}) => {
   const dispatch = useAppDispatch();
+  console.log('OrderInfoView-item----', JSON.stringify(item));
 
   const [orderStatus, setOrderStatus] = useState<string>(item?.status as string);
   const {

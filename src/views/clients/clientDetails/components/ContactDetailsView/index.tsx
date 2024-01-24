@@ -96,15 +96,15 @@ const ContactDetailsView: React.FC<IContactDetailsViewProps> = ({item}) => {
                   value={_getBillingInfo()?.authorityPersonMobile}
                 />
                 <EnquiryDetailListItem
-                  label="Employee Name:"
+                  label="Emp. Name:"
                   value={_getBillingInfo()?.employeeName}
                 />
                 <EnquiryDetailListItem
-                  label="Employee Number:"
+                  label="Emp. Number:"
                   value={_getBillingInfo()?.employeeMobile}
                 />
                 <EnquiryDetailListItem
-                  label="Employee Designation:"
+                  label="Emp. Designation:"
                   value={_getBillingInfo()?.employeeDesignation}
                   isLast={true}
                 />

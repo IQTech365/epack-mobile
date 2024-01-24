@@ -37,8 +37,8 @@ const ShiftingDetailsView: React.FC<IShiftingDetailsViewProps> = ({item}) => {
     let list: IGetOrdersData[] = [];
     const {data} = orders || {};
     if (data && Array.isArray(data) && data.length > 0) {
-      // list = data.filter((d:IGetOrdersData) => d.customerId == item._id);
-      list = data;
+      list = data.filter((d:IGetOrdersData) => d.customerId == item._id);
+      // list = data;
     }
     return list;
   };

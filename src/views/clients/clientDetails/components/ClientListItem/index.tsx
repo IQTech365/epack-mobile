@@ -45,7 +45,7 @@ const ClientListItem: React.FC<IClientListItemProps> = ({
     } else {
       const billingInfo: ICustomerBillingInfo =
         item.billingDetails as ICustomerBillingInfo;
-        name = billingInfo.authorityPersonName || billingInfo.employeeName;
+        name = billingInfo.companyName || billingInfo.authorityPersonName || billingInfo.employeeName;
     }
     return name;
   }

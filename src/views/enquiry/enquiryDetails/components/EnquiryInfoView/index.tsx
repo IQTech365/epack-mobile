@@ -51,7 +51,7 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId, navi
   const handleEnquiryStatusChange = (value: string) => {
     setEnquiryStatus(value);
     const payload: IUpdateEnquiryStatusRequest = {
-      status: value == 'Approved' ? 'NEW ORDER' : value.toUpperCase(),
+      status: value.toUpperCase(),
     }
     dispatch(updateEnquiryStatusRequest({id: enquiryId as string, requestBody: payload}));
   }

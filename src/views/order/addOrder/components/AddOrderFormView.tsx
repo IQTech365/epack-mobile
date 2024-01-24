@@ -107,7 +107,7 @@ const AddOrderFormView: FC<IProps> = ({navigation}) => {
                 employeeMobile: state.employee_mobile_no,
               }
             : {},
-        status: 'NEW ORDER',
+        status: 'APPROVED',
       };
       dispatch(addOrderRequest(data));
     }).catch(err => console.log(err));

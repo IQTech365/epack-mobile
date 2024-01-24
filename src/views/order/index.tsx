@@ -33,7 +33,7 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
       clientName = item.partyName;
     } else if (item.billingBy == 'by Company') {
       //@ts-ignore
-      clientName = item.billingDetails?.authorityPersonName;
+      clientName = item.billingDetails?.companyName || item.billingDetails?.authorityPersonName;
     }
     return clientName;
   };
@@ -105,6 +105,8 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
       .filter(
         e =>
           e.status.toLowerCase() == 'new order' ||
+          e.status.toLowerCase() == 'new' ||
+          e.status.toLowerCase() == 'approved' ||
           e.status.toLowerCase() == 'out for shifting' ||
           e.status.toLowerCase() == 'material received at warehouse' ||
           e.status.toLowerCase() == 'in transit' ||

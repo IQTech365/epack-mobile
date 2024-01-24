@@ -53,6 +53,8 @@ const ClientPageView: React.FC<IClientPageViewProps> = ({navigation}) => {
     if(data && Array.isArray(data) && data.length > 0) {
       list = data;
     }
+    console.log('customers----', JSON.stringify(list));
+    
     return list;
   }
 
