@@ -306,6 +306,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
                   value={reducerState.receiptNumber}
+                  placeholder="Receipt#"
                   editable={false}
                 />
               </View>

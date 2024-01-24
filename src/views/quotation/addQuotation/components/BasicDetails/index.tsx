@@ -212,7 +212,7 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false}) => {
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
               value={state.quotation_no}
-              placeholder="Serial#"
+              placeholder="Quotation#"
               editable={!switchState}
               //@ts-ignore
               ref={quotationNoInputCompRef}

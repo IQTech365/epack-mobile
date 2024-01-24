@@ -29,7 +29,9 @@ const BasicDetails: React.FC<{}> = ({}) => {
 
   useEffect(() => {
     if(switchState) {
-      setBiltyLrCrNo(serialNo.toString());
+      if(serialNo){
+        setBiltyLrCrNo(serialNo.toString());
+      }
       //@ts-ignore
       biltyNoInputCompRef && biltyNoInputCompRef?.current?.setValue(serialNo);
     } else {

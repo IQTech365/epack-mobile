@@ -13,26 +13,28 @@ import BiltyView from './components/BiltyView';
 import MoneyReceiptView from './components/MoneyReceiptView';
 import CarConditionView from './components/CarConditionView';
 import InvoiceView from './components/InvoiceView';
-import {useAppSelector} from '../../../redux/hooks';
+import {useAppDispatch, useAppSelector} from '../../../redux/hooks';
 import usePincodeHook from '../../../hooks/usePincodeHook';
 import Spinner from '../../../common/Spinner';
 import PackingListView from './components/PackingListView';
 import { ISingleEnquiryData } from '../../../interface/enquiry/ISingleEnquiryResponse';
+import { resetGetSerialNoRequest } from '../../../redux/slices/SerialNoSettingSlice';
 
 type Props = NativeStackScreenProps<OrderStackParamList, 'OrderDetails'>;
 
 const OrderDetailsView: React.FC<Props> = ({route, navigation}) => {
   const orderId: string = route.params?.orderId as string;
   const item: ISingleEnquiryData = route.params?.item as ISingleEnquiryData;
-
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
   const {createBiltyRequesting} = useAppSelector(state => state.Order);
   const {fetching} = usePincodeHook(
     () => {},
     () => {},
   );
+  const dispatch = useAppDispatch();
 
   const handleTabChange = (index: number) => {
+    dispatch(resetGetSerialNoRequest());
     setActiveTabIndex(index);
   };
 

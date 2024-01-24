@@ -321,6 +321,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
                   value={reducerState.carConditionNumber}
+                  placeholder="Car Condition#"
                   editable={false}
                 />
               </View>

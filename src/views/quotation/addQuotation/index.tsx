@@ -11,7 +11,7 @@ import AddQuotationForm from './components/AddQuotationForm';
 import { IGetQuotationData } from '../../../interface/quotation/IGetQuotationsResponse';
 import { getCurrentCompanyId } from '../../../utils/storage';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
-import { getSerialNoRequest } from '../../../redux/slices/SerialNoSettingSlice';
+import { getSerialNoRequest, resetGetSerialNoRequest } from '../../../redux/slices/SerialNoSettingSlice';
 import { DOCUMENT_TYPE, IGetSerialNoRequest } from '../../../interface/setting/serialNo/serialNo';
 import { getSingleQuotationRequest } from '../../../redux/slices/QuotationSlice';
 import useInitialValueHook from '../../../hooks/useInitialValueHook';
@@ -36,7 +36,7 @@ const AddQuotationView: React.FC<Props> = ({
   const dispatch = useAppDispatch();
   const {initialValue, prefix} = useInitialValueHook('658d3c6f585e3dde644da95b');
 
-  const _getQuotationSerialNoRequest = () => {
+  const _getSerialNoRequest = () => {
     getCurrentCompanyId().then(id => {
       const payload: IGetSerialNoRequest = {
         document: DOCUMENT_TYPE.QUOTATION,
@@ -55,7 +55,8 @@ const AddQuotationView: React.FC<Props> = ({
     if(isEdit) {
       dispatch(getSingleQuotationRequest(item._id));
     } else {
-      _getQuotationSerialNoRequest();
+      dispatch(resetGetSerialNoRequest());
+      _getSerialNoRequest();
     }
   }, []);
   
