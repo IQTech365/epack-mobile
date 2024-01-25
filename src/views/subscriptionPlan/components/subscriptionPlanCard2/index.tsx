@@ -159,7 +159,20 @@ const SubscriptionPlanCard2: React.FC<ISubscriptionPlanCardProps> = ({
           </ScrollView>
           <TouchableOpacity
             activeOpacity={0.6}
-            onPress={() => onPress(item, planAmount, planDuration)}>
+            onPress={() => {
+              if (!planAmount && !planDuration) {
+                const planOptions:TDropdownItem[] = preparePlanDurationData();
+                if(planOptions.length > 0) {
+                  const firstPlanOption:TDropdownItem = planOptions[0];
+                  const splitValue = firstPlanOption.value.split('|');
+                  const amount = splitValue[0];
+                  const duration = splitValue[1];
+                  onPress(item, parseInt(amount), duration);
+                }
+              } else {
+                onPress(item, planAmount, planDuration);
+              }
+            }}>
             <LinearGradient
               colors={getPlanGradientColors()}
               style={styles.buttonContainer}

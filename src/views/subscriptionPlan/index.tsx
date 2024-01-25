@@ -65,15 +65,25 @@ const SubscriptionPlanView = (props: any) => {
   const {data: submoduleFeatureData} = submoduleFeatures || {};
 
   const handleByPlan = async (plan: ISubscriptionPlan, amount:number, duration:string) => {
+    console.log('Plan--', JSON.stringify(plan));
+    console.log('Amount--', amount);
+    console.log('Duration--', duration);
+    
     setSubscriptionPlan(plan);
     setPlanAmount(amount);
     setPlanDuration(duration);
-    // Create Order on Server
-    const payload:IRazorPayCreateOrderPayload = {
-      amount: amount * 100,
-      currency: 'INR',
+    if(plan.subscriptionType.toLocaleLowerCase() == 'free' && amount == 0) {
+      // Get the Subscription without payment
+      _addPurchase(plan, 'order_id_not_applicable');
+    } else {
+      // Create Order on Server
+      const payload: IRazorPayCreateOrderPayload = {
+        amount: amount * 100,
+        currency: 'INR',
+      };
+      dispatch(createRazorpayRequest(payload));
     }
-    dispatch(createRazorpayRequest(payload));
+    
   };
 
   const _addPurchase = (plan: ISubscriptionPlan, orderId:string) => {
@@ -82,7 +92,7 @@ const SubscriptionPlanView = (props: any) => {
       purchaseOrderId: orderId,
       authId: authId,
       subscriptionId: plan._id,
-      subscriptionPlan: '',
+      subscriptionPlan: plan.subscriptionType,
       amountPaid: `${planAmount}`,
       discountAmount: '0',
       couponCode: '',
@@ -111,9 +121,9 @@ const SubscriptionPlanView = (props: any) => {
       name: 'EpackBook',
       order_id: orderId, //'order_NJN9VIkIQc0G9J'
       prefill: {
-        email: 'essencewebtech@gmail.com',
-        contact: '9191919191',
-        name: 'Gaurav Kumar',
+        // email: 'essencewebtech@gmail.com',
+        // contact: '9191919191',
+        // name: 'Gaurav Kumar',
       },
       theme: {color: '#53a20e'},
     };
@@ -177,8 +187,6 @@ const SubscriptionPlanView = (props: any) => {
       navigation.replace("CompanyBasicInfo");
     } else if (!addPurchaseRequesting && addPurchaseFailure) {
       dispatch(resetAddPurchaseRequest());
-      // README: If payment is done and plan is not activated due to server issue. 
-      // Then needs to activte the plan from backend. 
     }
   }, [addPurchaseRequesting, addPurchaseSuccess, addPurchaseFailure]);
 
