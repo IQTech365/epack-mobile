@@ -41,6 +41,7 @@ import TemplateViewer from '../../common/TemplateViewer';
 import {startShare} from '../../utils/utility';
 import { getCurrentCompanyId } from '../../utils/storage';
 import useTemplateIdHook from '../../hooks/useTemplateIdHook';
+import Spinner from '../../common/Spinner';
 interface IQuotationPageViewProps {
   navigation: NavigationProp<any, any>;
 }
@@ -400,6 +401,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
           <TemplateViewer html={quotationTemplateHtml} />
         </View>
       </ModalHOC>
+      <Spinner show={getQuotationTemplateHtmlRequesting} />
     </View>
   );
 };

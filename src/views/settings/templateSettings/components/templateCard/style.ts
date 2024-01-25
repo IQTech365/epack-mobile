@@ -8,9 +8,9 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 5,
+        marginTop: 8,
         borderRadius: 10,
-        borderWidth: 1,
+        borderWidth: 1.5,
         borderColor: COLOR_GRAY,
     },
     activeContainer: {
@@ -19,15 +19,21 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 5,
+        marginTop: 8,
         borderRadius: 10,
-        borderWidth: 1,
+        borderWidth: 2,
         borderColor: COLOR_BLUE2,
     },
     text: {
         color: COLOR_BLACK,
         fontFamily: 'WorkSans-Medium',
         fontSize: 14
+    },
+    tumbnail: {
+        width: width * 0.89,
+        height: width * 0.43,
+        borderRadius:8,
+        resizeMode: 'contain'
     }
 });
 

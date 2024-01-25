@@ -1,7 +1,8 @@
 import React, { FC, useState } from "react";
-import {Text, View, TouchableOpacity} from 'react-native';
+import {Text, View, TouchableOpacity, Image} from 'react-native';
 import styles from './style';
 import { ITemplate } from "../../../../../interface/setting/template/template";
+import noPreviewThumbnailImage from '../../../../../images/no_preview_thumbnail.png';
 
 interface IProps {
     item:ITemplate;
@@ -19,9 +20,15 @@ const TemplateCard:FC<IProps> = ({item, index, category, activeTemplateId, onCha
         onChangeTemplateId(item.templateVersion, item.moduleId, item._id);
     }
 
-    return <TouchableOpacity style={container} key={`${index}`} onPress={handleChange}>
-        <Text style={styles.text}>{item.templateName}</Text>
-    </TouchableOpacity>
+    return (
+      <TouchableOpacity
+        style={container}
+        key={`${index}`}
+        onPress={handleChange}>
+        {/* <Text style={styles.text}>{item.templateName}</Text> */}
+        <Image source={noPreviewThumbnailImage} style={styles.tumbnail} />
+      </TouchableOpacity>
+    );
 }
 
 export default TemplateCard;

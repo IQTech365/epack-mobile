@@ -27,6 +27,7 @@ import useTemplateIdHook from '../../../../../hooks/useTemplateIdHook';
 import { IHtmlTemplateRequest } from '../../../../../interface/order/templates/ITemplateResponse';
 import { QuotationStackRoute } from '../../../../../utils/constants';
 import { startShare } from '../../../../../utils/utility';
+import Spinner from '../../../../../common/Spinner';
 
 interface IQuotationViewProps {
   enquiryId: string;
@@ -160,14 +161,11 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
             quotationAmount: quotationAmount,
             quotationDate: quotationData,
             phoneNumber: _getMobile(quotation),
-            id: '',
+            id: quotation._id,
           };
-          console.log('item--------', JSON.stringify(item));
-          
           return item;
         });
     }
-    console.log('quotation--_data---', JSON.stringify(_data));
     return _data;
   };
 
@@ -247,7 +245,6 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
   const showList = () => {
     if (showQuotationList) {
       return (
-        <>
           <FlatList
             contentContainerStyle={{alignItems: 'center', paddingVertical: 10}}
             data={transformQuotationData()}
@@ -276,17 +273,6 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
             )}
             ListEmptyComponent={showEmptyView()}
           />
-          <ModalHOC
-        visible={showModal}
-        onClose={_hanldeCloseShowPreviewModal}
-        modalStyle={styles.modalStyle}
-        headerStyle={styles.headerStyle}
-        title="Preview">
-        <View style={{flex: 1}}>
-          <TemplateViewer html={quotationTemplateHtml} />
-        </View>
-      </ModalHOC>
-        </>
       );
     }
     return null;
@@ -346,6 +332,17 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
       </View>
       {showForm()}
       {showList()}
+      <Spinner show={getQuotationTemplateHtmlRequesting} />
+      <ModalHOC
+        visible={showModal}
+        onClose={_hanldeCloseShowPreviewModal}
+        modalStyle={styles.modalStyle}
+        headerStyle={styles.headerStyle}
+        title="Preview">
+        <View style={{flex: 1}}>
+          <TemplateViewer html={quotationTemplateHtml} />
+        </View>
+      </ModalHOC>
     </>
   );
 };
