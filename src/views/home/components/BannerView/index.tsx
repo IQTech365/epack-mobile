@@ -7,6 +7,7 @@ import Spinner from '../../../../common/Spinner';
 import {IBanner} from '../../../../interface/common/common';
 import Carousel from 'react-native-reanimated-carousel';
 const {width} = Dimensions.get('window');
+import noBannerPerviewImage from '../../../..//images/no_preview_thumbnail.png';
 
 const BannerView: React.FC<{}> = () => {
   const dispatch = useAppDispatch();
@@ -38,8 +39,13 @@ const BannerView: React.FC<{}> = () => {
           activeOffsetX: [-10, 10],
         }}
         renderItem={({item, index}) => {
+          const imageUri = item.bannerImage ? {uri: item.bannerImage} : noBannerPerviewImage;
           return (
-            <Image source={{uri: item.bannerImage}} style={styles.banner} key={`${index}`} /> 
+            <Image
+              source={imageUri}
+              style={styles.banner}
+              key={`${index}`}
+            />
           );
         }}
       />

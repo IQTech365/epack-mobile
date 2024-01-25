@@ -25,9 +25,9 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   labelText: {
-    color: COLOR_GRAY,
-    fontSize: 16,
-    fontWeight: '500',
+    color: COLOR_BLACK,
+    fontSize: 14,
+    fontFamily: 'WorkSans-SemiBold'
   },
   contentContainer: {
     width: width * 0.9,
@@ -38,12 +38,14 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   contentLabelText: {
-    color: COLOR_GRAY,
+    color: COLOR_BLACK,
     fontSize: 14,
+    fontFamily: 'WorkSans-Medium'
   },
   nameText: {
     color: COLOR_BLUE,
     fontSize: 14,
+    fontFamily: 'WorkSans-Medium'
   },
   elementContainer: {
     width: width * 0.9,
@@ -92,12 +94,12 @@ containerActive: {
 activeText: {
   color: COLOR_BLACK,
   fontSize: 16,
-  fontWeight: '500',
+  fontFamily: 'WorkSans-Medium'
 },
 inactiveText: {
-  color: COLOR_GRAY,
+  color: COLOR_BLACK,
   fontSize: 16,
-  fontWeight: '500',
+  fontFamily: 'WorkSans-Medium'
 }
 });
 

@@ -81,6 +81,11 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  label: {
+    color: COLOR_BLACK,
+    fontSize: 14,
+    fontFamily: 'WorkSans-Regular'
   }
 });
 

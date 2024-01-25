@@ -129,7 +129,7 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
             }
             ListEmptyComponent={() => (
               <View style={styles.emptyView}>
-                <Text>
+                <Text style={styles.label}>
                   {taskName == 'FOLLOW UP'
                     ? 'No Followups found!'
                     : taskData == 'SURVEY ITEM'

@@ -104,8 +104,8 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
       .sort((a, b) => sortItemByDate(a.orderData, b.orderData))
       .filter(
         e =>
-          e.status.toLowerCase() == 'new order' ||
-          e.status.toLowerCase() == 'new' ||
+          // e.status.toLowerCase() == 'new order' ||
+          // e.status.toLowerCase() == 'new' ||
           e.status.toLowerCase() == 'approved' ||
           e.status.toLowerCase() == 'out for shifting' ||
           e.status.toLowerCase() == 'material received at warehouse' ||

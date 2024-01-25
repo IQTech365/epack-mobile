@@ -9,7 +9,7 @@ import {getTemplateListRequest} from '../../../redux/slices/TemplateSettingSlice
 import {ISubmodule} from '../../../interface/common/common';
 import {getSubmoduleRequest} from '../../../redux/slices/CommonSlice';
 import TemplatePageView from './components/TemplatePageView';
-import {COLOR_GRAY} from '../../../utils/colors';
+import {COLOR_GRAY, COLOR_WHITE} from '../../../utils/colors';
 
 interface IProps {}
 
@@ -118,7 +118,7 @@ const TemplateSettingPageView: React.FC<IProps> = ({}) => {
                 scrollEnabled={true}
                 style={{height: 52}}
                 labelStyle={{fontFamily: 'WorkSans-SemiBold'}}
-                indicatorStyle={{backgroundColor: COLOR_GRAY, height: 4}}
+                indicatorStyle={{backgroundColor: COLOR_WHITE, height: 4}}
               />
             )}
           />

@@ -51,7 +51,7 @@ const InsuranceDetailsView: React.FC<Props> = ({}) => {
           if(transitInsurance) {
             setTransitInsurance(transitInsurance.isRequired);
             const insuraceTypeItem:TDropdownItem = insuranceTypeOptions.find((d:TDropdownItem) => d.label == transitInsurance.transitType) as TDropdownItem;
-            setTransitInsuranceType(insuraceTypeItem.label);
+            setTransitInsuranceType(insuraceTypeItem?.label);
             //@ts-ignore
             insuranceTypeDropdownCompRef && insuranceTypeDropdownCompRef?.current?.setDefaultValue(insuraceTypeItem);
             if(transitInsurance.charges.length > 0) {
