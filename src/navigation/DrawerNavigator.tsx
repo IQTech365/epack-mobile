@@ -45,6 +45,7 @@ import {ICompanyInfoData} from '../interface/companyRegistration/IGetCompaniesRe
 import AddFranchiseView from '../views/profile/components/addFranchiseDetail';
 import AddBranchView from '../views/profile/components/addBranchDetail';
 import { getCurrentCompanyId } from '../utils/storage';
+import TermsAndConditionsView from '../views/termsAndConditions';
 
 const Drawer = createDrawerNavigator();
 
@@ -184,13 +185,13 @@ export const DrawerNavigator = () => {
           drawerIcon: () => <HelpIcon width={22} height={22} />,
         }}
       />
-      {/* <Drawer.Screen
-        name="News Room"
-        component={NewsRoomView}
+      <Drawer.Screen
+        name="Terms & Conditions"
+        component={TermsAndConditionsView}
         options={{
           drawerIcon: () => <NewsRoomIcon width={24} height={24} />,
         }}
-      /> */}
+      />
       <Drawer.Screen
         name="Vehicle Management"
         component={VehicleMangementStacknavigator}

@@ -1,0 +1,23 @@
+[
+    {
+        "title": "About Us",
+        "uri": "https://www.epackbook.in/about-us"
+    },
+    {
+        "title": "Terms of Service",
+        "uri": "https://www.epackbook.in/terms-of-services"
+    },
+    {
+        "title": "Privacy Policy",
+        "uri": "https://www.epackbook.in/privacy-policy"
+    },
+    {
+        "title": "Refund Policy",
+        "uri": "https://www.epackbook.in/refund-policy"
+    },
+    {
+        "title": "Knowledge Base",
+        "uri": "https://www.epackbook.in/knowledgeBase-page"
+    }
+    
+]
