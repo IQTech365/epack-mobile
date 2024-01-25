@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -17,10 +17,16 @@ import ListViewIcon2 from '../../../../../images/icons/list_view_icon2.svg';
 import CreateIcon from '../../../../../images/icons/create_icon.svg';
 import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
 import Spacer from '../../../../../common/Spacer';
-import {getQuotationsRequest} from '../../../../../redux/slices/QuotationSlice';
+import {getQuotationHtmlRequest, getQuotationsRequest, resetGetQuotationHtmlRequest} from '../../../../../redux/slices/QuotationSlice';
 import { IGetQuotationRequest } from '../../../../../interface/quotation/IGetQuotationRequest';
 import { IEnquiry, IGetQuotationData } from '../../../../../interface/quotation/IGetQuotationsResponse';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
+import ModalHOC from '../../../../../common/ModalHOC';
+import TemplateViewer from '../../../../../common/TemplateViewer';
+import useTemplateIdHook from '../../../../../hooks/useTemplateIdHook';
+import { IHtmlTemplateRequest } from '../../../../../interface/order/templates/ITemplateResponse';
+import { QuotationStackRoute } from '../../../../../utils/constants';
+import { startShare } from '../../../../../utils/utility';
 
 interface IQuotationViewProps {
   enquiryId: string;
@@ -33,13 +39,24 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
   navigation,
   onItemClick,
 }) => {
-  const {quotations, getQuotationsRequesting} = useAppSelector(
-    state => state.Quotation,
-  );
+  const {
+    quotations,
+    getQuotationsRequesting,
+    quotationTemplateHtml,
+    getQuotationTemplateHtmlRequesting,
+    getQuotationTemplateHtmlSuccess,
+    getQuotationTemplateHtmlFailure,
+  } = useAppSelector(state => state.Quotation);
   const {data: quotationData} = quotations || {};
+  console.log('quotationData----', JSON.stringify(quotationData));
+  
   const dispatch = useAppDispatch();
   const [showQuotationList, setShowQuotationList] = useState<boolean>(false);
   const [createNewQuotation, setCreateNewQuotation] = useState<boolean>(true);
+  const [openPreview, setOpenPreview] = useState<boolean>(false);
+  const [openShare, setOpenShare] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const templateId = useTemplateIdHook('658d3c6f585e3dde644da95b');
 
   const _getClientName = (item:IGetQuotationData) => {
     let name:string = 'NA';
@@ -145,10 +162,12 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
             phoneNumber: _getMobile(quotation),
             id: '',
           };
+          console.log('item--------', JSON.stringify(item));
+          
           return item;
         });
-      return _data;
     }
+    console.log('quotation--_data---', JSON.stringify(_data));
     return _data;
   };
 
@@ -172,6 +191,43 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
     }).catch(err => console.log(err));
   }, []);
 
+  const _hanldeCloseShowPreviewModal = () => {
+    dispatch(resetGetQuotationHtmlRequest());
+    setShowModal(false);
+    setOpenPreview(false);
+    setOpenShare(false);
+  };
+
+  const handleEditClick = (quotation: IQuotationItem) => {
+    const item: IGetQuotationData = quotationData?.find(
+      (e: IGetQuotationData) => e.quotationNumber == quotation.quotationNo,
+    );
+    navigation.navigate(QuotationStackRoute.AddQuotation, {
+      item: item,
+      isEdit: true,
+    });
+  };
+
+  const _handleShowPreview = (docId: string) => {
+    setOpenPreview(true);
+    setOpenShare(false);
+    const payload: IHtmlTemplateRequest = {
+      templateId: templateId,
+      docId: docId,
+    };
+    dispatch(getQuotationHtmlRequest(payload));
+  };
+
+  const handleShareClick = async (docId: string) => {
+    setOpenPreview(false);
+    setOpenShare(true);
+    const payload: IHtmlTemplateRequest = {
+      templateId: templateId,
+      docId: docId,
+    };
+    dispatch(getQuotationHtmlRequest(payload));
+  };
+
   const showEmptyView = () => {
     return (
       <View style={styles.emptyContainer}>
@@ -191,32 +247,80 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
   const showList = () => {
     if (showQuotationList) {
       return (
-        <FlatList
-          contentContainerStyle={{alignItems: 'center', paddingVertical: 10}}
-          data={transformQuotationData()}
-          refreshControl={
-            <RefreshControl
-              refreshing={getQuotationsRequesting}
-              onRefresh={handleOnRefresh}
-            />
-          }
-          renderItem={({item, index}) => (
-            <QuotationListItem
-              item={item}
-              index={1}
-              onPress={() => {onItemClick(0)}}
-              onDownload={() => {}}
-              onEdit={() => {}}
-              onPreview={() => {}}
-              onShare={() => {}}
-            />
-          )}
-          ListEmptyComponent={showEmptyView()}
-        />
+        <>
+          <FlatList
+            contentContainerStyle={{alignItems: 'center', paddingVertical: 10}}
+            data={transformQuotationData()}
+            refreshControl={
+              <RefreshControl
+                refreshing={getQuotationsRequesting}
+                onRefresh={handleOnRefresh}
+              />
+            }
+            renderItem={({item, index}) => (
+              <QuotationListItem
+                item={item}
+                index={index}
+                onPress={() => {
+                  onItemClick(0);
+                }}
+                onShare={() => {
+                  handleShareClick(item.id);
+                }}
+                onDownload={() => {}}
+                onPreview={() => {
+                  _handleShowPreview(item.id);
+                }}
+                onEdit={() => handleEditClick(item)}
+              />
+            )}
+            ListEmptyComponent={showEmptyView()}
+          />
+          <ModalHOC
+        visible={showModal}
+        onClose={_hanldeCloseShowPreviewModal}
+        modalStyle={styles.modalStyle}
+        headerStyle={styles.headerStyle}
+        title="Preview">
+        <View style={{flex: 1}}>
+          <TemplateViewer html={quotationTemplateHtml} />
+        </View>
+      </ModalHOC>
+        </>
       );
     }
     return null;
   };
+
+  useEffect(() => {
+    if (
+      !getQuotationTemplateHtmlRequesting &&
+      getQuotationTemplateHtmlSuccess
+    ) {
+      if (openPreview) {
+        setShowModal(true);
+      } else if (openShare) {
+        startShare(
+          quotationTemplateHtml,
+          'QuotationDocument',
+          dispatch(resetGetQuotationHtmlRequest()),
+        );
+      }
+      dispatch(resetGetQuotationHtmlRequest());
+    } else if (
+      !getQuotationTemplateHtmlRequesting &&
+      getQuotationTemplateHtmlFailure
+    ) {
+      setShowModal(false);
+      setOpenPreview(false);
+      setOpenShare(false);
+      dispatch(resetGetQuotationHtmlRequest());
+    }
+  }, [
+    getQuotationTemplateHtmlRequesting,
+    getQuotationTemplateHtmlSuccess,
+    getQuotationTemplateHtmlFailure,
+  ]);
 
   return (
     <>

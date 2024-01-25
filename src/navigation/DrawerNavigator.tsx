@@ -186,7 +186,7 @@ export const DrawerNavigator = () => {
         }}
       />
       <Drawer.Screen
-        name="Terms & Conditions"
+        name="About Us"
         component={TermsAndConditionsView}
         options={{
           drawerIcon: () => <NewsRoomIcon width={24} height={24} />,

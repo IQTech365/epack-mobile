@@ -1,6 +1,6 @@
 import {StyleSheet, Dimensions} from 'react-native';
 import { COLOR_BLUE, COLOR_GRAY, COLOR_GRAY2 } from '../../../../../utils/colors';
-const {width} = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 const styles = StyleSheet.create({
     container: {
         width: width * 0.95,
@@ -26,7 +26,16 @@ const styles = StyleSheet.create({
     text: {
         color: COLOR_GRAY,
         fontSize: 14,
-    }
+    },
+    modalStyle: {
+        width: width,
+        height: height
+    },
+    headerStyle: {
+        width: width,
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 0,
+    },
 });
 
 export default styles;
