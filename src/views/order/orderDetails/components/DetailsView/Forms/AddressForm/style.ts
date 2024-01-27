@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   itemContainer: {
     width: width * 0.44,
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    // alignItems: 'flex-start',
     alignSelf: 'center',
   },
   input: {
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   elementContainer3: {
     width: width * 0.9,
     alignSelf: 'center',
-    alignItems: 'flex-start',
+    // alignItems: 'flex-start',
     justifyContent: 'center',
   },
   datePicker: {

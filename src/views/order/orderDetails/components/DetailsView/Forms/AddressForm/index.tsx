@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../../../common/AvoidSoftInputViewHOC';
 import Input from '../../../../../../../common/Input';
@@ -12,7 +12,7 @@ import Button from '../../../../../../../common/Button';
 import {MODULE_NAME} from '../../enum/EModuleName';
 import {IGetOrdersData} from '../../../../../../../interface/order/IGetOrdersResponse';
 import usePincodeHook from '../../../../../../../hooks/usePincodeHook';
-import {getCities, getStates} from '../../../../../../../utils/formatter';
+import {getCities2, getStates2} from '../../../../../../../utils/formatter';
 import liftStatusOptions from '../../../../../../../data/liftStatusOptions.json';
 import floorOptions from '../../../../../../../data/floorOptions.json';
 import Spinner from '../../../../../../../common/Spinner';
@@ -21,11 +21,13 @@ import {
   IPickupAddress,
 } from '../../../../../../../interface/order/IUpdateAddressRequest';
 import {useAppDispatch, useAppSelector} from '../../../../../../../redux/hooks';
-import { getEnquiryRequest, resetUpdateAddressRequest, updateAddressRequest } from '../../../../../../../redux/slices/EnquirySlice';
-import Toast from 'react-native-toast-message';
+import { getEnquiriesRequest, getEnquiryRequest, resetUpdateAddressRequest, updateAddressRequest } from '../../../../../../../redux/slices/EnquirySlice';
 import { ISingleEnquiryData } from '../../../../../../../interface/enquiry/ISingleEnquiryResponse';
 import { getOrderRequest } from '../../../../../../../redux/slices/OrderSlice';
 import { ISingleOrderRequest } from '../../../../../../../interface/order/ISingleOrderRequest';
+import EpackDropdown from '../../../../../../../common/DropdownComponent2';
+import { ToastType, showToast } from '../../../../../../../utils/utility';
+import { getCurrentCompanyId } from '../../../../../../../utils/storage';
 
 export enum ADDRESS_TYPE {
   PICKUP,
@@ -49,8 +51,8 @@ const AddressForm: React.FC<IAddressFormProps> = ({
 }) => {
   const dispatch = useAppDispatch();
   const {updateAddressRequesting, updateAddressSuccess, updateAddressFailure} = useAppSelector(state => state.Enquiry);
-  const [states, setStates] = useState<TDropdownItem[]>([]);
-  const [cities, setCities] = useState<TDropdownItem[]>([]);
+  const [states, setStates] = useState<string[]>([]);
+  const [cities, setCities] = useState<string[]>([]);
   const [isInit, setIsInit] = useState<boolean>(true);
   const [pin, setPin] = useState<string>('');
   const [city, setCity] = useState<string>('');
@@ -71,37 +73,28 @@ const AddressForm: React.FC<IAddressFormProps> = ({
     () => {},
   );
 
-  const handleAddressTextChange = useCallback(
-    (text: string) => {
-      setAddress(text);
-    },
-    [address],
-  );
+  const handleAddressTextChange = (text: string) => {
+    setAddress(text);
+  };
 
-  const handleLandmarkTextChange = useCallback(
-    (text: string) => {
-      setLandmark(text);
-    },
-    [landmark],
-  );
+  const handleLandmarkTextChange = (text: string) => {
+    setLandmark(text);
+  };
 
-  const handleLocalityTextChange = useCallback(
-    (text: string) => {
-      setLocality(text);
-    },
-    [locality],
-  );
+  const handleLocalityTextChange = (text: string) => {
+    setLocality(text);
+  };
 
   const handlePincodeChange = (text: string) => {
     setPincode(text);
     setPin(text);
   };
 
-  const handleCity = (item: TDropdownItem) => {
-    setCity(item.label);
+  const handleCity = (item: string) => {
+    setCity(item);
   };
-  const handleState = (item: TDropdownItem) => {
-    setState(item.label);
+  const handleState = (item: string) => {
+    setState(item);
   };
 
   const handleCurrentFloor = (item: TDropdownItem) => {
@@ -137,14 +130,20 @@ const AddressForm: React.FC<IAddressFormProps> = ({
     }
   }
 
+  const _getEnquiriesRequest = () => {
+    getCurrentCompanyId().then(id => {
+      dispatch(getEnquiriesRequest(id as string));
+    }).catch(err => console.log(err));
+  }
+
   useEffect(() => {
     initFormValues();
   }, []);
 
   useEffect(() => {
     if (result && result.Status != 'Error') {
-      setStates(getStates(result));
-      setCities(getCities(result));
+      setStates(getStates2(result));
+      setCities(getCities2(result));
     }
   }, [result]);
 
@@ -154,27 +153,27 @@ const AddressForm: React.FC<IAddressFormProps> = ({
         setIsInit(false);
         let previousStateIndex = 0, previousCityIndex = 0, previousFloorIndex = 0, previousLiftStatusIndex = 0;
         if(addressType == ADDRESS_TYPE.PICKUP) {
-          previousStateIndex = states.findIndex(s => s.label == item.pickupAddress.state);
-          previousCityIndex = states.findIndex(s => s.label == item.pickupAddress.city);
+          previousStateIndex = states.findIndex(s => s == item.pickupAddress.state);
+          previousCityIndex = states.findIndex(s => s == item.pickupAddress.city);
           previousFloorIndex = floorOptions.findIndex(s => s.label == item.pickupAddress.floor);
           previousLiftStatusIndex = liftStatusOptions.findIndex(s => s.label.toLowerCase() == item.pickupAddress.isLiftAvailable.toLowerCase());
           //@ts-ignore
-          stateDropwdownRef?.current?.setDefaultValue(states[previousStateIndex]);
+          stateDropwdownRef?.current?.setValue(states[previousStateIndex]);
           //@ts-ignore
-          cityDropdownRef?.current?.setDefaultValue(cities[previousCityIndex]);
+          cityDropdownRef?.current?.setValue(cities[previousCityIndex]);
           //@ts-ignore
           floorDropdownRef?.current?.setDefaultValue(floorOptions[previousFloorIndex]);
           //@ts-ignore
           liftDropdownRef?.current?.setDefaultValue(liftStatusOptions[previousLiftStatusIndex]);
         } else if(addressType == ADDRESS_TYPE.DROP) {
-          previousStateIndex = states.findIndex(s => s.label == item.dropAddress.state);
-          previousCityIndex = states.findIndex(s => s.label == item.dropAddress.city);
+          previousStateIndex = states.findIndex(s => s == item.dropAddress.state);
+          previousCityIndex = states.findIndex(s => s == item.dropAddress.city);
           previousFloorIndex = floorOptions.findIndex(s => s.label == item.dropAddress.floor);
           previousLiftStatusIndex = liftStatusOptions.findIndex(s => s.label.toLowerCase() == item.dropAddress.isLiftAvailable.toLowerCase());
           //@ts-ignore
-        stateDropwdownRef?.current?.setDefaultValue(states[previousStateIndex]);
+        stateDropwdownRef?.current?.setValue(states[previousStateIndex]);
         //@ts-ignore
-        cityDropdownRef?.current?.setDefaultValue(cities[previousCityIndex]);
+        cityDropdownRef?.current?.setValue(cities[previousCityIndex]);
         //@ts-ignore
         floorDropdownRef?.current?.setDefaultValue(floorOptions[previousFloorIndex]);
         //@ts-ignore
@@ -182,11 +181,11 @@ const AddressForm: React.FC<IAddressFormProps> = ({
         }
       } else {
         //@ts-ignore
-        stateDropwdownRef?.current?.setDefaultValue(states[0]);
-        setState(states[0].label);
+        stateDropwdownRef?.current?.setValue(states[0]);
+        setState(states[0]);
         //@ts-ignore
-        cityDropdownRef?.current?.setDefaultValue(cities[0]);
-        setCity(cities[0].label);
+        cityDropdownRef?.current?.setValue(cities[0]);
+        setCity(cities[0]);
       }
     }
   }, [states, cities]);
@@ -197,7 +196,7 @@ const AddressForm: React.FC<IAddressFormProps> = ({
         pickupAddress: {
           shiftingFrom: city,
           city: city,
-          isLiftAvailable: liftStatus,
+          isLiftAvailable: liftStatus.toUpperCase(),
           locality: locality || 'Not Available',
           landmark: landmark || 'Not Available',
           pincode: pin,
@@ -206,13 +205,14 @@ const AddressForm: React.FC<IAddressFormProps> = ({
           floor: floorNumber,
         },
       };
+      console.log('PickupAddress--payload-', JSON.stringify(payload));
       dispatch(updateAddressRequest({id: enquiryId, requestBody: payload}));
     } else if (addressType == ADDRESS_TYPE.DROP) {
       const payload: IDropAddress = {
         dropAddress: {
           shiftingTo: city,
           city: city,
-          isLiftAvailable: liftStatus,
+          isLiftAvailable: liftStatus.toUpperCase(),
           locality: locality || 'Not Available',
           landmark: landmark || 'Not Available',
           pincode: pin,
@@ -221,20 +221,18 @@ const AddressForm: React.FC<IAddressFormProps> = ({
           floor: floorNumber,
         },
       };
+      console.log('PickupAddress--payload-', JSON.stringify(payload));
       dispatch(updateAddressRequest({id: enquiryId, requestBody: payload}));
     }
   };
 
   useEffect(() => {
     if (!updateAddressRequesting && updateAddressSuccess) {
-      Toast.show({
-        type: 'success',
-        text1: 'Address Update',
-        text2: 'Address has been updated successfully',
-      });
+      showToast('Address Updated', ToastType.SUCCESS);
       dispatch(resetUpdateAddressRequest());
       if(moduleName == MODULE_NAME.ENQUIRY) {
         dispatch(getEnquiryRequest(enquiryId));
+        _getEnquiriesRequest();
       } else if(moduleName == MODULE_NAME.ORDER) {
         const payload: ISingleOrderRequest = {
           _id: enquiryId
@@ -243,11 +241,7 @@ const AddressForm: React.FC<IAddressFormProps> = ({
       }
       onClose();
     } else if (!updateAddressRequesting && updateAddressFailure) {
-      Toast.show({
-        type: 'error',
-        text1: 'Address Update',
-        text2: 'Error in updating address. Please try again!',
-      });
+      showToast('Address Not Updated. Try again!', ToastType.ERROR);
       dispatch(resetUpdateAddressRequest());
     }
   }, [updateAddressRequesting, updateAddressSuccess, updateAddressFailure]);
@@ -269,9 +263,10 @@ const AddressForm: React.FC<IAddressFormProps> = ({
           </View>
           <View style={styles.itemContainer}>
             <Label text="State" style={styles.label} />
-            <DropdownComponent
+            <EpackDropdown
               data={states}
-              onSelect={handleState}
+              placeholder={'Select State'}
+              hanldeData={handleState}
               //@ts-ignore
               ref={stateDropwdownRef}
             />
@@ -280,12 +275,13 @@ const AddressForm: React.FC<IAddressFormProps> = ({
         <Spacer height={4} />
         <View style={styles.elementContainer3}>
           <Label text="City" style={styles.label} />
-          <DropdownComponent
-            data={cities}
-            onSelect={handleCity}
-            //@ts-ignore
-            ref={cityDropdownRef}
-          />
+          <EpackDropdown
+              data={cities}
+              placeholder={'Select City'}
+              hanldeData={handleCity}
+              //@ts-ignore
+              ref={cityDropdownRef}
+            />
         </View>
         <Spacer height={4} />
         <View style={styles.elementContainer3}>

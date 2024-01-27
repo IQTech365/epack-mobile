@@ -132,7 +132,7 @@ const ClientListItem: React.FC<IClientListItemProps> = ({
               <Text style={styles.labelText}>Customer ID</Text>
             </View>
             <View style={styles.rowItemContainer2}>
-              <Text style={styles.valueText}>{item.companyId}</Text>
+              <Text style={styles.valueText}>{item._id}</Text>
             </View>
           </View>
           <View style={styles.rowContainer}>

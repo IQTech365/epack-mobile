@@ -19,6 +19,7 @@ import {
 } from '../../../../../../../interface/order/IUpdateContactDetails';
 import {useAppDispatch, useAppSelector} from '../../../../../../../redux/hooks';
 import {
+  getEnquiriesRequest,
   getEnquiryRequest,
   resetUpdateContactDetailsRequest,
   updateContactDetailsRequest,
@@ -27,6 +28,7 @@ import Toast from 'react-native-toast-message';
 import {ISingleEnquiryData} from '../../../../../../../interface/enquiry/ISingleEnquiryResponse';
 import { getOrderRequest } from '../../../../../../../redux/slices/OrderSlice';
 import { ISingleOrderRequest } from '../../../../../../../interface/order/ISingleOrderRequest';
+import { getCurrentCompanyId } from '../../../../../../../utils/storage';
 interface IContactDetailFormProps {
   moduleName: MODULE_NAME;
   item: ISingleEnquiryData;
@@ -288,9 +290,16 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
     }
   };
 
+  const _getEnquiriesRequest = () => {
+    getCurrentCompanyId().then(id => {
+      dispatch(getEnquiriesRequest(id as string));
+    }).catch(err => console.log(err));
+  }
+
   const handleUpdate = () => {
     if (item.billingBy == 'by Individual') {
       const payload: IUpdateIndividualContactDetailRequest = {
+        partyName: contactPersonName,
         email: email,
         landline: landline,
         mobile: mobile,
@@ -298,10 +307,6 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
         tokenAmount: tokenAmount,
         alternateNumbers: alternateNumbers,
       };
-      console.log(
-        'Update-Individual-Contact-Detail--',
-        JSON.stringify(payload),
-      );
       dispatch(
         updateContactDetailsRequest({id: enquiryId, requestBody: payload}),
       );
@@ -324,8 +329,6 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
         tokenAmount: tokenAmount,
         alternateNumbers: alternateNumbers,
       };
-      console.log('Update-Company-Contact-Detail--', JSON.stringify(payload));
-
       dispatch(
         updateContactDetailsRequest({id: enquiryId, requestBody: payload}),
       );
@@ -346,6 +349,7 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
       dispatch(resetUpdateContactDetailsRequest());
       if(moduleName == MODULE_NAME.ENQUIRY) {
         dispatch(getEnquiryRequest(enquiryId));
+        _getEnquiriesRequest();
       } else if(moduleName == MODULE_NAME.ORDER) {
         const payload: ISingleOrderRequest = {
           _id: enquiryId

@@ -1,4 +1,5 @@
 export interface IUpdateIndividualContactDetailRequest {
+    partyName: string;
     email: string;
     landline: string;
     mobile: string;

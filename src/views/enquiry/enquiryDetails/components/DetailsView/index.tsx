@@ -12,11 +12,12 @@ import ContactDetailForm from '../../../../order/orderDetails/components/Details
 import ShifingDetailForm from '../../../../order/orderDetails/components/DetailsView/Forms/ShifingDetailForm';
 import EnquiryDetailListItem from '../EnquiryDetailListItem';
 import styles from './style';
-import Toast from 'react-native-toast-message';
+import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import { getEnquiryRequest } from '../../../../../redux/slices/EnquirySlice';
 import Spinner from '../../../../../common/Spinner';
 import { ISingleEnquiryData } from '../../../../../interface/enquiry/ISingleEnquiryResponse';
+import { COLOR_BLACK, COLOR_GREEN } from '../../../../../utils/colors';
 
 interface IDetailsViewProps {
   enquiryId: string;
@@ -32,6 +33,44 @@ const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
   const {data} = enquiry || {};
   console.log('Single Enquiry-enquiryId--', enquiryId);
   console.log('Single Enquiry-data--', JSON.stringify(data));
+
+  const toastConfig = {
+    success: (props: any) => (
+      <BaseToast
+        {...props}
+        style={{borderLeftColor: COLOR_GREEN}}
+        contentContainerStyle={{paddingHorizontal: 10, paddingVertical: 15}}
+        contentContainerProps={{paddingHorizontal: 15}}
+        text1Style={{
+          fontSize: 18,
+          fontWeight: '400',
+          color: COLOR_BLACK,
+        }}
+        text2Style={{
+          fontSize: 16,
+          fontWeight: '300',
+          color: COLOR_BLACK,
+        }}
+      />
+    ),
+    error: (props: any) => (
+      <ErrorToast
+        {...props}
+        contentContainerStyle={{paddingHorizontal: 10, paddingVertical: 15}}
+        contentContainerProps={{paddingHorizontal: 15}}
+        text1Style={{
+          fontSize: 18,
+          fontWeight: '400',
+          color: COLOR_BLACK,
+        }}
+        text2Style={{
+          fontSize: 16,
+          fontWeight: '300',
+          color: COLOR_BLACK,
+        }}
+      />
+    ),
+  };
 
   const getSingleEnquiry = () => {
     let enquiry:ISingleEnquiryData;
@@ -75,13 +114,13 @@ const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
   const getModalTitle = () => {
     let title: string = '';
     if (editShiftingDetail) {
-      title = 'Edit - Shifting Detail Info';
+      title = 'UPDATE - SHIFTING DETAIL';
     } else if (editContactDetail) {
-      title = 'Edit - Contact Detail Info';
+      title = 'UPDATE - CONTACT DETAIL';
     } else if (editPickupAddress) {
-      title = 'Edit - Pickup Address';
+      title = 'UPDATE - PICKUP ADDRESS';
     } else if (editDropAddress) {
-      title = 'Edit - Delivery Address';
+      title = 'UPDATE - DELIVERY ADDRESS';
     }
     return title;
   };
@@ -393,10 +432,10 @@ const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
           modalStyle={styles.modalStyle}
           headerStyle={styles.headerStyle}
           onClose={handleModalClose}
-          title={getModalTitle()}>
+          title={getModalTitle().toUpperCase()}>
           <>
           {getForm()}
-          <Toast />
+          <Toast config={toastConfig} />
           </>
         </ModalHOC>
         <Spinner show={getEnquiryRequesting} />

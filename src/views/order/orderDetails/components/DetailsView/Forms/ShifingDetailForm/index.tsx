@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../../../common/AvoidSoftInputViewHOC';
 import Label from '../../../../../../../common/Label';
-import {COLOR_BLUE} from '../../../../../../../utils/colors';
+import {COLOR_BLACK, COLOR_BLUE, COLOR_GREEN} from '../../../../../../../utils/colors';
 import styles from './style';
 import shiftingTypeOptions from '../../../../../../../data/shiftingType.json';
 import DropdownComponent from '../../../../../../../common/DropdownComponent';
@@ -16,16 +16,19 @@ import {MODULE_NAME} from '../../enum/EModuleName';
 import {formatDate4} from '../../../../../../../utils/formatter';
 import {useAppDispatch, useAppSelector} from '../../../../../../../redux/hooks';
 import {
+  getEnquiriesRequest,
   getEnquiryRequest,
   resetUpdateShiftingInfoRequest,
   updateShiftingInfoRequest,
 } from '../../../../../../../redux/slices/EnquirySlice';
 import Spinner from '../../../../../../../common/Spinner';
 import {IUpdateShiftingInfoRequest} from '../../../../../../../interface/enquiry/IUpdateShiftingInfo';
-import Toast from 'react-native-toast-message';
 import {ISingleEnquiryData} from '../../../../../../../interface/enquiry/ISingleEnquiryResponse';
 import { getOrderRequest } from '../../../../../../../redux/slices/OrderSlice';
 import { ISingleOrderRequest } from '../../../../../../../interface/order/ISingleOrderRequest';
+import { ToastType, showToast } from '../../../../../../../utils/utility';
+import { getCurrentCompanyId } from '../../../../../../../utils/storage';
+
 interface IShiftingFormProps {
   moduleName: MODULE_NAME;
   item: ISingleEnquiryData;
@@ -109,9 +112,9 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({
     const payload: IUpdateShiftingInfoRequest = {
       shiftingType: shiftingType.toUpperCase(),
       shiftingLuggage: shiftingLuggages,
-      shiftingDate: dateOfMoving,
-      deliveryDate: dateOfDelivery,
-      deliveredDate: dateOfDelivered,
+      shiftingDate: dateOfMoving || formatDate4(new Date()),
+      deliveryDate: dateOfDelivery || "",
+      deliveredDate: dateOfDelivered || "",
     };
     dispatch(updateShiftingInfoRequest({id: enquiryId, requestBody: payload}));
   };
@@ -141,6 +144,12 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({
     }
     setShiftingLuggages(temp);
   };
+
+  const _getEnquiriesRequest = () => {
+    getCurrentCompanyId().then(id => {
+      dispatch(getEnquiriesRequest(id as string));
+    }).catch(err => console.log(err));
+  }
 
   useEffect(() => {
     if (item) {
@@ -177,14 +186,11 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({
 
   useEffect(() => {
     if (!updateShiftingInfoRequesting && updateShiftingInfoSuccess) {
-      Toast.show({
-        type: 'success',
-        text1: 'Shifting Info',
-        text2: 'Shifting Info has been updated successfully',
-      });
+      showToast('Shifting Info Updated.', ToastType.SUCCESS);
       dispatch(resetUpdateShiftingInfoRequest());
       if(moduleName == MODULE_NAME.ENQUIRY) {
         dispatch(getEnquiryRequest(enquiryId));
+        _getEnquiriesRequest();
       } else if(moduleName == MODULE_NAME.ORDER) {
         const payload: ISingleOrderRequest = {
           _id: enquiryId
@@ -193,11 +199,7 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({
       }
       onClose();
     } else if (!updateShiftingInfoRequesting && updateShiftingInfoFailure) {
-      Toast.show({
-        type: 'error',
-        text1: 'Shifting Info',
-        text2: 'Error in updating shifing info. Please try again!',
-      });
+      showToast('Shifting Info Not Updated. Try again!', ToastType.ERROR);
       dispatch(resetUpdateShiftingInfoRequest());
     }
   }, [

@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     },
     modalStyle: {
         width: width,
-        height: height
+        // height: height
     },
     headerStyle: {
         width: width,

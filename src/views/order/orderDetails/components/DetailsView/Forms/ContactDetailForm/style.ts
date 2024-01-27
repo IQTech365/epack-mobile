@@ -6,11 +6,12 @@ import {
   COLOR_GRAY2,
   COLOR_WHITE,
 } from '../../../../../../../utils/colors';
-const {width} = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
     width: width * 0.95,
+    height: height,
     alignSelf: 'center',
     alignItems: 'center',
     backgroundColor: COLOR_WHITE,

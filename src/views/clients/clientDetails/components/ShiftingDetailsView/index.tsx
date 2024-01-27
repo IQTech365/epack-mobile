@@ -27,6 +27,8 @@ const ShiftingDetailsView: React.FC<IShiftingDetailsViewProps> = ({item}) => {
     getCurrentCompanyId().then(id => {
       const payload: Partial<IGetOrdersRequest> = {
         companyId: id as string,
+        customerId: item._id,
+
       };
       dispatch(getOrdersRequest(payload));
     }).catch(err => console.log(err));
@@ -37,8 +39,8 @@ const ShiftingDetailsView: React.FC<IShiftingDetailsViewProps> = ({item}) => {
     let list: IGetOrdersData[] = [];
     const {data} = orders || {};
     if (data && Array.isArray(data) && data.length > 0) {
-      list = data.filter((d:IGetOrdersData) => d.customerId == item._id);
-      // list = data;
+      // list = data.filter((d:IGetOrdersData) => d.customerId == item._id);
+      list = data;
     }
     return list;
   };

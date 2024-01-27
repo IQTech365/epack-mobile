@@ -54,7 +54,6 @@ const ClientPageView: React.FC<IClientPageViewProps> = ({navigation}) => {
       list = data;
     }
     console.log('customers----', JSON.stringify(list));
-    
     return list;
   }
 
