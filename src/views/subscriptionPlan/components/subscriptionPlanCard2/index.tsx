@@ -94,7 +94,7 @@ const SubscriptionPlanCard2: React.FC<ISubscriptionPlanCardProps> = ({
     setPlanDuration(duration);
   };
   return (
-    <Shadow distance={2}>
+    <Shadow distance={8}>
       <View style={styles.container}>
         <View style={styles.contentContainer}>
           <LinearGradient
@@ -103,10 +103,9 @@ const SubscriptionPlanCard2: React.FC<ISubscriptionPlanCardProps> = ({
             useAngle={true}
             angle={45}>
             <Text style={styles.planTypeText}>
-              {subscriptionType.charAt(0).toUpperCase() +
-                subscriptionType.substring(1)}
+              {subscriptionType.toUpperCase()}
             </Text>
-            <View style={styles.planDurationContainer}>
+            {subscriptionType !== "free" ? <View style={styles.planDurationContainer}>
               <DropdownComponent
                 data={preparePlanDurationData()}
                 onSelect={handlePlanDuration}
@@ -115,7 +114,7 @@ const SubscriptionPlanCard2: React.FC<ISubscriptionPlanCardProps> = ({
                 containerStyle={{width: '80%', marginTop: 0}}
                 selectedTextStyle={styles.selectedTextStyle}
               />
-            </View>
+            </View>: <Spacer height={6} />}
           </LinearGradient>
           <ScrollView style={{width: '95%'}}>
             {planFeatures.map((planFeature: IPlanFeature, index: number) => {
@@ -178,7 +177,7 @@ const SubscriptionPlanCard2: React.FC<ISubscriptionPlanCardProps> = ({
               style={styles.buttonContainer}
               useAngle={true}
               angle={45}>
-              <Text style={styles.planPriceText}>BUY NOW</Text>
+              <Text style={styles.planPriceText}>UPGRADE</Text>
             </LinearGradient>
           </TouchableOpacity>
         </View>

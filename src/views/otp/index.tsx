@@ -7,7 +7,6 @@ import LogoIcon from '../../images/icons/epack-logo.svg';
 
 import Button from '../../common/Button';
 import Spacer from '../../common/Spacer';
-import {AuthStackRoute} from '../../utils/constants';
 import Spinner from '../../common/Spinner';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {INTRO_BG_LINEARGRADIENT} from '../../utils/colors';
@@ -22,16 +21,12 @@ import {IOtpVerifyRequest} from '../../interface/otp/IOtpVerifyRequest';
 import {
   removeCurrentCompanyId,
   setAuthToken,
-  setCurrentCompanyId,
-  setIsRegistrationComplete,
-  setLoginStatus,
 } from '../../utils/storage';
 import {getCompaniesRequest, resetGetCompaniesRequest} from '../../redux/slices/CompanySlice';
 import {useAuthContext} from '../../provider/AuthProvider';
 import CompanyListModal from '../../common/CompanyListModal';
 import {ICompanyInfoData} from '../../interface/companyRegistration/IGetCompaniesResponse';
 import { ToastType, showToast } from '../../utils/utility';
-import { getSavedDocumentTemplateIdListRequest } from '../../redux/slices/TemplateSettingSlice';
 import { getPendingRegisrationRequest, resetGetPendingRegisrationRequest } from '../../redux/slices/CommonSlice';
 import { IPendingRegistration } from '../../interface/common/common';
 
@@ -177,10 +172,8 @@ const OTPPageView = (props: any) => {
       if (data?.token) {
         setAuthToken(data.token);
         dispatch(getPendingRegisrationRequest(otpData?.data?._id as string))
-        // dispatch(resetVerifyOtpRequest());
       }
     } else if (!verifyOtpRequesting && verifyOtpFailure) {
-      // dispatch(resetVerifyOtpRequest());
       showToast('Otp verification failed. Try again!', ToastType.ERROR);
     }
   }, [verifyOtpRequesting, verifyOtpSuccess, verifyOtpFailure]);
@@ -210,9 +203,6 @@ const OTPPageView = (props: any) => {
 
   useEffect(() => {
     if (!getCompaniesRequesting && getCompaniesSuccess && verifyOtpSuccess) {
-      console.log('getCompaniesRequesting----', getCompaniesRequesting);
-      console.log('getCompaniesSuccess----', getCompaniesSuccess);
-      
       const {data} = companies || {};
       if (data && Array.isArray(data) && data.length > 0) {
         setShowCompaniesModal(true);

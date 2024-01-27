@@ -8,10 +8,11 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 35,
     backgroundColor: COLOR_WHITE,
+    marginTop: -100,
   },
   contentContainer: {
     width: '100%',
-    height: height - 30,
+    height: height * 0.7,
     alignSelf: 'center',
     alignItems: 'center',
     borderTopLeftRadius: 35,
@@ -19,7 +20,7 @@ const styles = StyleSheet.create({
   },
   planNameAndPriceContainer: {
     width: '100%',
-    paddingVertical: 35,
+    paddingVertical: 20,
     alignItems: 'center',
     borderTopLeftRadius: 35,
     borderTopRightRadius: 35,

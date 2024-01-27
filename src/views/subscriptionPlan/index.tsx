@@ -7,6 +7,7 @@ import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {
   addPurchaseRequest,
   createRazorpayRequest,
+  getPurchasedSubscriptionRequest,
   getSubmoduleFeaturesRequest,
   getSubmodulesRequest,
   getSubscriptionPlansRequest,
@@ -16,12 +17,13 @@ import {
 import {getModulesRequest} from '../../redux/slices/UserRoleManagementSlice';
 import {
   IAddPurchaseRequest,
+  IGetPurchasedSubscriptionParams,
   IRazorPayCreateOrderPayload,
   ISubscriptionPlan,
 } from '../../interface/subscription/subscription';
 import {IDurationConverter, getDurationConverter, getNextRenewableDate, prepareSubscriptionPlanList} from './utils';
 import BackgroundImage from '../../images/subscription_bg.png';
-import SubscriptionPlanCard2 from './components/subscriptionPlanCard2';
+import SubscriptionPlanCard from './components/subscriptionPlanCard';
 import RazorpayCheckout from 'react-native-razorpay';
 import {ToastType, showToast} from '../../utils/utility';
 import Spinner from '../../common/Spinner';
@@ -33,27 +35,25 @@ const SubscriptionPlanView = (props: any) => {
   const authId = useAuthId();
   const {
     subscriptionPlans,
-    getSubscriptionPlansRequesting,
     getSubscriptionPlansRequestSuccess,
     submoduleFeatures,
-    getSubmoduleFeaturesRequesting,
     getSubmoduleFeaturesRequestSuccess,
-    getSubmodulesRequesting,
     getSubmodulesRequestSuccess,
     submodules,
     addPurchaseRequesting,
     addPurchaseSuccess,
     addPurchaseFailure,
-    addPurchaseInfo,
     createRazorpayOrderRequesting,
     createRazorpayOrderSuccess,
     createRazorpayOrderFailure,
-    razorpayOrder
+    razorpayOrder,
+    getPurchasedSubscriptionsRequesting,
+    getPurchasedSubscriptionsSuccess,
+    getPurchasedSubscriptionsFailure,
+    purchasedSubscriptions,
   } = useAppSelector(state => state.Subscription);
 
-  const {modules, getModulesRequesting, getModulesSuccess} = useAppSelector(
-    state => state.UserRole,
-  );
+  const {modules, getModulesSuccess} = useAppSelector(state => state.UserRole);
   const [paymentProcessing, setPaymentProcessing] = useState<boolean>(false);
   const [paymentDone, setPaymentDone] = useState<boolean>(false);
   const [subscriptionPlan, setSubscriptionPlan] = useState<ISubscriptionPlan>();
@@ -65,10 +65,6 @@ const SubscriptionPlanView = (props: any) => {
   const {data: submoduleFeatureData} = submoduleFeatures || {};
 
   const handleByPlan = async (plan: ISubscriptionPlan, amount:number, duration:string) => {
-    console.log('Plan--', JSON.stringify(plan));
-    console.log('Amount--', amount);
-    console.log('Duration--', duration);
-    
     setSubscriptionPlan(plan);
     setPlanAmount(amount);
     setPlanDuration(duration);
@@ -130,7 +126,6 @@ const SubscriptionPlanView = (props: any) => {
     try {
       RazorpayCheckout.open(options)
         .then((data: any) => {
-          console.log('Payment-Success----', data.razorpay_payment_id);
           showToast("Payment Success", ToastType.SUCCESS);
           setPaymentProcessing(false);
           setPaymentDone(true);
@@ -157,6 +152,8 @@ const SubscriptionPlanView = (props: any) => {
       submoduleFeatureData,
     );
   };
+
+  
 
   useEffect(() => {
     dispatch(getSubscriptionPlansRequest());
@@ -219,7 +216,7 @@ const SubscriptionPlanView = (props: any) => {
         renderItem={({item, index}) => {
           return (
             <View>
-              <SubscriptionPlanCard2 item={item} onPress={handleByPlan} />
+              <SubscriptionPlanCard item={item} onPress={handleByPlan} />
               <Spinner show={paymentProcessing || addPurchaseRequesting} />
             </View>
           );

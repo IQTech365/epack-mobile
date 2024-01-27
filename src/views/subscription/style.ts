@@ -7,27 +7,31 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: COLOR_WHITE,
   },
-  currentPlanContainer: {
+  gradientContainer: {
     width: '90%',
     alignSelf: 'center',
     alignItems: 'center',
-    borderWidth: 0.5,
-    borderColor: COLOR_BLACK,
-    borderRadius: 5,
+    borderRadius: 8,
+  },
+  currentPlanContainer: {
+    width: '100%',
+    alignSelf: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
     paddingVertical: 5,
   },
   planNameText: {
-    color: COLOR_BLACK,
+    color: COLOR_WHITE,
     fontSize: 22,
     fontFamily: 'WorkSans-Bold',
   },
   planDaysText: {
-    color: COLOR_BLACK,
+    color: COLOR_WHITE,
     fontSize: 16,
     fontFamily: 'WorkSans-Medium',
   },
   planExpireText: {
-    color: COLOR_BLACK,
+    color: COLOR_WHITE,
     fontSize: 14,
     fontFamily: 'WorkSans-Regular',
     textAlign: 'center'

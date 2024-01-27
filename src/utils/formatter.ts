@@ -23,6 +23,13 @@ export const formatDate5 = (date: Date): string => {
   return moment(date).format('MMMM D YYYY, h:mm a');
 };
 
+export const getDaysDifference = (expireDate:Date):string => {
+  var startDate = moment(new Date());
+  var endDate = moment(expireDate);
+  const daysLeft = 'Days Left - ' + endDate.diff(startDate, 'days');
+  return daysLeft;
+}
+
 export const getStates = (arr: any): TDropdownItem[] => {
   let states: TDropdownItem[] = [{label: '', value: ''}];
   const {PostOffice} = arr || {};
