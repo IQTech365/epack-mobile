@@ -23,13 +23,17 @@ const SurchargeView: React.FC<Props> = ({}) => {
         const quotationfreight:IQuotationFreight = item.quotationfreights;
         if(quotationfreight) {
           const surchargeTypeItem:TDropdownItem = surchargeOptions.find((d:TDropdownItem) => d.label == quotationfreight.surchargeIsRequired) as TDropdownItem;
-          //@ts-ignore
-          surchargeTypeDropdownRef && surchargeTypeDropdownRef?.current?.setDefaultValue(surchargeTypeItem);
-          setSurcharge(surchargeTypeItem.label);
+          if(surchargeTypeItem) {
+            //@ts-ignore
+            surchargeTypeDropdownRef && surchargeTypeDropdownRef?.current?.setDefaultValue(surchargeTypeItem);
+            setSurcharge(surchargeTypeItem.label);
+          }
           const surchargePercentItem:TDropdownItem = surchargePercentOptions.find((d:TDropdownItem) => d.label == quotationfreight.surchargeCharges) as TDropdownItem;
-          //@ts-ignore
-          surchargePercentDropdownRef && surchargePercentDropdownRef?.current?.setDefaultValue(surchargePercentItem);
-          setSurchargePercent(surchargePercentItem.label);
+          if(surchargePercentItem) {
+            //@ts-ignore
+            surchargePercentDropdownRef && surchargePercentDropdownRef?.current?.setDefaultValue(surchargePercentItem);
+            setSurchargePercent(surchargePercentItem.label);
+          }
         }
       }
     }

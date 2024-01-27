@@ -1,5 +1,8 @@
 [
     {
+        "label": "CONTACT DETAIL" 
+    },
+    {
         "label": "ACCOUNT DETAIL" 
     },
     {
@@ -7,11 +10,5 @@
     },
     {
         "label": "COMPANY DOCUMENT" 
-    },
-    {
-        "label": "SIGNATURE" 
-    },
-    {
-        "label": "CONTACT DETAIL" 
     }
 ]

@@ -26,9 +26,11 @@ const VehicleLoadSizeView: React.FC<IProps> = ({}) => {
         const quotationfreight:IQuotationFreight = item.quotationfreights;
         if(quotationfreight && quotationfreight.lorryType) {
           const lorryTypeItem:TDropdownItem = _getVehicleSizes().find((d:TDropdownItem) => d.label == quotationfreight.lorryType) as TDropdownItem;
-          //@ts-ignore
-          lorryTypeDropdownRef && lorryTypeDropdownRef?.current?.setDefaultValue(lorryTypeItem);
-          setLorryType(lorryTypeItem.label);
+          if(lorryTypeItem) {
+            //@ts-ignore
+            lorryTypeDropdownRef && lorryTypeDropdownRef?.current?.setDefaultValue(lorryTypeItem);
+            setLorryType(lorryTypeItem.label);
+          }
         }
       }
     }

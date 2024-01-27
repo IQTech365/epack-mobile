@@ -27,13 +27,17 @@ const GstView: React.FC<Props> = ({}) => {
         if(quotationfreight) {
           setGstInQuotation(quotationfreight.gstStatus);
           const gstPercentItem:TDropdownItem = gstPercentOptions.find((d:TDropdownItem) => d.label == quotationfreight.gstPercentage) as TDropdownItem;
-          //@ts-ignore
-          gstPercentDropdownCompRef && gstPercentDropdownCompRef?.current?.setDefaultValue(gstPercentItem);
-          setGstPercent(gstPercentItem.label);
+          if(gstPercentItem) {
+            //@ts-ignore
+            gstPercentDropdownCompRef && gstPercentDropdownCompRef?.current?.setDefaultValue(gstPercentItem);
+            setGstPercent(gstPercentItem.label);
+          }
           const gstTypeItem:TDropdownItem = gstTypeOptions.find((d:TDropdownItem) => d.label == quotationfreight.gstType) as TDropdownItem;
-          //@ts-ignore
-          gstPercentDropdownCompRef && gstPercentDropdownCompRef?.current?.setDefaultValue(gstPercentItem);
-          setGstType(gstTypeItem.label);
+          if(gstTypeItem) {
+            //@ts-ignore
+            gstPercentDropdownCompRef && gstPercentDropdownCompRef?.current?.setDefaultValue(gstPercentItem);
+            setGstType(gstTypeItem.label);
+          }
         }
       }
     }

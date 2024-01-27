@@ -193,10 +193,10 @@ const AddQuotationForm: React.FC<Props> = ({
         );
         valid = false;
       }
-      if (Validator.isEmpty(employee_name)) {
-        setEmployeeNameError('Employee name required');
-        valid = false;
-      }
+      // if (Validator.isEmpty(employee_name)) {
+      //   setEmployeeNameError('Employee name required');
+      //   valid = false;
+      // }
     }
     if (Validator.isEmpty(pickup_pincode)) {
       setPickupPincodeError('Pincode required');

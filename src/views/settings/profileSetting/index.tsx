@@ -27,15 +27,15 @@ const PackersProfileSetting = (props: any) => {
   const showTabItem = () => {
     switch (activeTabIndex) {
       case 0:
-        return <AddAccountView />;
-      case 1:
-        return <AddFooterContentView />;
-      case 2:
-        return <AddDocumentView />;
-      case 3:
-        return <AddSignatureView />;
-      case 4:
         return <AddContactView />;
+      case 1:
+        return <AddAccountView />;
+      case 2:
+        return <AddFooterContentView />;
+      case 3:
+        return <AddDocumentView />;
+      case 4:
+        return <AddSignatureView />;
       default:
         return null;
     }

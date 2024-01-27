@@ -44,9 +44,11 @@ const StorageChargesView: React.FC<Props> = ({}) => {
           if(storageCharge) {
             setStorage(storageCharge.isRequired);
             const storageDurationItem:TDropdownItem = storageDurationOptions.find((d:TDropdownItem) => d.label == storageCharge.storageChargesType) as TDropdownItem;
-            setStorageDuration(storageDurationItem.label);
-            //@ts-ignore
-            storageDurationDropdownCompRef && storageDurationDropdownCompRef?.current?.setDefaultValue(storageDurationItem);
+            if(storageDurationItem) {
+              setStorageDuration(storageDurationItem.label);
+              //@ts-ignore
+              storageDurationDropdownCompRef && storageDurationDropdownCompRef?.current?.setDefaultValue(storageDurationItem);
+            }
             setStorageAmount(storageCharge.amount);
             if(storageCharge.storageChargesType == storageDurationOptions[2].label) {
               //@ts-ignore

@@ -32,6 +32,9 @@ export interface IBillingInfo {
     employeeName: string;
     employeeDesignation: string;
     employeeMobile: string;
+    companyState:string;
+    companyCity:string;
+    companyPincode:string;
   }
 
 export interface ISingleEnquiryData {

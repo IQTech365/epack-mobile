@@ -204,6 +204,18 @@ const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
           label="Company Address"
           value={singleEnquiry?.billingDetails?.companyAddress}
         />
+         <EnquiryDetailListItem
+          label="State"
+          value={singleEnquiry?.billingDetails?.companyState}
+        />
+         <EnquiryDetailListItem
+          label="City"
+          value={singleEnquiry?.billingDetails?.companyCity}
+        />
+         <EnquiryDetailListItem
+          label="Pincode"
+          value={singleEnquiry?.billingDetails?.companyPincode}
+        />
         <EnquiryDetailListItem
           label="Company GST"
           value={singleEnquiry?.billingDetails?.companyGST}

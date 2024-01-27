@@ -51,26 +51,32 @@ const InsuranceDetailsView: React.FC<Props> = ({}) => {
           if(transitInsurance) {
             setTransitInsurance(transitInsurance.isRequired);
             const insuraceTypeItem:TDropdownItem = insuranceTypeOptions.find((d:TDropdownItem) => d.label == transitInsurance.transitType) as TDropdownItem;
-            setTransitInsuranceType(insuraceTypeItem?.label);
-            //@ts-ignore
-            insuranceTypeDropdownCompRef && insuranceTypeDropdownCompRef?.current?.setDefaultValue(insuraceTypeItem);
+            if(insuraceTypeItem) {
+              setTransitInsuranceType(insuraceTypeItem?.label);
+              //@ts-ignore
+              insuranceTypeDropdownCompRef && insuranceTypeDropdownCompRef?.current?.setDefaultValue(insuraceTypeItem);
+            }
             if(transitInsurance.charges.length > 0) {
               const charge:ICharge = transitInsurance.charges[0];
               if(charge) {
                 const shiftingLuggageItem:string = shiftingLuggageOptions.map(({label}) => label).find((d:string) => d == charge.luggageType) as string;
-                setTransitShiftingLuggage(shiftingLuggageItem);
                 if(shiftingLuggageItem) {
+                  setTransitShiftingLuggage(shiftingLuggageItem);
                   //@ts-ignore
                   shiftingLuggageDropdownCompRef && shiftingLuggageDropdownCompRef?.current?.setValue(shiftingLuggageItem);
                 }
                 const insurancePercentItem:TDropdownItem = insurancePercentOptions.find((d:TDropdownItem) => d.label == charge.insurancePerc) as TDropdownItem;
-                setTransitInsuranceCharge(insurancePercentItem.label);
-                //@ts-ignore
-                insuranceChargeDropdownCompRef && insuranceChargeDropdownCompRef?.current?.setDefaultValue(insurancePercentItem);
+                if(insurancePercentItem) {
+                  setTransitInsuranceCharge(insurancePercentItem.label);
+                  //@ts-ignore
+                  insuranceChargeDropdownCompRef && insuranceChargeDropdownCompRef?.current?.setDefaultValue(insurancePercentItem);
+                }
                 const gstPercentItem:TDropdownItem = gstPercentOptions.find((d:TDropdownItem) => d.label == charge.gst) as TDropdownItem;
-                setTransitInsuranceGst(gstPercentItem.label);
-                //@ts-ignore
-                insuranceGstDropdownCompRef && insuranceGstDropdownCompRef?.current?.setDefaultValue(gstPercentItem);
+                if(gstPercentItem) {
+                  setTransitInsuranceGst(gstPercentItem.label);
+                  //@ts-ignore
+                  insuranceGstDropdownCompRef && insuranceGstDropdownCompRef?.current?.setDefaultValue(gstPercentItem);
+                }
                 setTransitGoodsValue(charge.value);
               }
             }

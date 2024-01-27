@@ -28,9 +28,11 @@ const DiscountView: React.FC<Props> = ({}) => {
           setDiscountInQuotation(quotationfreight.discountType);
           if(quotationfreight.discountType == discountInQuotationOptions[0]) {
             const discountPercentItem:TDropdownItem = discountPercentOptions.find((d:TDropdownItem) => d.label == quotationfreight.discountAmount) as TDropdownItem;
-            //@ts-ignore
-            discountPercentDropdownCompRef && discountPercentDropdownCompRef?.current?.setDefaultValue(discountPercentItem);
-            setDiscountPercentOrValue(discountPercentItem.label);
+            if(discountPercentItem) {
+              //@ts-ignore
+              discountPercentDropdownCompRef && discountPercentDropdownCompRef?.current?.setDefaultValue(discountPercentItem);
+              setDiscountPercentOrValue(discountPercentItem.label);
+            }
           } else if(quotationfreight.discountType == discountInQuotationOptions[1]) {
             setDiscountPercentOrValue(quotationfreight.discountAmount);
           }

@@ -30,6 +30,7 @@ const TemplatePageView = ({route}) => {
   } = useAppSelector(state => state.Template);
   const [activeCategory, setActiveCategory] = useState<string>('');
   const [activeTemplateId, setActiveTemplateId] = useState<string>('');
+  const [activeModuleId, setActiveModuleId] = useState<string>('');
 
   const _getTemplatesByModuleId = () => {
     let list: ITemplate[] = [];
@@ -86,6 +87,7 @@ const TemplatePageView = ({route}) => {
       if(templates && templates.length > 0) {
         const firstTemplate:ITemplate = templates[0];
         setActiveTemplateId(firstTemplate._id);
+        setActiveModuleId(firstTemplate.moduleId);
       }
     }
   }
