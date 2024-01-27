@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import { COLOR_BLACK, COLOR_BLUE, COLOR_WHITE } from '../../../../utils/colors';
+import { COLOR_BLACK, COLOR_BLUE, COLOR_GREEN, COLOR_WHITE } from '../../../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -52,10 +52,35 @@ const styles = StyleSheet.create({
     color: COLOR_BLACK,
     fontFamily: 'WorkSans-SemiBold'
   },
-  idText: {
+  labelText: {
     fontSize: 14,
     color: COLOR_BLACK,
-    fontFamily: 'WorkSans-Medium'
+    fontFamily: 'WorkSans-SemiBold'
+  },
+  valueText: {
+    fontSize: 14,
+    color: COLOR_BLACK,
+    fontFamily: 'WorkSans-Medium',
+  },
+  planText: {
+    fontSize: 14,
+    color: COLOR_WHITE,
+    fontFamily: 'WorkSans-SemiBold'
+  },
+  planContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  planNameContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 6,
+    paddingVertical: 2,
+    paddingHorizontal: 15,
+    marginLeft: 8,
+    backgroundColor: COLOR_GREEN,
   }
 });
 

@@ -23,11 +23,12 @@ import {
 import {useAppDispatch, useAppSelector} from '../../../../../../../redux/hooks';
 import { getEnquiriesRequest, getEnquiryRequest, resetUpdateAddressRequest, updateAddressRequest } from '../../../../../../../redux/slices/EnquirySlice';
 import { ISingleEnquiryData } from '../../../../../../../interface/enquiry/ISingleEnquiryResponse';
-import { getOrderRequest } from '../../../../../../../redux/slices/OrderSlice';
+import { getOrderRequest, getOrdersRequest } from '../../../../../../../redux/slices/OrderSlice';
 import { ISingleOrderRequest } from '../../../../../../../interface/order/ISingleOrderRequest';
 import EpackDropdown from '../../../../../../../common/DropdownComponent2';
 import { ToastType, showToast } from '../../../../../../../utils/utility';
 import { getCurrentCompanyId } from '../../../../../../../utils/storage';
+import { IGetOrdersRequest } from '../../../../../../../interface/order/IGetOrdersRequest';
 
 export enum ADDRESS_TYPE {
   PICKUP,
@@ -109,7 +110,7 @@ const AddressForm: React.FC<IAddressFormProps> = ({
       setPin(item.pickupAddress.pincode);
       setCity(item.pickupAddress.city);
       setState(item.pickupAddress.state);
-      setAddress(item.pickupAddress.locality as string || item.pickupAddress.address);
+      setAddress(item.pickupAddress.address);
       setLandmark(item.pickupAddress.landmark as string);
       //@ts-ignore
       setLocality(item.pickupAddress?.locality as string);
@@ -120,7 +121,7 @@ const AddressForm: React.FC<IAddressFormProps> = ({
       setPin(item.dropAddress.pincode);
       setCity(item.dropAddress.city);
       setState(item.dropAddress.state);
-      setAddress(item.dropAddress.locality as string || item.dropAddress.address);
+      setAddress(item.dropAddress.address as string);
       setLandmark(item.dropAddress.landmark as string);
       //@ts-ignore
       setLocality(item.dropAddress?.locality as string);
@@ -133,6 +134,15 @@ const AddressForm: React.FC<IAddressFormProps> = ({
   const _getEnquiriesRequest = () => {
     getCurrentCompanyId().then(id => {
       dispatch(getEnquiriesRequest(id as string));
+    }).catch(err => console.log(err));
+  }
+
+  const _fetchOrders = () => {
+    getCurrentCompanyId().then(id => {
+      const payload: Partial<IGetOrdersRequest> = {
+        companyId: id as string,
+      };
+      dispatch(getOrdersRequest(payload));
     }).catch(err => console.log(err));
   }
 
@@ -205,7 +215,6 @@ const AddressForm: React.FC<IAddressFormProps> = ({
           floor: floorNumber,
         },
       };
-      console.log('PickupAddress--payload-', JSON.stringify(payload));
       dispatch(updateAddressRequest({id: enquiryId, requestBody: payload}));
     } else if (addressType == ADDRESS_TYPE.DROP) {
       const payload: IDropAddress = {
@@ -221,7 +230,6 @@ const AddressForm: React.FC<IAddressFormProps> = ({
           floor: floorNumber,
         },
       };
-      console.log('PickupAddress--payload-', JSON.stringify(payload));
       dispatch(updateAddressRequest({id: enquiryId, requestBody: payload}));
     }
   };
@@ -238,6 +246,7 @@ const AddressForm: React.FC<IAddressFormProps> = ({
           _id: enquiryId
         }
         dispatch(getOrderRequest(payload));
+        _fetchOrders();
       }
       onClose();
     } else if (!updateAddressRequesting && updateAddressFailure) {

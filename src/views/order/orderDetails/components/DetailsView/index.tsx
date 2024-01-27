@@ -356,6 +356,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
   };
 
   return (
+    <AvoidSoftInputViewHOC>
     <View style={styles.container}>
       <Spacer height={4} />
       <CollapsibleView
@@ -508,8 +509,8 @@ const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
           editPickupAddress ||
           editDropAddress
         }
-        // modalStyle={styles.modalStyle}
-        // headerStyle={styles.headerStyle}
+        modalStyle={styles.modalStyle}
+        headerStyle={styles.headerStyle}
         onClose={handleModalClose}
         title={getModalTitle()}>
           <View>
@@ -519,6 +520,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
       </ModalHOC>
       <Spinner show={getOrderRequesting} />
     </View>
+    </AvoidSoftInputViewHOC>
   );
 };
 

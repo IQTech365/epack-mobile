@@ -21,6 +21,8 @@ import {
 import {IDashboardData, IDashboardPaylod} from '../../interface/common/common';
 import { getCompaniesRequest } from '../../redux/slices/CompanySlice';
 import useAuthId from '../../hooks/useAuthId';
+import { IGetPurchasedSubscriptionParams, IPurchasedSubscription } from '../../interface/subscription/subscription';
+import { getPurchasedSubscriptionRequest } from '../../redux/slices/SubscriptionSlice';
 
 const HomePageView = () => {
   const navigation = useNavigation();
@@ -29,6 +31,7 @@ const HomePageView = () => {
   const {getDashboardDataRequesting, dashboard} = useAppSelector(
     state => state.Common,
   );
+  const {purchasedSubscriptions} = useAppSelector(state => state.Subscription);
   const handleFeatureClick = (featureType: FEATURE_TYPE) => {
     if (featureType == FEATURE_TYPE.BRANCHES) {
       //@ts-ignore
@@ -49,6 +52,16 @@ const HomePageView = () => {
       })
       .catch(err => console.log(err));
   };
+
+  const _getPurchasedSubscription = () => {
+    getCurrentCompanyId().then(id => {
+      const payload: IGetPurchasedSubscriptionParams = {
+        authId: authId,
+        companyId: id as string,
+      };
+      dispatch(getPurchasedSubscriptionRequest(payload));
+    }).catch(err => console.log('storage-fetch-error--', err));
+  }
 
   const _getSavedTemplateId = () => {
     getCurrentCompanyId()
@@ -83,6 +96,7 @@ const HomePageView = () => {
     _getDashboardData();
     dispatch(getInsurancePercentagesRequest());
     dispatch(getFloorsRequest());
+    _getPurchasedSubscription();
   }, []);
 
   useEffect(() => {

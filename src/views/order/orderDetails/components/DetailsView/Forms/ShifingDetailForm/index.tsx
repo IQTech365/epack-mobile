@@ -24,10 +24,11 @@ import {
 import Spinner from '../../../../../../../common/Spinner';
 import {IUpdateShiftingInfoRequest} from '../../../../../../../interface/enquiry/IUpdateShiftingInfo';
 import {ISingleEnquiryData} from '../../../../../../../interface/enquiry/ISingleEnquiryResponse';
-import { getOrderRequest } from '../../../../../../../redux/slices/OrderSlice';
+import { getOrderRequest, getOrdersRequest } from '../../../../../../../redux/slices/OrderSlice';
 import { ISingleOrderRequest } from '../../../../../../../interface/order/ISingleOrderRequest';
 import { ToastType, showToast } from '../../../../../../../utils/utility';
 import { getCurrentCompanyId } from '../../../../../../../utils/storage';
+import { IGetOrdersRequest } from '../../../../../../../interface/order/IGetOrdersRequest';
 
 interface IShiftingFormProps {
   moduleName: MODULE_NAME;
@@ -151,6 +152,15 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({
     }).catch(err => console.log(err));
   }
 
+  const _fetchOrders = () => {
+    getCurrentCompanyId().then(id => {
+      const payload: Partial<IGetOrdersRequest> = {
+        companyId: id as string,
+      };
+      dispatch(getOrdersRequest(payload));
+    }).catch(err => console.log(err));
+  }
+
   useEffect(() => {
     if (item) {
       if (shiftingTypeDropdownRef) {
@@ -196,6 +206,7 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({
           _id: enquiryId
         }
         dispatch(getOrderRequest(payload));
+        _fetchOrders();
       }
       onClose();
     } else if (!updateShiftingInfoRequesting && updateShiftingInfoFailure) {

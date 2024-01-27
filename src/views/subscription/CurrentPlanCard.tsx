@@ -43,7 +43,7 @@ const CurrentPlanCard: FC<IProps> = ({data}) => {
         angle={45}>
         <View style={styles.currentPlanContainer}>
           <Text style={styles.planNameText}>
-            {data?.subscriptionPlan.toUpperCase()}
+            {data?.subscriptionPlan.toUpperCase() || 'NA'}
           </Text>
           {_showDaysLeftView()}
           {_showExpirationMessage()}

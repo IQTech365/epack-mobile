@@ -5,10 +5,13 @@ import {Shadow} from 'react-native-shadow-2';
 import {useAppSelector} from '../../../../redux/hooks';
 import {ICompanyInfoData} from '../../../../interface/companyRegistration/IGetCompaniesResponse';
 import {getCurrentCompanyId} from '../../../../utils/storage';
+import {IPurchasedSubscription} from '../../../../interface/subscription/subscription';
+import LinearGradient from 'react-native-linear-gradient';
 
 const ClientInfoView = () => {
   const {companies} = useAppSelector(state => state.Company);
   const [company, setCompany] = useState<ICompanyInfoData>();
+  const {purchasedSubscriptions} = useAppSelector(state => state.Subscription);
 
   const _getCompany = () => {
     getCurrentCompanyId()
@@ -48,6 +51,16 @@ const ClientInfoView = () => {
     }
   };
 
+  const _getCurrentPlanInfo = () => {
+    const {data} = purchasedSubscriptions || {};
+    console.log('purchasedSubscriptions--', JSON.stringify(data));
+    let plan: IPurchasedSubscription | null = null;
+    if (data && Array.isArray(data) && data.length > 0) {
+      plan = data[0] as IPurchasedSubscription;
+    }
+    return plan;
+  };
+
   useEffect(() => {
     _getCompany();
   }, [companies]);
@@ -60,7 +73,24 @@ const ClientInfoView = () => {
         </View>
         <View style={styles.clientDetailContainer}>
           <Text style={styles.nameText}>{company?.companyName}</Text>
-          <Text style={styles.idText}>{`Cust ID: ${company?._id}`}</Text>
+          <Text style={styles.labelText}>
+            Cust#:
+            <Text
+              style={styles.valueText}
+              numberOfLines={1}>{` ${company?._id}`}</Text>
+          </Text>
+          <View style={styles.planContainer}>
+            <Text style={styles.labelText}>Current Plan:</Text>
+            <LinearGradient
+              colors={['#051937', '#004d7a', '#008793', '#00bf72', '#a8eb12']}
+              style={styles.planNameContainer}
+              useAngle={true}
+              angle={45}>
+              <Text style={styles.planText}>
+                {_getCurrentPlanInfo()?.subscriptionPlan.toUpperCase()}
+              </Text>
+            </LinearGradient>
+          </View>
         </View>
       </View>
     </Shadow>

@@ -26,9 +26,10 @@ import {
 } from '../../../../../../../redux/slices/EnquirySlice';
 import Toast from 'react-native-toast-message';
 import {ISingleEnquiryData} from '../../../../../../../interface/enquiry/ISingleEnquiryResponse';
-import { getOrderRequest } from '../../../../../../../redux/slices/OrderSlice';
+import { getOrderRequest, getOrdersRequest } from '../../../../../../../redux/slices/OrderSlice';
 import { ISingleOrderRequest } from '../../../../../../../interface/order/ISingleOrderRequest';
 import { getCurrentCompanyId } from '../../../../../../../utils/storage';
+import { IGetOrdersRequest } from '../../../../../../../interface/order/IGetOrdersRequest';
 interface IContactDetailFormProps {
   moduleName: MODULE_NAME;
   item: ISingleEnquiryData;
@@ -296,6 +297,15 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
     }).catch(err => console.log(err));
   }
 
+  const _fetchOrders = () => {
+    getCurrentCompanyId().then(id => {
+      const payload: Partial<IGetOrdersRequest> = {
+        companyId: id as string,
+      };
+      dispatch(getOrdersRequest(payload));
+    }).catch(err => console.log(err));
+  }
+
   const handleUpdate = () => {
     if (item.billingBy == 'by Individual') {
       const payload: IUpdateIndividualContactDetailRequest = {
@@ -344,7 +354,7 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
       Toast.show({
         type: 'success',
         text1: 'Contact Details',
-        text2: 'Contact details has been updated successfully',
+        text2: 'Contact Info Updated.',
       });
       dispatch(resetUpdateContactDetailsRequest());
       if(moduleName == MODULE_NAME.ENQUIRY) {
@@ -355,13 +365,14 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
           _id: enquiryId
         }
         dispatch(getOrderRequest(payload));
+        _fetchOrders();
       }
       onClose();
     } else if (!updateContactDetailRequesting && updateContactDetailFailure) {
       Toast.show({
         type: 'error',
         text1: 'Contact Details',
-        text2: 'Error in updating contact details. Please try again!',
+        text2: 'Contact Info Not Updated. Try again!',
       });
       dispatch(resetUpdateContactDetailsRequest());
     }
