@@ -6,6 +6,7 @@ import {
   FlatList,
   Text,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import AddNew from '../../common/AddNew';
 import Header from '../../common/Header';
@@ -42,6 +43,7 @@ import {startShare} from '../../utils/utility';
 import { getCurrentCompanyId } from '../../utils/storage';
 import useTemplateIdHook from '../../hooks/useTemplateIdHook';
 import Spinner from '../../common/Spinner';
+import useUtilityHook from '../../hooks/useUtilityHook';
 interface IQuotationPageViewProps {
   navigation: NavigationProp<any, any>;
 }
@@ -66,6 +68,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
   const [openShare, setOpenShare] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
   const templateId = useTemplateIdHook('658d3c6f585e3dde644da95b');
+  const {getDocumentLimitCount} = useUtilityHook();
 
   const getTotalQuotations = () => {
     let _count = 0;
@@ -230,7 +233,15 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
   };
 
   const handleAddNew = () => {
-    navigation.navigate(QuotationStackRoute.AddQuotation);
+    const docLimit:number = getDocumentLimitCount('658d3c6f585e3dde644da95b');
+    const currentDocCount:number = getTotalQuotations();
+    console.log('docLimit--', docLimit);
+    console.log('currentDocCount--', currentDocCount);
+    if(docLimit == -1 || (currentDocCount < docLimit)) {
+      navigation.navigate(QuotationStackRoute.AddQuotation);
+    } else {
+      Alert.alert('Limit', "Document limit reached");
+    }
   };
 
   const _getQuotationsRequest = () => {

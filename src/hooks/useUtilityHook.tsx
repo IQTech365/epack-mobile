@@ -1,9 +1,11 @@
-import {IFloor, IInsurancePercentage} from '../interface/common/common';
+import {IFloor, IInsurancePercentage, ISubmodule} from '../interface/common/common';
+import { IList, IPurchasedSubscription, ISubscription } from '../interface/subscription/subscription';
 import {useAppSelector} from '../redux/hooks';
 import { TDropdownItem } from '../type/TDropdownItem';
 
 const useUtilityHook = () => {
-  const {insurancePercentages, floors} = useAppSelector(state => state.Common);
+  const {insurancePercentages, floors, submodules} = useAppSelector(state => state.Common);
+  const {purchasedSubscriptions} = useAppSelector(state => state.Subscription);
 
   const getInsurancePercentageList = (): TDropdownItem[] => {
     let list: TDropdownItem[] = [];
@@ -35,7 +37,36 @@ const useUtilityHook = () => {
     return list;
   };
 
-  return {getInsurancePercentageList, getFloorsList};
+  const _getCurrentPlanInfo = () => {
+    const {data} = purchasedSubscriptions || {};
+    let plan: IPurchasedSubscription | null = null;
+    if (data && Array.isArray(data) && data.length > 0) {
+      plan = data[0] as IPurchasedSubscription;
+    }
+    return plan;
+  };
+
+  //658d3c30585e3dde644da94d - Enquiry
+  const getDocumentLimitCount = (submoduleId:string) => {
+    let count:number = 0;
+    const purchasedPlan:IPurchasedSubscription = _getCurrentPlanInfo() as IPurchasedSubscription;
+    if(purchasedPlan) {
+      const subscription:ISubscription[] = purchasedPlan.subscription;
+      if(subscription && Array.isArray(subscription) && subscription.length > 0) {
+        const list:IList[] = purchasedPlan.subscription[0].list;
+        if(list && Array.isArray(list) && list.length > 0) {
+          const document:IList = list.find((d:IList) => d.subModuleId == submoduleId) as IList;
+          if(document) {
+            count = parseInt(document.qty);
+          }
+        }
+
+      }
+    }
+    return count;
+  }
+
+  return {getInsurancePercentageList, getFloorsList, getDocumentLimitCount};
 };
 
 export default useUtilityHook;

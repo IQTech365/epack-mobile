@@ -18,7 +18,6 @@ import {
   initialState,
   moneyReceiptReducer,
 } from './moneyReceiptReducer';
-import {formatDate, formatDate3} from '../../../../../utils/formatter';
 import Button from '../../../../../common/Button';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import {ICreateMoneyReceiptRequest} from '../../../../../interface/order/ICreateMoneyReceiptRequest';
@@ -65,9 +64,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
   } = useAppSelector(state => state.Order);
   
   const authId = useAuthId();
-  const {quotations, getQuotationsRequesting} = useAppSelector(
-    state => state.Quotation,
-  );
+  const {quotations} = useAppSelector(state => state.Quotation);
   const {data: quotationData} = quotations || {};
   const dispatch2 = useAppDispatch();
   const {initialValue, prefix} = useInitialValueHook('658d3c9c585e3dde644da970');
@@ -107,12 +104,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
       payload: text,
     });
   };
-  const handleTemplateDesign = (item: TDropdownItem) => {
-    dispatch({
-      type: MONEYRECEIPT_FORM_ACTION.MONEY_RECEIPT_DESIGNS,
-      payload: item.label,
-    });
-  };
+
   const handlePaymentType = (item: TDropdownItem) => {
     dispatch({
       type: MONEYRECEIPT_FORM_ACTION.PAYMENT_TYPE,
@@ -161,12 +153,6 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
       type: MONEYRECEIPT_FORM_ACTION.DATE_OF_ARRIVAL,
       payload: date.toISOString(),
     });
-  };
-  const handleTemplate = (item: TDropdownItem) => {
-    // dispatch({
-    //   type: QUOTATION_FORM_ACTION.SHIFTING_LUGGAGE,
-    //   payload: item.label,
-    // });
   };
 
   const _getLabelText = () => {
@@ -315,14 +301,6 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
                 <DatePickerComponent onDateSelect={handleReceiptDate} />
               </View>
             </View>
-            {/* <Spacer height={4} />
-            <View style={styles.elementContainer2}>
-              <Label text="Money Receipt Designs" style={styles.label} />
-              <DropdownComponent
-                data={shiftingLuggages}
-                onSelect={handleTemplateDesign}
-              />
-            </View> */}
             <Spacer height={4} />
             <View style={styles.elementContainer2}>
               <Label text="Payment Type" style={styles.label} />

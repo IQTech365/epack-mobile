@@ -56,7 +56,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
   const downloadOptions = ['With Sign. & Stamp', 'Without Sign. & Stamp'];
   const [showMoneyReceiptList, setShowMoneyReceiptList] =
     useState<boolean>(false);
-  const [createNewBiltyMoneyReceipt, setCreateNewMoneyReceipt] =
+  const [createNewMoneyReceipt, setCreateNewMoneyReceipt] =
     useState<boolean>(true);
   const [downloadOption, setDownloadOption] = useState<string>('');
   const [isEdit, setIsEdit] = useState<boolean>(false);
@@ -190,7 +190,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
   }, []);
 
   const showForm = () => {
-    if (createNewBiltyMoneyReceipt) {
+    if (createNewMoneyReceipt) {
       return (
         <MoneyReceiptFormView
           orderId={orderId}
@@ -300,7 +300,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
         <TouchableOpacity
           onPress={handleCreateNewMoneyReceipt}
           activeOpacity={0.4}>
-          {createNewBiltyMoneyReceipt ? (
+          {createNewMoneyReceipt ? (
             <CreateIcon2 width={30} height={30} />
           ) : (
             <CreateIcon width={30} height={30} />
