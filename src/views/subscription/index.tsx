@@ -167,8 +167,6 @@ const SubscriptionView: FC<IProps> = ({}) => {
 
   const _getCurrentPlanInfo = () => {
     const {data} = purchasedSubscriptions || {};
-    console.log('purchasedSubscriptions--', JSON.stringify(data));
-    
     let plan:IPurchasedSubscription|null = null;
     if (data && Array.isArray(data) && data.length > 0) {
       plan = data[0] as IPurchasedSubscription;

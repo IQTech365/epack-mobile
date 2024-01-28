@@ -61,12 +61,19 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   contentLabelText: {
-    color: COLOR_GRAY,
+    color: COLOR_BLACK,
     fontSize: 14,
+    fontFamily: 'WorkSans-Medium'
+  },
+  contentValueText: {
+    color: COLOR_BLACK,
+    fontSize: 14,
+    fontFamily: 'WorkSans-Regular'
   },
   nameText: {
     color: COLOR_BLUE,
     fontSize: 14,
+    fontFamily: 'WorkSans-Regular'
   },
 });
 

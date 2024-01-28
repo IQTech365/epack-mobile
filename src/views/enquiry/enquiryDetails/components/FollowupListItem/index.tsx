@@ -46,7 +46,7 @@ const FollowupListItem: React.FC<IFollowupListItemProps> = ({comment, date, enqu
           </View>
           <View style={styles.contentContainer}>
             <Text style={styles.contentLabelText}>
-              Comment: {comment}
+              Comment: <Text style={styles.contentValueText}>{comment}</Text>
             </Text>
           </View>
         </View>

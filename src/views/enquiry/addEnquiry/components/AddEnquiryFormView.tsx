@@ -16,6 +16,7 @@ import { NavigationProp } from '@react-navigation/native';
 import billingByOptions from '../../../../data/billingByOptions.json';
 import { getCurrentCompanyId } from '../../../../utils/storage';
 import EnquiryDropAddressView from './EnquiryDropAddressView';
+import { EventRegister } from 'react-native-event-listeners';
 
 interface IProps {
   navigation: NavigationProp<any, any>;
@@ -113,6 +114,7 @@ const AddEnquiryFormView: React.FC<IProps> = ({navigation}) => {
       showToast("New Enquiry Created.", ToastType.SUCCESS);
       dispatch(resetAddEnquiryRequest());
       _getEnquiriesRequest();
+      EventRegister.emit('onUpdateEvent', true);
       navigation.goBack();
     } else if (!addEnquiryRequesting && addEnquiryFailure) {
       showToast("New Enquiry Not Created. Try again!", ToastType.ERROR);

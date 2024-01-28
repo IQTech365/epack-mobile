@@ -32,6 +32,7 @@ import { IGetOrdersRequest } from '../../../../../interface/order/IGetOrdersRequ
 import { getOrdersRequest } from '../../../../../redux/slices/OrderSlice';
 import { NavigationProp } from '@react-navigation/native';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
+import { EventRegister } from 'react-native-event-listeners';
 interface IOrderInfoViewProps {
   orderId: string;
   item: ISingleEnquiryData | null;
@@ -84,6 +85,7 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item, navigation
       dispatch(resetUpdateEnquiryStatusRequest());
       if(orderStatus == 'Completed') {
         refetchOrderList();
+        EventRegister.emit('onUpdateEvent', true);
         navigation.goBack();
       }
     } else if (!updateEnquiryStatusRequesting && updateEnquiryStatusFailure) {

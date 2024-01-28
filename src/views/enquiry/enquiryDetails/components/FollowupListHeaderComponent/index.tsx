@@ -21,6 +21,8 @@ import Spinner from '../../../../../common/Spinner';
 import { IAddSurveyRequest } from '../../../../../interface/enquiry/IAddSurveyRequest';
 import SurveyTab from '../../../../../data/survey.json';
 import SurveyListView from '../SurveyListView';
+import useAuthId from '../../../../../hooks/useAuthId';
+import { EventRegister } from 'react-native-event-listeners';
 
 interface IFollowupListHeaderComponentProps {
   taskName: string;
@@ -34,7 +36,6 @@ const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> =
   const [comment, setComment] = useState<string>('');
   const [date, setDate] = useState<Date>(new Date());
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
-  const [index, setIndex] = React.useState(0);
 
   const dispatch = useAppDispatch();
   const {
@@ -47,8 +48,7 @@ const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> =
   } = useAppSelector(state => state.Enquiry);
   const { verifiedData } = useAppSelector(state => state.OTP);
   //@ts-ignore
-  const { data } = verifiedData || {};
-  const { id } = data || {};
+  const authId = useAuthId();
 
   const handleFollowupDate = (date: Date) => {
     setDate(date);
@@ -142,6 +142,7 @@ const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> =
         dispatch(resetAddSurveyRequest());
         dispatch(getSurveyListRequest(enquiryId));
       }
+      EventRegister.emit('onUpdateEvent', true);
     } else if ((!addFollowupRequesting && addFollowupFailure) || (!addSurveyRequesting && addSurveySuccess)) {
       Toast.show({
         type: 'error',
@@ -162,8 +163,7 @@ const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> =
   const handleSave = () => {
     if (taskName == 'FOLLOW UP') {
       const data: IAddFollowupRequest = {
-        authId: id,
-        // authId: '650efb2d7e3968c4c217a34f',
+        authId: authId,
         enquiryId: enquiryId,
         comment: comment,
         followUpDate: date.toString(),
@@ -171,8 +171,7 @@ const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> =
       dispatch(addFollowupRequest(data));
     } else if (taskName == 'SURVEY') {
       const data: IAddSurveyRequest = {
-        addedBy: id,
-        // addedBy: '650efb2d7e3968c4c217a34f',
+        addedBy: authId,
         enquiryId: enquiryId,
         comment: comment,
         surveyDate: date.toString(),
@@ -215,7 +214,6 @@ const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> =
 
       {taskName == 'FOLLOW UP' ? SurveyRoute() : <><Spacer height={10} />
         {showTabItem()}</>}
-
       <Spacer height={12} />
       <Spinner show={addFollowupRequesting || addSurveyRequesting} />
     </View>

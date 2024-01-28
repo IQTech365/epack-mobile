@@ -16,9 +16,7 @@ const ClientInfoView = () => {
   const _getCompany = () => {
     getCurrentCompanyId()
       .then(id => {
-        console.log('currentCompanyId-', id);
         const {data} = companies || {};
-        console.log('companiesData-rrr-', JSON.stringify(data));
         if (data && Array.isArray(data) && data.length > 0) {
           const _company = data.find((d: ICompanyInfoData) => d._id == id);
           setCompany(_company);
@@ -53,7 +51,6 @@ const ClientInfoView = () => {
 
   const _getCurrentPlanInfo = () => {
     const {data} = purchasedSubscriptions || {};
-    console.log('purchasedSubscriptions--', JSON.stringify(data));
     let plan: IPurchasedSubscription | null = null;
     if (data && Array.isArray(data) && data.length > 0) {
       plan = data[0] as IPurchasedSubscription;

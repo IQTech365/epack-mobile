@@ -23,6 +23,7 @@ import { getOrdersRequest } from '../../../../../redux/slices/OrderSlice';
 import { IEnquiry } from '../../../../../interface/quotation/IGetQuotationsResponse';
 import { ToastType, showToast } from '../../../../../utils/utility';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
+import { EventRegister } from 'react-native-event-listeners';
 
 interface IEnquiryInfoViewProps {
   item: IEnquiry|undefined;
@@ -106,6 +107,7 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId, navi
       _getEnquiriesRequest();
       if(enquiryStatus == 'Approved') {
         refreshOrders();
+        EventRegister.emit('onUpdateEvent', true);
         navigation.goBack();
       }
     } else if(!updateEnquiryStatusRequesting && updateEnquiryStatusFailure) {
