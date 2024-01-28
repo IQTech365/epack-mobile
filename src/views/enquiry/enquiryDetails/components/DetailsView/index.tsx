@@ -445,10 +445,10 @@ const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
           headerStyle={styles.headerStyle}
           onClose={handleModalClose}
           title={getModalTitle().toUpperCase()}>
-          <>
+          <View style={{flex: 1}}>
           {getForm()}
           <Toast config={toastConfig} />
-          </>
+          </View>
         </ModalHOC>
         <Spinner show={getEnquiryRequesting} />
       </View>

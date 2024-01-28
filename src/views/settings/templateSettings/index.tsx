@@ -41,7 +41,7 @@ const TemplateSettingPageView: React.FC<IProps> = ({}) => {
     let tabs: Route[] = [];
     const modules: ISubmodule[] = _getSubmodules();
     if (modules && modules.length > 0) {
-      tabs = _getSubmodules().map((d: ISubmodule, i: number) => {
+      tabs = modules.map((d: ISubmodule, i: number) => {
         const item = {
           key: `${i}`,
           title: d.subModuleName.toUpperCase(),

@@ -15,6 +15,7 @@ import { ToastType, showToast } from '../../../../utils/utility';
 import { NavigationProp } from '@react-navigation/native';
 import { IGetOrdersRequest } from '../../../../interface/order/IGetOrdersRequest';
 import { getCurrentCompanyId } from '../../../../utils/storage';
+import { EventRegister } from 'react-native-event-listeners';
 
 interface IProps {
     navigation: NavigationProp<any, any>;
@@ -118,11 +119,11 @@ const AddOrderFormView: FC<IProps> = ({navigation}) => {
     if (!addOrderRequesting && addOrderSuccess) {
       showToast("New Order Created.", ToastType.SUCCESS);
       dispatch(resetAddOrderRequest());
+      EventRegister.emit('onUpdateEvent', true);
       _fetchOrders();
-    //   fetchCompletedOrders();
       navigation?.goBack();
     } else if (!addOrderRequesting && addOrderFailure) {
-      showToast("New Order not created. Try again!", ToastType.ERROR);
+      showToast("New Order Not Created. Try again!", ToastType.ERROR);
       dispatch(resetAddOrderRequest());
     }
   }, [addOrderRequesting, addOrderSuccess, addOrderFailure]);

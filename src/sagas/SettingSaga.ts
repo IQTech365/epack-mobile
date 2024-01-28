@@ -1,4 +1,4 @@
-import {takeLatest, put, call} from 'redux-saga/effects';
+import {takeLatest, put, call, takeEvery} from 'redux-saga/effects';
 import {PayloadAction} from '@reduxjs/toolkit';
 import * as SettingService from '../service/SettingService';
 import { IAddFooterContentRequest } from '../interface/setting/packerProfile/footerContent/IAddFooterContentRequest';
@@ -274,6 +274,6 @@ export function* watcherSettingSaga() {
     yield takeLatest(getSerialNoRequest.type, getSerialNoSaga);
     yield takeLatest(getUnitTypeRequest.type, getUnitTypeSaga);
     yield takeLatest(getTemplateListRequest.type, getTemplateListSaga);
-    yield takeLatest(saveDocumentTemplateIdRequest.type, saveDocumentTemplateIdSaga);
+    yield takeEvery(saveDocumentTemplateIdRequest.type, saveDocumentTemplateIdSaga);
     yield takeLatest(getSavedDocumentTemplateIdListRequest.type, getSavedDocumentTemplateIdListSaga);
 }

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, ScrollView} from 'react-native';
 import Header from '../../common/Header';
 import styles from './style';
@@ -11,27 +11,30 @@ import FeatureView from './components/FeatureView';
 import {useNavigation} from '@react-navigation/native';
 import {getCurrentCompanyId} from '../../utils/storage';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
-import {getSavedDocumentTemplateIdListRequest} from '../../redux/slices/TemplateSettingSlice';
+import {getSavedDocumentTemplateIdListRequest, getTemplateListRequest, saveDocumentTemplateIdRequest} from '../../redux/slices/TemplateSettingSlice';
 import {
   getAppSettingsRequest,
   getDashboardDataRequest,
   getFloorsRequest,
   getInsurancePercentagesRequest,
+  getSubmoduleRequest,
 } from '../../redux/slices/CommonSlice';
-import {IDashboardData, IDashboardPaylod} from '../../interface/common/common';
+import {IDashboardData, IDashboardPaylod, ISubmodule} from '../../interface/common/common';
 import { getCompaniesRequest } from '../../redux/slices/CompanySlice';
 import useAuthId from '../../hooks/useAuthId';
-import { IGetPurchasedSubscriptionParams, IPurchasedSubscription } from '../../interface/subscription/subscription';
+import { IGetPurchasedSubscriptionParams } from '../../interface/subscription/subscription';
 import { getPurchasedSubscriptionRequest } from '../../redux/slices/SubscriptionSlice';
+import { EventRegister } from 'react-native-event-listeners';
+import { ISaveDocumentTemplateIdPayload, ITemplate, ITemplateData } from '../../interface/setting/template/template';
 
 const HomePageView = () => {
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
   const authId = useAuthId();
-  const {getDashboardDataRequesting, dashboard} = useAppSelector(
-    state => state.Common,
-  );
-  const {purchasedSubscriptions} = useAppSelector(state => state.Subscription);
+  const {dashboard, submodules} = useAppSelector(state => state.Common);
+  const {templates} = useAppSelector(state => state.Template);
+  const [initDefaultTemplates, setInitDefaultTemplates] = useState<boolean>(true);
+
   const handleFeatureClick = (featureType: FEATURE_TYPE) => {
     if (featureType == FEATURE_TYPE.BRANCHES) {
       //@ts-ignore
@@ -90,6 +93,66 @@ const HomePageView = () => {
     
   }
 
+  const _getSubmodules = (): ISubmodule[] => {
+    let items: ISubmodule[] = [];
+    const {data} = submodules || {};
+    if (data && Array.isArray(data) && data.length > 0) {
+      items = data;
+    }
+    return items.filter((d:ISubmodule) => d.availableOnDocument);
+  };
+
+  const _getTemplatesByModuleId = (moduleId:string) => {
+    let list: ITemplate[] = [];
+    const {data} = templates || {};
+    if (data && Array.isArray(data) && data.length > 0) {
+      const item: ITemplateData = data.find(
+        (d: ITemplateData) => d._id == moduleId
+      );
+      if (item) {
+        list = item.rows;
+      }
+    }
+    return list;
+  };
+
+  const _setTemplateId = async (template:ITemplate) => {
+    const companyId = await getCurrentCompanyId();
+    if(companyId && template) {
+      const payload:ISaveDocumentTemplateIdPayload = {
+        params: {
+          templateId: template._id,
+        },
+        payload: {
+          companyId: companyId,
+          moduleId: template.moduleId,
+        }
+      }
+      dispatch(saveDocumentTemplateIdRequest(payload));
+    }
+  }
+
+  const _setDocumentDefaultTemplateId = async () => {
+    const docSubmodules:ISubmodule[] = _getSubmodules();
+    if(docSubmodules && docSubmodules.length > 0) {
+      docSubmodules.forEach((sm:ISubmodule) => {
+        const docTemplates:ITemplate[] = _getTemplatesByModuleId(sm._id);
+        if(docTemplates && docTemplates.length > 0) {
+          const firstTemplate:ITemplate = docTemplates[0];
+          _setTemplateId(firstTemplate);
+        }
+      });
+      setInitDefaultTemplates(false);
+    }
+  }
+  
+  useEffect(() => {
+    EventRegister.addEventListener('onUpdateEvent', () => {
+      console.log('update dashboard');
+      _getDashboardData();
+    });
+  }, []);
+
   useEffect(() => {
     _getAppSettingsRequest();
     _getSavedTemplateId();
@@ -97,6 +160,8 @@ const HomePageView = () => {
     dispatch(getInsurancePercentagesRequest());
     dispatch(getFloorsRequest());
     _getPurchasedSubscription();
+    dispatch(getSubmoduleRequest());
+    dispatch(getTemplateListRequest());
   }, []);
 
   useEffect(() => {
@@ -104,6 +169,12 @@ const HomePageView = () => {
       dispatch(getCompaniesRequest(authId));
     }
   }, [authId]);
+
+  useEffect(()=> {
+    if(initDefaultTemplates && templates && submodules) {
+      _setDocumentDefaultTemplateId();
+    }
+  }, [templates, submodules]);
 
   return (
     <View style={styles.container}>
