@@ -2,7 +2,6 @@ import React from 'react';
 import {View} from 'react-native';
 import styles from './style';
 import Lottie from 'lottie-react-native';
-const spinner = require('../../images/loader.json');
 const loaderWhiteIcon = require('../../images/loader-white.json');
 const loaderBlueIcon = require('../../images/loader-blue.json');
 interface ISpinnerProps {
