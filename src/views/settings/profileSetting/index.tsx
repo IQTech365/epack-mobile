@@ -12,13 +12,13 @@ import AddDocumentView from './components/AddDocumentView';
 import AddFooterContentView from './components/AddFooterContentView';
 import AddSignatureView from './components/AddSignatureView';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
-import { getSubmodulesRequest } from '../../../redux/slices/ProfileSettingSlice';
 import Spinner from '../../../common/Spinner';
+import { getSubmoduleRequest } from '../../../redux/slices/CommonSlice';
 
 const PackersProfileSetting = (props: any) => {
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
   const dispatch = useAppDispatch();
-  const {getSubmoduleRequesting} = useAppSelector(state => state.Setting);
+  const {getSubmodulesRequesting} = useAppSelector(state => state.Common);
 
   const handleTabChange = (index: number) => {
     setActiveTabIndex(index);
@@ -42,7 +42,7 @@ const PackersProfileSetting = (props: any) => {
   };
 
   useEffect(() => {
-    dispatch(getSubmodulesRequest());
+    dispatch(getSubmoduleRequest());
   }, []);
 
   return (
@@ -67,7 +67,7 @@ const PackersProfileSetting = (props: any) => {
       </View>
       <Spacer height={10} />
       {showTabItem()}
-      <Spinner show={getSubmoduleRequesting} />
+      <Spinner show={getSubmodulesRequesting} />
     </View>
   );
 };

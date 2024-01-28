@@ -29,6 +29,8 @@ import Spinner from '../../../../../common/Spinner';
 import { ISubmoduleData } from '../../../../../interface/setting/packerProfile/ISubmodule';
 import { ToastType, showToast } from '../../../../../utils/utility';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
+import useAuthId from '../../../../../hooks/useAuthId';
+import { ISubmodule } from '../../../../../interface/common/common';
 
 interface IContentUpdateProps {}
 
@@ -41,10 +43,11 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({}) => {
   const [content, setContent] = useState<string>('');
   const [modules, setModules] = useState<string[]>(['']);
   const dispatch = useAppDispatch();
+  const {submodules} = useAppSelector(state => state.Common);
 
-  const {addFooterContentRequesting, addFooterContentSuccess, addFooterContentFailure, submodules} = useAppSelector(state => state.Setting);
+  const {addFooterContentRequesting, addFooterContentSuccess, addFooterContentFailure} = useAppSelector(state => state.Setting);
   const richText = React.useRef();
-  const {data: submodulesData = []} = submodules || {};
+  const authId = useAuthId();
 
   const handleAccountType = (item: TDropdownItem) => {
     setAccountType(item.label);
@@ -81,6 +84,15 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({}) => {
       dispatch(addFooterContentRequest(payload));
     }).catch(err => console.log(err));
   }
+
+  const _getSubmodules = (): ISubmodule[] => {
+    let items: ISubmodule[] = [];
+    const {data} = submodules || {};
+    if (data && Array.isArray(data) && data.length > 0) {
+      items = data;
+    }
+    return items.filter((d:ISubmodule) => d.availableOnDocument);
+  };
 
   useEffect(() => {
     if (!addFooterContentRequesting && addFooterContentSuccess) {
@@ -149,21 +161,21 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({}) => {
           <Label text="Applicable For" style={styles.label} />
         </View>
         <View style={styles.applicableWrapper}>
-          {submodulesData.map((item:ISubmoduleData, index: number) => {
+          {_getSubmodules().map((item:ISubmodule, index: number) => {
             return (
               <View style={styles.checkboxItem} key={`${index}`}>
                 <BouncyCheckbox
                   size={25}
                   fillColor={COLOR_BLUE}
                   unfillColor="#FFFFFF"
-                  text={item.submoduleName}
+                  text={item.subModuleName}
                   iconStyle={styles.iconStyle}
                   innerIconStyle={styles.innerIconStyle}
                   textStyle={styles.textStyle2}
                   style={{marginRight: 15}}
                   textContainerStyle={{paddingLeft: 0}}
                   onPress={(isChecked: boolean) => {
-                    handleModulesApplyFor(item.submoduleId, isChecked);
+                    handleModulesApplyFor(item._id, isChecked);
                   }}
                   isChecked={false}
                 />

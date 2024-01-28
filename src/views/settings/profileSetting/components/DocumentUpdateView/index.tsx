@@ -15,13 +15,14 @@ import isoTypeOptions from '../../../../../data/isoTypeOptions.json';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import DatePickerComponent from '../../../../../common/DatePickerComponent';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
-import { ISubmoduleData } from '../../../../../interface/setting/packerProfile/ISubmodule';
 import { formatDate } from '../../../../../utils/formatter';
 import { IAddDocumentRequest } from '../../../../../interface/setting/packerProfile/document/IAddDocumentRequest';
 import { addDocumentRequest, resetAddDocumentRequest } from '../../../../../redux/slices/ProfileSettingSlice';
 import Toast from 'react-native-toast-message';
 import Spinner from '../../../../../common/Spinner';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
+import useAuthId from '../../../../../hooks/useAuthId';
+import { ISubmodule } from '../../../../../interface/common/common';
 
 interface IDocumentUpdateProps {}
 
@@ -35,11 +36,10 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
   const [documentTitle, setDocumentTitle] = useState<string>('');
   const [modules, setModules] = useState<string[]>(['']);
   const dispatch = useAppDispatch();
+  const {addDocumentRequesting, addDocumentSuccess, addDocumentFailure} = useAppSelector(state => state.Setting);
+  const {submodules} = useAppSelector(state => state.Common);
 
-  const {otpData} = useAppSelector(state => state.OTP);
-  const {submodules, addDocumentRequesting, addDocumentSuccess, addDocumentFailure} = useAppSelector(state => state.Setting);
-  const {data: submodulesData = []} = submodules || {};
-
+  const authId = useAuthId();
   const handleDocumentType = (item: TDropdownItem) => {
     setDocumentType(item.label);
   };
@@ -109,12 +109,21 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
         documentTypeValue: getDocumentValue(),
         documentTypeTitle: getDocumentTitle(),
         ibaValidTillDate: ibaValidTillDate,
-        createdBy: otpData?.data.id as string,
+        createdBy: authId,
       }
       dispatch(addDocumentRequest(payload));
     }).catch(err => console.log(err));
     
   }
+
+  const _getSubmodules = (): ISubmodule[] => {
+    let items: ISubmodule[] = [];
+    const {data} = submodules || {};
+    if (data && Array.isArray(data) && data.length > 0) {
+      items = data;
+    }
+    return items.filter((d:ISubmodule) => d.availableOnDocument);
+  };
 
   useEffect(() => {
     if (!addDocumentRequesting && addDocumentSuccess) {
@@ -231,21 +240,21 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
           <Label text="Applicable For" style={styles.label} />
         </View>
         <View style={styles.applicableWrapper}>
-          {submodulesData.map((item:ISubmoduleData, index: number) => {
+          {_getSubmodules()?.map((item:ISubmodule, index: number) => {
             return (
               <View style={styles.checkboxItem}>
                 <BouncyCheckbox
                   size={25}
                   fillColor={COLOR_BLUE}
                   unfillColor="#FFFFFF"
-                  text={item.submoduleName}
+                  text={item.subModuleName}
                   iconStyle={styles.iconStyle}
                   innerIconStyle={styles.innerIconStyle}
                   textStyle={styles.textStyle2}
                   style={{marginRight: 15}}
                   textContainerStyle={{paddingLeft: 0}}
                   onPress={(isChecked: boolean) => {
-                    handleModulesApplyFor(item.submoduleId, isChecked);
+                    handleModulesApplyFor(item._id, isChecked);
                   }}
                   isChecked={false}
                 />

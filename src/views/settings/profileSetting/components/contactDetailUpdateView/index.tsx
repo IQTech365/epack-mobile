@@ -11,15 +11,15 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import styles from './style';
 import contactDetail from '../../../../../data/contactDetail.json';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
-import applicableForOptions from '../../../../../data/applicableForOptions.json';
 import Button from '../../../../../common/Button';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import Toast from 'react-native-toast-message';
 import { addContactRequest, getContactsRequest, resetAddContactRequest } from '../../../../../redux/slices/ProfileSettingSlice';
 import { IAddContactDetailRequest } from '../../../../../interface/setting/packerProfile/contactDetail/IAddContactDetailRequest';
 import Spinner from '../../../../../common/Spinner';
-import { ISubmoduleData } from '../../../../../interface/setting/packerProfile/ISubmodule';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
+import { ISubmodule } from '../../../../../interface/common/common';
+import useAuthId from '../../../../../hooks/useAuthId';
 
 interface IContactDetailsProps {}
 
@@ -32,11 +32,11 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
     addContactRequesting,
     addContactSuccess,
     addContactFailure,
-    submodules,
   } = useAppSelector(state => state.Setting);
-  const {data: submodulesData = []} = submodules || {};
-  const {otpData} = useAppSelector(state => state.OTP);
-  const dispatch = useAppDispatch();
+  const {submodules} = useAppSelector(state => state.Common);
+  
+  const dispatch = useAppDispatch()
+  const authId = useAuthId();
 
   const handleTextInputChange = (text: string) => {
     if(contactNumberError) {
@@ -118,7 +118,7 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
           contactType: contactType || contactDetail[0].label,
           contactNumber: contactNumber,
           otherTitle: '',
-          createdBy: otpData?.data.id as string,
+          createdBy: authId,
         }
         console.log('Contact-payload--', JSON.stringify(payload));
         dispatch(addContactRequest(payload));
@@ -140,6 +140,15 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
       dispatch(getContactsRequest(id as string));
     }).catch(err => console.log(err));
   }
+
+  const _getSubmodules = (): ISubmodule[] => {
+    let items: ISubmodule[] = [];
+    const {data} = submodules || {};
+    if (data && Array.isArray(data) && data.length > 0) {
+      items = data;
+    }
+    return items.filter((d:ISubmodule) => d.availableOnDocument);
+  };
 
   useEffect(() => {
     if (!addContactRequesting && addContactSuccess) {
@@ -180,21 +189,21 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
           <Label text="Applicable For" style={styles.label} />
         </View>
         <View style={styles.applicableWrapper}>
-          {submodulesData.map((item:ISubmoduleData, index: number) => {
+          {_getSubmodules().map((item:ISubmodule, index: number) => {
             return (
               <View style={styles.checkboxItem} key={`${index}`}>
                 <BouncyCheckbox
                   size={25}
                   fillColor={COLOR_BLUE}
                   unfillColor="#FFFFFF"
-                  text={item.submoduleName}
+                  text={item.subModuleName}
                   iconStyle={styles.iconStyle}
                   innerIconStyle={styles.innerIconStyle}
                   textStyle={styles.textStyle2}
                   style={{marginRight: 15}}
                   textContainerStyle={{paddingLeft: 0}}
                   onPress={(isChecked: boolean) => {
-                    handleModulesApplyFor(item.submoduleId, isChecked);
+                    handleModulesApplyFor(item._id, isChecked);
                   }}
                   isChecked={false}
                 />
