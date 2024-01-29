@@ -14,6 +14,7 @@ import { IAddPaymentMethodRequest } from '../../interface/setting/packerProfile/
 import { IAddPaymentMethodResponse } from '../../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodResponse';
 import { IGetPaymentMethodsResponse } from '../../interface/setting/packerProfile/paymentMethod/IGetPaymentMethodsResponse';
 import { IGetUnitTypeResponse } from '../../interface/setting/unitType/IGetunitTypeResponse';
+import { IDeleteAccountResponse, IDeleteContactResponse, IDeleteDocumentResponse, IDeleteFooterContentResponse } from '../../interface/setting/packerProfile/contact';
 
 interface ISettingState {
     // Add Payment Method
@@ -23,7 +24,7 @@ interface ISettingState {
     addPaymentMethodFailure: boolean;
     addPaymentMethodError: any;
     // Delete Payment Method
-    deletePaymentMethodInfo: any;
+    deletePaymentMethodInfo: IDeleteAccountResponse | null;
     deletePaymentMethodRequesting: boolean;
     deletePaymentMethodSuccess: boolean;
     deletePaymentMethodFailure: boolean;
@@ -50,7 +51,7 @@ interface ISettingState {
     addFooterContentFailure: boolean;
     addFooterContentError: any;
     // Delete  Footer Content
-    deleteFooterContentInfo: any;
+    deleteFooterContentInfo: IDeleteFooterContentResponse | null;
     deleteFooterContentRequesting: boolean;
     deleteFooterContentSuccess: boolean;
     deleteFooterContentFailure: boolean;
@@ -77,7 +78,7 @@ interface ISettingState {
     addDocumentFailure: boolean;
     addDocumentError: any;
     // Delete  Document
-    deleteDocumentInfo: any;
+    deleteDocumentInfo: IDeleteDocumentResponse | null;
     deleteDocumentRequesting: boolean;
     deleteDocumentSuccess: boolean;
     deleteDocumentFailure: boolean;
@@ -125,7 +126,7 @@ interface ISettingState {
     addContactFailure: boolean;
     addContactError: any;
     // Delete  Contact
-    deleteContactInfo: any;
+    deleteContactInfo: IDeleteContactResponse | null;
     deleteContactRequesting: boolean;
     deleteContactSuccess: boolean;
     deleteContactFailure: boolean;
@@ -421,10 +422,10 @@ export const SettingSlice = createSlice({
         },
         // ***** Delete Footer Content *****
         // ******************************
-        deleteFooterContentRequest: (state, action: PayloadAction<IAddPaymentMethodRequest>) => {
+        deleteFooterContentRequest: (state, action: PayloadAction<string>) => {
             state.deleteFooterContentRequesting = true;
         },
-        deleteFooterContentSuccess: (state, action: PayloadAction<IAddPaymentMethodResponse>) => {
+        deleteFooterContentSuccess: (state, action: PayloadAction<IDeleteFooterContentResponse>) => {
             state.deleteFooterContentRequesting = false;
             state.deleteFooterContentSuccess = true;
             state.deletePaymentMethodInfo = action.payload;
@@ -645,10 +646,10 @@ export const SettingSlice = createSlice({
         },
         // ***** Delete Contact *****
         // ******************************
-        deleteContactRequest: (state, action: PayloadAction<IAddPaymentMethodRequest>) => {
+        deleteContactRequest: (state, action: PayloadAction<string>) => {
             state.deleteContactRequesting = true;
         },
-        deleteContactSuccess: (state, action: PayloadAction<IAddPaymentMethodResponse>) => {
+        deleteContactSuccess: (state, action: PayloadAction<IDeleteContactResponse>) => {
             state.deleteContactRequesting = false;
             state.deleteContactSuccess = true;
             state.deleteContactInfo = action.payload;

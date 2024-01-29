@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
         width: width * 0.95,
         alignSelf: 'center',
         borderWidth: 0.5,
-        borderColor: COLOR_GRAY2,
+        borderColor: COLOR_BLACK,
         borderRadius: 5,
         padding: 5,
         marginBottom: 8,
@@ -29,12 +29,12 @@ const styles = StyleSheet.create({
     label: {
         fontSize: 16,
         color: COLOR_BLACK,
-        fontWeight: '600',
+        fontFamily: 'WorkSans-Medium',
     },
     text: {
-        fontSize: 12,
-        color: COLOR_GRAY,
-        fontWeight: '400', 
+        fontSize: 15,
+        color: COLOR_BLACK,
+        fontFamily: 'WorkSans-Regular',
     }
 });
 

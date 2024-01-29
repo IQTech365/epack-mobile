@@ -41,7 +41,7 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({}) => {
   const [accountType, setAccountType] = useState<string>('');
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
-  const [modules, setModules] = useState<string[]>(['']);
+  const [modules, setModules] = useState<string[]>([]);
   const dispatch = useAppDispatch();
   const {submodules} = useAppSelector(state => state.Common);
 
@@ -75,12 +75,10 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({}) => {
     getCurrentCompanyId().then(id => {
       const payload: IAddFooterContentRequest = {
         companyId: id as string,
-        modulesView: modules,
-        accountType: accountType,
-        title: title,
+        moduleId: modules,
+        contentType: accountType,
         content: content,
       }
-      console.log('FooterContent-payload--', JSON.stringify(payload));
       dispatch(addFooterContentRequest(payload));
     }).catch(err => console.log(err));
   }

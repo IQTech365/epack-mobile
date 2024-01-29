@@ -37,6 +37,49 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontFamily: 'WorkSans-Regular'
       },
+      // list item
+      listWrapper: {
+        width: width * 0.9,
+        alignSelf: 'center',
+        justifyContent: 'center',
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: COLOR_BLACK,
+      },
+      listContentContainer:{
+        width: '100%',
+        alignSelf: 'center',
+        justifyContent: 'center',
+        flexDirection: 'row',
+        backgroundColor: COLOR_GRAY2,
+        borderTopLeftRadius: 5,
+        borderTopRightRadius: 5,
+        marginBottom: 5,
+      },
+      contentTypeContainer:{
+        width: width * 0.9,
+        alignSelf: 'flex-start',
+        justifyContent: 'flex-start',
+        paddingHorizontal: 8,
+        paddingBottom: 5,
+      },
+      contentContainer: {
+        width: '85%',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        padding: 8,
+      },
+      actionContainer: {
+        width: '15%',
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      contentTypeText: {
+        color: COLOR_BLACK,
+        fontSize: 16,
+        fontFamily: 'WorkSans-Medium'
+      }
+      
 });
 
 export default styles;

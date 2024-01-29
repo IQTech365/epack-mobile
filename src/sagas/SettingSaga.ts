@@ -3,7 +3,7 @@ import {PayloadAction} from '@reduxjs/toolkit';
 import * as SettingService from '../service/SettingService';
 import { IAddFooterContentRequest } from '../interface/setting/packerProfile/footerContent/IAddFooterContentRequest';
 import { IAddFooterContentResponse } from '../interface/setting/packerProfile/footerContent/IAddFooterContentResponse';
-import { addContactFailure, addContactRequest, addContactSuccess, addDocumentFailure, addDocumentRequest, addDocumentSuccess, addFooterContentFailure, addFooterContentRequest, addFooterContentSuccess, addPaymentMethodFailure, addPaymentMethodRequest, addPaymentMethodSuccess, getContactsFailure, getContactsRequest, getContactsSuccess, getDocumentsFailure, getDocumentsRequest, getDocumentsSuccess, getFooterContentsFailure, getFooterContentsRequest, getFooterContentsSuccess, getPaymentMethodsFailure, getPaymentMethodsRequest, getPaymentMethodsSuccess, getSubmodulesFailure, getSubmodulesRequest, getSubmodulesSuccess, getUnitTypeFailure, getUnitTypeRequest, getUnitTypeSuccess } from '../redux/slices/ProfileSettingSlice';
+import { addContactFailure, addContactRequest, addContactSuccess, addDocumentFailure, addDocumentRequest, addDocumentSuccess, addFooterContentFailure, addFooterContentRequest, addFooterContentSuccess, addPaymentMethodFailure, addPaymentMethodRequest, addPaymentMethodSuccess, deleteContactFailure, deleteContactRequest, deleteContactSuccess, deleteFooterContentFailure, deleteFooterContentRequest, deleteFooterContentSuccess, getContactsFailure, getContactsRequest, getContactsSuccess, getDocumentsFailure, getDocumentsRequest, getDocumentsSuccess, getFooterContentsFailure, getFooterContentsRequest, getFooterContentsSuccess, getPaymentMethodsFailure, getPaymentMethodsRequest, getPaymentMethodsSuccess, getSubmodulesFailure, getSubmodulesRequest, getSubmodulesSuccess, getUnitTypeFailure, getUnitTypeRequest, getUnitTypeSuccess } from '../redux/slices/ProfileSettingSlice';
 import { IGetFooterContentsResponse } from '../interface/setting/packerProfile/footerContent/IGetFooterContentsResponse';
 import { IAddPaymentMethodRequest } from '../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodRequest';
 import { IAddPaymentMethodResponse } from '../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodResponse';
@@ -24,6 +24,7 @@ import { IGetUnitTypeResponse } from '../interface/setting/unitType/IGetunitType
 import { ISaveDocumentTemplateIdPayload, ISaveDocumentTemplateIdResponse, ISavedDocumentTemplateIdResponse, ITemplateListResponse } from '../interface/setting/template/template';
 import { getSavedDocumentTemplateIdListFailure, getSavedDocumentTemplateIdListRequest, getSavedDocumentTemplateIdListSuccess, getTemplateListFailure, getTemplateListRequest, getTemplateListSuccess, saveDocumentTemplateIdFailure, saveDocumentTemplateIdRequest, saveDocumentTemplateIdSuccess } from '../redux/slices/TemplateSettingSlice';
 import { ICreateSerialNoRequest, ICreateSerialNoResponse, IGetSerialNoRequest, IGetSerialNoResponse } from '../interface/setting/serialNo/serialNo';
+import { IDeleteContactResponse, IDeleteFooterContentResponse } from '../interface/setting/packerProfile/contact';
 
 export function* addFooterContentSaga(action: PayloadAction<IAddFooterContentRequest>) {
     console.log('addFooterContentSaga--action--', JSON.stringify(action));
@@ -49,17 +50,18 @@ export function* getFooterContentsSaga(action: PayloadAction<string>) {
     }
 }
 
-// export function* verifyOtpSaga(action: PayloadAction<IOtpVerifyRequest>) {
-//     console.log('verifyOtpSaga--action--', JSON.stringify(action));
-//     try {
-//         const response: IOtpVerifyResponse = yield call(SettingService.VerifyOtpService, action.payload);
-//         console.log('verifyOtpSaga-response----', JSON.stringify(response));
-//         yield put(verifyOtpSuccess(response));
-//     } catch (error) {
-//         console.log('verifyOtpSaga-error----', JSON.stringify(error));
-//         yield put(verifyOtpFailure(error));
-//     }
-// }
+export function* deleteFooterContentSaga(action: PayloadAction<string>) {
+    console.log('deleteFooterContentSaga--action--', JSON.stringify(action));
+    try {
+        const response: IDeleteFooterContentResponse = yield call(SettingService.DeleteFooterContentService, action.payload);
+        console.log('deleteFooterContentSaga-response----', JSON.stringify(response));
+        yield put(deleteFooterContentSuccess(response));
+    } catch (error) {
+        console.log('deleteFooterContentSaga-error----', error);
+        yield put(deleteFooterContentFailure(JSON.stringify(error)));
+    }
+}
+
 
 //payemntMethod
 export function* addPaymentMethodSaga(action: PayloadAction<IAddPaymentMethodRequest>) {
@@ -108,6 +110,18 @@ export function* getContactDetailsSaga(action: PayloadAction<string>) {
     } catch (error) {
         console.log('getContactDetailsSaga-error----', error);
         yield put(getContactsFailure(JSON.stringify(error)));
+    }
+}
+
+export function* deleteContactDetailSaga(action: PayloadAction<string>) {
+    console.log('deleteContactDetailSaga--action--', JSON.stringify(action));
+    try {
+        const response: IDeleteContactResponse = yield call(SettingService.DeleteContactDetailService, action.payload);
+        console.log('deleteContactDetailSaga-response----', JSON.stringify(response));
+        yield put(deleteContactSuccess(response));
+    } catch (error) {
+        console.log('deleteContactDetailSaga-error----', error);
+        yield put(deleteContactFailure(JSON.stringify(error)));
     }
 }
 
@@ -259,9 +273,11 @@ export function* getSavedDocumentTemplateIdListSaga(action: PayloadAction<string
 export function* watcherSettingSaga() {
     yield takeLatest(addFooterContentRequest.type, addFooterContentSaga);
     yield takeLatest(getFooterContentsRequest.type, getFooterContentsSaga);
+    yield takeLatest(deleteFooterContentRequest.type, deleteFooterContentSaga);
     yield takeLatest(addPaymentMethodRequest.type, addPaymentMethodSaga);
     yield takeLatest(getPaymentMethodsRequest.type, getPaymentMethodSaga);
     yield takeLatest(addContactRequest.type, addContactDetailSaga);
+    yield takeLatest(deleteContactRequest.type, deleteContactDetailSaga);
     yield takeLatest(getContactsRequest.type, getContactDetailsSaga);
     yield takeLatest(addDocumentRequest.type, addCompanyDocumentSaga);
     yield takeLatest(getDocumentsRequest.type, getCompanyDocumentsSaga);

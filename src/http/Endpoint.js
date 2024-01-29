@@ -54,10 +54,10 @@ export const DELETE_PAYMENT_METHOD = (company_id) => ``;
 export const UPDATE_PAYMENT_METHOD = (company_id) => ``;
 export const GET_PAYMENT_METHODS = (company_id) => `/account-management/account/${company_id}`;
 
-export const ADD_FOOTER_CONTENT = `/content-management/footer-setting/addFooter`;
-export const DELETE_FOOTER_CONTENT = (company_id) => `/content-management/footer-setting/addFooter`;
-export const UPDATE_FOOTER_CONTENT = (company_id) => `/content-management/footer-setting/addFooter`;
-export const GET_FOOTER_CONTENTS = (company_id) => `/content-management/footer-setting/${company_id}`;
+export const ADD_FOOTER_CONTENT = `/content-management/footer-setting/add`;
+export const DELETE_FOOTER_CONTENT = (id) => `/content-management/footer-setting/delete/${id}`;
+export const UPDATE_FOOTER_CONTENT = (id) => `/content-management/footer-setting/update/${id}`;
+export const GET_FOOTER_CONTENTS = (company_id) => `/content-management/footer-setting/company/${company_id}`;
 
 export const ADD_DOCUMENT = `/content-management/govt-registration/add`;
 export const DELETE_DOCUMENT = (company_id) => ``;
@@ -69,7 +69,7 @@ export const DELETE_SIGNATURE = (company_id) => ``;
 export const GET_SIGNATURES = (company_id) => ``;
 
 export const ADD_CONTACT_DETAIL = `/content-management/contact/add`;
-export const DELETE_CONTACT_DETAIL = (company_id) => ``;
+export const DELETE_CONTACT_DETAIL = (contact_id) => `/content-management/contact/${contact_id}`;
 export const UPDATE_CONTACT_DETAIL = (company_id) => ``;
 export const GET_CONTACTS = (company_id) => `/content-management/contact/${company_id}`;
 
