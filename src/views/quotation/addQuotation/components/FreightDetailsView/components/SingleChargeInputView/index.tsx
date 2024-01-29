@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {View} from 'react-native';
 import styles from './style';
 import Label from '../../../../../../../common/Label';
@@ -7,11 +7,14 @@ import {COLOR_BLACK} from '../../../../../../../utils/colors';
 import {useQuotationFormContextHook} from '../../../../../../../provider/QuotationFormContextProvider';
 import {FREIGHT_TYPE, options} from '../utils';
 import shiftingLuggages from '../../../../../../../data/shiftingLuggage.json';
+import { IQuotationFreight } from '../../../../../../../interface/quotation/IGetSingleQuotationResponse';
 interface Props {
   freightType: FREIGHT_TYPE;
 }
 
 const SingleChargeInputView: React.FC<Props> = ({freightType}) => {
+  const input1Ref = useRef();
+
   const {
     state,
     setFreightPartCharge,
@@ -27,6 +30,25 @@ const SingleChargeInputView: React.FC<Props> = ({freightType}) => {
     setUnpackingChargePartLoad,
     setUnpackingChargeFullLoad,
   } = useQuotationFormContextHook();
+
+  useEffect(() => {
+    if(state.editQuotation && state.item) {
+      const {item} = state;
+      if(item) {
+        const quotationfreight:IQuotationFreight = item.quotationfreights;
+        console.log('quotationfreight----', JSON.stringify(quotationfreight));
+        if(quotationfreight) {
+          setFreightPartCharge(quotationfreight.partLoadCharge);
+          setPackingChargePartLoad(quotationfreight.packagingPartLoadCharges);
+          setPackingMaterialChargePartLoad(quotationfreight.packingMaterialPartLoadCharges);
+          setLoadingChargePartLoad(quotationfreight.loadingPartLoadCharges);
+          setUnloadingChargePartLoad(quotationfreight.unLoadingPartLoadCharges);
+          setUnpackingChargePartLoad(quotationfreight.unPackagingPartLoadCharges);
+          _inputValue(quotationfreight);
+        }
+      }
+    }
+  }, [state.editQuotation, state.item]);
 
   const _getLabelText = () => {
     let text: string = state.freight_part_load ? 'Part Load' : 'Full Load';
@@ -109,6 +131,28 @@ const SingleChargeInputView: React.FC<Props> = ({freightType}) => {
     return hideView;
   }
 
+  const _inputValue = (quotationfreight:IQuotationFreight) => {
+    if (freightType == FREIGHT_TYPE.LOAD_TYPE) {
+      //@ts-ignore
+      input1Ref && input1Ref?.current?.setValue(quotationfreight.partLoadCharge);
+    } else if (freightType == FREIGHT_TYPE.PACKING_CHARGE) {
+      //@ts-ignore
+      input1Ref && input1Ref?.current?.setValue(quotationfreight.packagingPartLoadCharges);
+    } else if (freightType == FREIGHT_TYPE.PACKING_MATERIAL_CHARGE) {
+     //@ts-ignore
+     input1Ref && input1Ref?.current?.setValue(quotationfreight.packingMaterialPartLoadCharges);
+    } else if (freightType == FREIGHT_TYPE.LOADING_CHARGE) {
+      //@ts-ignore
+      input1Ref && input1Ref?.current?.setValue(quotationfreight.loadingPartLoadCharges);
+    } else if (freightType == FREIGHT_TYPE.UNLOADING_CHARGE) {
+     //@ts-ignore
+     input1Ref && input1Ref?.current?.setValue(quotationfreight.unLoadingPartLoadCharges);
+    } else if (freightType == FREIGHT_TYPE.UNPACKING_CHARGE) {
+      //@ts-ignore
+      input1Ref && input1Ref?.current?.setValue(quotationfreight.unPackagingPartLoadCharges);
+    }
+  };
+
   if(_shouldHideView()) {
     return null;
   }
@@ -121,8 +165,7 @@ const SingleChargeInputView: React.FC<Props> = ({freightType}) => {
         containerStyle={styles.inputContainer}
         inputStyle={styles.input}
         selectionColor={COLOR_BLACK}
-        //@ts-ignore
-        //error={showErrors && errors.dropPincode}
+        value={state.freight_part_charge}
         inputType="numeric"
       />
     </View>

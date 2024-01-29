@@ -23,6 +23,7 @@ import SurveyTab from '../../../../../data/survey.json';
 import SurveyListView from '../SurveyListView';
 import useAuthId from '../../../../../hooks/useAuthId';
 import { EventRegister } from 'react-native-event-listeners';
+import { getCurrentCompanyId } from '../../../../../utils/storage';
 
 interface IFollowupListHeaderComponentProps {
   taskName: string;
@@ -160,9 +161,13 @@ const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> =
     }
   }, [addFollowupRequesting, addFollowupSuccess, addFollowupFailure, addSurveyRequesting, addSurveySuccess, addSurveyFailure]);
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    const companyId = await getCurrentCompanyId();
     if (taskName == 'FOLLOW UP') {
       const data: IAddFollowupRequest = {
+        companyId: companyId as string,
+        franchiseId: "",
+        branchId: "",
         authId: authId,
         enquiryId: enquiryId,
         comment: comment,
@@ -171,6 +176,9 @@ const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> =
       dispatch(addFollowupRequest(data));
     } else if (taskName == 'SURVEY') {
       const data: IAddSurveyRequest = {
+        companyId: companyId as string,
+        franchiseId: "",
+        branchId: "",
         addedBy: authId,
         enquiryId: enquiryId,
         comment: comment,

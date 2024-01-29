@@ -101,8 +101,6 @@ const BothChargeInputView: React.FC<Props> = ({freightType}) => {
   };
 
   const _inputValue = (quotationfreight:IQuotationFreight) => {
-    let value1: string = '';
-    let value2: string = '';
     if (freightType == FREIGHT_TYPE.LOAD_TYPE) {
       //@ts-ignore
       input1Ref && input1Ref?.current?.setValue(quotationfreight.partLoadCharge);
@@ -168,6 +166,7 @@ const BothChargeInputView: React.FC<Props> = ({freightType}) => {
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
           inputType="numeric"
+          value={state.freight_part_charge}
           //@ts-ignore
           ref={input1Ref}
         />
@@ -179,6 +178,7 @@ const BothChargeInputView: React.FC<Props> = ({freightType}) => {
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
+          value={state.freight_full_charge}
           inputType="numeric"
           //@ts-ignore
           ref={input2Ref}
