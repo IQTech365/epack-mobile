@@ -58,11 +58,11 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId, navi
   }
 
   const handlePhoneCall = () => {
-    Linking.openURL(`tel:${item?.mobile}`);
+    Linking.openURL(`tel:${_getMobile(item)}`);
   }
 
   const handleWhatsappCall = () => {
-    Linking.openURL(`whatsapp://send?phone=+91${item?.mobile}`);
+    Linking.openURL(`whatsapp://send?phone=+91${_getMobile(item)}`);
   }
 
   const _getName = (item:any) => {
@@ -76,13 +76,14 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId, navi
   }
 
   const _getMobile = (item:any) => {
-    let mobile:string = '';
-    if(item?.mobile) {
-      mobile = item?.mobile;
-    } else if(item?.billingDetails?.authorityPersonMobile) {
-      mobile = item?.billingDetails?.authorityPersonMobile;
+    let number = '';
+    if(item?.billingBy == 'by Individual') {
+      number = item.mobile;
+    } else {
+      // @ts-ignore
+      number = item?.billingDetails.authorityPersonMobile || item?.billingDetails.employeeMobile;
     }
-    return mobile;
+    return number;
   }
 
   const refreshOrders = () => {

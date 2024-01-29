@@ -59,11 +59,11 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item, navigation
   };
 
   const handlePhoneCall = () => {
-    // Linking.openURL(`tel:${item?.mobile}`);
+    Linking.openURL(`tel:${getContactPersonNumber()}`);
   };
 
   const handleWhatsappCall = () => {
-    // Linking.openURL(`whatsapp://send?phone=+91${item?.mobile}`);
+    Linking.openURL(`whatsapp://send?phone=+91${getContactPersonNumber()}`);
   };
 
   const refetchOrderList = () => {
