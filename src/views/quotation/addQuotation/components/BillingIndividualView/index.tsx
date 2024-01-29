@@ -109,7 +109,11 @@ const BillingIndividualView: React.FC<Props> = ({fromEnquiry = false}) => {
         if(enquiry) {
           if(enquiry.billingBy == "by Individual") {
             setPartyName(enquiry.partyName);
+            //@ts-ignore
+            partyMobileNoInputCompRef && partyMobileNoInputCompRef?.current?.setValue(enquiry.partyName);
             setPartyMobileNo(enquiry.mobile);
+            //@ts-ignore
+            partyNameInputCompRef && partyNameInputCompRef?.current?.setValue(enquiry.mobile);
           }
         }
       }
@@ -126,7 +130,7 @@ const BillingIndividualView: React.FC<Props> = ({fromEnquiry = false}) => {
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
-            value={state.party_mobile_no}
+            value={state.party_mobile_no as string}
             //@ts-ignore
             ref={partyMobileNoInputCompRef}
             //@ts-ignore
@@ -154,7 +158,7 @@ const BillingIndividualView: React.FC<Props> = ({fromEnquiry = false}) => {
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
-          value={state.party_name}
+          value={state.party_name as string}
           //@ts-ignore
           ref={partyNameInputCompRef}
           //@ts-ignore

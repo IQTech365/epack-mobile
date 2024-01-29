@@ -104,34 +104,71 @@ const BothChargeInputView: React.FC<Props> = ({freightType}) => {
     if (freightType == FREIGHT_TYPE.LOAD_TYPE) {
       //@ts-ignore
       input1Ref && input1Ref?.current?.setValue(quotationfreight.partLoadCharge);
+      setFreightPartCharge(quotationfreight.partLoadCharge);
       //@ts-ignore
       input2Ref && input2Ref?.current?.setValue(quotationfreight.fullLoadCharge);
+      setFreightFullCharge(quotationfreight.fullLoadCharge);
     } else if (freightType == FREIGHT_TYPE.PACKING_CHARGE) {
       //@ts-ignore
       input1Ref && input1Ref?.current?.setValue(quotationfreight.packagingPartLoadCharges);
+      setPackingChargePartLoad(quotationfreight.packagingPartLoadCharges)
       //@ts-ignore
       input2Ref && input2Ref?.current?.setValue(quotationfreight.packagingFullLoadCharges);
+      setPackingChargeFullLoad(quotationfreight.packagingFullLoadCharges)
     } else if (freightType == FREIGHT_TYPE.PACKING_MATERIAL_CHARGE) {
      //@ts-ignore
      input1Ref && input1Ref?.current?.setValue(quotationfreight.packingMaterialPartLoadCharges);
+     setPackingMaterialChargePartLoad(quotationfreight.packingMaterialPartLoadCharges);
      //@ts-ignore
      input2Ref && input2Ref?.current?.setValue(quotationfreight.packingMaterialFullLoadCharges);
+     setPackingMaterialChargeFullLoad(quotationfreight.packingMaterialFullLoadCharges);
     } else if (freightType == FREIGHT_TYPE.LOADING_CHARGE) {
       //@ts-ignore
       input1Ref && input1Ref?.current?.setValue(quotationfreight.loadingPartLoadCharges);
+      setLoadingChargePartLoad(quotationfreight.loadingPartLoadCharges);
       //@ts-ignore
       input2Ref && input2Ref?.current?.setValue(quotationfreight.loadingFullLoadCharges);
+      setLoadingChargeFullLoad(quotationfreight.loadingFullLoadCharges);
     } else if (freightType == FREIGHT_TYPE.UNLOADING_CHARGE) {
      //@ts-ignore
      input1Ref && input1Ref?.current?.setValue(quotationfreight.unLoadingPartLoadCharges);
+     setUnloadingChargePartLoad(quotationfreight.unLoadingPartLoadCharges);
      //@ts-ignore
      input2Ref && input2Ref?.current?.setValue(quotationfreight.unLoadingFullLoadCharges);
+     setUnloadingChargeFullLoad(quotationfreight.unLoadingFullLoadCharges);
     } else if (freightType == FREIGHT_TYPE.UNPACKING_CHARGE) {
       //@ts-ignore
       input1Ref && input1Ref?.current?.setValue(quotationfreight.unPackagingPartLoadCharges);
+      setUnpackingChargePartLoad(quotationfreight.unPackagingPartLoadCharges);
       //@ts-ignore
       input2Ref && input2Ref?.current?.setValue(quotationfreight.unPackagingFullLoadCharges);
+      setUnpackingChargeFullLoad(quotationfreight.unPackagingFullLoadCharges);
     }
+  };
+
+  const _getInputValue = () => {
+    let value1:string = '';
+    let value2:string = '';
+    if (freightType == FREIGHT_TYPE.LOAD_TYPE) {
+      value1 = state.freight_part_charge;
+      value2 = state.freight_full_charge;
+    } else if (freightType == FREIGHT_TYPE.PACKING_CHARGE) {
+      value1 = state.packing_charge_part_load;
+      value2 = state.packing_charge_full_load;
+    } else if (freightType == FREIGHT_TYPE.PACKING_MATERIAL_CHARGE) {
+      value1 = state.packing_material_charge_part_load;
+      value2 = state.packing_material_charge_full_load;
+    } else if (freightType == FREIGHT_TYPE.LOADING_CHARGE) {
+      value1 = state.loading_charge_part_load;
+      value2 = state.loading_charge_full_load;
+    } else if (freightType == FREIGHT_TYPE.UNLOADING_CHARGE) {
+      value1 = state.unloading_charge_part_load;
+      value2 = state.unloading_charge_part_load;
+    } else if (freightType == FREIGHT_TYPE.UNPACKING_CHARGE) {
+      value1 = state.unpacking_charge_part_load;
+      value2 = state.unpacking_charge_full_load;
+    }
+    return {value1, value2};
   };
 
   const _shouldHideView = () => {
@@ -166,7 +203,7 @@ const BothChargeInputView: React.FC<Props> = ({freightType}) => {
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
           inputType="numeric"
-          value={state.freight_part_charge}
+          value={_getInputValue().value1}
           //@ts-ignore
           ref={input1Ref}
         />
@@ -178,7 +215,7 @@ const BothChargeInputView: React.FC<Props> = ({freightType}) => {
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
-          value={state.freight_full_charge}
+          value={_getInputValue().value2}
           inputType="numeric"
           //@ts-ignore
           ref={input2Ref}

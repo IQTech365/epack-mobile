@@ -135,22 +135,46 @@ const SingleChargeInputView: React.FC<Props> = ({freightType}) => {
     if (freightType == FREIGHT_TYPE.LOAD_TYPE) {
       //@ts-ignore
       input1Ref && input1Ref?.current?.setValue(quotationfreight.partLoadCharge);
+      setFreightPartCharge(quotationfreight.partLoadCharge);
     } else if (freightType == FREIGHT_TYPE.PACKING_CHARGE) {
       //@ts-ignore
       input1Ref && input1Ref?.current?.setValue(quotationfreight.packagingPartLoadCharges);
+      setPackingChargePartLoad(quotationfreight.packagingPartLoadCharges)
     } else if (freightType == FREIGHT_TYPE.PACKING_MATERIAL_CHARGE) {
      //@ts-ignore
      input1Ref && input1Ref?.current?.setValue(quotationfreight.packingMaterialPartLoadCharges);
+     setPackingMaterialChargePartLoad(quotationfreight.packingMaterialPartLoadCharges);
     } else if (freightType == FREIGHT_TYPE.LOADING_CHARGE) {
       //@ts-ignore
       input1Ref && input1Ref?.current?.setValue(quotationfreight.loadingPartLoadCharges);
+      setLoadingChargePartLoad(quotationfreight.loadingPartLoadCharges);
     } else if (freightType == FREIGHT_TYPE.UNLOADING_CHARGE) {
      //@ts-ignore
      input1Ref && input1Ref?.current?.setValue(quotationfreight.unLoadingPartLoadCharges);
+     setUnloadingChargePartLoad(quotationfreight.unLoadingPartLoadCharges);
     } else if (freightType == FREIGHT_TYPE.UNPACKING_CHARGE) {
       //@ts-ignore
       input1Ref && input1Ref?.current?.setValue(quotationfreight.unPackagingPartLoadCharges);
+      setUnpackingChargePartLoad(quotationfreight.unPackagingPartLoadCharges);
     }
+  };
+
+  const _getInputValue = ():string => {
+    let value:string = '';
+    if (freightType == FREIGHT_TYPE.LOAD_TYPE) {
+      value = state.freight_part_charge;
+    } else if (freightType == FREIGHT_TYPE.PACKING_CHARGE) {
+      value = state.packing_charge_part_load;
+    } else if (freightType == FREIGHT_TYPE.PACKING_MATERIAL_CHARGE) {
+      value = state.packing_material_charge_part_load;
+    } else if (freightType == FREIGHT_TYPE.LOADING_CHARGE) {
+      value = state.loading_charge_part_load;
+    } else if (freightType == FREIGHT_TYPE.UNLOADING_CHARGE) {
+      value = state.unloading_charge_part_load;
+    } else if (freightType == FREIGHT_TYPE.UNPACKING_CHARGE) {
+      value = state.unpacking_charge_part_load;
+    }
+    return value;
   };
 
   if(_shouldHideView()) {
@@ -165,7 +189,7 @@ const SingleChargeInputView: React.FC<Props> = ({freightType}) => {
         containerStyle={styles.inputContainer}
         inputStyle={styles.input}
         selectionColor={COLOR_BLACK}
-        value={state.freight_part_charge}
+        value={_getInputValue()}
         inputType="numeric"
       />
     </View>
