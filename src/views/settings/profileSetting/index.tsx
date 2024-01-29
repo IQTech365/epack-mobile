@@ -6,11 +6,11 @@ import Spacer from '../../../common/Spacer';
 import styles from './style';
 import profileSettingsTabOptions from '../../../data/profileSettingsTabOptions.json';
 import Tab from '../../../common/Tab';
-import AddAccountView from './components/AddAccountView';
-import AddContactView from './components/AddContactView';
-import AddDocumentView from './components/AddDocumentView';
-import AddFooterContentView from './components/AddFooterContentView';
-import AddSignatureView from './components/AddSignatureView';
+import AccountView from './components/AccountView';
+import ContactView from './components/ContactView';
+import DocumentView from './components/DocumentView';
+import FooterContentView from './components/FooterContentView';
+import SignatureView from './components/SignatureView';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import Spinner from '../../../common/Spinner';
 import { getSubmoduleRequest } from '../../../redux/slices/CommonSlice';
@@ -27,15 +27,15 @@ const PackersProfileSetting = (props: any) => {
   const showTabItem = () => {
     switch (activeTabIndex) {
       case 0:
-        return <AddContactView />;
+        return <ContactView />;
       case 1:
-        return <AddAccountView />;
+        return <AccountView />;
       case 2:
-        return <AddFooterContentView />;
+        return <FooterContentView />;
       case 3:
-        return <AddDocumentView />;
+        return <DocumentView />;
       case 4:
-        return <AddSignatureView />;
+        return <SignatureView />;
       default:
         return null;
     }

@@ -166,8 +166,8 @@ const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> =
     if (taskName == 'FOLLOW UP') {
       const data: IAddFollowupRequest = {
         companyId: companyId as string,
-        franchiseId: "",
-        branchId: "",
+        // franchiseId: "",
+        // branchId: "",
         authId: authId,
         enquiryId: enquiryId,
         comment: comment,
@@ -177,8 +177,8 @@ const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> =
     } else if (taskName == 'SURVEY') {
       const data: IAddSurveyRequest = {
         companyId: companyId as string,
-        franchiseId: "",
-        branchId: "",
+        // franchiseId: "",
+        // branchId: "",
         addedBy: authId,
         enquiryId: enquiryId,
         comment: comment,

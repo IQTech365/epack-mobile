@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {View, FlatList, Text, TouchableOpacity} from 'react-native';
 import styles from './style';
-import ContactDetailUpdateView from '../contactDetailUpdateView';
+import ContactDetailUpdateView from '../ContactFormView';
 import ListViewIcon from '../../../../../images/icons/list_view_icon.svg';
 import ListViewIcon2 from '../../../../../images/icons/list_view_icon2.svg';
 import CreateIcon from '../../../../../images/icons/create_icon.svg';
@@ -27,7 +27,7 @@ const AddContactView = () => {
       _data = contactsData.map((e: IGetContactDetailsData) => {
         const item:IContactListItem = {
           contactType: e.contactType,
-          contactNumber: e.contactNumber,
+          contactNumber: e.contactValue,
           modules: e.modulesView,
         }
         return item;

@@ -4,7 +4,7 @@ import styles from './style';
 import BottomSheet from '@gorhom/bottom-sheet';
 import FormModal from '../../../formModal';
 import EmptyView from '../../../emptyView';
-import SignatureUpdateView from '../SignatureUpdateView';
+import SignatureUpdateView from '../SignatureFormView';
 import Spacer from '../../../../../common/Spacer';
 import Label from '../../../../../common/Label';
 

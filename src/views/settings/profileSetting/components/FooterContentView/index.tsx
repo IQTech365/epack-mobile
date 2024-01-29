@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {View, FlatList, TouchableOpacity, Text} from 'react-native';
 import styles from './style';
 import Spacer from '../../../../../common/Spacer';
-import FooterContentUpdateView from '../FooterContentUpdateView';
+import FooterContentUpdateView from '../FooterContentFormView';
 import ListViewIcon from '../../../../../images/icons/list_view_icon.svg';
 import ListViewIcon2 from '../../../../../images/icons/list_view_icon2.svg';
 import CreateIcon from '../../../../../images/icons/create_icon.svg';

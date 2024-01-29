@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import styles from './style';
-import AccountDetailUpdateView from '../AccountDetailUpdateView';
+import AccountDetailUpdateView from '../AccountFormView';
 import Spacer from '../../../../../common/Spacer';
 import EditIcon from '../../../../../images/icons/edit2.svg';
 import DleteIcon from '../../../../../images/icons/delete.svg';

@@ -116,7 +116,7 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
           companyId: id as string,
           modulesView: modules,
           contactType: contactType || contactDetail[0].label,
-          contactNumber: contactNumber,
+          contactValue: contactNumber,
           otherTitle: '',
           createdBy: authId,
         }
