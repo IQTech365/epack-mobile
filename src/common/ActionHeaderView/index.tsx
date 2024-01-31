@@ -5,9 +5,8 @@ import styles from './styles';
 import ListIcon from '../../images/icons/list_view_icon.svg';
 import ListIcon2 from '../../images/icons/list_view_icon2.svg';
 import CreateIcon from '../../images/icons/plus_icon.svg';
-import CreateIcon2 from '../../images/icons/create_icon2.svg';
+import CreateIcon2 from '../../images/icons/plus_blue_icon.svg';
 import Spacer from '../Spacer';
-import {Shadow} from 'react-native-shadow-2';
 
 interface IProps {
   onShow: () => void;

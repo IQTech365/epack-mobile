@@ -11,8 +11,9 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         paddingVertical: 6,
         paddingHorizontal: 10,
-        backgroundColor: COLOR_GRAY2,
-        borderRadius: 5,
+        // backgroundColor: COLOR_GRAY2,
+        // borderRadius: 5,
+        // borderWidth: 1,
     }
 });
 
