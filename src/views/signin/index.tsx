@@ -38,6 +38,7 @@ const SignInPageView = (props: any) => {
   const [mobile, setMobile] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [isStaffLogin, setIsStaffLogin] = useState<boolean>(false);
+  const [showStaffLoginOption, setShowStaffLoginOption] = useState<boolean>(false);
   const [topLabel, setTopLabel] = useState<string>('Enter mobile number');
   const [inputLabel, setInputLabel] = useState<string>('Mobile Number');
   const [inputKeyboardType, setInputKeyboardType] = useState<string>('numeric');
@@ -163,8 +164,7 @@ const SignInPageView = (props: any) => {
             placeholderTextColor={OFF_WHITE}
           />
         )}
-        <Spacer />
-        <BouncyCheckbox
+        {showStaffLoginOption ? <BouncyCheckbox
           size={25}
           fillColor={COLOR_BLUE}
           unfillColor="#FFFFFF"
@@ -183,7 +183,7 @@ const SignInPageView = (props: any) => {
           }}
           isChecked={isStaffLogin}
           disableBuiltInState={true}
-        />
+        /> : null}
         <Spacer height={50} />
         <Button
           text="GET OTP"

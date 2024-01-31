@@ -17,8 +17,10 @@ import {useAppDispatch, useAppSelector} from '../../../redux/hooks';
 import usePincodeHook from '../../../hooks/usePincodeHook';
 import Spinner from '../../../common/Spinner';
 import PackingListView from './components/PackingListView';
-import { ISingleEnquiryData } from '../../../interface/enquiry/ISingleEnquiryResponse';
-import { resetGetSerialNoRequest } from '../../../redux/slices/SerialNoSettingSlice';
+import {ISingleEnquiryData} from '../../../interface/enquiry/ISingleEnquiryResponse';
+import {resetGetSerialNoRequest} from '../../../redux/slices/SerialNoSettingSlice';
+
+const tabData = [tabOptions];
 
 type Props = NativeStackScreenProps<OrderStackParamList, 'OrderDetails'>;
 
@@ -50,8 +52,8 @@ const OrderDetailsView: React.FC<Props> = ({route, navigation}) => {
         return <BiltyView orderId={orderId as string} />;
       case 4:
         return <InvoiceView orderId={orderId as string} item={item} />;
-        case 5:
-          return <PackingListView orderId={orderId as string} />;
+      case 5:
+        return <PackingListView orderId={orderId as string} />;
       default:
         return null;
     }
@@ -59,26 +61,41 @@ const OrderDetailsView: React.FC<Props> = ({route, navigation}) => {
   return (
     <View style={styles.container}>
       <Header label="ORDER DETAILS" canGoBack={true} />
-      <OrderInfoView orderId={orderId as string} item={item} navigation={navigation} />
-      <Spacer height={10} />
-      <View style={styles.tabsContainer}>
-        <FlatList
-          style={{paddingHorizontal: 8}}
-          data={tabOptions}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          renderItem={({item, index}) => (
-            <Tab
-              label={item.label}
-              index={index}
-              onPress={handleTabChange}
-              activeIndex={activeTabIndex}
-            />
-          )}
-        />
-      </View>
-      <Spacer height={10} />
-      {showTabItem()}
+      <FlatList
+        data={tabData}
+        ListHeaderComponent={
+          <OrderInfoView
+            orderId={orderId as string}
+            item={item}
+            navigation={navigation}
+          />
+        }
+        renderItem={({item: tabOptions, index: idx}) => {
+          return (
+            <>
+              <Spacer height={10} />
+              <View style={styles.tabsContainer}>
+                <FlatList
+                  style={{paddingHorizontal: 8}}
+                  data={tabOptions}
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  renderItem={({item, index}) => (
+                    <Tab
+                      label={item.label}
+                      index={index}
+                      onPress={handleTabChange}
+                      activeIndex={activeTabIndex}
+                    />
+                  )}
+                />
+              </View>
+              <Spacer height={10} />
+            </>
+          );
+        }}
+        ListFooterComponent={showTabItem()}
+      />
       <Spinner show={createBiltyRequesting || fetching} />
     </View>
   );

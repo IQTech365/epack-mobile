@@ -35,6 +35,7 @@ export interface ICompanyInfoData {
   isDeleted: boolean;
   created: string;
   companySignature: string;
+  sn:string;
 }
 
 export interface IGetCompaniesResponse {

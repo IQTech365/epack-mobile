@@ -71,10 +71,10 @@ const ClientInfoView = () => {
         <View style={styles.clientDetailContainer}>
           <Text style={styles.nameText}>{company?.companyName}</Text>
           <Text style={styles.labelText}>
-            Cust#:
+            Customer ID:
             <Text
               style={styles.valueText}
-              numberOfLines={1}>{` ${company?._id}`}</Text>
+              numberOfLines={1}>{` #${company?.sn}`}</Text>
           </Text>
           <View style={styles.planContainer}>
             <Text style={styles.labelText}>Current Plan:</Text>
