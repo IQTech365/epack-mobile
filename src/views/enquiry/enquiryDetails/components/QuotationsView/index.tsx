@@ -3,7 +3,6 @@ import {
   View,
   Text,
   FlatList,
-  TouchableOpacity,
   RefreshControl,
 } from 'react-native';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
@@ -12,11 +11,6 @@ import QuotationListItem, {
   IQuotationItem,
 } from '../../../../quotation/quotationList/components/QuotationListItem';
 import styles from './style';
-import ListViewIcon from '../../../../../images/icons/list_view_icon.svg';
-import ListViewIcon2 from '../../../../../images/icons/list_view_icon2.svg';
-import CreateIcon from '../../../../../images/icons/create_icon.svg';
-import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
-import Spacer from '../../../../../common/Spacer';
 import {getQuotationHtmlRequest, getQuotationsRequest, resetGetQuotationHtmlRequest} from '../../../../../redux/slices/QuotationSlice';
 import { IGetQuotationRequest } from '../../../../../interface/quotation/IGetQuotationRequest';
 import { IEnquiry, IGetQuotationData } from '../../../../../interface/quotation/IGetQuotationsResponse';
@@ -28,6 +22,7 @@ import { IHtmlTemplateRequest } from '../../../../../interface/order/templates/I
 import { QuotationStackRoute } from '../../../../../utils/constants';
 import { startShare } from '../../../../../utils/utility';
 import Spinner from '../../../../../common/Spinner';
+import ActionHeaderView from '../../../../../common/ActionHeaderView';
 
 interface IQuotationViewProps {
   enquiryId: string;
@@ -229,7 +224,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
   const showEmptyView = () => {
     return (
       <View style={styles.emptyContainer}>
-        <Text>No Quotations Found!</Text>
+        <Text style={styles.text}>No Quotations Found!</Text>
       </View>
     );
   };
@@ -310,26 +305,11 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
 
   return (
     <>
-      <View style={styles.container}>
-        <TouchableOpacity onPress={handleShowQuotationList} activeOpacity={0.4}>
-          {showQuotationList ? (
-            <ListViewIcon2 width={30} height={30} />
-          ) : (
-            <ListViewIcon width={30} height={30} />
-          )}
-        </TouchableOpacity>
-        <Spacer width={10} />
-        <TouchableOpacity
-          onPress={handleCreateNewQuotation}
-          activeOpacity={0.4}>
-          {createNewQuotation ? (
-            <CreateIcon2 width={30} height={30} />
-          ) : (
-            <CreateIcon width={30} height={30} />
-          )}
-        </TouchableOpacity>
-        <Spacer width={10} />
-      </View>
+      <ActionHeaderView
+        count={0}
+        onShow={handleShowQuotationList}
+        onCreate={handleCreateNewQuotation}
+      />
       {showForm()}
       {showList()}
       <Spinner show={getQuotationTemplateHtmlRequesting} />

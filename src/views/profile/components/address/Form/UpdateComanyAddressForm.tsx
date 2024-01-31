@@ -20,6 +20,7 @@ import { ICompanyInfoData } from '../../../../../interface/companyRegistration/I
 import { ICompanyEditRequest } from '../../../../../interface/companyRegistration/ICompanyEditRequest';
 import { editCompanyRequest } from '../../../../../redux/slices/CompanySlice';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
+import { ToastType, showToast } from '../../../../../utils/utility';
 
 export enum ADDRESS_TYPE {
   PICKUP,
@@ -156,34 +157,6 @@ const UpdateComanyAddressForm: React.FC<IUpdateComanyAddressFormProps> = ({
     if (states && cities && cityDropdownRef && stateDropwdownRef) {
       if (isInit) {
         setIsInit(false);
-        let previousStateIndex = 0, previousCityIndex = 0, previousFloorIndex = 0, previousLiftStatusIndex = 0;
-        // if(addressType == ADDRESS_TYPE.PICKUP) {
-        //   previousStateIndex = states.findIndex(s => s.label == item.pickupAddress.state);
-        //   previousCityIndex = states.findIndex(s => s.label == item.pickupAddress.city);
-        //   previousFloorIndex = floorOptions.findIndex(s => s.label == item.pickupAddress.floor);
-        //   previousLiftStatusIndex = liftStatusOptions.findIndex(s => s.label.toLowerCase() == item.pickupAddress.isLiftAvailable.toLowerCase());
-        //   //@ts-ignore
-        //   stateDropwdownRef?.current?.setDefaultValue(states[previousStateIndex]);
-        //   //@ts-ignore
-        //   cityDropdownRef?.current?.setDefaultValue(cities[previousCityIndex]);
-        //   //@ts-ignore
-        //   floorDropdownRef?.current?.setDefaultValue(floorOptions[previousFloorIndex]);
-        //   //@ts-ignore
-        //   liftDropdownRef?.current?.setDefaultValue(liftStatusOptions[previousLiftStatusIndex]);
-        // } else if(addressType == ADDRESS_TYPE.DROP) {
-        //   previousStateIndex = states.findIndex(s => s.label == item.dropAddress.state);
-        //   previousCityIndex = states.findIndex(s => s.label == item.dropAddress.city);
-        //   previousFloorIndex = floorOptions.findIndex(s => s.label == item.dropAddress.floor);
-        //   previousLiftStatusIndex = liftStatusOptions.findIndex(s => s.label.toLowerCase() == item.dropAddress.isLiftAvailable.toLowerCase());
-        //   //@ts-ignore
-        // stateDropwdownRef?.current?.setDefaultValue(states[previousStateIndex]);
-        // //@ts-ignore
-        // cityDropdownRef?.current?.setDefaultValue(cities[previousCityIndex]);
-        // //@ts-ignore
-        // floorDropdownRef?.current?.setDefaultValue(floorOptions[previousFloorIndex]);
-        // //@ts-ignore
-        // liftDropdownRef?.current?.setDefaultValue(liftStatusOptions[previousLiftStatusIndex]);
-        // }
       } else {
         //@ts-ignore
         stateDropwdownRef?.current?.setDefaultValue(states[0]);
@@ -194,20 +167,6 @@ const UpdateComanyAddressForm: React.FC<IUpdateComanyAddressFormProps> = ({
   }, [states, cities]);
 
   const handleUpdate = () => {
-    // const payload: IPickupAddress = {
-    //   pickupAddress: {
-    //     shiftingFrom: city,
-    //     city: city,
-    //     isLiftAvailable: liftStatus,
-    //     locality: locality || 'Not Available',
-    //     landmark: landmark || 'Not Available',
-    //     pincode: pin,
-    //     state: state,
-    //     address: address,
-    //     floor: floorNumber,
-    //   },
-    // };
-
     const payload: ICompanyEditRequest = {
       companyId: company?._id as string,
       payload: {
@@ -239,19 +198,11 @@ const UpdateComanyAddressForm: React.FC<IUpdateComanyAddressFormProps> = ({
 
   useEffect(() => {
     if (!editCompanyRequesting &&editCompanySuccess) {
-      Toast.show({
-        type: 'success',
-        text1: 'Address Update',
-        text2: 'Address has been updated successfully',
-      });
-      // dispatch(resetUpdateAddressRequest());
+      showToast('Address Updated', ToastType.SUCCESS);
+      dispatch(resetUpdateAddressRequest());
     } else if (!editCompanyRequesting && editCompanyFailure) {
-      Toast.show({
-        type: 'error',
-        text1: 'Address Update',
-        text2: 'Error in updating address. Please try again!',
-      });
-      // dispatch(resetUpdateAddressRequest());
+      showToast('Address Not Updated. Try Again!', ToastType.ERROR);
+      dispatch(resetUpdateAddressRequest());
     }
   }, [editCompanyRequesting, editCompanySuccess, editCompanyFailure]);
 

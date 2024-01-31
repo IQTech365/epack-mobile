@@ -7,7 +7,7 @@ import {
   COLOR_GRAY3,
   COLOR_WHITE,
 } from '../../../../../utils/colors';
-const {width, height} = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -15,18 +15,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   labelContainer: {
-    width: width * 0.98,
+    width: width * 0.92,
     paddingVertical: 9,
     paddingHorizontal: 12,
     alignItems: 'center',
     justifyContent: 'space-between',
     alignSelf: 'center',
     flexDirection: 'row',
+    backgroundColor: COLOR_GRAY2,
+    borderRadius: 5,
   },
   labelText: {
-    color: COLOR_GRAY,
+    color: COLOR_BLACK,
     fontSize: 18,
-    fontWeight: '500',
+    fontFamily: 'WorkSans-SemiBold'
   },
   textContainer2: {
     width: width * 0.9,
@@ -59,7 +61,6 @@ wrapConatiner:{
 counterContainer: {
     width: width * 0.40,
     paddingVertical: 9,
-
     borderRadius: 5,
     borderWidth: 0.7,
     borderColor: COLOR_GRAY,
@@ -67,18 +68,14 @@ counterContainer: {
     justifyContent: 'space-around',
     alignSelf: 'center',
     flexDirection:'row',
-    
   },
   touchableContainer: {
     width: 30,
     height: 30,
-    // borderRadius: 15,
-    // borderWidth: 1,
     borderColor: COLOR_GRAY,
     justifyContent: 'center',
     alignSelf: 'center',
     alignItems: 'center',
-    
   },
   textStyle: {
     color: COLOR_WHITE,
@@ -93,17 +90,9 @@ counterContainer: {
     borderRadius: 5,
     width: width*0.44
   },
-
   dropDownStyle:{ 
     width:  width * 0.44, 
     left: width * 0.05 
-  },
-
-  opratorTextStyle:{ 
-    textAlign: 'center', 
-    fontWeight: '500', 
-    fontSize: 22,
-    bottom:height*0.005
   },
   inputContainer: {
     width: '100%',
@@ -115,18 +104,18 @@ counterContainer: {
     fontSize: 14,
   },
   showListButtonContainer: {
-    paddingVertical: 6,
+    paddingVertical: 8,
     paddingHorizontal: 20,
-    borderWidth: 0.5,
-    borderColor: COLOR_GRAY,
+    borderWidth: 1,
+    borderColor: COLOR_BLACK,
     borderRadius: 20,
     alignItems: 'center',
-    backgroundColor: COLOR_GRAY3,
+    backgroundColor: COLOR_BLACK,
   },
   buttonText: {
-    color: COLOR_BLACK,
+    color: COLOR_WHITE,
     fontSize: 14,
-    fontWeight: '400',
+    fontFamily: 'WorkSans-Medium'
   },
   modalStyle: {
     width: width * 0.9,

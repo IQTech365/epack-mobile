@@ -4,27 +4,26 @@ import {
   FlatList,
   RefreshControl,
   Text,
-  TouchableOpacity,
 } from 'react-native';
-import Spacer from '../../../../../common/Spacer';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import styles from './styles';
-import ListViewIcon from '../../../../../images/icons/list_view_icon.svg';
-import ListViewIcon2 from '../../../../../images/icons/list_view_icon2.svg';
-import CreateIcon from '../../../../../images/icons/create_icon.svg';
-import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
 import InvoiceFormView from '../InvoiceFormView';
 import {InvoiceFormContextProvider} from '../../../../../provider/InvoiceFormContextProvider';
 import {ISingleEnquiryData} from '../../../../../interface/enquiry/ISingleEnquiryResponse';
-import {getInvoiceHtmlRequest, getInvoiceListRequest, resetGetInvoiceHtmlRequest} from '../../../../../redux/slices/OrderSlice';
+import {
+  getInvoiceHtmlRequest,
+  getInvoiceListRequest,
+  resetGetInvoiceHtmlRequest,
+} from '../../../../../redux/slices/OrderSlice';
 import Spinner from '../../../../../common/Spinner';
 import {IInvoice} from '../../../../../interface/order/IGetInvoiceListResponse';
 import InvoiceListItem from './InvoiceListItem';
-import { IHtmlTemplateRequest } from '../../../../../interface/order/templates/ITemplateResponse';
+import {IHtmlTemplateRequest} from '../../../../../interface/order/templates/ITemplateResponse';
 import ModalHOC from '../../../../../common/ModalHOC';
 import TemplateViewer from '../../../../../common/TemplateViewer';
-import { startShare } from '../../../../../utils/utility';
+import {startShare} from '../../../../../utils/utility';
 import useTemplateIdHook from '../../../../../hooks/useTemplateIdHook';
+import ActionHeaderView from '../../../../../common/ActionHeaderView';
 
 interface IInvoiceViewProps {
   orderId: string;
@@ -64,13 +63,13 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item}) => {
     setShowPreview(false);
   };
 
-  const handleDocDownload = (docId:string) => {
+  const handleDocDownload = (docId: string) => {
     const payload: IHtmlTemplateRequest = {
       templateId: templateId,
       docId: docId,
     };
     dispatch(getInvoiceHtmlRequest(payload));
-  }
+  };
 
   const onEdit = () => {};
 
@@ -114,38 +113,38 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item}) => {
     if (showInvoiceList) {
       return (
         <View style={{flex: 1}}>
-        <FlatList
-          contentContainerStyle={{alignItems: 'center', paddingVertical: 10}}
-          data={_getInvoiceList()}
-          refreshControl={
-            <RefreshControl refreshing={false} onRefresh={handleOnRefresh} />
-          }
-          renderItem={({item, index}) => (
-            <InvoiceListItem
-              item={item}
-              index={index}
-              onPress={() => {
-                // presentModal(item.id)
-              }}
-              onShare={() => {
-                setShowPreview(false);
-                setShowShare(true);
-                handleDocDownload(item._id);
-              }}
-              onDownload={() => {
-                //
-              }}
-              onPreview={() => {
-                setShowPreview(true);
-                setShowShare(false);
-                handleDocDownload(item._id);
-              }}
-              onEdit={() => {}}
-            />
-          )}
-          ListEmptyComponent={showEmptyView()}
-        />
-        <ModalHOC
+          <FlatList
+            contentContainerStyle={{alignItems: 'center', paddingVertical: 10}}
+            data={_getInvoiceList()}
+            refreshControl={
+              <RefreshControl refreshing={false} onRefresh={handleOnRefresh} />
+            }
+            renderItem={({item, index}) => (
+              <InvoiceListItem
+                item={item}
+                index={index}
+                onPress={() => {
+                  // presentModal(item.id)
+                }}
+                onShare={() => {
+                  setShowPreview(false);
+                  setShowShare(true);
+                  handleDocDownload(item._id);
+                }}
+                onDownload={() => {
+                  //
+                }}
+                onPreview={() => {
+                  setShowPreview(true);
+                  setShowShare(false);
+                  handleDocDownload(item._id);
+                }}
+                onEdit={() => {}}
+              />
+            )}
+            ListEmptyComponent={showEmptyView()}
+          />
+          <ModalHOC
             visible={showModal}
             onClose={handleShowPreviewModalClose}
             modalStyle={styles.modalStyle}
@@ -178,32 +177,15 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item}) => {
       // setShowDownload(false);
       dispatch(resetGetInvoiceHtmlRequest());
     }
-  }, [
-    getInvoiceHtmlRequesting,
-    getInvoiceHtmlSuccess,
-    getInvoiceHtmlFailure,
-  ]);
+  }, [getInvoiceHtmlRequesting, getInvoiceHtmlSuccess, getInvoiceHtmlFailure]);
 
   return (
     <>
-      <View style={styles.container}>
-        <TouchableOpacity onPress={handleShowInvoiceList} activeOpacity={0.4}>
-          {showInvoiceList ? (
-            <ListViewIcon2 width={30} height={30} />
-          ) : (
-            <ListViewIcon width={30} height={30} />
-          )}
-        </TouchableOpacity>
-        <Spacer width={10} />
-        <TouchableOpacity onPress={handleCreateNewInvoice} activeOpacity={0.4}>
-          {createNewInvoice ? (
-            <CreateIcon2 width={30} height={30} />
-          ) : (
-            <CreateIcon width={30} height={30} />
-          )}
-        </TouchableOpacity>
-        <Spacer width={10} />
-      </View>
+      <ActionHeaderView
+        count={_getInvoiceList().length}
+        onShow={handleShowInvoiceList}
+        onCreate={handleCreateNewInvoice}
+      />
       {showForm()}
       {showList()}
       <Spinner show={getInvoicesRequesting} />

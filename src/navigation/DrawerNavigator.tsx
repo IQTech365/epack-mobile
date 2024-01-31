@@ -34,7 +34,6 @@ import FranchiseMgmtIcon from '../images/icons/franchise_mgmt_black_icon.svg';
 import LogoutIcon from '../images/icons/logout.svg';
 import SubscriptionView from '../views/subscription';
 import HelpCenterView from '../views/helpCenter';
-import NewsRoomView from '../views/newsRoom';
 import SettingStackNavigator from './SettingStackNavigator';
 import MyProfileStackNavigator from './MyProfileStackNavigator';
 import {logout} from '../redux/slices/OtpSlice';
@@ -119,7 +118,7 @@ const DrawerContent = (props: any) => {
               {_getCompanyNameOrLogo()}
             </View>
             <Text style={styles.nameText}>{company?.companyName}</Text>
-            <Text style={styles.text}>{`User ID: ${company?._id}`}</Text>
+            <Text style={styles.text}>{`User ID: #${company?.sn}`}</Text>
             <Text
               style={
                 styles.text

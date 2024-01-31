@@ -64,6 +64,7 @@ const DropdownComponent: React.FC<IDropdownProps> = forwardRef(
           ]}
           //@ts-ignore
           ref={ref}
+          mode="modal"
           placeholderStyle={styles.placeholderStyle}
           itemTextStyle={styles.itemText}
           selectedTextStyle={[styles.selectedTextStyle, selectedTextStyle]}

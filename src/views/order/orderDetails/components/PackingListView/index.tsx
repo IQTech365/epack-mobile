@@ -10,7 +10,8 @@ import CreateIcon from '../../../../../images/icons/create_icon.svg';
 import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
 import PackingFormView from './PackingFormView';
 import PackingListView from './PackingListView';
-import { getPackingTypesRequest } from '../../../../../redux/slices/CommonSlice';
+import {getPackingTypesRequest} from '../../../../../redux/slices/CommonSlice';
+import ActionHeaderView from '../../../../../common/ActionHeaderView';
 
 interface IPackingListViewProps {
   orderId: string;
@@ -48,24 +49,11 @@ const PackingView: React.FC<IPackingListViewProps> = ({orderId}) => {
 
   return (
     <View style={{flex: 1}}>
-      <View style={styles.container2}>
-        <TouchableOpacity onPress={handleShowList} activeOpacity={0.4}>
-          {showList ? (
-            <ListViewIcon2 width={30} height={30} />
-          ) : (
-            <ListViewIcon width={30} height={30} />
-          )}
-        </TouchableOpacity>
-        <Spacer width={10} />
-        <TouchableOpacity onPress={handleShowForm} activeOpacity={0.4}>
-          {showForm ? (
-            <CreateIcon2 width={30} height={30} />
-          ) : (
-            <CreateIcon width={30} height={30} />
-          )}
-        </TouchableOpacity>
-        <Spacer width={10} />
-      </View>
+      <ActionHeaderView
+        count={0}
+        onShow={handleShowList}
+        onCreate={handleShowForm}
+      />
       {_showList()}
       {_showForm()}
       <Spinner show={packingTypesRequesting} />

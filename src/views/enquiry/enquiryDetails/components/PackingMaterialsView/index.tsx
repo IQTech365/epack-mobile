@@ -119,7 +119,7 @@ const PackingMaterialsView: React.FC<IProps> = ({enquiryId}) => {
           <TouchableOpacity
             style={styles.showListButtonContainer}
             onPress={handleShowList}>
-            <Text style={styles.buttonText}>Show List</Text>
+            <Text style={styles.buttonText}>SHOW LIST</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.textContainer2}>

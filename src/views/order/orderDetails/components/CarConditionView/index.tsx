@@ -4,15 +4,9 @@ import {
   FlatList,
   RefreshControl,
   Text,
-  TouchableOpacity,
 } from 'react-native';
-import Spacer from '../../../../../common/Spacer';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import styles from './styles';
-import ListViewIcon from '../../../../../images/icons/list_view_icon.svg';
-import ListViewIcon2 from '../../../../../images/icons/list_view_icon2.svg';
-import CreateIcon from '../../../../../images/icons/create_icon.svg';
-import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
 import CarConditionFormView from '../CarConditionFormView';
 import {
   getCarConditionHtmlRequest,
@@ -33,8 +27,9 @@ import CarConditionListItem from './CarConditionListItem';
 import ModalHOC from '../../../../../common/ModalHOC';
 import TemplateViewer from '../../../../../common/TemplateViewer';
 import {startShare} from '../../../../../utils/utility';
-import { IHtmlTemplateRequest } from '../../../../../interface/order/templates/ITemplateResponse';
+import {IHtmlTemplateRequest} from '../../../../../interface/order/templates/ITemplateResponse';
 import useTemplateIdHook from '../../../../../hooks/useTemplateIdHook';
+import ActionHeaderView from '../../../../../common/ActionHeaderView';
 
 interface ICarConditionViewProps {
   orderId: string;
@@ -79,7 +74,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId}) => {
     if (data && Array.isArray(data) && data.length > 0) {
       list = data.map((d: ICardConditionData) => {
         const item: ICarCondition = {
-          id:d._id,
+          id: d._id,
           created_date: d.createdAt,
           vehicle_condition_no: d.carConditionNumber,
           car_condition_date: d.dateOfCarCondition,
@@ -132,13 +127,13 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId}) => {
     dispatch(getCarConditionListRequest(orderId));
   }, []);
 
-  const handleDocDownload = (docId:string) => {
+  const handleDocDownload = (docId: string) => {
     const payload: IHtmlTemplateRequest = {
       templateId: templateId,
       docId: docId,
     };
     dispatch(getCarConditionHtmlRequest(payload));
-  }
+  };
 
   const showForm = () => {
     if (createNewCarCondition) {
@@ -226,28 +221,11 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId}) => {
 
   return (
     <>
-      <View style={styles.container}>
-        <TouchableOpacity
-          onPress={handleShowCarConditionList}
-          activeOpacity={0.4}>
-          {showCarConditionList ? (
-            <ListViewIcon2 width={30} height={30} />
-          ) : (
-            <ListViewIcon width={30} height={30} />
-          )}
-        </TouchableOpacity>
-        <Spacer width={10} />
-        <TouchableOpacity
-          onPress={handleCreateNewCarCondition}
-          activeOpacity={0.4}>
-          {createNewCarCondition ? (
-            <CreateIcon2 width={30} height={30} />
-          ) : (
-            <CreateIcon width={30} height={30} />
-          )}
-        </TouchableOpacity>
-        <Spacer width={10} />
-      </View>
+      <ActionHeaderView
+        count={_getListData().length}
+        onShow={handleShowCarConditionList}
+        onCreate={handleCreateNewCarCondition}
+      />
       {showForm()}
       {showList()}
       <Spinner show={getCarConditionListRequesting || loading} />

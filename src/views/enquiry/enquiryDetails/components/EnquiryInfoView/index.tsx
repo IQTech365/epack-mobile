@@ -12,7 +12,7 @@ import {
   MenuOption,
   MenuTrigger,
 } from 'react-native-popup-menu';
-import {COLOR_GRAY, COLOR_GRAY2, COLOR_WHITE} from '../../../../../utils/colors';
+import {COLOR_BLACK, COLOR_GRAY, COLOR_GRAY2, COLOR_WHITE} from '../../../../../utils/colors';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import { IUpdateEnquiryStatusRequest } from '../../../../../interface/enquiry/IUpdateEnquiryStatusRequest';
 import { getEnquiriesRequest, resetUpdateEnquiryStatusRequest, updateEnquiryStatusRequest } from '../../../../../redux/slices/EnquirySlice';
@@ -203,7 +203,8 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId, navi
                         },
                         optionText: {
                           paddingVertical: 8,
-                          color: COLOR_GRAY
+                          color: COLOR_BLACK,
+                          fontFamily: 'WorkSans-Regular'
                         }
                       }}>
                         {enquiryStatusOptions.map((option, index) => {
@@ -212,6 +213,8 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId, navi
                             optionWrapper: {borderBottomWidth: 0, marginHorizontal: 5,},
                             optionText: {
                               paddingVertical: 8,
+                              color: COLOR_BLACK,
+                              fontFamily: 'WorkSans-Regular'
                             }
                           } : undefined;
                           return <MenuOption customStyles={lastItemStyle} key={`${index}`} onSelect={() => {

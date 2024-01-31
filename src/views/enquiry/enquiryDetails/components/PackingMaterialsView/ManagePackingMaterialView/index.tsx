@@ -1,13 +1,14 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, useEffect, useRef, useState} from 'react';
 import {View, TouchableOpacity, TextInput} from 'react-native';
 import styles from './style';
 import PlusIcon from '../../../../../../images/icons/plus_icon.svg';
 import MinusIcon from '../../../../../../images/icons/minus_icon.svg';
-import EpackDropdown from '../../../../../../common/DropdownComponent2';
 import Label from '../../../../../../common/Label';
 import { useAppSelector } from '../../../../../../redux/hooks';
 import { EPackingMaterialType } from '../PackingMaterialTypeEnum';
 import { IPackingItem } from '../utils';
+import DropdownComponent from '../../../../../../common/DropdownComponent';
+import { TDropdownItem } from '../../../../../../type/TDropdownItem';
 
 interface IProps {
   title: string;
@@ -21,12 +22,19 @@ const ManagePackingMaterialView: FC<IProps> = ({title, unitRequired = true, mate
   const [quantity, setQuantity] = useState<string>('0');
   const [unitOfMeasure, setUnitOfMeasure] = useState<string>('');
   const {unitType} = useAppSelector(state => state.Setting);
+  const dropdownCompRef = useRef(null);
 
   const _getUnitTypeList = () => {
-    let _data: any[] = [];
+    let _data: TDropdownItem[] = [];
     const {data} = unitType || {};
     if (data && Array.isArray(data) && data.length > 0) {
-      _data = data.map((item: {unitType: any}) => item.unitType);
+      _data = data.map((item: any) => {
+        const _item:TDropdownItem = {
+          label: item?.unitType,
+          value: item?.unitType,
+        };
+        return _item;
+      });
     }
     return _data;
   };
@@ -43,8 +51,8 @@ const ManagePackingMaterialView: FC<IProps> = ({title, unitRequired = true, mate
     setQuantity(`${copy + 1}`);
   };
 
-  const _handleUnitChange = (unit: string) => {
-    setUnitOfMeasure(unit);
+  const _handleUnitChange = (unit: TDropdownItem) => {
+    setUnitOfMeasure(unit.value);
   }
 
   useEffect(() => {
@@ -55,6 +63,13 @@ const ManagePackingMaterialView: FC<IProps> = ({title, unitRequired = true, mate
     }
     onChange && onChange(item, index);
   }, [quantity, unitOfMeasure]);
+
+  useEffect(() => {
+    if(unitType && _getUnitTypeList().length > 0) {
+      const firstItem:TDropdownItem = _getUnitTypeList()[0];
+      setUnitOfMeasure(firstItem.value);
+    }
+  }, [unitType]);
 
 
   return (
@@ -72,6 +87,9 @@ const ManagePackingMaterialView: FC<IProps> = ({title, unitRequired = true, mate
           </TouchableOpacity>
           <View style={styles.inputContainer}>
             <TextInput
+              onChangeText={(text:string) => {
+                setQuantity(text);
+              }}
               style={styles.input}
               inputMode="numeric"
               value={quantity}
@@ -85,12 +103,12 @@ const ManagePackingMaterialView: FC<IProps> = ({title, unitRequired = true, mate
           </TouchableOpacity>
         </View>
         <View style={styles.unitContainer}>
-          <EpackDropdown
+          <DropdownComponent
             data={_getUnitTypeList()}
-            placeholder={'Select Unit'}
-            hanldeData={_handleUnitChange}
-            wrapperStyle={styles.dropDownWrapperStyle}
-            disabled={!unitRequired}
+            onSelect={_handleUnitChange}
+            disable={!unitRequired}
+            //@ts-ignore
+            ref={dropdownCompRef}
           />
         </View>
       </View>
