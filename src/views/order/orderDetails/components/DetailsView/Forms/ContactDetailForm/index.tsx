@@ -43,8 +43,6 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
   enquiryId,
   onClose,
 }) => {
-  console.log('ContactDetailForm--item--', JSON.stringify(item));
-  
   const [contactPersonName, setContactPersonName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [landline, setLandline] = useState<string>('');

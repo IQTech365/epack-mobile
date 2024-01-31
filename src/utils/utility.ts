@@ -11,13 +11,6 @@ export const startShare = async (html: any, docName: string, action: any) => {
     directory: 'Documents',
   };
   let file = await RNHTMLtoPDF.convert(options);
-  console.log('file--', JSON.stringify(file));
-  // const fileExists = await RNFS.exists(file.filePath);
-  // if(!fileExists) {
-  //   console.log('Filed does not exists');
-  //   return;
-  // }
-
   const shareOptions = {
     file: 'pdf',
     message: docName,
@@ -29,7 +22,6 @@ export const startShare = async (html: any, docName: string, action: any) => {
       action();
     })
     .catch(err => {
-      //   dispatch(clearMoneyReceiptHtmlDocument());
       action();
       console.log(err);
     });

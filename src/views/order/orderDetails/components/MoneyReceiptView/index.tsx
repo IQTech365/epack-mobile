@@ -131,16 +131,6 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
     dispatch(getMoneyReceiptHtmlRequest(payload));
   };
 
-  const startDownload = async () => {
-    let options = {
-      html: moneyReceiptTemplateHtml,
-      fileName: 'MoneyReceipt',
-      directory: 'Documents',
-    };
-    let file = await RNHTMLtoPDF.convert(options);
-    console.log('file--', JSON.stringify(file));
-  };
-
   const handlePreviewClick = (moneyReceiptId: string) => {
     setOpenShare(false);
     setShouldDownload(false);

@@ -42,7 +42,6 @@ const AccessoryView: React.FC<IAccessoryViewProps> = ({label, id, onPress}) => {
         <BouncyCheckboxGroup
           data={loadTypes}
           onChange={(selectedItem: ICheckboxButton) => {
-            console.log('SelectedItem: ', JSON.stringify(selectedItem));
             if (selectedItem.id == '1') {
               onPress(label, id, true);
             } else if (selectedItem.id == '2') {

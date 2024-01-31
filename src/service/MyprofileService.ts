@@ -9,7 +9,6 @@ import { IAddFranchiseRequest } from '../interface/myProfile/IAddFranchiseReques
 import { IAddFranchiseResponse } from '../interface/myProfile/IAddFranchiseResponse';
 
 export const AddBranchService = async (payload: IAddBranchRequest): Promise<IAddBranchResponse> => {
-    console.log('AddBranchService--payload--', JSON.stringify(payload));
     const api = Api.getInstance();
     return await api.post<IAddBranchRequest, AxiosResponse<IAddBranchResponse>>(payload, ADD_BRANCH);
 }
@@ -20,7 +19,6 @@ export const GetBranchService = async (payload: string): Promise<IGetBranchsResp
 }
 
 export const AddFranchiseService = async (payload: IAddFranchiseRequest): Promise<IAddFranchiseResponse> => {
-    console.log('AddFranchiseService--payload--', JSON.stringify(payload));
     const api = Api.getInstance();
     return await api.post<IAddFranchiseRequest, AxiosResponse<IAddFranchiseResponse>>(payload, ADD_FRANCHISE);
 }

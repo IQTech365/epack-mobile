@@ -98,7 +98,6 @@ const AddEnquiryFormView: React.FC<IProps> = ({navigation}) => {
             : {},
         status: 'NEW',
       };
-      console.log('NewEnquiry-paylaod--', JSON.stringify(payload));
       dispatch(addEnquiryRequest(payload));
     }).catch(err => console.log(err));
   };

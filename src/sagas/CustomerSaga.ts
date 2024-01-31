@@ -7,10 +7,8 @@ import { getCustomersFailure, getCustomersRequest, getCustomersSuccess } from '.
 export function* getCustomerListSaga(action: PayloadAction<ICustomerRequest>) {
   try {
     const response: ICustomerListResponse = yield call(CustomerService.GetCustomerListService, action.payload);
-    console.log('getCustomerListSaga-response----', JSON.stringify(response));
     yield put(getCustomersSuccess(response));
   } catch (error) {
-    console.log('getCustomerListSaga-error----', error);
     yield put(getCustomersFailure(JSON.stringify(error)));
   }
 }

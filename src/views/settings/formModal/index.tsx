@@ -19,7 +19,6 @@ const FormModal = forwardRef<BottomSheet, IFormModalProps>(
     const snapPoints = useMemo(() => ['65%'], []);
 
     const handleSheetChanges = useCallback((index: number) => {
-      console.log('handleSheetChanges', index);
     }, []);
 
     const renderBackdrop = useCallback(

@@ -21,22 +21,16 @@ export const UpdateQuotationService = async (payload: IUpdateQuotationRequest,):
 };
 
 export const GetQuotationsService = async (payload: IGetQuotationRequest): Promise<IGetQuotationsResponse> => {
-  console.log('GetQuotationsService-payload--', payload);
-  
   const api = Api.getInstance();
-  // return await api.get<IGetQuotationsResponse>(GET_QUOTATION_LIST);
   return await api.post<IGetQuotationRequest,AxiosResponse<IGetQuotationsResponse>>(payload, GET_QUOTATION_LIST);
 }
 
 export const GetSingleQuotationService = async (payload: string): Promise<IGetSingleQuotationResponse> => {
-  console.log('GetSingleQuotationService-payload--', payload);
-  
   const api = Api.getInstance();
   return await api.get<IGetSingleQuotationResponse>(GET_QUOTATION(payload));
 }
 
 export const GetQuotationTemplateHtmlService = async (templateId:string, docId:string): Promise<IHtmlTemplateResponse> => {
-  console.log('GetQuotationTemplateHtmlService--payload--', JSON.stringify(templateId));
   const api = Api.getInstance();
   return await api.get<IHtmlTemplateResponse>(GET_QUOTATION_TEMPLATE_HTML(templateId, docId));
 }

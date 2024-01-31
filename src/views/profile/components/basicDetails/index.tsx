@@ -28,7 +28,6 @@ const BasicDetailsView: React.FC<IBasicDetailsViewProps> = ({}) => {
   const [company, setCompany] = useState<ICompanyInfoData>();
   const {data: companiesData} = companies || {};
   const authId = useAuthId();
-  console.log('companiesData-----', JSON.stringify(companiesData));
   
   const dispatch = useAppDispatch();
 

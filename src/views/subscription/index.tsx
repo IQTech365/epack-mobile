@@ -127,14 +127,12 @@ const SubscriptionView: FC<IProps> = ({}) => {
     try {
       RazorpayCheckout.open(options)
         .then((data: any) => {
-          console.log('Payment-Success----', data.razorpay_payment_id);
           showToast("Payment Success", ToastType.SUCCESS);
           setPaymentProcessing(false);
           setPaymentDone(true);
           _addPurchase(plan, orderId);
         })
         .catch((error: any) => {
-          console.log('error----', JSON.stringify(error));
           showToast(
             `Error: ${error.code} | ${error.description}`,
             ToastType.ERROR,

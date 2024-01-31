@@ -78,7 +78,6 @@ export function* addEnquirySaga(action: PayloadAction<IAddEnquiryRequest>) {
         const response: IAddEnquiryResponse = yield call(EnquiryService.AddEnquiryService, action.payload);
         yield put(addEnquirySuccess(response));
     } catch (error) {
-        console.log('addEnquirySaga-error----', error);
         yield put(addEnquiryFailure(error));
     }
 }
@@ -86,10 +85,8 @@ export function* addEnquirySaga(action: PayloadAction<IAddEnquiryRequest>) {
 export function* getEnquiriesSaga(action: PayloadAction<string>) {
     try {
         const response: IGetEnquiriesResponse = yield call(EnquiryService.GetEnquiriesService, action.payload);
-        console.log('getEnquiriesSaga-response----', JSON.stringify(response));
         yield put(getEnquiriesSuccess(response));
     } catch (error) {
-        console.log('getEnquiriesSaga-error----', JSON.stringify(error));
         yield put(getEnquiriesFailure(error));
     }
 }
@@ -97,10 +94,8 @@ export function* getEnquiriesSaga(action: PayloadAction<string>) {
 export function* getEnquirySaga(action: PayloadAction<string>) {
     try {
         const response: ISingleEnquiryResponse = yield call(EnquiryService.GetEnquiryService, action.payload);
-        console.log('getEnquirySaga-response----', JSON.stringify(response));
         yield put(getEnquirySuccess(response));
     } catch (error) {
-        console.log('getEnquirySaga-error----', JSON.stringify(error));
         yield put(getEnquiryFailure(error));
     }
 }
@@ -108,10 +103,8 @@ export function* getEnquirySaga(action: PayloadAction<string>) {
 export function* addFollowupSaga(action: PayloadAction<IAddFollowupRequest>) {
     try {
         const response: IAddFollowupResponse = yield call(EnquiryService.AddFollowupService, action.payload);
-        console.log('addFollowupSaga-response----', JSON.stringify(response));
         yield put(addFollowupSuccess(response));
     } catch (error) {
-        console.log('addFollowupSaga-error----', JSON.stringify(error));
         yield put(addFollowupFailure(error));
     }
 }
@@ -119,10 +112,8 @@ export function* addFollowupSaga(action: PayloadAction<IAddFollowupRequest>) {
 export function* getFollowupsSaga(action: PayloadAction<string>) {
     try {
         const response: IGetFollowupsResponse = yield call(EnquiryService.GetFollowupsService, action.payload);
-        console.log('getFollowupsSaga-response----', JSON.stringify(response));
         yield put(getFollowupsSuccess(response));
     } catch (error) {
-        console.log('getFollowupsSaga-error----', JSON.stringify(error));
         yield put(getFollowupsFailure(error));
     }
 }
@@ -130,10 +121,8 @@ export function* getFollowupsSaga(action: PayloadAction<string>) {
 export function* addSurveySaga(action: PayloadAction<IAddSurveyRequest>) {
     try {
         const response: IAddSurveyResponse = yield call(EnquiryService.AddSurveyService, action.payload);
-        console.log('addSurveySaga-response----', JSON.stringify(response));
         yield put(addSurveySuccess(response));
     } catch (error) {
-        console.log('addSurveySaga-error----', JSON.stringify(error));
         yield put(addSurveyFailure(error));
     }
 }
@@ -141,10 +130,8 @@ export function* addSurveySaga(action: PayloadAction<IAddSurveyRequest>) {
 export function* getSurveyListSaga(action: PayloadAction<string>) {
     try {
         const response: IGetSurveyListResponse = yield call(EnquiryService.GetSurveyListService, action.payload);
-        console.log('IGetSurveyListResponse-response----', JSON.stringify(response));
         yield put(getSurveyListSuccess(response));
     } catch (error) {
-        console.log('IGetSurveyListResponse-error----', JSON.stringify(error));
         yield put(getSurveyListFailure(error));
     }
 }
@@ -152,10 +139,8 @@ export function* getSurveyListSaga(action: PayloadAction<string>) {
 export function* addSurveyItemSaga(action: PayloadAction<IAddSurveyItemRequest>) {
     try {
         const response: IAddSurveyResponse = yield call(EnquiryService.AddSurveyItemService, action.payload);
-        console.log('addSurveyItemSaga-response----', JSON.stringify(response));
         yield put(addSurveyItemSuccess(response));
     } catch (error) {
-        console.log('addSurveyItemSaga-error----', JSON.stringify(error));
         yield put(addSurveyItemFailure(error));
     }
 }
@@ -163,10 +148,8 @@ export function* addSurveyItemSaga(action: PayloadAction<IAddSurveyItemRequest>)
 export function* getSurveyItemListSaga(action: PayloadAction<IGetSurvyeItemListRequestPayload>) {
     try {
         const response: IGetSurveyItemListResponse = yield call(EnquiryService.GetSurveyItemListService, action.payload);
-        console.log('getSurveyItemListSaga-response----', JSON.stringify(response));
         yield put(getSurveyItemListSuccess(response));
     } catch (error) {
-        console.log('getSurveyItemListSaga-error----', JSON.stringify(error));
         yield put(getSurveyItemListFailure(error));
     }
 }
@@ -175,10 +158,8 @@ export function* updateEnquiryStatusSaga(action: PayloadAction<{ id: string, req
     const { id, requestBody } = action.payload;
     try {
         const response: IUpdateEnquiryStatusResponse = yield call(EnquiryService.UpdateEnquiryStatusService, id, requestBody);
-        console.log('updateEnquiryStatusSaga-response----', JSON.stringify(response));
         yield put(updateEnquiryStatusSuccess(response));
     } catch (error) {
-        console.log('updateEnquiryStatusSaga-error----', JSON.stringify(error));
         yield put(updateEnquiryStatusFailure(error));
     }
 }
@@ -187,10 +168,8 @@ export function* updateAddressSaga(action: PayloadAction<{ id: string, requestBo
     const { id, requestBody } = action.payload;
     try {
         const response: IUpdateAddressResponse = yield call(EnquiryService.UpdateAddressService, id, requestBody);
-        console.log('updateAddressSaga-response----', JSON.stringify(response));
         yield put(updateAddressSuccess(response));
     } catch (error) {
-        console.log('updateAddressSaga-error----', JSON.stringify(error));
         yield put(updateAddressFailure(error));
     }
 }
@@ -199,10 +178,8 @@ export function* updateContactDetailsSaga(action: PayloadAction<{ id: string, re
     const { id, requestBody } = action.payload;
     try {
         const response: IUpdateContactDetailResponse = yield call(EnquiryService.UpdateContactDetailsService, id, requestBody);
-        console.log('updateContactDetailsSaga-response----', JSON.stringify(response));
         yield put(updateContactDetailsSuccess(response));
     } catch (error) {
-        console.log('updateContactDetailsSaga-error----', JSON.stringify(error));
         yield put(updateContactDetailsFailure(error));
     }
 }
@@ -211,10 +188,8 @@ export function* updateShiftingInfoSaga(action: PayloadAction<{ id: string, requ
     const { id, requestBody } = action.payload;
     try {
         const response: IUpdateShiftingInfoResponse = yield call(EnquiryService.UpdateShiftingInfoService, id, requestBody);
-        console.log('updateShiftingInfoSaga-response----', JSON.stringify(response));
         yield put(updateShiftingInfoSuccess(response));
     } catch (error) {
-        console.log('updateShiftingInfoSaga-error----', JSON.stringify(error));
         yield put(updateShiftingInfoFailure(error));
     }
 }
@@ -222,10 +197,8 @@ export function* updateShiftingInfoSaga(action: PayloadAction<{ id: string, requ
 export function* addPackingMaterialSaga(action: PayloadAction<IAddPackingMaterialRequest>) {
     try {
         const response: IAddPackingMaterialResponse = yield call(EnquiryService.AddPackingMaterialService, action.payload);
-        console.log('PackingMaterial-response----', JSON.stringify(response));
         yield put(addPackingMaterialSuccess(response));
     } catch (error) {
-        console.log('PackingMaterial-error----', JSON.stringify(error));
         yield put(addPackingMaterialFailure(error));
     }
 }
@@ -233,10 +206,8 @@ export function* addPackingMaterialSaga(action: PayloadAction<IAddPackingMateria
 export function* getPackingMaterialsSaga(action: PayloadAction<IGetPackingMaterialsRequest>) {
     try {
         const response: IPackingMaterialsResponse = yield call(EnquiryService.GetPackingMaterialsService, action.payload);
-        console.log('getPackingMaterialSaga-response----', JSON.stringify(response));
         yield put(getPackingMaterialsSuccess(response));
     } catch (error) {
-        console.log('getPackingMaterialSaga-error----', JSON.stringify(error));
         yield put(getPackingMaterialsFailure(error));
     }
 }
@@ -244,10 +215,8 @@ export function* getPackingMaterialsSaga(action: PayloadAction<IGetPackingMateri
 export function* updateSurveyItemListSaga(action: PayloadAction<IUpdateSurveyItemRequest>) {
     try {
         const response: IUpdateSurveyItemResponse = yield call(EnquiryService.UpdateSurveyItemListService, action.payload);
-        console.log('updateSurveyItemListSaga-response----', JSON.stringify(response));
         yield put(updateSurveryItemListSuccess(response));
     } catch (error) {
-        console.log('updateSurveyItemListSaga-error----', JSON.stringify(error));
         yield put(updateSurveryItemListFailure(error));
     }
 }

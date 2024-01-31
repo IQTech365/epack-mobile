@@ -165,7 +165,6 @@ const AddLorryView: React.FC<{}> = ({}) => {
         pollutionRenewalDate: state.pollution_certificate_renewal_date,
         addedBy: authId,
       };
-      console.log(payload, 'add Lorry..');
       dispatch(addLorryRequest(payload));
     }).catch(err => console.log(err));
     

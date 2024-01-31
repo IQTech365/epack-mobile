@@ -363,7 +363,6 @@ const AddQuotationForm: React.FC<Props> = ({
 
   useEffect(() => {
     if(isEdit) {
-      console.log('Edit-Quotation--', isEdit);
       setItem(_getQuotationItem() as ISingleQuotationData)
       setIsEditQuotation(isEdit);
     }

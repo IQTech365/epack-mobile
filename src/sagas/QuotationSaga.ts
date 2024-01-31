@@ -13,10 +13,8 @@ import { IUpdateQuotationRequest, IUpdateQuotationResponse } from '../interface/
 export function* addQuotationSaga(action: PayloadAction<IAddQuotationRequest>) {
     try {
         const response: IAddQuotationResponse = yield call(QuotationService.AddQuotationService, action.payload);
-        console.log('addQuotationSaga-response----', JSON.stringify(response));
         yield put(aaddQuotationSuccess(response));
     } catch (error) {
-        console.log('addQuotationSaga-error----', error);
         yield put(addQuotationFailure(error));
     }
 }
@@ -24,10 +22,8 @@ export function* addQuotationSaga(action: PayloadAction<IAddQuotationRequest>) {
 export function* updateQuotationSaga(action: PayloadAction<IUpdateQuotationRequest>) {
     try {
         const response: IUpdateQuotationResponse = yield call(QuotationService.UpdateQuotationService, action.payload);
-        console.log('updateQuotationSaga-response----', JSON.stringify(response));
         yield put(updateQuotationSuccess(response));
     } catch (error) {
-        console.log('updateQuotationSaga-error----', error);
         yield put(updateQuotationFailure(error));
     }
 }
@@ -35,10 +31,8 @@ export function* updateQuotationSaga(action: PayloadAction<IUpdateQuotationReque
 export function* getQuotationsSaga(action: PayloadAction<IGetQuotationRequest>) {
     try {
         const response: IGetQuotationsResponse = yield call(QuotationService.GetQuotationsService, action.payload);
-        console.log('getQuotationsSaga-response----', JSON.stringify(response));
         yield put(getQuotationsSuccess(response));
     } catch (error) {
-        console.log('getQuotationsSaga-error----', error);
         yield put(getQuotationsFailure(error));
     }
 }
@@ -46,10 +40,8 @@ export function* getQuotationsSaga(action: PayloadAction<IGetQuotationRequest>) 
 export function* getSingleQuotationSaga(action: PayloadAction<string>) {
     try {
         const response: IGetSingleQuotationResponse = yield call(QuotationService.GetSingleQuotationService, action.payload);
-        console.log('getSingleQuotationSaga-response----', JSON.stringify(response));
         yield put(getSingleQuotationSuccess(response));
     } catch (error) {
-        console.log('getSingleQuotationSaga-error----', error);
         yield put(getSingleQuotationFailure(error));
     }
 }
@@ -58,10 +50,8 @@ export function* getQuotationTemplateHtmlSaga(action: PayloadAction<IHtmlTemplat
     try {
         const {templateId, docId} = action.payload;
         const response: IHtmlTemplateResponse = yield call(QuotationService.GetQuotationTemplateHtmlService, templateId, docId);
-        console.log('getQuotationTemplateHtmlSaga-response----', JSON.stringify(response));
         yield put(getQuotationHtmlSuccess(response));
     } catch (error) {
-        console.log('getQuotationTemplateHtmlSaga-error----', JSON.stringify(error));
         yield put(getQuotationHtmlFailure(error));
     }
   }

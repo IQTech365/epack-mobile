@@ -16,7 +16,6 @@ const PackingListView: React.FC<Props> = ({orderId}) => {
   const {getPackingMaterialsRequesting, packingMaterials} = useAppSelector(
     state => state.Order,
   );
-  console.log('packingMaterials-----', JSON.stringify(packingMaterials));
   
   const _getPackingMaterils = () => {
     let items: IPackingListData[] = [];

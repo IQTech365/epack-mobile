@@ -32,8 +32,6 @@ const ManageDriverView: React.FC<IAddDriverDetailViewProps> = ({}) => {
     state => state.Vehicle,
   );
   const {data: DriversData = []} = Drivers || {};
-  console.log('DriversData----', JSON.stringify(DriversData));
-  
 
   const [showAddDriverDetailList, setShowAddDriverDetailList] =
     useState<boolean>(false);

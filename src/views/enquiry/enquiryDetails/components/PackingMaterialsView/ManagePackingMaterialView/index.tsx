@@ -9,6 +9,7 @@ import { EPackingMaterialType } from '../PackingMaterialTypeEnum';
 import { IPackingItem } from '../utils';
 import DropdownComponent from '../../../../../../common/DropdownComponent';
 import { TDropdownItem } from '../../../../../../type/TDropdownItem';
+import { COLOR_BLACK } from '../../../../../../utils/colors';
 
 interface IProps {
   title: string;
@@ -93,6 +94,7 @@ const ManagePackingMaterialView: FC<IProps> = ({title, unitRequired = true, mate
               style={styles.input}
               inputMode="numeric"
               value={quantity}
+              selectionColor={COLOR_BLACK}
             />
           </View>
           <TouchableOpacity

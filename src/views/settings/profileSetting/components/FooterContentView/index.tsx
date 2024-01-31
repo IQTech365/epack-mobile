@@ -32,7 +32,6 @@ const AddFooterContentView = () => {
     deleteFooterContentSuccess,
     deleteFooterContentFailure,
   } = useAppSelector(state => state.Setting);
-  console.log('FooterContents-', JSON.stringify(footerContents));
 
   const handleCreateNewContent = () => {
     setShowContentList(false);

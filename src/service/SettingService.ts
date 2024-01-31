@@ -217,7 +217,6 @@ export const CreateSerialNoService = async (
 export const GetSerialNoService = async (
   req: IGetSerialNoRequest,
 ): Promise<IGetSerialNoResponse> => {
-  console.log('config-req-', JSON.stringify(req));
   const {document, payload} = req;
   let uri: string = '';
   switch (document) {

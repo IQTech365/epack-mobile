@@ -148,7 +148,6 @@ const HomePageView = () => {
   
   useEffect(() => {
     EventRegister.addEventListener('onUpdateEvent', () => {
-      console.log('update dashboard');
       _getDashboardData();
     });
   }, []);

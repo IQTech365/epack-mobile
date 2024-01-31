@@ -29,7 +29,7 @@ const InsuranceDetails: React.FC<{}> = ({}) => {
           <BouncyCheckboxGroup
             data={insuranceOptions}
             onChange={(selectedItem: ICheckboxButton) => {
-              console.log('SelectedItem: ', JSON.stringify(selectedItem));
+              
             }}
           />
         </View>

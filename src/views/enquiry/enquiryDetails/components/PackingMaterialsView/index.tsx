@@ -35,7 +35,6 @@ const PackingMaterialsView: React.FC<IProps> = ({enquiryId}) => {
   const [packingItems, setPackingItems] = useState<IPackingItem[]>([]);
   const [materialTypes, setMaterialTypes] = useState<string[]>(materials);
   const [extraMaterialName, setExtraMaterialName] = useState<string>('');
-  console.log('packing-items---', JSON.stringify(packingItems));
   
   const {
     addPackingMaterialsRequesting,

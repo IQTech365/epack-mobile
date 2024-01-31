@@ -18,7 +18,6 @@ const useInitialValueHook = (submoduleId:string) => {
     const {initialValue:iniital, prefix:pfx} = getSubmoduleInitialValue(submoduleId, _getAppSettingList());
     initialValue = iniital;
     prefix = pfx;
-    console.log('prefix, initialValue----', prefix, initialValue);
     return {initialValue, prefix};
 }
 

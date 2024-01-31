@@ -221,7 +221,6 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
         paymentType: reducerState.paymentType,
         paymentAmount: reducerState.paymentAmount,
       };
-      console.log(payload, 'payload create money', isEdit);
       if (isEdit == true) {
         dispatch2(
           editMoneyReceiptListRequest({

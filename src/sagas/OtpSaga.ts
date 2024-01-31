@@ -15,25 +15,19 @@ import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
 import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
 
 export function* getOtpSaga(action: PayloadAction<Partial<IOtpGetRequest>>) {
-    console.log('getOtpSaga--action--', JSON.stringify(action));
     try {
         const response: IOtpGetResponse = yield call(OtpService.GetOtpService, action.payload);
-        console.log('getOtpSaga-response----', JSON.stringify(response));
         yield put(getOtpSuccess(response));
     } catch (error) {
-        console.log('getOtpSaga-error----', error);
         yield put(getOtpFailure(JSON.stringify(error)));
     }
 }
 
 export function* verifyOtpSaga(action: PayloadAction<IOtpVerifyRequest>) {
-    console.log('verifyOtpSaga--action--', JSON.stringify(action));
     try {
         const response: IOtpVerifyResponse = yield call(OtpService.VerifyOtpService, action.payload);
-        console.log('verifyOtpSaga-response----', JSON.stringify(response));
         yield put(verifyOtpSuccess(response));
     } catch (error) {
-        console.log('verifyOtpSaga-error----', JSON.stringify(error));
         yield put(verifyOtpFailure(error));
     }
 }

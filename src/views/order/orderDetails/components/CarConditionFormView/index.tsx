@@ -275,7 +275,6 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
         remarks: reducerState.remarks,
         addedBy: authId,
       };
-      console.log(payload, 'payload carconditon req');
       dispatch2(createCarConditionRequest(payload));
     }).catch(err => console.log(err));
     

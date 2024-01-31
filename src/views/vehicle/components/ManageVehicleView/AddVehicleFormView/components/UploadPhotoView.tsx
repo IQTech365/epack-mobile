@@ -84,7 +84,6 @@ const UploadPhotoView: React.FC<Props> = ({title, photo}) => {
   const handleLaunchCamera = async () => {
     try {
       const result = await launchCamera(options);
-      console.log('Camera-result----', JSON.stringify(result));
       if (result && result.hasOwnProperty('assets')) {
         const {assets} = result || {};
         if (assets && Array.isArray(assets) && assets.length > 0) {
@@ -109,7 +108,6 @@ const UploadPhotoView: React.FC<Props> = ({title, photo}) => {
   const handleLaunchGallery = async () => {
     try {
       const result = await launchImageLibrary(options);
-      console.log('Gallery-result----', JSON.stringify(result));
       if (result && result.hasOwnProperty('assets')) {
         const {assets} = result || {};
         if (assets && Array.isArray(assets) && assets.length > 0) {
@@ -239,7 +237,6 @@ const UploadPhotoView: React.FC<Props> = ({title, photo}) => {
 
   useEffect(() => {
     if (!imageUploading && imageUploadSuccess) {
-      console.log('uploadedImage-----', JSON.stringify(uploadedImage));
       if (photo == PHOTO.RC && isRCPhoto) {
         const rcImagePath = _getUploadedImagePath();
         setVehicleRCPhoto(rcImagePath);

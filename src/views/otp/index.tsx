@@ -274,9 +274,6 @@ const OTPPageView = (props: any) => {
           onPress={onVerifyOtpPress}
           disabled={disabled}
         />
-        <View>
-          <Text>{_displayOTP()}</Text>
-        </View>
         <Spacer height={50} />
         <Spinner
           variant="white"

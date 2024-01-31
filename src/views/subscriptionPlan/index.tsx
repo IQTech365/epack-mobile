@@ -132,7 +132,6 @@ const SubscriptionPlanView = (props: any) => {
           _addPurchase(plan, orderId);
         })
         .catch((error: any) => {
-          console.log('error----', JSON.stringify(error));
           showToast(
             `Error: ${error.code} | ${error.description}`,
             ToastType.ERROR,

@@ -147,7 +147,6 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({}) => {
             //@ts-ignore
               ref={richText}
               onChange={descriptionText => {
-                console.log('descriptionText:', descriptionText);
                 setContent(descriptionText);
               }}
             />

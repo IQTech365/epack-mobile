@@ -122,7 +122,6 @@ const SignatureCaptureView: React.FC<IProps> = ({
             style={styles.signature}
             ref={signatureRef}
             onSaveEvent={(result: any) => {
-              //   console.log('onSaveEvent--', result);
               onSave(result?.pathName as string);
               const formData = new FormData();
               formData.append('image', {

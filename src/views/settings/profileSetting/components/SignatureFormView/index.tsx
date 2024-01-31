@@ -21,19 +21,14 @@ const SignatureUpdateView: React.FC<ISigatureUpdateProps> = ({}) => {
   const [signatureType, setSignatureType] = useState<string>('1');
   const signatureRef = useRef();
   const handleSignatureType = (item: TDropdownItem) => {
-    console.log('account type');
     setSignatureType(item.value);
   };
 
   const handleRoleType = (item: TDropdownItem) => {
-    console.log('account type');
     setSignatureType(item.value);
   };
 
   const _onSaveEvent = (result: any) => {
-    console.log(result);
-    // setSignatureUri(result?.encoded);
-    // setOwnerSignature(result?.encoded as string);
   };
 
   const _onDragEvent = () => {

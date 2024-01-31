@@ -77,7 +77,6 @@ const CompanyLogoPageView: React.FC<IProps> = (props:any) => {
     try {
       const result = await launchCamera(options);
       if (result && result.hasOwnProperty('assets')) {
-        console.log('Camera-result----', JSON.stringify(result));
         const {assets} = result || {};
         if (assets && Array.isArray(assets) && assets.length > 0) {
           const imageObj = assets[0];
@@ -93,7 +92,6 @@ const CompanyLogoPageView: React.FC<IProps> = (props:any) => {
   const handleLaunchGallery = async () => {
     try {
       const result = await launchImageLibrary(options);
-      console.log('Gallery-result----', JSON.stringify(result));
       if (result && result.hasOwnProperty('assets')) {
         const {assets} = result || {};
         if (assets && Array.isArray(assets) && assets.length > 0) {

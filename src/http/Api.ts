@@ -38,7 +38,6 @@ export class Api extends HttpClient {
   public getWithBody = async <R,D>(uri: string, data: D): Promise<R> => {
     console.info('Method-', 'Get');
     console.info('Uri-', uri);
-    console.log('config-data--', JSON.stringify(data));
     const config:AxiosRequestConfig = {
       data: data,
     }

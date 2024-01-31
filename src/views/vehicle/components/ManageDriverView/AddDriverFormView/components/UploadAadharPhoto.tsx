@@ -66,7 +66,6 @@ const UploadAadharPhoto: React.FC<IProps> = ({imageSide}) => {
   const handleLaunchCamera = async () => {
     try {
       const result = await launchCamera(options);
-      console.log('Camera-result----', JSON.stringify(result));
       if (result && result.hasOwnProperty('assets')) {
         const {assets} = result || {};
         if (assets && Array.isArray(assets) && assets.length > 0) {
@@ -88,7 +87,6 @@ const UploadAadharPhoto: React.FC<IProps> = ({imageSide}) => {
   const handleLaunchGallery = async () => {
     try {
       const result = await launchImageLibrary(options);
-      console.log('Gallery-result----', JSON.stringify(result));
       if (result && result.hasOwnProperty('assets')) {
         const {assets} = result || {};
         if (assets && Array.isArray(assets) && assets.length > 0) {
@@ -211,7 +209,6 @@ const UploadAadharPhoto: React.FC<IProps> = ({imageSide}) => {
 
   useEffect(() => {
     if(!imageUploading && imageUploadSuccess) {
-      console.log('uploadedImage-----', JSON.stringify(uploadedImage));
       if(imageSide == AADHAR.FRONT && isAadharFront) {
         const aadharFrontImagePath = _getUploadedImagePath();
         setAadharFrontPhoto(aadharFrontImagePath);

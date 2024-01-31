@@ -91,10 +91,6 @@ const SignatureViewPage: React.FC<IProps> = (props: any) => {
     imageUploadFailure,
     uploadedImage,
   } = useAppSelector(state => state.Common);
-  console.log('[imageUploading]--', imageUploading);
-  console.log('[imageUploadSuccess]--', imageUploadSuccess);
-  console.log('[imageUploadFailure]--', imageUploadFailure);
-  console.log('[uploadedImage]--', JSON.stringify(uploadedImage));
 
   const _getUploadedImagePath = () => {
     let path: string = '';
@@ -108,7 +104,6 @@ const SignatureViewPage: React.FC<IProps> = (props: any) => {
   const handleLaunchCamera = async () => {
     try {
       const result = await launchCamera(options);
-      console.log('Camera-result----', JSON.stringify(result));
       if (result && result.hasOwnProperty('assets')) {
         const {assets} = result || {};
         if (assets && Array.isArray(assets) && assets.length > 0) {
@@ -125,7 +120,6 @@ const SignatureViewPage: React.FC<IProps> = (props: any) => {
   const handleLaunchGallery = async () => {
     try {
       const result = await launchImageLibrary(options);
-      console.log('Gallery-result----', JSON.stringify(result));
       if (result && result.hasOwnProperty('assets')) {
         const {assets} = result || {};
         if (assets && Array.isArray(assets) && assets.length > 0) {
@@ -262,7 +256,6 @@ const SignatureViewPage: React.FC<IProps> = (props: any) => {
             style={style.signature}
             ref={signatureRef}
             onSaveEvent={(result: any) => {
-              console.log(result);
               if (!isDigitalSignatureProvided) {
                 setShowSignatureRequiredAlert(true);
               } else {

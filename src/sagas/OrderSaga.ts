@@ -84,16 +84,13 @@ import { ICreateInvoiceResponse } from '../interface/order/ICreateInvoiceRespons
 import { IGetInvoiceListResponse } from '../interface/order/IGetInvoiceListResponse';
 
 export function* addOrderSaga(action: PayloadAction<IAddOrderRequest>) {
-  console.log('addOrderSaga--action--', JSON.stringify(action));
   try {
     const response: IAddOrderResponse = yield call(
       OrderService.AddOrderService,
       action.payload,
     );
-    console.log('addOrderSaga-response----', JSON.stringify(response));
     yield put(addOrderSuccess(response));
   } catch (error) {
-    console.log('addOrderSaga-error----', error);
     yield put(addOrderFailure(error));
   }
 }
@@ -101,10 +98,8 @@ export function* addOrderSaga(action: PayloadAction<IAddOrderRequest>) {
 export function* getOrderListSaga(action: PayloadAction<Partial<IGetOrdersRequest>>) {
   try {
       const response: IGetOrdersResponse = yield call(OrderService.GetOrdersService, action.payload);
-      console.log('getOrderListSaga-response----', JSON.stringify(response));
       yield put(getOrdersSuccess(response));
   } catch (error) {
-      console.log('getOrderListSaga-error----', JSON.stringify(error));
       yield put(getOrdersFailure(error));
   }
 }
@@ -112,10 +107,8 @@ export function* getOrderListSaga(action: PayloadAction<Partial<IGetOrdersReques
 export function* createPackingListSaga(action: PayloadAction<ICreatePackingMaterialRequest>) {
   try {
       const response: ICreatePackingMaterialResponse = yield call(OrderService.CreatePackingListService, action.payload);
-      console.log('createPackingListSaga-response----', JSON.stringify(response));
       yield put(createPackingMaterialsSuccess(response));
   } catch (error) {
-      console.log('createPackingListSaga-error----', JSON.stringify(error));
       yield put(createPackingMaterialsFailure(error));
   }
 }
@@ -123,10 +116,8 @@ export function* createPackingListSaga(action: PayloadAction<ICreatePackingMater
 export function* getOrderSaga(action: PayloadAction<ISingleOrderRequest>) {
   try {
       const response: ISingleEnquiryResponse = yield call(OrderService.GetOrderService, action.payload);
-      console.log('getOrderSaga-response----', JSON.stringify(response));
       yield put(getOrderSuccess(response));
   } catch (error) {
-      console.log('getOrderSaga-error----', JSON.stringify(error));
       yield put(getOrderFailure(error));
   }
 }
@@ -134,10 +125,8 @@ export function* getOrderSaga(action: PayloadAction<ISingleOrderRequest>) {
 export function* getApprovedOrderListSaga(action: PayloadAction<IGetOrdersRequest>) {
   try {
       const response: IGetOrdersResponse = yield call(OrderService.GetOrdersService, action.payload);
-      console.log('getApprovedOrderListSaga-response----', JSON.stringify(response));
       yield put(getApprovedOrdersSuccess(response));
   } catch (error) {
-      console.log('getApprovedOrderListSaga-error----', JSON.stringify(error));
       yield put(getApprovedOrdersFailure(error));
   }
 }
@@ -150,13 +139,8 @@ export function* createMoneyReceiptSaga(
       OrderService.CreateMoneyReceiptService,
       action.payload,
     );
-    console.log(
-      'createMoneyReceiptSaga-response----',
-      JSON.stringify(response),
-    );
     yield put(createMoneyReceiptSuccess(response));
   } catch (error) {
-    console.log('createMoneyReceiptSaga-error----', JSON.stringify(error));
     yield put(createMoneyReceiptFailure(error));
   }
 }
@@ -164,10 +148,8 @@ export function* createMoneyReceiptSaga(
 export function* getMoneyReceiptListSaga(action: PayloadAction<string>) {
   try {
       const response: IGetMoneyReceiptsResponse = yield call(OrderService.GetMoneyReceiptListService, action.payload);
-      console.log('getMoneyReceiptListSaga-response----', JSON.stringify(response));
       yield put(getMoneyReceiptListSuccess(response));
   } catch (error) {
-      console.log('getMoneyReceiptListSaga-error----', JSON.stringify(error));
       yield put(getMoneyReceiptListFailure(error));
   }
 }
@@ -176,10 +158,8 @@ export function* editMoneyReceiptSaga(action: PayloadAction<{id:string, requestB
   const { id, requestBody } = action.payload;
   try {
       const response: IGetMoneyReceiptsResponse = yield call(OrderService.EditMoneyReceiptListService, id, requestBody);
-      console.log('editMoneyReceiptSaga-response----', JSON.stringify(response));
       yield put(editMoneyReceiptListSuccess(response));
   } catch (error) {
-      console.log('editMoneyReceiptSaga-error----', JSON.stringify(error));
       yield put(editMoneyReceiptListFailure(error));
   }
 }
@@ -192,13 +172,8 @@ export function* createCarConditionSaga(
         OrderService.CreateCarConditionService,
         action.payload,
       );
-      console.log(
-        'createCarConditionSaga-response----',
-        JSON.stringify(response),
-      );
       yield put(createCarConditionSuccess(response));
     } catch (error) {
-      console.log('createCarConditionSaga-error----', JSON.stringify(error));
       yield put(createCarConditionFailure(error));
     }
   }
@@ -206,10 +181,8 @@ export function* createCarConditionSaga(
   export function* getCarConditionListSaga(action: PayloadAction<string>) {
     try {
         const response: IGetCarConditionListResponse = yield call(OrderService.GetCarConditionListService, action.payload);
-        console.log('getCarConditionListSaga-response----', JSON.stringify(response));
         yield put(getCarConditionListSuccess(response));
     } catch (error) {
-        console.log('getCarConditionListSaga-error----', JSON.stringify(error));
         yield put(getCarConditionListFailure(error));
     }
   }
@@ -217,10 +190,8 @@ export function* createCarConditionSaga(
   export function* getPackingListSaga(action: PayloadAction<IGetPackingListRequest>) {
     try {
         const response: IPackingListResponse = yield call(OrderService.GetPackingListService, action.payload);
-        console.log('getPackingListSaga-response----', JSON.stringify(response));
         yield put(getPackingMaterialsSuccess(response));
     } catch (error) {
-        console.log('getPackingListSaga-error----', JSON.stringify(error));
         yield put(getPackingMaterialsFailure(error));
     }
   }
@@ -228,10 +199,8 @@ export function* createCarConditionSaga(
   export function* deletePackingListItemSaga(action: PayloadAction<string>) {
     try {
         const response: IDeletePackingListItemResponse = yield call(OrderService.DeletePackingListItemService, action.payload);
-        console.log('deletePackingListItemSaga-response----', JSON.stringify(response));
         yield put(deletePackingMaterialItemSuccess(response));
     } catch (error) {
-        console.log('deletePackingListItemSaga-error----', JSON.stringify(error));
         yield put(deletePackingMaterialItemFailure(error));
     }
   }
@@ -244,13 +213,8 @@ export function* createCarConditionSaga(
         OrderService.CreateBiltyService,
         action.payload,
       );
-      console.log(
-        'createBiltySaga-response----',
-        JSON.stringify(response),
-      );
       yield put(createBiltySuccess(response));
     } catch (error) {
-      console.log('createBiltySaga-error----', JSON.stringify(error));
       yield put(createBiltyFailure(error));
     }
   }
@@ -258,10 +222,8 @@ export function* createCarConditionSaga(
   export function* getBiltyListSaga(action: PayloadAction<string>) {
     try {
         const response: IGetBiltyListResponse = yield call(OrderService.GetBiltyListService, action.payload);
-        console.log('getBiltyListSaga-response----', JSON.stringify(response));
         yield put(getBiltyListSuccess(response));
     } catch (error) {
-        console.log('getBiltyListSaga-error----', JSON.stringify(error));
         yield put(getBiltyListFailure(error));
     }
   }
@@ -270,10 +232,8 @@ export function* createCarConditionSaga(
     try {
         const {templateId, docId} = action.payload;
         const response: IHtmlTemplateResponse = yield call(OrderService.GetMoneyReceiptTemplateHtmlService, templateId, docId);
-        console.log('getMoneyReceiptTemplateHtmlSaga-response----', JSON.stringify(response));
         yield put(getMoneyReceiptHtmlSuccess(response));
     } catch (error) {
-        console.log('getMoneyReceiptTemplateHtmlSaga-error----', JSON.stringify(error));
         yield put(getMoneyReceiptHtmlFailure(error));
     }
   }
@@ -282,10 +242,8 @@ export function* createCarConditionSaga(
     try {
         const {templateId, docId} = action.payload;
         const response: IHtmlTemplateResponse = yield call(OrderService.GetBiltyTemplateHtmlService, templateId, docId);
-        console.log('getMoneyReceiptTemplateHtmlSaga-response----', JSON.stringify(response));
         yield put(getBiltyHtmlSuccess(response));
     } catch (error) {
-        console.log('getMoneyReceiptTemplateHtmlSaga-error----', JSON.stringify(error));
         yield put(getBiltyHtmlFailure(error));
     }
   }
@@ -294,10 +252,8 @@ export function* createCarConditionSaga(
     try {
         const {templateId, docId} = action.payload;
         const response: IHtmlTemplateResponse = yield call(OrderService.GetCarConditionTemplateHtmlService, templateId, docId);
-        console.log('getCarConditionTemplateHtmlSaga-response----', JSON.stringify(response));
         yield put(getCarConditionHtmlSuccess(response));
     } catch (error) {
-        console.log('getCarConditionTemplateHtmlSaga-error----', JSON.stringify(error));
         yield put(getCarConditionHtmlFailure(error));
     }
   }
@@ -305,10 +261,8 @@ export function* createCarConditionSaga(
   export function* createInvoiceSaga(action: PayloadAction<ICreateInvoiceRequest>) {
     try {
         const response: ICreateInvoiceResponse = yield call(OrderService.CreateInvoiceService, action.payload);
-        console.log('createInvoiceSaga-response----', JSON.stringify(response));
         yield put(createInvoiceSuccess(response));
     } catch (error) {
-        console.log('createInvoiceSaga-error----', JSON.stringify(error));
         yield put(createInvoiceFailure(error));
     }
   }
@@ -316,10 +270,8 @@ export function* createCarConditionSaga(
   export function* getInvoiceListSaga(action: PayloadAction<string>) {
     try {
         const response: IGetInvoiceListResponse = yield call(OrderService.GetInvoiceListService, action.payload);
-        console.log('getInvoiceListSaga-response----', JSON.stringify(response));
         yield put(getInvoiceListSuccess(response));
     } catch (error) {
-        console.log('getInvoiceListSaga-error----', JSON.stringify(error));
         yield put(getInvoiceListFailure(error));
     }
   }
@@ -328,10 +280,8 @@ export function* createCarConditionSaga(
     try {
         const {templateId, docId} = action.payload;
         const response: IHtmlTemplateResponse = yield call(OrderService.GetInvoiceTemplateHtmlService, templateId, docId);
-        console.log('getInvoiceTemplateHtmlSaga-response----', JSON.stringify(response));
         yield put(getInvoiceHtmlSuccess(response));
     } catch (error) {
-        console.log('getInvoiceTemplateHtmlSaga-error----', JSON.stringify(error));
         yield put(getInvoiceHtmlFailure(error));
     }
   }

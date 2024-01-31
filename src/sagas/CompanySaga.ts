@@ -24,25 +24,19 @@ import { IGetCompaniesResponse } from '../interface/companyRegistration/IGetComp
 import { ICompanyEditRequest, ICompanyEditResponse } from '../interface/companyRegistration/ICompanyEditRequest';
 
 export function* addCompanySaga(action: PayloadAction<ICompanyRegistrationRequest>) {
-    console.log('addCompanySaga--action--', JSON.stringify(action));
     try {
         const response: ICompanyRegistrationResponse = yield call(CompanyService.AddCompanyService, action.payload);
-        console.log('addCompanySaga-response----', JSON.stringify(response));
         yield put(addCompanySuccess(response));
     } catch (error) {
-        console.log('addCompanySaga-error----', error);
         yield put(addCompanyFailure(error));
     }
 }
 
 export function* editCompanySaga(action: PayloadAction<ICompanyEditRequest>) {
-    console.log('editCompanySaga--action--', JSON.stringify(action));
     try {
         const response: ICompanyEditResponse = yield call(CompanyService.EditCompanyService, action.payload);
-        console.log('editCompanySaga-response----', JSON.stringify(response));
         yield put(editCompanySuccess(response));
     } catch (error) {
-        console.log('editCompanySaga-error----', error);
         yield put(editCompanyFailure(error));
     }
 }
@@ -51,10 +45,8 @@ export function* editCompanySaga(action: PayloadAction<ICompanyEditRequest>) {
 export function* getCompaniesSaga(action: PayloadAction<string>) {
     try {
         const response: IGetCompaniesResponse = yield call(CompanyService.GetCompaniesService, action.payload);
-        console.log('getCompaniesSaga-response----', JSON.stringify(response));
         yield put(getCompaniesSuccess(response));
     } catch (error) {
-        console.log('getCompaniesSaga-error----', error);
         yield put(getCompaniesFailure(error));
     }
 }
@@ -63,23 +55,18 @@ export function* uploadCompanyLogoSaga(action: PayloadAction<any>) {
     try {
         //@ts-ignore
         const response: any = yield call(CompanyService.UploadCompanyLogoService, action.payload);
-        console.log('uploadCompanyLogoSaga-response----', JSON.stringify(response));
         yield put(uploadCompanyLogoSuccess(response));
     } catch (error) {
-        console.log('uploadCompanyLogoSaga-error----', error);
         yield put(uploadCompanyLogoFailure(error));
     }
 }
 
 export function* uploadSignatureSaga(action: PayloadAction<any>) {
-    console.log('uploadSignatureSaga-action----', JSON.stringify(action));
     try {
         //@ts-ignore
         const response: any = yield call(CompanyService.UploadSignatureService, action.payload);
-        console.log('uploadSignatureSaga-response----', JSON.stringify(response));
         yield put(uploadSignatureSuccess(response));
     } catch (error) {
-        console.log('uploadSignatureSaga-error----', JSON.stringify(error));
         yield put(uploadSignatureFailure(error));
     }
 }

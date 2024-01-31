@@ -103,49 +103,10 @@ const PackingMaterialListView: React.FC<IProps> = ({route, navigation}) => {
     );
   };
 
-  const renderHeaderComponent = (data: IPackingMaterial | null) => {
-    if (_getPackingMaterials().length == 0) return null;
-    return (
-      <>
-        <View style={styles.packingInfoContainer}>
-          <View style={styles.infoContainer}>
-            <Text style={styles.infoValueText}>
-              <Text style={styles.infoLabelText}>Date:</Text>
-              {`  ${formatDate5(new Date())}`}
-            </Text>
-          </View>
-          <View style={styles.infoContainer}>
-            <Text style={styles.infoValueText}>
-              <Text style={styles.infoLabelText}>ID:</Text>
-              {`  ${data?.enquiryId}`}
-            </Text>
-          </View>
-          <View style={styles.infoContainer}>
-            <Text style={styles.infoValueText}>
-              <Text style={styles.infoLabelText}>Prepared By:</Text>
-              {`  Admin`}
-            </Text>
-          </View>
-        </View>
-        <View style={styles.headerContainer}>
-          <View style={styles.itemNameContainer}>
-            <Text style={styles.headerTitleText}>Material Name</Text>
-          </View>
-          <View style={styles.itemQuantityContainer}>
-            <Text style={styles.headerTitleText}>Quantity</Text>
-          </View>
-          <View style={styles.itemUnitContainer}>
-            <Text style={styles.headerTitleText}>Units</Text>
-          </View>
-        </View>
-      </>
-    );
-  };
-
   const _renderEmptyView = () => {
     return (
       <View style={styles.emptyContainer}>
-        <Text>No Packing Materials Prepared</Text>
+        <Text style={styles.text}>No Packing Materials Prepared</Text>
       </View>
     );
   };

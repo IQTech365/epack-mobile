@@ -10,7 +10,6 @@ import { IGetDriverResponse } from '../interface/vehicle/IGetDriverReuest';
 import { IGetVehicleSizeResponse } from '../interface/vehicle/IGetVehicleSizeResponse';
 
 export const AddLorryService = async (payload: IAddLorryRequest): Promise<IAddLorryResponse> => {
-    console.log('AddLorryService--payload--', JSON.stringify(payload));
     const api = Api.getInstance();
     return await api.post<IAddLorryRequest, AxiosResponse<IAddLorryResponse>>(payload, ADD_LORRY);
 }
@@ -21,7 +20,6 @@ export const GetLorryService = async (payload: string): Promise<IGetLorryRespons
 }
 
 export const addDriverService = async (payload: IAddDriverRequest): Promise<IAddDriverResponse> => {
-    console.log('addDriverService--payload--', JSON.stringify(payload));
     const api = Api.getInstance();
     return await api.post<IAddDriverRequest, AxiosResponse<IAddDriverResponse>>(payload, ADD_DRIVER);
 }

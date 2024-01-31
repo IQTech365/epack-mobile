@@ -10,49 +10,37 @@ import { IAddFranchiseResponse } from '../interface/myProfile/IAddFranchiseRespo
 import { IGetFranchiseResponse } from '../interface/myProfile/IGetFranchiseResponse';
 
 export function* addBranchSaga(action: PayloadAction<IAddBranchRequest>) {
-    console.log('addBranchSaga--action--', JSON.stringify(action));
     try {
         const response: IAddBranchResponse = yield call(MyProfileService.AddBranchService, action.payload);
-        console.log('addBranchSaga-response----', JSON.stringify(response));
         yield put(addBranchSuccess(response));
     } catch (error) {
-        console.log('addBranchSaga-error----', error);
         yield put(addBranchFailure(JSON.stringify(error)));
     }
 }
 
 export function* getBranchSaga(action: PayloadAction<string>) {
-    console.log('getBranchSaga--action--', JSON.stringify(action));
     try {
         const response: IGetBranchsResponse = yield call(MyProfileService.GetBranchService, action.payload);
-        console.log('getBranchSaga-response----', JSON.stringify(response));
         yield put(getBranchsSuccess(response));
     } catch (error) {
-        console.log('getBranchSaga-error----', error);
         yield put(getBranchFailure(JSON.stringify(error)));
     }
 }
 
 export function* addFranchiseSaga(action: PayloadAction<IAddFranchiseRequest>) {
-    console.log('addFranchiseSaga--action--', JSON.stringify(action));
     try {
         const response: IAddFranchiseResponse = yield call(MyProfileService.AddFranchiseService, action.payload);
-        console.log('addFranchiseSaga-response----', JSON.stringify(response));
         yield put(addFranchiseSuccess(response));
     } catch (error) {
-        console.log('addFranchiseSaga-error----', error);
         yield put(addFranchiseFailure(JSON.stringify(error)));
     }
 }
 
 export function* getFranchiseSaga(action: PayloadAction<string>) {
-    console.log('getFranchiseSaga--action--', JSON.stringify(action));
     try {
         const response: IGetFranchiseResponse = yield call(MyProfileService.GetFranchiseService, action.payload);
-        console.log('getFranchiseSaga-response----', JSON.stringify(response));
         yield put(getFranchiseSuccess(response));
     } catch (error) {
-        console.log('getFranchiseSaga-error----', error);
         yield put(getFranchiseFailure(JSON.stringify(error)));
     }
 }

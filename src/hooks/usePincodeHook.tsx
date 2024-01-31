@@ -46,7 +46,6 @@ const usePincodeHook = (setError: () => void, resetError: () => void) => {
       }
     } catch (error) {
       setFetching(false);
-      console.log('error----', error);
     }
   };
 

@@ -29,7 +29,6 @@ export abstract class HttpClient {
       config.headers['platform'] = 'mobile';
     }
     const authToken = await getAuthToken();
-    console.log('authToken----', authToken);
     if(authToken) {
       //@ts-ignore
       config.headers['token'] = authToken;

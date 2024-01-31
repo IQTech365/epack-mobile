@@ -31,8 +31,6 @@ const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
   const dispatch = useAppDispatch();
   const {enquiry, getEnquiryRequesting} = useAppSelector(state => state.Enquiry);
   const {data} = enquiry || {};
-  console.log('Single Enquiry-enquiryId--', enquiryId);
-  console.log('Single Enquiry-data--', JSON.stringify(data));
 
   const toastConfig = {
     success: (props: any) => (

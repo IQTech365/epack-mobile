@@ -190,7 +190,6 @@ const RoleManagementView: React.FC<{}> = ({}) => {
         permissions: permissions,
         createdBy: otpData?.data.id as string,
       };
-      console.log('add-role-payload--', JSON.stringify(payload));
       dispatch(addUserRoleRequest(payload));
     }).catch(err => console.log(err));
   };

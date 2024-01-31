@@ -19,8 +19,6 @@ interface IShiftingDetailsViewProps {
 
 const ShiftingDetailsView: React.FC<IShiftingDetailsViewProps> = ({item}) => {
   const {orders, getOrdersRequesting} = useAppSelector(state => state.Order);
-  console.log('ShiftingDetailsView--orders--', JSON.stringify(orders));
-
   const dispatch = useAppDispatch();
 
   const _fetchOrders = () => {

@@ -106,7 +106,6 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
         upiId:upiId,
         createdBy:authId,
       }
-      console.log('payment method-payload--', JSON.stringify(payload));
       dispatch(addPaymentMethodRequest(payload));
     }).catch(err => console.log(err));
   };

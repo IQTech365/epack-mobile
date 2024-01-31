@@ -27,37 +27,28 @@ import { ICreateSerialNoRequest, ICreateSerialNoResponse, IGetSerialNoRequest, I
 import { IDeleteContactResponse, IDeleteFooterContentResponse } from '../interface/setting/packerProfile/contact';
 
 export function* addFooterContentSaga(action: PayloadAction<IAddFooterContentRequest>) {
-    console.log('addFooterContentSaga--action--', JSON.stringify(action));
     try {
         const response: IAddFooterContentResponse = yield call(SettingService.AddFooterContentService, action.payload);
-        console.log('addFooterContentSaga-response----', JSON.stringify(response));
         yield put(addFooterContentSuccess(response));
     } catch (error) {
-        console.log('addFooterContentSaga-error----', error);
         yield put(addFooterContentFailure(JSON.stringify(error)));
     }
 }
 
 export function* getFooterContentsSaga(action: PayloadAction<string>) {
-    console.log('getFooterContentsSaga--action--', JSON.stringify(action));
     try {
         const response: IGetFooterContentsResponse = yield call(SettingService.GetFooterContentsService, action.payload);
-        console.log('getFooterContentsSaga-response----', JSON.stringify(response));
         yield put(getFooterContentsSuccess(response));
     } catch (error) {
-        console.log('getFooterContentsSaga-error----', error);
         yield put(getFooterContentsFailure(JSON.stringify(error)));
     }
 }
 
 export function* deleteFooterContentSaga(action: PayloadAction<string>) {
-    console.log('deleteFooterContentSaga--action--', JSON.stringify(action));
     try {
         const response: IDeleteFooterContentResponse = yield call(SettingService.DeleteFooterContentService, action.payload);
-        console.log('deleteFooterContentSaga-response----', JSON.stringify(response));
         yield put(deleteFooterContentSuccess(response));
     } catch (error) {
-        console.log('deleteFooterContentSaga-error----', error);
         yield put(deleteFooterContentFailure(JSON.stringify(error)));
     }
 }
@@ -65,86 +56,65 @@ export function* deleteFooterContentSaga(action: PayloadAction<string>) {
 
 //payemntMethod
 export function* addPaymentMethodSaga(action: PayloadAction<IAddPaymentMethodRequest>) {
-    console.log('addPaymentmethodSaga--action--', JSON.stringify(action));
     try {
         const response: IAddPaymentMethodResponse = yield call(SettingService.AddPaymentMethodService, action.payload);
-        console.log('addPaymentmethodSaga-response----', JSON.stringify(response));
         yield put(addPaymentMethodSuccess(response));
     } catch (error) {
-        console.log('addPaymentmethodSaga-error----', error);
         yield put(addPaymentMethodFailure(JSON.stringify(error)));
     }
 }
 
 export function* getPaymentMethodSaga(action: PayloadAction<IAddPaymentMethodRequest>) {
-    console.log('getPaymentMethodSaga--action--', JSON.stringify(action));
     try {
         const response: IGetPaymentMethodsResponse = yield call(SettingService.GetPaymentMethodService, action.payload);
-        console.log('getPaymentMethodSaga-response----', JSON.stringify(response));
         yield put(getPaymentMethodsSuccess(response));
     } catch (error) {
-        console.log('getPaymentMethodSaga-error----', error);
         yield put(getPaymentMethodsFailure(JSON.stringify(error)));
     }
 }
 
 //contact detail
 export function* addContactDetailSaga(action: PayloadAction<IAddContactDetailRequest>) {
-    console.log('addContactDetailSaga--action--', JSON.stringify(action));
     try {
         const response: IAddContactDetailResponse = yield call(SettingService.AddContactDetailService, action.payload);
-        console.log('addContactDetailSaga-response----', JSON.stringify(response));
         yield put(addContactSuccess(response));
     } catch (error) {
-        console.log('addContactDetailSaga-error----', error);
         yield put(addContactFailure(JSON.stringify(error)));
     }
 }
 
 export function* getContactDetailsSaga(action: PayloadAction<string>) {
-    console.log('getContactDetailsSaga--action--', JSON.stringify(action));
     try {
         const response: IGetContactDetailsResponse = yield call(SettingService.GetContactDetailsService, action.payload);
-        console.log('getContactDetailsSaga-response----', JSON.stringify(response));
         yield put(getContactsSuccess(response));
     } catch (error) {
-        console.log('getContactDetailsSaga-error----', error);
         yield put(getContactsFailure(JSON.stringify(error)));
     }
 }
 
 export function* deleteContactDetailSaga(action: PayloadAction<string>) {
-    console.log('deleteContactDetailSaga--action--', JSON.stringify(action));
     try {
         const response: IDeleteContactResponse = yield call(SettingService.DeleteContactDetailService, action.payload);
-        console.log('deleteContactDetailSaga-response----', JSON.stringify(response));
         yield put(deleteContactSuccess(response));
     } catch (error) {
-        console.log('deleteContactDetailSaga-error----', error);
         yield put(deleteContactFailure(JSON.stringify(error)));
     }
 }
 
 export function* addCompanyDocumentSaga(action: PayloadAction<IAddDocumentRequest>) {
-    console.log('addCompanyDocumentSaga--action--', JSON.stringify(action));
     try {
         const response: IAddDocumentResponse = yield call(SettingService.AddCompanyDocumentService, action.payload);
-        console.log('addCompanyDocumentSaga-response----', JSON.stringify(response));
         yield put(addDocumentSuccess(response));
     } catch (error) {
-        console.log('addCompanyDocumentSaga-error----', error);
         yield put(addDocumentFailure(JSON.stringify(error)));
     }
 }
 
 export function* getCompanyDocumentsSaga(action: PayloadAction<string>) {
-    console.log('getCompanyDocumentsSaga--action--', JSON.stringify(action));
     try {
         const response: IGetDocumentsResponse = yield call(SettingService.GetCompanyDocumentsService, action.payload);
-        console.log('getCompanyDocumentsSaga-response----', JSON.stringify(response));
         yield put(getDocumentsSuccess(response));
     } catch (error) {
-        console.log('getCompanyDocumentsSaga-error----', error);
         yield put(getDocumentsFailure(JSON.stringify(error)));
     }
 }
@@ -152,10 +122,8 @@ export function* getCompanyDocumentsSaga(action: PayloadAction<string>) {
 export function* addUserRoleSaga(action: PayloadAction<IAddUserRoleRequest>) {
     try {
         const response: IAddUserRoleResponse = yield call(SettingService.AddUserRoleService, action.payload);
-        console.log('addUserRoleSaga-response----', JSON.stringify(response));
         yield put(addUserRoleSuccess(response));
     } catch (error) {
-        console.log('addUserRoleSaga-error----', error);
         yield put(addUserRoleFailure(JSON.stringify(error)));
     }
 }
@@ -163,10 +131,8 @@ export function* addUserRoleSaga(action: PayloadAction<IAddUserRoleRequest>) {
 export function* checkUsernameAvailabilitySaga(action: PayloadAction<ICheckUsernameAvailablilityRequest>) {
     try {
         const response: ICheckUsernameAvailablilityResponse = yield call(SettingService.CheckUsernameAvailabilityService, action.payload);
-        console.log('checkUsernameAvailabilitySaga-response----', JSON.stringify(response));
         yield put(checkUsernameAvailabilitySuccess(response));
     } catch (error) {
-        console.log('checkUsernameAvailabilitySaga-error----', error);
         yield put(checkUsernameAvailabilityFailure(JSON.stringify(error)));
     }
 }
@@ -174,10 +140,8 @@ export function* checkUsernameAvailabilitySaga(action: PayloadAction<ICheckUsern
 export function* getRoleTypesSaga(action: PayloadAction) {
     try {
         const response: IRoleTypeResponse = yield call(SettingService.GetRoleTypesService);
-        console.log('getRoleTypesSaga-response----', JSON.stringify(response));
         yield put(getRoleTypesSuccess(response));
     } catch (error) {
-        console.log('getRoleTypesSaga-error----', error);
         yield put(getRoleTypesFailure(JSON.stringify(error)));
     }
 }
@@ -185,10 +149,8 @@ export function* getRoleTypesSaga(action: PayloadAction) {
 export function* getSubmodulesSaga(action: PayloadAction) {
     try {
         const response: ISubmoduleResponse = yield call(SettingService.GetSubmodulesService);
-        console.log('getSubmodulesSaga-response----', JSON.stringify(response));
         yield put(getSubmodulesSuccess(response));
     } catch (error) {
-        console.log('getSubmodulesSaga-error----', error);
         yield put(getSubmodulesFailure(JSON.stringify(error)));
     }
 }
@@ -196,10 +158,8 @@ export function* getSubmodulesSaga(action: PayloadAction) {
 export function* createSerialNoSaga(action: PayloadAction<ICreateSerialNoRequest>) {
     try {
         const response: ICreateSerialNoResponse = yield call(SettingService.CreateSerialNoService, action.payload);
-        console.log('createSerialNoSaga-response----', JSON.stringify(response));
         yield put(createSerialNoSuccess(response));
     } catch (error) {
-        console.log('createSerialNoSaga-error----', error);
         yield put(createSerialNoFailure(JSON.stringify(error)));
     }
 }
@@ -207,10 +167,8 @@ export function* createSerialNoSaga(action: PayloadAction<ICreateSerialNoRequest
 export function* getSerialNoSaga(action: PayloadAction<IGetSerialNoRequest>) {
     try {
         const response: IGetSerialNoResponse = yield call(SettingService.GetSerialNoService, action.payload);
-        console.log('getSerialNoSaga-response----', JSON.stringify(response));
         yield put(getSerialNoSuccess(response));
     } catch (error) {
-        console.log('getSerialNoSaga-error----', error);
         yield put(getSerialNoFailure(JSON.stringify(error)));
     }
 }
@@ -218,10 +176,8 @@ export function* getSerialNoSaga(action: PayloadAction<IGetSerialNoRequest>) {
 export function* getModulesSaga(action: PayloadAction) {
     try {
         const response: IGetModulesResponse = yield call(SettingService.GetModulesService);
-        // console.log('getModulesSaga-response----', JSON.stringify(response));
         yield put(getModulesSuccess(response));
     } catch (error) {
-        console.log('getModulesSaga-error----', error);
         yield put(getModulesFailure(JSON.stringify(error)));
     }
 }
@@ -229,10 +185,8 @@ export function* getModulesSaga(action: PayloadAction) {
 export function* getUnitTypeSaga(action: PayloadAction) {
     try {
         const response: IGetUnitTypeResponse = yield call(SettingService.GetUnitTypeService);
-        console.log('getUnitTypeSaga-response----', JSON.stringify(response));
         yield put(getUnitTypeSuccess(response));
     } catch (error) {
-        console.log('getUnitTypeSaga-error----', error);
         yield put(getUnitTypeFailure(JSON.stringify(error)));
     }
 }
@@ -240,10 +194,8 @@ export function* getUnitTypeSaga(action: PayloadAction) {
 export function* getTemplateListSaga(action: PayloadAction) {
     try {
         const response: ITemplateListResponse = yield call(SettingService.GetTemplateListService);
-        console.log('getTemplateListSaga-response----', JSON.stringify(response));
         yield put(getTemplateListSuccess(response));
     } catch (error) {
-        console.log('getTemplateListSaga-error----', error);
         yield put(getTemplateListFailure(JSON.stringify(error)));
     }
 }
@@ -251,10 +203,8 @@ export function* getTemplateListSaga(action: PayloadAction) {
 export function* saveDocumentTemplateIdSaga(action: PayloadAction<ISaveDocumentTemplateIdPayload>) {
     try {
         const response: ISaveDocumentTemplateIdResponse = yield call(SettingService.SaveDocumentTemplateIdService, action.payload);
-        console.log('saveDocumentTemplateIdSaga-response----', JSON.stringify(response));
         yield put(saveDocumentTemplateIdSuccess(response));
     } catch (error) {
-        console.log('saveDocumentTemplateIdSaga-error----', error);
         yield put(saveDocumentTemplateIdFailure(JSON.stringify(error)));
     }
 }
@@ -262,10 +212,8 @@ export function* saveDocumentTemplateIdSaga(action: PayloadAction<ISaveDocumentT
 export function* getSavedDocumentTemplateIdListSaga(action: PayloadAction<string>) {
     try {
         const response: ISavedDocumentTemplateIdResponse = yield call(SettingService.GetSavedTemplateIdListService, action.payload);
-        console.log('getSavedDocumentTemplateIdListSaga-response----', JSON.stringify(response));
         yield put(getSavedDocumentTemplateIdListSuccess(response));
     } catch (error) {
-        console.log('getSavedDocumentTemplateIdListSaga-error----', error);
         yield put(getSavedDocumentTemplateIdListFailure(JSON.stringify(error)));
     }
 }

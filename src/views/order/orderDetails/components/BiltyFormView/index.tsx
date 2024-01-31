@@ -41,8 +41,6 @@ interface IBiltyFormViewProps {
 
 const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
   const {state} = useBiltyFormContextHook();
-  console.log('BiltyForm-state----', JSON.stringify(state));
-  
   const dispatch = useAppDispatch();
 
   const {

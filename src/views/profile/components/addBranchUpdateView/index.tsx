@@ -123,7 +123,6 @@ const AddBranchUpdateView: React.FC<{}> = ({}) => {
         address: state.address,
         createdBy: otpData?.data.id as string,
       };
-      console.log(payload, 'add branch..');
       dispatch2(addBranchRequest(payload));
     }).catch(err => console.log(err));
     

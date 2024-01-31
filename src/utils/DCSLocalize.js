@@ -18,7 +18,6 @@ const LANGUAGE_DETECTOR = {
           console.log('No language is set, choosing English as fallback');
         }
         const findBestAvailableLanguage = RNLocalize?.findBestAvailableLanguage(LANG_CODES);
-        console.log('findBestAvailableLanguage---', JSON.stringify(findBestAvailableLanguage));
         callback(findBestAvailableLanguage?.languageTag || 'en');
         return;
       }

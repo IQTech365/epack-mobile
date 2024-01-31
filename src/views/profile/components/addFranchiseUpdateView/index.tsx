@@ -144,7 +144,6 @@ const AddFranchiseUpdateView: React.FC<{}> = ({}) => {
         address: state.address,
         createdBy: otpData?.data.id as string,
       };
-      console.log(payload, 'add Franchise..');
       dispatch2(addFranchiseRequest(payload));
     }).catch(err => console.log(err));
   }, [state]);

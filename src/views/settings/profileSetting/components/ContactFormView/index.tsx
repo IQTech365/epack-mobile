@@ -104,7 +104,6 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
   }
 
   const handleContactDetail = (item: TDropdownItem) => {
-    console.log(item.label, 'lll');
     setContactType(item.label);
   };
 
@@ -120,7 +119,6 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
           otherTitle: '',
           createdBy: authId,
         }
-        console.log('Contact-payload--', JSON.stringify(payload));
         dispatch(addContactRequest(payload));
       }).catch(err => console.log(err));
     } else if(contactNumber == '') {

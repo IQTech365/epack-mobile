@@ -36,7 +36,6 @@ const SingleChargeInputView: React.FC<Props> = ({freightType}) => {
       const {item} = state;
       if(item) {
         const quotationfreight:IQuotationFreight = item.quotationfreights;
-        console.log('quotationfreight----', JSON.stringify(quotationfreight));
         if(quotationfreight) {
           setFreightPartCharge(quotationfreight.partLoadCharge);
           setPackingChargePartLoad(quotationfreight.packagingPartLoadCharges);

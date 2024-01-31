@@ -21,8 +21,6 @@ const FreightOtherChargesView: React.FC<Props> = ({}) => {
   const [amount, setAmount] = useState<string>('');
   const [hsnCode, setHsnCode] = useState<string>('');
 
-  // console.log('FreightOtherChargesView--', JSON.stringify(otherItems));
-
   const particularNameCompRef = useRef(null);
   const quantityCompRef = useRef(null);
   const ratePerItemCompRef = useRef(null);
