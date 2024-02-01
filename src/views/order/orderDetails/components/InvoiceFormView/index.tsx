@@ -76,6 +76,24 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item}) => {
     return order;
   };
 
+  const _getShiftingLuggageOptions = ():TDropdownItem[] => {
+    let options:TDropdownItem[] = [];
+    const order:ISingleEnquiryData = getSingleOrder();
+    if(order) {
+      const {shiftingLuggage} = order;
+      if(shiftingLuggage && shiftingLuggage.length > 0) {
+        options = shiftingLuggage.map((d:string) => {
+          const option:TDropdownItem = {
+            label:d,
+            value:d
+          }
+          return option;
+        });
+      }
+    }
+    return options
+  }
+
   const _getSerialNoRequest = () => {
     getCurrentCompanyId().then(id => {
       const payload: IGetSerialNoRequest = {
@@ -296,7 +314,7 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item}) => {
               <View style={styles.itemContainer}>
                 <Label text="Shifting Luggage" style={styles.label} />
                 <DropdownComponent
-                  data={shiftingLuggages}
+                  data={_getShiftingLuggageOptions()}
                   onSelect={(item:TDropdownItem) => {
                     setShiftingLuggage(item.label);
                   }}

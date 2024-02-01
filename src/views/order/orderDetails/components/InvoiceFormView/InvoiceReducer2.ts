@@ -6,6 +6,7 @@ import {
   loadTypeOptions,
   loadingChargeOptions,
   pickupChargeOptions,
+  transitInsuranceOptions,
   unloadingChargeOptions,
 } from './utils';
 
@@ -279,11 +280,11 @@ export const initialState: State = {
   gst_type: '',
   gst_paid_by: '',
   // **** Insurace ****
-  transit_insurance: '',
+  transit_insurance: transitInsuranceOptions[1],
   transit_insurance_type: '',
   transit_charges: [],
   // **** Storage ****
-  storage: '',
+  storage: transitInsuranceOptions[1],
   storage_duration: '',
   storage_from_date: '',
   storage_to_date: '',

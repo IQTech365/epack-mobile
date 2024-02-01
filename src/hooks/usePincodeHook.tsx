@@ -50,7 +50,7 @@ const usePincodeHook = (setError: () => void, resetError: () => void) => {
   };
 
   useEffect(() => {
-    if (pincode.length >= 6) {
+    if (pincode && pincode.length >= 6) {
       getAddressByPincode();
     }
   }, [pincode]);

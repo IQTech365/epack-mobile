@@ -48,6 +48,7 @@ const InvoiceToCompanyView: React.FC<Props> = () => {
   const empDesigInputRef = useRef(null);
   const companyGstInputRef = useRef(null);
   const pincodeInputRef = useRef(null);
+  const companyAddInputRef = useRef(null);
 
   const [states, setStates] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
@@ -85,7 +86,7 @@ const InvoiceToCompanyView: React.FC<Props> = () => {
       empDesigInputRef &&
       companyGstInputRef && 
       cityDropdownRef && 
-      stateDropdownRef
+      stateDropdownRef 
     ) {
       const singleOrder:ISingleEnquiryData = getSingleOrder();
       if(singleOrder) {
@@ -127,11 +128,13 @@ const InvoiceToCompanyView: React.FC<Props> = () => {
         companyGstInputRef && companyGstInputRef?.current?.setValue(billingInfo?.companyGST);
         setCompanyGST(billingInfo?.companyGST);
 
-        if(billingInfo) {
-          //@ts-ignore
-          pincodeInputRef && pincodeInputRef?.current?.setValue(billingInfo?.pincode);
-          handlePincodeChange(billingInfo?.pincode);
-        }
+        //@ts-ignore
+        pincodeInputRef && pincodeInputRef?.current?.setValue(billingInfo?.pincode);
+        handlePincodeChange(billingInfo?.pincode);
+
+        //@ts-ignore
+        companyAddInputRef && companyAddInputRef?.current?.setValue(billingInfo?.companyAddress);
+        setCompanyAddress(billingInfo?.companyAddress);
       }
     }
     }
@@ -289,6 +292,8 @@ const InvoiceToCompanyView: React.FC<Props> = () => {
               selectionColor={COLOR_BLACK}
               placeholder='Enter address'
               placeholderTextColor={COLOR_GRAY4}
+              //@ts-ignore
+              ref={companyAddInputRef}
             />
           </View>
           <Spacer height={4} />
@@ -302,6 +307,7 @@ const InvoiceToCompanyView: React.FC<Props> = () => {
                 selectionColor={COLOR_BLACK}
                 placeholder="Enter Pincode"
                 placeholderTextColor={COLOR_GRAY4}
+                value={state.pincode}
                 //@ts-ignore
                 ref={pincodeInputRef}
               />
