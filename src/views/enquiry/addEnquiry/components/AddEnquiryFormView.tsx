@@ -94,6 +94,9 @@ const AddEnquiryFormView: React.FC<IProps> = ({navigation}) => {
                 employeeName: state.employee_name,
                 employeeDesignation: state.employee_designation,
                 employeeMobile: state.employee_mobile_no,
+                companyPincode: state.company_pincode,
+                companyState: state.company_state,
+                companyCity: state.company_city,
               }
             : {},
         status: 'NEW',

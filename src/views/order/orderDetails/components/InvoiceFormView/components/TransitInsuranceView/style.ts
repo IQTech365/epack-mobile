@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: '100%',
-    borderColor: COLOR_GRAY2,
+    borderColor: COLOR_GRAY,
     paddingLeft: 4,
   },
   input: {

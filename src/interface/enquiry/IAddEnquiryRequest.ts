@@ -30,6 +30,9 @@ interface IBillingInfo {
   employeeName: string;
   employeeDesignation: string;
   employeeMobile: string;
+  state:string;
+  city:string;
+  pincode:string;
 }
 
 export interface IAddEnquiryRequest {

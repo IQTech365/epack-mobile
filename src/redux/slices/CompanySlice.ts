@@ -133,12 +133,13 @@ export const CompanySlice = createSlice({
       state.getCompaniesRequesting = false;
       state.getCompaniesSuccess = false;
       state.getCompaniesFailure = true;
-      state.error = action.payload;
+      state.getCompaniesError = action.payload;
     },
     resetGetCompaniesRequest: (state) => {
       state.getCompaniesRequesting = false;
       state.getCompaniesSuccess = false;
       state.getCompaniesFailure = false;
+      state.getCompaniesError = null;
       state.companies = null;
     },
     // Edit Company

@@ -105,6 +105,7 @@ const FreightInputView: React.FC<Props> = ({label1, label2, freightType}) => {
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
+          inputType="numeric"
         />
       </View>
       <View style={styles.compContainer}>

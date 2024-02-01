@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import {View} from 'react-native';
+import {Text, View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
 import DatePickerComponent from '../../../../../common/DatePickerComponent';
@@ -8,7 +8,7 @@ import Input from '../../../../../common/Input';
 import Label from '../../../../../common/Label';
 import Spacer from '../../../../../common/Spacer';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
-import {COLOR_BLACK, COLOR_BLUE} from '../../../../../utils/colors';
+import {COLOR_BLACK, COLOR_BLUE, COLOR_GRAY4} from '../../../../../utils/colors';
 import styles from './style';
 import shiftingLuggages from '../../../../../data/shiftingLuggage.json';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
@@ -61,10 +61,20 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item}) => {
     setShiftingLuggage,
   } = useInvoiceFormContextHook();
   const dispatch = useAppDispatch();
-  const {createInvoiceRequesting, createInvoiceSuccess, createInvoiceFailure} = useAppSelector(state => state.Order);
+  const {createInvoiceRequesting, createInvoiceSuccess, createInvoiceFailure, order} = useAppSelector(state => state.Order);
+  const {data: orderData} = order || {};
 
   const {initialValue, prefix} = useInitialValueHook('658d3ce2585e3dde644da98c');
   const serialNo:number = useSerialNoHook();
+
+  const getSingleOrder = () => {
+    let order: ISingleEnquiryData;
+    if (orderData && Array.isArray(orderData) && orderData.length > 0) {
+      order = orderData[0];
+    }
+    //@ts-ignore
+    return order;
+  };
 
   const _getSerialNoRequest = () => {
     getCurrentCompanyId().then(id => {
@@ -145,9 +155,9 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item}) => {
       employeeName: state.employee_name,
       employeeDesignation: state.employee_designation,
       employeeMobile: state.employee_mobile_no,
-      state: '',
-      city: '',
-      pincode: '',
+      state: state.state,
+      city: state.city,
+      pincode: state.pincode,
     };
 
     const pickupAddress: IInvoicePickupAddress = {
@@ -158,8 +168,8 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item}) => {
       pincode: state.same_as_client_address ? item.pickupAddress.pincode : state.pincode,
       landmark: '',
       locality: '',
-      floor: '',
-      isLiftAvailable: '',
+      floor: item.pickupAddress.floor,
+      isLiftAvailable: item.pickupAddress.isLiftAvailable,
     };
     const payload: ICreateInvoiceRequest = {
       enquiryId: orderId,
@@ -236,6 +246,7 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item}) => {
 
   useEffect(() => {
     _getSerialNoRequest();
+    setBillingType(getSingleOrder()?.billingBy);
   }, []);
 
   useEffect(() => {
@@ -307,6 +318,8 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item}) => {
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
+                  placeholder='Vehicle#'
+                  placeholderTextColor={COLOR_GRAY4}
                 />
               </View>
               <View style={styles.itemContainer}>
@@ -327,6 +340,8 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item}) => {
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
+                placeholder='Enter Consignment #'
+                  placeholderTextColor={COLOR_GRAY4}
               />
             </View>
           </View>
@@ -335,25 +350,8 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item}) => {
         <CollapsibleView title="BILLING DETAILS" collapsed={true}>
           <View>
             <View style={styles.checkboxContainer}>
-              {billingByOptions.map((option: string, index: number) => (
-                <BouncyCheckbox
-                  key={`${index}`}
-                  size={25}
-                  unfillColor="#FFFFFF"
-                  text={option}
-                  fillColor={COLOR_BLUE}
-                  iconStyle={styles.iconStyle}
-                  innerIconStyle={styles.innerIconStyle}
-                  textStyle={styles.textStyle}
-                  style={styles.style}
-                  textContainerStyle={styles.textContainerStyle}
-                  onPress={(isChecked: boolean) => {
-                    setBillingType(option);
-                  }}
-                  isChecked={state.billing_type == option}
-                  disableBuiltInState={true}
-                />
-              ))}
+              <Text style={styles.billingByLabelText}>Billing Type - </Text>
+              <Text style={styles.billingByValueText}>{getSingleOrder()?.billingBy}</Text>
             </View>
             <Spacer height={20} />
             <View style={styles.elementContainer}>
@@ -374,7 +372,7 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item}) => {
                 disableBuiltInState={true}
               />
             </View>
-            {state.billing_type == billingByOptions[0] ? (
+            {state.billing_type == 'by Individual' ? (
               <InvoiceToIndividualView />
             ) : (
               <InvoiceToCompanyView />

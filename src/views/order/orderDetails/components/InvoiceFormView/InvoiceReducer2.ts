@@ -1,6 +1,8 @@
 import {
   billingByOptions,
+  discountOptions,
   doorDeliveryChargeOptions,
+  gstOptions,
   loadTypeOptions,
   loadingChargeOptions,
   pickupChargeOptions,
@@ -260,7 +262,7 @@ export const initialState: State = {
   unloading_amount: '',
   unloading_hsn: '',
   // **** Unpacking Charge ****
-  unpacking_charge: '',
+  unpacking_charge: unloadingChargeOptions[1],
   unpacking_amount: '',
   unpakcing_hsn: '',
   // **** Other Charges ****
@@ -269,10 +271,10 @@ export const initialState: State = {
   surcharge: '',
   surcharge_percent: '',
   // **** Discount in Invoice ****
-  discount_in_invoice: '',
+  discount_in_invoice: discountOptions[2],
   discount_value_or_percent: '',
   // **** GST on Invoice ****
-  gst_on_invoice: '',
+  gst_on_invoice: gstOptions[0],
   gst_percent: '',
   gst_type: '',
   gst_paid_by: '',

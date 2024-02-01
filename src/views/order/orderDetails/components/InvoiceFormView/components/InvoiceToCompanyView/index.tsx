@@ -3,7 +3,7 @@ import {View} from 'react-native';
 import styles from './style';
 import Label from '../../../../../../../common/Label';
 import Input from '../../../../../../../common/Input';
-import {COLOR_BLACK} from '../../../../../../../utils/colors';
+import {COLOR_BLACK, COLOR_GRAY4} from '../../../../../../../utils/colors';
 import Spacer from '../../../../../../../common/Spacer';
 import EpackDropdown from '../../../../../../../common/DropdownComponent2';
 import DropdownComponent from '../../../../../../../common/DropdownComponent';
@@ -11,8 +11,10 @@ import {approvalAuthorityOptions} from '../../utils';
 import {useInvoiceFormContextHook} from '../../../../../../../provider/InvoiceFormContextProvider';
 import {TDropdownItem} from '../../../../../../../type/TDropdownItem';
 import usePincodeHook from '../../../../../../../hooks/usePincodeHook';
-import { getCities2, getStates2 } from '../../../../../../../utils/formatter';
+import {getCities2, getStates2} from '../../../../../../../utils/formatter';
 import Spinner from '../../../../../../../common/Spinner';
+import { useAppSelector } from '../../../../../../../redux/hooks';
+import { IBillingInfo, ISingleEnquiryData } from '../../../../../../../interface/enquiry/ISingleEnquiryResponse';
 
 interface Props {}
 
@@ -28,14 +30,25 @@ const InvoiceToCompanyView: React.FC<Props> = () => {
     setEmployeeDesignation,
     setEmployeeMobileNo,
     setCompanyAddress,
-    setPincode:setPincode2,
+    setPincode: setPincode2,
     setState,
     setCity,
     setAddress,
   } = useInvoiceFormContextHook();
-
+  const {order} = useAppSelector(state => state.Order);
+  const {data: orderData} = order || {};
   const stateDropdownRef = useRef(null);
   const cityDropdownRef = useRef(null);
+  const companyNameInputRef = useRef(null);
+  const approvalAuthDropdownRef = useRef(null);
+  const authMobileNoInputRef = useRef(null);
+  const authPersonNameInputRef = useRef(null);
+  const empNameInputRef = useRef(null);
+  const empMobileNoInputRef = useRef(null);
+  const empDesigInputRef = useRef(null);
+  const companyGstInputRef = useRef(null);
+  const pincodeInputRef = useRef(null);
+
   const [states, setStates] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
 
@@ -44,6 +57,15 @@ const InvoiceToCompanyView: React.FC<Props> = () => {
     () => {},
   );
 
+  const getSingleOrder = () => {
+    let order: ISingleEnquiryData;
+    if (orderData && Array.isArray(orderData) && orderData.length > 0) {
+      order = orderData[0];
+    }
+    //@ts-ignore
+    return order;
+  };
+
   const handlePincodeChange = useCallback(
     (text: string) => {
       setPincode2(text);
@@ -51,6 +73,70 @@ const InvoiceToCompanyView: React.FC<Props> = () => {
     },
     [state.pincode],
   );
+
+  useEffect(() => {
+    if (
+      companyNameInputRef &&
+      approvalAuthDropdownRef &&
+      authMobileNoInputRef &&
+      authPersonNameInputRef &&
+      empNameInputRef &&
+      empMobileNoInputRef &&
+      empDesigInputRef &&
+      companyGstInputRef && 
+      cityDropdownRef && 
+      stateDropdownRef
+    ) {
+      const singleOrder:ISingleEnquiryData = getSingleOrder();
+      if(singleOrder) {
+        const billingInfo:IBillingInfo = singleOrder.billingDetails as IBillingInfo;
+        console.log('billingInfo--', JSON.stringify(billingInfo));
+        
+        if(billingInfo) {
+        //@ts-ignore
+        companyNameInputRef && companyNameInputRef?.current?.setValue(billingInfo?.companyName);
+        setCompanyName(billingInfo?.companyName);
+
+        const approvalAuthorityItem:TDropdownItem = approvalAuthorityOptions.find((d:TDropdownItem) => d.label == billingInfo?.approvalAuthority) as TDropdownItem;
+        if(approvalAuthorityItem) {
+          //@ts-ignore
+          approvalAuthDropdownRef && approvalAuthDropdownRef?.current?.setDefaultValue(approvalAuthorityItem);
+        }
+
+        //@ts-ignore
+        authMobileNoInputRef && authMobileNoInputRef?.current?.setValue(billingInfo?.authorityPersonMobile);
+        setAuthorityMobileNo(billingInfo?.authorityPersonMobile);
+
+        //@ts-ignore
+        authPersonNameInputRef && authPersonNameInputRef?.current?.setValue(billingInfo?.authorityPersonName);
+        setAuthorityPersonName(billingInfo?.authorityPersonName);
+
+        //@ts-ignore
+        empNameInputRef && empNameInputRef?.current?.setValue(billingInfo?.employeeName);
+        setEmployeeName(billingInfo?.employeeName);
+
+        //@ts-ignore
+        empMobileNoInputRef && empMobileNoInputRef?.current?.setValue(billingInfo?.employeeMobile);
+        setEmployeeMobileNo(billingInfo?.employeeMobile);
+
+        //@ts-ignore
+        empDesigInputRef && empDesigInputRef?.current?.setValue(billingInfo?.employeeDesignation);
+        setEmployeeDesignation(billingInfo?.employeeDesignation);
+
+        //@ts-ignore
+        companyGstInputRef && companyGstInputRef?.current?.setValue(billingInfo?.companyGST);
+        setCompanyGST(billingInfo?.companyGST);
+
+        if(billingInfo) {
+          //@ts-ignore
+          pincodeInputRef && pincodeInputRef?.current?.setValue(billingInfo?.pincode);
+          handlePincodeChange(billingInfo?.pincode);
+        }
+      }
+    }
+    }
+
+  }, []);
 
   useEffect(() => {
     if (result && result.Status != 'Error') {
@@ -85,17 +171,38 @@ const InvoiceToCompanyView: React.FC<Props> = () => {
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
+          placeholder='Enter company name'
+          placeholderTextColor={COLOR_GRAY4}
+          //@ts-ignore
+          ref={companyNameInputRef}
         />
       </View>
       <Spacer height={4} />
-      <View style={styles.fullWidthCompContainer}>
-        <Label text="Approval Authority" style={styles.label} />
-        <DropdownComponent
-          data={approvalAuthorityOptions}
-          onSelect={(item: TDropdownItem) => {
-            setApprovalAuthority(item.label);
-          }}
-        />
+      <View style={styles.halfWidthCompContainer}>
+        <View style={styles.compContainer}>
+          <Label text="Approval Authority" style={styles.label} />
+          <DropdownComponent
+            data={approvalAuthorityOptions}
+            onSelect={(item: TDropdownItem) => {
+              setApprovalAuthority(item.label);
+            }}
+            //@ts-ignore
+            ref={approvalAuthDropdownRef}
+          />
+        </View>
+        <View style={styles.compContainer}>
+          <Label text="Authority Mobile No." style={styles.label} />
+          <Input
+            onChangeText={setAuthorityMobileNo}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+            placeholder="Enter mobile no"
+            placeholderTextColor={COLOR_GRAY4}
+            //@ts-ignore
+            ref={authMobileNoInputRef}
+          />
+        </View>
       </View>
       <Spacer height={4} />
       <View style={styles.fullWidthCompContainer}>
@@ -105,26 +212,10 @@ const InvoiceToCompanyView: React.FC<Props> = () => {
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
-        />
-      </View>
-      <Spacer height={4} />
-      <View style={styles.fullWidthCompContainer}>
-        <Label text="Authority Mobile No." style={styles.label} />
-        <Input
-          onChangeText={setAuthorityMobileNo}
-          containerStyle={styles.inputContainer}
-          inputStyle={styles.input}
-          selectionColor={COLOR_BLACK}
-        />
-      </View>
-      <Spacer height={4} />
-      <View style={styles.fullWidthCompContainer}>
-        <Label text="Company GST" style={styles.label} />
-        <Input
-          onChangeText={setCompanyGST}
-          containerStyle={styles.inputContainer}
-          inputStyle={styles.input}
-          selectionColor={COLOR_BLACK}
+          placeholder="Enter person name"
+          placeholderTextColor={COLOR_GRAY4}
+          //@ts-ignore
+          ref={authPersonNameInputRef}
         />
       </View>
       <Spacer height={4} />
@@ -135,30 +226,71 @@ const InvoiceToCompanyView: React.FC<Props> = () => {
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
+          placeholder="Enter employee name"
+          placeholderTextColor={COLOR_GRAY4}
+          //@ts-ignore
+          ref={empNameInputRef}
         />
       </View>
       <Spacer height={4} />
-      <View style={styles.fullWidthCompContainer}>
-        <Label text="Employee Designation" style={styles.label} />
-        <Input
-          onChangeText={setEmployeeDesignation}
-          containerStyle={styles.inputContainer}
-          inputStyle={styles.input}
-          selectionColor={COLOR_BLACK}
-        />
+
+      <View style={styles.halfWidthCompContainer}>
+        <View style={styles.compContainer}>
+          <Label text="Emp. Mobile No." style={styles.label} />
+          <Input
+            onChangeText={setEmployeeMobileNo}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+            placeholder="Enter mobile no"
+            placeholderTextColor={COLOR_GRAY4}
+            //@ts-ignore
+            ref={empMobileNoInputRef}
+          />
+        </View>
+        <View style={styles.compContainer}>
+          <Label text="Emp. Designation" style={styles.label} />
+          <Input
+            onChangeText={setEmployeeDesignation}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+            placeholder="Enter designation"
+            placeholderTextColor={COLOR_GRAY4}
+            //@ts-ignore
+            ref={empDesigInputRef}
+          />
+        </View>
       </View>
       <Spacer height={4} />
       <View style={styles.fullWidthCompContainer}>
-        <Label text="Employee Mobile No." style={styles.label} />
+        <Label text="Company GST" style={styles.label} />
         <Input
-          onChangeText={setEmployeeMobileNo}
+          onChangeText={setCompanyGST}
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
+          placeholder="Enter GST#"
+          placeholderTextColor={COLOR_GRAY4}
+          //@ts-ignore
+          ref={companyGstInputRef}
         />
       </View>
+      <Spacer height={4} />
       {!state.same_as_client_address ? (
         <>
+        <Spacer height={4} />
+          <View style={styles.fullWidthCompContainer}>
+            <Label text="Company Address" style={styles.label} />
+            <Input
+              onChangeText={setCompanyAddress}
+              containerStyle={styles.inputContainer}
+              inputStyle={styles.input}
+              selectionColor={COLOR_BLACK}
+              placeholder='Enter address'
+              placeholderTextColor={COLOR_GRAY4}
+            />
+          </View>
           <Spacer height={4} />
           <View style={styles.halfWidthCompContainer}>
             <View style={styles.compContainer}>
@@ -168,7 +300,10 @@ const InvoiceToCompanyView: React.FC<Props> = () => {
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
-                placeholder='Enter Pincode'
+                placeholder="Enter Pincode"
+                placeholderTextColor={COLOR_GRAY4}
+                //@ts-ignore
+                ref={pincodeInputRef}
               />
             </View>
             <View style={styles.compContainer}>
@@ -193,16 +328,7 @@ const InvoiceToCompanyView: React.FC<Props> = () => {
               ref={cityDropdownRef}
             />
           </View>
-          <Spacer height={4} />
-          <View style={styles.fullWidthCompContainer}>
-            <Label text="Address" style={styles.label} />
-            <Input
-              onChangeText={setCompanyAddress}
-              containerStyle={styles.inputContainer}
-              inputStyle={styles.input}
-              selectionColor={COLOR_BLACK}
-            />
-          </View>
+          
           <Spinner show={fetching} />
         </>
       ) : null}

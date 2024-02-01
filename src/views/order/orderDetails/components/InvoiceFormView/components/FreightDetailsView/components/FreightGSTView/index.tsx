@@ -47,25 +47,29 @@ const FreightGSTView: React.FC<Props> = ({}) => {
           />
         ))}
       </View>
-      <Spacer height={10} />
-      <View style={styles.fullWidthContainer}>
-        <View style={styles.compContainer}>
-          <DropdownComponent
-            data={gstPercentOptions}
-            onSelect={(item: TDropdownItem) => {
-              setGSTPercent(item.label);
-            }}
-          />
-        </View>
-        <View style={styles.compContainer}>
-          <DropdownComponent
-            data={gstTypeOptions}
-            onSelect={(item: TDropdownItem) => {
-              setGSTType(item.label);
-            }}
-          />
-        </View>
-      </View>
+      {state.gst_on_invoice == gstOptions[0] ? (
+        <>
+          <Spacer height={10} />
+          <View style={styles.fullWidthContainer}>
+            <View style={styles.compContainer}>
+              <DropdownComponent
+                data={gstPercentOptions}
+                onSelect={(item: TDropdownItem) => {
+                  setGSTPercent(item.label);
+                }}
+              />
+            </View>
+            <View style={styles.compContainer}>
+              <DropdownComponent
+                data={gstTypeOptions}
+                onSelect={(item: TDropdownItem) => {
+                  setGSTType(item.label);
+                }}
+              />
+            </View>
+          </View>
+        </>
+      ) : null}
       <Spacer height={15} />
       <View style={styles.container}>
         <Text style={styles.labelText}>GST paid by</Text>

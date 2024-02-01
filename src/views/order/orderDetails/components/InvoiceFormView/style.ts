@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: '100%',
-    borderColor: COLOR_GRAY2,
+    borderColor: COLOR_GRAY,
     paddingLeft: 4,
   },
   input: {
@@ -132,6 +132,16 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR_BLUE,
     borderRadius: 5,
   },
+  billingByLabelText: {
+    color: COLOR_BLACK,
+    fontSize: 16,
+    fontFamily: 'WorkSans-SemiBold',
+  },
+  billingByValueText: {
+    color: COLOR_BLACK,
+    fontSize: 14,
+    fontFamily: 'WorkSand-Medium',
+  }
 });
 
 export default styles;

@@ -3,7 +3,7 @@ import {TouchableOpacity, View} from 'react-native';
 import styles from './style';
 import Label from '../../../../../../../../../common/Label';
 import Input from '../../../../../../../../../common/Input';
-import {COLOR_BLACK} from '../../../../../../../../../utils/colors';
+import {COLOR_BLACK, COLOR_GRAY4} from '../../../../../../../../../utils/colors';
 import Spacer from '../../../../../../../../../common/Spacer';
 import {useInvoiceFormContextHook} from '../../../../../../../../../provider/InvoiceFormContextProvider';
 import PlusIcon from '../../../../../../../../../images/icons/plus_icon.svg';
@@ -90,6 +90,8 @@ const FreightOtherChargesView: React.FC<Props> = ({}) => {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
+              placeholder='Enter particular name'
+              placeholderTextColor={COLOR_GRAY4}
               //@ts-ignore
               ref={particularNameCompRef}
             />
@@ -104,6 +106,9 @@ const FreightOtherChargesView: React.FC<Props> = ({}) => {
                 selectionColor={COLOR_BLACK}
                 //@ts-ignore
                 ref={quantityCompRef}
+                inputType="numeric"
+                placeholder='Enter quantity'
+                placeholderTextColor={COLOR_GRAY4}
               />
             </View>
             <Spacer width={8} />
@@ -116,6 +121,9 @@ const FreightOtherChargesView: React.FC<Props> = ({}) => {
                 selectionColor={COLOR_BLACK}
                 //@ts-ignore
                 ref={ratePerItemCompRef}
+                inputType="numeric"
+                placeholder='Rate per item'
+                placeholderTextColor={COLOR_GRAY4}
               />
             </View>
           </View>
@@ -129,6 +137,9 @@ const FreightOtherChargesView: React.FC<Props> = ({}) => {
                 selectionColor={COLOR_BLACK}
                 //@ts-ignore
                 ref={amountCompRef}
+                inputType="numeric"
+                placeholder='Enter amount'
+                placeholderTextColor={COLOR_GRAY4}
               />
             </View>
             <Spacer width={8} />
@@ -141,6 +152,8 @@ const FreightOtherChargesView: React.FC<Props> = ({}) => {
                 selectionColor={COLOR_BLACK}
                 //@ts-ignore
                 ref={hsnCodeCompRef}
+                placeholder='Enter HSN code'
+                placeholderTextColor={COLOR_GRAY4}
               />
             </View>
           </View>

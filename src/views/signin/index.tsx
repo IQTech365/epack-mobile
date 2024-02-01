@@ -21,7 +21,7 @@ import {AuthStackRoute} from '../../utils/constants';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { setAuthToken, setIsRegistrationComplete, setLoginStatus } from '../../utils/storage';
 import { useAuthContext } from '../../provider/AuthProvider';
-import { getCompaniesRequest } from '../../redux/slices/CompanySlice';
+import { getCompaniesRequest, resetGetCompaniesRequest } from '../../redux/slices/CompanySlice';
 
 const SignInPageView = (props: any) => {
   const {navigation} = props;
@@ -109,6 +109,7 @@ const SignInPageView = (props: any) => {
         navigation.replace(AuthStackRoute.OTPInput);
       }
     } else if (!requesting && error) {
+      dispatch(restGetOtpRequest());
       Alert.alert('Something went wrong. Please try again!');
     }
   }, [requesting, success, failure]);
@@ -124,6 +125,7 @@ const SignInPageView = (props: any) => {
         );
       }
     } else if(!getCompaniesRequesting && getCompaniesFailure) {
+      dispatch(resetGetCompaniesRequest());
       Alert.alert('Error in Getting companies details.');
     }
   }, [getCompaniesRequesting, getCompaniesSuccess, getCompaniesFailure]);

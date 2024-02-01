@@ -8,6 +8,9 @@ export interface BillingDetails {
     employeeName: string;
     employeeDesignation: string;
     employeeMobile: string;
+    state:string;
+    city:string;
+    pincode:string;
 }
 
 export interface PickupAddress {

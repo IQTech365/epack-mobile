@@ -152,8 +152,6 @@ const SubscriptionPlanView = (props: any) => {
     );
   };
 
-  
-
   useEffect(() => {
     dispatch(getSubscriptionPlansRequest());
     dispatch(getModulesRequest());

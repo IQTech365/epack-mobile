@@ -17,14 +17,13 @@ import {
   MenuOption,
   MenuTrigger,
 } from 'react-native-popup-menu';
-import {COLOR_BLACK, COLOR_GRAY, COLOR_GRAY2, COLOR_WHITE} from '../../../../../utils/colors';
+import {COLOR_BLACK, COLOR_GRAY2, COLOR_WHITE} from '../../../../../utils/colors';
 import orderStatusOptions from '../../../../../data/orderStatusOptions.json';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import {
   resetUpdateEnquiryStatusRequest,
   updateEnquiryStatusRequest,
 } from '../../../../../redux/slices/EnquirySlice';
-import Toast from 'react-native-toast-message';
 import {formatDate} from '../../../../../utils/formatter';
 import { IUpdateEnquiryStatusRequest } from '../../../../../interface/enquiry/IUpdateEnquiryStatusRequest';
 import { ISingleEnquiryData } from '../../../../../interface/enquiry/ISingleEnquiryResponse';
@@ -33,6 +32,7 @@ import { getOrdersRequest } from '../../../../../redux/slices/OrderSlice';
 import { NavigationProp } from '@react-navigation/native';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
 import { EventRegister } from 'react-native-event-listeners';
+import { ToastType, showToast } from '../../../../../utils/utility';
 interface IOrderInfoViewProps {
   orderId: string;
   item: ISingleEnquiryData | null;
@@ -41,8 +41,6 @@ interface IOrderInfoViewProps {
 
 const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item, navigation}) => {
   const dispatch = useAppDispatch();
-  console.log('OrderInfoView-item----', JSON.stringify(item));
-
   const [orderStatus, setOrderStatus] = useState<string>(item?.status as string);
   const {
     updateEnquiryStatusRequesting,
@@ -77,11 +75,7 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item, navigation
 
   useEffect(() => {
     if (!updateEnquiryStatusRequesting && updateEnquiryStatusSuccess) {
-      Toast.show({
-        type: 'success',
-        text1: 'Order Status',
-        text2: `Order status has been updated to ${orderStatus}`,
-      });
+      showToast(`Order Status Changed to ${orderStatus}`, ToastType.SUCCESS);
       dispatch(resetUpdateEnquiryStatusRequest());
       if(orderStatus == 'Completed') {
         refetchOrderList();
@@ -89,11 +83,7 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item, navigation
         navigation.goBack();
       }
     } else if (!updateEnquiryStatusRequesting && updateEnquiryStatusFailure) {
-      Toast.show({
-        type: 'error',
-        text1: 'Enquiry Status',
-        text2: 'Error in updating order status. Please try again!',
-      });
+      showToast(`Order Status Not Changed. Try again!`, ToastType.ERROR);
       setOrderStatus('' as string);
       dispatch(resetUpdateEnquiryStatusRequest());
     }
@@ -243,6 +233,7 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item, navigation
                           : undefined;
                         return (
                           <MenuOption
+                            key={`${index}`}
                             customStyles={lastItemStyle}
                             onSelect={() => {
                               handleOrderStatusChange(option);

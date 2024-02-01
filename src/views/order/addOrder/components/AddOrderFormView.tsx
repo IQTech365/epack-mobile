@@ -106,6 +106,9 @@ const AddOrderFormView: FC<IProps> = ({navigation}) => {
                 employeeName: state.employee_name,
                 employeeDesignation: state.employee_designation,
                 employeeMobile: state.employee_mobile_no,
+                pincode: state.company_pincode,
+                state: state.company_state,
+                city: state.company_city,
               }
             : {},
         status: 'APPROVED',

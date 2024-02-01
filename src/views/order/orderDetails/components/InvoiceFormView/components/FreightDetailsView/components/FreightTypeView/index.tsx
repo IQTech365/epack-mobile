@@ -161,11 +161,11 @@ const FreightTypeView: React.FC<Props> = ({
         ))}
       </View>
       <Spacer height={10} />
-      <FreightInputView
+      {['Additional', 'With GST'].includes(_getCheckedCompareToOption()) ? <FreightInputView
         freightType={freightType}
         label1={label1}
         label2={label2}
-      />
+      /> : null}
     </View>
   );
 };

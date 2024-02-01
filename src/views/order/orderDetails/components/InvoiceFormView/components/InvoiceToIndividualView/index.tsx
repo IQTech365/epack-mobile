@@ -10,6 +10,8 @@ import {useInvoiceFormContextHook} from '../../../../../../../provider/InvoiceFo
 import usePincodeHook from '../../../../../../../hooks/usePincodeHook';
 import { getCities2, getStates2 } from '../../../../../../../utils/formatter';
 import Spinner from '../../../../../../../common/Spinner';
+import { useAppSelector } from '../../../../../../../redux/hooks';
+import { ISingleEnquiryData } from '../../../../../../../interface/enquiry/ISingleEnquiryResponse';
 
 interface Props {}
 
@@ -23,9 +25,14 @@ const InvoiceToIndividualView: React.FC<Props> = () => {
     setCity,
     setAddress,
   } = useInvoiceFormContextHook();
+  const {order} = useAppSelector(state => state.Order);
+  const {data: orderData} = order || {};
 
   const stateDropdownRef = useRef(null);
   const cityDropdownRef = useRef(null);
+  const partyNameInputRef = useRef(null);
+  const mobileNoInputRef = useRef(null);
+
   const [states, setStates] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
 
@@ -34,6 +41,15 @@ const InvoiceToIndividualView: React.FC<Props> = () => {
     () => {},
   );
 
+  const getSingleOrder = () => {
+    let order: ISingleEnquiryData;
+    if (orderData && Array.isArray(orderData) && orderData.length > 0) {
+      order = orderData[0];
+    }
+    //@ts-ignore
+    return order;
+  };
+
   const handlePincodeChange = useCallback(
     (text: string) => {
       setPincode2(text);
@@ -41,6 +57,20 @@ const InvoiceToIndividualView: React.FC<Props> = () => {
     },
     [state.pincode],
   );
+
+  useEffect(() => {
+    if(partyNameInputRef && mobileNoInputRef) {
+      const singleOrder:ISingleEnquiryData = getSingleOrder();
+      if(singleOrder) {
+        //@ts-ignore
+        partyNameInputRef && partyNameInputRef?.current?.setValue(singleOrder?.partyName);
+        setPartyName(singleOrder?.partyName);
+        //@ts-ignore
+        mobileNoInputRef && mobileNoInputRef?.current?.setValue(singleOrder?.mobile);
+        setPartyMobileNo(singleOrder?.mobile);
+      }
+    } 
+  }, []);
 
   useEffect(() => {
     if (result && result.Status != 'Error') {
@@ -75,6 +105,8 @@ const InvoiceToIndividualView: React.FC<Props> = () => {
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
+          //@ts-ignore
+          ref={partyNameInputRef}
         />
       </View>
       <Spacer height={4} />
@@ -85,6 +117,8 @@ const InvoiceToIndividualView: React.FC<Props> = () => {
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
+          //@ts-ignore
+          ref={mobileNoInputRef}
         />
       </View>
       {!state.same_as_client_address ? (

@@ -101,6 +101,30 @@ export const discountPercentOptions = [
     label: '7%',
     value: '7',
   },
+  {
+    label: '8%',
+    value: '8',
+  },
+  {
+    label: '9%',
+    value: '9',
+  },
+  {
+    label: '10%',
+    value: '10',
+  },
+  {
+    label: '15%',
+    value: '15',
+  },
+  {
+    label: '20%',
+    value: '20',
+  },
+  {
+    label: '25%',
+    value: '25',
+  },
 ];
 
 export const gstOptions:string[] = ['With GST', 'Without GST', 'Exempted', 'Extra'];

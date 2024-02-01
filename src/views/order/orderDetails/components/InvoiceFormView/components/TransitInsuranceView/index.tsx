@@ -3,7 +3,7 @@ import {View, Text, TouchableOpacity} from 'react-native';
 import styles from './style';
 import Label from '../../../../../../../common/Label';
 import Input from '../../../../../../../common/Input';
-import {COLOR_BLACK, COLOR_BLUE} from '../../../../../../../utils/colors';
+import {COLOR_BLACK, COLOR_BLUE, COLOR_GRAY4} from '../../../../../../../utils/colors';
 import Spacer from '../../../../../../../common/Spacer';
 import DropdownComponent from '../../../../../../../common/DropdownComponent';
 import {transitInsuranceOptions} from '../../utils';
@@ -172,6 +172,7 @@ const TransitInsuranceView: React.FC<Props> = () => {
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
               placeholder="Enter value of goods"
+              placeholderTextColor={COLOR_GRAY4}
             />
           </View>
           <Spacer height={12} />

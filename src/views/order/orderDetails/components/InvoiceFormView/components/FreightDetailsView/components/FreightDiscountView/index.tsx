@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text} from 'react-native';
 import styles from './style';
 import {discountOptions, discountPercentOptions} from '../../../../utils';
-import {COLOR_BLACK, COLOR_BLUE} from '../../../../../../../../../utils/colors';
+import {COLOR_BLACK, COLOR_BLUE, COLOR_GRAY4} from '../../../../../../../../../utils/colors';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import Spacer from '../../../../../../../../../common/Spacer';
 import {useInvoiceFormContextHook} from '../../../../../../../../../provider/InvoiceFormContextProvider';
@@ -34,6 +34,8 @@ const FreightDiscountView: React.FC<Props> = ({}) => {
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
           placeholder="Enter flat discount amount"
+          placeholderTextColor={COLOR_GRAY4}
+          inputType="numeric"
         />
       );
     }

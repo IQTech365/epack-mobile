@@ -66,6 +66,8 @@ const OTPPageView = (props: any) => {
   const [otp6, setOtp6] = useState<string>('');
   const [showCompaniesModal, setShowCompaniesModal] = useState<boolean>(false);
 
+  const disabled = !otp1 || !otp2 || !otp3 || !otp4 || !otp5 || !otp6;
+
   const inputRef1 = useRef();
   const inputRef2 = useRef();
   const inputRef3 = useRef();
@@ -116,6 +118,13 @@ const OTPPageView = (props: any) => {
   const onChangeOtpText6 = (text: string) => {
     if (text.length == 1) {
       setOtp6(text);
+      if(!disabled) {
+        const payload: IOtpVerifyRequest = {
+          _id: otpData?.data?._id as string,
+          otp: `${otp1}${otp2}${otp3}${otp4}${otp5}${text}`,
+        };
+        dispatch(verifyOtpRequest(payload));
+      }
     }
   };
 
@@ -127,7 +136,7 @@ const OTPPageView = (props: any) => {
     dispatch(verifyOtpRequest(payload));
   }, [otp1, otp2, otp3, otp4, otp5, otp6]);
 
-  const disabled = !otp1 || !otp2 || !otp3 || !otp4 || !otp5 || !otp6;
+  
 
   const closeModal = async () => {
     await removeCurrentCompanyId();
@@ -220,7 +229,7 @@ const OTPPageView = (props: any) => {
   return (
     <AvoidSoftInputViewHOC>
       <LinearGradient colors={INTRO_BG_LINEARGRADIENT} style={styles.container}>
-        <Header canGoBack={true} label="Verify OTP" />
+        <Header canGoBack={false} label="Verify OTP" />
         <Spacer height={100} />
         <View style={styles.logo}>
           <LogoIcon width={232} height={56} />
@@ -268,6 +277,7 @@ const OTPPageView = (props: any) => {
           />
         </View>
         <Spacer />
+        <Text>{_displayOTP()}</Text>
         <Spacer height={50} />
         <Button
           text="Verify OTP"
