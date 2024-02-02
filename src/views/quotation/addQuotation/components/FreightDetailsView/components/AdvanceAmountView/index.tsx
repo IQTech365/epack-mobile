@@ -30,6 +30,7 @@ const AdvanceAmountView: React.FC<Props> = ({}) => {
         containerStyle={styles.inputContainer}
         inputStyle={styles.input}
         selectionColor={COLOR_BLACK}
+        placeholder='Enter amount'
         value={state.advance_amount}
         //@ts-ignore
         ref={advanceAmountCompRef}

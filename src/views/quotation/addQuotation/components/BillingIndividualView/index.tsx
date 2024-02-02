@@ -131,6 +131,7 @@ const BillingIndividualView: React.FC<Props> = ({fromEnquiry = false}) => {
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
             value={state.party_mobile_no as string}
+            placeholder='Enter mobile no.'
             //@ts-ignore
             ref={partyMobileNoInputCompRef}
             //@ts-ignore
@@ -159,6 +160,7 @@ const BillingIndividualView: React.FC<Props> = ({fromEnquiry = false}) => {
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
           value={state.party_name as string}
+          placeholder='Enter name'
           //@ts-ignore
           ref={partyNameInputCompRef}
           //@ts-ignore

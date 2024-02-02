@@ -1,6 +1,6 @@
 import {StyleSheet, Dimensions} from 'react-native';
 import { COLOR_BLACK, COLOR_GRAY, COLOR_GRAY2, COLOR_GRAY4, COLOR_WHITE } from '../../../../../utils/colors';
-const {width} = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     container: {
@@ -87,6 +87,9 @@ const styles = StyleSheet.create({
     innerCircleStyle: {
         width: '80%'
     },
+    containerStyle: {
+        maxHeight: height * 0.5,
+    }
 });
 
 export default styles;

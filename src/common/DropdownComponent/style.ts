@@ -1,6 +1,6 @@
 import {StyleSheet, Dimensions} from 'react-native';
 import { COLOR_BLACK, COLOR_GRAY, COLOR_GRAY2 } from '../../utils/colors';
-const {width} = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -57,6 +57,13 @@ const styles = StyleSheet.create({
   itemText: {
     color: COLOR_BLACK,
     fontFamily: 'WorkSans-Medium'
+  },
+  containerStyle: {
+    maxHeight: height * 0.5,
+  },
+  itemContainerStyle: {
+    borderBottomWidth: 1,
+    borderBottomColor: COLOR_GRAY2,
   }
 });
 

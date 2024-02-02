@@ -202,6 +202,7 @@ const BothChargeInputView: React.FC<Props> = ({freightType}) => {
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
+          placeholder='Enter amount'
           inputType="numeric"
           value={_getInputValue().value1}
           //@ts-ignore
@@ -215,6 +216,7 @@ const BothChargeInputView: React.FC<Props> = ({freightType}) => {
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
+          placeholder='Enter amount'
           value={_getInputValue().value2}
           inputType="numeric"
           //@ts-ignore

@@ -188,6 +188,7 @@ const SingleChargeInputView: React.FC<Props> = ({freightType}) => {
         containerStyle={styles.inputContainer}
         inputStyle={styles.input}
         selectionColor={COLOR_BLACK}
+        placeholder='Enter amount'
         value={_getInputValue()}
         inputType="numeric"
       />

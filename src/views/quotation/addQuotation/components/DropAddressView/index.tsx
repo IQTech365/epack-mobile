@@ -184,6 +184,7 @@ const DropAddressView: React.FC<Props> = ({fromEnquiry = false}) => {
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
+            placeholder='Enter address'
             //@ts-ignore
             ref={addressInputCompRef}
             //@ts-ignore

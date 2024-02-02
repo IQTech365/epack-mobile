@@ -74,6 +74,7 @@ const DropdownWithTextInput: FC<IProps> = forwardRef(
               style={styles.input}
               value={text}
               placeholder={placeholder}
+              placeholderTextColor={COLOR_GRAY4}
               selectionColor={COLOR_GRAY4}
               editable={!disabled}
             />

@@ -1,12 +1,9 @@
 import {StyleSheet, Dimensions} from 'react-native';
 import {
-    COLOR_BLACK,
-  COLOR_GRAY,
+  COLOR_BLACK,
   COLOR_GRAY2,
-  COLOR_GRAY3,
   COLOR_GRAY4,
   COLOR_GRAY6,
-  COLOR_GREEN,
   COLOR_WHITE,
 } from '../../utils/colors';
 const {width, height} = Dimensions.get('window');
@@ -14,7 +11,7 @@ const {width, height} = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     width: width * 0.9,
-    height: 48,
+    height: 46,
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',
@@ -75,7 +72,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     color: COLOR_BLACK,
     fontSize: 16,
-    fontFamily: 'WorkSans-Regular'
+    fontFamily: 'WorkSans-Regular',
   },
   optionItem: {
     width: width * 0.9,
@@ -83,7 +80,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     borderBottomWidth: 1,
     borderBottomColor: COLOR_GRAY2,
-    borderRadius:5,
+    borderRadius: 5,
   },
 });
 

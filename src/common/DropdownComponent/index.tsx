@@ -28,7 +28,7 @@ const DropdownComponent: React.FC<IDropdownProps> = forwardRef(
       error,
       dropDownStyle,
       container,
-      containerStyle,
+      containerStyle = styles.containerStyle,
       selectedTextStyle
     },
     ref,
@@ -71,6 +71,7 @@ const DropdownComponent: React.FC<IDropdownProps> = forwardRef(
           inputSearchStyle={styles.inputSearchStyle}
           iconStyle={styles.iconStyle}
           containerStyle={containerStyle}
+          itemContainerStyle={styles.itemContainerStyle}
           data={data}
           search={showSearchInput}
           maxHeight={250}

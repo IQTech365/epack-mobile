@@ -169,6 +169,7 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false}) => {
               }}
               //@ts-ignore
               ref={shiftingTypeDropdownCompRef}
+              containerStyle={styles.containerStyle}
             />
           </View>
           <View style={styles.compContainer}>
