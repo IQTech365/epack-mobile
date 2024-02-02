@@ -6,7 +6,6 @@ import Label from '../../../../../common/Label';
 import Input from '../../../../../common/Input';
 import {COLOR_BLACK} from '../../../../../utils/colors';
 import {useQuotationFormContextHook} from '../../../../../provider/QuotationFormContextProvider';
-import EpackDropdown from '../../../../../common/DropdownComponent2';
 import Spacer from '../../../../../common/Spacer';
 import DropdownComponent from '../../../../../common/DropdownComponent';
 import liftStatusOptions from '../../../../../data/liftStatusOptions.json';
@@ -16,6 +15,7 @@ import { getCities2, getStates2 } from '../../../../../utils/formatter';
 import Spinner from '../../../../../common/Spinner';
 import { IDropAddress, IEnquiry } from '../../../../../interface/quotation/IGetQuotationsResponse';
 import useUtilityHook from '../../../../../hooks/useUtilityHook';
+import DropdownWithTextInput from '../../../../../common/DropdownWithTextInput';
 
 interface Props {
   fromEnquiry?:boolean;
@@ -157,22 +157,21 @@ const DropAddressView: React.FC<Props> = ({fromEnquiry = false}) => {
           </View>
           <View style={styles.compContainer}>
             <Label text="State" style={styles.label} />
-            <EpackDropdown
-              data={states}
-              placeholder={'Select State'}
-              hanldeData={setDropState}
+            <DropdownWithTextInput
+              options={states}
+              onSelect={setDropState}
               //@ts-ignore
               ref={stateDropdownCompRef}
+              containerStyle={styles.compContainer}
             />
           </View>
         </View>
         <Spacer height={4} />
         <View style={styles.fullWidthContainer}>
           <Label text="City" style={styles.label} />
-          <EpackDropdown
-            data={cities}
-            placeholder={'Select City'}
-            hanldeData={setDropCity}
+          <DropdownWithTextInput
+            options={cities}
+            onSelect={setDropCity}
             //@ts-ignore
             ref={cityDropdownCompRef}
           />

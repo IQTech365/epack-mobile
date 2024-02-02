@@ -46,6 +46,10 @@ const DropdownWithTextInput: FC<IProps> = forwardRef(
       onSelect && onSelect(item);
     };
 
+    const _onDismiss = () => {
+      setShowOptions(false);
+    };
+
     React.useImperativeHandle(ref, () => ({
       setValue,
     }));
@@ -86,7 +90,12 @@ const DropdownWithTextInput: FC<IProps> = forwardRef(
             )}
           </TouchableOpacity>
         </View>
-        <OptionModal visible={showOptions} onPress={_close} data={options} />
+        <OptionModal
+          visible={showOptions}
+          onPress={_close}
+          data={options}
+          onDismiss={_onDismiss}
+        />
       </>
     );
   },

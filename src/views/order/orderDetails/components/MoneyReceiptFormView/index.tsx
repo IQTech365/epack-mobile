@@ -31,13 +31,13 @@ import useAuthId from '../../../../../hooks/useAuthId';
 import { getQuotationsRequest } from '../../../../../redux/slices/QuotationSlice';
 import { IGetQuotationRequest } from '../../../../../interface/quotation/IGetQuotationRequest';
 import { IGetQuotationData } from '../../../../../interface/quotation/IGetQuotationsResponse';
-import EpackDropdown from '../../../../../common/DropdownComponent2';
 import { ToastType, showToast } from '../../../../../utils/utility';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
 import useInitialValueHook from '../../../../../hooks/useInitialValueHook';
 import { DOCUMENT_TYPE, IGetSerialNoRequest } from '../../../../../interface/setting/serialNo/serialNo';
 import { getSerialNoRequest, resetGetSerialNoRequest } from '../../../../../redux/slices/SerialNoSettingSlice';
 import useSerialNoHook from '../../../../../hooks/useSerialNo';
+import DropdownWithTextInput from '../../../../../common/DropdownWithTextInput';
 
 interface IMoneyReceiptFormViewProps {
   orderId: string | undefined;
@@ -323,12 +323,10 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
               </View>
               <View style={styles.itemContainer}>
                 <Label text={_getLabelText()} style={styles.label} />
-                <EpackDropdown
-                  data={transformQuotationData()}
-                  placeholder={'Select or Enter'}
-                  hanldeData={handleBillQuotation}
-                  //@ts-ignore
-                  // ref={pickupStateDropwdownRef}
+                <DropdownWithTextInput
+                  options={transformQuotationData()}
+                  onSelect={handleBillQuotation}
+                  containerStyle={styles.itemContainer}
                 />
               </View>
             </View>
@@ -398,7 +396,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
                   value={isEdit ? editData.numbersOfArticles : ''}
                   inputType="numeric"
                   placeholder="No. of Articles"
-                placeholderTextColor={COLOR_GRAY4}
+                  placeholderTextColor={COLOR_GRAY4}
                 />
               </View>
               <View style={styles.itemContainer}>

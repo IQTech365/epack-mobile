@@ -4,7 +4,6 @@ import styles from '../style';
 import CollapsibleView from '../../../../common/CollapsibleView';
 import Label from '../../../../common/Label';
 import Input from '../../../../common/Input';
-import EpackDropdown from '../../../../common/DropdownComponent2';
 import Spacer from '../../../../common/Spacer';
 import DropdownComponent from '../../../../common/DropdownComponent';
 import liftStatusOptions from '../../../../data/liftStatusOptions.json';
@@ -15,6 +14,7 @@ import {getCities2, getStates2} from '../../../../utils/formatter';
 import {useEnquiryFormContextHook} from '../../../../provider/EnquiryFormContextProvider';
 import Spinner from '../../../../common/Spinner';
 import useUtilityHook from '../../../../hooks/useUtilityHook';
+import DropdownWithTextInput from '../../../../common/DropdownWithTextInput';
 
 interface IProps {}
 
@@ -81,28 +81,26 @@ const EnquiryPickupAddressView: FC<IProps> = ({}) => {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
-              placeholder='Enter Pincode'
+              placeholder="Enter Pincode"
               inputType="numeric"
             />
           </View>
           <View style={styles.textContainer}>
             <Label text="State" style={styles.label} />
-            <EpackDropdown
-              data={states}
-              placeholder={'Select State'}
-              hanldeData={setPickupState}
+            <DropdownWithTextInput
+              options={states}
+              onSelect={setPickupState}
               //@ts-ignore
               ref={stateDropdownRef}
+              containerStyle={styles.textDropdownContainer}
             />
           </View>
         </View>
-
         <View style={styles.elementContainer}>
           <Label text="City" style={styles.label} />
-          <EpackDropdown
-            data={cities}
-            placeholder={'Select City'}
-            hanldeData={setPickupCity}
+          <DropdownWithTextInput
+            options={cities}
+            onSelect={setPickupCity}
             //@ts-ignore
             ref={cityDropdownRef}
           />

@@ -5,13 +5,13 @@ import Label from '../../../../../../../common/Label';
 import Input from '../../../../../../../common/Input';
 import {COLOR_BLACK} from '../../../../../../../utils/colors';
 import Spacer from '../../../../../../../common/Spacer';
-import EpackDropdown from '../../../../../../../common/DropdownComponent2';
 import {useInvoiceFormContextHook} from '../../../../../../../provider/InvoiceFormContextProvider';
 import usePincodeHook from '../../../../../../../hooks/usePincodeHook';
 import { getCities2, getStates2 } from '../../../../../../../utils/formatter';
 import Spinner from '../../../../../../../common/Spinner';
 import { useAppSelector } from '../../../../../../../redux/hooks';
 import { ISingleEnquiryData } from '../../../../../../../interface/enquiry/ISingleEnquiryResponse';
+import DropdownWithTextInput from '../../../../../../../common/DropdownWithTextInput';
 
 interface Props {}
 
@@ -137,22 +137,21 @@ const InvoiceToIndividualView: React.FC<Props> = () => {
             </View>
             <View style={styles.compContainer}>
               <Label text="State" style={styles.label} />
-              <EpackDropdown
-                data={states}
-                placeholder={'Select State'}
-                hanldeData={setState}
+              <DropdownWithTextInput
+                options={states}
+                onSelect={setState}
                 //@ts-ignore
                 ref={stateDropdownRef}
+                containerStyle={styles.compContainer}
               />
             </View>
           </View>
           <Spacer height={4} />
           <View style={styles.fullWidthCompContainer}>
             <Label text="City" style={styles.label} />
-            <EpackDropdown
-              data={cities}
-              placeholder={'Select City'}
-              hanldeData={setCity}
+            <DropdownWithTextInput
+              options={cities}
+              onSelect={setCity}
               //@ts-ignore
               ref={cityDropdownRef}
             />

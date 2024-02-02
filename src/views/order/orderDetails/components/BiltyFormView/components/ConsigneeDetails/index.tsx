@@ -6,13 +6,13 @@ import Label from '../../../../../../../common/Label';
 import Input from '../../../../../../../common/Input';
 import Spacer from '../../../../../../../common/Spacer';
 import {COLOR_BLACK, COLOR_BLUE} from '../../../../../../../utils/colors';
-import EpackDropdown from '../../../../../../../common/DropdownComponent2';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
 import DeliveryAddressView from './DeliveryAddressView';
 import usePincodeHook from '../../../../../../../hooks/usePincodeHook';
 import {getCities2, getStates2} from '../../../../../../../utils/formatter';
 import Spinner from '../../../../../../../common/Spinner';
+import DropdownWithTextInput from '../../../../../../../common/DropdownWithTextInput';
 
 const ConsigneeDetails: React.FC<{}> = ({}) => {
   const {
@@ -148,20 +148,19 @@ const ConsigneeDetails: React.FC<{}> = ({}) => {
         <View style={styles.elementContainer}>
           <View style={styles.itemContainer}>
             <Label text="State" style={styles.label} />
-            <EpackDropdown
-              data={states}
-              placeholder={'Select State'}
-              hanldeData={setConsigneeState}
+            <DropdownWithTextInput
+              options={states}
+              onSelect={setConsigneeState}
               //@ts-ignore
               ref={stateDropdownCompRef}
+              containerStyle={styles.itemContainer}
             />
           </View>
           <View style={styles.itemContainer}>
             <Label text="City" style={styles.label} />
-            <EpackDropdown
-              data={cities}
-              placeholder={'Select City'}
-              hanldeData={setConsigneeCity}
+            <DropdownWithTextInput
+              options={cities}
+              onSelect={setConsigneeCity}
               //@ts-ignore
               ref={cityDropdownCompRef}
             />

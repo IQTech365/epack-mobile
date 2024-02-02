@@ -8,11 +8,11 @@ import {COLOR_BLACK, COLOR_BLUE, COLOR_GRAY4} from '../../../../../../../utils/c
 import Spacer from '../../../../../../../common/Spacer';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
-import EpackDropdown from '../../../../../../../common/DropdownComponent2';
 import LoadingAddressView from './LoadingAddressView';
 import usePincodeHook from '../../../../../../../hooks/usePincodeHook';
 import {getCities2, getStates2} from '../../../../../../../utils/formatter';
 import Spinner from '../../../../../../../common/Spinner';
+import DropdownWithTextInput from '../../../../../../../common/DropdownWithTextInput';
 
 const ConsignerDetails: React.FC<{}> = ({}) => {
   const {
@@ -79,7 +79,7 @@ const ConsignerDetails: React.FC<{}> = ({}) => {
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
-            placeholder='Enter Consigner name'
+            placeholder="Enter Consigner name"
             placeholderTextColor={COLOR_GRAY4}
           />
         </View>
@@ -92,8 +92,8 @@ const ConsignerDetails: React.FC<{}> = ({}) => {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
-              placeholder='Enter GST#'
-            placeholderTextColor={COLOR_GRAY4}
+              placeholder="Enter GST#"
+              placeholderTextColor={COLOR_GRAY4}
             />
           </View>
           <View style={styles.itemContainer}>
@@ -104,8 +104,8 @@ const ConsignerDetails: React.FC<{}> = ({}) => {
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
               inputType="numeric"
-              placeholder='Enter mobile number'
-            placeholderTextColor={COLOR_GRAY4}
+              placeholder="Enter mobile number"
+              placeholderTextColor={COLOR_GRAY4}
             />
           </View>
         </View>
@@ -117,7 +117,7 @@ const ConsignerDetails: React.FC<{}> = ({}) => {
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
-            placeholder='Enter address'
+            placeholder="Enter address"
             placeholderTextColor={COLOR_GRAY4}
           />
         </View>
@@ -130,7 +130,7 @@ const ConsignerDetails: React.FC<{}> = ({}) => {
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
             inputType="numeric"
-            placeholder='Enter Pincode'
+            placeholder="Enter Pincode"
             placeholderTextColor={COLOR_GRAY4}
           />
         </View>
@@ -138,20 +138,19 @@ const ConsignerDetails: React.FC<{}> = ({}) => {
         <View style={styles.elementContainer}>
           <View style={styles.itemContainer}>
             <Label text="State" style={styles.label} />
-            <EpackDropdown
-              data={states}
-              placeholder={'Select State'}
-              hanldeData={setConsignerState}
+            <DropdownWithTextInput
+              options={states}
+              onSelect={setConsignerState}
               //@ts-ignore
               ref={stateDropdownCompRef}
+              containerStyle={styles.itemContainer}
             />
           </View>
           <View style={styles.itemContainer}>
             <Label text="City" style={styles.label} />
-            <EpackDropdown
-              data={cities}
-              placeholder={'Select City'}
-              hanldeData={setConsignerCity}
+            <DropdownWithTextInput
+              options={cities}
+              onSelect={setConsignerCity}
               //@ts-ignore
               ref={cityDropdownCompRef}
             />

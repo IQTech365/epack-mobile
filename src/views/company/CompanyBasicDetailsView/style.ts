@@ -121,6 +121,9 @@ const styles = StyleSheet.create({
   textStyle2:{
     fontFamily: 'JosefinSans-Regular',
     textDecorationLine: 'none',
+  },
+  textDropdownContainer: {
+    width: width * 0.44,
   }
 });
 

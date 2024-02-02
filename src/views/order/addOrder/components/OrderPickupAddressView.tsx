@@ -5,7 +5,6 @@ import CollapsibleView from '../../../../common/CollapsibleView';
 import Label from '../../../../common/Label';
 import Input from '../../../../common/Input';
 import {COLOR_BLACK} from '../../../../utils/colors';
-import EpackDropdown from '../../../../common/DropdownComponent2';
 import usePincodeHook from '../../../../hooks/usePincodeHook';
 import Spacer from '../../../../common/Spacer';
 import DropdownComponent from '../../../../common/DropdownComponent';
@@ -15,6 +14,7 @@ import { TDropdownItem } from '../../../../type/TDropdownItem';
 import { getCities2, getStates2 } from '../../../../utils/formatter';
 import Spinner from '../../../../common/Spinner';
 import useUtilityHook from '../../../../hooks/useUtilityHook';
+import DropdownWithTextInput from '../../../../common/DropdownWithTextInput';
 
 interface IProps {}
 
@@ -89,22 +89,21 @@ const OrderPickupAddressView: FC<IProps> = ({}) => {
           </View>
           <View style={styles.textContainer}>
             <Label text="State" style={styles.label} />
-            <EpackDropdown
-              data={states}
-              placeholder={'Select State'}
-              hanldeData={setPickupState}
+            <DropdownWithTextInput
+              options={states}
+              onSelect={setPickupState}
               //@ts-ignore
               ref={stateDropdownRef}
+              containerStyle={styles.textContainer}
             />
           </View>
         </View>
 
         <View style={styles.elementContainer}>
           <Label text="City" style={styles.label} />
-          <EpackDropdown
-            data={cities}
-            placeholder={'Select City'}
-            hanldeData={setPickupCity}
+          <DropdownWithTextInput
+            options={cities}
+            onSelect={setPickupCity}
             //@ts-ignore
             ref={cityDropdownRef}
           />

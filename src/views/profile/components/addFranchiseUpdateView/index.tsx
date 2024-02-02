@@ -28,9 +28,9 @@ import {
   addFranchiseRequest,
   restAddFranchiseRequest,
 } from '../../../../redux/slices/MyProfile';
-import EpackDropdown from '../../../../common/DropdownComponent2';
 import { ToastType, showToast } from '../../../../utils/utility';
 import { getCurrentCompanyId } from '../../../../utils/storage';
+import DropdownWithTextInput from '../../../../common/DropdownWithTextInput';
 
 const AddFranchiseUpdateView: React.FC<{}> = ({}) => {
   const [state, dispatch] = useReducer(addFranchiseReducer, initialState);
@@ -238,22 +238,22 @@ const AddFranchiseUpdateView: React.FC<{}> = ({}) => {
           <View style={styles.twoColumnWrapper}>
             <View style={styles.textContainer}>
               <Label text="State" style={styles.label} />
-              <EpackDropdown
-                data={states}
-                placeholder={'Select State'}
-                hanldeData={handleState}
+              <DropdownWithTextInput
+                options={states}
+                onSelect={handleState}
                 //@ts-ignore
                 ref={stateDropdownCompRef}
+                containerStyle={styles.textContainer}
               />
             </View>
             <View style={styles.textContainer}>
               <Label text="City" style={styles.label} />
-              <EpackDropdown
-                data={cities}
-                placeholder={'Select City'}
-                hanldeData={handleCity}
+              <DropdownWithTextInput
+                options={cities}
+                onSelect={handleCity}
                 //@ts-ignore
                 ref={cityDropdownCompRef}
+                containerStyle={styles.textContainer}
               />
             </View>
           </View>
@@ -261,10 +261,9 @@ const AddFranchiseUpdateView: React.FC<{}> = ({}) => {
         <Spacer height={4} />
         <View style={styles.elementContainer}>
           <Label text="Lacality" style={styles.label} />
-          <EpackDropdown
-            data={localities}
-            placeholder={'Select Locality'}
-            hanldeData={handleLocality}
+          <DropdownWithTextInput
+            options={localities}
+            onSelect={handleLocality}
             //@ts-ignore
             ref={localityDropdownCompRef}
           />

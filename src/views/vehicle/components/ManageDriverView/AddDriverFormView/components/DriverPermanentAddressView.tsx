@@ -5,11 +5,11 @@ import Label from '../../../../../../common/Label';
 import Spacer from '../../../../../../common/Spacer';
 import Input from '../../../../../../common/Input';
 import {COLOR_BLACK} from '../../../../../../utils/colors';
-import EpackDropdown from '../../../../../../common/DropdownComponent2';
 import {useAddDriverFormContextHook} from '../../../../../../provider/AddDriverFormContextProvider';
 import usePincodeHook from '../../../../../../hooks/usePincodeHook';
 import {getCities2, getLocalities, getStates2} from '../../../../../../utils/formatter';
 import Spinner from '../../../../../../common/Spinner';
+import DropdownWithTextInput from '../../../../../../common/DropdownWithTextInput';
 
 interface Props {}
 
@@ -81,17 +81,17 @@ const DriverPermanentAddressView: React.FC<Props> = ({}) => {
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
-            placeholder='Enter Pincode'
+            placeholder="Enter Pincode"
           />
         </View>
         <View style={styles.textContainer}>
           <Label text="State" style={styles.label} />
-          <EpackDropdown
-            data={states}
-            placeholder={'Please select or enter'}
-            hanldeData={setPermanentAddState}
+          <DropdownWithTextInput
+            options={states}
+            onSelect={setPermanentAddState}
             //@ts-ignore
             ref={stateDropdownCompRef}
+            containerStyle={styles.textContainer}
           />
         </View>
       </View>
@@ -99,22 +99,22 @@ const DriverPermanentAddressView: React.FC<Props> = ({}) => {
       <View style={styles.twoColumnWrapper}>
         <View style={styles.textContainer}>
           <Label text="City" style={styles.label} />
-          <EpackDropdown
-            data={cities}
-            placeholder={'Please select or enter'}
-            hanldeData={setPermanentAddCity}
+          <DropdownWithTextInput
+            options={cities}
+            onSelect={setPermanentAddCity}
             //@ts-ignore
             ref={cityDropdownCompRef}
+            containerStyle={styles.textContainer}
           />
         </View>
         <View style={styles.textContainer}>
           <Label text="Locality" style={styles.label} />
-          <EpackDropdown
-            data={localities}
-            placeholder={'Please select or enter'}
-            hanldeData={setPermanentAddLocality}
+          <DropdownWithTextInput
+            options={localities}
+            onSelect={setPermanentAddLocality}
             //@ts-ignore
             ref={localityDropdownCompRef}
+            containerStyle={styles.textContainer}
           />
         </View>
       </View>

@@ -5,11 +5,11 @@ import Spacer from '../../../../../../../common/Spacer';
 import Label from '../../../../../../../common/Label';
 import Input from '../../../../../../../common/Input';
 import {COLOR_BLACK} from '../../../../../../../utils/colors';
-import EpackDropdown from '../../../../../../../common/DropdownComponent2';
 import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
 import usePincodeHook from '../../../../../../../hooks/usePincodeHook';
 import {getCities2, getStates2} from '../../../../../../../utils/formatter';
 import Spinner from '../../../../../../../common/Spinner';
+import DropdownWithTextInput from '../../../../../../../common/DropdownWithTextInput';
 
 interface Props {}
 
@@ -93,20 +93,19 @@ const DeliveryAddressView: React.FC<Props> = ({}) => {
       <View style={styles.elementContainer}>
         <View style={styles.itemContainer}>
           <Label text="State" style={styles.label} />
-          <EpackDropdown
-            data={states}
-            placeholder={'Select State'}
-            hanldeData={setDeliveryState}
+          <DropdownWithTextInput
+            options={states}
+            onSelect={setDeliveryState}
             //@ts-ignore
             ref={stateDropdownCompRef}
+            containerStyle={styles.itemContainer}
           />
         </View>
         <View style={styles.itemContainer}>
           <Label text="City" style={styles.label} />
-          <EpackDropdown
-            data={cities}
-            placeholder={'Select City'}
-            hanldeData={setDeliveryCity}
+          <DropdownWithTextInput
+            options={cities}
+            onSelect={setDeliveryCity}
             //@ts-ignore
             ref={cityDropdownCompRef}
           />

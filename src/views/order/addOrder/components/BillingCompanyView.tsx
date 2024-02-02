@@ -21,10 +21,10 @@ import {
   resetGetCustomersRequest,
 } from '../../../../redux/slices/CommonSlice';
 import approvalAuthorityOptions from '../../../../data/ApprovalAuthorityOptions.json';
-import EpackDropdown from '../../../../common/DropdownComponent2';
 import usePincodeHook from '../../../../hooks/usePincodeHook';
 import {getCities2, getStates2} from '../../../../utils/formatter';
 import { getCurrentCompanyId } from '../../../../utils/storage';
+import DropdownWithTextInput from '../../../../common/DropdownWithTextInput';
 
 interface IProps {}
 
@@ -315,21 +315,20 @@ const BillingCompanyView: FC<IProps> = ({}) => {
         </View>
         <View style={styles.textContainer}>
           <Label text="State" style={styles.label} />
-          <EpackDropdown
-            data={states}
-            placeholder={'Select State'}
-            hanldeData={setCompanyState}
+          <DropdownWithTextInput
+            options={states}
+            onSelect={setCompanyState}
             //@ts-ignore
             ref={stateDropdownRef}
+            containerStyle={styles.textContainer}
           />
         </View>
       </View>
       <View style={styles.elementContainer}>
         <Label text="City" style={styles.label} />
-        <EpackDropdown
-          data={cities}
-          placeholder={'Select City'}
-          hanldeData={setCompanyCity}
+        <DropdownWithTextInput
+          options={cities}
+          onSelect={setCompanyCity}
           //@ts-ignore
           ref={cityDropdownRef}
         />

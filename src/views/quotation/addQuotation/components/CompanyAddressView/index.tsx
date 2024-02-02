@@ -5,13 +5,13 @@ import Label from '../../../../../common/Label';
 import Input from '../../../../../common/Input';
 import {COLOR_BLACK} from '../../../../../utils/colors';
 import {useQuotationFormContextHook} from '../../../../../provider/QuotationFormContextProvider';
-import EpackDropdown from '../../../../../common/DropdownComponent2';
 import Spacer from '../../../../../common/Spacer';
 import usePincodeHook from '../../../../../hooks/usePincodeHook';
 import {getCities2, getStates2} from '../../../../../utils/formatter';
 import Spinner from '../../../../../common/Spinner';
 import { IEnquiry } from '../../../../../interface/quotation/IGetQuotationsResponse';
 import { ICustomerBillingInfo } from '../../../../../interface/common/common';
+import DropdownWithTextInput from '../../../../../common/DropdownWithTextInput';
 
 interface Props {
   //
@@ -116,22 +116,21 @@ const CompanyAddressView: React.FC<Props> = ({}) => {
           </View>
           <View style={styles.compContainer}>
             <Label text="State" style={styles.label} />
-            <EpackDropdown
-              data={states}
-              placeholder={'Select State'}
-              hanldeData={setCompanyState}
+            <DropdownWithTextInput
+              options={states}
+              onSelect={setCompanyState}
               //@ts-ignore
               ref={stateDropdownCompRef}
+              containerStyle={styles.compContainer}
             />
           </View>
         </View>
         <Spacer height={4} />
         <View style={styles.fullWidthContainer}>
           <Label text="City" style={styles.label} />
-          <EpackDropdown
-            data={cities}
-            placeholder={'Select City'}
-            hanldeData={setCompanyCity}
+          <DropdownWithTextInput
+            options={cities}
+            onSelect={setCompanyCity}
             //@ts-ignore
             ref={cityDropdownCompRef}
           />

@@ -4,12 +4,12 @@ import styles from './style';
 import Spacer from '../../../../../../../common/Spacer';
 import Label from '../../../../../../../common/Label';
 import Input from '../../../../../../../common/Input';
-import EpackDropdown from '../../../../../../../common/DropdownComponent2';
 import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
 import {COLOR_BLACK, COLOR_GRAY4} from '../../../../../../../utils/colors';
 import {getCities2, getStates2} from '../../../../../../../utils/formatter';
 import usePincodeHook from '../../../../../../../hooks/usePincodeHook';
 import Spinner from '../../../../../../../common/Spinner';
+import DropdownWithTextInput from '../../../../../../../common/DropdownWithTextInput';
 
 interface Props {}
 
@@ -76,8 +76,8 @@ const LoadingAddressView: React.FC<Props> = ({}) => {
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
-          placeholder='Enter loading address'
-            placeholderTextColor={COLOR_GRAY4}
+          placeholder="Enter loading address"
+          placeholderTextColor={COLOR_GRAY4}
         />
       </View>
       <Spacer height={4} />
@@ -89,30 +89,30 @@ const LoadingAddressView: React.FC<Props> = ({}) => {
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
           inputType="numeric"
-          placeholder='Enter pincode'
-            placeholderTextColor={COLOR_GRAY4}
+          placeholder="Enter pincode"
+          placeholderTextColor={COLOR_GRAY4}
         />
       </View>
       <Spacer height={4} />
       <View style={styles.elementContainer}>
         <View style={styles.itemContainer}>
           <Label text="State" style={styles.label} />
-          <EpackDropdown
-            data={states}
-            placeholder={'Select State'}
-            hanldeData={setLoadingState}
+          <DropdownWithTextInput
+            options={states}
+            onSelect={setLoadingState}
             //@ts-ignore
             ref={stateDropdownCompRef}
+            containerStyle={styles.itemContainer}
           />
         </View>
         <View style={styles.itemContainer}>
           <Label text="City" style={styles.label} />
-          <EpackDropdown
-            data={cities}
-            placeholder={'Select City'}
-            hanldeData={setLoadingCity}
+          <DropdownWithTextInput
+            options={cities}
+            onSelect={setLoadingCity}
             //@ts-ignore
             ref={cityDropdownCompRef}
+            containerStyle={styles.itemContainer}
           />
         </View>
       </View>

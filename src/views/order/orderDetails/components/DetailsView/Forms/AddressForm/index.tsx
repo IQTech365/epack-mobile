@@ -25,10 +25,10 @@ import { getEnquiriesRequest, getEnquiryRequest, resetUpdateAddressRequest, upda
 import { ISingleEnquiryData } from '../../../../../../../interface/enquiry/ISingleEnquiryResponse';
 import { getOrderRequest, getOrdersRequest } from '../../../../../../../redux/slices/OrderSlice';
 import { ISingleOrderRequest } from '../../../../../../../interface/order/ISingleOrderRequest';
-import EpackDropdown from '../../../../../../../common/DropdownComponent2';
 import { ToastType, showToast } from '../../../../../../../utils/utility';
 import { getCurrentCompanyId } from '../../../../../../../utils/storage';
 import { IGetOrdersRequest } from '../../../../../../../interface/order/IGetOrdersRequest';
+import DropdownWithTextInput from '../../../../../../../common/DropdownWithTextInput';
 
 export enum ADDRESS_TYPE {
   PICKUP,
@@ -272,25 +272,24 @@ const AddressForm: React.FC<IAddressFormProps> = ({
           </View>
           <View style={styles.itemContainer}>
             <Label text="State" style={styles.label} />
-            <EpackDropdown
-              data={states}
-              placeholder={'Select State'}
-              hanldeData={handleState}
+            <DropdownWithTextInput
+              options={states}
+              onSelect={handleState}
               //@ts-ignore
               ref={stateDropwdownRef}
+              containerStyle={styles.itemContainer}
             />
           </View>
         </View>
         <Spacer height={4} />
         <View style={styles.elementContainer3}>
           <Label text="City" style={styles.label} />
-          <EpackDropdown
-              data={cities}
-              placeholder={'Select City'}
-              hanldeData={handleCity}
-              //@ts-ignore
-              ref={cityDropdownRef}
-            />
+          <DropdownWithTextInput
+            options={cities}
+            onSelect={handleCity}
+            //@ts-ignore
+            ref={cityDropdownRef}
+          />
         </View>
         <Spacer height={4} />
         <View style={styles.elementContainer3}>

@@ -5,7 +5,6 @@ import Label from '../../../../../../common/Label';
 import Spacer from '../../../../../../common/Spacer';
 import Input from '../../../../../../common/Input';
 import {COLOR_BLACK, COLOR_BLUE} from '../../../../../../utils/colors';
-import EpackDropdown from '../../../../../../common/DropdownComponent2';
 import {useAddDriverFormContextHook} from '../../../../../../provider/AddDriverFormContextProvider';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import usePincodeHook from '../../../../../../hooks/usePincodeHook';
@@ -15,6 +14,7 @@ import {
   getStates2,
 } from '../../../../../../utils/formatter';
 import Spinner from '../../../../../../common/Spinner';
+import DropdownWithTextInput from '../../../../../../common/DropdownWithTextInput';
 
 interface Props {}
 
@@ -109,17 +109,17 @@ const DriverCurrentAddressView: React.FC<Props> = ({}) => {
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
-                placeholder='Enter Pincode'
+                placeholder="Enter Pincode"
               />
             </View>
             <View style={styles.textContainer}>
               <Label text="State" style={styles.label} />
-              <EpackDropdown
-                data={states}
-                placeholder={'Please select or enter'}
-                hanldeData={setCurrentAddState}
+              <DropdownWithTextInput
+                options={states}
+                onSelect={setCurrentAddState}
                 //@ts-ignore
                 ref={stateDropdownCompRef}
+                containerStyle={styles.textContainer}
               />
             </View>
           </View>
@@ -127,20 +127,18 @@ const DriverCurrentAddressView: React.FC<Props> = ({}) => {
           <View style={styles.twoColumnWrapper}>
             <View style={styles.textContainer}>
               <Label text="City" style={styles.label} />
-              <EpackDropdown
-                data={cities}
-                placeholder={'Please select or enter'}
-                hanldeData={setCurrentAddCity}
+              <DropdownWithTextInput
+                options={cities}
+                onSelect={setCurrentAddCity}
                 //@ts-ignore
                 ref={cityDropdownCompRef}
               />
             </View>
             <View style={styles.textContainer}>
               <Label text="Locality" style={styles.label} />
-              <EpackDropdown
-                data={localities}
-                placeholder={'Please select or enter'}
-                hanldeData={setCurrentAddLocality}
+              <DropdownWithTextInput
+                options={localities}
+                onSelect={setCurrentAddLocality}
                 //@ts-ignore
                 ref={localityDropdownCompRef}
               />

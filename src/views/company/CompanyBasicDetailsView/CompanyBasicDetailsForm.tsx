@@ -18,7 +18,6 @@ import {useAppDispatch, useAppSelector} from '../../../redux/hooks';
 import {useCompanyRegistrationContextHook} from '../../../provider/CompanyRegistrationContextProvider';
 import {NavigationProp} from '@react-navigation/native';
 import {COLOR_BLACK, COLOR_BLUE} from '../../../utils/colors';
-import EpackDropdown from '../../../common/DropdownComponent2';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import DatePickerComponent from '../../../common/DatePickerComponent';
 import DropdownComponent from '../../../common/DropdownComponent';
@@ -31,6 +30,7 @@ import { IPurchase, IUpdateSubscriptionRequest } from '../../../interface/subscr
 import { ToastType, showToast } from '../../../utils/utility';
 import { IPendingRegistration } from '../../../interface/common/common';
 import { resetPendingRegistrationInfoPayload } from '../../../redux/slices/CommonSlice';
+import DropdownWithTextInput from '../../../common/DropdownWithTextInput';
 
 interface IProps {
   navigation: NavigationProp<any, any>;
@@ -329,20 +329,18 @@ const CompanyBasicDetailsForm: FC<IProps> = ({navigation}) => {
             <Spacer height={4} />
             <View style={styles.elementContainer}>
               <Label text="State" style={styles.label} />
-              <EpackDropdown
-                data={states}
-                placeholder={'Select State'}
-                hanldeData={setState}
+              <DropdownWithTextInput
+                options={states}
+                onSelect={setState}
                 //@ts-ignore
                 ref={stateDropwdownRef}
               />
             </View>
             <View style={styles.elementContainer}>
               <Label text="City" style={styles.label} />
-              <EpackDropdown
-                data={cities}
-                placeholder={'Select City'}
-                hanldeData={setCity}
+              <DropdownWithTextInput
+                options={cities}
+                onSelect={setCity}
                 //@ts-ignore
                 ref={cityDropdownRef}
               />
@@ -463,7 +461,9 @@ const CompanyBasicDetailsForm: FC<IProps> = ({navigation}) => {
             </View>
           </View>
           <Spacer height={12} />
-          <Spinner show={fetching || requesting || updateSubscriptionRequesting} />
+          <Spinner
+            show={fetching || requesting || updateSubscriptionRequesting}
+          />
         </View>
       </AvoidSoftInputViewHOC>
       <View style={styles.oneButtonContainer}>

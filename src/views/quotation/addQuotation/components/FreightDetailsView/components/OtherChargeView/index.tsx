@@ -12,10 +12,10 @@ import MinusIcon from '../../../../../../../images/icons/minus_red.svg';
 import OtherChargeListItem from './OtherChargeListItem';
 import {IOtherCharge} from '../../../../quotationReducer2';
 import {Shadow} from 'react-native-shadow-2';
-import EpackDropdown from '../../../../../../../common/DropdownComponent2';
 import { particularOptions } from '../utils';
 import { ToastType, showToast } from '../../../../../../../utils/utility';
 import * as SQuotation from '../../../../../../../interface/quotation/IGetSingleQuotationResponse';
+import DropdownWithTextInput from '../../../../../../../common/DropdownWithTextInput';
 
 interface Props {}
 
@@ -287,10 +287,9 @@ const OtherChargeView: React.FC<Props> = ({}) => {
             <View style={styles.contentContainer}>
               <View style={styles.fullWidthContainer}>
                 <Label text="Particulars/Items" style={styles.label} />
-                <EpackDropdown
-                  data={particularOptions}
-                  placeholder={'Enter item name'}
-                  hanldeData={setParticularName}
+                <DropdownWithTextInput
+                  options={particularOptions}
+                  onSelect={setParticularName}
                   //@ts-ignore
                   ref={particularsInputCompRef}
                 />

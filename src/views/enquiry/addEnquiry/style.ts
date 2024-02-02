@@ -108,6 +108,9 @@ const styles = StyleSheet.create({
     fontFamily: 'WorkSans-Regular',
     textDecorationLine: 'none',
     color: COLOR_BLACK,
+  },
+  textDropdownContainer: {
+    width: width * 0.44,
   }
 });
 

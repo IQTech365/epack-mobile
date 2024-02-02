@@ -11,13 +11,12 @@ import DropdownComponent from '../../../../../common/DropdownComponent';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import shiftingLuggageOptions from '../../../../../data/shiftingLuggage.json';
 import insuranceTypeOptions from '../../../../../data/insuranceTypeOptions.json';
-// import insurancePercentOptions from '../../../../../data/insurancePercentOptions.json';
 import gstPercentOptions from '../../../../../data/gstPercentOptions.json';
 import Spacer from '../../../../../common/Spacer';
 import Input from '../../../../../common/Input';
-import EpackDropdown from '../../../../../common/DropdownComponent2';
 import { ICharge, IQuotationFreight, IStorage, ITransitInsurance } from '../../../../../interface/quotation/IGetSingleQuotationResponse';
 import useUtilityHook from '../../../../../hooks/useUtilityHook';
+import DropdownWithTextInput from '../../../../../common/DropdownWithTextInput';
 
 interface Props {
   //
@@ -114,10 +113,9 @@ const InsuranceDetailsView: React.FC<Props> = ({}) => {
           <>
             <View style={styles.fullWidthContainer}>
               <Label text="Shifting Luggage" style={styles.labelText} />
-              <EpackDropdown
-                data={shiftingLuggageOptions.map(({label}) => label)}
-                placeholder="Select Luggage"
-                hanldeData={setTransitShiftingLuggage}
+              <DropdownWithTextInput
+                options={shiftingLuggageOptions.map(({label}) => label)}
+                onSelect={setTransitShiftingLuggage}
                 //@ts-ignore
                 ref={shiftingLuggageDropdownCompRef}
               />

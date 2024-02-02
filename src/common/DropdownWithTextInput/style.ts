@@ -71,27 +71,11 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-  modalText: {
-    textAlign: 'center',
-    color: COLOR_WHITE,
-    fontSize: 16,
-    fontWeight: '500',
-  },
   descriptionText: {
     textAlign: 'left',
     color: COLOR_BLACK,
     fontSize: 16,
     fontFamily: 'WorkSans-Regular'
-  },
-  titleSuccessContainer: {
-    width: '100%',
-    paddingVertical: 14,
-    paddingHorizontal: 14,
-    backgroundColor: COLOR_GREEN,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    alignItems: 'flex-start',
-    justifyContent: 'center',
   },
   optionItem: {
     width: width * 0.9,
@@ -99,6 +83,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     borderBottomWidth: 1,
     borderBottomColor: COLOR_GRAY2,
+    borderRadius:5,
   },
 });
 

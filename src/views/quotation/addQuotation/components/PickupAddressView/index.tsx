@@ -6,7 +6,6 @@ import Label from '../../../../../common/Label';
 import Input from '../../../../../common/Input';
 import {COLOR_BLACK} from '../../../../../utils/colors';
 import {useQuotationFormContextHook} from '../../../../../provider/QuotationFormContextProvider';
-import EpackDropdown from '../../../../../common/DropdownComponent2';
 import Spacer from '../../../../../common/Spacer';
 import DropdownComponent from '../../../../../common/DropdownComponent';
 import liftStatusOptions from '../../../../../data/liftStatusOptions.json';
@@ -17,9 +16,9 @@ import Spinner from '../../../../../common/Spinner';
 import {
   IEnquiry,
   IPickupAddress,
-  IDropAddress,
 } from '../../../../../interface/quotation/IGetQuotationsResponse';
 import useUtilityHook from '../../../../../hooks/useUtilityHook';
+import DropdownWithTextInput from '../../../../../common/DropdownWithTextInput';
 
 interface Props {
   fromEnquiry?: boolean;
@@ -166,22 +165,21 @@ const PickupAddressView: React.FC<Props> = ({fromEnquiry = false}) => {
           </View>
           <View style={styles.compContainer}>
             <Label text="State" style={styles.label} />
-            <EpackDropdown
-              data={states}
-              placeholder={'Select State'}
-              hanldeData={setPickupState}
+            <DropdownWithTextInput
+              options={states}
+              onSelect={setPickupState}
               //@ts-ignore
               ref={stateDropdownCompRef}
+              containerStyle={styles.compContainer}
             />
           </View>
         </View>
         <Spacer height={4} />
         <View style={styles.fullWidthContainer}>
           <Label text="City" style={styles.label} />
-          <EpackDropdown
-            data={cities}
-            placeholder={'Select City'}
-            hanldeData={setPickupCity}
+          <DropdownWithTextInput
+            options={cities}
+            onSelect={setPickupCity}
             //@ts-ignore
             ref={cityDropdownCompRef}
           />
