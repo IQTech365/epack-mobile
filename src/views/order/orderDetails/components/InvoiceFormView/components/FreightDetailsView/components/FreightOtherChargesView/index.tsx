@@ -13,13 +13,15 @@ import PlusIcon from '../../../../../../../../../images/icons/plus_icon.svg';
 import {IOtherCharge} from '../../../../InvoiceReducer2';
 import Button from '../../../../../../../../../common/Button';
 import OtherChargeItem from './OtherChargeItem';
+import { particularOptions } from '../../../../../../../../quotation/addQuotation/components/FreightDetailsView/components/utils';
+import DropdownWithTextInput from '../../../../../../../../../common/DropdownWithTextInput';
 interface Props {}
 
 const FreightOtherChargesView: React.FC<Props> = ({}) => {
   const {setOtherCharges} = useInvoiceFormContextHook();
   const [shouldAdd, setShouldAdd] = useState<boolean>(false);
   const [otherItems, setOtherItems] = useState<IOtherCharge[]>([]);
-  const [particularName, setParticularName] = useState<string>('');
+  const [particularName, setParticularName] = useState<string>(particularOptions[0]);
   const [quantity, setQuantity] = useState<string>('');
   const [ratePerItem, setRatePerItem] = useState<string>('');
   const [amount, setAmount] = useState<string>('');
@@ -40,8 +42,8 @@ const FreightOtherChargesView: React.FC<Props> = ({}) => {
       hsnCodeCompRef
     ) {
       //@ts-ignore
-      particularNameCompRef?.current.reset();
-      setParticularName('');
+      particularNameCompRef?.current.setValue(particularOptions[0]);
+      setParticularName(particularOptions[0]);
       //@ts-ignore
       quantityCompRef?.current.reset();
       setQuantity('');
@@ -89,6 +91,14 @@ const FreightOtherChargesView: React.FC<Props> = ({}) => {
       const rateInt = parseInt(ratePerItem);
       const totalPrice = quantityInt * rateInt;
       setAmount(totalPrice.toString());
+    } 
+    if(!quantity) {
+      setQuantity('');
+      setAmount('');
+    } 
+    if(!ratePerItem) {
+      setRatePerItem('');
+      setAmount('');
     }
   }, [quantity, ratePerItem]);
 
@@ -105,13 +115,11 @@ const FreightOtherChargesView: React.FC<Props> = ({}) => {
         <>
           <View style={styles.fullWidhCompContainer}>
             <Label text="Particulars Name" style={styles.label} />
-            <Input
-              onChangeText={setParticularName}
-              containerStyle={styles.inputContainer}
-              inputStyle={styles.input}
-              selectionColor={COLOR_BLACK}
-              placeholder="Enter particular name"
-              placeholderTextColor={COLOR_GRAY4}
+            <DropdownWithTextInput
+              options={particularOptions}
+              onSelect={setParticularName}
+              initialValue={particularName}
+              containerStyle={styles.textDropdownContainer}
               //@ts-ignore
               ref={particularNameCompRef}
             />
@@ -189,7 +197,7 @@ const FreightOtherChargesView: React.FC<Props> = ({}) => {
           </View>
         </>
       ) : null}
-      <Spacer height={10} />
+      <Spacer height={16} />
       {otherItems.map((d: IOtherCharge, index: number) => {
         return <OtherChargeItem item={d} index={index} onDelete={onDelete} />;
       })}

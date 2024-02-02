@@ -185,9 +185,6 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
       city: state.city,
       pincode: state.pincode,
     };
-    console.log('state.billing_type--', state.billing_type);
-    console.log('billingInfo--', JSON.stringify(billingInfo));
-    
 
     const pickupAddress: IInvoicePickupAddress = {
       shiftingFrom: state.same_as_client_address ? item.pickupAddress.city : state.city,

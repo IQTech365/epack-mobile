@@ -79,6 +79,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.8,
     borderColor: COLOR_BLACK,
     borderRadius: 5,
+    marginBottom: 8,
   },
   contentContainer: {
     width: '80%',
@@ -96,6 +97,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  textDropdownContainer: {
+    width: width * 0.88,
+  }
 });
 
 export default styles;

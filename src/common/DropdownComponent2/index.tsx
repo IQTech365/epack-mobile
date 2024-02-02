@@ -13,6 +13,8 @@ import {
 import styles from './style';
 import CloseIcon from '../../images/icons/close_icon.svg';
 import DownArrowIcon from '../../images/icons/down-arrow.svg';
+import UpArrowIcon from '../../images/icons/up-arrow.svg';
+
 import {COLOR_GRAY} from '../../utils/colors';
 
 interface IEpackDropdownProps {
@@ -103,9 +105,11 @@ const EpackDropdown: React.FC<IEpackDropdownProps> = forwardRef(
           onPress={toggleDropdown}
           style={styles.dropdownIcon}
           disabled={disabled}>
-          <Text>
-            {isOpen ? null : <DownArrowIcon width={15} height={20} />}
-          </Text>
+          {isOpen ? (
+            <UpArrowIcon width={30} height={30} />
+          ) : (
+            <DownArrowIcon width={30} height={30} />
+          )}
         </TouchableOpacity>
         <Modal
           transparent={true}

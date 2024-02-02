@@ -9,13 +9,14 @@ const styles = StyleSheet.create({
     padding: 5,
     paddingLeft: 10,
     borderRadius: 5,
-    height: 46,
+    // height: 46,
     color: COLOR_BLACK
   },
   dropdownIcon: {
-    position: 'absolute',
-    top: 14,
-    right: 10,
+    // position: 'absolute',
+    // top: 14,
+    // right: 10,
+    backgroundColor: 'red'
   },
   container: {
     // position: 'relative',
