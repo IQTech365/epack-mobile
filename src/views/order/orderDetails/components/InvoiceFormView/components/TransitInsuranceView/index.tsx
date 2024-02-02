@@ -59,7 +59,7 @@ const TransitInsuranceView: React.FC<Props> = () => {
     if (transit_charges.length > 0) {
       return transit_charges.map((d: ITransitCharge, i) => {
         return (
-          <>
+          <View key={`${i}`}>
           <View style={styles.transitChargeContainer}>
             <View style={styles.transitChargeContentWrapper}>
               <View style={styles.transitChargeContentContainer}>
@@ -88,7 +88,7 @@ const TransitInsuranceView: React.FC<Props> = () => {
             </View>
           </View>
           <Spacer height={8} />
-          </>
+          </View>
         );
       });
     }

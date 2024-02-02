@@ -1,4 +1,4 @@
-export const billingByOptions:string[] = ['By Individual', 'By Company'];
+export const billingByOptions:string[] = ['by Individual', 'by Company'];
 export const approvalAuthorityOptions = [
   {
     label: 'HR Manager',

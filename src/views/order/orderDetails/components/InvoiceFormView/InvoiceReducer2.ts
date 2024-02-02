@@ -1,3 +1,4 @@
+import { formatDate4 } from '../../../../../utils/formatter';
 import {
   billingByOptions,
   discountOptions,
@@ -5,6 +6,7 @@ import {
   gstOptions,
   loadTypeOptions,
   loadingChargeOptions,
+  modeOfMovingOptions,
   pickupChargeOptions,
   transitInsuranceOptions,
   unloadingChargeOptions,
@@ -211,10 +213,10 @@ export const initialState: State = {
   same_as_client_address: true,
   // **** Basic Details ****
   invoice_no: '',
-  date_of_invoice: '',
-  date_of_delivery: '',
+  date_of_invoice: formatDate4(new Date()),
+  date_of_delivery: formatDate4(new Date()),
   shifting_luggage: '',
-  mode_of_moving: '',
+  mode_of_moving: modeOfMovingOptions[0].label,
   vehicle_no: '',
   consignment_no: '',
   // **** Billing Details Individual ****

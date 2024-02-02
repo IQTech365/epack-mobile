@@ -102,6 +102,7 @@ const InvoiceToCompanyView: React.FC<Props> = () => {
         if(approvalAuthorityItem) {
           //@ts-ignore
           approvalAuthDropdownRef && approvalAuthDropdownRef?.current?.setDefaultValue(approvalAuthorityItem);
+          setApprovalAuthority(approvalAuthorityItem.label);
         }
 
         //@ts-ignore

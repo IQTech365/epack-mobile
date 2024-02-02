@@ -94,6 +94,14 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item}) => {
     return options
   }
 
+  const _setShiftingLuggage = () => {
+    const options:TDropdownItem[] = _getShiftingLuggageOptions();
+    if(options && options.length > 0) {
+      const firstOption = options[0];
+      setShiftingLuggage(firstOption.label);
+    }
+  }
+
   const _getSerialNoRequest = () => {
     getCurrentCompanyId().then(id => {
       const payload: IGetSerialNoRequest = {
@@ -177,6 +185,9 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item}) => {
       city: state.city,
       pincode: state.pincode,
     };
+    console.log('state.billing_type--', state.billing_type);
+    console.log('billingInfo--', JSON.stringify(billingInfo));
+    
 
     const pickupAddress: IInvoicePickupAddress = {
       shiftingFrom: state.same_as_client_address ? item.pickupAddress.city : state.city,
@@ -265,6 +276,7 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item}) => {
   useEffect(() => {
     _getSerialNoRequest();
     setBillingType(getSingleOrder()?.billingBy);
+    _setShiftingLuggage();
   }, []);
 
   useEffect(() => {
