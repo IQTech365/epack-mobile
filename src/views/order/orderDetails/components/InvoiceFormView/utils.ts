@@ -127,7 +127,7 @@ export const discountPercentOptions = [
   },
 ];
 
-export const gstOptions:string[] = ['With GST', 'Without GST', 'Exempted', 'Extra'];
+export const gstOptions:string[] = ['With GST', 'Without GST', 'Exempted', 'Reverse Charge Mechanism'];
 
 export const gstPercentOptions = [
   {

@@ -37,9 +37,10 @@ import { getSerialNoRequest, resetGetSerialNoRequest } from '../../../../../redu
 
 interface IBiltyFormViewProps {
   orderId: string | undefined;
+  onSuccess: () => void;
 }
 
-const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
+const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess}) => {
   const {state} = useBiltyFormContextHook();
   const dispatch = useAppDispatch();
 
@@ -254,6 +255,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId}) => {
       showToast('New Bilty Created', ToastType.SUCCESS);
       dispatch(resetCreateBiltyRequest());
       dispatch(resetGetSerialNoRequest());
+      onSuccess && onSuccess();
     } else if (!createBiltyRequesting && createBiltyError) {
       showToast('New Bilty Not Created. Try again!', ToastType.ERROR);
       dispatch(resetCreateBiltyRequest());

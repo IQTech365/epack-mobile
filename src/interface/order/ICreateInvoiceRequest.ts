@@ -58,7 +58,7 @@ export interface ICreateInvoiceRequest {
   enquiryId: string;
   isAuto: boolean;
   isHeadOffice: boolean;
-  branchId: string;
+  branchId?: string;
   serialNo: string;
   shiftingLuggage: string;
   templateId: string;

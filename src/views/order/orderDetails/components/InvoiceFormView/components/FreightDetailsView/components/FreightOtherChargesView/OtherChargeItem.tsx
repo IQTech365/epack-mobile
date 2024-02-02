@@ -27,6 +27,10 @@ const OtherChargeItem:FC<IProps> = ({item, index, onDelete}) => {
                 <Text style={styles.label}>{item.rate_per_item}</Text>
             </View>
             <View style={styles.content}>
+                <Text style={styles.label2}>HSN Code: </Text>
+                <Text style={styles.label}>{item.hsn_code}</Text>
+            </View>
+            <View style={styles.content}>
                 <Text style={styles.label2}>Amount: </Text>
                 <Text style={styles.label}>{item.amount}</Text>
             </View>

@@ -1,4 +1,4 @@
-import React, {useReducer, useState} from 'react';
+import React, {useEffect, useReducer, useState} from 'react';
 import {View, FlatList, Text, TouchableOpacity} from 'react-native';
 import styles from './style';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
@@ -18,17 +18,19 @@ import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import Button from '../../../../../common/Button';
 import useAuthId from '../../../../../hooks/useAuthId';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
-import {createPackingMaterialsRequest} from '../../../../../redux/slices/OrderSlice';
+import {createPackingMaterialsRequest, resetCreatePackingMaterialsRequest} from '../../../../../redux/slices/OrderSlice';
 import {Shadow} from 'react-native-shadow-2';
 import Spinner from '../../../../../common/Spinner';
 import {IPackingType} from '../../../../../interface/common/common';
 import DeleteIcon from '../../../../../images/icons/delete.svg';
+import { ToastType, showToast } from '../../../../../utils/utility';
 
 interface Props {
   orderId: string;
+  onSuccess: () => void;
 }
 
-const ListHeaderView: React.FC<Props> = ({orderId}) => {
+const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   const [state, dispatch] = useReducer(packingReducer, initialState);
   const [particularName, setParticularName] = useState<string>('');
   const [quantity, setQuantity] = useState<string>('');
@@ -37,9 +39,11 @@ const ListHeaderView: React.FC<Props> = ({orderId}) => {
   const [valueOfGoods, setValueOfGoods] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [items, setItems] = useState<IPackingItem[]>([]);
-  const {createPackingMaterialRequesting} = useAppSelector(
-    state => state.Order,
-  );
+  const {
+    createPackingMaterialRequesting,
+    createPackingMaterialSuccess,
+    createPackingMaterialFailure,
+  } = useAppSelector(state => state.Order);
   const {packingTypes} = useAppSelector(state => state.Common);
 
   const _getPackingTypes = () => {
@@ -148,6 +152,17 @@ const ListHeaderView: React.FC<Props> = ({orderId}) => {
     }
     return null;
   };
+
+  useEffect(() => {
+    if(!createPackingMaterialRequesting && createPackingMaterialSuccess) {
+      showToast("Packing Item List Created", ToastType.SUCCESS);
+      dispatch2(resetCreatePackingMaterialsRequest())
+      onSuccess && onSuccess();
+    } else if(!createPackingMaterialRequesting && createPackingMaterialFailure) {
+      showToast("Packing Item List Not Created", ToastType.ERROR);
+      dispatch2(resetCreatePackingMaterialsRequest())
+    }
+  }, [createPackingMaterialRequesting, createPackingMaterialSuccess, createPackingMaterialFailure]);
 
   return (
     <AvoidSoftInputViewHOC>

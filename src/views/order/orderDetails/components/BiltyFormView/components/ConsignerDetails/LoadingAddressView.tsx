@@ -6,7 +6,7 @@ import Label from '../../../../../../../common/Label';
 import Input from '../../../../../../../common/Input';
 import EpackDropdown from '../../../../../../../common/DropdownComponent2';
 import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
-import {COLOR_BLACK} from '../../../../../../../utils/colors';
+import {COLOR_BLACK, COLOR_GRAY4} from '../../../../../../../utils/colors';
 import {getCities2, getStates2} from '../../../../../../../utils/formatter';
 import usePincodeHook from '../../../../../../../hooks/usePincodeHook';
 import Spinner from '../../../../../../../common/Spinner';
@@ -76,6 +76,8 @@ const LoadingAddressView: React.FC<Props> = ({}) => {
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
+          placeholder='Enter loading address'
+            placeholderTextColor={COLOR_GRAY4}
         />
       </View>
       <Spacer height={4} />
@@ -87,6 +89,8 @@ const LoadingAddressView: React.FC<Props> = ({}) => {
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
           inputType="numeric"
+          placeholder='Enter pincode'
+            placeholderTextColor={COLOR_GRAY4}
         />
       </View>
       <Spacer height={4} />

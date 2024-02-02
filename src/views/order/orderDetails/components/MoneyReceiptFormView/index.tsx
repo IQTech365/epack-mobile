@@ -8,7 +8,7 @@ import Input from '../../../../../common/Input';
 import Label from '../../../../../common/Label';
 import Spacer from '../../../../../common/Spacer';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
-import {COLOR_BLACK} from '../../../../../utils/colors';
+import {COLOR_BLACK, COLOR_GRAY4} from '../../../../../utils/colors';
 import styles from './style';
 import paymentTypeOptions from '../../../../../data/paymentTypeOptions.json';
 import receiptAgainstOptions from '../../../../../data/receiptAgainstOptions.json';
@@ -43,12 +43,14 @@ interface IMoneyReceiptFormViewProps {
   orderId: string | undefined;
   editData: any;
   isEdit: boolean;
+  onSuccess: () => void;
 }
 
 const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
   orderId,
   editData,
   isEdit,
+  onSuccess
 }) => {
   const [reducerState, dispatch] = useReducer(
     moneyReceiptReducer,
@@ -263,6 +265,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
       showToast('Money Receipt Created.', ToastType.SUCCESS);
       dispatch2(resetCreateMoneyReceiptRequest());
       dispatch2(resetGetSerialNoRequest());
+      onSuccess && onSuccess();
     } else if (
       (!createMoneyReceiptRequesting && createMoneyReceiptError) ||
       (!editMoneyReceiptListRequesting && editMoneyReceiptListSuccess)
@@ -363,6 +366,8 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
                 selectionColor={COLOR_BLACK}
                 value={isEdit ? editData.paymentAmount : ''}
                 inputType="numeric"
+                placeholder="Enter amount"
+                placeholderTextColor={COLOR_GRAY4}
               />
             </View>
           </View>
@@ -377,6 +382,8 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
+                placeholder="Enter CN / Bilty / LR No."
+                placeholderTextColor={COLOR_GRAY4}
               />
             </View>
             <Spacer height={4} />
@@ -390,6 +397,8 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
                   selectionColor={COLOR_BLACK}
                   value={isEdit ? editData.numbersOfArticles : ''}
                   inputType="numeric"
+                  placeholder="No. of Articles"
+                placeholderTextColor={COLOR_GRAY4}
                 />
               </View>
               <View style={styles.itemContainer}>

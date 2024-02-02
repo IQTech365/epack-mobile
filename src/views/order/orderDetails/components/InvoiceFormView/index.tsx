@@ -10,7 +10,6 @@ import Spacer from '../../../../../common/Spacer';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import {COLOR_BLACK, COLOR_BLUE, COLOR_GRAY4} from '../../../../../utils/colors';
 import styles from './style';
-import shiftingLuggages from '../../../../../data/shiftingLuggage.json';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {billingByOptions, modeOfMovingOptions} from './utils';
 import InvoiceToIndividualView from './components/InvoiceToIndividualView';
@@ -45,9 +44,10 @@ import useSerialNoHook from '../../../../../hooks/useSerialNo';
 interface IInvoiceFormViewProps {
   orderId: string;
   item: ISingleEnquiryData;
+  onSuccess: () => void;
 }
 
-const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item}) => {
+const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSuccess}) => {
   const {
     state,
     setSameAsClientAddress,
@@ -204,7 +204,7 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item}) => {
       enquiryId: orderId,
       isAuto: true,
       isHeadOffice: true,
-      branchId: '',
+      // branchId: '',
       serialNo: state.invoice_no,
       shiftingLuggage: state.shifting_luggage,
       templateId: '',
@@ -290,6 +290,7 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item}) => {
       showToast('New Invoice Created', ToastType.SUCCESS);
       dispatch(resetCreateInvoiceRequest());
       dispatch(resetGetSerialNoRequest());
+      onSuccess && onSuccess();
     } else if(!createInvoiceRequesting && createInvoiceFailure) {
       showToast('New Invoice Not Created. Try again!', ToastType.ERROR);
       dispatch(resetCreateInvoiceRequest());

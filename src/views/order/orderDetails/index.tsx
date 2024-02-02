@@ -40,6 +40,10 @@ const OrderDetailsView: React.FC<Props> = ({route, navigation}) => {
     setActiveTabIndex(index);
   };
 
+  const handleSuccess = (index:number) => {
+
+  }
+
   const showTabItem = () => {
     switch (activeTabIndex) {
       case 0:

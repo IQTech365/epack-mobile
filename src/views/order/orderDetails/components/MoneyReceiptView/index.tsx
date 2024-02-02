@@ -24,7 +24,6 @@ import {COLOR_BLUE} from '../../../../../utils/colors';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {IHtmlTemplateRequest} from '../../../../../interface/order/templates/ITemplateResponse';
 import ModalHOC from '../../../../../common/ModalHOC';
-import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import {startShare} from '../../../../../utils/utility';
 import TemplateViewer from '../../../../../common/TemplateViewer';
 import useTemplateIdHook from '../../../../../hooks/useTemplateIdHook';
@@ -82,6 +81,13 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
     setShowMoneyReceiptList(true);
     setCreateNewMoneyReceipt(false);
   };
+
+  const onSuccess = () => {
+    setShowMoneyReceiptList(true);
+    setCreateNewMoneyReceipt(false);
+    dispatch(getMoneyReceiptListRequest(orderId));
+  }
+
   const presentModal = (moneyReceiptId: string) => {
     setMoneyReceiptId(moneyReceiptId);
     bottomSheetRef.current?.snapToIndex(0);
@@ -194,6 +200,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
           orderId={orderId}
           editData={editData}
           isEdit={isEdit}
+          onSuccess={onSuccess}
         />
       );
     }

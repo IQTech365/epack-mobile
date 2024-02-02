@@ -41,10 +41,12 @@ import { ToastType, showToast } from '../../../../../utils/utility';
 
 interface ICarConditionFormViewProps {
   orderId: string | undefined;
+  onSuccess: () => void;
 }
 
 const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
   orderId,
+  onSuccess,
 }) => {
   const [vehicleTypeId, setVehicleTypeId] = useState<string>('');
   const [vehicleCompanyId, setVehicleCompanyId] = useState<string>('');
@@ -295,6 +297,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
       showToast('Car Conditiion Created.', ToastType.SUCCESS);
       dispatch2(resetCreateCarConditionRequest());
       dispatch2(resetGetSerialNoRequest());
+      onSuccess && onSuccess();
     } else if (!createCarConditionRequesting && createCarConditionError) {
       showToast('Car Condition Not Created. Try again!', ToastType.ERROR);
       dispatch2(resetCreateCarConditionRequest());

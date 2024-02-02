@@ -98,6 +98,12 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId}) => {
     setCreateNewCarCondition(false);
   };
 
+  const onSuccess = () => {
+    setShowCarConditionList(true);
+    setCreateNewCarCondition(false);
+    dispatch(getCarConditionListRequest(orderId));
+  }
+
   const handleShowPreviewModalClose = () => {
     dispatch(resetGetCarConditionHtmlRequest());
     setShowPreview(false);
@@ -137,7 +143,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId}) => {
 
   const showForm = () => {
     if (createNewCarCondition) {
-      return <CarConditionFormView orderId={orderId} />;
+      return <CarConditionFormView orderId={orderId} onSuccess={onSuccess} />;
     }
     return null;
   };

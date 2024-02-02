@@ -58,6 +58,12 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item}) => {
     setCreateNewInvoice(false);
   };
 
+  const onSuccess = () => {
+    setShowInvoiceList(true);
+    setCreateNewInvoice(false);
+    dispatch(getInvoiceListRequest(orderId));
+  };
+
   const handleShowPreviewModalClose = () => {
     dispatch(resetGetInvoiceHtmlRequest());
     setShowPreview(false);
@@ -102,7 +108,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item}) => {
     if (createNewInvoice) {
       return (
         <InvoiceFormContextProvider>
-          <InvoiceFormView orderId={orderId} item={item} />
+          <InvoiceFormView orderId={orderId} item={item} onSuccess={onSuccess} />
         </InvoiceFormContextProvider>
       );
     }

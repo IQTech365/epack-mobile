@@ -733,7 +733,7 @@ export const OrderSlice = createSlice({
       state.createPackingMaterialFailure = true;
       state.createPackingMaterialError = action.payload;
     },
-    resetCreatePackingMaterialsRequest: (state, action: PayloadAction<any>) => {
+    resetCreatePackingMaterialsRequest: (state) => {
       state.createPackingMaterialRequesting = false;
       state.createPackingMaterialSuccess = false;
       state.createPackingMaterialFailure = false;

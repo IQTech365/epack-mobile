@@ -37,9 +37,15 @@ const PackingView: React.FC<IPackingListViewProps> = ({orderId}) => {
     setShowForm(false);
   };
 
+  const onSuccess = () => {
+    setShowList(true);
+    setShowForm(false);
+    dispatch(getPackingTypesRequest());
+  }
+
   const _showForm = () => {
     if (showList) return null;
-    return <PackingFormView orderId={orderId} />;
+    return <PackingFormView orderId={orderId} onSuccess={onSuccess} />;
   };
 
   const _showList = () => {

@@ -4,7 +4,7 @@ import styles from './style';
 import CollapsibleView from '../../../../../../../common/CollapsibleView';
 import Label from '../../../../../../../common/Label';
 import Input from '../../../../../../../common/Input';
-import {COLOR_BLACK, COLOR_BLUE} from '../../../../../../../utils/colors';
+import {COLOR_BLACK, COLOR_BLUE, COLOR_GRAY4} from '../../../../../../../utils/colors';
 import Spacer from '../../../../../../../common/Spacer';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
@@ -79,6 +79,8 @@ const ConsignerDetails: React.FC<{}> = ({}) => {
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
+            placeholder='Enter Consigner name'
+            placeholderTextColor={COLOR_GRAY4}
           />
         </View>
         <Spacer height={4} />
@@ -90,6 +92,8 @@ const ConsignerDetails: React.FC<{}> = ({}) => {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
+              placeholder='Enter GST#'
+            placeholderTextColor={COLOR_GRAY4}
             />
           </View>
           <View style={styles.itemContainer}>
@@ -100,6 +104,8 @@ const ConsignerDetails: React.FC<{}> = ({}) => {
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
               inputType="numeric"
+              placeholder='Enter mobile number'
+            placeholderTextColor={COLOR_GRAY4}
             />
           </View>
         </View>
@@ -111,6 +117,8 @@ const ConsignerDetails: React.FC<{}> = ({}) => {
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
+            placeholder='Enter address'
+            placeholderTextColor={COLOR_GRAY4}
           />
         </View>
         <Spacer height={4} />
@@ -122,6 +130,8 @@ const ConsignerDetails: React.FC<{}> = ({}) => {
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
             inputType="numeric"
+            placeholder='Enter Pincode'
+            placeholderTextColor={COLOR_GRAY4}
           />
         </View>
         <Spacer height={4} />

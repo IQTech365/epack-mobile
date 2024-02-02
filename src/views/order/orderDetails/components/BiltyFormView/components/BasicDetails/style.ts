@@ -2,6 +2,7 @@ import {StyleSheet, Dimensions} from 'react-native';
 import {
   COLOR_BLACK,
   COLOR_BLUE,
+  COLOR_GRAY,
   COLOR_GRAY2,
   COLOR_WHITE,
 } from '../../../../../../../utils/colors';
@@ -54,11 +55,11 @@ const styles = StyleSheet.create({
   switchMainWrapper3: {
     borderWidth: 1,
     borderRadius: 8,
-    borderColor: COLOR_GRAY2,
+    borderColor: COLOR_GRAY,
   },
   switchInputContainer: {
     width: '100%',
-    borderColor: COLOR_GRAY2,
+    borderColor: COLOR_GRAY,
     borderTopWidth: 0,
     borderRightWidth: 0,
     borderBottomWidth: 0,
@@ -86,7 +87,7 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 8,
   },
   switchMainWrapper: {
-    backgroundColor: COLOR_GRAY2,
+    backgroundColor: COLOR_GRAY,
     borderTopRightRadius: 8,
     borderBottomRightRadius: 8,
   },

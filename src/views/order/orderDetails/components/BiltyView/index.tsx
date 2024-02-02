@@ -119,6 +119,12 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
     setCreateNewBilty(false);
   };
 
+  const onSuccess = () => {
+    setShowBiltyList(true);
+    setCreateNewBilty(false);
+    dispatch(getBiltyListRequest(orderId));
+  }
+
   const handleShowPreviewModalClose = () => {
     dispatch(resetGetBiltyHtmlRequest());
     setShowPreview(false);
@@ -145,7 +151,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
     if (createNewBilty) {
       return (
         <BiltyFormContextProvider>
-          <BiltyFormView orderId={orderId} />
+          <BiltyFormView orderId={orderId} onSuccess={onSuccess} />
         </BiltyFormContextProvider>
       );
     }

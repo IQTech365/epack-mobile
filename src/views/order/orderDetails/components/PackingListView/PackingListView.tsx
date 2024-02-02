@@ -5,6 +5,7 @@ import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import {IGetPackingListRequest, IPackingListData} from '../../../../../interface/order/IPackingMaterialResponse';
 import { getPackingMaterialsRequest } from '../../../../../redux/slices/OrderSlice';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
+import Spinner from '../../../../../common/Spinner';
 
 interface Props {
   orderId: string;
@@ -13,9 +14,7 @@ interface Props {
 const PackingListView: React.FC<Props> = ({orderId}) => {
   const dispatch = useAppDispatch();
 
-  const {getPackingMaterialsRequesting, packingMaterials} = useAppSelector(
-    state => state.Order,
-  );
+  const {getPackingMaterialsRequesting, packingMaterials} = useAppSelector(state => state.Order);
   
   const _getPackingMaterils = () => {
     let items: IPackingListData[] = [];
@@ -55,6 +54,7 @@ const PackingListView: React.FC<Props> = ({orderId}) => {
         renderItem={({item, index}) => <Text>Hello</Text>}
         ListEmptyComponent={showEmptyView()}
       />
+      <Spinner show={getPackingMaterialsRequesting} />
     </View>
   );
 };
