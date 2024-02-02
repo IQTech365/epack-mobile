@@ -70,6 +70,32 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
   },
+  // Other Charge item styles
+  itemWrapper: {
+    width: width * 0.85,
+    alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 0.8,
+    borderColor: COLOR_BLACK,
+    borderRadius: 5,
+  },
+  contentContainer: {
+    width: '80%',
+    alignItems: 'center',
+    paddingHorizontal: 8,
+  },
+  content: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  actionContainer: {
+    width: '20%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
 
 export default styles;

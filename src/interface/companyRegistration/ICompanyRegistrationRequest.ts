@@ -29,7 +29,7 @@ export interface ICompanyRegistrationRequest {
   state: string;
   city: string;
   pincode: string;
-  companyWebite?: string;
+  companyWebsite?: string;
   companyLogo: string;
   punchLine?: string;
   companyProfile: string;

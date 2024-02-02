@@ -1,14 +1,18 @@
-import React, {useRef, useState} from 'react';
-import {TouchableOpacity, View} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {Text, TouchableOpacity, View} from 'react-native';
 import styles from './style';
 import Label from '../../../../../../../../../common/Label';
 import Input from '../../../../../../../../../common/Input';
-import {COLOR_BLACK, COLOR_GRAY4} from '../../../../../../../../../utils/colors';
+import {
+  COLOR_BLACK,
+  COLOR_GRAY4,
+} from '../../../../../../../../../utils/colors';
 import Spacer from '../../../../../../../../../common/Spacer';
 import {useInvoiceFormContextHook} from '../../../../../../../../../provider/InvoiceFormContextProvider';
 import PlusIcon from '../../../../../../../../../images/icons/plus_icon.svg';
 import {IOtherCharge} from '../../../../InvoiceReducer2';
 import Button from '../../../../../../../../../common/Button';
+import OtherChargeItem from './OtherChargeItem';
 interface Props {}
 
 const FreightOtherChargesView: React.FC<Props> = ({}) => {
@@ -58,19 +62,35 @@ const FreightOtherChargesView: React.FC<Props> = ({}) => {
   };
 
   const handleAddItemClick = () => {
-    const item:IOtherCharge = {
+    const item: IOtherCharge = {
       particular_name: particularName,
       quantity: quantity,
       rate_per_item: ratePerItem,
       amount: amount,
       hsn_code: hsnCode,
-    }
+    };
     const clone = [...otherItems];
     clone.push(item);
     setOtherItems(clone);
     setOtherCharges(clone);
     resetInputCompAndState();
-  }
+  };
+
+  const onDelete = (index: number) => {
+    const clone = [...otherItems];
+    clone.splice(index, 1);
+    setOtherItems(clone);
+    setOtherCharges(clone);
+  };
+
+  useEffect(() => {
+    if(quantity && ratePerItem) {
+      const quantityInt = parseInt(quantity);
+      const rateInt = parseInt(ratePerItem);
+      const totalPrice = quantityInt * rateInt;
+      setAmount(totalPrice.toString());
+    }
+  }, [quantity, ratePerItem]);
 
   return (
     <View style={styles.mainWrapper}>
@@ -90,7 +110,7 @@ const FreightOtherChargesView: React.FC<Props> = ({}) => {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
-              placeholder='Enter particular name'
+              placeholder="Enter particular name"
               placeholderTextColor={COLOR_GRAY4}
               //@ts-ignore
               ref={particularNameCompRef}
@@ -107,7 +127,7 @@ const FreightOtherChargesView: React.FC<Props> = ({}) => {
                 //@ts-ignore
                 ref={quantityCompRef}
                 inputType="numeric"
-                placeholder='Enter quantity'
+                placeholder="Enter quantity"
                 placeholderTextColor={COLOR_GRAY4}
               />
             </View>
@@ -122,7 +142,7 @@ const FreightOtherChargesView: React.FC<Props> = ({}) => {
                 //@ts-ignore
                 ref={ratePerItemCompRef}
                 inputType="numeric"
-                placeholder='Rate per item'
+                placeholder="Rate per item"
                 placeholderTextColor={COLOR_GRAY4}
               />
             </View>
@@ -135,10 +155,11 @@ const FreightOtherChargesView: React.FC<Props> = ({}) => {
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
+                value={amount}
                 //@ts-ignore
                 ref={amountCompRef}
                 inputType="numeric"
-                placeholder='Enter amount'
+                placeholder="Enter amount"
                 placeholderTextColor={COLOR_GRAY4}
               />
             </View>
@@ -152,7 +173,7 @@ const FreightOtherChargesView: React.FC<Props> = ({}) => {
                 selectionColor={COLOR_BLACK}
                 //@ts-ignore
                 ref={hsnCodeCompRef}
-                placeholder='Enter HSN code'
+                placeholder="Enter HSN code"
                 placeholderTextColor={COLOR_GRAY4}
               />
             </View>
@@ -168,6 +189,10 @@ const FreightOtherChargesView: React.FC<Props> = ({}) => {
           </View>
         </>
       ) : null}
+      <Spacer height={10} />
+      {otherItems.map((d: IOtherCharge, index: number) => {
+        return <OtherChargeItem item={d} index={index} onDelete={onDelete} />;
+      })}
     </View>
   );
 };

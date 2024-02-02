@@ -3,7 +3,7 @@ import {View} from 'react-native';
 import styles from './style';
 import Label from '../../../../../../../../../common/Label';
 import Input from '../../../../../../../../../common/Input';
-import {COLOR_BLACK} from '../../../../../../../../../utils/colors';
+import {COLOR_BLACK, COLOR_GRAY4} from '../../../../../../../../../utils/colors';
 import {FREIGHT_TYPE} from '../../../../utils';
 import {useInvoiceFormContextHook} from '../../../../../../../../../provider/InvoiceFormContextProvider';
 
@@ -106,6 +106,8 @@ const FreightInputView: React.FC<Props> = ({label1, label2, freightType}) => {
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
           inputType="numeric"
+          placeholder='Enter amount'
+          placeholderTextColor={COLOR_GRAY4}
         />
       </View>
       <View style={styles.compContainer}>
@@ -115,6 +117,8 @@ const FreightInputView: React.FC<Props> = ({label1, label2, freightType}) => {
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
+          placeholder='Enter HSN code'
+          placeholderTextColor={COLOR_GRAY4}
         />
       </View>
     </View>
