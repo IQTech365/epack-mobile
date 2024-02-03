@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import {View, Text} from 'react-native';
+import {View} from 'react-native';
 import styles from './style';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {QuotationStackParamList} from '../../../navigation/params/QuotationStackParamList';
@@ -10,7 +10,7 @@ import {QuotationFormContextProvider} from '../../../provider/QuotationFormConte
 import AddQuotationForm from './components/AddQuotationForm';
 import { IGetQuotationData } from '../../../interface/quotation/IGetQuotationsResponse';
 import { getCurrentCompanyId } from '../../../utils/storage';
-import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { useAppDispatch } from '../../../redux/hooks';
 import { getSerialNoRequest, resetGetSerialNoRequest } from '../../../redux/slices/SerialNoSettingSlice';
 import { DOCUMENT_TYPE, IGetSerialNoRequest } from '../../../interface/setting/serialNo/serialNo';
 import { getSingleQuotationRequest } from '../../../redux/slices/QuotationSlice';

@@ -163,6 +163,7 @@ const ConsigneeDetails: React.FC<{}> = ({}) => {
               onSelect={setConsigneeCity}
               //@ts-ignore
               ref={cityDropdownCompRef}
+              containerStyle={styles.itemContainer}
             />
           </View>
         </View>

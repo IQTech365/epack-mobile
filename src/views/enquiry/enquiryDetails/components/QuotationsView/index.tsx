@@ -146,7 +146,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
       _data = quotationData
         .filter((e: IGetQuotationData) => e.enquiryId == enquiryId)
         .map((quotation: IGetQuotationData) => {
-          const {quotationNumber, quotationData, quotationAmount} = quotation;
+          const {quotationNumber, quotationDate, quotationAmount} = quotation;
           const item: IQuotationItem = {
             quotationNo: quotationNumber,
             clientName: _getClientName(quotation),
@@ -154,7 +154,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
             toDestination: _getToDestination(quotation),
             shiftingType: _getShiftingType(quotation),
             quotationAmount: quotationAmount,
-            quotationDate: quotationData,
+            quotationDate: quotationDate,
             phoneNumber: _getMobile(quotation),
             id: quotation._id,
           };
@@ -241,7 +241,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
     if (showQuotationList) {
       return (
           <FlatList
-            contentContainerStyle={{alignItems: 'center', paddingVertical: 10}}
+            // contentContainerStyle={{alignItems: 'center', paddingVertical: 10, justifyContent: 'center'}}
             data={transformQuotationData()}
             refreshControl={
               <RefreshControl
@@ -304,7 +304,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
   ]);
 
   return (
-    <>
+    <View style={{alignItems: 'center'}}>
       <ActionHeaderView
         count={0}
         onShow={handleShowQuotationList}
@@ -323,7 +323,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
           <TemplateViewer html={quotationTemplateHtml} />
         </View>
       </ModalHOC>
-    </>
+    </View>
   );
 };
 

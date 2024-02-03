@@ -80,7 +80,7 @@ export interface ISingleQuotationData {
   enquiryId: string;
   shiftingLuggage: string;
   templateId: string;
-  quotationData: string;
+  quotationDate: string;
   quotationNumber: string;
   quotationAmount: string;
   advanceAmount: string;

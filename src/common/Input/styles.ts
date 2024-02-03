@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
         height: 44,
         color: COLOR_WHITE,
         fontSize: 16,
+        fontFamily: 'WorkSans-Regular',
     },
     error: {
         color: COLOR_ERROR,

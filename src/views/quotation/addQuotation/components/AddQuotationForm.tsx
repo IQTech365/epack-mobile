@@ -82,7 +82,6 @@ const AddQuotationForm: React.FC<Props> = ({
     addQuotationRequesting,
     addQuotationSuccess,
     addQuotationFailure,
-    addQuotationInfo,
     quotation,
     getQuotationRequesting,
     updateQuotationRequesting,

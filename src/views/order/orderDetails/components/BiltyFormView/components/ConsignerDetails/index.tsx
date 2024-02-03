@@ -153,6 +153,7 @@ const ConsignerDetails: React.FC<{}> = ({}) => {
               onSelect={setConsignerCity}
               //@ts-ignore
               ref={cityDropdownCompRef}
+              containerStyle={styles.itemContainer}
             />
           </View>
         </View>

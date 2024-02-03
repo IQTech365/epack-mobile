@@ -133,7 +133,7 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false}) => {
         }
         setQuotationNo(item.quotationNumber);
         //@ts-ignore
-        dateOfQuotationCompRef && dateOfQuotationCompRef?.current?.setDefaultValue(new Date(item.quotationData));
+        dateOfQuotationCompRef && dateOfQuotationCompRef?.current?.setDefaultValue(new Date(item.quotationDate));
         const enquiry:IEnquiry = item.enquiries;
         if(enquiry) {
           setShiftingType(enquiry.shiftingType);

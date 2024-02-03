@@ -64,6 +64,8 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
   const [downloadOption, setDownloadOption] = useState<string>('');
   const bottomSheetRef = useRef<BottomSheet>(null);
   const {data: quotationData} = quotations || {};
+  console.log('quotationData--', JSON.stringify(quotationData));
+  
   const [openPreview, setOpenPreview] = useState<boolean>(false);
   const [openShare, setOpenShare] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -172,7 +174,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
       quotationData.length > 0
     ) {
       _data = quotationData.map((quotation: IGetQuotationData) => {
-        const {quotationNumber, enquiries, quotationData, quotationAmount} =
+        const {quotationNumber, enquiries, quotationDate, quotationAmount} =
           quotation;
         const item: IQuotationItem = {
           quotationNo: quotationNumber,
@@ -181,7 +183,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
           toDestination: _getToDestination(quotation),
           shiftingType: _getShiftingType(quotation),
           quotationAmount: quotationAmount,
-          quotationDate: quotationData,
+          quotationDate: quotationDate,
           phoneNumber: _getMobile(quotation),
           id: quotation._id,
         };

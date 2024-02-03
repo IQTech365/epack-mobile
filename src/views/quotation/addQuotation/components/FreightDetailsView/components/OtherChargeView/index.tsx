@@ -324,6 +324,7 @@ const OtherChargeView: React.FC<Props> = ({}) => {
               <Spacer height={12} />
               {items.map((item: IOtherCharge, index) => (
                 <OtherChargeListItem
+                  key={`${index}`}
                   data={item}
                   index={index}
                   onDelete={handleDeleteItem}

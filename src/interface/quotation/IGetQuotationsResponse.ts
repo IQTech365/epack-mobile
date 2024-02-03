@@ -61,7 +61,7 @@ export interface IGetQuotationData {
   enquiryId: string;
   shiftingLuggage: string;
   templateId: string;
-  quotationData: string;
+  quotationDate: string;
   quotationNumber: string;
   quotationAmount: string;
   advanceAmount: string;
