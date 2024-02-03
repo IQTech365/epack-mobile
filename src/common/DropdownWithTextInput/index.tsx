@@ -85,9 +85,9 @@ const DropdownWithTextInput: FC<IProps> = forwardRef(
             disabled={disabled}
             onPress={_toggleOptions}>
             {showOptions ? (
-              <UpArrowIcon width={24} height={24} />
+              <UpArrowIcon width={20} height={20} />
             ) : (
-              <DownArrowIcon width={24} height={24} />
+              <DownArrowIcon width={20} height={20} />
             )}
           </TouchableOpacity>
         </View>
