@@ -49,6 +49,8 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
   const dispatch = useAppDispatch();
   const [showQuotationList, setShowQuotationList] = useState<boolean>(false);
   const [createNewQuotation, setCreateNewQuotation] = useState<boolean>(true);
+  const [showFormInEditMode, setShowFormInEditMode] = useState<boolean>(false);
+  const [quotationToEdit, setQuotationToEdit] = useState<IGetQuotationData>();
   const [openPreview, setOpenPreview] = useState<boolean>(false);
   const [openShare, setOpenShare] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -167,11 +169,13 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
   const handleCreateNewQuotation = () => {
     setShowQuotationList(false);
     setCreateNewQuotation(true);
+    setShowFormInEditMode(false);
   };
 
   const handleShowQuotationList = () => {
     setShowQuotationList(true);
     setCreateNewQuotation(false);
+    setShowFormInEditMode(false);
   };
 
   const handleOnRefresh = useCallback(() => {
@@ -195,10 +199,10 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
     const item: IGetQuotationData = quotationData?.find(
       (e: IGetQuotationData) => e.quotationNumber == quotation.quotationNo,
     );
-    navigation.navigate(QuotationStackRoute.AddQuotation, {
-      item: item,
-      isEdit: true,
-    });
+    setQuotationToEdit(item);
+    setShowQuotationList(false);
+    setCreateNewQuotation(false);
+    setShowFormInEditMode(true);
   };
 
   const _handleShowPreview = (docId: string) => {
@@ -229,10 +233,27 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
     );
   };
 
+  /**
+   * This Callback will be fired from Enquiry section if either new quotation created or updated
+   */
+  const _handleOnSuccess = () => {
+    setShowQuotationList(true);
+    setCreateNewQuotation(false);
+    setShowFormInEditMode(false);
+  }
+
   const showForm = () => {
     if (createNewQuotation) {
       //@ts-ignore
       return <AddQuotationView showHeader={false} fromEnquiry={true} enquiryId={enquiryId} />;
+    }
+    return null;
+  };
+
+  const showEditForm = () => {
+    if (showFormInEditMode) {
+      //@ts-ignore
+      return <AddQuotationView showHeader={false} fromEnquiry={true} enquiryId={enquiryId} editRequestFromEnquiry={true} itemFromEnquiry={quotationToEdit} onSuccess={_handleOnSuccess} />;
     }
     return null;
   };
@@ -306,12 +327,13 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
   return (
     <View style={{alignItems: 'center'}}>
       <ActionHeaderView
-        count={0}
+        count={transformQuotationData().length}
         onShow={handleShowQuotationList}
         onCreate={handleCreateNewQuotation}
       />
       {showForm()}
       {showList()}
+      {showEditForm()}
       <Spinner show={getQuotationTemplateHtmlRequesting} />
       <ModalHOC
         visible={showModal}

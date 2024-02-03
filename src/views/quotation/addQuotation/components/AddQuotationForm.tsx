@@ -52,6 +52,7 @@ interface Props {
   navigation: any;
   item?:IGetQuotationData;
   isEdit?:boolean;
+  onSuccess?:() => void;
 }
 
 const AddQuotationForm: React.FC<Props> = ({
@@ -59,6 +60,7 @@ const AddQuotationForm: React.FC<Props> = ({
   enquiryId,
   navigation,
   isEdit,
+  onSuccess,
   item
 }) => {
   const {
@@ -380,7 +382,11 @@ const AddQuotationForm: React.FC<Props> = ({
       dispatch(resetaddQuotationRequest());
       dispatch(resetGetSerialNoRequest());
       _getQuotationsRequest();
-      navigation?.goBack();
+      if(onSuccess) {
+        onSuccess();
+      } else {
+        navigation?.goBack();
+      }
     } else if (!addQuotationRequesting && addQuotationFailure) {
       showToast('Quotation Not Created. Try again!', ToastType.ERROR);
       dispatch(resetaddQuotationRequest());
@@ -392,7 +398,11 @@ const AddQuotationForm: React.FC<Props> = ({
       showToast('Quotation Updated.', ToastType.SUCCESS);
       dispatch(resetUpdateQuotationRequest());
       _getQuotationsRequest();
-      navigation?.goBack();
+      if(onSuccess) {
+        onSuccess();
+      } else {
+        navigation?.goBack();
+      }
     } else if (!updateQuotationRequesting && updateQuotationFailure) {
       showToast('Quotation Not Updated. Try again!', ToastType.ERROR);
       dispatch(resetUpdateQuotationRequest());

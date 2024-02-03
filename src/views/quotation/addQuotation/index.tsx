@@ -21,12 +21,18 @@ interface Props
   showHeader?: boolean;
   fromEnquiry?: boolean;
   enquiryId?: string;
+  editRequestFromEnquiry?:boolean;
+  itemFromEnquiry?:IGetQuotationData,
+  onSuccess?:() => void;
 }
 
 const AddQuotationView: React.FC<Props> = ({
   showHeader = true,
   fromEnquiry = false,
   enquiryId,
+  editRequestFromEnquiry = false,
+  itemFromEnquiry,
+  onSuccess,
   navigation,
   route,
 }) => {
@@ -70,8 +76,9 @@ const AddQuotationView: React.FC<Props> = ({
             fromEnquiry={fromEnquiry}
             enquiryId={enquiryId || item?.enquiryId}
             navigation={navigation}
-            isEdit={isEdit}
-            item={item}
+            isEdit={isEdit || editRequestFromEnquiry}
+            item={item ? item : itemFromEnquiry}
+            onSuccess={onSuccess}
           />
         </View>
       </AvoidSoftInputViewHOC>
