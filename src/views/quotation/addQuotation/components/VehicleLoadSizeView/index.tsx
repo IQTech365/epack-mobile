@@ -25,7 +25,7 @@ const VehicleLoadSizeView: React.FC<IProps> = ({}) => {
       if(item) {
         const quotationfreight:IQuotationFreight = item.quotationfreights;
         if(quotationfreight && quotationfreight.lorryType) {
-          const lorryTypeItem:TDropdownItem = _getVehicleSizes().find((d:TDropdownItem) => d.label == quotationfreight.lorryType) as TDropdownItem;
+          const lorryTypeItem:TDropdownItem = _getVehicleSizes().find((d:TDropdownItem) => d.label == quotationfreight?.lorryType) as TDropdownItem;
           if(lorryTypeItem) {
             //@ts-ignore
             lorryTypeDropdownRef && lorryTypeDropdownRef?.current?.setDefaultValue(lorryTypeItem);

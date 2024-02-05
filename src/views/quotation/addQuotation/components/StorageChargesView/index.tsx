@@ -42,21 +42,21 @@ const StorageChargesView: React.FC<Props> = ({}) => {
         if(quotationfreight) {
           const storageCharge:IStorage = quotationfreight.storageCharges;
           if(storageCharge) {
-            setStorage(storageCharge.isRequired);
-            const storageDurationItem:TDropdownItem = storageDurationOptions.find((d:TDropdownItem) => d.label == storageCharge.storageChargesType) as TDropdownItem;
+            setStorage(storageCharge?.isRequired);
+            const storageDurationItem:TDropdownItem = storageDurationOptions.find((d:TDropdownItem) => d.label == storageCharge?.storageChargesType) as TDropdownItem;
             if(storageDurationItem) {
-              setStorageDuration(storageDurationItem.label);
+              setStorageDuration(storageDurationItem?.label);
               //@ts-ignore
               storageDurationDropdownCompRef && storageDurationDropdownCompRef?.current?.setDefaultValue(storageDurationItem);
             }
-            setStorageAmount(storageCharge.amount);
+            setStorageAmount(storageCharge?.amount);
             if(storageCharge.storageChargesType == storageDurationOptions[2].label) {
               //@ts-ignore
-              fromDateDropdownCompRef && fromDateDropdownCompRef?.current?.setDefaultValue(new Date(storageCharge.fromDate));
-              setStorageFromDate(formatDate4(new Date(storageCharge.fromDate)));
+              fromDateDropdownCompRef && fromDateDropdownCompRef?.current?.setDefaultValue(new Date(storageCharge?.fromDate));
+              setStorageFromDate(formatDate4(new Date(storageCharge?.fromDate)));
               //@ts-ignore
-              toDateDropdownCompRef && toDateDropdownCompRef?.current?.setDefaultValue(new Date(storageCharge.toDate));
-              setStorageToDate(formatDate4(new Date(storageCharge.toDate)));
+              toDateDropdownCompRef && toDateDropdownCompRef?.current?.setDefaultValue(new Date(storageCharge?.toDate));
+              setStorageToDate(formatDate4(new Date(storageCharge?.toDate)));
             }
           }
         }

@@ -15,6 +15,8 @@ import { getSerialNoRequest, resetGetSerialNoRequest } from '../../../redux/slic
 import { DOCUMENT_TYPE, IGetSerialNoRequest } from '../../../interface/setting/serialNo/serialNo';
 import { getSingleQuotationRequest } from '../../../redux/slices/QuotationSlice';
 import useInitialValueHook from '../../../hooks/useInitialValueHook';
+import { getVehicleCompanyRequest, getVehicleModelsRequest, getVehicleTypesRequest } from '../../../redux/slices/CommonSlice';
+import { getVehicleSizeRequest } from '../../../redux/slices/VehicleSlice';
 
 interface Props
   extends NativeStackScreenProps<QuotationStackParamList, 'AddQuotation'> {
@@ -64,6 +66,10 @@ const AddQuotationView: React.FC<Props> = ({
       dispatch(resetGetSerialNoRequest());
       _getSerialNoRequest();
     }
+    dispatch(getVehicleCompanyRequest());
+    dispatch(getVehicleModelsRequest());
+    dispatch(getVehicleTypesRequest());
+    dispatch(getVehicleSizeRequest());
   }, []);
   
   return (

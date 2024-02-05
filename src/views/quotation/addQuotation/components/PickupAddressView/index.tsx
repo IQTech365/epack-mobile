@@ -90,15 +90,15 @@ const PickupAddressView: React.FC<Props> = ({fromEnquiry = false}) => {
     if (fromEnquiry && state.enquiryItem) {
       const pickupAddress = state.enquiryItem.pickupAddress;
       if (pickupAddress) {
-        setPickupPincode(pickupAddress.pincode);
-        setPincode(pickupAddress.pincode);
-        setPickupState(pickupAddress.state);
-        setPickupAddress(pickupAddress.address);
+        setPickupPincode(pickupAddress?.pincode);
+        setPincode(pickupAddress?.pincode);
+        setPickupState(pickupAddress?.state);
+        setPickupAddress(pickupAddress?.address);
         //@ts-ignore
-        stateDropdownCompRef?.current?.setValue(pickupAddress.state);
-        setPickupCity(pickupAddress.city);
+        stateDropdownCompRef?.current?.setValue(pickupAddress?.state);
+        setPickupCity(pickupAddress?.city);
         //@ts-ignore
-        cityDropdownCompRef?.current?.setValue(pickupAddress.city);
+        cityDropdownCompRef?.current?.setValue(pickupAddress?.city);
       }
     }
   }, [state.enquiryItem]);
@@ -112,17 +112,17 @@ const PickupAddressView: React.FC<Props> = ({fromEnquiry = false}) => {
           const pickupAddress: IPickupAddress =
             enquiry.pickupAddress as IPickupAddress;
           if (pickupAddress) {
-            setPickupPincode(pickupAddress.pincode);
-            setPincode(pickupAddress.pincode);
-            setPickupState(pickupAddress.state);
+            setPickupPincode(pickupAddress?.pincode);
+            setPincode(pickupAddress?.pincode);
+            setPickupState(pickupAddress?.state);
             //@ts-ignore
-            stateDropdownCompRef?.current?.setValue(pickupAddress.state);
-            setPickupCity(pickupAddress.city);
+            stateDropdownCompRef?.current?.setValue(pickupAddress?.state);
+            setPickupCity(pickupAddress?.city);
             //@ts-ignore
-            cityDropdownCompRef?.current?.setValue(pickupAddress.city);
-            setPickupCurrentFloor(pickupAddress.floor);
+            cityDropdownCompRef?.current?.setValue(pickupAddress?.city);
+            setPickupCurrentFloor(pickupAddress?.floor);
             const floorItem: TDropdownItem = floorOptions.find(
-              (d: TDropdownItem) => d.label == pickupAddress.floor,
+              (d: TDropdownItem) => d.label == pickupAddress?.floor,
             ) as TDropdownItem;
             if (floorItem) {
               //@ts-ignore

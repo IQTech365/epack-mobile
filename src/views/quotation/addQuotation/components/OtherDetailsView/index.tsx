@@ -31,10 +31,10 @@ const OtherDetailsView: React.FC<Props> = ({}) => {
       if(item) {
         const quotationfreight:IQuotationFreight = item.quotationfreights;
         if(quotationfreight) {
-          setOtherDetail1(quotationfreight.otherDetail1);
-          setOtherDetail2(quotationfreight.otherDetail2);
-          setOtherDetail3(quotationfreight.easy_access_for_loading_unloading);
-          setOtherDetail4(quotationfreight.any_restrcition_for_loading_unloading);
+          setOtherDetail1(quotationfreight?.otherDetail1);
+          setOtherDetail2(quotationfreight?.otherDetail2);
+          setOtherDetail3(quotationfreight?.easy_access_for_loading_unloading);
+          setOtherDetail4(quotationfreight?.any_restrcition_for_loading_unloading);
         }
       }
     }

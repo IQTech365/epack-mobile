@@ -31,13 +31,7 @@ import {IGetQuotationRequest} from '../../../../interface/quotation/IGetQuotatio
 import billingByOptions from '../../../../data/billingByOptions.json';
 import Spinner from '../../../../common/Spinner';
 import {Validator} from '../../../../utils/validation';
-import {
-  getVehicleCompanyRequest,
-  getVehicleModelsRequest,
-  getVehicleTypesRequest,
-} from '../../../../redux/slices/CommonSlice';
 import {ToastType, showToast} from '../../../../utils/utility';
-import { getVehicleSizeRequest } from '../../../../redux/slices/VehicleSlice';
 import { getCurrentCompanyId } from '../../../../utils/storage';
 import { IGetQuotationData } from '../../../../interface/quotation/IGetQuotationsResponse';
 import { ISingleQuotationData } from '../../../../interface/quotation/IGetSingleQuotationResponse';
@@ -97,9 +91,6 @@ const AddQuotationForm: React.FC<Props> = ({
     vehicleModelsRequesting,
   } = useAppSelector(state => state.Common);
   const {prefix} = useInitialValueHook('658d3c6f585e3dde644da95b');
-
-  const {getVehicleSizeRequesting} = useAppSelector(state => state.Vehicle);
-
   const {enquiry} = useAppSelector(state => state.Enquiry);
 
   const transitInsurance: ITransitInsurance = {
@@ -370,10 +361,6 @@ const AddQuotationForm: React.FC<Props> = ({
     if(fromEnquiry) {
       setEnquiryItem(_getSingleEnquiry());
     }
-    dispatch(getVehicleCompanyRequest());
-    dispatch(getVehicleModelsRequest());
-    dispatch(getVehicleTypesRequest());
-    dispatch(getVehicleSizeRequest());
   }, []);
 
   useEffect(() => {

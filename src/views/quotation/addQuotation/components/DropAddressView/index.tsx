@@ -87,15 +87,15 @@ const DropAddressView: React.FC<Props> = ({fromEnquiry = false}) => {
     if (fromEnquiry && state.enquiryItem) {
       const dropAddress = state.enquiryItem.dropAddress;
       if (dropAddress) {
-        setDropPincode(dropAddress.pincode);
-        setPincode(dropAddress.pincode);
-        setDropState(dropAddress.state);
-        setDropAddress(dropAddress.address);
+        setDropPincode(dropAddress?.pincode);
+        setPincode(dropAddress?.pincode);
+        setDropState(dropAddress?.state);
+        setDropAddress(dropAddress?.address);
         //@ts-ignore
-        stateDropdownCompRef?.current?.setValue(dropAddress.state);
-        setDropCity(dropAddress.city);
+        stateDropdownCompRef?.current?.setValue(dropAddress?.state);
+        setDropCity(dropAddress?.city);
         //@ts-ignore
-        cityDropdownCompRef?.current?.setValue(dropAddress.city);
+        cityDropdownCompRef?.current?.setValue(dropAddress?.city);
       }
     }
   }, [state.enquiryItem]);
@@ -108,22 +108,22 @@ const DropAddressView: React.FC<Props> = ({fromEnquiry = false}) => {
         if(enquiry) {
           const dropAddress:IDropAddress = enquiry.dropAddress as IDropAddress;
           if(dropAddress) {
-            setDropPincode(dropAddress.pincode);
-            setPincode(dropAddress.pincode);
-            setDropState(dropAddress.state);
+            setDropPincode(dropAddress?.pincode);
+            setPincode(dropAddress?.pincode);
+            setDropState(dropAddress?.state);
             //@ts-ignore
-            stateDropdownCompRef?.current?.setValue(dropAddress.state);
-            setDropCity(dropAddress.city);
+            stateDropdownCompRef?.current?.setValue(dropAddress?.state);
+            setDropCity(dropAddress?.city);
             //@ts-ignore
-            cityDropdownCompRef?.current?.setValue(dropAddress.city);
-            setDropCurrentFloor(dropAddress.floor);
-            const floorItem:TDropdownItem = floorOptions.find((d:TDropdownItem) => d.label == dropAddress.floor) as TDropdownItem;
+            cityDropdownCompRef?.current?.setValue(dropAddress?.city);
+            setDropCurrentFloor(dropAddress?.floor);
+            const floorItem:TDropdownItem = floorOptions.find((d:TDropdownItem) => d.label == dropAddress?.floor) as TDropdownItem;
               if(floorItem) {
                 //@ts-ignore
                 floorDropdownCompRef && floorDropdownCompRef?.current?.setDefaultValue(floorItem);
             }
             setDropLiftStatus(dropAddress.isLiftAvailable);
-            const liftItem:TDropdownItem = liftStatusOptions.find((d:TDropdownItem) => d.label == dropAddress.isLiftAvailable) as TDropdownItem;
+            const liftItem:TDropdownItem = liftStatusOptions.find((d:TDropdownItem) => d.label == dropAddress?.isLiftAvailable) as TDropdownItem;
               if(liftItem) {
                 //@ts-ignore
                 liftDropdownCompRef && liftDropdownCompRef?.current?.setDefaultValue(liftItem);
