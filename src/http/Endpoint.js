@@ -112,11 +112,11 @@ export const GET_UNIT_TYPES = `/setting/unit-type/all`;
 export const GET_PACKING_MATERIALS = `/enquiry/get-packing-material`;
 
 // Templates
-export const GET_MONEY_RECEIPT_TEMPLATE_HTML = (templateId, receiptId) => `/template/create-money-receipt-template/${templateId}/${receiptId}`;
-export const GET_QUOTATION_TEMPLATE_HTML = (templateId, docId) => `template/create-quotation-template/${templateId}/${docId}`;
-export const GET_BILTY_TEMPLATE_HTML = (templateId, docId) => `template/create-bilty-template/${templateId}/${docId}`;
-export const GET_CAR_CONDITION_TEMPLATE_HTML = (templateId, docId) => `template/create-car-condition-template/${templateId}/${docId}`;
-export const GET_INVOICE_TEMPLATE_HTML = (templateId, docId) => `template/create-invoice-template/${templateId}/${docId}`;
+export const GET_MONEY_RECEIPT_TEMPLATE_HTML = `/template/money-receipt-template`;
+export const GET_QUOTATION_TEMPLATE_HTML = `/template/quotation-template`;
+export const GET_BILTY_TEMPLATE_HTML = `/template/bilty-template`;
+export const GET_CAR_CONDITION_TEMPLATE_HTML = `/template/car-condition-template`;
+export const GET_INVOICE_TEMPLATE_HTML = `/template/create-invoice-template`;
 
 // Vehicle types
 export const GET_VEHICLE_TYPES = `/vehicle-management/vehicle-type/getAll`;

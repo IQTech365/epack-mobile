@@ -42,7 +42,7 @@ import { IGetCarConditionListResponse } from '../interface/order/IGetCarConditio
 import { IGetOrdersRequest } from '../interface/order/IGetOrdersRequest';
 import { ISingleOrderRequest } from '../interface/order/ISingleOrderRequest';
 import { ISingleEnquiryResponse } from '../interface/enquiry/ISingleEnquiryResponse';
-import { IHtmlTemplateResponse } from '../interface/order/templates/ITemplateResponse';
+import { IHtmlBiltyTemplateRequest, IHtmlCarConditionTemplateRequest, IHtmlInvoiceTemplateRequest, IHtmlMoneyReceiptTemplateRequest, IHtmlTemplateRequest, IHtmlTemplateResponse } from '../interface/order/templates/ITemplateResponse';
 import { ICreatePackingMaterialRequest, ICreatePackingMaterialResponse, IDeletePackingListItemResponse, IGetPackingListRequest, IPackingListResponse } from '../interface/order/IPackingMaterialResponse';
 import { IGetInvoiceListResponse } from '../interface/order/IGetInvoiceListResponse';
 
@@ -101,9 +101,13 @@ export const GetInvoiceListService = async (payload: string): Promise<IGetInvoic
     return await api.get<IGetInvoiceListResponse>(GET_INVOICE_LIST(payload));
 }
 
-export const GetInvoiceTemplateHtmlService = async (templateId:string, docId:string): Promise<IHtmlTemplateResponse> => {
+export const GetInvoiceTemplateHtmlService = async (payload:IHtmlTemplateRequest): Promise<IHtmlTemplateResponse> => {
     const api = Api.getInstance();
-    return await api.get<IHtmlTemplateResponse>(GET_INVOICE_TEMPLATE_HTML(templateId, docId));
+    const data:IHtmlInvoiceTemplateRequest = {
+        templateId: payload.templateId,
+        invoiceId: payload.quotationId,
+    }
+    return await api.post<IHtmlInvoiceTemplateRequest,AxiosResponse<IHtmlTemplateResponse>>(data, GET_INVOICE_TEMPLATE_HTML);
 }
 
 export const EditEnquiryService = async (payload: IOtpVerifyRequest): Promise<IOtpVerifyResponse> => {
@@ -122,19 +126,31 @@ export const GetOrderService = async (payload: ISingleOrderRequest): Promise<ISi
 }
 
 // Template
-export const GetMoneyReceiptTemplateHtmlService = async (templateId:string, moneyReceiptId:string): Promise<IHtmlTemplateResponse> => {
+export const GetMoneyReceiptTemplateHtmlService = async (payload:IHtmlTemplateRequest): Promise<IHtmlTemplateResponse> => {
     const api = Api.getInstance();
-    return await api.get<IHtmlTemplateResponse>(GET_MONEY_RECEIPT_TEMPLATE_HTML(templateId, moneyReceiptId));
+    const data:IHtmlMoneyReceiptTemplateRequest = {
+        templateId: payload.templateId,
+        moneyReceiptId: payload.quotationId,
+    }
+    return await api.post<IHtmlMoneyReceiptTemplateRequest,AxiosResponse<IHtmlTemplateResponse>>(data, GET_MONEY_RECEIPT_TEMPLATE_HTML);
 }
 
-export const GetBiltyTemplateHtmlService = async (templateId:string, docId:string): Promise<IHtmlTemplateResponse> => {
+export const GetBiltyTemplateHtmlService = async (payload:IHtmlTemplateRequest): Promise<IHtmlTemplateResponse> => {
     const api = Api.getInstance();
-    return await api.get<IHtmlTemplateResponse>(GET_BILTY_TEMPLATE_HTML(templateId, docId));
+    const data:IHtmlBiltyTemplateRequest = {
+        templateId: payload.templateId,
+        biltyId: payload.quotationId,
+    }
+    return await api.post<IHtmlBiltyTemplateRequest,AxiosResponse<IHtmlTemplateResponse>>(data, GET_BILTY_TEMPLATE_HTML);
 }
 
-export const GetCarConditionTemplateHtmlService = async (templateId:string, docId:string): Promise<IHtmlTemplateResponse> => {
+export const GetCarConditionTemplateHtmlService = async (payload:IHtmlTemplateRequest): Promise<IHtmlTemplateResponse> => {
     const api = Api.getInstance();
-    return await api.get<IHtmlTemplateResponse>(GET_CAR_CONDITION_TEMPLATE_HTML(templateId, docId));
+    const data:IHtmlCarConditionTemplateRequest = {
+        templateId: payload.templateId,
+        carConditionId: payload.quotationId,
+    }
+    return await api.post<IHtmlCarConditionTemplateRequest,AxiosResponse<IHtmlTemplateResponse>>(data, GET_CAR_CONDITION_TEMPLATE_HTML);
 }
 
 export const CreatePackingListService = async (payload: ICreatePackingMaterialRequest): Promise<ICreatePackingMaterialResponse> => {

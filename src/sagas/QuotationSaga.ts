@@ -48,8 +48,7 @@ export function* getSingleQuotationSaga(action: PayloadAction<string>) {
 
 export function* getQuotationTemplateHtmlSaga(action: PayloadAction<IHtmlTemplateRequest>) {
     try {
-        const {templateId, docId} = action.payload;
-        const response: IHtmlTemplateResponse = yield call(QuotationService.GetQuotationTemplateHtmlService, templateId, docId);
+        const response: IHtmlTemplateResponse = yield call(QuotationService.GetQuotationTemplateHtmlService, action.payload);
         yield put(getQuotationHtmlSuccess(response));
     } catch (error) {
         yield put(getQuotationHtmlFailure(error));

@@ -7,7 +7,7 @@ import {
   ITemplate,
   ITemplateData,
 } from '../../../../../interface/setting/template/template';
-import TemplateCard from '../TemplateCard';
+import TemplateCard from '../templateCard';
 import TemplateEmptyView from '../TemplateEmptyView';
 import { getSavedDocumentTemplateIdListRequest, resetSaveDocumentTemplateIdRequest, saveDocumentTemplateIdRequest } from '../../../../../redux/slices/TemplateSettingSlice';
 import { ToastType, showToast } from '../../../../../utils/utility';

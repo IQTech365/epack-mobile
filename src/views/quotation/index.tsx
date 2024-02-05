@@ -301,7 +301,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
     setOpenShare(false);
     const payload: IHtmlTemplateRequest = {
       templateId: templateId,
-      docId: docId,
+      quotationId: docId,
     };
     dispatch(getQuotationHtmlRequest(payload));
   };
@@ -311,7 +311,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
     setOpenShare(true);
     const payload: IHtmlTemplateRequest = {
       templateId: templateId,
-      docId: docId,
+      quotationId: docId,
     };
     dispatch(getQuotationHtmlRequest(payload));
   };

@@ -163,7 +163,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
   const handleDocumentDownload = async () => {
     const payload: IHtmlTemplateRequest = {
       templateId: templateId,
-      docId: documentId,
+      quotationId: documentId,
     };
     dispatch(getBiltyHtmlRequest(payload));
   };

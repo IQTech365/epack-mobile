@@ -122,7 +122,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
     //658d3c9c585e3dde644da970
     const payload: IHtmlTemplateRequest = {
       templateId: templateId,
-      docId: moneyReceiptId,
+      quotationId: moneyReceiptId,
     };
     dispatch(getMoneyReceiptHtmlRequest(payload));
   };
@@ -132,7 +132,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
     setShouldDownload(true);
     const payload: IHtmlTemplateRequest = {
       templateId: templateId,
-      docId: moneyReceiptId,
+      quotationId: moneyReceiptId,
     };
     dispatch(getMoneyReceiptHtmlRequest(payload));
   };
@@ -143,7 +143,7 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
     setOpenPreview(true);
     const payload: IHtmlTemplateRequest = {
       templateId: templateId,
-      docId: moneyReceiptId,
+      quotationId: moneyReceiptId,
     };
     dispatch(getMoneyReceiptHtmlRequest(payload));
   };

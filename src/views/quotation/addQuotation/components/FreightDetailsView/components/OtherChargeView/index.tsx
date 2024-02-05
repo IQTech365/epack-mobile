@@ -79,9 +79,9 @@ const OtherChargeView: React.FC<Props> = ({}) => {
       particular_name: particularName,
       quantity: quantity,
       part_load_rate_per_item: partLoadRatePerItem,
-      part_load_amount: partLoadAmount,
+      part_load_amount: _calculatePartLoadAmount(),
       full_load_rate_per_item: fullLoadRatePerItem,
-      full_load_amount: fullLoadAmount,
+      full_load_amount: _calculateFullLoadAmount(),
     };
     const copy = [...items];
     copy.push(item);
@@ -290,6 +290,7 @@ const OtherChargeView: React.FC<Props> = ({}) => {
                 <DropdownWithTextInput
                   options={particularOptions}
                   onSelect={setParticularName}
+                  initialValue={particularOptions[0]}
                   //@ts-ignore
                   ref={particularsInputCompRef}
                 />

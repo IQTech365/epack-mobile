@@ -163,7 +163,7 @@ const BothChargeInputView: React.FC<Props> = ({freightType}) => {
       value2 = state.loading_charge_full_load;
     } else if (freightType == FREIGHT_TYPE.UNLOADING_CHARGE) {
       value1 = state.unloading_charge_part_load;
-      value2 = state.unloading_charge_part_load;
+      value2 = state.unloading_charge_full_load;
     } else if (freightType == FREIGHT_TYPE.UNPACKING_CHARGE) {
       value1 = state.unpacking_charge_part_load;
       value2 = state.unpacking_charge_full_load;

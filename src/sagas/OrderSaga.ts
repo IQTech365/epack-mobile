@@ -230,8 +230,7 @@ export function* createCarConditionSaga(
 
   export function* getMoneyReceiptTemplateHtmlSaga(action: PayloadAction<IHtmlTemplateRequest>) {
     try {
-        const {templateId, docId} = action.payload;
-        const response: IHtmlTemplateResponse = yield call(OrderService.GetMoneyReceiptTemplateHtmlService, templateId, docId);
+        const response: IHtmlTemplateResponse = yield call(OrderService.GetMoneyReceiptTemplateHtmlService, action.payload);
         yield put(getMoneyReceiptHtmlSuccess(response));
     } catch (error) {
         yield put(getMoneyReceiptHtmlFailure(error));
@@ -240,8 +239,7 @@ export function* createCarConditionSaga(
 
   export function* getBiltyTemplateHtmlSaga(action: PayloadAction<IHtmlTemplateRequest>) {
     try {
-        const {templateId, docId} = action.payload;
-        const response: IHtmlTemplateResponse = yield call(OrderService.GetBiltyTemplateHtmlService, templateId, docId);
+        const response: IHtmlTemplateResponse = yield call(OrderService.GetBiltyTemplateHtmlService, action.payload);
         yield put(getBiltyHtmlSuccess(response));
     } catch (error) {
         yield put(getBiltyHtmlFailure(error));
@@ -250,8 +248,7 @@ export function* createCarConditionSaga(
 
   export function* getCarConditionTemplateHtmlSaga(action: PayloadAction<IHtmlTemplateRequest>) {
     try {
-        const {templateId, docId} = action.payload;
-        const response: IHtmlTemplateResponse = yield call(OrderService.GetCarConditionTemplateHtmlService, templateId, docId);
+        const response: IHtmlTemplateResponse = yield call(OrderService.GetCarConditionTemplateHtmlService, action.payload);
         yield put(getCarConditionHtmlSuccess(response));
     } catch (error) {
         yield put(getCarConditionHtmlFailure(error));
@@ -278,8 +275,7 @@ export function* createCarConditionSaga(
 
   export function* getInvoiceTemplateHtmlSaga(action: PayloadAction<IHtmlTemplateRequest>) {
     try {
-        const {templateId, docId} = action.payload;
-        const response: IHtmlTemplateResponse = yield call(OrderService.GetInvoiceTemplateHtmlService, templateId, docId);
+        const response: IHtmlTemplateResponse = yield call(OrderService.GetInvoiceTemplateHtmlService, action.payload);
         yield put(getInvoiceHtmlSuccess(response));
     } catch (error) {
         yield put(getInvoiceHtmlFailure(error));

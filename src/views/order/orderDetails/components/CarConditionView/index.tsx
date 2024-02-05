@@ -136,7 +136,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId}) => {
   const handleDocDownload = (docId: string) => {
     const payload: IHtmlTemplateRequest = {
       templateId: templateId,
-      docId: docId,
+      quotationId: docId,
     };
     dispatch(getCarConditionHtmlRequest(payload));
   };
