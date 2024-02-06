@@ -9,7 +9,7 @@ import PhoneCallIcon from '../../../../../images/icons/phone_call2.svg';
 import WhatsappIcon from '../../../../../images/icons/whatsapp_black_icon.svg';
 
 import DocumentActionView from '../../../../../common/DocumentActionView';
-import {formatDate} from '../../../../../utils/formatter';
+import {formatDate, formatDate5} from '../../../../../utils/formatter';
 
 export interface IQuotationItem {
   quotationNo: string;
@@ -21,6 +21,7 @@ export interface IQuotationItem {
   quotationDate: string;
   phoneNumber: string;
   id: string;
+  createdOn:string;
 }
 
 interface IQuotationListItemProps {
@@ -76,7 +77,7 @@ const QuotationListItem: React.FC<IQuotationListItemProps> = ({
           <Text style={styles.badgeText}>{index + 1}</Text>
         </View>
         <Text style={styles.enquiryDateText}>
-          {formatDate(new Date(item.quotationDate))}
+          {formatDate5(new Date(item.createdOn))}
         </Text>
       </View>
       <Shadow style={styles.cardWrapper} distance={1}>

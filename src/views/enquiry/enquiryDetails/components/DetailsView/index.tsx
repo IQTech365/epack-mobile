@@ -18,6 +18,7 @@ import { getEnquiryRequest } from '../../../../../redux/slices/EnquirySlice';
 import Spinner from '../../../../../common/Spinner';
 import { ISingleEnquiryData } from '../../../../../interface/enquiry/ISingleEnquiryResponse';
 import { COLOR_BLACK, COLOR_GREEN } from '../../../../../utils/colors';
+import { formatDate } from '../../../../../utils/formatter';
 
 interface IDetailsViewProps {
   enquiryId: string;
@@ -204,15 +205,15 @@ const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
         />
          <EnquiryDetailListItem
           label="State"
-          value={singleEnquiry?.billingDetails?.companyState}
+          value={singleEnquiry?.billingDetails?.state}
         />
          <EnquiryDetailListItem
           label="City"
-          value={singleEnquiry?.billingDetails?.companyCity}
+          value={singleEnquiry?.billingDetails?.city}
         />
          <EnquiryDetailListItem
           label="Pincode"
-          value={singleEnquiry?.billingDetails?.companyPincode}
+          value={singleEnquiry?.billingDetails?.pincode}
         />
         <EnquiryDetailListItem
           label="Company GST"
@@ -298,6 +299,10 @@ const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
               <EnquiryDetailListItem
                 label="Shifting Type"
                 value={singleEnquiry?.shiftingType}
+              />
+              <EnquiryDetailListItem
+                label="Date of Moving"
+                value={formatDate(new Date(singleEnquiry?.shiftingDate))}
               />
               <EnquiryDetailListItem
                 label="Shifting From"

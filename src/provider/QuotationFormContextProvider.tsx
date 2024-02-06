@@ -929,6 +929,13 @@ const useQuotationFormContext = () => {
     });
   }
 
+  const resetItem = () => {
+    dispatch({
+      type: ACTION.RESET_QUOTATION_ITEM,
+      payload: null,
+    });
+  }
+
   const setIsEditQuotation = (isEdit: boolean) => {
     dispatch({
       type: ACTION.IS_EDIT_QUOTATION,
@@ -1068,6 +1075,7 @@ const useQuotationFormContext = () => {
     validateForm,
     validForm,
     setItem,
+    resetItem,
     setIsEditQuotation,
     setIsSerialNoAutomatic,
     setEnquiryItem,
@@ -1194,6 +1202,7 @@ const initQuotationFormContextState: UseQuotationFormContextType = {
   validateForm: (validate: boolean) => {},
   validForm: (valid: boolean) => {},
   setItem: (item:ISingleQuotationData) => {},
+  resetItem: () => {},
   setIsEditQuotation: (isEdit: boolean) => {},
   setIsSerialNoAutomatic: (isAuto: boolean) => {},
   setEnquiryItem: (item:ISingleEnquiryData) => {},

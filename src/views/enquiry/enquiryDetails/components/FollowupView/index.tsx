@@ -147,6 +147,7 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
                 taskNameCallback={taskNameCallback}
               />
             }
+            extraData={getDataSet()}
           />
         </View>
       )}

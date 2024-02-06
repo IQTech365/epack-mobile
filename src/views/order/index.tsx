@@ -101,11 +101,8 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
       });
     }
     return dataSet
-      .sort((a, b) => sortItemByDate(a.orderData, b.orderData))
       .filter(
         e =>
-          // e.status.toLowerCase() == 'new order' ||
-          // e.status.toLowerCase() == 'new' ||
           e.status.toLowerCase() == 'approved' ||
           e.status.toLowerCase() == 'out for shifting' ||
           e.status.toLowerCase() == 'material received at warehouse' ||
@@ -163,7 +160,7 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
       <Spacer height={12} />
       <FlatList
         contentContainerStyle={styles.listContent}
-        data={getTransformedData()}
+        data={[...getTransformedData()].reverse()}
         refreshControl={
           <RefreshControl
             refreshing={getOrdersRequesting}

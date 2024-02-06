@@ -14,7 +14,6 @@ import {IGetOrdersData} from '../../../../../../../interface/order/IGetOrdersRes
 import usePincodeHook from '../../../../../../../hooks/usePincodeHook';
 import {getCities2, getStates2} from '../../../../../../../utils/formatter';
 import liftStatusOptions from '../../../../../../../data/liftStatusOptions.json';
-import floorOptions from '../../../../../../../data/floorOptions.json';
 import Spinner from '../../../../../../../common/Spinner';
 import {
   IDropAddress,
@@ -29,6 +28,7 @@ import { ToastType, showToast } from '../../../../../../../utils/utility';
 import { getCurrentCompanyId } from '../../../../../../../utils/storage';
 import { IGetOrdersRequest } from '../../../../../../../interface/order/IGetOrdersRequest';
 import DropdownWithTextInput from '../../../../../../../common/DropdownWithTextInput';
+import useUtilityHook from '../../../../../../../hooks/useUtilityHook';
 
 export enum ADDRESS_TYPE {
   PICKUP,
@@ -68,6 +68,10 @@ const AddressForm: React.FC<IAddressFormProps> = ({
   const stateDropwdownRef = useRef(null);
   const floorDropdownRef = useRef(null);
   const liftDropdownRef = useRef(null);
+
+  const {getFloorsList} = useUtilityHook();
+
+  const floorOptions = getFloorsList();
 
   const {result, fetching, setPincode} = usePincodeHook(
     () => {},

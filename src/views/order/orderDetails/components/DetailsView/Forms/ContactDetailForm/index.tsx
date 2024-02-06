@@ -10,7 +10,6 @@ import {TDropdownItem} from '../../../../../../../type/TDropdownItem';
 import Spacer from '../../../../../../../common/Spacer';
 import Button from '../../../../../../../common/Button';
 import {MODULE_NAME} from '../../enum/EModuleName';
-import {IGetOrdersData} from '../../../../../../../interface/order/IGetOrdersResponse';
 import DeleteIcon from '../../../../../../../images/icons/delete.svg';
 import approvalAuthorityOptions from '../../../../../../../data/ApprovalAuthorityOptions.json';
 import {

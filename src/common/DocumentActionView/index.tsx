@@ -22,10 +22,10 @@ const DocumentActionView: React.FC<Props> = ({onDownload, onShare, onPreview, on
         <ShareIcon width={24} height={24} />
         <Text style={styles.actionText}>Share</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.action} onPress={onDownload} activeOpacity={0.6}>
+      {/* <TouchableOpacity style={styles.action} onPress={onDownload} activeOpacity={0.6}>
         <DownloadIcon width={24} height={24} />
         <Text style={styles.actionText}>Download</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <TouchableOpacity style={styles.action} onPress={onPreview} activeOpacity={0.6}>
         <PreviewIcon width={24} height={24} />
         <Text style={styles.actionText}>Preview</Text>

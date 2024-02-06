@@ -19,6 +19,21 @@ const VehicleLoadSizeView: React.FC<IProps> = ({}) => {
   const {state, setLorryType} = useQuotationFormContextHook();
   const lorryTypeDropdownRef = useRef(null);
 
+  const _getVehicleSizes = () => {
+    let vehicleSizes: TDropdownItem[] = [];
+    const {data} = vehicleSizeData || {};
+    if (data && Array.isArray(data) && data.length > 0) {
+      vehicleSizes = data.map((d: IVehicleSize) => {
+        const item: TDropdownItem = {
+          label: d.vehicleSize,
+          value: d.vehicleSize,
+        };
+        return item;
+      });
+    }
+    return vehicleSizes;
+  };
+
   useEffect(() => {
     if(state.editQuotation && state.item) {
       const {item} = state;
@@ -37,21 +52,6 @@ const VehicleLoadSizeView: React.FC<IProps> = ({}) => {
   }, [state.editQuotation, state.item]);
 
   if (!state.freight_full_load || (state.shifting_luggage == shiftingLuggages[3].label)) return null;
-
-  const _getVehicleSizes = () => {
-    let vehicleSizes: TDropdownItem[] = [];
-    const {data} = vehicleSizeData || {};
-    if (data && Array.isArray(data) && data.length > 0) {
-      vehicleSizes = data.map((d: IVehicleSize) => {
-        const item: TDropdownItem = {
-          label: d.vehicleSize,
-          value: d.vehicleSize,
-        };
-        return item;
-      });
-    }
-    return vehicleSizes;
-  };
 
   return (
     <>

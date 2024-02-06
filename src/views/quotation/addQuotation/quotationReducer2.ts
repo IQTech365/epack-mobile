@@ -134,6 +134,7 @@ export enum ACTION {
   IS_SERIAL_NO_AUTOMATIC = 'IS_SERIAL_NO_AUTOMATIC',
   // item : Note:- This will be used only in edit quotation form
   QUOTATION_ITEM = 'QUOTATION_ITEM',
+  RESET_QUOTATION_ITEM = 'RESET_QUOTATION_ITEM',
   IS_EDIT_QUOTATION = 'IS_EDIT_QUOTATION',
   SET_ENQUIRY_ITEM = 'SET_ENQUIRY_ITEM',
 }
@@ -277,7 +278,7 @@ export interface IState {
 
 export interface IAction {
   type: ACTION;
-  payload: string | boolean | IOtherCharge[] | ISingleQuotationData | ISingleEnquiryData
+  payload: string | boolean | IOtherCharge[] | ISingleQuotationData | ISingleEnquiryData | null;
 }
 
 export const initialState: IState = {
@@ -677,6 +678,11 @@ export const quotationReducer: Reducer<IState, IAction> = (
       return {
         ...state,
         item: payload as ISingleQuotationData,
+      };
+    case ACTION.RESET_QUOTATION_ITEM:
+      return {
+        ...state,
+        item: null,
       };
     case ACTION.IS_EDIT_QUOTATION:
       return {

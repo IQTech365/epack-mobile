@@ -202,7 +202,7 @@ const DropAddressView: React.FC<Props> = ({fromEnquiry = false}) => {
               onSelect={(item: TDropdownItem) => {
                 setDropCurrentFloor(item.label);
               }}
-              defaultValue={floorOptions[3]}
+              defaultValue={floorOptions[1]}
               //@ts-ignore
               ref={floorDropdownCompRef}
             />

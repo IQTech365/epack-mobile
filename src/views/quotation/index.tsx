@@ -154,13 +154,13 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
       if (enquiry?.mobile) {
         mobile = enquiry?.mobile;
         //@ts-ignore
-      } else if (enquiry.billingDetails?.authority_mobile_number) {
+      } else if (enquiry.billingDetails?.authorityPersonMobile) {
         //@ts-ignore
-        mobile = enquiry.billingDetails?.authority_mobile_number;
+        mobile = enquiry.billingDetails?.authorityPersonMobile;
         //@ts-ignore
-      } else if (enquiry.billingDetails?.employee_mobile_number) {
+      } else if (enquiry.billingDetails?.employeeMobile) {
         //@ts-ignore
-        mobile = enquiry.billingDetails?.employee_mobile_number;
+        mobile = enquiry.billingDetails?.employeeMobile;
       }
     }
     return mobile;
@@ -186,14 +186,16 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
           quotationDate: quotationDate,
           phoneNumber: _getMobile(quotation),
           id: quotation._id,
+          createdOn: quotation.createdAt
         };
         return item;
       });
       // return _data;
     }
-    return [..._data].sort((a: IQuotationItem, b: IQuotationItem) =>
-      sortItemByDate(a.quotationDate, b.quotationDate),
-    );
+    // return [..._data].sort((a: IQuotationItem, b: IQuotationItem) =>
+    //   sortItemByDate(a.quotationDate, b.quotationDate),
+    // );
+    return [..._data].reverse();
   };
 
   const handleCardClick = (quotation: IQuotationItem) => {

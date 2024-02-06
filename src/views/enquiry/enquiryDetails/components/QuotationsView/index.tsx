@@ -126,13 +126,13 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
       if(enquiry?.mobile) {
         mobile = enquiry?.mobile;
         //@ts-ignore
-      } else if(enquiry.billingDetails?.authority_mobile_number) {
+      } else if(enquiry.billingDetails?.authorityPersonMobile) {
         //@ts-ignore
-        mobile = enquiry.billingDetails?.authority_mobile_number;
+        mobile = enquiry.billingDetails?.authorityPersonMobile;
         //@ts-ignore
-      } else if(enquiry.billingDetails?.employee_mobile_number) {
+      } else if(enquiry.billingDetails?.employeeMobile) {
         //@ts-ignore
-        mobile = enquiry.billingDetails?.employee_mobile_number;
+        mobile = enquiry.billingDetails?.employeeMobile;
       }
     }
     return mobile;
@@ -159,6 +159,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
             quotationDate: quotationDate,
             phoneNumber: _getMobile(quotation),
             id: quotation._id,
+            createdOn: quotation.createdAt,
           };
           return item;
         });
@@ -210,7 +211,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
     setOpenShare(false);
     const payload: IHtmlTemplateRequest = {
       templateId: templateId,
-      docId: docId,
+      quotationId: docId,
     };
     dispatch(getQuotationHtmlRequest(payload));
   };
@@ -220,7 +221,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
     setOpenShare(true);
     const payload: IHtmlTemplateRequest = {
       templateId: templateId,
-      docId: docId,
+      quotationId: docId,
     };
     dispatch(getQuotationHtmlRequest(payload));
   };

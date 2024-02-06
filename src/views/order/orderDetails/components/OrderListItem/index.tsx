@@ -7,6 +7,7 @@ import WhatsappIcon from '../../../../../images/icons/whatsapp.svg';
 import MoreIcon from '../../../../../images/icons/dots-vertical.svg';
 
 import Spacer from '../../../../../common/Spacer';
+import { formatDate5 } from '../../../../../utils/formatter';
 
 export interface IOrderItem {
   orderId: string;
@@ -41,7 +42,7 @@ const OrderListItem: React.FC<IOrderListItemProps> = ({
         <View style={styles.bageContainer}>
           <Text style={styles.badgeText}>{index + 1}</Text>
         </View>
-        <Text style={styles.orderDateText}>{item.orderData}</Text>
+        <Text style={styles.orderDateText}>{formatDate5(new Date(item.createdAt))}</Text>
       </View>
       <Shadow style={styles.cardWrapper} distance={1.5}>
         <TouchableOpacity

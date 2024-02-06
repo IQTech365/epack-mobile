@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   modalStyle: {
-    height: height * 0.5,
+    height: height,
   },
   saveActionContainer: {
     width: width * 0.9,

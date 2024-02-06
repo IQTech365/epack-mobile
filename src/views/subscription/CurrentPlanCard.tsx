@@ -28,7 +28,7 @@ const CurrentPlanCard: FC<IProps> = ({data}) => {
     if(data?.subscriptionPlan == 'free') {
         expirationMessage = `Limited FEATURES and DOCUMENTS.\nTry Premium and get MORE benefits`
     } else {
-        expirationMessage = `Your Basic Plan will expire on\n ${formatDate5(
+        expirationMessage = `Your Plan will expire on\n ${formatDate5(
             new Date(data?.expiryDate as string),
           )}`
     }

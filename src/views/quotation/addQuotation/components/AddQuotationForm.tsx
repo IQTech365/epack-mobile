@@ -69,6 +69,7 @@ const AddQuotationForm: React.FC<Props> = ({
     setPickupPincodeError,
     setDropPincodeError,
     setItem,
+    resetItem,
     setIsEditQuotation,
     setEnquiryItem,
   } = useQuotationFormContextHook();
@@ -84,6 +85,7 @@ const AddQuotationForm: React.FC<Props> = ({
     updateQuotationSuccess,
     updateQuotationFailure,
   } = useAppSelector(state => state.Quotation);
+  console.log('Single-quotation--', JSON.stringify(quotation));
 
   const {
     vehicleTypesRequesting,
@@ -222,9 +224,9 @@ const AddQuotationForm: React.FC<Props> = ({
         employeeName: state.employee_name,
         employeeDesignation: state.employee_designation,
         employeeMobile: state.employee_mobile_no,
-        companyPincode: state.company_pincode,
-        companyState: state.company_state,
-        companyCity: state.company_city,
+        pincode: state.company_pincode,
+        state: state.company_state,
+        city: state.company_city,
       };
       const payload: IAddQuotationRequest = {
         companyId: id as string,
@@ -364,6 +366,13 @@ const AddQuotationForm: React.FC<Props> = ({
   }, []);
 
   useEffect(() => {
+    return () => {
+      resetItem();
+      setIsEditQuotation(false);
+    }
+  }, []);
+
+  useEffect(() => {
     if (!addQuotationRequesting && addQuotationSuccess) {
       showToast('New Quotation Created.', ToastType.SUCCESS);
       dispatch(resetaddQuotationRequest());
@@ -384,6 +393,10 @@ const AddQuotationForm: React.FC<Props> = ({
     if (!updateQuotationRequesting && updateQuotationSuccess) {
       showToast('Quotation Updated.', ToastType.SUCCESS);
       dispatch(resetUpdateQuotationRequest());
+      if(isEdit) {
+        resetItem();
+        setIsEditQuotation(false);
+      }
       _getQuotationsRequest();
       if(onSuccess) {
         onSuccess();

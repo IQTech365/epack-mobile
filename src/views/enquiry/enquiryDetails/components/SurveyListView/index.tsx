@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Text, View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import DatePickerComponent from '../../../../../common/DatePickerComponent';
@@ -30,7 +30,7 @@ import {
   DOCUMENT_TYPE,
   IGetSerialNoRequest,
 } from '../../../../../interface/setting/serialNo/serialNo';
-import {getSerialNoRequest} from '../../../../../redux/slices/SerialNoSettingSlice';
+import {getSerialNoRequest, resetGetSerialNoRequest} from '../../../../../redux/slices/SerialNoSettingSlice';
 import {ToastType, showToast} from '../../../../../utils/utility';
 
 interface ISurveyListViewProps {
@@ -41,13 +41,19 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
   const {addSurveyItemRequesting, addSurveyItemSuccess, addSurveyItemFailure} =
     useAppSelector(state => state.Enquiry);
   const [surveyNo, setSurveyNo] = useState('');
-  const [date, setDate] = useState<string>(formatDate4(new Date()));
+  const [date, setDate] = useState<string>(new Date().toISOString());
   const [itemName, setItem] = useState<string>('');
   const [quantity, setQuantity] = useState<string>('');
   const [valueOfGoods, setValueOfGoods] = useState<string>('');
   const [remarks, setRemarks] = useState<string>('');
   const [surveyItems, setSurveyItems] = useState<ISurveyListItem[]>([]);
   const authId = useAuthId();
+
+  const itemNameCompRef = useRef(null);
+  const quantityCompRef = useRef(null);
+  const valueOfGoodsCompRef = useRef(null);
+  const remarksCompRef = useRef(null);
+
   const serialNo: number = useSerialNoHook();
   const {initialValue, prefix} = useInitialValueHook('658d3d2f585e3dde644da9b2');
 
@@ -75,7 +81,8 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
   };
 
   const handleReceiptDate = (date: Date) => {
-    setDate(formatDate2(date));
+    // setDate(formatDate2(date));
+    setDate(date.toISOString());
   };
 
   const handleParticularNameInputTextChange = (text: string) => {
@@ -104,7 +111,23 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
     };
     copy.push(newItem);
     setSurveyItems(copy);
+    resetForm();
   };
+
+  const resetForm = () => {
+    setItem('');
+    //@ts-ignore
+    itemNameCompRef && itemNameCompRef?.current?.reset();
+    setQuantity('');
+    //@ts-ignore
+    quantityCompRef && quantityCompRef?.current?.reset();
+    setValueOfGoods('');
+    //@ts-ignore
+    valueOfGoodsCompRef && valueOfGoodsCompRef?.current?.reset();
+    setRemarks('');
+    //@ts-ignore
+    remarksCompRef && remarksCompRef?.current?.reset();
+  }
 
   const handleSave = () => {
     getCurrentCompanyId()
@@ -134,6 +157,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
   };
 
   useEffect(() => {
+    dispatch(resetGetSerialNoRequest());
     _getSerialNoRequest();
   }, []);
 
@@ -147,6 +171,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
     if (!addSurveyItemRequesting && addSurveyItemSuccess) {
       showToast('Survey Item List Created.', ToastType.SUCCESS);
       dispatch(resetAddSurveyItemRequest());
+      setSurveyItems([]);
       _getSurveyItemListRequest();
     } else if (!addSurveyItemRequesting && addSurveyItemFailure) {
       showToast('Survey Item List not Created.', ToastType.ERROR);
@@ -156,9 +181,9 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
 
   const showSurveyItemList = () => {
     if (surveyItems.length > 0) {
-      return surveyItems.map((d: ISurveyListItem) => {
+      return surveyItems.map((d: ISurveyListItem, index: number) => {
         return (
-          <View style={styles.itemWrapper}>
+          <View style={styles.itemWrapper} key={`${index}`}>
             <View style={styles.elementContainer}>
               <View style={styles.labelContainer}>
                 <Text style={styles.labelText}>Item Name:</Text>
@@ -167,30 +192,30 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
                 <Text style={styles.valueText}>{d.itemName}</Text>
               </View>
             </View>
-            <View style={styles.elementContainer}>
+            {d.quantity ? <View style={styles.elementContainer}>
               <View style={styles.labelContainer}>
                 <Text style={styles.labelText}>Quantity:</Text>
               </View>
               <View style={styles.valueContainer}>
                 <Text style={styles.valueText}>{d.quantity}</Text>
               </View>
-            </View>
-            <View style={styles.elementContainer}>
+            </View>: null}
+            {d.valueOfGoods ? <View style={styles.elementContainer}>
               <View style={styles.labelContainer}>
                 <Text style={styles.labelText}>Goods Value:</Text>
               </View>
               <View style={styles.valueContainer}>
                 <Text style={styles.valueText}>{d.valueOfGoods}</Text>
               </View>
-            </View>
-            <View style={styles.elementContainer}>
+            </View> : null}
+            {d.remarks ? <View style={styles.elementContainer}>
               <View style={styles.labelContainer}>
                 <Text style={styles.labelText}>Remarks:</Text>
               </View>
               <View style={styles.valueContainer}>
                 <Text style={styles.valueText}>{d.remarks}</Text>
               </View>
-            </View>
+            </View> : null}
           </View>
         );
       });
@@ -227,8 +252,11 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
               onChangeText={handleParticularNameInputTextChange}
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
+              value={itemName}
               selectionColor={COLOR_BLACK}
               placeholder='Enter particular/item name'
+              //@ts-ignore
+              ref={itemNameCompRef}
             />
           </View>
           <Spacer height={4} />
@@ -239,8 +267,12 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
                 onChangeText={handleQuantityInputTextChange}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
+                value={quantity}
                 selectionColor={COLOR_BLACK}
+                inputType="numeric"
                 placeholder='Enter quantity'
+                //@ts-ignore
+                ref={quantityCompRef}
               />
             </View>
             <View style={styles.itemContainer}>
@@ -249,8 +281,12 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
                 onChangeText={handleGoodsInputTextChange}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
+                value={valueOfGoods}
+                inputType="numeric"
                 selectionColor={COLOR_BLACK}
                 placeholder="Enter goods value"
+                //@ts-ignore
+                ref={valueOfGoodsCompRef}
               />
             </View>
           </View>
@@ -261,8 +297,11 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
               onChangeText={handleDescriptionInputTextChange}
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
+              value={remarks}
               selectionColor={COLOR_BLACK}
               placeholder='Enter remarks'
+              //@ts-ignore
+              ref={remarksCompRef}
             />
           </View>
         </View>

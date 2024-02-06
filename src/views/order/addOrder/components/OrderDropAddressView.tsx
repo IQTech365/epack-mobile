@@ -125,7 +125,7 @@ const OrderDropAddressView: FC<IProps> = ({}) => {
               onSelect={(item: TDropdownItem) => {
                 setDropCurrentFloor(item.label);
               }}
-              defaultValue={floorOptions[3]}
+              defaultValue={floorOptions[1]}
             />
           </View>
           <View style={styles.textContainer}>
