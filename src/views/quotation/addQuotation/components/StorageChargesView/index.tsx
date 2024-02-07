@@ -97,7 +97,6 @@ const StorageChargesView: React.FC<Props> = ({}) => {
                 onSelect={(item: TDropdownItem) => {
                   setStorageDuration(item.label);
                 }}
-                defaultValue={storageDurationOptions[0]}
                 //@ts-ignore
                 ref={storageDurationDropdownCompRef}
               />

@@ -111,6 +111,7 @@ const DropAddressView: React.FC<Props> = ({fromEnquiry = false}) => {
             setDropPincode(dropAddress?.pincode);
             setPincode(dropAddress?.pincode);
             setDropState(dropAddress?.state);
+            setDropAddress(dropAddress?.address);
             //@ts-ignore
             stateDropdownCompRef?.current?.setValue(dropAddress?.state);
             setDropCity(dropAddress?.city);

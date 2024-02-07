@@ -5,6 +5,7 @@ export interface IPickupAddress {
   state: string;
   city: string;
   pincode: string;
+  address:string;
   locality: string;
   landmark: string;
   floor: string;
@@ -16,6 +17,7 @@ export interface IDropAddress {
   state: string;
   city: string;
   locality: string;
+  address:string;
   pincode: string;
   landmark: string;
   floor: string;

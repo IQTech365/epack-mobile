@@ -128,7 +128,6 @@ const InsuranceDetailsView: React.FC<Props> = ({}) => {
                 onSelect={(item: TDropdownItem) => {
                   setTransitInsuranceType(item.label);
                 }}
-                defaultValue={insuranceTypeOptions[0]}
                 //@ts-ignore
                 ref={insuranceTypeDropdownCompRef}
               />
@@ -142,7 +141,6 @@ const InsuranceDetailsView: React.FC<Props> = ({}) => {
                   onSelect={(item: TDropdownItem) => {
                     setTransitInsuranceCharge(item.label);
                   }}
-                  defaultValue={insurancePercentOptions[0]}
                   //@ts-ignore
                   ref={insuranceChargeDropdownCompRef}
                 />
@@ -154,7 +152,6 @@ const InsuranceDetailsView: React.FC<Props> = ({}) => {
                   onSelect={(item: TDropdownItem) => {
                     setTransitInsuranceGst(item.label);
                   }}
-                  defaultValue={gstPercentOptions[0]}
                   //@ts-ignore
                   ref={insuranceGstDropdownCompRef}
                 />
@@ -169,8 +166,6 @@ const InsuranceDetailsView: React.FC<Props> = ({}) => {
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 value={state.transit_goods_value}
-                //@ts-ignore
-                //error={showErrors && errors.dropPincode}
                 //@ts-ignore
                 ref={insuranceGoodsValueInputCompRef}
                 inputType="numeric"

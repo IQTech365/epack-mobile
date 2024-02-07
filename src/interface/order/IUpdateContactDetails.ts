@@ -19,6 +19,9 @@ export interface IUpdateCompanyContactDetailRequest {
         employeeDesignation: string;
         employeeMobile: string;
         companyAddress: string;
+        pincode:string;
+        state:string;
+        city:string;
     },
     email: string;
     landline: string;

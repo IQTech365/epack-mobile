@@ -35,7 +35,7 @@ const GstView: React.FC<Props> = ({}) => {
           const gstTypeItem:TDropdownItem = gstTypeOptions.find((d:TDropdownItem) => d.label == quotationfreight.gstType) as TDropdownItem;
           if(gstTypeItem) {
             //@ts-ignore
-            gstPercentDropdownCompRef && gstPercentDropdownCompRef?.current?.setDefaultValue(gstPercentItem);
+            gstTypeDropdownCompRef && gstTypeDropdownCompRef?.current?.setDefaultValue(gstTypeItem);
             setGstType(gstTypeItem.label);
           }
         }
@@ -53,7 +53,6 @@ const GstView: React.FC<Props> = ({}) => {
               onSelect={(item: TDropdownItem) => {
                 setGstPercent(item.label);
               }}
-              defaultValue={gstPercentOptions[0]}
               //@ts-ignore
               ref={gstPercentDropdownCompRef}
             />
@@ -64,7 +63,6 @@ const GstView: React.FC<Props> = ({}) => {
               onSelect={(item: TDropdownItem) => {
                 setGstType(item.label);
               }}
-              defaultValue={gstTypeOptions[0]}
               //@ts-ignore
               ref={gstTypeDropdownCompRef}
             />

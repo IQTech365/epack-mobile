@@ -127,6 +127,7 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false}) => {
       const {item} = state;
       if(item) {
         const shiftingLuggageItem:TDropdownItem = shiftingLuggages.find((d:TDropdownItem) => d.label == item.shiftingLuggage) as TDropdownItem;
+        
         if(shiftingLuggageItem) {
           //@ts-ignore
           shiftingLuggageDropdownCompRef && shiftingLuggageDropdownCompRef?.current?.setDefaultValue(shiftingLuggageItem);
@@ -137,7 +138,7 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false}) => {
         const enquiry:IEnquiry = item.enquiries;
         if(enquiry) {
           setShiftingType(enquiry.shiftingType);
-          const shiftingTypeItem:TDropdownItem = shiftingTypes.find((d:TDropdownItem) => d.label == enquiry.shiftingType) as TDropdownItem;
+          const shiftingTypeItem:TDropdownItem = shiftingTypes.find((d:TDropdownItem) => d.label.toLowerCase() == enquiry.shiftingType.toLowerCase()) as TDropdownItem;
           if(shiftingTypeItem) {
             //@ts-ignore
             shiftingTypeDropdownCompRef && shiftingTypeDropdownCompRef?.current?.setDefaultValue(shiftingTypeItem);

@@ -50,7 +50,6 @@ const DiscountView: React.FC<Props> = ({}) => {
             onSelect={(item: TDropdownItem) => {
               setDiscountPercentOrValue(item.label);
             }}
-            // defaultValue={discountPercentOptions[0]}
             //@ts-ignore
             ref={discountPercentDropdownCompRef}
           />

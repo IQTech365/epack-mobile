@@ -115,6 +115,7 @@ const PickupAddressView: React.FC<Props> = ({fromEnquiry = false}) => {
             setPickupPincode(pickupAddress?.pincode);
             setPincode(pickupAddress?.pincode);
             setPickupState(pickupAddress?.state);
+            setPickupAddress(pickupAddress?.address)
             //@ts-ignore
             stateDropdownCompRef?.current?.setValue(pickupAddress?.state);
             setPickupCity(pickupAddress?.city);

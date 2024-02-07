@@ -35,6 +35,7 @@ import {IGetOrdersRequest} from '../../../../../../../interface/order/IGetOrders
 import DropdownWithTextInput from '../../../../../../../common/DropdownWithTextInput';
 import usePincodeHook from '../../../../../../../hooks/usePincodeHook';
 import { getCities2, getStates2 } from '../../../../../../../utils/formatter';
+import Spinner from '../../../../../../../common/Spinner';
 interface IContactDetailFormProps {
   moduleName: MODULE_NAME;
   item: ISingleEnquiryData;
@@ -70,6 +71,7 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
   const [city, setCity] = useState<string>('');
   const [state, setState] = useState<string>('');
   const [pin, setPin] = useState<string>('');
+  const [isInit, setIsInit] = useState<boolean>(true);
 
   const dispatch = useAppDispatch();
   const {
@@ -87,6 +89,7 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
   const approvalAuthDropdownRef = useRef(null);
   const cityDropdownRef = useRef(null);
   const stateDropwdownRef = useRef(null);
+  const pincodeInputRef = useRef(null);
 
   const getContactPersonName = () => {
     let name: string = '';
@@ -135,6 +138,12 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
     setEmployeeMobileNumber(item.billingDetails.employeeMobile);
     //@ts-ignore
     setCompanyAddress(item.billingDetails.companyAddress);
+    //@ts-ignore
+    handlePincodeChange(item.billingDetails?.pincode);
+    //@ts-ignore
+    cityDropdownRef && cityDropdownRef?.current?.setValue(city);
+    //@ts-ignore
+    stateDropwdownRef && stateDropwdownRef?.current?.setValue(city);
   };
 
   const handleContactPersonName = useCallback(
@@ -366,6 +375,9 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
           employeeDesignation: employeeDesignation,
           employeeMobile: employeeMobileNumber,
           companyAddress: companyAddress,
+          pincode: pin,
+          state: state,
+          city: city,
         },
         email: email,
         landline: landline,
@@ -389,6 +401,32 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
       setCities(getCities2(result));
     }
   }, [result]);
+
+  useEffect(() => {
+    if (states && cities && cityDropdownRef && stateDropwdownRef) {
+      if (isInit) {
+        setIsInit(false);
+        let previousStateIndex = 0, previousCityIndex = 0;
+          previousStateIndex = states.findIndex(s => s == item.pickupAddress.state);
+          previousCityIndex = cities.findIndex(s => s == item.pickupAddress.city);
+          if(previousStateIndex != -1) {
+            //@ts-ignore
+            stateDropwdownRef?.current?.setValue(states[previousStateIndex]);
+          }
+          if(previousCityIndex != -1) {
+            //@ts-ignore
+            cityDropdownRef?.current?.setValue(cities[previousCityIndex]);
+          }
+      } else {
+        //@ts-ignore
+        stateDropwdownRef?.current?.setValue(states[0]);
+        setState(states[0]);
+        //@ts-ignore
+        cityDropdownRef?.current?.setValue(cities[0]);
+        setCity(cities[0]);
+      }
+    }
+  }, [states, cities]);
 
   useEffect(() => {
     if (!updateContactDetailRequesting && updateContactDetailSuccess) {
@@ -588,18 +626,20 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
                 inputStyle={styles.input}
                 placeholder="Enter Pincode"
                 selectionColor={COLOR_BLACK}
-                value={orderAmount}
+                value={pin}
+                //@ts-ignore
+                ref={pincodeInputRef}
               />
             </View>
             <View style={styles.itemContainer}>
               <Label text="State" style={styles.label} />
               <DropdownWithTextInput
-              options={states}
-              onSelect={handleState}
-              //@ts-ignore
-              ref={stateDropwdownRef}
-              containerStyle={styles.itemContainer}
-            />
+                options={states}
+                onSelect={handleState}
+                //@ts-ignore
+                ref={stateDropwdownRef}
+                containerStyle={styles.itemContainer}
+              />
             </View>
           </View>
         ) : null}
@@ -711,6 +751,7 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
           style={styles.previewButtonStyle}
           textStyle={styles.textStyle}
         />
+        <Spinner show={fetching || updateContactDetailRequesting} />
       </View>
     </AvoidSoftInputViewHOC>
   );

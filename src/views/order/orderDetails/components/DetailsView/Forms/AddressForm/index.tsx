@@ -168,7 +168,7 @@ const AddressForm: React.FC<IAddressFormProps> = ({
         let previousStateIndex = 0, previousCityIndex = 0, previousFloorIndex = 0, previousLiftStatusIndex = 0;
         if(addressType == ADDRESS_TYPE.PICKUP) {
           previousStateIndex = states.findIndex(s => s == item.pickupAddress.state);
-          previousCityIndex = states.findIndex(s => s == item.pickupAddress.city);
+          previousCityIndex = cities.findIndex(s => s == item.pickupAddress.city);
           previousFloorIndex = floorOptions.findIndex(s => s.label == item.pickupAddress.floor);
           previousLiftStatusIndex = liftStatusOptions.findIndex(s => s.label.toLowerCase() == item.pickupAddress.isLiftAvailable.toLowerCase());
           //@ts-ignore

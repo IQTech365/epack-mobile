@@ -79,14 +79,14 @@ const CompanyAddressView: React.FC<Props> = ({}) => {
           if(enquiry.billingBy == "by Company") {
             const billingInfo:ICustomerBillingInfo = enquiry.billingDetails as ICustomerBillingInfo;
             if(billingInfo) {
-              setCompanyPincode(billingInfo.companyPincode);
-              setPincode(billingInfo.companyPincode);
-              setCompanyState(billingInfo.companyState);
+              setCompanyPincode(billingInfo.pincode);
+              setPincode(billingInfo.pincode);
+              setCompanyState(billingInfo.state);
               //@ts-ignore
-              stateDropdownCompRef?.current?.setValue(billingInfo.companyState);
-              setCompanyCity(billingInfo.companyCity);
+              stateDropdownCompRef?.current?.setValue(billingInfo.state);
+              setCompanyCity(billingInfo.city);
               //@ts-ignore
-              cityDropdownCompRef?.current?.setValue(billingInfo.companyCity);
+              cityDropdownCompRef?.current?.setValue(billingInfo.city);
             }
           }
         }
