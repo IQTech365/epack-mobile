@@ -44,6 +44,7 @@ export const getVehicleCompanyList = (vehicleTypeId:string,response:IVehicleComp
           });
       }
     }
+    console.log('getVehicleCompanyList--', JSON.stringify(items));
     return items;
 }
 
@@ -77,11 +78,23 @@ export const getVehicleModelList = (vehicleCompanyId:string,response:IVehicleMod
     if (data && data.length > 0) {
       const filters:IVehicleModel[] = data.filter((d:IVehicleModel) => d.vehicleCompanyName == vehicleCompanyId);
       if(filters.length > 0) {
-        items = data.map((d: IVehicleModel) => {
+        items = filters.map((d: IVehicleModel) => {
             const item: IItem = {label: d.vehicleModel, value: d._id};
             return item;
           });
       }
     }
     return items;
+}
+
+export const getYears = ():IItem[] => {
+  const years:IItem[] = [];
+  for (let index = 1950; index < 2024; index++) {
+    const year:IItem = {
+      label: `${index}`,
+      value: `${index}`
+    };
+    years.push(year)
+  }
+  return years;
 }

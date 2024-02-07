@@ -16,6 +16,7 @@ export interface IAddMoneyReceiptItem {
   numbersOfArticles: string;
   paymentAmount: string;
   referenceNumber: string;
+  consignmentNumber:string;
 }
 
 interface IAddMoneyReceiptListItemProps {
@@ -63,7 +64,6 @@ const AddMoneyReceiptListItem: React.FC<IAddMoneyReceiptListItemProps> = ({
               <Text style={styles.valueText}>{item.receiptNumber}</Text>
             </View>
           </View>
-          <Spacer height={2} />
           <View style={styles.rowContainer}>
             <View style={styles.rowItemContainer}>
               <Text style={styles.labelText}>Receipt Date</Text>
@@ -72,16 +72,6 @@ const AddMoneyReceiptListItem: React.FC<IAddMoneyReceiptListItemProps> = ({
               <Text style={styles.valueText}>{formatDate4(new Date(item.receiptDate))}</Text>
             </View>
           </View>
-          <Spacer height={2} />
-          <View style={styles.rowContainer}>
-            <View style={styles.rowItemContainer}>
-              <Text style={styles.labelText}>Arival Date</Text>
-            </View>
-            <View style={styles.rowItemContainer2}>
-              <Text style={styles.valueText}>{formatDate4(new Date(item.arivalDate))}</Text>
-            </View>
-          </View>
-          <Spacer height={2} />
           <View style={styles.rowContainer}>
             <View style={styles.rowItemContainer}>
               <Text style={styles.labelText}>Receipt Against</Text>
@@ -108,6 +98,22 @@ const AddMoneyReceiptListItem: React.FC<IAddMoneyReceiptListItemProps> = ({
           </View>
           <View style={styles.rowContainer}>
             <View style={styles.rowItemContainer}>
+              <Text style={styles.labelText}>Payment Amount</Text>
+            </View>
+            <View style={styles.rowItemContainer2}>
+              <Text style={styles.valueText}>{`₹ ${item.paymentAmount}.00`}</Text>
+            </View>
+          </View>
+          <View style={styles.rowContainer}>
+            <View style={styles.rowItemContainer}>
+              <Text style={styles.labelText}>CN / Bilty / LR No.</Text>
+            </View>
+            <View style={styles.rowItemContainer2}>
+              <Text style={styles.valueText}>{item.consignmentNumber}</Text>
+            </View>
+          </View>
+          <View style={styles.rowContainer}>
+            <View style={styles.rowItemContainer}>
               <Text style={styles.labelText}>Numbers Of Articles</Text>
             </View>
             <View style={styles.rowItemContainer2}>
@@ -116,10 +122,10 @@ const AddMoneyReceiptListItem: React.FC<IAddMoneyReceiptListItemProps> = ({
           </View>
           <View style={styles.rowContainer}>
             <View style={styles.rowItemContainer}>
-              <Text style={styles.labelText}>Payment Amount</Text>
+              <Text style={styles.labelText}>Arival Date</Text>
             </View>
             <View style={styles.rowItemContainer2}>
-              <Text style={styles.valueText}>{item.paymentAmount}</Text>
+              <Text style={styles.valueText}>{formatDate4(new Date(item.arivalDate))}</Text>
             </View>
           </View>
         </TouchableOpacity>

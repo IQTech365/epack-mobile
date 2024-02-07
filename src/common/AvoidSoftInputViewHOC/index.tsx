@@ -21,12 +21,12 @@ const AvoidSoftInputViewHOC: React.FC<{children: ReactElement}> = ({children}) =
     <SafeAreaView
       edges={['bottom', 'left', 'right']}
       style={commonStyles.screenContainer}>
-      <AvoidSoftInputView style={styles.avoidSoftInputView}>
+      <AvoidSoftInputView style={styles.avoidSoftInputView} avoidOffset={20}>
         <ScrollView
           bounces={false}
           contentContainerStyle={commonStyles.scrollContainer}
-          contentInsetAdjustmentBehavior="always"
-          overScrollMode="always"
+          contentInsetAdjustmentBehavior="automatic"
+          overScrollMode="auto"
           showsVerticalScrollIndicator={false}
           style={commonStyles.scroll}>
           {children}

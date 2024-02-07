@@ -8,7 +8,6 @@ export interface ICreateCarConditionRequest {
   orderId: string;
   isAuto: boolean;
   isHeadOffice: boolean;
-  templateId: string;
   carConditionNumber: string;
   dateOfCarCondition: string;
   vehicleType: string;

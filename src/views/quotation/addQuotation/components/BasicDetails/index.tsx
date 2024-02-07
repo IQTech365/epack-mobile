@@ -107,7 +107,7 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false}) => {
     if (fromEnquiry && state.enquiryItem) {
       const {enquiryItem} = state;
       setShiftingType(enquiryItem.shiftingType);
-      const shiftingTypeItem:TDropdownItem = shiftingTypes.find((d:TDropdownItem) => d.label == enquiryItem.shiftingType) as TDropdownItem;
+      const shiftingTypeItem:TDropdownItem = shiftingTypes.find((d:TDropdownItem) => d.label.toLowerCase() == enquiryItem.shiftingType.toLowerCase()) as TDropdownItem;
       if(shiftingTypeItem) {
         //@ts-ignore
         shiftingTypeDropdownCompRef && shiftingTypeDropdownCompRef?.current?.setDefaultValue(shiftingTypeItem);
@@ -118,6 +118,10 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false}) => {
        //@ts-ignore
        billingByDropdownCompRef && billingByDropdownCompRef?.current?.setDefaultValue(billingByItem);
       }
+      //@ts-ignore
+      dateOfMovingCompRef && dateOfMovingCompRef?.current?.setDefaultValue(new Date(enquiryItem.shiftingDate));
+      //@ts-ignore
+      // dateOfQuotationCompRef && dateOfQuotationCompRef?.current?.setDefaultValue(new Date(enquiryItem.quotationDate));
       
     }
   }, [state.enquiryItem]);

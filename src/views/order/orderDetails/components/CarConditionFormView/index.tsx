@@ -30,6 +30,7 @@ import {
   getVehicleCompanyList,
   getVehicleModelList,
   getVehicleTypeList,
+  getYears,
 } from './utils';
 import useAuthId from '../../../../../hooks/useAuthId';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
@@ -252,7 +253,6 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
         orderId: orderId as string,
         isAuto: true,
         isHeadOffice: true,
-        templateId: '32423erer',
         carConditionNumber: reducerState.carConditionNumber,
         dateOfCarCondition: reducerState.dateOfCarCondition,
         vehicleType: reducerState.vehicleType,
@@ -328,7 +328,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                 />
               </View>
               <View style={styles.itemContainer}>
-                <Label text="Date of Vehicle Condition" style={styles.label} />
+                <Label text="Date" style={styles.label} />
                 <DatePickerComponent onDateSelect={handleCarConditionDate} />
               </View>
             </View>
@@ -340,7 +340,9 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                   onChangeText={handleCnBiltyLrNO}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
+                  placeholder='CN / Bilty / LR No.'
                   selectionColor={COLOR_BLACK}
+                  autoCapitalize="characters"
                 />
               </View>
               <View style={styles.itemContainer}>
@@ -379,7 +381,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Year" style={styles.label} />
-                <DropdownComponent data={carYear} onSelect={handleYear} />
+                <DropdownComponent data={getYears()} onSelect={handleYear} />
               </View>
             </View>
             <Spacer height={4} />
@@ -390,7 +392,9 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                   onChangeText={handleVehicleRegNO}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
+                  placeholder='Vehicle Reg.#'
                   selectionColor={COLOR_BLACK}
+                  autoCapitalize="characters"
                 />
               </View>
               <View style={styles.itemContainer}>
@@ -399,7 +403,9 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                   onChangeText={handleVehicleKm}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
+                  placeholder='KM'
                   selectionColor={COLOR_BLACK}
+                  inputType="numeric"
                 />
               </View>
             </View>
@@ -410,6 +416,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                 onChangeText={handleInsuranceCompany}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
+                placeholder='Insurance Company Name'
                 selectionColor={COLOR_BLACK}
               />
             </View>
@@ -421,6 +428,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                   onChangeText={handlePolicyNo}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
+                  placeholder='Policy#'
                   selectionColor={COLOR_BLACK}
                 />
               </View>
@@ -430,6 +438,8 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                   onChangeText={handleVehicleValue}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
+                  placeholder='Vehicle Value'
+                  inputType="numeric"
                   selectionColor={COLOR_BLACK}
                 />
               </View>
@@ -441,6 +451,8 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                 onChangeText={handleChasisNo}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
+                placeholder='Chasis No.'
+                autoCapitalize="characters"
                 selectionColor={COLOR_BLACK}
               />
             </View>
@@ -451,6 +463,8 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                 onChangeText={handleEngineNo}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
+                placeholder='Engine No.'
+                autoCapitalize="characters"
                 selectionColor={COLOR_BLACK}
               />
             </View>
@@ -478,6 +492,8 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                   onChangeText={handleBatteryNo}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
+                  placeholder='Battery No.'
+                  autoCapitalize="characters"
                   selectionColor={COLOR_BLACK}
                 />
               </View>
@@ -487,6 +503,8 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                   onChangeText={handleTyreyNo}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
+                  placeholder='Tyre No.'
+                  inputType="numeric"
                   selectionColor={COLOR_BLACK}
                 />
               </View>
@@ -498,6 +516,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                 onChangeText={handleAnyOtherAccessories}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
+                placeholder='Other accessories'
                 selectionColor={COLOR_BLACK}
               />
             </View>
@@ -508,6 +527,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                 onChangeText={handleRemark}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
+                placeholder='Any Remarks'
                 selectionColor={COLOR_BLACK}
               />
             </View>
@@ -522,6 +542,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                 onChangeText={handleScratches}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
+                placeholder='Any Scratches'
                 selectionColor={COLOR_BLACK}
               />
             </View>
@@ -532,6 +553,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                 onChangeText={handleDent}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
+                placeholder='Any Dent'
                 selectionColor={COLOR_BLACK}
               />
             </View>
@@ -542,6 +564,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                 onChangeText={handleAnyOtherObservation}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
+                placeholder='Other Observations'
                 selectionColor={COLOR_BLACK}
               />
             </View>

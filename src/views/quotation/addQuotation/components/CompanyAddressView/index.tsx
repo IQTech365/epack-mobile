@@ -12,12 +12,13 @@ import Spinner from '../../../../../common/Spinner';
 import { IEnquiry } from '../../../../../interface/quotation/IGetQuotationsResponse';
 import { ICustomerBillingInfo } from '../../../../../interface/common/common';
 import DropdownWithTextInput from '../../../../../common/DropdownWithTextInput';
+import { IBillingInfo } from '../../../../../interface/enquiry/ISingleEnquiryResponse';
 
 interface Props {
-  //
+  fromEnquiry:boolean;
 }
 
-const CompanyAddressView: React.FC<Props> = ({}) => {
+const CompanyAddressView: React.FC<Props> = ({fromEnquiry}) => {
   const {
     state,
     setCompanyPincode,
@@ -69,6 +70,25 @@ const CompanyAddressView: React.FC<Props> = ({}) => {
       }
     }
   }, [states, cities]);
+
+  useEffect(() => {
+    if (fromEnquiry && state.enquiryItem) {
+      const {enquiryItem} = state;
+      if(enquiryItem.billingBy == "by Company") {
+        const billingInfo:IBillingInfo = enquiryItem.billingDetails as IBillingInfo;
+        if(billingInfo) {
+          setCompanyPincode(billingInfo.pincode);
+          setPincode(billingInfo.pincode);
+          setCompanyState(billingInfo.state);
+          setCompanyCity(billingInfo.city);
+          //@ts-ignore
+          stateDropdownCompRef && stateDropdownCompRef?.current?.setValue(billingInfo.state);
+          //@ts-ignore
+          cityDropdownCompRef && cityDropdownCompRef?.current?.setValue(billingInfo.city);
+        }
+      }
+    }
+  }, [state.enquiryItem]);
 
   useEffect(() => {
     if(state.editQuotation && state.item) {

@@ -345,7 +345,7 @@ const BillingCompanyView: React.FC<Props> = ({fromEnquiry = false}) => {
         />
       </View>
       <Spacer height={4} />
-      <CompanyAddressView />
+      <CompanyAddressView fromEnquiry={fromEnquiry} />
     </>
   );
 };

@@ -6,7 +6,6 @@ export interface ICreateMoneyReceiptRequest {
   receiptNumber: string;
   receiptDate: string;
   arivalDate: string;
-  templateId: string;
   receiptAgainst: string;
   billNumber: string;
   quotationNumber: string;

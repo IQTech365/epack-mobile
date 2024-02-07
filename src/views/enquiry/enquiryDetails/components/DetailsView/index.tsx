@@ -81,7 +81,6 @@ const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
   }
 
   const singleEnquiry = getSingleEnquiry();
-  
 
   useEffect(() => {
     dispatch(getEnquiryRequest(enquiryId));
@@ -285,6 +284,14 @@ const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
     }
     return _address;
   }
+
+  const _getDateOfMoving = () => {
+    let movingDate:string = 'NA';
+    if(singleEnquiry && singleEnquiry?.shiftingDate) {
+      movingDate = formatDate(new Date(singleEnquiry?.shiftingDate))
+    }
+    return movingDate;
+  }
   return (
     <AvoidSoftInputViewHOC>
       <View style={styles.container}>
@@ -302,7 +309,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
               />
               <EnquiryDetailListItem
                 label="Date of Moving"
-                value={formatDate(new Date(singleEnquiry?.shiftingDate))}
+                value={_getDateOfMoving()}
               />
               <EnquiryDetailListItem
                 label="Shifting From"
@@ -448,9 +455,9 @@ const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
           headerStyle={styles.headerStyle}
           onClose={handleModalClose}
           title={getModalTitle().toUpperCase()}>
-          <View style={{flex: 1}}>
-          {getForm()}
-          <Toast config={toastConfig} />
+          <View>
+            {getForm()}
+            <Toast config={toastConfig} />
           </View>
         </ModalHOC>
         <Spinner show={getEnquiryRequesting} />

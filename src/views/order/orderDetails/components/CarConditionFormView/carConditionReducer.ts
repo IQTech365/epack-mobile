@@ -1,3 +1,5 @@
+import moment from "moment";
+
 //** ALL ACTIONS*/
 
 export enum CARCONDITION_FORM_ACTION {
@@ -102,7 +104,7 @@ interface ICarConditionFormAction {
 export const initialState: ICarConditionFormState = {
   carConditionNumber: '',
   chooseTemplate: '',
-  dateOfCarCondition: '',
+  dateOfCarCondition: moment().toISOString(),
   cnBiltyLrNo: '',
   vehicleType: '',
   manufacturer: '',

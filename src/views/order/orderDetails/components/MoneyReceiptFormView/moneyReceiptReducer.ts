@@ -57,7 +57,7 @@ export const initialState: IMoneyReceiptFormState = {
   paymentAmount: '',
   cnBiltyLrNo: '',
   numbersOfArticles: '',
-  arivalDate: '',
+  arivalDate: moment().toISOString(),
 };
 
 /** AddOrder Reducer */

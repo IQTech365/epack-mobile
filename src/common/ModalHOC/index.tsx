@@ -21,7 +21,6 @@ const ModalHOC: React.FC<IModalProps> = ({
   headerStyle,
 }) => {
   return (
-    <View style={styles.container}>
       <Modal
         animationType="slide"
         transparent={true}
@@ -39,7 +38,6 @@ const ModalHOC: React.FC<IModalProps> = ({
           </View>
         </View>
       </Modal>
-    </View>
   );
 };
 

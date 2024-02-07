@@ -30,6 +30,8 @@ const OrderPickupAddressView: FC<IProps> = ({}) => {
   } = useOrderFormContextHook();
   const stateDropdownRef = useRef(null);
   const cityDropdownRef = useRef(null);
+  const floorDropdownRef = useRef(null);
+  const liftDropdownRef = useRef(null);
   const [states, setStates] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
 
@@ -48,6 +50,11 @@ const OrderPickupAddressView: FC<IProps> = ({}) => {
     },
     [state.p_pincode],
   );
+
+  useEffect(() => {
+    setPickupCurrentFloor(floorOptions[1].label);
+    setPickupLiftStatus(liftStatusOptions[0].label);
+  }, []);
 
   useEffect(() => {
     if (result && result.Status != 'Error') {
@@ -128,6 +135,8 @@ const OrderPickupAddressView: FC<IProps> = ({}) => {
                 setPickupCurrentFloor(item.label);
               }}
               defaultValue={floorOptions[1]}
+              //@ts-ignore
+              ref={floorDropdownRef}
             />
           </View>
           <View style={styles.textContainer}>
@@ -137,6 +146,9 @@ const OrderPickupAddressView: FC<IProps> = ({}) => {
               onSelect={(item: TDropdownItem) => {
                 setPickupLiftStatus(item.label);
               }}
+              defaultValue={liftStatusOptions[0]}
+              //@ts-ignore
+              ref={liftDropdownRef}
             />
           </View>
         </View>

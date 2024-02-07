@@ -194,12 +194,11 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
         receiptNumber: reducerState.receiptNumber,
         receiptDate: reducerState.receiptDate,
         arivalDate: reducerState.arivalDate,
-        templateId: '12121124232323',
         receiptAgainst:
           reducerState.receiptAgainst || receiptAgainstOptions[0].label,
         billNumber: reducerState.billQuotationNo,
         quotationNumber: reducerState.billQuotationNo,
-        consignmentNumber: '',
+        consignmentNumber: reducerState.cnBiltyLrNo,
         numbersOfArticles: reducerState.numbersOfArticles,
         paymentMode: reducerState.paymentMode || modeOfPaymentOptions[0].label,
         paymentType: reducerState.paymentType || paymentTypeOptions[0].label,
@@ -213,11 +212,10 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
         receiptNumber: reducerState.receiptNumber,
         receiptDate: reducerState.receiptDate,
         arivalDate: reducerState.arivalDate,
-        templateId: '1112222',
         receiptAgainst: reducerState.receiptAgainst,
         billNumber: reducerState.billQuotationNo,
         quotationNumber: reducerState.billQuotationNo,
-        consignmentNumber: '',
+        consignmentNumber: reducerState.cnBiltyLrNo,
         numbersOfArticles: reducerState.numbersOfArticles,
         paymentMode: reducerState.paymentMode,
         paymentType: reducerState.paymentType,
@@ -347,8 +345,10 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
                     onChangeText={handleRefNo}
                     containerStyle={styles.inputContainer}
                     inputStyle={styles.input}
+                    placeholder='Enter reference #'
                     selectionColor={COLOR_BLACK}
                     value={isEdit ? editData.referenceNumber : ''}
+                    autoCapitalize="characters"
                   />
                 </View>
               </>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, Linking} from 'react-native';
 import {Shadow} from 'react-native-shadow-2';
 import styles from './style';
 import PhoneBlueIcon from '../../../../../images/icons/phone-blue.svg';
@@ -36,6 +36,19 @@ const OrderListItem: React.FC<IOrderListItemProps> = ({
   index,
   onPress,
 }) => {
+
+  const _handlePhoneCall = () => {
+    if(item?.phoneNumber) {
+      Linking.openURL(`tel:${item?.phoneNumber}`);
+    }
+  }
+
+  const _handleWhatsappCall = () => {
+    if(item?.phoneNumber) {
+      Linking.openURL(`whatsapp://send?phone=+91${item?.phoneNumber}`);
+    }
+  }
+  
   return (
     <View style={styles.wrapper}>
       <View style={styles.badgeWrapper}>
@@ -54,11 +67,11 @@ const OrderListItem: React.FC<IOrderListItemProps> = ({
               <Text style={styles.nameText}>{item.clientName}</Text>
             </View>
             <View style={styles.contactOptionsContainer}>
-              <TouchableOpacity activeOpacity={0.6}>
+              <TouchableOpacity activeOpacity={0.6} onPress={_handleWhatsappCall}>
                 <WhatsappIcon width={24} height={24} />
               </TouchableOpacity>
               <Spacer width={12} height={0} />
-              <TouchableOpacity activeOpacity={0.6}>
+              <TouchableOpacity activeOpacity={0.6} onPress={_handlePhoneCall}>
                 <PhoneBlueIcon width={24} height={24} />
               </TouchableOpacity>
               <Spacer width={12} height={0} />
