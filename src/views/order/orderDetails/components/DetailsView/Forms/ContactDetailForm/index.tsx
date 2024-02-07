@@ -25,10 +25,16 @@ import {
 } from '../../../../../../../redux/slices/EnquirySlice';
 import Toast from 'react-native-toast-message';
 import {ISingleEnquiryData} from '../../../../../../../interface/enquiry/ISingleEnquiryResponse';
-import { getOrderRequest, getOrdersRequest } from '../../../../../../../redux/slices/OrderSlice';
-import { ISingleOrderRequest } from '../../../../../../../interface/order/ISingleOrderRequest';
-import { getCurrentCompanyId } from '../../../../../../../utils/storage';
-import { IGetOrdersRequest } from '../../../../../../../interface/order/IGetOrdersRequest';
+import {
+  getOrderRequest,
+  getOrdersRequest,
+} from '../../../../../../../redux/slices/OrderSlice';
+import {ISingleOrderRequest} from '../../../../../../../interface/order/ISingleOrderRequest';
+import {getCurrentCompanyId} from '../../../../../../../utils/storage';
+import {IGetOrdersRequest} from '../../../../../../../interface/order/IGetOrdersRequest';
+import DropdownWithTextInput from '../../../../../../../common/DropdownWithTextInput';
+import usePincodeHook from '../../../../../../../hooks/usePincodeHook';
+import { getCities2, getStates2 } from '../../../../../../../utils/formatter';
 interface IContactDetailFormProps {
   moduleName: MODULE_NAME;
   item: ISingleEnquiryData;
@@ -53,13 +59,17 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
   const [companyName, setCompanyName] = useState<string>('');
   const [approvalAuthority, setApprovalAuthority] = useState<string>('');
   const [authorityPersonName, setAuthorityPersonName] = useState<string>('');
-  const [authorityMobileNumber, setAuthorityMobileNumber] =
-    useState<string>('');
+  const [authorityMobileNumber, setAuthorityMobileNumber] = useState<string>('');
   const [companyGST, setCompanyGST] = useState<string>('');
   const [employeeName, setEmployeeName] = useState<string>('');
   const [employeeDesignation, setEmployeeDesignation] = useState<string>('');
   const [employeeMobileNumber, setEmployeeMobileNumber] = useState<string>('');
   const [companyAddress, setCompanyAddress] = useState<string>('');
+  const [cities, setCities] = useState<string[]>([]);
+  const [states, setStates] = useState<string[]>([]);
+  const [city, setCity] = useState<string>('');
+  const [state, setState] = useState<string>('');
+  const [pin, setPin] = useState<string>('');
 
   const dispatch = useAppDispatch();
   const {
@@ -69,7 +79,14 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
     getEnquiryRequesting,
   } = useAppSelector(state => state.Enquiry);
 
+  const {result, fetching, setPincode} = usePincodeHook(
+    () => {},
+    () => {},
+  );
+
   const approvalAuthDropdownRef = useRef(null);
+  const cityDropdownRef = useRef(null);
+  const stateDropwdownRef = useRef(null);
 
   const getContactPersonName = () => {
     let name: string = '';
@@ -84,15 +101,19 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
   };
 
   const setApprovalAuthorityDropdownItem = () => {
-    if(approvalAuthDropdownRef) {
+    if (approvalAuthDropdownRef) {
       const {billingDetails} = item || {};
       //@ts-ignore
       const {approvalAuthority} = billingDetails || {};
-      const itemIndex = approvalAuthorityOptions.findIndex(e => e.label == approvalAuthority);
+      const itemIndex = approvalAuthorityOptions.findIndex(
+        e => e.label == approvalAuthority,
+      );
       //@ts-ignore
-      approvalAuthDropdownRef?.current.setDefaultValue(approvalAuthorityOptions[itemIndex]);
+      approvalAuthDropdownRef?.current.setDefaultValue(
+        approvalAuthorityOptions[itemIndex],
+      );
     }
-  }
+  };
 
   const initBillingInfoFormValues = () => {
     //@ts-ignore
@@ -241,6 +262,18 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
     [companyAddress],
   );
 
+  const handleCity = (item: string) => {
+    setCity(item);
+  };
+  const handleState = (item: string) => {
+    setState(item);
+  };
+
+  const handlePincodeChange = (text: string) => {
+    setPincode(text);
+    setPin(text);
+  };
+
   const showAlternateNumbers = () => {
     if (alternateNumbers.length > 0) {
       return alternateNumbers
@@ -289,19 +322,23 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
   };
 
   const _getEnquiriesRequest = () => {
-    getCurrentCompanyId().then(id => {
-      dispatch(getEnquiriesRequest(id as string));
-    }).catch(err => console.log(err));
-  }
+    getCurrentCompanyId()
+      .then(id => {
+        dispatch(getEnquiriesRequest(id as string));
+      })
+      .catch(err => console.log(err));
+  };
 
   const _fetchOrders = () => {
-    getCurrentCompanyId().then(id => {
-      const payload: Partial<IGetOrdersRequest> = {
-        companyId: id as string,
-      };
-      dispatch(getOrdersRequest(payload));
-    }).catch(err => console.log(err));
-  }
+    getCurrentCompanyId()
+      .then(id => {
+        const payload: Partial<IGetOrdersRequest> = {
+          companyId: id as string,
+        };
+        dispatch(getOrdersRequest(payload));
+      })
+      .catch(err => console.log(err));
+  };
 
   const handleUpdate = () => {
     if (item.billingBy == 'by Individual') {
@@ -347,6 +384,13 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
   }, []);
 
   useEffect(() => {
+    if (result && result.Status != 'Error') {
+      setStates(getStates2(result));
+      setCities(getCities2(result));
+    }
+  }, [result]);
+
+  useEffect(() => {
     if (!updateContactDetailRequesting && updateContactDetailSuccess) {
       Toast.show({
         type: 'success',
@@ -354,13 +398,13 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
         text2: 'Contact Info Updated.',
       });
       dispatch(resetUpdateContactDetailsRequest());
-      if(moduleName == MODULE_NAME.ENQUIRY) {
+      if (moduleName == MODULE_NAME.ENQUIRY) {
         dispatch(getEnquiryRequest(enquiryId));
         _getEnquiriesRequest();
-      } else if(moduleName == MODULE_NAME.ORDER) {
+      } else if (moduleName == MODULE_NAME.ORDER) {
         const payload: ISingleOrderRequest = {
-          _id: enquiryId
-        }
+          _id: enquiryId,
+        };
         dispatch(getOrderRequest(payload));
         _fetchOrders();
       }
@@ -529,6 +573,46 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 value={companyAddress}
+              />
+            </View>
+          </>
+        ) : null}
+        <Spacer height={4} />
+        {item?.billingBy == 'by Company' ? (
+          <View style={styles.elementContainer}>
+            <View style={styles.itemContainer}>
+              <Label text="Pincode" style={styles.label} />
+              <Input
+                onChangeText={handlePincodeChange}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                placeholder="Enter Pincode"
+                selectionColor={COLOR_BLACK}
+                value={orderAmount}
+              />
+            </View>
+            <View style={styles.itemContainer}>
+              <Label text="State" style={styles.label} />
+              <DropdownWithTextInput
+              options={states}
+              onSelect={handleState}
+              //@ts-ignore
+              ref={stateDropwdownRef}
+              containerStyle={styles.itemContainer}
+            />
+            </View>
+          </View>
+        ) : null}
+        {item?.billingBy == 'by Company' ? (
+          <>
+            <Spacer height={4} />
+            <View style={styles.elementContainer3}>
+              <Label text="City" style={styles.label} />
+              <DropdownWithTextInput
+                options={cities}
+                onSelect={handleCity}
+                //@ts-ignore
+                ref={cityDropdownRef}
               />
             </View>
           </>
