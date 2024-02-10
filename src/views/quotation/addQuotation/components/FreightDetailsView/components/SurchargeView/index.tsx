@@ -24,15 +24,17 @@ const SurchargeView: React.FC<Props> = ({}) => {
         if(quotationfreight) {
           const surchargeTypeItem:TDropdownItem = surchargeOptions.find((d:TDropdownItem) => d.label == quotationfreight.surchargeIsRequired) as TDropdownItem;
           if(surchargeTypeItem) {
+            console.log('surchargeTypeDropdownRef---', JSON.stringify(surchargeTypeDropdownRef));
+            
             //@ts-ignore
             surchargeTypeDropdownRef && surchargeTypeDropdownRef?.current?.setDefaultValue(surchargeTypeItem);
             setSurcharge(surchargeTypeItem.label);
           }
-          const surchargePercentItem:TDropdownItem = surchargePercentOptions.find((d:TDropdownItem) => d.label == quotationfreight.surchargeCharges) as TDropdownItem;
+          const surchargePercentItem:TDropdownItem = surchargePercentOptions.find((d:TDropdownItem) => d.value == quotationfreight.surchargeCharges) as TDropdownItem;
           if(surchargePercentItem) {
             //@ts-ignore
             surchargePercentDropdownRef && surchargePercentDropdownRef?.current?.setDefaultValue(surchargePercentItem);
-            setSurchargePercent(surchargePercentItem.label);
+            setSurchargePercent(surchargePercentItem.value);
           }
         }
       }
@@ -51,7 +53,7 @@ const SurchargeView: React.FC<Props> = ({}) => {
             onSelect={(item: TDropdownItem) => {
               setSurcharge(item.label);
             }}
-            defaultValue={surchargeOptions[0]}
+            // defaultValue={surchargeOptions[0]}
             //@ts-ignore
             ref={surchargeTypeDropdownRef}
           />
@@ -60,9 +62,9 @@ const SurchargeView: React.FC<Props> = ({}) => {
           <DropdownComponent
             data={surchargePercentOptions}
             onSelect={(item: TDropdownItem) => {
-              setSurchargePercent(item.label);
+              setSurchargePercent(item.value);
             }}
-            defaultValue={surchargePercentOptions[0]}
+            // defaultValue={surchargePercentOptions[0]}
             //@ts-ignore
             ref={surchargePercentDropdownRef}
           />

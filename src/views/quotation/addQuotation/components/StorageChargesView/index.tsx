@@ -43,6 +43,20 @@ const StorageChargesView: React.FC<Props> = ({}) => {
           const storageCharge:IStorage = quotationfreight.storageCharges;
           if(storageCharge) {
             setStorage(storageCharge?.isRequired);
+          }
+        }
+      }
+    }
+  }, [state.editQuotation, state.item]);
+
+  useEffect(() => {
+    if(state.editQuotation && state.item) {
+      const {item} = state;
+      if(item) {
+        const quotationfreight:IQuotationFreight = item.quotationfreights;
+        if(quotationfreight) {
+          const storageCharge:IStorage = quotationfreight.storageCharges;
+          if(storageCharge) {
             const storageDurationItem:TDropdownItem = storageDurationOptions.find((d:TDropdownItem) => d.label == storageCharge?.storageChargesType) as TDropdownItem;
             if(storageDurationItem) {
               setStorageDuration(storageDurationItem?.label);
@@ -62,7 +76,7 @@ const StorageChargesView: React.FC<Props> = ({}) => {
         }
       }
     }
-  }, [state.editQuotation, state.item]);
+  }, [state.storage]);
 
   return (
     <CollapsibleView title="STORAGE CHARGES" collapsed={true}>
@@ -145,7 +159,7 @@ const StorageChargesView: React.FC<Props> = ({}) => {
               />
             </View>
           </>
-        ) : null}
+        ) : <></>}
       </View>
     </CollapsibleView>
   );

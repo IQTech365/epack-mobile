@@ -89,7 +89,7 @@ export const getVehicleModelList = (vehicleCompanyId:string,response:IVehicleMod
 
 export const getYears = ():IItem[] => {
   const years:IItem[] = [];
-  for (let index = 1950; index < 2024; index++) {
+  for (let index = 1950; index <= 2024; index++) {
     const year:IItem = {
       label: `${index}`,
       value: `${index}`

@@ -19,30 +19,6 @@ const GstView: React.FC<Props> = ({}) => {
   const gstPercentDropdownCompRef = useRef(null);
   const gstTypeDropdownCompRef = useRef(null);
 
-  useEffect(() => {
-    if(state.editQuotation && state.item) {
-      const {item} = state;
-      if(item) {
-        const quotationfreight:IQuotationFreight = item.quotationfreights;
-        if(quotationfreight) {
-          setGstInQuotation(quotationfreight.gstStatus);
-          const gstPercentItem:TDropdownItem = gstPercentOptions.find((d:TDropdownItem) => d.label == quotationfreight.gstPercentage) as TDropdownItem;
-          if(gstPercentItem) {
-            //@ts-ignore
-            gstPercentDropdownCompRef && gstPercentDropdownCompRef?.current?.setDefaultValue(gstPercentItem);
-            setGstPercent(gstPercentItem.label);
-          }
-          const gstTypeItem:TDropdownItem = gstTypeOptions.find((d:TDropdownItem) => d.label == quotationfreight.gstType) as TDropdownItem;
-          if(gstTypeItem) {
-            //@ts-ignore
-            gstTypeDropdownCompRef && gstTypeDropdownCompRef?.current?.setDefaultValue(gstTypeItem);
-            setGstType(gstTypeItem.label);
-          }
-        }
-      }
-    }
-  }, [state.editQuotation, state.item]);
-
   const _renderGstDropdownView = () => {
     if (state.gst_in_quotation == gstInQuotationOptions[0]) {
       return (
@@ -51,7 +27,7 @@ const GstView: React.FC<Props> = ({}) => {
             <DropdownComponent
               data={gstPercentOptions}
               onSelect={(item: TDropdownItem) => {
-                setGstPercent(item.label);
+                setGstPercent(item.value);
               }}
               //@ts-ignore
               ref={gstPercentDropdownCompRef}
@@ -72,6 +48,41 @@ const GstView: React.FC<Props> = ({}) => {
     }
     return null;
   };
+
+  useEffect(() => {
+    if(state.editQuotation && state.item) {
+      const {item} = state;
+      if(item) {
+        const quotationfreight:IQuotationFreight = item.quotationfreights;
+        if(quotationfreight) {
+          setGstInQuotation(quotationfreight.gstStatus);
+        }
+      }
+    }
+  }, [state.editQuotation, state.item]);
+
+  useEffect(() => {
+    if(state.editQuotation && state.item && state.gst_in_quotation == gstInQuotationOptions[0]) {
+      const {item} = state;
+      if(item) {
+        const quotationfreight:IQuotationFreight = item.quotationfreights;
+        if(quotationfreight) {
+          const gstPercentItem:TDropdownItem = gstPercentOptions.find((d:TDropdownItem) => d.value == quotationfreight.gstPercentage) as TDropdownItem;
+          if(gstPercentItem) {
+            //@ts-ignore
+            gstPercentDropdownCompRef && gstPercentDropdownCompRef?.current?.setDefaultValue(gstPercentItem);
+            setGstPercent(gstPercentItem.value);
+          }
+          const gstTypeItem:TDropdownItem = gstTypeOptions.find((d:TDropdownItem) => d.label == quotationfreight.gstType) as TDropdownItem;
+          if(gstTypeItem) {
+            //@ts-ignore
+            gstTypeDropdownCompRef && gstTypeDropdownCompRef?.current?.setDefaultValue(gstTypeItem);
+            setGstType(gstTypeItem.label);
+          }
+        }
+      }
+    }
+  }, [state.gst_in_quotation]);
 
   return (
     <View style={styles.mainWrapper}>

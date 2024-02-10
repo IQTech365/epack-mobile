@@ -35,8 +35,9 @@ const DropdownComponent: React.FC<IDropdownProps> = forwardRef(
   ) => {
     const [value, setValue] = useState<TDropdownItem>(data[0]);
     const [isFocus, setIsFocus] = useState<boolean>(false);
+
     React.useImperativeHandle(ref, () => ({
-      setDefaultValue
+      setDefaultValue,
     }));
 
     useEffect(() => {

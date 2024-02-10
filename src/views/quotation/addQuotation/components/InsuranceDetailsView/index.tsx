@@ -39,9 +39,25 @@ const InsuranceDetailsView: React.FC<Props> = ({}) => {
   const insuranceGoodsValueInputCompRef = useRef(null);
   const {getInsurancePercentageList} = useUtilityHook();
   const insurancePercentOptions = getInsurancePercentageList();
-
+  console.log('insurancePercentOptions--', JSON.stringify(insurancePercentOptions));
+  
   useEffect(() => {
     if(state.editQuotation && state.item) {
+      const {item} = state;
+      if(item) {
+        const quotationfreight:IQuotationFreight = item.quotationfreights;
+        if(quotationfreight) {
+          const transitInsurance:ITransitInsurance = quotationfreight.transitInsurance;
+          if(transitInsurance) {
+            setTransitInsurance(transitInsurance.isRequired);
+          }
+        }
+      }
+    }
+  }, [state.editQuotation, state.item]);
+
+  useEffect(() => {
+    if(state.editQuotation && state.item && state.transit_insurance == options2[0]) {
       const {item} = state;
       if(item) {
         const quotationfreight:IQuotationFreight = item.quotationfreights;
@@ -70,9 +86,9 @@ const InsuranceDetailsView: React.FC<Props> = ({}) => {
                   //@ts-ignore
                   insuranceChargeDropdownCompRef && insuranceChargeDropdownCompRef?.current?.setDefaultValue(insurancePercentItem);
                 }
-                const gstPercentItem:TDropdownItem = gstPercentOptions.find((d:TDropdownItem) => d.label == charge.gst) as TDropdownItem;
+                const gstPercentItem:TDropdownItem = gstPercentOptions.find((d:TDropdownItem) => d.value == charge.gst) as TDropdownItem;
                 if(gstPercentItem) {
-                  setTransitInsuranceGst(gstPercentItem.label);
+                  setTransitInsuranceGst(gstPercentItem.value);
                   //@ts-ignore
                   insuranceGstDropdownCompRef && insuranceGstDropdownCompRef?.current?.setDefaultValue(gstPercentItem);
                 }
@@ -83,7 +99,7 @@ const InsuranceDetailsView: React.FC<Props> = ({}) => {
         }
       }
     }
-  }, [state.editQuotation, state.item]);
+  }, [state.transit_insurance]);
 
   return (
     <CollapsibleView title="TRANSIT INSURANCE DETAILS" collapsed={true}>
@@ -150,7 +166,7 @@ const InsuranceDetailsView: React.FC<Props> = ({}) => {
                 <DropdownComponent
                   data={gstPercentOptions}
                   onSelect={(item: TDropdownItem) => {
-                    setTransitInsuranceGst(item.label);
+                    setTransitInsuranceGst(item.value);
                   }}
                   //@ts-ignore
                   ref={insuranceGstDropdownCompRef}

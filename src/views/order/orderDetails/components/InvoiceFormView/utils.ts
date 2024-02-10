@@ -132,19 +132,19 @@ export const gstOptions:string[] = ['With GST', 'Without GST', 'Exempted', 'Reve
 export const gstPercentOptions = [
   {
     label: '0%',
-    value: '1',
+    value: '0',
   },
   {
     label: '5%',
-    value: '2',
+    value: '5',
   },
   {
     label: '12%',
-    value: '3',
+    value: '12',
   },
   {
     label: '18%',
-    value: '4',
+    value: '18',
   },
 ];
 

@@ -32,6 +32,10 @@ const EnquiryPickupAddressView: FC<IProps> = ({}) => {
   const [cities, setCities] = useState<string[]>([]);
   const stateDropdownRef = useRef(null);
   const cityDropdownRef = useRef(null);
+
+  const floorDropdownRef = useRef(null);
+  const liftDropdownRef = useRef(null);
+
   const {result, fetching, setPincode} = usePincodeHook(
     () => {},
     () => {},
@@ -46,6 +50,11 @@ const EnquiryPickupAddressView: FC<IProps> = ({}) => {
     },
     [state.p_pincode],
   );
+
+  useEffect(() => {
+    setPickupCurrentFloor(floorOptions[1].label);
+    setPickupLiftStatus(liftStatusOptions[0].label);
+  }, []);
 
   useEffect(() => {
     if (result && result.Status != 'Error') {
@@ -125,6 +134,8 @@ const EnquiryPickupAddressView: FC<IProps> = ({}) => {
                 setPickupCurrentFloor(item.label);
               }}
               defaultValue={floorOptions[1]}
+              //@ts-ignore
+              ref={floorDropdownRef}
             />
           </View>
           <View style={styles.textContainer}>
@@ -134,6 +145,8 @@ const EnquiryPickupAddressView: FC<IProps> = ({}) => {
               onSelect={(item: TDropdownItem) => {
                 setPickupLiftStatus(item.label);
               }}
+              //@ts-ignore
+              ref={liftDropdownRef}
             />
           </View>
         </View>

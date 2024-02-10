@@ -1,6 +1,5 @@
 import React from 'react';
 import {View, Text} from 'react-native';
-import styles from './style';
 import CollapsibleView from '../../../../../common/CollapsibleView';
 import FreightTypeView from './components/FreightTypeView';
 import {
@@ -26,6 +25,7 @@ interface Props {
 
 const FreightDetailsView: React.FC<Props> = ({}) => {
   const {state} = useQuotationFormContextHook();
+
   return (
     <CollapsibleView title="FREIGHT DETAILS" collapsed={true}>
       <View style={{alignItems: 'center'}}>

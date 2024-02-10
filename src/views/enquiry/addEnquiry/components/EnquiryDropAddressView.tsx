@@ -33,6 +33,8 @@ const EnquiryDropAddressView: FC<IProps> = ({}) => {
   const [cities, setCities] = useState<string[]>([]);
   const stateDropdownRef = useRef(null);
   const cityDropdownRef = useRef(null);
+  const floorDropdownRef = useRef(null);
+  const liftDropdownRef = useRef(null);
   const {getFloorsList} = useUtilityHook();
   const floorOptions = getFloorsList();
   const {result, fetching, setPincode} = usePincodeHook(
@@ -47,6 +49,11 @@ const EnquiryDropAddressView: FC<IProps> = ({}) => {
     },
     [state.d_pincode],
   );
+
+  useEffect(() => {
+    setDropCurrentFloor(floorOptions[1].label);
+    setDropLiftStatus(liftStatusOptions[0].label);
+  }, []);
 
   useEffect(() => {
     if (result && result.Status != 'Error') {
@@ -127,6 +134,8 @@ const EnquiryDropAddressView: FC<IProps> = ({}) => {
                 setDropCurrentFloor(item.label);
               }}
               defaultValue={floorOptions[1]}
+              //@ts-ignore
+              ref={floorDropdownRef}
             />
           </View>
           <View style={styles.textContainer}>
@@ -136,6 +145,8 @@ const EnquiryDropAddressView: FC<IProps> = ({}) => {
               onSelect={(item: TDropdownItem) => {
                 setDropLiftStatus(item.label);
               }}
+              //@ts-ignore
+              ref={liftDropdownRef}
             />
           </View>
         </View>

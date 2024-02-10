@@ -6,7 +6,10 @@ export enum FREIGHT_TYPE {
   UNLOADING_CHARGE,
   UNPACKING_CHARGE,
 }
-
+export type TItem = {
+  label: string;
+  value: string;
+}
 export const loadOptions: string[] = ['Part Load', 'Full Load'];
 export const loadOptions2: string[] = ['In Sharing', 'Separate'];
 export const options: string[] = ['Included', 'Additional', 'Not Required'];
@@ -15,10 +18,10 @@ export const unloadingChargeOptions: string[] = [
   ...options,
   'Unloading by Party',
 ];
-export const discountInQuotationOptions: string[] = [
-  'Discount @%',
-  'Flat Discount',
-  'Not Required',
+export const discountInQuotationOptions: TItem[] = [
+  {label: 'Discount @%', value: 'Percentage'},
+  {label: 'Flat Discount', value: 'Flat Discount'},
+  {label: 'Not Required', value: 'Not Required'},
 ];
 export const gstInQuotationOptions: string[] = [
   'With GST',

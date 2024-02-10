@@ -357,7 +357,7 @@ export const initialState: IState = {
   surcharge: '',
   surcharge_percent: '',
   // **** Discount In Quotation
-  discount_in_quotation: discountInQuotationOptions[2],
+  discount_in_quotation: discountInQuotationOptions[2].value,
   discount_percent_or_value: '',
   // **** GST in Quotation
   gst_in_quotation: gstInQuotationOptions[3],
@@ -683,6 +683,7 @@ export const quotationReducer: Reducer<IState, IAction> = (
       return {
         ...state,
         item: null,
+        editQuotation: false,
       };
     case ACTION.IS_EDIT_QUOTATION:
       return {
