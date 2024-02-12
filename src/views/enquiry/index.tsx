@@ -28,6 +28,23 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
   
   const {data} = enquiries || {};
 
+  const getPhoneNumber = (item:any) => {
+    let phoneNumber = '';
+    if (item.billingBy == 'by Individual') {
+      phoneNumber = item.mobile;
+    } else if (item.billingBy == 'by Company') {
+      const billingInfo = item.billingDetails;
+      if(billingInfo && Object.keys(billingInfo).length > 0) {
+        if(billingInfo?.authorityPersonMobile) {
+          phoneNumber = billingInfo?.authorityPersonMobile;
+        } else if(billingInfo?.employeeMobile) {
+          phoneNumber = billingInfo?.employeeMobile;
+        }
+      }
+    }
+    return phoneNumber;
+  };
+
   let transformedData: IEnquiryItem[] = [];
   if (data) {
     //@ts-ignore
@@ -39,7 +56,7 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
           deliveryAddress: `${enq.dropAddress.address}, ${enq.dropAddress.city}, ${enq.dropAddress.state}, ${enq.dropAddress.pincode}`,
           shiftingType: enq.shiftingType,
           shiftingLuggage: enq.shiftingLuggage.join(','),
-          phoneNumber: enq.mobile,
+          phoneNumber: getPhoneNumber(enq),
           enquiryId: enq._id,
           enquiryDate: formatDate5(enq.createdAt),
           status: enq.status,

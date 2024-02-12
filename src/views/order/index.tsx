@@ -16,6 +16,7 @@ import OrderListItem, {
 import styles from './style';
 import {ISingleEnquiryData} from '../../interface/enquiry/ISingleEnquiryResponse';
 import { getCurrentCompanyId } from '../../utils/storage';
+import { BillingDetails } from '../../interface/order/IAddOrderRequest';
 
 interface IOrderPageViewProps {
   navigation: NavigationProp<any, any>;
@@ -43,8 +44,14 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
     if (item.billingBy == 'by Individual') {
       phoneNumber = item.mobile;
     } else if (item.billingBy == 'by Company') {
-      //@ts-ignore
-      clientName = item.billingDetails?.authorityPersonMobile;
+      const billingInfo:BillingDetails = item.billingDetails as BillingDetails;
+      if(billingInfo && Object.keys(billingInfo).length > 0) {
+        if(billingInfo?.authorityPersonMobile) {
+          phoneNumber = billingInfo?.authorityPersonMobile;
+        } else if(billingInfo?.employeeMobile) {
+          phoneNumber = billingInfo?.employeeMobile;
+        }
+      }
     }
     return phoneNumber;
   };
