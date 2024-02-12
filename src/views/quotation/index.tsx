@@ -35,7 +35,6 @@ import {
   IEnquiry,
   IGetQuotationData,
 } from '../../interface/quotation/IGetQuotationsResponse';
-import {sortItemByDate} from '../../utils/formatter';
 import {IHtmlTemplateRequest} from '../../interface/order/templates/ITemplateResponse';
 import ModalHOC from '../../common/ModalHOC';
 import TemplateViewer from '../../common/TemplateViewer';

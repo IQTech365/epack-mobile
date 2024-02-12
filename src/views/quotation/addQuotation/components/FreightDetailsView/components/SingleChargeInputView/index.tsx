@@ -37,13 +37,24 @@ const SingleChargeInputView: React.FC<Props> = ({freightType}) => {
       if(item) {
         const quotationfreight:IQuotationFreight = item.quotationfreights;
         if(quotationfreight) {
-          setFreightPartCharge(quotationfreight.partLoadCharge);
-          setPackingChargePartLoad(quotationfreight.packagingPartLoadCharges);
-          setPackingMaterialChargePartLoad(quotationfreight.packingMaterialPartLoadCharges);
-          setLoadingChargePartLoad(quotationfreight.loadingPartLoadCharges);
-          setUnloadingChargePartLoad(quotationfreight.unLoadingPartLoadCharges);
-          setUnpackingChargePartLoad(quotationfreight.unPackagingPartLoadCharges);
-          _inputValue(quotationfreight);
+          if(quotationfreight.isPartLoad == "true") {
+            setFreightPartCharge(quotationfreight.partLoadCharge);
+            setPackingChargePartLoad(quotationfreight.packagingPartLoadCharges);
+            setPackingMaterialChargePartLoad(quotationfreight.packingMaterialPartLoadCharges);
+            setLoadingChargePartLoad(quotationfreight.loadingPartLoadCharges);
+            setUnloadingChargePartLoad(quotationfreight.unLoadingPartLoadCharges);
+            setUnpackingChargePartLoad(quotationfreight.unPackagingPartLoadCharges);
+            _inputValue(quotationfreight);
+          } else if(quotationfreight.isFullLoad == "true") {
+            setFreightFullCharge(quotationfreight.fullLoadCharge);
+            setPackingChargeFullLoad(quotationfreight.packagingFullLoadCharges);
+            setPackingMaterialChargeFullLoad(quotationfreight.packingMaterialFullLoadCharges);
+            setLoadingChargeFullLoad(quotationfreight.loadingFullLoadCharges);
+            setUnloadingChargeFullLoad(quotationfreight.unLoadingFullLoadCharges);
+            setUnpackingChargeFullLoad(quotationfreight.unPackagingFullLoadCharges);
+            _inputValue(quotationfreight);
+          }
+         
         }
       }
     }
@@ -132,9 +143,15 @@ const SingleChargeInputView: React.FC<Props> = ({freightType}) => {
 
   const _inputValue = (quotationfreight:IQuotationFreight) => {
     if (freightType == FREIGHT_TYPE.LOAD_TYPE) {
-      //@ts-ignore
-      input1Ref && input1Ref?.current?.setValue(quotationfreight.partLoadCharge);
-      setFreightPartCharge(quotationfreight.partLoadCharge);
+      if(state.freight_part_load) {
+        //@ts-ignore
+        input1Ref && input1Ref?.current?.setValue(quotationfreight.partLoadCharge);
+        setFreightPartCharge(quotationfreight.partLoadCharge);
+      } else if(state.freight_full_load) {
+        //@ts-ignore
+        input1Ref && input1Ref?.current?.setValue(quotationfreight.fullLoadCharge);
+        setFreightFullCharge(quotationfreight.fullLoadCharge);
+      }
     } else if (freightType == FREIGHT_TYPE.PACKING_CHARGE) {
       //@ts-ignore
       input1Ref && input1Ref?.current?.setValue(quotationfreight.packagingPartLoadCharges);
@@ -144,13 +161,19 @@ const SingleChargeInputView: React.FC<Props> = ({freightType}) => {
      input1Ref && input1Ref?.current?.setValue(quotationfreight.packingMaterialPartLoadCharges);
      setPackingMaterialChargePartLoad(quotationfreight.packingMaterialPartLoadCharges);
     } else if (freightType == FREIGHT_TYPE.LOADING_CHARGE) {
-      //@ts-ignore
-      input1Ref && input1Ref?.current?.setValue(quotationfreight.loadingPartLoadCharges);
-      setLoadingChargePartLoad(quotationfreight.loadingPartLoadCharges);
+      if(state.freight_part_load) {
+        //@ts-ignore
+        input1Ref && input1Ref?.current?.setValue(quotationfreight.loadingPartLoadCharges);
+        setLoadingChargePartLoad(quotationfreight.loadingPartLoadCharges);
+      } else if(state.freight_full_load) {
+        //@ts-ignore
+      input1Ref && input1Ref?.current?.setValue(quotationfreight.loadingFullLoadCharges);
+      setLoadingChargeFullLoad(quotationfreight.loadingFullLoadCharges);
+      }
     } else if (freightType == FREIGHT_TYPE.UNLOADING_CHARGE) {
-     //@ts-ignore
-     input1Ref && input1Ref?.current?.setValue(quotationfreight.unLoadingPartLoadCharges);
-     setUnloadingChargePartLoad(quotationfreight.unLoadingPartLoadCharges);
+      //@ts-ignore
+      input1Ref && input1Ref?.current?.setValue(quotationfreight.unLoadingPartLoadCharges);
+      setUnloadingChargePartLoad(quotationfreight.unLoadingPartLoadCharges);
     } else if (freightType == FREIGHT_TYPE.UNPACKING_CHARGE) {
       //@ts-ignore
       input1Ref && input1Ref?.current?.setValue(quotationfreight.unPackagingPartLoadCharges);
@@ -161,17 +184,41 @@ const SingleChargeInputView: React.FC<Props> = ({freightType}) => {
   const _getInputValue = ():string => {
     let value:string = '';
     if (freightType == FREIGHT_TYPE.LOAD_TYPE) {
-      value = state.freight_part_charge;
+      if(state.freight_part_load) {
+        value = state.freight_part_charge;
+      } else if(state.freight_full_load) {
+        value = state.freight_full_charge;
+      }
     } else if (freightType == FREIGHT_TYPE.PACKING_CHARGE) {
-      value = state.packing_charge_part_load;
+      if(state.freight_part_load) {
+        value = state.packing_charge_part_load;
+      } else if(state.freight_full_load) {
+        value = state.packing_charge_full_load;
+      }
     } else if (freightType == FREIGHT_TYPE.PACKING_MATERIAL_CHARGE) {
-      value = state.packing_material_charge_part_load;
+      if(state.freight_part_load) {
+        value = state.packing_material_charge_part_load;
+      } else if(state.freight_full_load) {
+        value = state.packing_material_charge_full_load;
+      }
     } else if (freightType == FREIGHT_TYPE.LOADING_CHARGE) {
-      value = state.loading_charge_part_load;
+      if(state.freight_part_load) {
+        value = state.loading_charge_part_load;
+      } else if(state.freight_full_load) {
+        value = state.loading_charge_full_load;
+      }
     } else if (freightType == FREIGHT_TYPE.UNLOADING_CHARGE) {
-      value = state.unloading_charge_part_load;
+      if(state.freight_part_load) {
+        value = state.unloading_charge_part_load;
+      } else if(state.freight_full_load) {
+        value = state.unloading_charge_full_load;
+      }
     } else if (freightType == FREIGHT_TYPE.UNPACKING_CHARGE) {
-      value = state.unpacking_charge_part_load;
+      if(state.freight_part_load) {
+        value = state.unpacking_charge_part_load;
+      } else if(state.freight_full_load) {
+        value = state.unpacking_charge_full_load;
+      }
     }
     return value;
   };

@@ -137,6 +137,7 @@ export enum ACTION {
   RESET_QUOTATION_ITEM = 'RESET_QUOTATION_ITEM',
   IS_EDIT_QUOTATION = 'IS_EDIT_QUOTATION',
   SET_ENQUIRY_ITEM = 'SET_ENQUIRY_ITEM',
+  RESET_ALL = 'RESET_ALL',
 }
 
 export type TInsuranceDetails = {
@@ -700,6 +701,8 @@ export const quotationReducer: Reducer<IState, IAction> = (
         ...state,
         enquiryItem: payload as ISingleEnquiryData,
       };
+    case ACTION.RESET_ALL:
+      return initialState;
     default:
       return state;
   }

@@ -85,6 +85,7 @@ const AddQuotationView: React.FC<Props> = ({
             isEdit={isEdit || editRequestFromEnquiry}
             item={item ? item : itemFromEnquiry}
             onSuccess={onSuccess}
+            showHeader={showHeader}
           />
         </View>
       </AvoidSoftInputViewHOC>

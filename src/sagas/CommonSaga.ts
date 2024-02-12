@@ -129,6 +129,8 @@ export function* getSubmodulesSaga(action: PayloadAction<any>) {
 export function* getAppSettingsSaga(action: PayloadAction<string>) {
     try {
         const response: IAppSettingResponse = yield call(CommonService.GetAppSettingsService, action.payload);
+        console.log('getAppSettingsSaga-response--', JSON.stringify(response));
+        
         yield put(getAppSettingsSuccess(response));
     } catch (error) {
         yield put(getAppSettingsFailure(JSON.stringify(error)));
@@ -168,8 +170,10 @@ export function* getDashboardSaga(action: PayloadAction<IDashboardPaylod>) {
     try {
         //@ts-ignore
         const response: any = yield call(CommonService.GetDashboardService, action.payload);
+        console.log('getDashboardSaga-response-', JSON.stringify(response));
         yield put(getDashboardDataSuccess(response));
     } catch (error) {
+        console.log('getDashboardSaga-response-', JSON.stringify(error));
         yield put(getDashboardDataFailure(error));
     }
 }

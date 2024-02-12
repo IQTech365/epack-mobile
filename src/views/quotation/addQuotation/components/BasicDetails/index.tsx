@@ -120,8 +120,6 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false}) => {
       }
       //@ts-ignore
       dateOfMovingCompRef && dateOfMovingCompRef?.current?.setDefaultValue(new Date(enquiryItem.shiftingDate));
-      //@ts-ignore
-      // dateOfQuotationCompRef && dateOfQuotationCompRef?.current?.setDefaultValue(new Date(enquiryItem.quotationDate));
       
     }
   }, [state.enquiryItem]);
@@ -131,7 +129,6 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false}) => {
       const {item} = state;
       if(item) {
         const shiftingLuggageItem:TDropdownItem = shiftingLuggages.find((d:TDropdownItem) => d.label == item.shiftingLuggage) as TDropdownItem;
-        
         if(shiftingLuggageItem) {
           //@ts-ignore
           shiftingLuggageDropdownCompRef && shiftingLuggageDropdownCompRef?.current?.setDefaultValue(shiftingLuggageItem);

@@ -27,6 +27,7 @@ const TemplatePageView = ({route}) => {
     saveDocTemplateIdRequesting,
     saveDocTemplateIdSuccess,
     saveDocTemplateIdFailure,
+    savedDocumentTemplateIds,
   } = useAppSelector(state => state.Template);
   const [activeCategory, setActiveCategory] = useState<string>('');
   const [activeTemplateId, setActiveTemplateId] = useState<string>('');

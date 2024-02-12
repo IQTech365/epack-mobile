@@ -15,6 +15,7 @@ interface IHeaderProps {
   onMorePress?: () => void;
   canGoBack?: boolean;
   showDrawerIcon?: boolean;
+  onBack?:() => void;
 }
 
 const Header: React.FC<IHeaderProps> = ({
@@ -22,6 +23,7 @@ const Header: React.FC<IHeaderProps> = ({
   onMorePress,
   label,
   showDrawerIcon = false,
+  onBack,
 }) => {
   const navigation = useNavigation();
 
@@ -68,6 +70,8 @@ const Header: React.FC<IHeaderProps> = ({
     if (showDrawerIcon) {
       //@ts-ignore
       navigation.toggleDrawer();
+    } else if (onBack){
+      onBack();
     } else {
       navigation.goBack();
     }

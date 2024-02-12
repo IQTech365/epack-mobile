@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../../../common/Spacer';
@@ -8,7 +8,6 @@ import DropdownComponent from '../../../../../common/DropdownComponent';
 import Input from '../../../../../common/Input';
 import {COLOR_BLACK, COLOR_BLUE} from '../../../../../utils/colors';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import Toast from 'react-native-toast-message';
 import styles from './style';
 import Button from '../../../../../common/Button';
 import accountTypeOptions from '../../../../../data/accountType.json';
@@ -19,7 +18,6 @@ import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import { IAddPaymentMethodRequest } from '../../../../../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodRequest';
 import { addPaymentMethodRequest, getBanksRequest, resetAddPaymentMethodRequest } from '../../../../../redux/slices/ProfileSettingSlice';
 import Spinner from '../../../../../common/Spinner';
-import { ISubmoduleData } from '../../../../../interface/setting/packerProfile/ISubmodule';
 import { ToastType, showToast } from '../../../../../utils/utility';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
 import useAuthId from '../../../../../hooks/useAuthId';

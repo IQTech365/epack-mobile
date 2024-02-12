@@ -957,6 +957,13 @@ const useQuotationFormContext = () => {
     });
   }
 
+  const resetAll = () => {
+    dispatch({
+      type: ACTION.RESET_ALL,
+      payload: null,
+    });
+  }
+
   return {
     state,
     // **** Basic Details ****
@@ -1079,6 +1086,7 @@ const useQuotationFormContext = () => {
     setIsEditQuotation,
     setIsSerialNoAutomatic,
     setEnquiryItem,
+    resetAll,
   };
 };
 
@@ -1206,6 +1214,7 @@ const initQuotationFormContextState: UseQuotationFormContextType = {
   setIsEditQuotation: (isEdit: boolean) => {},
   setIsSerialNoAutomatic: (isAuto: boolean) => {},
   setEnquiryItem: (item:ISingleEnquiryData) => {},
+  resetAll: () => {},
 };
 
 const QuotationFormContext = createContext<UseQuotationFormContextType>(

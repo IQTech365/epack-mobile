@@ -49,8 +49,10 @@ export function* getSingleQuotationSaga(action: PayloadAction<string>) {
 export function* getQuotationTemplateHtmlSaga(action: PayloadAction<IHtmlTemplateRequest>) {
     try {
         const response: IHtmlTemplateResponse = yield call(QuotationService.GetQuotationTemplateHtmlService, action.payload);
+        console.log('getQuotationTemplateHtmlSaga-response-', JSON.stringify(response));
         yield put(getQuotationHtmlSuccess(response));
     } catch (error) {
+        console.log('getQuotationTemplateHtmlSaga-error-', JSON.stringify(error));
         yield put(getQuotationHtmlFailure(error));
     }
   }

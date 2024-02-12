@@ -39,7 +39,6 @@ const InsuranceDetailsView: React.FC<Props> = ({}) => {
   const insuranceGoodsValueInputCompRef = useRef(null);
   const {getInsurancePercentageList} = useUtilityHook();
   const insurancePercentOptions = getInsurancePercentageList();
-  console.log('insurancePercentOptions--', JSON.stringify(insurancePercentOptions));
   
   useEffect(() => {
     if(state.editQuotation && state.item) {

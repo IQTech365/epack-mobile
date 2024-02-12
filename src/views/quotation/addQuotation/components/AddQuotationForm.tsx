@@ -47,6 +47,7 @@ interface Props {
   item?:IGetQuotationData;
   isEdit?:boolean;
   onSuccess?:() => void;
+  showHeader?: boolean;
 }
 
 const AddQuotationForm: React.FC<Props> = ({
@@ -55,7 +56,8 @@ const AddQuotationForm: React.FC<Props> = ({
   navigation,
   isEdit,
   onSuccess,
-  item
+  item,
+  showHeader
 }) => {
   const {
     state,
@@ -72,6 +74,7 @@ const AddQuotationForm: React.FC<Props> = ({
     resetItem,
     setIsEditQuotation,
     setEnquiryItem,
+    resetAll,
   } = useQuotationFormContextHook();
   const authId = useAuthId();
   const dispatch = useAppDispatch();
@@ -85,8 +88,8 @@ const AddQuotationForm: React.FC<Props> = ({
     updateQuotationSuccess,
     updateQuotationFailure,
   } = useAppSelector(state => state.Quotation);
-  console.log('Single-quotation--', JSON.stringify(quotation));
-
+  // console.log('Single-quotation--', JSON.stringify(quotation));
+  // console.log('Single-quotation-state-1--', JSON.stringify(state));
   const {
     vehicleTypesRequesting,
     vehicleCompaniesRequesting,
@@ -357,8 +360,7 @@ const AddQuotationForm: React.FC<Props> = ({
 
   useEffect(() => {
     if(isEdit) {
-      setItem(_getQuotationItem() as ISingleQuotationData)
-      setIsEditQuotation(isEdit);
+      resetAll();
     }
     if(fromEnquiry) {
       setEnquiryItem(_getSingleEnquiry());
@@ -366,11 +368,23 @@ const AddQuotationForm: React.FC<Props> = ({
   }, []);
 
   useEffect(() => {
-    return () => {
-      resetItem();
-      setIsEditQuotation(false);
+    console.log('Inside-2---new-isEdit--', isEdit);
+    console.log('Inside-2---new-state--', JSON.stringify(state));
+    if(isEdit && !state.item) {
+      // setItem(_getQuotationItem() as ISingleQuotationData)
+      // setIsEditQuotation(isEdit);
     }
-  }, []);
+  }, [state]);
+
+  // useEffect(() => {
+  //   return () => {
+  //     resetAll();
+  //     console.log('onmount called');
+  //     console.log('Single-quotation-state-2--', JSON.stringify(state));
+  //     // resetItem();
+  //     // setIsEditQuotation(false);
+  //   }
+  // }, []);
 
   useEffect(() => {
     if (!addQuotationRequesting && addQuotationSuccess) {
@@ -394,8 +408,7 @@ const AddQuotationForm: React.FC<Props> = ({
       showToast('Quotation Updated.', ToastType.SUCCESS);
       dispatch(resetUpdateQuotationRequest());
       if(isEdit) {
-        resetItem();
-        setIsEditQuotation(false);
+        resetAll();
       }
       _getQuotationsRequest();
       if(onSuccess) {

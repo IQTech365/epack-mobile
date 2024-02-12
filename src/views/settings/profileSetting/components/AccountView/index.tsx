@@ -8,9 +8,6 @@ import {
 import styles from './style';
 import AccountDetailUpdateView from '../AccountFormView';
 import Spacer from '../../../../../common/Spacer';
-import EditIcon from '../../../../../images/icons/edit2.svg';
-import DleteIcon from '../../../../../images/icons/delete.svg';
-import Button from '../../../../../common/Button';
 import ListViewIcon from '../../../../../images/icons/list_view_icon.svg';
 import ListViewIcon2 from '../../../../../images/icons/list_view_icon2.svg';
 import CreateIcon from '../../../../../images/icons/create_icon.svg';

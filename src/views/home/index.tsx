@@ -25,14 +25,14 @@ import useAuthId from '../../hooks/useAuthId';
 import { IGetPurchasedSubscriptionParams } from '../../interface/subscription/subscription';
 import { getPurchasedSubscriptionRequest } from '../../redux/slices/SubscriptionSlice';
 import { EventRegister } from 'react-native-event-listeners';
-import { ISaveDocumentTemplateIdPayload, ITemplate, ITemplateData } from '../../interface/setting/template/template';
+import { ISaveDocumentTemplateIdPayload, ISavedDocumentTemplateId, ITemplate, ITemplateData } from '../../interface/setting/template/template';
 
 const HomePageView = () => {
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
   const authId = useAuthId();
   const {dashboard, submodules} = useAppSelector(state => state.Common);
-  const {templates} = useAppSelector(state => state.Template);
+  const {templates, savedDocumentTemplateIds} = useAppSelector(state => state.Template);
   const [initDefaultTemplates, setInitDefaultTemplates] = useState<boolean>(true);
 
   const handleFeatureClick = (featureType: FEATURE_TYPE) => {
@@ -132,14 +132,31 @@ const HomePageView = () => {
     }
   }
 
+  const _getPreviousSavedTemplateIdBySubModuleId = (id:string):ITemplate|null => {
+    let template:ITemplate|null = null;
+    const {data} = savedDocumentTemplateIds || {};
+    if(data && Array.isArray(data) && data.length > 0) {
+      const savedTemplate:ISavedDocumentTemplateId = data.find((d:ISavedDocumentTemplateId) => d.moduleId == id);
+      if(savedTemplate) {
+        template = savedTemplate.template;
+      }
+    }
+    return template;
+  }
+
   const _setDocumentDefaultTemplateId = async () => {
     const docSubmodules:ISubmodule[] = _getSubmodules();
     if(docSubmodules && docSubmodules.length > 0) {
       docSubmodules.forEach((sm:ISubmodule) => {
-        const docTemplates:ITemplate[] = _getTemplatesByModuleId(sm._id);
-        if(docTemplates && docTemplates.length > 0) {
-          const firstTemplate:ITemplate = docTemplates[0];
-          _setTemplateId(firstTemplate);
+        const previousTemplate:ITemplate|null = _getPreviousSavedTemplateIdBySubModuleId(sm._id);
+        if(previousTemplate !== null) {
+          _setTemplateId(previousTemplate);
+        } else {
+          const docTemplates:ITemplate[] = _getTemplatesByModuleId(sm._id);
+          if(docTemplates && docTemplates.length > 0) {
+            const firstTemplate:ITemplate = docTemplates[0];
+            _setTemplateId(firstTemplate);
+          }
         }
       });
       setInitDefaultTemplates(false);
@@ -189,7 +206,7 @@ const HomePageView = () => {
           />
           <TaskView
             taskName={TASK_NAME.TODAY_FOLLOW_UPS}
-            count={_getTaskCountDataObj()?.todayFollowup as number}
+            count={_getTaskCountDataObj()?.todayfollowup as number}
           />
           <TaskView
             taskName={TASK_NAME.TODAY_SURVEY}

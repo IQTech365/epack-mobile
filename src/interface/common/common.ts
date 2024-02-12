@@ -247,7 +247,7 @@ export interface IDashboardData {
   deliveredOrder: number;
   totalCustomer: number;
   todaySurvey: number;
-  todayFollowup: number;
+  todayfollowup: number;
 }
 
 // Dashbaord Payload
