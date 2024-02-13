@@ -11,7 +11,7 @@ import FeatureView from './components/FeatureView';
 import {useNavigation} from '@react-navigation/native';
 import {getCurrentCompanyId} from '../../utils/storage';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
-import {getSavedDocumentTemplateIdListRequest, getTemplateListRequest, saveDocumentTemplateIdRequest} from '../../redux/slices/TemplateSettingSlice';
+import {getSavedDocumentTemplateIdListRequest, getTemplateListRequest, resetSaveDocumentTemplateIdRequest, saveDocumentTemplateIdRequest} from '../../redux/slices/TemplateSettingSlice';
 import {
   getAppSettingsRequest,
   getDashboardDataRequest,
@@ -32,7 +32,7 @@ const HomePageView = () => {
   const dispatch = useAppDispatch();
   const authId = useAuthId();
   const {dashboard, submodules} = useAppSelector(state => state.Common);
-  const {templates, savedDocumentTemplateIds} = useAppSelector(state => state.Template);
+  const {templates, savedDocumentTemplateIds, saveDocTemplateIdRequesting, saveDocTemplateIdSuccess, saveDocTemplateIdFailure} = useAppSelector(state => state.Template);
   const [initDefaultTemplates, setInitDefaultTemplates] = useState<boolean>(true);
 
   const handleFeatureClick = (featureType: FEATURE_TYPE) => {
@@ -191,6 +191,15 @@ const HomePageView = () => {
       _setDocumentDefaultTemplateId();
     }
   }, [templates, submodules]);
+
+  useEffect(() => {
+    if(!saveDocTemplateIdRequesting && saveDocTemplateIdSuccess) {
+      dispatch(resetSaveDocumentTemplateIdRequest());
+      _getSavedTemplateId();
+    } else if(!saveDocTemplateIdRequesting && saveDocTemplateIdFailure) {
+      dispatch(resetSaveDocumentTemplateIdRequest());
+    }
+  }, [saveDocTemplateIdRequesting, saveDocTemplateIdSuccess, saveDocTemplateIdFailure]);
 
   return (
     <View style={styles.container}>
