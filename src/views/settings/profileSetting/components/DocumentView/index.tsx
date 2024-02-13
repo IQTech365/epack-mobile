@@ -1,16 +1,24 @@
-import React, {useState} from 'react';
-import {View, FlatList, Text, TouchableOpacity} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, FlatList, Text} from 'react-native';
 import styles from './style';
-import Spacer from '../../../../../common/Spacer';
 import DocumentUpdateView from '../DocumentFormView';
-import ListViewIcon from '../../../../../images/icons/list_view_icon.svg';
-import ListViewIcon2 from '../../../../../images/icons/list_view_icon2.svg';
-import CreateIcon from '../../../../../images/icons/create_icon.svg';
-import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
+import ActionHeaderView from '../../../../../common/ActionHeaderView';
+import {getCurrentCompanyId} from '../../../../../utils/storage';
+import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
+import {getDocumentsRequest} from '../../../../../redux/slices/ProfileSettingSlice';
+import {IGetDocumentData} from '../../../../../interface/setting/packerProfile/document/IGetDocumentsResponse';
+import DocumentListItem from './components/DocumentListItem';
 
 const AddDocumentView = () => {
   const [showDocumentList, setShowDocumentList] = useState<boolean>(false);
   const [showAddDocument, setShowAddDocument] = useState<boolean>(true);
+  const dispatch = useAppDispatch();
+  const {
+    getDocumentsRequesting,
+    getDocumentsSuccess,
+    getDocumentsFailure,
+    documents,
+  } = useAppSelector(state => state.Setting);
 
   const handleCreateNewDocument = () => {
     setShowDocumentList(false);
@@ -32,17 +40,30 @@ const AddDocumentView = () => {
 
   const showForm = () => {
     if (showAddDocument) {
-      return <DocumentUpdateView />;
+      return <DocumentUpdateView onSuccess={handleShowDocument} />;
     }
     return null;
   };
+
+  const _getDocumentList = (): IGetDocumentData[] => {
+    let list: IGetDocumentData[] = [];
+    const {data} = documents || {};
+    if (data && Array.isArray(data) && data.length > 0) {
+      list = data;
+    }
+    return list;
+  };
+
+  const _onDelete = (id: string) => {};
 
   const showList = () => {
     if (showDocumentList) {
       return (
         <FlatList
-          data={[]}
-          renderItem={({item, index}) => <Text>Hello</Text>}
+          data={_getDocumentList()}
+          renderItem={({item, index}) => (
+            <DocumentListItem item={item} index={index} onDelete={_onDelete} />
+          )}
           ListEmptyComponent={showEmptyView()}
         />
       );
@@ -50,26 +71,31 @@ const AddDocumentView = () => {
     return null;
   };
 
+  const _getDocumentsRequest = () => {
+    getCurrentCompanyId()
+      .then(id => {
+        dispatch(getDocumentsRequest(id as string));
+      })
+      .catch(err => console.log(err));
+  };
+
+  useEffect(() => {
+    _getDocumentsRequest();
+  }, []);
+
+  useEffect(() => {
+    if (!getDocumentsRequesting && getDocumentsSuccess) {
+      handleShowDocument;
+    }
+  }, [getDocumentsRequesting, getDocumentsSuccess, getDocumentsFailure]);
+
   return (
     <View style={{flex: 1, alignItems: 'center'}}>
-      <View style={styles.container2}>
-        <TouchableOpacity onPress={handleShowDocument} activeOpacity={0.4}>
-          {showDocumentList ? (
-            <ListViewIcon2 width={30} height={30} />
-          ) : (
-            <ListViewIcon width={30} height={30} />
-          )}
-        </TouchableOpacity>
-        <Spacer width={10} />
-        <TouchableOpacity onPress={handleCreateNewDocument} activeOpacity={0.4}>
-          {showAddDocument ? (
-            <CreateIcon2 width={30} height={30} />
-          ) : (
-            <CreateIcon width={30} height={30} />
-          )}
-        </TouchableOpacity>
-        <Spacer width={10} />
-      </View>
+      <ActionHeaderView
+        onCreate={handleCreateNewDocument}
+        onShow={handleShowDocument}
+        count={_getDocumentList().length}
+      />
       {showForm()}
       {showList()}
     </View>

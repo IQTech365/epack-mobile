@@ -16,12 +16,12 @@ import UPIOptions from '../../../../../data/UPIOptions.json';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import { IAddPaymentMethodRequest } from '../../../../../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodRequest';
-import { addPaymentMethodRequest, getBanksRequest, resetAddPaymentMethodRequest } from '../../../../../redux/slices/ProfileSettingSlice';
+import { addPaymentMethodRequest, resetAddPaymentMethodRequest } from '../../../../../redux/slices/ProfileSettingSlice';
 import Spinner from '../../../../../common/Spinner';
 import { ToastType, showToast } from '../../../../../utils/utility';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
 import useAuthId from '../../../../../hooks/useAuthId';
-import { ISubmodule } from '../../../../../interface/common/common';
+import { IBank, ISubmodule } from '../../../../../interface/common/common';
 interface IAccountDetailsProps {}
 
 interface IAccountOptions {
@@ -37,7 +37,7 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
   const [ifscCode, setIfscCode] = useState<string>('');
   const [upiId, setUPIId] = useState<string>('');
   const [bankId, setBankId] = useState<string>('');
-  const [accountOptions, setAccountOptions] = useState<IAccountOptions[]>(bankNameOptions);
+  const [accountOptions, setAccountOptions] = useState<IAccountOptions[]>([]);
   const [modules, setModules] = useState<string[]>(['']);
   const dispatch = useAppDispatch();
 
@@ -45,10 +45,8 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
     addPaymentMethodRequesting,
     addPaymentMethodSuccess,
     addPaymentMethodFailure,
-    getBanksRequesting,
-    banks,
   } = useAppSelector(state => state.Setting);
-  const {submodules} = useAppSelector(state => state.Common);
+  const {submodules, banks} = useAppSelector(state => state.Common);
   const authId = useAuthId();
 
   const handleAccountType = (item: TDropdownItem) => {
@@ -90,6 +88,21 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
     }
   }
 
+  const _getBankList = ():IAccountOptions[] => {
+    let list:IAccountOptions[] = [];
+    const {data} = banks || {};
+    if(data && Array.isArray(data) && data.length > 0) {
+      list = data.map((d:IBank) => {
+        const item:IAccountOptions = {
+          label: d.bankName,
+          value: d._id,
+        }
+        return item;
+      });
+    }
+    return list;
+  }
+
   
   const handleSave = () => {
     getCurrentCompanyId().then(id => {
@@ -117,13 +130,13 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
     return items.filter((d:ISubmodule) => d.availableOnDocument);
   };
 
-  useEffect(() => {
-    dispatch(getBanksRequest());
-  }, []);
+  useEffect(()=> {
+    setAccountOptions(_getBankList());
+  }, [banks]);
 
   useEffect(() => {
     if(accountType == 'Bank Account') {
-      setAccountOptions(bankNameOptions);
+      setAccountOptions(_getBankList());
     } else if(accountType == 'UPI') {
       setAccountOptions(UPIOptions);
     }

@@ -1,36 +1,35 @@
-import React, {useState,useEffect} from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, Text, FlatList, TouchableOpacity} from 'react-native';
 import styles from './style';
 import AccountDetailUpdateView from '../AccountFormView';
-import Spacer from '../../../../../common/Spacer';
-import ListViewIcon from '../../../../../images/icons/list_view_icon.svg';
-import ListViewIcon2 from '../../../../../images/icons/list_view_icon2.svg';
-import CreateIcon from '../../../../../images/icons/create_icon.svg';
-import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
-import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
-import { getPaymentMethodsRequest } from '../../../../../redux/slices/ProfileSettingSlice';
-import { getCurrentCompanyId } from '../../../../../utils/storage';
+import {useAppDispatch} from '../../../../../redux/hooks';
+import {getPaymentMethodsRequest} from '../../../../../redux/slices/ProfileSettingSlice';
+import {getCurrentCompanyId} from '../../../../../utils/storage';
+import ActionHeaderView from '../../../../../common/ActionHeaderView';
+import { getBankListRequest } from '../../../../../redux/slices/CommonSlice';
 
 const AddAccountView = () => {
   const [showPaymentMethodList, setShowPaymentMethodList] =
     useState<boolean>(false);
   const [showAddPaymentMehod, setShowAddPaymentMethod] =
     useState<boolean>(true);
-    const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
 
   const _getPaymentMethodsRequest = () => {
-    getCurrentCompanyId().then(id => {
-      dispatch(getPaymentMethodsRequest(id as string));
-    }).catch(err => console.log(err));
+    getCurrentCompanyId()
+      .then(id => {
+        dispatch(getPaymentMethodsRequest(id as string));
+      })
+      .catch(err => console.log(err));
+  };
+
+  const _getBankListRequest = () => {
+    dispatch(getBankListRequest());
   }
 
   useEffect(() => {
     _getPaymentMethodsRequest();
+    _getBankListRequest();
   }, []);
 
   const showEmptyView = () => {
@@ -73,24 +72,11 @@ const AddAccountView = () => {
 
   return (
     <View style={{flex: 1, alignItems: 'center'}}>
-      <View style={styles.container2}>
-        <TouchableOpacity onPress={handleShowBiltyList} activeOpacity={0.4}>
-          {showPaymentMethodList ? (
-            <ListViewIcon2 width={30} height={30} />
-          ) : (
-            <ListViewIcon width={30} height={30} />
-          )}
-        </TouchableOpacity>
-        <Spacer width={10} />
-        <TouchableOpacity onPress={handleCreateNewBilty} activeOpacity={0.4}>
-          {showAddPaymentMehod ? (
-            <CreateIcon2 width={30} height={30} />
-          ) : (
-            <CreateIcon width={30} height={30} />
-          )}
-        </TouchableOpacity>
-        <Spacer width={10} />
-      </View>
+      <ActionHeaderView
+        count={0}
+        onCreate={handleCreateNewBilty}
+        onShow={handleShowBiltyList}
+      />
       {showForm()}
       {showList()}
     </View>

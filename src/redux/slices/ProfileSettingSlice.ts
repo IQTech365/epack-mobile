@@ -562,6 +562,12 @@ export const SettingSlice = createSlice({
             state.getDocumentsFailure = true;
             state.getDocumentsError = action.payload;
         },
+        resetGetDocumentsRequest: (state) => {
+            state.getDocumentsRequesting = false;
+            state.getDocumentsSuccess = false;
+            state.getDocumentsFailure = false;
+            state.getDocumentsError = null;
+        },
         // ***** Add Signature *****
         // ******************************
         addSignatureRequest: (state, action: PayloadAction<IAddDocumentRequest>) => {
@@ -817,7 +823,7 @@ export const {
     getDocumentsRequest,
     getDocumentsSuccess,
     getDocumentsFailure,
-
+    resetGetDocumentsRequest,
     // Add Signature
     addSignatureRequest,
     addSignatureSuccess,
@@ -832,7 +838,6 @@ export const {
     getSignaturesRequest,
     getSignaturesSuccess,
     getSignaturesFailure,
-
     // Add Contact
     addContactRequest,
     addContactSuccess,

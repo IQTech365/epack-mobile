@@ -49,7 +49,8 @@ export const GET_PACKING_LIST = `/packing-item/list`;
 export const DELETE_PACKING_LIST_ITEM = (item_id) => `/packing-item/${item_id}`;
 
 // Setting
-export const ADD_PAYMENT_METHOD = `/account-management/account/addAccount`;
+export const GET_BANK_LIST = `/account-management/bank/getAll`;    
+export const ADD_PAYMENT_METHOD = `/account-management/account/add`;
 export const DELETE_PAYMENT_METHOD = (company_id) => ``;
 export const UPDATE_PAYMENT_METHOD = (company_id) => ``;
 export const GET_PAYMENT_METHODS = (company_id) => `/account-management/account/${company_id}`;
@@ -62,7 +63,7 @@ export const GET_FOOTER_CONTENTS = (company_id) => `/content-management/footer-s
 export const ADD_DOCUMENT = `/content-management/govt-registration/add`;
 export const DELETE_DOCUMENT = (company_id) => ``;
 export const UPDATE_DOCUMENT = (company_id) => ``;
-export const GET_DOCUMENTS = (company_id) => `/content-management/company-document/${company_id}`;
+export const GET_DOCUMENTS = (company_id) => `/content-management/govt-registration/${company_id}`;
 
 export const ADD_SIGNATURE = (company_id) => `/`;
 export const DELETE_SIGNATURE = (company_id) => ``;
@@ -116,7 +117,7 @@ export const GET_MONEY_RECEIPT_TEMPLATE_HTML = `/template/money-receipt-template
 export const GET_QUOTATION_TEMPLATE_HTML = `/template/quotation-template`;
 export const GET_BILTY_TEMPLATE_HTML = `/template/bilty-template`;
 export const GET_CAR_CONDITION_TEMPLATE_HTML = `/template/car-condition-template`;
-export const GET_INVOICE_TEMPLATE_HTML = `/template/create-invoice-template`;
+export const GET_INVOICE_TEMPLATE_HTML = `/template/invoice-template`;
 
 // Vehicle types
 export const GET_VEHICLE_TYPES = `/vehicle-management/vehicle-type/getAll`;

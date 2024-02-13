@@ -19,6 +19,9 @@ import {
     getAppSettingsFailure,
     getAppSettingsRequest,
     getAppSettingsSuccess,
+  getBankListFailure,
+  getBankListRequest,
+  getBankListSuccess,
   getBannersFailure,
   getBannersRequest,
   getBannersSuccess,
@@ -208,6 +211,17 @@ export function* getPendingRegistrationSaga(action: PayloadAction<string>) {
     }
 }
 
+export function* getBankListSaga() {
+    try {
+        //@ts-ignore
+        const response: any = yield call(CommonService.GetBankListService);
+        console.log('getBankListSaga-response--', JSON.stringify(response));
+        yield put(getBankListSuccess(response));
+    } catch (error) {
+        yield put(getBankListFailure(error));
+    }
+}
+
 export function* watcherCommonSaga() {
     yield takeLatest(getPackingTypesRequest.type, getPackingTypesSaga);
     yield takeLatest(getVehicleTypesRequest.type, getVehicleTypesSaga);
@@ -224,4 +238,5 @@ export function* watcherCommonSaga() {
     yield takeLatest(getInsurancePercentagesRequest.type, getInsurancePercentageListSaga);
     yield takeLatest(getFloorsRequest.type, getFloorListSaga);
     yield takeLatest(getPendingRegisrationRequest.type, getPendingRegistrationSaga);
+    yield takeLatest(getBankListRequest.type, getBankListSaga);
 }
