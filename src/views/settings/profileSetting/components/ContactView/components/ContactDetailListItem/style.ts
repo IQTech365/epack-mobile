@@ -1,16 +1,20 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import { COLOR_BLACK, COLOR_GRAY, COLOR_GRAY2 } from '../../../../../../../utils/colors';
+import { COLOR_BLACK, COLOR_GRAY, COLOR_GRAY4, COLOR_GRAY5, COLOR_GRAY6 } from '../../../../../../../utils/colors';
 const {width} = Dimensions.get('screen');
 
 const styles = StyleSheet.create({
-    container: {
-        width: width * 0.95,
+    cardWrapper: {
+        borderRadius: 5,
+        alignItems: 'center',
         alignSelf: 'center',
-        borderWidth: 0.5,
-        borderColor: COLOR_BLACK,
+    },
+    container: {
+        width: width * 0.94,
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
         borderRadius: 5,
         padding: 5,
-        marginBottom: 8,
         flexDirection: 'row',
     },
     contentContainer: {
@@ -29,11 +33,11 @@ const styles = StyleSheet.create({
     label: {
         fontSize: 16,
         color: COLOR_BLACK,
-        fontFamily: 'WorkSans-Medium',
+        fontFamily: 'WorkSans-SemiBold',
     },
     text: {
         fontSize: 15,
-        color: COLOR_BLACK,
+        color: COLOR_GRAY,
         fontFamily: 'WorkSans-Regular',
     }
 });

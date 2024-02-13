@@ -83,6 +83,7 @@ const AddContactView = () => {
     if (showContactList) {
       return (
         <FlatList
+          contentContainerStyle={{alignItems: 'center'}}
           data={getTransformedData()}
           renderItem={({item, index}) => (
             <ContactListItem item={item} onDelete={_handleDeleteContact} />
