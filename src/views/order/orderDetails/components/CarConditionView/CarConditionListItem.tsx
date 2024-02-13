@@ -34,7 +34,7 @@ const CarConditionListItem: React.FC<Props> = ({
 
   useEffect(() => {
     if (show) {
-      setLabel('Hide');
+      setLabel('HIDE');
     } else {
       setLabel('MORE...');
     }
@@ -43,41 +43,54 @@ const CarConditionListItem: React.FC<Props> = ({
     <View style={styles.mainWrapper}>
       <Shadow distance={4}>
         <View style={styles.listItemMainContainer}>
-          <View style={styles.datecontainer}>
+          <View style={styles.dateContainer}>
             <Text style={styles.text2}>{`Entry Date: ${formatDate4(
               new Date(item.created_date),
             )}`}</Text>
           </View>
-          <Spacer height={5} />
-          <View style={[styles.rowContainer, styles.padding]}>
-            <View style={styles.halfContainer}>
-              <Text style={styles.label}>Condtion#:</Text>
-              <Text style={styles.value}>{item.vehicle_condition_no}</Text>
+          <View style={[styles.rowContainer]}>
+            <View style={styles.labelContainer}>
+              <Text style={styles.label}>V. Condtion#:</Text>
             </View>
-            <View style={styles.halfContainer}>
+            <View style={styles.valueContainer}>
+            <Text style={styles.value}>{item.vehicle_condition_no}</Text>
+            </View>
+          </View>
+          <View style={[styles.rowContainer]}>
+            <View style={styles.labelContainer}>
               <Text style={styles.label}>Condition Date:</Text>
+            </View>
+            <View style={styles.valueContainer}>
+            <Text style={styles.value}>{item.vehicle_condition_no}</Text>
               <Text style={styles.value}>
                 {formatDate4(new Date(item.car_condition_date))}
               </Text>
             </View>
           </View>
-          <Spacer height={3} />
-          <View style={[styles.rowContainer, styles.padding]}>
-            <View style={styles.halfContainer}>
+          <View style={[styles.rowContainer]}>
+            <View style={styles.labelContainer}>
               <Text style={styles.label}>Vehicle Model:</Text>
+            </View>
+            <View style={styles.valueContainer}>
               <Text style={styles.value}>{item.model}</Text>
             </View>
-            <View style={styles.halfContainer}>
+          </View>
+          <View style={[styles.rowContainer]}>
+            <View style={styles.labelContainer}>
               <Text style={styles.label}>Vehicle KM:</Text>
+            </View>
+            <View style={styles.valueContainer}>
               <Text style={styles.value}>{item.running_km}</Text>
             </View>
           </View>
-          <Spacer height={3} />
-          <View style={[styles.rowContainer, styles.padding]}>
-            <Text style={styles.label}>Vehicle Reg. No:</Text>
-            <Text style={styles.value}>{item.registration_no}</Text>
+          <View style={[styles.rowContainer]}>
+            <View style={styles.labelContainer}>
+              <Text style={styles.label}>Vehicle Reg. No:</Text>
+            </View>
+            <View style={styles.valueContainer}>
+              <Text style={styles.value}>{item.registration_no}</Text>
+            </View>
           </View>
-          <Spacer height={10} />
           <View style={styles.viewDetailsContainer}>
             <TouchableOpacity activeOpacity={0.6} onPress={handleShowDetail}>
               <Text style={styles.viewDetailsText}>{label}</Text>
