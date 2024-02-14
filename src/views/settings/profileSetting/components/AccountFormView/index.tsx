@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../../../common/Spacer';
@@ -11,16 +11,14 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import styles from './style';
 import Button from '../../../../../common/Button';
 import accountTypeOptions from '../../../../../data/accountType.json';
-import bankNameOptions from '../../../../../data/bankNameOptions.json';
 import UPIOptions from '../../../../../data/UPIOptions.json';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import { IAddPaymentMethodRequest } from '../../../../../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodRequest';
-import { addPaymentMethodRequest, resetAddPaymentMethodRequest } from '../../../../../redux/slices/ProfileSettingSlice';
+import { addPaymentMethodRequest, getPaymentMethodsRequest, resetAddPaymentMethodRequest } from '../../../../../redux/slices/ProfileSettingSlice';
 import Spinner from '../../../../../common/Spinner';
 import { ToastType, showToast } from '../../../../../utils/utility';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
-import useAuthId from '../../../../../hooks/useAuthId';
 import { IBank, ISubmodule } from '../../../../../interface/common/common';
 interface IAccountDetailsProps {}
 
@@ -30,13 +28,12 @@ interface IAccountOptions {
 }
 
 const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
-  const [accountType, setAccountType] = useState<string>('');
+  const [accountType, setAccountType] = useState<string>(accountTypeOptions[0].label);
   const [selectedUPI, setSelectedUPI] = useState<string>('');
   const [accountHolder, setAccountHolder] = useState<string>('');
   const [accountNumber, setAccountNumber] = useState<string>('');
   const [ifscCode, setIfscCode] = useState<string>('');
   const [upiId, setUPIId] = useState<string>('');
-  const [bankId, setBankId] = useState<string>('');
   const [accountOptions, setAccountOptions] = useState<IAccountOptions[]>([]);
   const [modules, setModules] = useState<string[]>(['']);
   const dispatch = useAppDispatch();
@@ -47,7 +44,7 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
     addPaymentMethodFailure,
   } = useAppSelector(state => state.Setting);
   const {submodules, banks} = useAppSelector(state => state.Common);
-  const authId = useAuthId();
+  const accountOptionDropdownRef = useRef(null);
 
   const handleAccountType = (item: TDropdownItem) => {
     setAccountType(item.label);
@@ -115,7 +112,7 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
         ifscCode:ifscCode,
         upiType:selectedUPI,
         upiId:upiId,
-        createdBy:authId,
+        qrCode: "",
       }
       dispatch(addPaymentMethodRequest(payload));
     }).catch(err => console.log(err));
@@ -130,8 +127,27 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
     return items.filter((d:ISubmodule) => d.availableOnDocument);
   };
 
+  const _setDefaultAccountOption = () => {
+    const bankList = _getBankList();
+    if(bankList && bankList.length > 0) {
+      const firstBank = bankList[0];
+      setSelectedUPI(firstBank.value);
+      //@ts-ignore
+      accountOptionDropdownRef && accountOptionDropdownRef?.current?.setDefaultValue(firstBank);
+    }
+  }
+
+  const _getPaymentMethodsRequest = () => {
+    getCurrentCompanyId()
+      .then(id => {
+        dispatch(getPaymentMethodsRequest(id as string));
+      })
+      .catch(err => console.log(err));
+  };
+
   useEffect(()=> {
     setAccountOptions(_getBankList());
+    _setDefaultAccountOption();
   }, [banks]);
 
   useEffect(() => {
@@ -145,6 +161,7 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
   useEffect(() => {
     if (!addPaymentMethodRequesting && addPaymentMethodSuccess) {
       showToast('Account Detail Added.', ToastType.SUCCESS);
+      _getPaymentMethodsRequest();
       dispatch(resetAddPaymentMethodRequest());
     } else if (!addPaymentMethodRequesting && addPaymentMethodFailure) {
       showToast('Account Detail Not Added.', ToastType.ERROR);
@@ -238,7 +255,12 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
         </View>
         <View style={styles.textContainer2}>
           <Label text={accountTypeLabel} style={styles.label} />
-          <DropdownComponent data={accountOptions} onSelect={handleSelectedAccountOption} />
+          <DropdownComponent 
+            data={accountOptions} 
+            onSelect={handleSelectedAccountOption}
+            //@ts-ignore
+            ref={accountOptionDropdownRef}
+          />
         </View>
         <Spacer height={4} />
         {showBankDetailCaptureView()}

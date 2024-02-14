@@ -2,11 +2,14 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, FlatList, TouchableOpacity} from 'react-native';
 import styles from './style';
 import AccountDetailUpdateView from '../AccountFormView';
-import {useAppDispatch} from '../../../../../redux/hooks';
+import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import {getPaymentMethodsRequest} from '../../../../../redux/slices/ProfileSettingSlice';
 import {getCurrentCompanyId} from '../../../../../utils/storage';
 import ActionHeaderView from '../../../../../common/ActionHeaderView';
 import { getBankListRequest } from '../../../../../redux/slices/CommonSlice';
+import Spinner from '../../../../../common/Spinner';
+import { IGetPaymentMethodData } from '../../../../../interface/setting/packerProfile/paymentMethod/IGetPaymentMethodsResponse';
+import PaymentMethodListItem from './component/PaymentMethodListItem';
 
 const AddAccountView = () => {
   const [showPaymentMethodList, setShowPaymentMethodList] =
@@ -14,6 +17,9 @@ const AddAccountView = () => {
   const [showAddPaymentMehod, setShowAddPaymentMethod] =
     useState<boolean>(true);
   const dispatch = useAppDispatch();
+  const {getPaymentMethodsRequesting, paymentMethods} = useAppSelector(
+    state => state.Setting,
+  );
 
   const _getPaymentMethodsRequest = () => {
     getCurrentCompanyId()
@@ -25,6 +31,19 @@ const AddAccountView = () => {
 
   const _getBankListRequest = () => {
     dispatch(getBankListRequest());
+  }
+
+  const _getPaymentMethodList = ():IGetPaymentMethodData[] => {
+    let list:IGetPaymentMethodData[] = [];
+    const {data} = paymentMethods || {};
+    if(data && Array.isArray(data) && data.length > 0) {
+      list = data;
+    }
+    return list;
+  }
+
+  const _onDelete = (id:string) => {
+    //
   }
 
   useEffect(() => {
@@ -61,8 +80,14 @@ const AddAccountView = () => {
     if (showPaymentMethodList) {
       return (
         <FlatList
-          data={[]}
-          renderItem={({item, index}) => <Text>Hello</Text>}
+          data={_getPaymentMethodList()}
+          renderItem={({item, index}) => (
+            <PaymentMethodListItem
+              item={item}
+              index={index}
+              onDelete={_onDelete}
+            />
+          )}
           ListEmptyComponent={showEmptyView()}
         />
       );
@@ -73,12 +98,13 @@ const AddAccountView = () => {
   return (
     <View style={{flex: 1, alignItems: 'center'}}>
       <ActionHeaderView
-        count={0}
+        count={_getPaymentMethodList().length}
         onCreate={handleCreateNewBilty}
         onShow={handleShowBiltyList}
       />
       {showForm()}
       {showList()}
+      <Spinner show={getPaymentMethodsRequesting} />
     </View>
   );
 };

@@ -53,7 +53,7 @@ export const GET_BANK_LIST = `/account-management/bank/getAll`;
 export const ADD_PAYMENT_METHOD = `/account-management/account/add`;
 export const DELETE_PAYMENT_METHOD = (company_id) => ``;
 export const UPDATE_PAYMENT_METHOD = (company_id) => ``;
-export const GET_PAYMENT_METHODS = (company_id) => `/account-management/account/${company_id}`;
+export const GET_PAYMENT_METHODS = (company_id) => `/account-management/account/getAll/${company_id}`;
 
 export const ADD_FOOTER_CONTENT = `/content-management/footer-setting/add`;
 export const DELETE_FOOTER_CONTENT = (id) => `/content-management/footer-setting/delete/${id}`;
