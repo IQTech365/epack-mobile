@@ -6,7 +6,7 @@ import Spacer from '../../../../../common/Spacer';
 import Label from '../../../../../common/Label';
 import DropdownComponent from '../../../../../common/DropdownComponent';
 import Input from '../../../../../common/Input';
-import {COLOR_BLACK, COLOR_BLUE} from '../../../../../utils/colors';
+import {COLOR_BLACK, COLOR_BLUE, COLOR_GRAY} from '../../../../../utils/colors';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import styles from './style';
 import Button from '../../../../../common/Button';
@@ -17,16 +17,19 @@ import DatePickerComponent from '../../../../../common/DatePickerComponent';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import { formatDate } from '../../../../../utils/formatter';
 import { IAddDocumentRequest } from '../../../../../interface/setting/packerProfile/document/IAddDocumentRequest';
-import { addDocumentRequest, resetAddDocumentRequest } from '../../../../../redux/slices/ProfileSettingSlice';
+import { addDocumentRequest, getDocumentsRequest, resetAddDocumentRequest } from '../../../../../redux/slices/ProfileSettingSlice';
 import Toast from 'react-native-toast-message';
 import Spinner from '../../../../../common/Spinner';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
 import useAuthId from '../../../../../hooks/useAuthId';
 import { ISubmodule } from '../../../../../interface/common/common';
+import { ToastType, showToast } from '../../../../../utils/utility';
 
-interface IDocumentUpdateProps {}
+interface IDocumentUpdateProps {
+  onSuccess:() => void;
+}
 
-const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
+const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({onSuccess}) => {
   const [documentType, setDocumentType] = useState<string>(documentTypeOptions[0].label);
   const [isoType, setISOType] = useState<string>(isoTypeOptions[0].label);
   const [isoNumber, setISONumber] = useState<string>('');
@@ -34,7 +37,7 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
   const [ibaValidTillDate, setIBAValidTillDate] = useState<string>('');
   const [documentNumber, setDocumentNumber] = useState<string>('');
   const [documentTitle, setDocumentTitle] = useState<string>('');
-  const [modules, setModules] = useState<string[]>(['']);
+  const [modules, setModules] = useState<string[]>([]);
   const dispatch = useAppDispatch();
   const {addDocumentRequesting, addDocumentSuccess, addDocumentFailure} = useAppSelector(state => state.Setting);
   const {submodules} = useAppSelector(state => state.Common);
@@ -116,6 +119,14 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
     
   }
 
+  const _getDocumentsRequest = () => {
+    getCurrentCompanyId()
+      .then(id => {
+        dispatch(getDocumentsRequest(id as string));
+      })
+      .catch(err => console.log(err));
+  };
+
   const _getSubmodules = (): ISubmodule[] => {
     let items: ISubmodule[] = [];
     const {data} = submodules || {};
@@ -127,19 +138,12 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
 
   useEffect(() => {
     if (!addDocumentRequesting && addDocumentSuccess) {
-      Toast.show({
-        type: 'success',
-        text1: 'Company Document',
-        text2: 'Document Number has been added successfully',
-      });
+      showToast('Document Added.', ToastType.SUCCESS);
       dispatch(resetAddDocumentRequest());
-      // dispatch(getContactsRequest(companyId));
+      _getDocumentsRequest();
+      onSuccess && onSuccess();
     } else if (!addDocumentRequesting && addDocumentFailure) {
-      Toast.show({
-        type: 'error',
-        text1: 'Company Document',
-        text2: 'Error in adding Document Number. Please try again!',
-      });
+      showToast('Document Not Added. Try again!', ToastType.ERROR);
       dispatch(resetAddDocumentRequest());
     }
   }, [addDocumentRequesting, addDocumentSuccess, addDocumentFailure]);
@@ -162,6 +166,7 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
+                  placeholder='Enter document ID'
                 />
               </View>
             </>
@@ -184,6 +189,7 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
+                placeholder='Enter document ID'
               />
             </View>
             <View style={styles.textContainer}>
@@ -218,6 +224,7 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
+                placeholder='Enter Document Title'
               />
             </View>
           </>
@@ -231,6 +238,7 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({}) => {
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
+                placeholder='Enter Document Number'
               />
             </View>
           </>

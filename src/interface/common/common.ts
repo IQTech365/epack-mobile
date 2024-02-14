@@ -324,7 +324,22 @@ export interface IPendingRegistration {
 }
 
 export interface IPendingRegistrationResponse {
-  data:IPendingRegistration;
-  status:number;
+  data: IPendingRegistration;
+  status: number;
+  error: boolean;
+}
+
+export interface IBank {
+  _id: string;
+  bankName: string;
+  isActive: boolean;
+  isDeleted: boolean;
+  createdDate: string;
+  __v: number;
+}
+
+export interface IGetBankListResponse {
+  data: IBank[];
+  status: number;
   error: boolean;
 }

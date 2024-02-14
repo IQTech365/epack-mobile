@@ -4,6 +4,7 @@ import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import styles from './styles';
 import {
   ISaveDocumentTemplateIdPayload,
+  ISavedDocumentTemplateId,
   ITemplate,
   ITemplateData,
 } from '../../../../../interface/setting/template/template';
@@ -13,7 +14,6 @@ import { getSavedDocumentTemplateIdListRequest, resetSaveDocumentTemplateIdReque
 import { ToastType, showToast } from '../../../../../utils/utility';
 import Spinner from '../../../../../common/Spinner';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
-
 interface ISectionData {
   title: string;
   data: ITemplate[];
@@ -31,7 +31,6 @@ const TemplatePageView = ({route}) => {
   } = useAppSelector(state => state.Template);
   const [activeCategory, setActiveCategory] = useState<string>('');
   const [activeTemplateId, setActiveTemplateId] = useState<string>('');
-  const [activeModuleId, setActiveModuleId] = useState<string>('');
 
   const _getTemplatesByModuleId = () => {
     let list: ITemplate[] = [];
@@ -46,6 +45,17 @@ const TemplatePageView = ({route}) => {
     }
     return list;
   };
+
+  const _getActiveTemplate = () => {
+    const {data} = savedDocumentTemplateIds || {};
+    if(data && Array.isArray(data) && data.length > 0) {
+      const savedTemplate:ISavedDocumentTemplateId = data.find((d:ISavedDocumentTemplateId) => d.moduleId == route?.data?._id);
+      if(savedTemplate) {
+        setActiveCategory(savedTemplate?.template?.templateVersion);
+        setActiveTemplateId(savedTemplate?.template?._id);
+      }
+    }
+  }
   
   const _getUniqueTemplateCategories = () => {
     const templateVersions: string[] = _getTemplatesByModuleId().map(
@@ -73,26 +83,6 @@ const TemplatePageView = ({route}) => {
     return sectionData;
   };
 
-  const _setActiveCategory = () => {
-    const categories:string[] = _getUniqueTemplateCategories();
-    if(categories && categories.length > 0) {
-      setActiveCategory(categories[0]);
-    }
-  }
-
-  const _setActiveTemplateIndex = () => {
-    const sectionData:ISectionData[] = _prepareTemplateListWithCategory();
-    if(sectionData && sectionData.length > 0) {
-      const firstSection:ISectionData = sectionData[0];
-      const templates:ITemplate[] = firstSection.data;
-      if(templates && templates.length > 0) {
-        const firstTemplate:ITemplate = templates[0];
-        setActiveTemplateId(firstTemplate._id);
-        setActiveModuleId(firstTemplate.moduleId);
-      }
-    }
-  }
-
   const _getSavedTemplateId = () => {
     getCurrentCompanyId().then(id => {
       dispatch(getSavedDocumentTemplateIdListRequest(id as string));
@@ -117,8 +107,7 @@ const TemplatePageView = ({route}) => {
   }
 
   useEffect(() => {
-    _setActiveCategory();
-    _setActiveTemplateIndex();
+    _getActiveTemplate();
   }, []);
 
   useEffect(() => {

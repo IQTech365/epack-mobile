@@ -4,6 +4,7 @@ import {
   COLOR_BLUE,
   COLOR_GRAY,
   COLOR_GRAY2,
+  COLOR_GRAY3,
   COLOR_GRAY5,
   COLOR_WHITE,
 } from '../../../../../utils/colors';
@@ -49,38 +50,48 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
+    borderBottomWidth: 0.5,
+    borderBottomColor: COLOR_GRAY2,
   },
   padding: {
     paddingHorizontal: 8,
   },
-  halfContainer: {
-    width: '50%',
+  labelContainer: {
+    width: '45%',
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: COLOR_GRAY3,
+    paddingVertical: 5,
+    paddingLeft: 8,
   },
-  datecontainer: {
+  valueContainer: {
+    width: '55%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: 8,
+  },
+  dateContainer: {
     // width: '30%',
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
     backgroundColor: COLOR_BLUE,
     paddingHorizontal: 8,
-    paddingVertical: 6,
+    paddingVertical: 10,
   },
   label: {
     color: COLOR_BLACK,
     fontSize: 16,
-    fontWeight: '500',
-    marginRight: 8,
+    fontFamily: 'WorkSans-Medium',
   },
   value: {
     color: COLOR_BLACK,
     fontSize: 14,
-    fontWeight: '400',
+    fontFamily: 'WorkSans-Medium'
   },
   text2: {
     color: COLOR_WHITE,
-    fontSize: 14,
-    fontWeight: '500',
+    fontSize: 16,
+    fontFamily: 'WorkSans-Bold'
   },
   viewDetailsContainer: {
     width: '100%',
@@ -89,15 +100,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 8,
     paddingHorizontal: 8,
-    borderTopWidth: 1,
-    borderTopColor: COLOR_BLUE,
     borderBottomLeftRadius: 8,
     borderBottomRightRadius: 8,
   },
   viewDetailsText: {
     color: COLOR_BLACK,
-    fontSize: 13,
-    fontWeight: '600',
+    fontSize: 16,
+    fontFamily: 'WorkSans-Bold'
   },
   checkboxContainer: {
     width: width * 0.9,

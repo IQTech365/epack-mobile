@@ -2,24 +2,23 @@ import React, {useEffect, useState} from 'react';
 import {
   View,
   FlatList,
-  TouchableOpacity,
   Text,
-  useWindowDimensions,
 } from 'react-native';
 import styles from './style';
-import Spacer from '../../../../../common/Spacer';
+
 import FooterContentUpdateView from '../FooterContentFormView';
-import ListViewIcon from '../../../../../images/icons/list_view_icon.svg';
-import ListViewIcon2 from '../../../../../images/icons/list_view_icon2.svg';
-import CreateIcon from '../../../../../images/icons/create_icon.svg';
-import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
-import {deleteFooterContentRequest, getFooterContentsRequest, resetDeleteFooterContentRequest} from '../../../../../redux/slices/ProfileSettingSlice';
+import {
+  deleteFooterContentRequest,
+  getFooterContentsRequest,
+  resetDeleteFooterContentRequest,
+} from '../../../../../redux/slices/ProfileSettingSlice';
 import Spinner from '../../../../../common/Spinner';
 import {getCurrentCompanyId} from '../../../../../utils/storage';
 import {IGetFooterContentData} from '../../../../../interface/setting/packerProfile/footerContent/IGetFooterContentsResponse';
 import FooterContentListItem from './FooterContentListItem';
-import { ToastType, showToast } from '../../../../../utils/utility';
+import {ToastType, showToast} from '../../../../../utils/utility';
+import ActionHeaderView from '../../../../../common/ActionHeaderView';
 
 const AddFooterContentView = () => {
   const [showContentList, setShowContentList] = useState<boolean>(false);
@@ -103,36 +102,27 @@ const AddFooterContentView = () => {
   }, []);
 
   useEffect(() => {
-    if(!deleteFooterContentRequesting && deleteFooterContentSuccess) {
+    if (!deleteFooterContentRequesting && deleteFooterContentSuccess) {
       showToast('Content Deleted', ToastType.SUCCESS);
       dispatch(resetDeleteFooterContentRequest());
       _getFooterContentsRequest();
-    } else if(!deleteFooterContentRequesting && deleteFooterContentFailure) {
+    } else if (!deleteFooterContentRequesting && deleteFooterContentFailure) {
       showToast('Content Not Deleted. Try Again!', ToastType.ERROR);
       dispatch(resetDeleteFooterContentRequest());
     }
-  }, [deleteFooterContentRequesting, deleteFooterContentSuccess, deleteFooterContentFailure]);
+  }, [
+    deleteFooterContentRequesting,
+    deleteFooterContentSuccess,
+    deleteFooterContentFailure,
+  ]);
 
   return (
     <View style={{flex: 1, alignItems: 'center'}}>
-      <View style={styles.container2}>
-        <TouchableOpacity onPress={handleShowContent} activeOpacity={0.4}>
-          {showContentList ? (
-            <ListViewIcon2 width={30} height={30} />
-          ) : (
-            <ListViewIcon width={30} height={30} />
-          )}
-        </TouchableOpacity>
-        <Spacer width={10} />
-        <TouchableOpacity onPress={handleCreateNewContent} activeOpacity={0.4}>
-          {showAddContent ? (
-            <CreateIcon2 width={30} height={30} />
-          ) : (
-            <CreateIcon width={30} height={30} />
-          )}
-        </TouchableOpacity>
-        <Spacer width={10} />
-      </View>
+      <ActionHeaderView
+        count={0}
+        onCreate={handleCreateNewContent}
+        onShow={handleShowContent}
+      />
       {showForm()}
       {showList()}
       <Spinner show={getFooterContentsRequesting} />

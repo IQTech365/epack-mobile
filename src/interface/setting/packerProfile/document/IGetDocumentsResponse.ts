@@ -2,6 +2,7 @@ import {IAddDocumentRequest} from './IAddDocumentRequest';
 
 export interface IGetDocumentData extends IAddDocumentRequest {
     _id: string;
+    isActive: boolean;
     createdAt: string;
 }
 

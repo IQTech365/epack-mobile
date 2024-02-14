@@ -16,6 +16,7 @@ import {
   IFloorResponse,
   IDashboardPaylod,
   IPendingRegistrationResponse,
+  IGetBankListResponse,
 } from '../../interface/common/common';
 
 interface ICommonState {
@@ -109,6 +110,12 @@ interface ICommonState {
   getPendingRegistrationSuccess:boolean;
   getPendingRegistrationFailure:boolean;
   getPendingRegistrationError:any;
+  // Bank List
+  banks:IGetBankListResponse | null;
+  getBankListRequesting: boolean;
+  getBankListRequestSuccess:boolean;
+  getBankListRequestFailure:boolean;
+  getBankListRequestError:any;
 }
 
 const initialState: ICommonState = {
@@ -202,6 +209,12 @@ const initialState: ICommonState = {
   getPendingRegistrationSuccess:false,
   getPendingRegistrationFailure:false,
   getPendingRegistrationError:null,
+  // Bank List
+  banks:null,
+  getBankListRequesting: false,
+  getBankListRequestSuccess:false,
+  getBankListRequestFailure:false,
+  getBankListRequestError:null,
 };
 
 export const CommonSlice = createSlice({
@@ -501,6 +514,24 @@ export const CommonSlice = createSlice({
     resetPendingRegistrationInfoPayload: (state) => {
       state.pendingRegistrationInfo = null;
     },
+    // Bank List
+    getBankListRequest: state => {
+      state.getBankListRequesting = true;
+    },
+    getBankListSuccess: (
+      state,
+      action: PayloadAction<IGetBankListResponse>,
+    ) => {
+      state.getBankListRequesting = false;
+      state.getBankListRequestSuccess = true;
+      state.banks = action.payload;
+    },
+    getBankListFailure: (state, action: PayloadAction<any>) => {
+      state.getBankListRequesting = false;
+      state.getBankListRequestSuccess = false;
+      state.getBankListRequestFailure = true;
+      state.getBankListRequestError = action.payload;
+    },
   },
 });
 
@@ -571,5 +602,9 @@ export const {
   getPendingRegisrationFailure,
   resetGetPendingRegisrationRequest,
   resetPendingRegistrationInfoPayload,
+  // Bank List
+  getBankListRequest,
+  getBankListSuccess,
+  getBankListFailure,
 } = CommonSlice.actions;
 

@@ -5,6 +5,7 @@ import styles from './style';
 import DeleteIcon from '../../../../../../../images/icons/delete.svg';
 import {useAppSelector} from '../../../../../../../redux/hooks';
 import {ISubmodule} from '../../../../../../../interface/common/common';
+import {Shadow} from 'react-native-shadow-2';
 
 export interface IContactListItem {
   id: string;
@@ -53,33 +54,37 @@ const ContactListItem: React.FC<IContactListItemProps> = ({item, onDelete}) => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.contentContainer}>
-        <View style={styles.content}>
-          <Text style={styles.label}>Contact Type:</Text>
-          <Text style={styles.text}>{item.contactType}</Text>
+    <View style={{paddingHorizontal: 10, paddingVertical: 6,}}>
+      <Shadow style={styles.cardWrapper} distance={5}>
+        <View style={styles.container}>
+          <View style={styles.contentContainer}>
+            <View style={styles.content}>
+              <Text style={styles.label}>Contact Type:</Text>
+              <Text style={styles.text}>{item.contactType}</Text>
+            </View>
+            <Spacer height={4} />
+            <View style={styles.content}>
+              <Text style={styles.label}>Contact Info:</Text>
+              <Text style={styles.text}>{item.contactNumber}</Text>
+            </View>
+            <Spacer height={4} />
+            <View style={styles.content}>
+              <Text style={styles.label}>Modules:</Text>
+              <Text style={styles.text}>
+                {_transformSubmoduleIdToName(item.modules).join(', ')}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.actionContainer}>
+            <TouchableOpacity
+              onPress={() => {
+                onDelete(item.id);
+              }}>
+              <DeleteIcon width={25} height={25} />
+            </TouchableOpacity>
+          </View>
         </View>
-        <Spacer height={4} />
-        <View style={styles.content}>
-          <Text style={styles.label}>Contact Info:</Text>
-          <Text style={styles.text}>{item.contactNumber}</Text>
-        </View>
-        <Spacer height={4} />
-        <View style={styles.content}>
-          <Text style={styles.label}>Modules:</Text>
-          <Text style={styles.text}>
-            {_transformSubmoduleIdToName(item.modules).join(', ')}
-          </Text>
-        </View>
-      </View>
-      <View style={styles.actionContainer}>
-        <TouchableOpacity
-          onPress={() => {
-            onDelete(item.id);
-          }}>
-          <DeleteIcon width={25} height={25} />
-        </TouchableOpacity>
-      </View>
+      </Shadow>
     </View>
   );
 };

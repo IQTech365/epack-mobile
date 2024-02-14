@@ -1,21 +1,21 @@
 import React, {useEffect, useState} from 'react';
-import {View, FlatList, Text, TouchableOpacity} from 'react-native';
+import {View, FlatList, Text} from 'react-native';
 import styles from './style';
 import ContactDetailUpdateView from '../ContactFormView';
-import ListViewIcon from '../../../../../images/icons/list_view_icon.svg';
-import ListViewIcon2 from '../../../../../images/icons/list_view_icon2.svg';
-import CreateIcon from '../../../../../images/icons/create_icon.svg';
-import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
-import Spacer from '../../../../../common/Spacer';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
-import {deleteContactRequest, getContactsRequest, resetDeleteContactRequest} from '../../../../../redux/slices/ProfileSettingSlice';
+import {
+  deleteContactRequest,
+  getContactsRequest,
+  resetDeleteContactRequest,
+} from '../../../../../redux/slices/ProfileSettingSlice';
 import Spinner from '../../../../../common/Spinner';
 import ContactListItem, {
   IContactListItem,
 } from './components/ContactDetailListItem';
 import {IGetContactDetailsData} from '../../../../../interface/setting/packerProfile/contactDetail/IGetContactDetailsResponse';
 import {getCurrentCompanyId} from '../../../../../utils/storage';
-import { ToastType, showToast } from '../../../../../utils/utility';
+import {ToastType, showToast} from '../../../../../utils/utility';
+import ActionHeaderView from '../../../../../common/ActionHeaderView';
 
 const AddContactView = () => {
   const [showContactList, setShowContactList] = useState<boolean>(false);
@@ -83,6 +83,7 @@ const AddContactView = () => {
     if (showContactList) {
       return (
         <FlatList
+          contentContainerStyle={{alignItems: 'center'}}
           data={getTransformedData()}
           renderItem={({item, index}) => (
             <ContactListItem item={item} onDelete={_handleDeleteContact} />
@@ -119,11 +120,11 @@ const AddContactView = () => {
   }, [contactsData]);
 
   useEffect(() => {
-    if(!deleteContactRequesting && deleteContactSuccess) {
+    if (!deleteContactRequesting && deleteContactSuccess) {
       showToast('Contact Deleted', ToastType.SUCCESS);
       dispatch(resetDeleteContactRequest());
       _getContactsRequest();
-    } else if(!deleteContactRequesting && deleteContactFailure) {
+    } else if (!deleteContactRequesting && deleteContactFailure) {
       showToast('Contact Not Deleted. Try Again!', ToastType.ERROR);
       dispatch(resetDeleteContactRequest());
     }
@@ -135,27 +136,14 @@ const AddContactView = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.container2}>
-        <TouchableOpacity onPress={handleShowContact} activeOpacity={0.4}>
-          {showContactList ? (
-            <ListViewIcon2 width={30} height={30} />
-          ) : (
-            <ListViewIcon width={30} height={30} />
-          )}
-        </TouchableOpacity>
-        <Spacer width={10} />
-        <TouchableOpacity onPress={handleCreateNewContact} activeOpacity={0.4}>
-          {showAddContact ? (
-            <CreateIcon2 width={30} height={30} />
-          ) : (
-            <CreateIcon width={30} height={30} />
-          )}
-        </TouchableOpacity>
-        <Spacer width={10} />
-      </View>
+      <ActionHeaderView
+        count={0}
+        onCreate={handleCreateNewContact}
+        onShow={handleShowContact}
+      />
       {showForm()}
       {showList()}
-      <Spinner show={deleteContactRequesting}/>
+      <Spinner show={deleteContactRequesting} />
     </View>
   );
 };
