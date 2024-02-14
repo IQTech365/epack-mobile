@@ -253,23 +253,32 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
     if(serialNo){
       handleReceiptNoInputTextChange(serialNo.toString());
     }
+
+    if(isEdit){
+      handleReceiptNoInputTextChange(editData?.receiptNumber);
+      handleNoOfArticles(editData.numbersOfArticles);
+      handleEnterAmount(editData?.paymentAmount);
+      
+    }
   }, [serialNo]);
 
   useEffect(() => {
     if (
-      (!createMoneyReceiptRequesting && createMoneyReceiptSuccess) ||
-      (!editMoneyReceiptListRequesting && editMoneyReceiptListSuccess)
+      (!createMoneyReceiptRequesting && createMoneyReceiptSuccess)
     ) {
       showToast('Money Receipt Created.', ToastType.SUCCESS);
       dispatch2(resetCreateMoneyReceiptRequest());
       dispatch2(resetGetSerialNoRequest());
       onSuccess && onSuccess();
     } else if (
-      (!createMoneyReceiptRequesting && createMoneyReceiptError) ||
-      (!editMoneyReceiptListRequesting && editMoneyReceiptListSuccess)
+      (!createMoneyReceiptRequesting && createMoneyReceiptError) 
     ) {
       showToast('Money Receipt Not Created. Try again!', ToastType.ERROR);
       dispatch2(resetCreateMoneyReceiptRequest());
+    } else if (!editMoneyReceiptListRequesting && editMoneyReceiptListSuccess) {
+      showToast('Car Condition Edited.', ToastType.SUCCESS);
+    } else if (!editMoneyReceiptListRequesting && editMoneyReceiptListSuccess) {
+      showToast('Car Condition Not Edited. Try again!', ToastType.ERROR);
     }
   }, [
     createMoneyReceiptRequesting,

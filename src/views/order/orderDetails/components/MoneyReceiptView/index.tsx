@@ -305,8 +305,8 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
       <ActionHeaderView
         count={_getDocCount()}
         onShow={handleShowMoneyReceipt}
-        onCreate={handleCreateNewMoneyReceipt}
-      />
+        onCreate={handleCreateNewMoneyReceipt} 
+        isEdit={isEdit}      />
       <Spacer height={2} />
       {showForm()}
       {showList()}
