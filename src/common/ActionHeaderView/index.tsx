@@ -12,9 +12,10 @@ interface IProps {
   onShow: () => void;
   onCreate: () => void;
   count: number;
+  isEdit:boolean
 }
 
-const ActionHeaderView: FC<IProps> = ({onShow, onCreate, count = 0}) => {
+const ActionHeaderView: FC<IProps> = ({onShow, onCreate, count = 0, isEdit}) => {
   const [isList, setIsList] = useState<boolean>(count > 0);
   const [isForm, setIsForm] = useState<boolean>(count == 0);
 
@@ -45,7 +46,7 @@ const ActionHeaderView: FC<IProps> = ({onShow, onCreate, count = 0}) => {
   return (
       <View style={styles.container}>
         <TouchableOpacity onPress={_handleOnShow} activeOpacity={0.4}>
-          {isList ? (
+          {isList && !isEdit? (
             <ListIcon2 width={32} height={32} />
           ) : (
             <ListIcon width={32} height={32} />
@@ -53,7 +54,7 @@ const ActionHeaderView: FC<IProps> = ({onShow, onCreate, count = 0}) => {
         </TouchableOpacity>
         <Spacer width={20} />
         <TouchableOpacity onPress={_handleOnCreate} activeOpacity={0.4}>
-          {isForm ? (
+          {isForm || isEdit? (
             <CreateIcon2 width={34} height={34} />
           ) : (
             <CreateIcon width={34} height={34} />

@@ -23,6 +23,9 @@ import {
   deletePackingMaterialItemFailure,
   deletePackingMaterialItemRequest,
   deletePackingMaterialItemSuccess,
+  editCarConditionFailure,
+  editCarConditionRequest,
+  editCarConditionSuccess,
   editMoneyReceiptListFailure,
   editMoneyReceiptListRequest,
   editMoneyReceiptListSuccess,
@@ -172,9 +175,30 @@ export function* createCarConditionSaga(
         OrderService.CreateCarConditionService,
         action.payload,
       );
+      console.log(response, 'car condition saga');
+      
       yield put(createCarConditionSuccess(response));
     } catch (error) {
+      console.log(error, 'car condition error saga');
       yield put(createCarConditionFailure(error));
+    }
+  }
+
+  export function* editCarConditionSaga(
+    action: PayloadAction<{id:string, requestBody:ICreateCarConditionRequest}>,
+  ) {
+    const { id, requestBody } = action.payload;
+    try {
+      const response: ICreateMoneyReceiptResponse = yield call(
+        OrderService.EditCarConditionService,
+        id, requestBody
+      );
+      console.log(response, 'car condition saga');
+      
+      yield put(editCarConditionSuccess(response));
+    } catch (error) {
+      console.log(error, 'car condition error saga');
+      yield put(editCarConditionFailure(error));
     }
   }
 
@@ -290,6 +314,7 @@ export function* watcherOrderSaga() {
   yield takeLatest(getMoneyReceiptListRequest.type, getMoneyReceiptListSaga);
   yield takeLatest(editMoneyReceiptListRequest.type, editMoneyReceiptSaga);
   yield takeLatest(createCarConditionRequest.type, createCarConditionSaga);
+  yield takeLatest(editCarConditionRequest.type, editCarConditionSaga);
   yield takeLatest(getCarConditionListRequest.type, getCarConditionListSaga);
   yield takeLatest(createBiltyRequest.type, createBiltySaga);
   yield takeLatest(getBiltyListRequest.type, getBiltyListSaga);

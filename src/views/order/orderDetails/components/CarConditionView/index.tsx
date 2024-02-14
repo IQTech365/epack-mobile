@@ -66,6 +66,8 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId}) => {
   const [showPreview, setShowPreview] = useState<boolean>(false);
   const [showShare, setShowShare] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [isEditData, setisEditData] = useState<any>(null);
   const templateId = useTemplateIdHook('658d3cab585e3dde644da977');
 
   const _getListData = () => {
@@ -91,11 +93,14 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId}) => {
   const handleCreateNewCarCondition = () => {
     setShowCarConditionList(false);
     setCreateNewCarCondition(true);
+    setIsEdit(false);
   };
 
   const handleShowCarConditionList = () => {
     setShowCarConditionList(true);
     setCreateNewCarCondition(false);
+    setIsEdit(false);
+    
   };
 
   const onSuccess = () => {
@@ -110,7 +115,12 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId}) => {
     setShowModal(false);
   };
 
-  const onEdit = () => {};
+  const onEdit = (item:ICarCondition) => {
+    setCreateNewCarCondition(true)
+    setShowCarConditionList(false);
+    setisEditData(item);
+    setIsEdit(true);
+  };
 
   useEffect(() => {
     dispatch(getCarConditionListRequest(orderId));
@@ -143,7 +153,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId}) => {
 
   const showForm = () => {
     if (createNewCarCondition) {
-      return <CarConditionFormView orderId={orderId} onSuccess={onSuccess} />;
+      return <CarConditionFormView orderId={orderId} onSuccess={onSuccess} isEditData = {isEditData} isEdit = {isEdit}/>;
     }
     return null;
   };
@@ -181,7 +191,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId}) => {
                   setShowShare(false);
                   handleDocDownload(item.id);
                 }}
-                onEdit={onEdit}
+                onEdit={() =>onEdit(item)}
               />
             )}
             ListEmptyComponent={showEmptyView()}
@@ -231,6 +241,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId}) => {
         count={_getListData().length}
         onShow={handleShowCarConditionList}
         onCreate={handleCreateNewCarCondition}
+        isEdit = {isEdit}
       />
       {showForm()}
       {showList()}

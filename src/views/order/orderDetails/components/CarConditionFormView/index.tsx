@@ -22,7 +22,7 @@ import {formatDate3} from '../../../../../utils/formatter';
 import Button from '../../../../../common/Button';
 import {ICreateCarConditionRequest} from '../../../../../interface/order/ICreateCarConditionRequest';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
-import {createCarConditionRequest, resetCreateCarConditionRequest} from '../../../../../redux/slices/OrderSlice';
+import {createCarConditionRequest, editCarConditionRequest, resetCreateCarConditionRequest} from '../../../../../redux/slices/OrderSlice';
 import Spinner from '../../../../../common/Spinner';
 import {
   getVehicleAccessoryList,
@@ -39,15 +39,20 @@ import useSerialNoHook from '../../../../../hooks/useSerialNo';
 import { DOCUMENT_TYPE, IGetSerialNoRequest } from '../../../../../interface/setting/serialNo/serialNo';
 import { getSerialNoRequest, resetGetSerialNoRequest } from '../../../../../redux/slices/SerialNoSettingSlice';
 import { ToastType, showToast } from '../../../../../utils/utility';
+import { ICarCondition } from '../CarConditionView/ICarCondition';
 
 interface ICarConditionFormViewProps {
   orderId: string | undefined;
   onSuccess: () => void;
+  isEditData:ICarCondition;
+  isEdit: boolean;
 }
 
 const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
   orderId,
   onSuccess,
+  isEditData,
+  isEdit
 }) => {
   const [vehicleTypeId, setVehicleTypeId] = useState<string>('');
   const [vehicleCompanyId, setVehicleCompanyId] = useState<string>('');
@@ -55,11 +60,15 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
     carConditionReducer,
     initialState,
   );
+  
   const {
     createCarConditionRequesting,
     createCarConditionSuccess,
     createCarConditionError,
     createCarConditionFailure,
+    editCarConditionRequesting,
+    editCarConditionSuccess,
+    editCarConditionError,
     orders,
   } = useAppSelector(state => state.Order);
   const {
@@ -73,6 +82,14 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
   const authId = useAuthId();
   const {initialValue, prefix} = useInitialValueHook('658d3cab585e3dde644da977');
   const serialNo:number = useSerialNoHook();
+
+  useEffect(()=>{
+    if(isEdit ==  true){
+      handleVehicleRegNO(isEditData?.registration_no);
+      handleVehicleKm(isEditData?.running_km);
+  }
+
+  },[])
 
   const _getSerialNoRequest = () => {
     getCurrentCompanyId().then(id => {
@@ -277,7 +294,44 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
         remarks: reducerState.remarks,
         addedBy: authId,
       };
-      dispatch2(createCarConditionRequest(payload));
+
+      const editPayload: any = {
+        carConditionNumber: reducerState.carConditionNumber,
+        dateOfCarCondition: reducerState.dateOfCarCondition,
+        vehicleType: reducerState.vehicleType,
+        manufacturer: reducerState.manufacturer,
+        model: reducerState.model,
+        yearOfManufacturing: reducerState.yearOfManufacturing,
+        vehicleAccessories: reducerState.vehicleAccessories,
+        color: reducerState.color,
+        vehicleRegistrationNumber: reducerState.vehicleRegistrationNumber,
+        vehicleCoveredDistanceInKM: reducerState.vehicleCoveredDistanceInKM,
+        vehicleValue: reducerState.vehicleValue,
+        insurancePolicyNumber: reducerState.insurancePolicyNumber,
+        insuranceCompany: reducerState.insuranceCompany,
+        chasisNumber: reducerState.chasisNumber,
+        engineNumber: reducerState.engineNumber,
+        batteryNumber: reducerState.batteryNumber,
+        tyreNumber: reducerState.tyreNumber,
+        anyOtherAccessorie: reducerState.anyOtherAccessorie,
+        scratches: reducerState.scaratches,
+        dent: reducerState.dent,
+        visibleObservation: reducerState.visibleObservation,
+        remarks: reducerState.remarks,
+      };
+      
+      
+      if (isEdit == true) {
+        dispatch2(
+          editCarConditionRequest({
+            id: isEditData?.id,
+            requestBody: editPayload,
+          }),
+        );
+      } else {
+        dispatch2(createCarConditionRequest(payload));
+      }
+  
     }).catch(err => console.log(err));
     
   };
@@ -301,11 +355,20 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
     } else if (!createCarConditionRequesting && createCarConditionError) {
       showToast('Car Condition Not Created. Try again!', ToastType.ERROR);
       dispatch2(resetCreateCarConditionRequest());
+    } else if (!editCarConditionRequesting && editCarConditionSuccess) {
+      showToast('Car Condition Edited.', ToastType.SUCCESS);
+      dispatch2(resetCreateCarConditionRequest());
+    } else if (!editCarConditionRequesting && editCarConditionError) {
+      showToast('Car Condition Not Edited. Try again!', ToastType.ERROR);
+      dispatch2(resetCreateCarConditionRequest());
     }
   }, [
     createCarConditionRequesting,
     createCarConditionSuccess,
     createCarConditionFailure,
+    editCarConditionRequesting,
+    editCarConditionSuccess,
+    editCarConditionError
   ]);
 
   return (
@@ -343,6 +406,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                   placeholder='CN / Bilty / LR No.'
                   selectionColor={COLOR_BLACK}
                   autoCapitalize="characters"
+                  value= {isEdit?isEditData?.vehicle_condition_no: ''}
                 />
               </View>
               <View style={styles.itemContainer}>
@@ -367,6 +431,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                 <DropdownComponent
                   data={getVehicleModelList(vehicleCompanyId, vehicleModels)}
                   onSelect={handleModel}
+                  defaultValue={isEdit?{label:isEditData?.model, value:isEditData?.model}:{label:'', value:''}}
                 />
               </View>
             </View>
@@ -381,7 +446,9 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Year" style={styles.label} />
-                <DropdownComponent data={getYears()} onSelect={handleYear} />
+                <DropdownComponent data={getYears()} onSelect={handleYear} 
+                 defaultValue= {isEdit?{label:isEditData?.model, value:isEditData?.model }: {label:'', value:'' }}
+                 />
               </View>
             </View>
             <Spacer height={4} />
@@ -395,6 +462,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                   placeholder='Vehicle Reg.#'
                   selectionColor={COLOR_BLACK}
                   autoCapitalize="characters"
+                  value = {isEdit?isEditData?.registration_no: ''}
                 />
               </View>
               <View style={styles.itemContainer}>
@@ -406,6 +474,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                   placeholder='KM'
                   selectionColor={COLOR_BLACK}
                   inputType="numeric"
+                  value = {isEdit?isEditData?.running_km: ''}
                 />
               </View>
             </View>
@@ -572,14 +641,14 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
         </CollapsibleView>
         <Spacer height={8} />
         <Button
-          text="CREATE"
+          text= {`${isEdit ? 'UPDATE' : 'CREATE'}`}
           onPress={handleCreateCarCondition}
           disabled={false}
           style={styles.previewButtonStyle}
           textStyle={styles.textStyle}
         />
         <Spacer height={8} />
-        <Spinner show={createCarConditionRequesting} />
+        <Spinner show={createCarConditionRequesting || editCarConditionRequesting} />
       </View>
     </AvoidSoftInputViewHOC>
   );

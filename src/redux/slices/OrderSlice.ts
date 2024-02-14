@@ -87,6 +87,12 @@ interface IOrderState {
   createCarConditionSuccess: boolean;
   createCarConditionFailure: boolean;
   createCarConditionError: any;
+  // Edit Car Condition
+  editCarConditionInfo: ICreateCarConditionResponse | null;
+  editCarConditionRequesting: boolean;
+  editCarConditionSuccess: boolean;
+  editCarConditionFailure: boolean;
+  editCarConditionError: any;
   // Get Car Condition List
   carConditionList: IGetCarConditionListResponse | null;
   getCarConditionListRequesting: boolean;
@@ -192,6 +198,12 @@ const initialState: IOrderState = {
   createMoneyReceiptSuccess: false,
   createMoneyReceiptFailure: false,
   createMoneyReceiptError: null,
+ // Edit Car Condition
+  editCarConditionInfo:  null,
+  editCarConditionRequesting: false,
+  editCarConditionSuccess: false,
+  editCarConditionFailure: false,
+  editCarConditionError:null,
   // Get Money Receipt List
   moneyReceiptList: null,
   getMoneyReceiptListRequesting: false,
@@ -512,6 +524,34 @@ export const OrderSlice = createSlice({
       state.createCarConditionSuccess = false;
       state.createCarConditionFailure = false;
       state.createCarConditionError = null;
+    },
+
+     // Edit  Car Condition
+     editCarConditionRequest: (
+      state,
+      action: PayloadAction<{id: string; requestBody: ICreateCarConditionRequest}>,
+    ) => {
+      state.editCarConditionRequesting = true;
+    },
+    editCarConditionSuccess: (
+      state,
+      action: PayloadAction<ICreateCarConditionResponse>,
+    ) => {
+      state.editCarConditionRequesting = false;
+      state.editCarConditionSuccess = true;
+      state.editCarConditionInfo = action.payload;
+    },
+    editCarConditionFailure: (state, action: PayloadAction<any>) => {
+      state.editCarConditionRequesting = false;
+      state.editCarConditionSuccess = false;
+      state.editCarConditionFailure = true;
+      state.editCarConditionError = action.payload;
+    },
+    resetEditCarConditionRequest: state => {
+      state.editCarConditionRequesting = false;
+      state.editCarConditionSuccess = false;
+      state.editCarConditionFailure = false;
+      state.editCarConditionError = null;
     },
     // Get Car Condition List
     getCarConditionListRequest: (state, action: PayloadAction<string>) => {
@@ -839,6 +879,11 @@ export const {
   createCarConditionSuccess,
   createCarConditionFailure,
   resetCreateCarConditionRequest,
+  // Edit Car Condition
+  editCarConditionRequest,
+  editCarConditionSuccess,
+  editCarConditionFailure,
+  resetEditCarConditionRequest,
   // Get Car Condition List
   getCarConditionListRequest,
   getCarConditionListSuccess,

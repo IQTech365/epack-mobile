@@ -8,6 +8,7 @@ import {
   CREATE_MONEY_RECEIPT,
   CREATE_PACKING_LIST,
   DELETE_PACKING_LIST_ITEM,
+  EDIT_CAR_CONDITION_LIST,
   EDIT_COMPANY,
   EDIT_MONEY_RECEIPT_LIST,
   GET_BILTY_LIST,
@@ -59,6 +60,11 @@ export const AddOrderService = async (payload: IAddOrderRequest): Promise<IAddOr
 export const CreateCarConditionService = async (payload: ICreateCarConditionRequest): Promise<ICreateCarConditionResponse> => {
     const api = Api.getInstance();
     return await api.post<ICreateCarConditionRequest, AxiosResponse<ICreateCarConditionResponse>>(payload, CREATE_CAR_CONDITION);
+}
+
+export const EditCarConditionService = async (id:string, requestBody:ICreateCarConditionRequest): Promise<ICreateCarConditionResponse> => {
+    const api = Api.getInstance();
+    return await api.update<ICreateCarConditionRequest, AxiosResponse<ICreateCarConditionResponse>>(requestBody, EDIT_CAR_CONDITION_LIST(id));
 }
 
 export const GetCarConditionListService = async (payload: string): Promise<IGetCarConditionListResponse> => {
