@@ -51,7 +51,7 @@ export const DELETE_PACKING_LIST_ITEM = (item_id) => `/packing-item/${item_id}`;
 // Setting
 export const GET_BANK_LIST = `/account-management/bank/getAll`;    
 export const ADD_PAYMENT_METHOD = `/account-management/account/add`;
-export const DELETE_PAYMENT_METHOD = (company_id) => ``;
+export const DELETE_PAYMENT_METHOD = (id) => `/account-management/account/delete/${id}`;
 export const UPDATE_PAYMENT_METHOD = (company_id) => ``;
 export const GET_PAYMENT_METHODS = (company_id) => `/account-management/account/getAll/${company_id}`;
 

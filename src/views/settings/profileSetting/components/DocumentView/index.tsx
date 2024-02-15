@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {View, FlatList, Text} from 'react-native';
 import styles from './style';
-import DocumentUpdateView from '../DocumentFormView';
+import DocumentFormView from '../DocumentFormView';
 import ActionHeaderView from '../../../../../common/ActionHeaderView';
 import {getCurrentCompanyId} from '../../../../../utils/storage';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
@@ -40,7 +40,7 @@ const AddDocumentView = () => {
 
   const showForm = () => {
     if (showAddDocument) {
-      return <DocumentUpdateView onSuccess={handleShowDocument} />;
+      return <DocumentFormView onSuccess={handleShowDocument} />;
     }
     return null;
   };
@@ -54,7 +54,9 @@ const AddDocumentView = () => {
     return list;
   };
 
-  const _onDelete = (id: string) => {};
+  const _onDelete = (id: string) => {
+    //
+  };
 
   const showList = () => {
     if (showDocumentList) {

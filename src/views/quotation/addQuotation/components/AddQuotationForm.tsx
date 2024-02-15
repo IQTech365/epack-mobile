@@ -361,6 +361,8 @@ const AddQuotationForm: React.FC<Props> = ({
   useEffect(() => {
     if(isEdit) {
       resetAll();
+      setItem(_getQuotationItem() as ISingleQuotationData)
+      setIsEditQuotation(isEdit);
     }
     if(fromEnquiry) {
       setEnquiryItem(_getSingleEnquiry());
@@ -368,23 +370,10 @@ const AddQuotationForm: React.FC<Props> = ({
   }, []);
 
   useEffect(() => {
-    console.log('Inside-2---new-isEdit--', isEdit);
-    console.log('Inside-2---new-state--', JSON.stringify(state));
-    if(isEdit && !state.item) {
-      // setItem(_getQuotationItem() as ISingleQuotationData)
-      // setIsEditQuotation(isEdit);
+    return () => {
+      resetAll();
     }
-  }, [state]);
-
-  // useEffect(() => {
-  //   return () => {
-  //     resetAll();
-  //     console.log('onmount called');
-  //     console.log('Single-quotation-state-2--', JSON.stringify(state));
-  //     // resetItem();
-  //     // setIsEditQuotation(false);
-  //   }
-  // }, []);
+  }, []);
 
   useEffect(() => {
     if (!addQuotationRequesting && addQuotationSuccess) {

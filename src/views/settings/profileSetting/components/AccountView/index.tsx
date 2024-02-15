@@ -3,13 +3,14 @@ import {View, Text, FlatList, TouchableOpacity} from 'react-native';
 import styles from './style';
 import AccountDetailUpdateView from '../AccountFormView';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
-import {getPaymentMethodsRequest} from '../../../../../redux/slices/ProfileSettingSlice';
+import {deletePaymentMethodRequest, getPaymentMethodsRequest, resetDeletePaymentMethodRequest} from '../../../../../redux/slices/ProfileSettingSlice';
 import {getCurrentCompanyId} from '../../../../../utils/storage';
 import ActionHeaderView from '../../../../../common/ActionHeaderView';
 import { getBankListRequest } from '../../../../../redux/slices/CommonSlice';
 import Spinner from '../../../../../common/Spinner';
 import { IGetPaymentMethodData } from '../../../../../interface/setting/packerProfile/paymentMethod/IGetPaymentMethodsResponse';
 import PaymentMethodListItem from './component/PaymentMethodListItem';
+import { ToastType, showToast } from '../../../../../utils/utility';
 
 const AddAccountView = () => {
   const [showPaymentMethodList, setShowPaymentMethodList] =
@@ -17,9 +18,13 @@ const AddAccountView = () => {
   const [showAddPaymentMehod, setShowAddPaymentMethod] =
     useState<boolean>(true);
   const dispatch = useAppDispatch();
-  const {getPaymentMethodsRequesting, paymentMethods} = useAppSelector(
-    state => state.Setting,
-  );
+  const {
+    getPaymentMethodsRequesting,
+    paymentMethods,
+    deletePaymentMethodRequesting,
+    deletePaymentMethodSuccess,
+    deletePaymentMethodFailure,
+  } = useAppSelector(state => state.Setting);
 
   const _getPaymentMethodsRequest = () => {
     getCurrentCompanyId()
@@ -43,7 +48,7 @@ const AddAccountView = () => {
   }
 
   const _onDelete = (id:string) => {
-    //
+    dispatch(deletePaymentMethodRequest(id));
   }
 
   useEffect(() => {
@@ -95,6 +100,17 @@ const AddAccountView = () => {
     return null;
   };
 
+  useEffect(() => {
+    if(!deletePaymentMethodRequesting && deletePaymentMethodSuccess) {
+      showToast("Payment Account Deleted.", ToastType.SUCCESS);
+      dispatch(resetDeletePaymentMethodRequest());
+      _getPaymentMethodsRequest();
+    } else if(!deletePaymentMethodRequesting && deletePaymentMethodFailure) {
+      showToast("Error in Deleting.Try again!", ToastType.ERROR);
+      dispatch(resetDeletePaymentMethodRequest());
+    }
+  }, [deletePaymentMethodRequesting, deletePaymentMethodSuccess, deletePaymentMethodFailure]);
+
   return (
     <View style={{flex: 1, alignItems: 'center'}}>
       <ActionHeaderView
@@ -104,7 +120,7 @@ const AddAccountView = () => {
       />
       {showForm()}
       {showList()}
-      <Spinner show={getPaymentMethodsRequesting} />
+      <Spinner show={getPaymentMethodsRequesting || deletePaymentMethodRequesting} />
     </View>
   );
 };

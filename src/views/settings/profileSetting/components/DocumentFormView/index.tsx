@@ -25,11 +25,11 @@ import useAuthId from '../../../../../hooks/useAuthId';
 import { ISubmodule } from '../../../../../interface/common/common';
 import { ToastType, showToast } from '../../../../../utils/utility';
 
-interface IDocumentUpdateProps {
+interface IDocumentFormViewProps {
   onSuccess:() => void;
 }
 
-const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({onSuccess}) => {
+const DocumentFormView: React.FC<IDocumentFormViewProps> = ({onSuccess}) => {
   const [documentType, setDocumentType] = useState<string>(documentTypeOptions[0].label);
   const [isoType, setISOType] = useState<string>(isoTypeOptions[0].label);
   const [isoNumber, setISONumber] = useState<string>('');
@@ -250,7 +250,7 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({onSuccess}) => {
         <View style={styles.applicableWrapper}>
           {_getSubmodules()?.map((item:ISubmodule, index: number) => {
             return (
-              <View style={styles.checkboxItem}>
+              <View style={styles.checkboxItem} key={`${index}`}>
                 <BouncyCheckbox
                   size={25}
                   fillColor={COLOR_BLUE}
@@ -285,4 +285,4 @@ const DocumentUpdateView: React.FC<IDocumentUpdateProps> = ({onSuccess}) => {
   );
 };
 
-export default DocumentUpdateView;
+export default DocumentFormView;

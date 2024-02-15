@@ -9,6 +9,7 @@ import {
   CHECK_USERNAME_AVAILABLITY,
   DELETE_CONTACT_DETAIL,
   DELETE_FOOTER_CONTENT,
+  DELETE_PAYMENT_METHOD,
   GET_BANKS,
   GET_BILTY_SERIAL_NO,
   GET_CAR_CONDITION_SERIAL_NO,
@@ -73,7 +74,7 @@ import {
   IGetSerialNoRequest,
   IGetSerialNoResponse,
 } from '../interface/setting/serialNo/serialNo';
-import { IDeleteContactResponse, IDeleteFooterContentResponse } from '../interface/setting/packerProfile/contact';
+import { IDeleteAccountResponse, IDeleteContactResponse, IDeleteFooterContentResponse } from '../interface/setting/packerProfile/contact';
 
 // PAYMENT
 export const AddPaymentMethodService = async (
@@ -91,6 +92,13 @@ export const GetPaymentMethodService = async (
 ): Promise<IAddPaymentMethodResponse> => {
   const api = Api.getInstance();
   return await api.get<IAddPaymentMethodResponse>(GET_PAYMENT_METHODS(payload));
+};
+
+export const DeletePaymentMethodService = async (
+  payload: string,
+): Promise<IDeleteAccountResponse> => {
+  const api = Api.getInstance();
+  return await api.delete<any,AxiosResponse<IDeleteAccountResponse>>(null, DELETE_PAYMENT_METHOD(payload));
 };
 
 // FOOTER CONTENT

@@ -15,7 +15,6 @@ interface IProps {
 
 const PaymentMethodListItem: FC<IProps> = ({item, index, onDelete}) => {
     const {banks} = useAppSelector(state => state.Common);
-
     const _getBankList = ():IBank[] => {
         let list:IBank[] = [];
         const {data} = banks || {};

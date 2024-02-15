@@ -22,7 +22,7 @@ const DocumentListItem: FC<IProps> = ({item, index, onDelete}) => {
                 <Text style={styles.label}>Document Type:</Text>
               </View>
               <View style={[styles.valueContainer, styles.btrr]}>
-                <Text style={styles.value}>{item.documentTypeTitle}</Text>
+                <Text style={styles.value}>{item.documentTypeTitle || item.documentType}</Text>
               </View>
             </View>
             <View style={[styles.rowContainer, styles.bblr, styles.bbrr]}>

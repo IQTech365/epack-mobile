@@ -340,10 +340,10 @@ export const SettingSlice = createSlice({
         },
         // ***** Delete Payment Method *****
         // ******************************
-        deletePaymentMethodRequest: (state, action: PayloadAction<IAddPaymentMethodRequest>) => {
+        deletePaymentMethodRequest: (state, action: PayloadAction<string>) => {
             state.deletePaymentMethodRequesting = true;
         },
-        deletePaymentMethodSuccess: (state, action: PayloadAction<IAddPaymentMethodResponse>) => {
+        deletePaymentMethodSuccess: (state, action: PayloadAction<IDeleteAccountResponse>) => {
             state.deletePaymentMethodRequesting = false;
             state.deletePaymentMethodSuccess = true;
             state.deletePaymentMethodInfo = action.payload;
