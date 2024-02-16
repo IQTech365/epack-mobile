@@ -28,7 +28,7 @@ import {
 } from '../../../../../redux/slices/OrderSlice';
 import Spinner from '../../../../../common/Spinner';
 import useAuthId from '../../../../../hooks/useAuthId';
-import { getQuotationsRequest } from '../../../../../redux/slices/QuotationSlice';
+import { getQuotationsByEnquiryIdRequest, getQuotationsRequest } from '../../../../../redux/slices/QuotationSlice';
 import { IGetQuotationRequest } from '../../../../../interface/quotation/IGetQuotationRequest';
 import { IGetQuotationData } from '../../../../../interface/quotation/IGetQuotationsResponse';
 import { ToastType, showToast } from '../../../../../utils/utility';
@@ -38,6 +38,7 @@ import { DOCUMENT_TYPE, IGetSerialNoRequest } from '../../../../../interface/set
 import { getSerialNoRequest, resetGetSerialNoRequest } from '../../../../../redux/slices/SerialNoSettingSlice';
 import useSerialNoHook from '../../../../../hooks/useSerialNo';
 import DropdownWithTextInput from '../../../../../common/DropdownWithTextInput';
+import { IQuotation } from '../../../../../interface/quotation/quotation';
 
 interface IMoneyReceiptFormViewProps {
   orderId: string | undefined;
@@ -66,8 +67,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
   } = useAppSelector(state => state.Order);
   
   const authId = useAuthId();
-  const {quotations} = useAppSelector(state => state.Quotation);
-  const {data: quotationData} = quotations || {};
+  const {quotationList} = useAppSelector(state => state.Quotation);
   const dispatch2 = useAppDispatch();
   const {initialValue, prefix} = useInitialValueHook('658d3c9c585e3dde644da970');
   const serialNo:number = useSerialNoHook();
@@ -171,15 +171,15 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
 
   const transformQuotationData = () => {
     let _data: string[] = [];
+    const {data} = quotationList || {};
     if (
-      quotationData &&
-      Array.isArray(quotationData) &&
-      quotationData.length > 0
+      data &&
+      Array.isArray(data) &&
+      data.length > 0
     ) {
-      _data = quotationData
-        .filter((e: IGetQuotationData) => e.enquiryId == orderId)
-        .map((quotation: IGetQuotationData) => quotation?.quotationNumber);
-      return _data;
+      _data = data
+        .filter((e: IQuotation) => e.enquiryId == orderId)
+        .map((quotation: IQuotation) => quotation?.quotationNumber);
     }
     return _data;
   };
@@ -235,18 +235,9 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
     
   };
 
-  const _getQuotationsRequest = () => {
-    getCurrentCompanyId().then(id => {
-      const payload: IGetQuotationRequest = {
-        companyId:id as string
-      };
-      dispatch2(getQuotationsRequest(payload));
-    }).catch(err => console.log(err));
-  }
-
   useEffect(() => {
     _getSerialNoRequest();
-    _getQuotationsRequest();
+    dispatch2(getQuotationsByEnquiryIdRequest(orderId as string));
   }, []);
 
   useEffect(() => {

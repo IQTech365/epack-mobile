@@ -121,7 +121,6 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
     setOpenPreview(false);
     setShouldDownload(false);
     setOpenShare(true);
-    //658d3c9c585e3dde644da970
     const payload: IHtmlTemplateRequest = {
       templateId: templateId,
       quotationId: moneyReceiptId,

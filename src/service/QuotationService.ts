@@ -1,6 +1,6 @@
 import {AxiosResponse} from 'axios';
 import {Api} from '../http/Api';
-import {ADD_QUOTATION, GET_QUOTATION, GET_QUOTATION_LIST, GET_QUOTATION_TEMPLATE_HTML, UPDATE_QUOTATION} from '../http/Endpoint';
+import {ADD_QUOTATION, GET_QUOTATION, GET_QUOTATION_BY_ENQUIRY_ID, GET_QUOTATION_LIST, GET_QUOTATION_TEMPLATE_HTML, UPDATE_QUOTATION} from '../http/Endpoint';
 import {IAddQuotationRequest} from '../interface/quotation/IAddQuotationRequest';
 import {IAddQuotationResponse} from '../interface/quotation/IAddQuotationResponse';
 import { IGetQuotationRequest } from '../interface/quotation/IGetQuotationRequest';
@@ -23,6 +23,11 @@ export const UpdateQuotationService = async (payload: IUpdateQuotationRequest,):
 export const GetQuotationsService = async (payload: IGetQuotationRequest): Promise<IGetQuotationsResponse> => {
   const api = Api.getInstance();
   return await api.post<IGetQuotationRequest,AxiosResponse<IGetQuotationsResponse>>(payload, GET_QUOTATION_LIST);
+}
+
+export const GetQuotationsByEnquiryIdService = async (payload: string): Promise<IGetQuotationsResponse> => {
+  const api = Api.getInstance();
+  return await api.get<IGetQuotationsResponse>(GET_QUOTATION_BY_ENQUIRY_ID(payload));
 }
 
 export const GetSingleQuotationService = async (payload: string): Promise<IGetSingleQuotationResponse> => {

@@ -2,13 +2,13 @@ import {takeLatest, put, call} from 'redux-saga/effects';
 import {PayloadAction} from '@reduxjs/toolkit';
 import * as QuotationService from '../service/QuotationService';
 import { IAddQuotationRequest } from '../interface/quotation/IAddQuotationRequest';
-import { aaddQuotationSuccess, addQuotationFailure, addQuotationRequest, getQuotationHtmlFailure, getQuotationHtmlRequest, getQuotationHtmlSuccess, getQuotationsFailure, getQuotationsRequest, getQuotationsSuccess, getSingleQuotationFailure, getSingleQuotationRequest, getSingleQuotationSuccess, updateQuotationFailure, updateQuotationRequest, updateQuotationSuccess } from '../redux/slices/QuotationSlice';
+import { aaddQuotationSuccess, addQuotationFailure, addQuotationRequest, getQuotationHtmlFailure, getQuotationHtmlRequest, getQuotationHtmlSuccess, getQuotationsByEnquiryIdFailure, getQuotationsByEnquiryIdRequest, getQuotationsByEnquiryIdSuccess, getQuotationsFailure, getQuotationsRequest, getQuotationsSuccess, getSingleQuotationFailure, getSingleQuotationRequest, getSingleQuotationSuccess, updateQuotationFailure, updateQuotationRequest, updateQuotationSuccess } from '../redux/slices/QuotationSlice';
 import { IAddQuotationResponse } from '../interface/quotation/IAddQuotationResponse';
 import { IGetQuotationsResponse } from '../interface/quotation/IGetQuotationsResponse';
 import { IGetQuotationRequest } from '../interface/quotation/IGetQuotationRequest';
 import { IGetSingleQuotationResponse } from '../interface/quotation/IGetSingleQuotationResponse';
 import { IHtmlTemplateRequest, IHtmlTemplateResponse } from '../interface/order/templates/ITemplateResponse';
-import { IUpdateQuotationRequest, IUpdateQuotationResponse } from '../interface/quotation/quotation';
+import { IQuotationResponse, IUpdateQuotationRequest, IUpdateQuotationResponse } from '../interface/quotation/quotation';
 
 export function* addQuotationSaga(action: PayloadAction<IAddQuotationRequest>) {
     try {
@@ -37,6 +37,15 @@ export function* getQuotationsSaga(action: PayloadAction<IGetQuotationRequest>) 
     }
 }
 
+export function* getQuotationsByEnquiryIdSaga(action: PayloadAction<string>) {
+    try {
+        const response: IQuotationResponse = yield call(QuotationService.GetQuotationsByEnquiryIdService, action.payload);
+        yield put(getQuotationsByEnquiryIdSuccess(response));
+    } catch (error) {
+        yield put(getQuotationsByEnquiryIdFailure(error));
+    }
+}
+
 export function* getSingleQuotationSaga(action: PayloadAction<string>) {
     try {
         const response: IGetSingleQuotationResponse = yield call(QuotationService.GetSingleQuotationService, action.payload);
@@ -61,6 +70,7 @@ export function* getQuotationTemplateHtmlSaga(action: PayloadAction<IHtmlTemplat
 export function* watcherQuotationSaga() {
     yield takeLatest(addQuotationRequest.type, addQuotationSaga);
     yield takeLatest(getQuotationsRequest.type, getQuotationsSaga);
+    yield takeLatest(getQuotationsByEnquiryIdRequest.type, getQuotationsByEnquiryIdSaga);
     yield takeLatest(getSingleQuotationRequest.type, getSingleQuotationSaga);
     yield takeLatest(getQuotationHtmlRequest.type, getQuotationTemplateHtmlSaga);
     yield takeLatest(updateQuotationRequest.type, updateQuotationSaga);

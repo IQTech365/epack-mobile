@@ -5,7 +5,7 @@ import { IGetQuotationRequest } from '../../interface/quotation/IGetQuotationReq
 import { IGetQuotationsResponse } from '../../interface/quotation/IGetQuotationsResponse';
 import { IGetSingleQuotationResponse } from '../../interface/quotation/IGetSingleQuotationResponse';
 import { IHtmlTemplateRequest, IHtmlTemplateResponse } from '../../interface/order/templates/ITemplateResponse';
-import { IUpdateQuotationRequest, IUpdateQuotationResponse } from '../../interface/quotation/quotation';
+import { IQuotationResponse, IUpdateQuotationRequest, IUpdateQuotationResponse } from '../../interface/quotation/quotation';
 
 interface IQuotationState {
   // Add Quotation
@@ -38,6 +38,13 @@ interface IQuotationState {
   updateQuotationSuccess: boolean;
   updateQuotationFailure: boolean;
   updateQuotationError: any;
+  // Quotations By Enquiry ID
+  quotationList:IQuotationResponse | null;
+  getQuotationsByEnquiryIdRequesting:boolean;
+  getQuotationsByEnquiryIdSuccess:boolean;
+  getQuotationsByEnquiryIdFailure:boolean;
+  getQuotationByEnquiryIdError:any;
+
 }
 
 const initialState: IQuotationState = {
@@ -71,6 +78,12 @@ const initialState: IQuotationState = {
    updateQuotationSuccess: false,
    updateQuotationFailure: false,
    updateQuotationError: null,
+   // Quotations By Enquiry ID
+  quotationList: null,
+  getQuotationsByEnquiryIdRequesting:false,
+  getQuotationsByEnquiryIdSuccess:false,
+  getQuotationsByEnquiryIdFailure:false,
+  getQuotationByEnquiryIdError:null,
 };
 
 export const QuotationSlice = createSlice({
@@ -208,6 +221,27 @@ export const QuotationSlice = createSlice({
       state.updateQuotationInfo = null;
       state.updateQuotationError = null;
     },
+    // Quotations By Enquiry ID
+    getQuotationsByEnquiryIdRequest: (
+      state,
+      action: PayloadAction<string>,
+    ) => {
+      state.getQuotationsByEnquiryIdRequesting = true;
+    },
+    getQuotationsByEnquiryIdSuccess: (
+      state,
+      action: PayloadAction<IQuotationResponse>,
+    ) => {
+      state.getQuotationsByEnquiryIdRequesting = false;
+      state.getQuotationsByEnquiryIdSuccess = true;
+      state.quotationList = action.payload;
+    },
+    getQuotationsByEnquiryIdFailure: (state, action: PayloadAction<any>) => {
+      state.getQuotationsByEnquiryIdRequesting = false;
+      state.getQuotationsByEnquiryIdSuccess = false;
+      state.getQuotationsByEnquiryIdFailure = true;
+      state.getQuotationByEnquiryIdError = action.payload;
+    },
    },
 });
 
@@ -241,5 +275,9 @@ export const {
   updateQuotationSuccess,
   updateQuotationFailure,
   resetUpdateQuotationRequest,
+  // quotations by Enquiry id
+  getQuotationsByEnquiryIdRequest,
+  getQuotationsByEnquiryIdSuccess,
+  getQuotationsByEnquiryIdFailure,
 
 } = QuotationSlice.actions;
