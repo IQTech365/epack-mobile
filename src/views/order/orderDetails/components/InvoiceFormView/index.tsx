@@ -66,6 +66,8 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
 
   const {initialValue, prefix} = useInitialValueHook('658d3ce2585e3dde644da98c');
   const serialNo:number = useSerialNoHook();
+  console.log('Invoice-serialNo--', serialNo);
+  
 
   const getSingleOrder = () => {
     let order: ISingleEnquiryData;
@@ -171,103 +173,107 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
   };
 
   const handleCreateInvoice = () => {
-    const billingInfo: IInvoiceBillingInfo = {
-      companyName: state.company_name,
-      approvalAuthority: state.approval_authority,
-      authorityPersonName: state.authority_person_name,
-      authorityPersonMobile: state.authority_mobile_no,
-      companyAddress: state.company_address,
-      companyGST: state.company_gst,
-      employeeName: state.employee_name,
-      employeeDesignation: state.employee_designation,
-      employeeMobile: state.employee_mobile_no,
-      state: state.state,
-      city: state.city,
-      pincode: state.pincode,
-    };
-
-    const pickupAddress: IInvoicePickupAddress = {
-      shiftingFrom: state.same_as_client_address ? item.pickupAddress.city : state.city,
-      state: state.same_as_client_address ? item.pickupAddress.state : state.state,
-      city: state.same_as_client_address ? item.pickupAddress.city : state.city,
-      address: state.same_as_client_address ? item.pickupAddress.address : state.address,
-      pincode: state.same_as_client_address ? item.pickupAddress.pincode : state.pincode,
-      landmark: '',
-      locality: '',
-      floor: item.pickupAddress.floor,
-      isLiftAvailable: item.pickupAddress.isLiftAvailable,
-    };
-    const payload: ICreateInvoiceRequest = {
-      enquiryId: orderId,
-      isAuto: true,
-      isHeadOffice: true,
-      // branchId: '',
-      serialNo: state.invoice_no,
-      shiftingLuggage: state.shifting_luggage,
-      templateId: '',
-      invoiceData: state.date_of_invoice,
-      vehicleNo: state.vehicle_no,
-      consignmentNo: state.consignment_no,
-      movingMode: state.mode_of_moving,
-      deliveryDate: state.date_of_delivery,
-      vehicleType: '',
-      manufacture: '',
-      model: '',
-      partyName: state.party_name,
-      mobile: state.party_mobile_no,
-      billingBy: state.billing_type,
-      billingDetails:
-        state.billing_type == billingByOptions[1] ? billingInfo : '',
-      pickupAddress: pickupAddress,
-      openBody: false,
-      closeBody: false,
-      seperate: '',
-      sharing: '',
-      isPartLoad: state.freight_load_type,
-      isFullLoad: state.freight_load_type,
-      freightCharges: state.freight_charges,
-      freightHSNCode: state.freight_hsn,
-
-      pickupChargesStatus: state.pickup_charge,
-      pickupChargesAmount: state.pickup_charge_amount,
-      pickupHSNCode: state.pickup_charge_hsn,
-
-      doorDeliveryStatus: state.door_delivery_charge,
-      doorDeliveryAmount: state.door_delivery_amount,
-      doorDeliveryHSNCode: state.door_delivery_hsn,
-
-      packagingChargesStatus: state.packing_charge,
-      packagingChargesAmount: state.packing_amount,
-      packagingHSNCode: state.packing_hsn,
-
-      packingMaterialChargesStatus: state.packing_material_charge,
-      packingMaterialChargesAmount: state.packing_material_amount,
-      packingMaterialHSNCode: state.packing_material_hsn,
-
-      loadingChargesStatus: state.loading_charge,
-      loadingChargesAmount: state.loading_amount,
-      loadingHSNCode: state.loading_hsn,
-
-      unLoadingChargesStatus: state.unloading_charge,
-      unLoadingChargesAmount: state.unloading_amount,
-      unLoadingHSNCode: state.unloading_hsn,
-
-      unPackagingChargesStatus: state.unpacking_charge,
-      unPackagingChargesAmount: state.unpacking_amount,
-      unPackagingHSNCode: state.unpakcing_hsn,
-
-      otherCharges: _getOtherCharges(),
-      surchargeCharges: state.surcharge_percent,
-      discountType: state.discount_in_invoice,
-      discountAmount: state.discount_value_or_percent,
-      gstStatus: state.gst_on_invoice,
-      gstType: state.gst_type,
-      gstPercentage: state.gst_percent,
-      gstPaidBy: state.gst_paid_by,
-      transitInsurance: _getTransitInsurance(),
-      storageCharges: _getStorageCharge(),
-    };
-    dispatch(createInvoiceRequest(payload));
+    getCurrentCompanyId().then(id => {
+      const billingInfo: IInvoiceBillingInfo = {
+        companyName: state.company_name,
+        approvalAuthority: state.approval_authority,
+        authorityPersonName: state.authority_person_name,
+        authorityPersonMobile: state.authority_mobile_no,
+        companyAddress: state.company_address,
+        companyGST: state.company_gst,
+        employeeName: state.employee_name,
+        employeeDesignation: state.employee_designation,
+        employeeMobile: state.employee_mobile_no,
+        state: state.state,
+        city: state.city,
+        pincode: state.pincode,
+      };
+  
+      const pickupAddress: IInvoicePickupAddress = {
+        shiftingFrom: state.same_as_client_address ? item.pickupAddress.city : state.city,
+        state: state.same_as_client_address ? item.pickupAddress.state : state.state,
+        city: state.same_as_client_address ? item.pickupAddress.city : state.city,
+        address: state.same_as_client_address ? item.pickupAddress.address : state.address,
+        pincode: state.same_as_client_address ? item.pickupAddress.pincode : state.pincode,
+        landmark: '',
+        locality: '',
+        floor: item.pickupAddress.floor,
+        isLiftAvailable: item.pickupAddress.isLiftAvailable,
+      };
+      const payload: ICreateInvoiceRequest = {
+        enquiryId: orderId,
+        companyId: id as string,
+        isAuto: true,
+        isHeadOffice: true,
+        // branchId: '',
+        // franchiseId: '',
+        serialNo: state.invoice_no,
+        shiftingLuggage: state.shifting_luggage,
+        templateId: '',
+        invoiceData: state.date_of_invoice,
+        vehicleNo: state.vehicle_no,
+        consignmentNo: state.consignment_no,
+        movingMode: state.mode_of_moving,
+        deliveryDate: state.date_of_delivery,
+        vehicleType: '',
+        manufacture: '',
+        model: '',
+        partyName: state.party_name,
+        mobile: state.party_mobile_no,
+        billingBy: state.billing_type,
+        billingDetails:
+          state.billing_type == billingByOptions[1] ? billingInfo : '',
+        pickupAddress: pickupAddress,
+        openBody: false,
+        closeBody: false,
+        seperate: '',
+        sharing: '',
+        isPartLoad: state.freight_load_type,
+        isFullLoad: state.freight_load_type,
+        freightCharges: state.freight_charges,
+        freightHSNCode: state.freight_hsn,
+  
+        pickupChargesStatus: state.pickup_charge,
+        pickupChargesAmount: state.pickup_charge_amount,
+        pickupHSNCode: state.pickup_charge_hsn,
+  
+        doorDeliveryStatus: state.door_delivery_charge,
+        doorDeliveryAmount: state.door_delivery_amount,
+        doorDeliveryHSNCode: state.door_delivery_hsn,
+  
+        packagingChargesStatus: state.packing_charge,
+        packagingChargesAmount: state.packing_amount,
+        packagingHSNCode: state.packing_hsn,
+  
+        packingMaterialChargesStatus: state.packing_material_charge,
+        packingMaterialChargesAmount: state.packing_material_amount,
+        packingMaterialHSNCode: state.packing_material_hsn,
+  
+        loadingChargesStatus: state.loading_charge,
+        loadingChargesAmount: state.loading_amount,
+        loadingHSNCode: state.loading_hsn,
+  
+        unLoadingChargesStatus: state.unloading_charge,
+        unLoadingChargesAmount: state.unloading_amount,
+        unLoadingHSNCode: state.unloading_hsn,
+  
+        unPackagingChargesStatus: state.unpacking_charge,
+        unPackagingChargesAmount: state.unpacking_amount,
+        unPackagingHSNCode: state.unpakcing_hsn,
+  
+        otherCharges: _getOtherCharges(),
+        surchargeCharges: state.surcharge_percent,
+        discountType: state.discount_in_invoice,
+        discountAmount: state.discount_value_or_percent,
+        gstStatus: state.gst_on_invoice,
+        gstType: state.gst_type,
+        gstPercentage: state.gst_percent,
+        gstPaidBy: state.gst_paid_by,
+        transitInsurance: _getTransitInsurance(),
+        storageCharges: _getStorageCharge(),
+      };
+      dispatch(createInvoiceRequest(payload));
+    }).catch(err => console.log('err--', err));
   };
 
   useEffect(() => {

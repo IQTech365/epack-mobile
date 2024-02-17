@@ -88,7 +88,7 @@ const SubscriptionPlanView = (props: any) => {
       purchaseOrderId: orderId,
       authId: authId,
       subscriptionId: plan._id,
-      subscriptionPlan: plan.subscriptionType,
+      subscriptionPlan: planDuration, //plan.subscriptionType,
       amountPaid: `${planAmount}`,
       discountAmount: '0',
       couponCode: '',
