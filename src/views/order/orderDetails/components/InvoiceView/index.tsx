@@ -48,6 +48,9 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item}) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const templateId = useTemplateIdHook('658d3ce2585e3dde644da98c');
 
+  console.log('invoices----', JSON.stringify(invoices));
+  
+
   const handleCreateNewInvoice = () => {
     setShowInvoiceList(false);
     setCreateNewInvoice(true);

@@ -55,6 +55,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
   const remarksCompRef = useRef(null);
 
   const serialNo: number = useSerialNoHook();
+  
   const {initialValue, prefix} = useInitialValueHook('658d3d2f585e3dde644da9b2');
 
   const _getSerialNoRequest = () => {
@@ -134,7 +135,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
       .then(id => {
         const payload: IAddSurveyItemRequest = {
           enquiryId: enquiryId,
-          surveyListNo: surveyNo,
+          surveyListNo: serialNo.toString(),
           surveyDate: date,
           surveyItems: surveyItems,
           addedBy: authId,

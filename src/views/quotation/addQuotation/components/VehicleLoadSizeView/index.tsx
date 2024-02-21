@@ -26,7 +26,7 @@ const VehicleLoadSizeView: React.FC<IProps> = ({}) => {
       vehicleSizes = data.map((d: IVehicleSize) => {
         const item: TDropdownItem = {
           label: d.vehicleSize,
-          value: d.vehicleSize,
+          value: d._id,
         };
         return item;
       });
@@ -61,7 +61,7 @@ const VehicleLoadSizeView: React.FC<IProps> = ({}) => {
         <DropdownComponent
           data={_getVehicleSizes()}
           onSelect={(item: TDropdownItem) => {
-            setLorryType(item.label);
+            setLorryType(item.value);
           }}
           //@ts-ignore
           ref={lorryTypeDropdownRef}

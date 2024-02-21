@@ -33,6 +33,8 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
   );
   const {data} = followups || {};
   const {data: surveyItemData} = surveyItemList || {};
+  console.log('surveyItemData---', JSON.stringify(surveyItemData));
+  
   const {surveyList, getSurveyListRequesting} = useAppSelector(
     state => state.Enquiry,
   );

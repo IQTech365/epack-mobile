@@ -30,6 +30,8 @@ const AddSerialNoView = () => {
     setActiveTabIndex(index);
     _setSubmoduleByIndex(index);
   };
+  console.log('submodules-------', JSON.stringify(submodules));
+  
 
   const _getSubmodules = (): ISubmodule[] => {
     let items: ISubmodule[] = [];
