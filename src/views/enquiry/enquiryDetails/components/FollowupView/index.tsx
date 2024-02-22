@@ -6,6 +6,8 @@ import {
   getFollowupsRequest,
   getSurveyItemListRequest,
   getSurveyListRequest,
+  getSurveyListTemplateRequest,
+  resetGetSurveyListTemplateRequest,
 } from '../../../../../redux/slices/EnquirySlice';
 import {formatDate3} from '../../../../../utils/formatter';
 import FollowupListHeaderComponent from '../FollowupListHeaderComponent';
@@ -16,6 +18,11 @@ import Button from '../../../../../common/Button';
 import Spacer from '../../../../../common/Spacer';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
 import { IGetSurvyeItemListRequestPayload } from '../../../../../interface/enquiry/IGetSurveyItemListResponse';
+import { ISurveyListTemlatePayload } from '../../../../../interface/enquiry/enquiry';
+import TemplateViewer from '../../../../../common/TemplateViewer';
+import ModalHOC from '../../../../../common/ModalHOC';
+import useTemplateIdHook from '../../../../../hooks/useTemplateIdHook';
+import { ToastType, showToast, startShare } from '../../../../../utils/utility';
 interface IFollowupViewProps {
   taskName: string;
   assigneeRole: string;
@@ -28,9 +35,15 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
   enquiryId,
 }) => {
   const dispatch = useAppDispatch();
-  const {followups, getFollowupsRequesting, surveyItemList} = useAppSelector(
-    state => state.Enquiry,
-  );
+  const {
+    followups,
+    getFollowupsRequesting,
+    surveyItemList,
+    getSurveyListTemplateRequesting,
+    getSurveyListTemplateSuccess,
+    getSurveyListTemplateFailure,
+    surveyListTemplate,
+  } = useAppSelector(state => state.Enquiry);
   const {data} = followups || {};
   const {data: surveyItemData} = surveyItemList || {};
   console.log('surveyItemData---', JSON.stringify(surveyItemData));
@@ -40,6 +53,12 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
   );
   const {data: surveyData} = surveyList || {};
   const [taskData, setTaskData] = useState<string>('');
+  const [showTemplate, setShowTemplate] = useState<boolean>(false);
+  const [shouldShare, setShouldShare] = useState<boolean>(false);
+  // const templateId = useTemplateIdHook('65d48f14ad0f8972472d49ca');
+  const templateId = "65d48f14ad0f8972472d49ca";
+
+  console.log('surveyItem-templateId---', templateId);
 
   const _getSurveyItemListRequest = () => {
     getCurrentCompanyId().then(id => {
@@ -107,6 +126,63 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
     return date;
   };
 
+  const _showSurveyListItemTemplate = (surveyListId:string) => {
+    setShouldShare(false);
+    if(templateId) {
+      getCurrentCompanyId().then(id => {
+        const payload:ISurveyListTemlatePayload = {
+          companyId: id as string,
+          surveyListId: surveyListId,
+          templateId: templateId,
+          enquiryId: enquiryId,
+        }
+        dispatch(getSurveyListTemplateRequest(payload));
+      }).catch(err => console.log('error getting company id from storage'));
+    } else {
+      showToast("Template Not Selected!", ToastType.ERROR);
+    }
+  }
+
+  const _shareSurveyList = (surveyListId:string) => {
+    if(templateId) {
+      setShouldShare(true);
+      getCurrentCompanyId().then(id => {
+        const payload:ISurveyListTemlatePayload = {
+          companyId: id as string,
+          surveyListId: surveyListId,
+          templateId: templateId,
+          enquiryId: enquiryId,
+        }
+        dispatch(getSurveyListTemplateRequest(payload));
+      }).catch(err => console.log('error getting company id from storage'));
+    } else {
+      showToast("Template Not Selected!", ToastType.ERROR);
+    }
+  }
+
+  const _hanldeCloseShowPreviewModal = () => {
+    dispatch(resetGetSurveyListTemplateRequest());
+    setShowTemplate(false);
+    setShouldShare(false);
+  }
+
+  useEffect(() => {
+    if(!getSurveyListTemplateRequesting && getSurveyListTemplateSuccess) {
+      if(shouldShare) {
+        startShare(
+          surveyListTemplate,
+          'Survey List',
+          dispatch(resetGetSurveyListTemplateRequest()),
+        );
+      } else {
+        setShowTemplate(true);
+      }
+    } else if(!getSurveyListTemplateRequesting && getSurveyListTemplateFailure) {
+      setShowTemplate(false);
+      dispatch(resetGetSurveyListTemplateRequest());
+    }
+  }, [getSurveyListTemplateRequesting, getSurveyListTemplateSuccess, getSurveyListTemplateFailure]);
+
   return (
     <View style={styles.container}>
       {getFollowupsRequesting ? (
@@ -119,7 +195,13 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
             showsVerticalScrollIndicator={false}
             renderItem={({item, index}) =>
               taskData == 'SURVEY ITEM' ? (
-                <SurveyItemListView item={item} index={index} enquiryId={enquiryId} />
+                <SurveyItemListView
+                  item={item}
+                  index={index}
+                  enquiryId={enquiryId}
+                  onShowPreview={_showSurveyListItemTemplate}
+                  onShare={_shareSurveyList}
+                />
               ) : (
                 <FollowupListItem
                   comment={item?.comment}
@@ -153,6 +235,17 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
           />
         </View>
       )}
+      <Spinner show={getSurveyListTemplateRequesting} />
+      <ModalHOC
+        visible={showTemplate}
+        onClose={_hanldeCloseShowPreviewModal}
+        modalStyle={styles.modalStyle}
+        headerStyle={styles.headerStyle}
+        title="Preview">
+        <View style={{flex: 1}}>
+          <TemplateViewer html={surveyListTemplate} />
+        </View>
+      </ModalHOC>
     </View>
   );
 };

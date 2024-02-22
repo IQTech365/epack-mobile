@@ -15,12 +15,16 @@ interface ISurveyItemListViewProps {
   item: IGetSurveyItemListData;
   index: number;
   enquiryId:string;
+  onShowPreview: (id:string) => void;
+  onShare: (id:string) => void;
 }
 
 const SurveyItemListView: React.FC<ISurveyItemListViewProps> = ({
   item,
   index,
   enquiryId,
+  onShowPreview,
+  onShare,
 }) => {
   const navigation = useNavigation();
 
@@ -46,21 +50,25 @@ const SurveyItemListView: React.FC<ISurveyItemListViewProps> = ({
       <View style={styles.actionContainer}>
         <TouchableOpacity
           style={styles.action}
-          onPress={() => {}}
+          onPress={() => {
+            onShare(item._id);
+          }}
           activeOpacity={0.6}>
           <ShareIcon width={24} height={24} />
           <Text style={styles.actionText}>Share</Text>
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.action}
           onPress={() => {}}
           activeOpacity={0.6}>
           <DownloadIcon width={24} height={24} />
           <Text style={styles.actionText}>Download</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity
           style={styles.action}
-          onPress={() => {}}
+          onPress={() => {
+            onShowPreview(item._id);
+          }}
           activeOpacity={0.6}>
           <PreviewIcon width={24} height={24} />
           <Text style={styles.actionText}>Preview</Text>

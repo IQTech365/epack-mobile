@@ -26,13 +26,13 @@ const Main = () => {
         contentContainerProps={{paddingHorizontal: 15}}
         text1Style={{
           fontSize: 18,
-          fontWeight: '400',
           color: COLOR_BLACK,
+          fontFamily: 'WorkSans-Medium',
         }}
         text2Style={{
           fontSize: 16,
-          fontWeight: '300',
           color: COLOR_BLACK,
+          fontFamily: 'WorkSans-Regular',
         }}
       />
     ),
@@ -43,12 +43,12 @@ const Main = () => {
         contentContainerProps={{paddingHorizontal: 15}}
         text1Style={{
           fontSize: 18,
-          fontWeight: '400',
+          fontFamily: 'WorkSans-Medium',
           color: COLOR_BLACK,
         }}
         text2Style={{
           fontSize: 16,
-          fontWeight: '300',
+          fontFamily: 'WorkSans-Regular',
           color: COLOR_BLACK,
         }}
       />

@@ -35,6 +35,9 @@ import {
     getSurveyListFailure,
     getSurveyListRequest,
     getSurveyListSuccess,
+    getSurveyListTemplateFailure,
+    getSurveyListTemplateRequest,
+    getSurveyListTemplateSuccess,
     updateAddressFailure,
     updateAddressRequest,
     updateAddressSuccess,
@@ -71,7 +74,7 @@ import { ISingleEnquiryResponse } from '../interface/enquiry/ISingleEnquiryRespo
 import { IAddPackingMaterialRequest } from '../interface/enquiry/IAddPackingMaterialRequest';
 import { IAddPackingMaterialResponse } from '../interface/enquiry/IAddPackingMaterialResponse';
 import { IGetPackingMaterialsRequest, IPackingMaterialsResponse } from '../interface/enquiry/IPackingMaterialsResponse';
-import { IUpdateSurveyItemRequest, IUpdateSurveyItemResponse } from '../interface/enquiry/enquiry';
+import { ISurveyListTemlatePayload, ISurveyListTemplateResponse, IUpdateSurveyItemRequest, IUpdateSurveyItemResponse } from '../interface/enquiry/enquiry';
 
 export function* addEnquirySaga(action: PayloadAction<IAddEnquiryRequest>) {
     try {
@@ -221,6 +224,15 @@ export function* updateSurveyItemListSaga(action: PayloadAction<IUpdateSurveyIte
     }
 }
 
+export function* getSurveyListItemTemplateSaga(action: PayloadAction<ISurveyListTemlatePayload>) {
+    try {
+        const response: ISurveyListTemplateResponse = yield call(EnquiryService.GetSurveyListItemTemplateService, action.payload);
+        yield put(getSurveyListTemplateSuccess(response));
+    } catch (error) {
+        yield put(getSurveyListTemplateFailure(error));
+    }
+}
+
 export function* watcherEnquirySaga() {
     yield takeLatest(addEnquiryRequest.type, addEnquirySaga);
     yield takeLatest(getEnquiriesRequest.type, getEnquiriesSaga);
@@ -238,4 +250,5 @@ export function* watcherEnquirySaga() {
     yield takeLatest(addPackingMaterialRequest.type, addPackingMaterialSaga);
     yield takeLatest(getPackingMaterialsRequest.type, getPackingMaterialsSaga);
     yield takeLatest(updateSurveryItemListRequest.type, updateSurveyItemListSaga);
+    yield takeLatest(getSurveyListTemplateRequest.type, getSurveyListItemTemplateSaga);
 }

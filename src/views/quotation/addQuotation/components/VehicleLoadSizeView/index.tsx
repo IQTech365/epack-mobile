@@ -44,7 +44,7 @@ const VehicleLoadSizeView: React.FC<IProps> = ({}) => {
           if(lorryTypeItem) {
             //@ts-ignore
             lorryTypeDropdownRef && lorryTypeDropdownRef?.current?.setDefaultValue(lorryTypeItem);
-            setLorryType(lorryTypeItem.label);
+            setLorryType(lorryTypeItem.value);
           }
         }
       }

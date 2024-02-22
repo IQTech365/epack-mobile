@@ -1,6 +1,6 @@
 import {AxiosResponse} from 'axios';
 import {Api} from '../http/Api';
-import {ADD_ENQUIRY, EDIT_COMPANY, GET_ENQUIRY_LIST, ADD_FOLLOWUP, GET_FOLLOWUP_COMMENTS, ADD_SURVEY, GET_SURVEY_COMMENTS, EDIT_ENQUIRY, GET_ENQUIRY, ADD_SURVEY_ITEM, GET_SURVEY_ITEM, ADD_PACKING_MATERIAL, GET_PACKING_MATERIALS, EDIT_SURVEY_ITEM} from '../http/Endpoint';
+import {ADD_ENQUIRY, EDIT_COMPANY, GET_ENQUIRY_LIST, ADD_FOLLOWUP, GET_FOLLOWUP_COMMENTS, ADD_SURVEY, GET_SURVEY_COMMENTS, EDIT_ENQUIRY, GET_ENQUIRY, ADD_SURVEY_ITEM, GET_SURVEY_ITEM, ADD_PACKING_MATERIAL, GET_PACKING_MATERIALS, EDIT_SURVEY_ITEM, GET_SURVEY_LIST_ITEM_TEMPLATE_HTML} from '../http/Endpoint';
 import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
 import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
 import { IAddEnquiryRequest } from '../interface/enquiry/IAddEnquiryRequest';
@@ -24,7 +24,7 @@ import { ISingleEnquiryResponse } from '../interface/enquiry/ISingleEnquiryRespo
 import { IAddPackingMaterialRequest } from '../interface/enquiry/IAddPackingMaterialRequest';
 import { IAddPackingMaterialResponse } from '../interface/enquiry/IAddPackingMaterialResponse';
 import { IGetPackingMaterialsRequest, IPackingMaterialsResponse } from '../interface/enquiry/IPackingMaterialsResponse';
-import { IUpdateSurveyItemPayload, IUpdateSurveyItemRequest, IUpdateSurveyItemResponse } from '../interface/enquiry/enquiry';
+import { ISurveyListTemlatePayload, ISurveyListTemplateResponse, IUpdateSurveyItemPayload, IUpdateSurveyItemRequest, IUpdateSurveyItemResponse } from '../interface/enquiry/enquiry';
 
 export const AddEnquiryService = async (payload: IAddEnquiryRequest): Promise<IAddEnquiryResponse> => {
     const api = Api.getInstance();
@@ -111,5 +111,10 @@ export const UpdateSurveyItemListService = async (req:IUpdateSurveyItemRequest):
     const {surveyId, payload} = req;
     const api = Api.getInstance();
     return await api.update<IUpdateSurveyItemPayload, AxiosResponse<IUpdateSurveyItemResponse>>(payload, EDIT_SURVEY_ITEM(surveyId));
+}
+
+export const GetSurveyListItemTemplateService = async (payload: ISurveyListTemlatePayload): Promise<ISurveyListTemplateResponse> => {
+    const api = Api.getInstance();
+    return await api.post<ISurveyListTemlatePayload, AxiosResponse<ISurveyListTemplateResponse>>(payload, GET_SURVEY_LIST_ITEM_TEMPLATE_HTML);
 }
 

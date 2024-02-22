@@ -22,7 +22,7 @@ import { ISingleEnquiryResponse } from '../../interface/enquiry/ISingleEnquiryRe
 import { IAddPackingMaterialResponse } from '../../interface/enquiry/IAddPackingMaterialResponse';
 import { IAddPackingMaterialRequest } from '../../interface/enquiry/IAddPackingMaterialRequest';
 import { IGetPackingMaterialsRequest, IPackingMaterialsResponse } from '../../interface/enquiry/IPackingMaterialsResponse';
-import { IUpdateSurveyItemRequest, IUpdateSurveyItemResponse } from '../../interface/enquiry/enquiry';
+import { ISurveyListTemlatePayload, ISurveyListTemplateResponse, IUpdateSurveyItemRequest, IUpdateSurveyItemResponse } from '../../interface/enquiry/enquiry';
 
 interface IEnquiryState {
   // Get Enquiries
@@ -133,6 +133,12 @@ interface IEnquiryState {
    updateSurveyItemSuccess:boolean;
    updateSurveyItemFailure:boolean;
    updateSurveyItemError: any;
+  // Survey List Item Template
+  surveyListTemplate:ISurveyListTemplateResponse | null;
+  getSurveyListTemplateRequesting: boolean;
+  getSurveyListTemplateSuccess: boolean;
+  getSurveyListTemplateFailure: boolean;
+  getSurveyListTemplateError: any;
 }
 
 const initialState: IEnquiryState = {
@@ -244,6 +250,12 @@ const initialState: IEnquiryState = {
     updateSurveyItemSuccess:false,
     updateSurveyItemFailure:false,
     updateSurveyItemError: null,
+    // Survey List Item Template
+    surveyListTemplate: null,
+    getSurveyListTemplateRequesting: false,
+    getSurveyListTemplateSuccess: false,
+    getSurveyListTemplateFailure: false,
+    getSurveyListTemplateError: null,
 };
 
 export const EnquirySlice = createSlice({
@@ -665,6 +677,28 @@ export const EnquirySlice = createSlice({
         state.updateSurveyItemFailure = false;
         state.updateSurveyItemError = null;
         state.updateSurveyItemInfo = null;
+      },
+      // Survey List Item Template
+      getSurveyListTemplateRequest: (state, action: PayloadAction<ISurveyListTemlatePayload>) => {
+        state.getSurveyListTemplateRequesting = true;
+      },
+      getSurveyListTemplateSuccess: (state, action: PayloadAction<ISurveyListTemplateResponse>) => {
+        state.getSurveyListTemplateRequesting = false;
+        state.getSurveyListTemplateSuccess = true;
+        state.surveyListTemplate = action.payload;
+      },
+      getSurveyListTemplateFailure: (state, action: PayloadAction<any>) => {
+        state.getSurveyListTemplateRequesting = false;
+        state.getSurveyListTemplateSuccess = false;
+        state.getSurveyListTemplateFailure = true;
+        state.getSurveyListTemplateError = action.payload;
+      },
+      resetGetSurveyListTemplateRequest: (state) => {
+        state.getSurveyListTemplateRequesting = false;
+        state.getSurveyListTemplateSuccess = false;
+        state.getSurveyListTemplateFailure = false;
+        state.getSurveyListTemplateError = null;
+        state.surveyListTemplate = null;
       }
   },
 });
@@ -756,4 +790,9 @@ export const {
    updateSurveryItemListSuccess,
    updateSurveryItemListFailure,
    resetUpdateSurveryItemListRequest,
+   // Survey List Item Template
+   getSurveyListTemplateRequest,
+   getSurveyListTemplateSuccess,
+   getSurveyListTemplateFailure,
+   resetGetSurveyListTemplateRequest,
 } = EnquirySlice.actions;
