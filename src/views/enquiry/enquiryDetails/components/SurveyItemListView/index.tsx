@@ -6,7 +6,6 @@ import {formatDate5, formatPrice} from '../../../../../utils/formatter';
 import {ISurveyListItem} from '../../../../../interface/enquiry/IAddSurveyItemRequest';
 import {IGetSurveyItemListData} from '../../../../../interface/enquiry/IGetSurveyItemListResponse';
 import ShareIcon from '../../../../../images/icons/share_icon.svg';
-import DownloadIcon from '../../../../../images/icons/download_icon.svg';
 import EditIcon from '../../../../../images/icons/edit2.svg';
 import PreviewIcon from '../../../../../images/icons/preview_icon.svg';
 import {useNavigation} from '@react-navigation/native';

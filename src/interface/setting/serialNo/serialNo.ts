@@ -21,6 +21,7 @@ export enum DOCUMENT_TYPE {
     INVOICE,
     MONEY_RECEIPT,
     SURVEY_ITEM,
+    PACKING_LIST,
 }
 
 // Get Serial No# for given Form

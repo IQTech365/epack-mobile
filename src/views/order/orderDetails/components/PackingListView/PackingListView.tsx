@@ -6,6 +6,7 @@ import {IGetPackingListRequest, IPackingListData} from '../../../../../interface
 import { getPackingMaterialsRequest } from '../../../../../redux/slices/OrderSlice';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
 import Spinner from '../../../../../common/Spinner';
+import PackingListItem from './PackingListItem';
 
 interface Props {
   orderId: string;
@@ -15,12 +16,12 @@ const PackingListView: React.FC<Props> = ({orderId}) => {
   const dispatch = useAppDispatch();
 
   const {getPackingMaterialsRequesting, packingMaterials} = useAppSelector(state => state.Order);
-  
+  console.log('PackingListView-packingMaterials-', JSON.stringify(packingMaterials));
   const _getPackingMaterils = () => {
     let items: IPackingListData[] = [];
     const {data} = packingMaterials || {};
     if (data && Array.isArray(data) && data.length > 0) {
-      // items = data.map(d:I)
+      items = data;
     }
     return items;
   };
@@ -36,7 +37,7 @@ const PackingListView: React.FC<Props> = ({orderId}) => {
   const _getPackingMaterialsRequest = () => {
     getCurrentCompanyId().then(id => {
       const payload:IGetPackingListRequest = {
-        companyId: id as string,
+        // companyId: id as string,
         enquiryId: orderId
     }
       dispatch(getPackingMaterialsRequest(payload));
@@ -51,7 +52,7 @@ const PackingListView: React.FC<Props> = ({orderId}) => {
     <View>
       <FlatList
         data={_getPackingMaterils()}
-        renderItem={({item, index}) => <Text>Hello</Text>}
+        renderItem={({item, index}) => <PackingListItem item={item} index={index} />}
         ListEmptyComponent={showEmptyView()}
       />
       <Spinner show={getPackingMaterialsRequesting} />

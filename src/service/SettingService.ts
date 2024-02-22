@@ -246,6 +246,9 @@ export const GetSerialNoService = async (
     case DOCUMENT_TYPE.SURVEY_ITEM:
       uri = GET_SURVEY_ITEM_SERIAL_NO;
       break;
+    case DOCUMENT_TYPE.PACKING_LIST:
+        uri = GET_SURVEY_ITEM_SERIAL_NO;
+        break;
     default:
       break;
   }

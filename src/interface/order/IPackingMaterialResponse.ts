@@ -26,7 +26,34 @@ export interface IGetPackingListRequest {
   enquiryId?: string;
   id?: string;
 }
-export interface IPackingListData {}
+export interface IPackingListData {
+  _id: string;
+  enquiryId: string;
+  packingListNo: string;
+  packingDate: string;
+  packingItems: [
+    {
+      itemName: string;
+      quantity: string;
+      packingType: string;
+      productCode: string;
+      valueOfGoods: string;
+      description: string;
+    },
+    {
+      itemName: string;
+      quantity: string;
+      packingType: string;
+      productCode: string;
+      valueOfGoods: string;
+      description: string;
+    },
+  ];
+  addedBy: string;
+  isActive: boolean;
+  isDeleted: boolean;
+  createdDate: string;
+}
 export interface IPackingListResponse {
   data: IPackingListData[];
   error: boolean;

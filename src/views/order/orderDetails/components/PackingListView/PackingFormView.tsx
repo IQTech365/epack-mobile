@@ -24,6 +24,11 @@ import Spinner from '../../../../../common/Spinner';
 import {IPackingType} from '../../../../../interface/common/common';
 import DeleteIcon from '../../../../../images/icons/delete.svg';
 import { ToastType, showToast } from '../../../../../utils/utility';
+import { getCurrentCompanyId } from '../../../../../utils/storage';
+import { DOCUMENT_TYPE, IGetSerialNoRequest } from '../../../../../interface/setting/serialNo/serialNo';
+import useInitialValueHook from '../../../../../hooks/useInitialValueHook';
+import { getSerialNoRequest } from '../../../../../redux/slices/SerialNoSettingSlice';
+import useSerialNoHook from '../../../../../hooks/useSerialNo';
 
 interface Props {
   orderId: string;
@@ -45,6 +50,9 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
     createPackingMaterialFailure,
   } = useAppSelector(state => state.Order);
   const {packingTypes} = useAppSelector(state => state.Common);
+  const {initialValue, prefix} = useInitialValueHook('658d3cc6585e3dde644da985');
+  const serialNo:number = useSerialNoHook();
+  console.log('Packing-List-serialNo--', serialNo);
 
   const _getPackingTypes = () => {
     let packTypes: TDropdownItem[] = [];
@@ -152,6 +160,21 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
     }
     return null;
   };
+
+  const _getSerialNoRequest = () => {
+    getCurrentCompanyId().then(id => {
+      const payload: IGetSerialNoRequest = {
+        document: DOCUMENT_TYPE.PACKING_LIST,
+        payload: {
+          activeCount: initialValue,
+          companyId: id as string,
+          isAuto: true,
+          isHeadOffice: true,
+        }
+      }
+      dispatch2(getSerialNoRequest(payload));
+    }).catch(err => console.log('err--', err));
+  }
 
   useEffect(() => {
     if(!createPackingMaterialRequesting && createPackingMaterialSuccess) {

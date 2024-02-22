@@ -190,6 +190,8 @@ export function* createCarConditionSaga(
   export function* getPackingListSaga(action: PayloadAction<IGetPackingListRequest>) {
     try {
         const response: IPackingListResponse = yield call(OrderService.GetPackingListService, action.payload);
+        console.log('getPackingListSaga-response--', JSON.stringify(response));
+        
         yield put(getPackingMaterialsSuccess(response));
     } catch (error) {
         yield put(getPackingMaterialsFailure(error));
