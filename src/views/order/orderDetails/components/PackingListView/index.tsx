@@ -1,18 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {View, TouchableOpacity} from 'react-native';
-import Spacer from '../../../../../common/Spacer';
-import styles from './style';
+import {View} from 'react-native';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import Spinner from '../../../../../common/Spinner';
-import ListViewIcon from '../../../../../images/icons/list_view_icon.svg';
-import ListViewIcon2 from '../../../../../images/icons/list_view_icon2.svg';
-import CreateIcon from '../../../../../images/icons/create_icon.svg';
-import CreateIcon2 from '../../../../../images/icons/create_icon2.svg';
 import PackingFormView from './PackingFormView';
 import PackingListView from './PackingListView';
 import {getPackingTypesRequest} from '../../../../../redux/slices/CommonSlice';
 import ActionHeaderView from '../../../../../common/ActionHeaderView';
-
 interface IPackingListViewProps {
   orderId: string;
 }

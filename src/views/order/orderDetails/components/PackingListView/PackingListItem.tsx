@@ -21,9 +21,11 @@ import Spacer from '../../../../../common/Spacer';
 interface IProps {
   item: IPackingListData;
   index: number;
+  onShare: (id:string) => void;
+  onShowPreview: (id:string) => void;
 }
 
-const PackingListItem: FC<IProps> = ({item}) => {
+const PackingListItem: FC<IProps> = ({item, index, onShare, onShowPreview}) => {
   return (
     <View style={styles.container}>
       <View style={styles.row}>
@@ -47,7 +49,7 @@ const PackingListItem: FC<IProps> = ({item}) => {
         <TouchableOpacity
           style={styles.action}
           onPress={() => {
-            // onShare(item._id);
+            onShare(item._id);
           }}
           activeOpacity={0.6}>
           <ShareIcon width={24} height={24} />
@@ -56,7 +58,7 @@ const PackingListItem: FC<IProps> = ({item}) => {
         <TouchableOpacity
           style={styles.action}
           onPress={() => {
-            // onShowPreview(item._id);
+            onShowPreview(item._id);
           }}
           activeOpacity={0.6}>
           <PreviewIcon width={24} height={24} />

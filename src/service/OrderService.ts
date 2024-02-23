@@ -21,6 +21,7 @@ import {
   GET_ORDER_DETAILS,
   GET_ORDER_LIST,
   GET_PACKING_LIST,
+  GET_PACKING_LIST_TEMPLATE,
 } from '../http/Endpoint';
 import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
 import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
@@ -45,6 +46,7 @@ import { ISingleEnquiryResponse } from '../interface/enquiry/ISingleEnquiryRespo
 import { IHtmlBiltyTemplateRequest, IHtmlCarConditionTemplateRequest, IHtmlInvoiceTemplateRequest, IHtmlMoneyReceiptTemplateRequest, IHtmlTemplateRequest, IHtmlTemplateResponse } from '../interface/order/templates/ITemplateResponse';
 import { ICreatePackingMaterialRequest, ICreatePackingMaterialResponse, IDeletePackingListItemResponse, IGetPackingListRequest, IPackingListResponse } from '../interface/order/IPackingMaterialResponse';
 import { IGetInvoiceListResponse } from '../interface/order/IGetInvoiceListResponse';
+import { IPackingListTemplatePayload, IPackingListTemplateResponse } from '../interface/order/IPackingListTemplate';
 
 export const GetOrderDetailsService = async (payload: string): Promise<IOrderDetailsResponse> => {
     const api = Api.getInstance();
@@ -161,6 +163,11 @@ export const CreatePackingListService = async (payload: ICreatePackingMaterialRe
 export const GetPackingListService = async (payload: IGetPackingListRequest): Promise<IPackingListResponse> => {
     const api = Api.getInstance();
     return await api.post<IGetPackingListRequest, AxiosResponse<IPackingListResponse>>(payload, GET_PACKING_LIST);
+}
+
+export const GetPackingListTemplateService = async (payload: IPackingListTemplatePayload): Promise<IPackingListTemplateResponse> => {
+    const api = Api.getInstance();
+    return await api.post<IPackingListTemplatePayload, AxiosResponse<IPackingListTemplateResponse>>(payload, GET_PACKING_LIST_TEMPLATE);
 }
 
 export const DeletePackingListItemService = async (item_id: string): Promise<IDeletePackingListItemResponse> => {

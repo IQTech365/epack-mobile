@@ -23,6 +23,7 @@ import {
 } from '../../interface/order/templates/ITemplateResponse';
 import { ICreatePackingMaterialRequest, ICreatePackingMaterialResponse, IDeletePackingListItemResponse, IGetPackingListRequest, IPackingListResponse } from '../../interface/order/IPackingMaterialResponse';
 import { IGetInvoiceListResponse } from '../../interface/order/IGetInvoiceListResponse';
+import { IPackingListTemplateResponse, IPackingListTemplatePayload } from '../../interface/order/IPackingListTemplate';
 
 interface IOrderState {
   // Add Order
@@ -153,6 +154,12 @@ interface IOrderState {
   deletePackingItemSuccess:boolean;
   deletePackingItemFailure:boolean;
   deletePackingItemError:any;
+  // Packing List Template
+  packingListTemplate:IPackingListTemplateResponse | null;
+  packingListTemplateRequesting: boolean;
+  packingListTemplateSuccess:boolean;
+  packingListTemplateFailure:boolean;
+  packingListTemplateError:any;
 }
 
 const initialState: IOrderState = {
@@ -283,6 +290,12 @@ const initialState: IOrderState = {
   deletePackingItemSuccess:false,
   deletePackingItemFailure:false,
   deletePackingItemError:null,
+  // Packing List Template
+  packingListTemplate: null,
+  packingListTemplateRequesting: false,
+  packingListTemplateSuccess:false,
+  packingListTemplateFailure:false,
+  packingListTemplateError:null,
 };
 
 export const OrderSlice = createSlice({
@@ -787,6 +800,28 @@ export const OrderSlice = createSlice({
       state.deletePackingItemFailure = false;
       state.deletePackingItemError = null;
     },
+    // Packing List Template
+    getPackingListTemplateRequest: (state, action:PayloadAction<IPackingListTemplatePayload>) => {
+      state.packingListTemplateRequesting = true;
+    },
+    getPackingListTemplateSuccess: (state, action:PayloadAction<IPackingListTemplateResponse>) => {
+      state.packingListTemplateRequesting = false;
+      state.packingListTemplateSuccess = true;
+      state.packingListTemplate = action.payload;
+    },
+    getPackingListTemplateFailure: (state, action:PayloadAction<any>) => {
+      state.packingListTemplateRequesting = false;
+      state.packingListTemplateSuccess = false;
+      state.packingListTemplateFailure = true;
+      state.packingListTemplateError = action.payload;
+    },
+    resetGetPackingListTemplateRequest: (state) => {
+      state.packingListTemplateRequesting = false;
+      state.packingListTemplateSuccess = false;
+      state.packingListTemplateFailure = false;
+      state.packingListTemplate = null;
+      state.packingListTemplateError = null;
+    }
   },
 });
 
@@ -890,4 +925,9 @@ export const {
   deletePackingMaterialItemSuccess,
   deletePackingMaterialItemFailure,
   resetDeletePackingMaterialItemRequest,
+  // Packing List Template
+  getPackingListTemplateRequest,
+  getPackingListTemplateSuccess,
+  getPackingListTemplateFailure,
+  resetGetPackingListTemplateRequest,
 } = OrderSlice.actions;

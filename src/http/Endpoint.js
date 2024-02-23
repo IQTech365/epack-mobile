@@ -47,6 +47,7 @@ export const GET_BILTY_LIST = (order_id) => `/bilty/${order_id}`;
 export const GET_INVOICE_LIST = (order_id) => `/invoice/${order_id}`;
 export const CREATE_PACKING_LIST = `/packing-item/add`;
 export const GET_PACKING_LIST = `/packing-item/list`;
+export const GET_PACKING_LIST_TEMPLATE = `/template/packing-list-template`;
 export const DELETE_PACKING_LIST_ITEM = (item_id) => `/packing-item/${item_id}`;
 
 // Setting
