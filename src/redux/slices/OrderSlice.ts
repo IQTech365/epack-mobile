@@ -21,7 +21,7 @@ import {
   IHtmlTemplateRequest,
   IHtmlTemplateResponse,
 } from '../../interface/order/templates/ITemplateResponse';
-import { ICreatePackingMaterialRequest, ICreatePackingMaterialResponse, IDeletePackingListItemResponse, IGetPackingListRequest, IPackingListResponse } from '../../interface/order/IPackingMaterialResponse';
+import { ICreatePackingMaterialRequest, ICreatePackingMaterialResponse, IDeletePackingListItemResponse, IGetPackingListRequest, IPackingListResponse, IUpdatePackingListPayload, IUpdatePackingListRequest, IUpdatePackingListResponse } from '../../interface/order/IPackingMaterialResponse';
 import { IGetInvoiceListResponse } from '../../interface/order/IGetInvoiceListResponse';
 import { IPackingListTemplateResponse, IPackingListTemplatePayload } from '../../interface/order/IPackingListTemplate';
 
@@ -160,6 +160,12 @@ interface IOrderState {
   packingListTemplateSuccess:boolean;
   packingListTemplateFailure:boolean;
   packingListTemplateError:any;
+  // Update Packing List
+  updatePackingListUpdateInfo: IUpdatePackingListResponse | null;
+  updatePackingListUpdateRequesting: boolean;
+  updatePackingListSuccess:boolean;
+  updatePackingListFailure:boolean;
+  updatePackingListError:any;
 }
 
 const initialState: IOrderState = {
@@ -296,6 +302,12 @@ const initialState: IOrderState = {
   packingListTemplateSuccess:false,
   packingListTemplateFailure:false,
   packingListTemplateError:null,
+  // Update Packing List
+  updatePackingListUpdateInfo: null,
+  updatePackingListUpdateRequesting:false,
+  updatePackingListSuccess:false,
+  updatePackingListFailure:false,
+  updatePackingListError:null,
 };
 
 export const OrderSlice = createSlice({
@@ -821,6 +833,28 @@ export const OrderSlice = createSlice({
       state.packingListTemplateFailure = false;
       state.packingListTemplate = null;
       state.packingListTemplateError = null;
+    },
+    // Update Packing List
+    updatePackingListRequest: (state, action:PayloadAction<IUpdatePackingListRequest>) => {
+      state.updatePackingListUpdateRequesting = true;
+    },
+    updatePackingListSuccess:(state, action:PayloadAction<IUpdatePackingListResponse>) => {
+      state.updatePackingListUpdateRequesting = false;
+      state.updatePackingListSuccess = true;
+      state.updatePackingListFailure = false;
+      state.updatePackingListUpdateInfo = action.payload;
+    },
+    updatePackingListFailure:(state, action:PayloadAction<any>) => {
+      state.updatePackingListUpdateRequesting = false;
+      state.updatePackingListSuccess = false;
+      state.updatePackingListFailure = true;
+      state.updatePackingListError = action.payload;
+    },
+    resetUpdatePackingListRequest:(state) => {
+      state.updatePackingListUpdateRequesting = false;
+      state.updatePackingListSuccess = false;
+      state.updatePackingListFailure = false;
+      state.updatePackingListError = null;
     }
   },
 });
@@ -930,4 +964,9 @@ export const {
   getPackingListTemplateSuccess,
   getPackingListTemplateFailure,
   resetGetPackingListTemplateRequest,
+  // Update Packing List
+  updatePackingListRequest,
+  updatePackingListSuccess,
+  updatePackingListFailure,
+  resetUpdatePackingListRequest,
 } = OrderSlice.actions;

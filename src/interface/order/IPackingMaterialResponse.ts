@@ -20,12 +20,30 @@ export interface ICreatePackingMaterialResponse {
   status: number;
 }
 
+// Update Packing List
+export interface IUpdatePackingListPayload {
+  packingListNo: string;
+  packingDate: string;
+  packingItems: IPackingItem[];
+}
+
+export interface IUpdatePackingListResponse {
+  data:any;
+  status:number;
+  error:boolean;
+}
+export interface IUpdatePackingListRequest {
+  packingListId:string;
+  payload:IUpdatePackingListPayload;
+}
+
 // Get Packing List
 export interface IGetPackingListRequest {
   companyId?: string;
   enquiryId?: string;
   id?: string;
 }
+
 export interface IPackingListData {
   _id: string;
   enquiryId: string;

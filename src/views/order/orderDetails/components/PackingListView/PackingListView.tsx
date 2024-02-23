@@ -123,11 +123,20 @@ const PackingListView: React.FC<Props> = ({orderId}) => {
     <View>
       <FlatList
         data={_getPackingMaterils()}
-        renderItem={({item, index}) => <PackingListItem item={item} index={index} onShowPreview={_showPackingListItemTemplate}
-        onShare={_sharePackingList} />}
+        renderItem={({item, index}) => (
+          <PackingListItem
+            item={item}
+            index={index}
+            onShowPreview={_showPackingListItemTemplate}
+            onShare={_sharePackingList}
+            orderId={orderId}
+          />
+        )}
         ListEmptyComponent={showEmptyView()}
       />
-      <Spinner show={getPackingMaterialsRequesting || packingListTemplateRequesting} />
+      <Spinner
+        show={getPackingMaterialsRequesting || packingListTemplateRequesting}
+      />
       <ModalHOC
         visible={showTemplate}
         onClose={_hanldeCloseShowPreviewModal}

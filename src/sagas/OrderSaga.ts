@@ -65,6 +65,9 @@ import {
   getPackingMaterialsFailure,
   getPackingMaterialsRequest,
   getPackingMaterialsSuccess,
+  updatePackingListFailure,
+  updatePackingListRequest,
+  updatePackingListSuccess,
 } from '../redux/slices/OrderSlice';
 import {IAddOrderRequest} from '../interface/order/IAddOrderRequest';
 import {IAddOrderResponse} from '../interface/order/IAddOrderResponse';
@@ -81,7 +84,7 @@ import { IGetOrdersRequest } from '../interface/order/IGetOrdersRequest';
 import { ISingleOrderRequest } from '../interface/order/ISingleOrderRequest';
 import { ISingleEnquiryResponse } from '../interface/enquiry/ISingleEnquiryResponse';
 import { IHtmlTemplateRequest, IHtmlTemplateResponse } from '../interface/order/templates/ITemplateResponse';
-import { ICreatePackingMaterialRequest, ICreatePackingMaterialResponse, IDeletePackingListItemResponse, IGetPackingListRequest, IPackingListResponse } from '../interface/order/IPackingMaterialResponse';
+import { ICreatePackingMaterialRequest, ICreatePackingMaterialResponse, IDeletePackingListItemResponse, IGetPackingListRequest, IPackingListResponse, IUpdatePackingListRequest, IUpdatePackingListResponse } from '../interface/order/IPackingMaterialResponse';
 import { ICreateInvoiceRequest } from '../interface/order/ICreateInvoiceRequest';
 import { ICreateInvoiceResponse } from '../interface/order/ICreateInvoiceResponse';
 import { IGetInvoiceListResponse } from '../interface/order/IGetInvoiceListResponse';
@@ -297,6 +300,15 @@ export function* createCarConditionSaga(
     }
   }
 
+  export function* updatePackingListSaga(action: PayloadAction<IUpdatePackingListRequest>) {
+    try {
+        const response: IUpdatePackingListResponse = yield call(OrderService.UpdatePackingListService, action.payload);
+        yield put(updatePackingListSuccess(response));
+    } catch (error) {
+        yield put(updatePackingListFailure(error));
+    }
+  }
+
 export function* watcherOrderSaga() {
   yield takeLatest(addOrderRequest.type, addOrderSaga);
   yield takeLatest(getOrdersRequest.type, getOrderListSaga);
@@ -319,4 +331,5 @@ export function* watcherOrderSaga() {
   yield takeLatest(getInvoiceListRequest.type, getInvoiceListSaga);
   yield takeLatest(getInvoiceHtmlRequest.type, getInvoiceTemplateHtmlSaga);
   yield takeLatest(getPackingListTemplateRequest.type, getPackingListTemplateSaga);
+  yield takeLatest(updatePackingListRequest.type, updatePackingListSaga);
 }

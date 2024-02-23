@@ -286,7 +286,6 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
             />
           </View>
         </View>
-
         <Spacer height={12} />
         <Button
           text="Add item/Particular"

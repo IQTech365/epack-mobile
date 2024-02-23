@@ -17,15 +17,18 @@ import ShareIcon from '../../../../../images/icons/share_icon.svg';
 import EditIcon from '../../../../../images/icons/edit2.svg';
 import PreviewIcon from '../../../../../images/icons/preview_icon.svg';
 import Spacer from '../../../../../common/Spacer';
+import { useNavigation } from '@react-navigation/native';
 
 interface IProps {
   item: IPackingListData;
   index: number;
   onShare: (id:string) => void;
   onShowPreview: (id:string) => void;
+  orderId:string;
 }
 
-const PackingListItem: FC<IProps> = ({item, index, onShare, onShowPreview}) => {
+const PackingListItem: FC<IProps> = ({item, index, onShare, onShowPreview, orderId}) => {
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <View style={styles.row}>
@@ -68,10 +71,10 @@ const PackingListItem: FC<IProps> = ({item, index, onShare, onShowPreview}) => {
           style={styles.action}
           onPress={() => {
             //@ts-ignore
-            // navigation.navigate('EditSurveyItems', {
-            //   item: item,
-            //   enquiryId: enquiryId,
-            // });
+            navigation.navigate('EditPackingItems', {
+              item: item,
+              orderId: orderId,
+            });
           }}
           activeOpacity={0.6}>
           <EditIcon width={24} height={24} />

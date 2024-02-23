@@ -49,6 +49,7 @@ export const CREATE_PACKING_LIST = `/packing-item/add`;
 export const GET_PACKING_LIST = `/packing-item/list`;
 export const GET_PACKING_LIST_TEMPLATE = `/template/packing-list-template`;
 export const DELETE_PACKING_LIST_ITEM = (item_id) => `/packing-item/${item_id}`;
+export const UPDATE_PACKING_LIST = (item_id) => `/packing-item/edit/${item_id}`;
 
 // Setting
 export const GET_BANK_LIST = `/account-management/bank/getAll`;    

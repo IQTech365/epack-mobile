@@ -22,6 +22,7 @@ import {
   GET_ORDER_LIST,
   GET_PACKING_LIST,
   GET_PACKING_LIST_TEMPLATE,
+  UPDATE_PACKING_LIST,
 } from '../http/Endpoint';
 import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
 import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
@@ -44,7 +45,7 @@ import { IGetOrdersRequest } from '../interface/order/IGetOrdersRequest';
 import { ISingleOrderRequest } from '../interface/order/ISingleOrderRequest';
 import { ISingleEnquiryResponse } from '../interface/enquiry/ISingleEnquiryResponse';
 import { IHtmlBiltyTemplateRequest, IHtmlCarConditionTemplateRequest, IHtmlInvoiceTemplateRequest, IHtmlMoneyReceiptTemplateRequest, IHtmlTemplateRequest, IHtmlTemplateResponse } from '../interface/order/templates/ITemplateResponse';
-import { ICreatePackingMaterialRequest, ICreatePackingMaterialResponse, IDeletePackingListItemResponse, IGetPackingListRequest, IPackingListResponse } from '../interface/order/IPackingMaterialResponse';
+import { ICreatePackingMaterialRequest, ICreatePackingMaterialResponse, IDeletePackingListItemResponse, IGetPackingListRequest, IPackingListResponse, IUpdatePackingListPayload, IUpdatePackingListRequest, IUpdatePackingListResponse } from '../interface/order/IPackingMaterialResponse';
 import { IGetInvoiceListResponse } from '../interface/order/IGetInvoiceListResponse';
 import { IPackingListTemplatePayload, IPackingListTemplateResponse } from '../interface/order/IPackingListTemplate';
 
@@ -173,5 +174,9 @@ export const GetPackingListTemplateService = async (payload: IPackingListTemplat
 export const DeletePackingListItemService = async (item_id: string): Promise<IDeletePackingListItemResponse> => {
     const api = Api.getInstance();
     return await api.delete<any, AxiosResponse<IDeletePackingListItemResponse>>(null, DELETE_PACKING_LIST_ITEM(item_id));
+}
+export const UpdatePackingListService = async (payload: IUpdatePackingListRequest): Promise<IUpdatePackingListResponse> => {
+    const api = Api.getInstance();
+    return await api.update<IUpdatePackingListPayload, AxiosResponse<IUpdatePackingListResponse>>(payload.payload, UPDATE_PACKING_LIST(payload.packingListId));
 }
 
