@@ -21,9 +21,10 @@ interface IProps {
   surveyDate: string;
   onUpdate: (index: number, item: ISurveyListItem) => void;
   index: number;
+  isNew?:boolean;
 }
 
-const UpdateSurveyItemView: FC<IProps> = ({item, surveyId, surveyNo, surveyDate, index, onUpdate}) => {
+const UpdateSurveyItemView: FC<IProps> = ({item, surveyId, surveyNo, surveyDate, index, onUpdate, isNew}) => {
   const datePickerCompRef = useRef(null);
   const [itemName, setItemName] = useState<string>('');
   const [quantity, setQuantity] = useState<string>('');
@@ -31,7 +32,7 @@ const UpdateSurveyItemView: FC<IProps> = ({item, surveyId, surveyNo, surveyDate,
   const [remarks, setRemarks] = useState<string>('');
 
   useEffect(() => {
-    if(surveyDate && datePickerCompRef) {
+    if(item) {
       //@ts-ignore
       datePickerCompRef && datePickerCompRef?.current?.setDefaultValue(new Date(surveyDate));
       setItemName(item.itemName);
@@ -39,7 +40,7 @@ const UpdateSurveyItemView: FC<IProps> = ({item, surveyId, surveyNo, surveyDate,
       setGoodsValue(item.valueOfGoods);
       setRemarks(item.remarks);
     }
-  }, []);
+  }, [!isNew]);
 
   const _handleOnUpdate = () => {
     const item:ISurveyListItem = {

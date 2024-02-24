@@ -27,6 +27,8 @@ const EditSurveyItemsView: FC<IProps> = ({route, navigation}) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [surveyItem, setSurveyItem] = useState<ISurveyListItem | null>(null);
   const [itemIndex, setItemIndex] = useState<number>(-1);
+  const [shouldSave, setShouldSave] = useState<boolean>(false);
+  const [addNew, setAddNew] = useState<boolean>(false);
 
   const dispatch = useAppDispatch();
   const {
@@ -43,6 +45,7 @@ const EditSurveyItemsView: FC<IProps> = ({route, navigation}) => {
     const copy = [...surveyItems];
     copy.splice(index, 1);
     setSurveyItems(copy);
+    setShouldSave(true);
   };
 
   const _handleUpdate = (index: number, item: ISurveyListItem) => {
@@ -57,9 +60,14 @@ const EditSurveyItemsView: FC<IProps> = ({route, navigation}) => {
 
   const _onUpdate = (index: number, item: ISurveyListItem) => {
     const copy = [...surveyItems];
-    copy.splice(index, 1, item);
+    if(addNew) {
+      copy.push(item);
+    } else {
+      copy.splice(index, 1, item);
+    }
     setOpenModal(false);
     setSurveyItems(copy);
+    setShouldSave(true);
   };
 
   const _handleSaveChanges = () => {
@@ -74,6 +82,11 @@ const EditSurveyItemsView: FC<IProps> = ({route, navigation}) => {
     dispatch(updateSurveryItemListRequest(payload));
   };
 
+  const _handleAddNewItem = () => {
+    setAddNew(true);
+    setOpenModal(true);
+  }
+
   const _getSurveyItemListRequest = () => {
     const payload: IGetSurvyeItemListRequestPayload = {
       enquiryId: enquiryId as string,
@@ -82,14 +95,24 @@ const EditSurveyItemsView: FC<IProps> = ({route, navigation}) => {
   };
 
   useEffect(() => {
+    if(shouldSave) {
+      _handleSaveChanges();
+    }
+  }, [shouldSave]);
+
+  useEffect(() => {
     if(!updateSurveyItemRequesting && updateSurveyItemSuccess) {
       showToast('Survey Item List Updated', ToastType.SUCCESS);
       dispatch(resetUpdateSurveryItemListRequest());
+      setShouldSave(false);
+      setAddNew(false);
       _getSurveyItemListRequest();
       navigation.goBack();
     } else if(!updateSurveyItemRequesting && updateSurveyItemFailure) {
       showToast('Survey Item List Not Updated. Try again!', ToastType.ERROR);
       dispatch(resetUpdateSurveryItemListRequest());
+      setShouldSave(false);
+      setAddNew(false);
     }
   }, [updateSurveyItemRequesting, updateSurveyItemSuccess, updateSurveyItemFailure]);
 
@@ -101,8 +124,8 @@ const EditSurveyItemsView: FC<IProps> = ({route, navigation}) => {
         <TouchableOpacity
           style={styles.saveChangeButton}
           activeOpacity={0.4}
-          onPress={_handleSaveChanges}>
-          <Text style={styles.saveText}>Save Change</Text>
+          onPress={_handleAddNewItem}>
+          <Text style={styles.saveText}>Add New Item</Text>
         </TouchableOpacity>
       </View>
       <Spacer height={5} />
@@ -165,6 +188,7 @@ const EditSurveyItemsView: FC<IProps> = ({route, navigation}) => {
             surveyDate={item?.surveyDate as string}
             index={itemIndex}
             onUpdate={_onUpdate}
+            isNew={addNew}
           />
         </View>
       </ModalHOC>
