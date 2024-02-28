@@ -31,6 +31,8 @@ const FreightTypeView: React.FC<Props> = ({
     setLoadingCharge,
     setUnloadingCharge,
     setUnpackingCharge,
+    setFreightCharges,
+    setFreightHSN,
   } = useInvoiceFormContextHook();
 
   const _getFreightTypeText = () => {
@@ -38,6 +40,9 @@ const FreightTypeView: React.FC<Props> = ({
     switch (freightType) {
       case FREIGHT_TYPE.LOAD_TYPE:
         text = 'Load Type';
+        break;
+      case FREIGHT_TYPE.FREIGHT_CHARGES:
+        text = 'Freight Charges';
         break;
       case FREIGHT_TYPE.PICKUP_CHARGES:
         text = 'Pickup Charges';
@@ -72,6 +77,9 @@ const FreightTypeView: React.FC<Props> = ({
       case FREIGHT_TYPE.LOAD_TYPE:
         option = state.freight_load_type;
         break;
+      case FREIGHT_TYPE.FREIGHT_CHARGES:
+          option = 'Freight Charge';
+          break;
       case FREIGHT_TYPE.PICKUP_CHARGES:
         option = state.pickup_charge;
         break;
@@ -138,30 +146,32 @@ const FreightTypeView: React.FC<Props> = ({
       <View style={styles.container}>
         <Text style={styles.labelText}>{_getFreightTypeText()}</Text>
       </View>
+      {options.length > 0 ? <>
+        <Spacer height={10} />
+        <View style={styles.optionContainer}>
+          {options.map((option: string, index: number) => (
+            <BouncyCheckbox
+              key={`${index}`}
+              size={25}
+              unfillColor="#FFFFFF"
+              text={option}
+              fillColor={COLOR_BLUE}
+              iconStyle={styles.iconStyle}
+              innerIconStyle={styles.innerIconStyle}
+              textStyle={styles.textStyle}
+              style={styles.style}
+              textContainerStyle={styles.textContainerStyle}
+              onPress={(isChecked: boolean) => {
+                _handleOption(option);
+              }}
+              isChecked={_getCheckedCompareToOption() == option}
+              disableBuiltInState={true}
+            />
+          ))}
+        </View>
+      </> : null}
       <Spacer height={10} />
-      <View style={styles.optionContainer}>
-        {options.map((option: string, index: number) => (
-          <BouncyCheckbox
-            key={`${index}`}
-            size={25}
-            unfillColor="#FFFFFF"
-            text={option}
-            fillColor={COLOR_BLUE}
-            iconStyle={styles.iconStyle}
-            innerIconStyle={styles.innerIconStyle}
-            textStyle={styles.textStyle}
-            style={styles.style}
-            textContainerStyle={styles.textContainerStyle}
-            onPress={(isChecked: boolean) => {
-              _handleOption(option);
-            }}
-            isChecked={_getCheckedCompareToOption() == option}
-            disableBuiltInState={true}
-          />
-        ))}
-      </View>
-      <Spacer height={10} />
-      {['Additional', 'With GST'].includes(_getCheckedCompareToOption()) ? <FreightInputView
+      {['Additional', 'With GST', 'Freight Charge'].includes(_getCheckedCompareToOption()) ? <FreightInputView
         freightType={freightType}
         label1={label1}
         label2={label2}

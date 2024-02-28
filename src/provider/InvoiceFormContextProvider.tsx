@@ -121,7 +121,7 @@ const useInvoiceFormContext = () => {
   const setDoorDeliveryHSN = useCallback(
     (text: string) => {
       dispatch({
-        type: ACTION.PICKUP_CHARGE_HSN,
+        type: ACTION.DOOR_DELIVERY_HSN,
         payload: text,
       });
     },

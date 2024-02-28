@@ -2,12 +2,17 @@ import { formatDate4 } from '../../../../../utils/formatter';
 import {
   billingByOptions,
   discountOptions,
+  discountPercentOptions,
   doorDeliveryChargeOptions,
   gstOptions,
+  gstPercentOptions,
+  gstTypeOptions,
   loadTypeOptions,
   loadingChargeOptions,
   modeOfMovingOptions,
   pickupChargeOptions,
+  surchargeOptions,
+  surchargePercentOptions,
   transitInsuranceOptions,
   unloadingChargeOptions,
 } from './utils';
@@ -271,15 +276,15 @@ export const initialState: State = {
   // **** Other Charges ****
   other_charges: [],
   // **** Surcharge ****
-  surcharge: '',
-  surcharge_percent: '',
+  surcharge: surchargeOptions[0].label,
+  surcharge_percent: surchargePercentOptions[0].value,
   // **** Discount in Invoice ****
   discount_in_invoice: discountOptions[2],
-  discount_value_or_percent: '',
+  discount_value_or_percent: discountPercentOptions[0].value,
   // **** GST on Invoice ****
   gst_on_invoice: gstOptions[0],
-  gst_percent: '',
-  gst_type: '',
+  gst_percent: gstPercentOptions[0].value,
+  gst_type: gstTypeOptions[0].label,
   gst_paid_by: '',
   // **** Insurace ****
   transit_insurance: transitInsuranceOptions[1],

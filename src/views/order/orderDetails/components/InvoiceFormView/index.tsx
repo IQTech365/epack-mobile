@@ -66,7 +66,7 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
 
   const {initialValue, prefix} = useInitialValueHook('658d3ce2585e3dde644da98c');
   const serialNo:number = useSerialNoHook();
-  console.log('Invoice-serialNo--', serialNo);
+  console.log('Invoice-orderData--', orderData);
   
 
   const getSingleOrder = () => {
@@ -228,8 +228,8 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
         closeBody: false,
         seperate: '',
         sharing: '',
-        isPartLoad: state.freight_load_type,
-        isFullLoad: state.freight_load_type,
+        isPartLoad: state.freight_load_type == 'Part Load' ? 'true': 'false',
+        isFullLoad: state.freight_load_type == 'Full Load' ? 'true': 'false',
         freightCharges: state.freight_charges,
         freightHSNCode: state.freight_hsn,
   
@@ -262,6 +262,7 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
         unPackagingHSNCode: state.unpakcing_hsn,
   
         otherCharges: _getOtherCharges(),
+        surchargeStatus: state.surcharge,
         surchargeCharges: state.surcharge_percent,
         discountType: state.discount_in_invoice,
         discountAmount: state.discount_value_or_percent,
@@ -269,9 +270,12 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
         gstType: state.gst_type,
         gstPercentage: state.gst_percent,
         gstPaidBy: state.gst_paid_by,
+        transitInsuranceStatus: state.transit_insurance,
         transitInsurance: _getTransitInsurance(),
+        strorageStatus: state.storage,
         storageCharges: _getStorageCharge(),
       };
+      console.log('Invoice-payload--', JSON.stringify(payload));
       dispatch(createInvoiceRequest(payload));
     }).catch(err => console.log('err--', err));
   };

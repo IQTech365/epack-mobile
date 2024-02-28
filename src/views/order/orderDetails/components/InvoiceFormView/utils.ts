@@ -16,6 +16,7 @@ export const approvalAuthorityOptions = [
 
 export enum FREIGHT_TYPE {
   LOAD_TYPE,
+  FREIGHT_CHARGES,
   PICKUP_CHARGES,
   DOOR_DELIVERY_CHARGE,
   PACKING_CHARGES,
@@ -58,15 +59,15 @@ export const surchargeOptions = [
 export const surchargePercentOptions = [
   {
     label: '0%',
-    value: '1',
+    value: '0',
   },
   {
     label: '10%',
-    value: '2',
+    value: '10',
   },
   {
     label: '12%',
-    value: '3',
+    value: '12',
   },
 ];
 

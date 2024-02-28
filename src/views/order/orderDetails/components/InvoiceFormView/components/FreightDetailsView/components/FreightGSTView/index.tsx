@@ -55,7 +55,7 @@ const FreightGSTView: React.FC<Props> = ({}) => {
               <DropdownComponent
                 data={gstPercentOptions}
                 onSelect={(item: TDropdownItem) => {
-                  setGSTPercent(item.label);
+                  setGSTPercent(item.value);
                 }}
               />
             </View>

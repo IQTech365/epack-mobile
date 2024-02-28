@@ -10,13 +10,15 @@ import {transitInsuranceOptions} from '../../utils';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {useInvoiceFormContextHook} from '../../../../../../../provider/InvoiceFormContextProvider';
 import {TDropdownItem} from '../../../../../../../type/TDropdownItem';
-import shiftingLuggages from '../../../../../../../data/shiftingLuggage.json';
 import insurnaceTypeOptions from '../../../../../../../data/insuranceTypeOptions.json';
-import insurnacePercentOptions from '../../../../../../../data/insurancePercentOptions.json';
 import gstPercentOptions from '../../../../../../../data/gstPercentOptions.json';
 import Button from '../../../../../../../common/Button';
 import {ITransitCharge} from '../../InvoiceReducer2';
 import DeleteIcon from '../../../../../../../images/icons/delete.svg';
+import { useAppSelector } from '../../../../../../../redux/hooks';
+import useUtilityHook from '../../../../../../../hooks/useUtilityHook';
+import { ISingleEnquiryData } from '../../../../../../../interface/enquiry/ISingleEnquiryResponse';
+import DropdownWithTextInput from '../../../../../../../common/DropdownWithTextInput';
 
 interface Props {}
 
@@ -28,11 +30,15 @@ const TransitInsuranceView: React.FC<Props> = () => {
     setTransitCharges,
   } = useInvoiceFormContextHook();
 
+  const {order} = useAppSelector(state => state.Order);
+  const {data: orderData} = order || {};
+
   const [transitInsuranceCharge, setTransitInsuranceCharge] =
     useState<string>('');
   const [transitInsuranceGST, setTransitInsuranceGST] = useState<string>('');
   const [transitLuggage, setTransitLuggage] = useState<string>('');
   const [transitGoodsValue, setTransitGoodsValue] = useState<string>('');
+  const {getInsurancePercentageList} = useUtilityHook();
 
   const handleAddTransitInsurance = () => {
     const {transit_charges} = state;
@@ -53,6 +59,27 @@ const TransitInsuranceView: React.FC<Props> = () => {
     const filter = clone.filter((_, indx) => indx !== index);
     setTransitCharges(filter);
   };
+
+  const getSingleOrder = () => {
+    let order: ISingleEnquiryData;
+    if (orderData && Array.isArray(orderData) && orderData.length > 0) {
+      order = orderData[0];
+    }
+    //@ts-ignore
+    return order;
+  };
+
+  const _getShiftingLuggageOptions = ():string[] => {
+    let options:string[] = [];
+    const order:ISingleEnquiryData = getSingleOrder();
+    if(order) {
+      const {shiftingLuggage} = order;
+      if(shiftingLuggage && shiftingLuggage.length > 0) {
+        options = shiftingLuggage.map((d:string) => d);
+      }
+    }
+    return options
+  }
 
   const _showTransitChargesList = () => {
     const {transit_charges} = state;
@@ -123,11 +150,9 @@ const TransitInsuranceView: React.FC<Props> = () => {
           <Spacer height={4} />
           <View style={styles.fullWidthCompContainer}>
             <Label text="Shifting Luggage" style={styles.label} />
-            <DropdownComponent
-              data={shiftingLuggages}
-              onSelect={(item: TDropdownItem) => {
-                setTransitLuggage(item.label);
-              }}
+            <DropdownWithTextInput
+              options={_getShiftingLuggageOptions()}
+              onSelect={setTransitLuggage}
             />
           </View>
           <Spacer height={4} />
@@ -145,7 +170,7 @@ const TransitInsuranceView: React.FC<Props> = () => {
             <View style={styles.compContainer}>
               <Label text="Insurance Charge @%" style={styles.label} />
               <DropdownComponent
-                data={insurnacePercentOptions}
+                data={getInsurancePercentageList()}
                 onSelect={(item: TDropdownItem) => {
                   setTransitInsuranceCharge(item.label);
                 }}
@@ -156,7 +181,7 @@ const TransitInsuranceView: React.FC<Props> = () => {
               <DropdownComponent
                 data={gstPercentOptions}
                 onSelect={(item: TDropdownItem) => {
-                  setTransitInsuranceGST(item.label);
+                  setTransitInsuranceGST(item.value);
                 }}
               />
             </View>

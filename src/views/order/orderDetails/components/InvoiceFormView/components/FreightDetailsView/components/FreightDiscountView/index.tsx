@@ -22,7 +22,7 @@ const FreightDiscountView: React.FC<Props> = ({}) => {
         <DropdownComponent
           data={discountPercentOptions}
           onSelect={(item: TDropdownItem) => {
-            setDiscountValueOrPercent(item.label);
+            setDiscountValueOrPercent(item.value);
           }}
         />
       );

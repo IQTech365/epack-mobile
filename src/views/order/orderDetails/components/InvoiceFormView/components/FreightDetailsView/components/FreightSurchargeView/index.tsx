@@ -8,6 +8,7 @@ import Spacer from '../../../../../../../../../common/Spacer';
 import {useInvoiceFormContextHook} from '../../../../../../../../../provider/InvoiceFormContextProvider';
 import DropdownComponent from '../../../../../../../../../common/DropdownComponent';
 import {surchargeOptions, surchargePercentOptions} from '../../../../utils';
+import { TDropdownItem } from '../../../../../../../../../type/TDropdownItem';
 interface Props {}
 
 const FreightSurchargeView: React.FC<Props> = ({}) => {
@@ -20,13 +21,17 @@ const FreightSurchargeView: React.FC<Props> = ({}) => {
       </View>
       <View style={styles.container}>
         <View style={styles.compContainer}>
-          <DropdownComponent data={surchargeOptions} onSelect={() => {}} />
+          <DropdownComponent data={surchargeOptions} onSelect={(item:TDropdownItem) => {
+            setSurcharge(item.label);
+          }} />
         </View>
         <Spacer width={8} />
         <View style={styles.compContainer}>
           <DropdownComponent
             data={surchargePercentOptions}
-            onSelect={() => {}}
+            onSelect={(item:TDropdownItem) => {
+              setSurchargePercent(item.value);
+            }}
           />
         </View>
       </View>

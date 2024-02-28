@@ -68,8 +68,9 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item}) => {
   };
 
   const handleShowPreviewModalClose = () => {
-    dispatch(resetGetInvoiceHtmlRequest());
     setShowPreview(false);
+    setShowModal(false);
+    dispatch(resetGetInvoiceHtmlRequest());
   };
 
   const handleDocDownload = (docId: string) => {
@@ -197,7 +198,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item}) => {
       />
       {showForm()}
       {showList()}
-      <Spinner show={getInvoicesRequesting} />
+      <Spinner show={getInvoiceHtmlRequesting} />
     </>
   );
 };

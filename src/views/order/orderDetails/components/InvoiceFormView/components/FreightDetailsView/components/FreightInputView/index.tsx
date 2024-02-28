@@ -35,7 +35,7 @@ const FreightInputView: React.FC<Props> = ({label1, label2, freightType}) => {
 
   const handleStateUpdate = (text: string, inputAt: number) => {
     switch (freightType) {
-      case FREIGHT_TYPE.LOAD_TYPE:
+      case FREIGHT_TYPE.FREIGHT_CHARGES:
         if (inputAt == 1) {
           setFreightCharges(text);
         } else if (inputAt == 2) {

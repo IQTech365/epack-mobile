@@ -59,6 +59,16 @@ const InvoiceListItem: FC<IProps> = ({
           </Text>
         </View>
       </View>
+      <View style={styles.itemContentContainer}>
+        <View style={[styles.labelContainer]}>
+          <Text style={styles.label}>Shifting Luggage:</Text>
+        </View>
+        <View style={[styles.valueContainer]}>
+          <Text style={styles.value}>
+            {item?.shiftingLuggage}
+          </Text>
+        </View>
+      </View>
       <View style={styles.viewDetailsContainer}>
         <TouchableOpacity activeOpacity={0.6} onPress={handleShowDetail}>
           <Text style={styles.viewDetailsText}>{label}</Text>

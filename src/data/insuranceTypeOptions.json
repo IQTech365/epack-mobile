@@ -1,18 +1,10 @@
 [
   {
-    "label": "Optional",
+    "label": "Additional from Freight",
     "value": "1"
   },
   {
-    "label": "Additional from Freight",
-    "value": "2"
-  },
-  {
     "label": "Included in Freight",
-    "value": "3"
-  },
-  {
-    "label": "Extra",
-    "value": "4"
+    "value": "2"
   }
 ]

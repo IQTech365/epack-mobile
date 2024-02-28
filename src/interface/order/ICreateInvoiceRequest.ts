@@ -115,6 +115,7 @@ export interface ICreateInvoiceRequest {
   unPackagingHSNCode: string;
 
   otherCharges: IInvoiceOtherCharge[];
+  surchargeStatus: string;
   surchargeCharges: string;
   discountType: string;
   discountAmount: string;
@@ -122,6 +123,8 @@ export interface ICreateInvoiceRequest {
   gstType: string;
   gstPercentage: string;
   gstPaidBy: string;
+  transitInsuranceStatus: string;
   transitInsurance: IInvoiceTransitInsurance;
+  strorageStatus: string;
   storageCharges: IInvoiceStorageCharge;
 }

@@ -27,6 +27,12 @@ const FreightDetailsView: React.FC<Props> = () => {
         label1='Freight Charges'
         label2='HSN Code'
       />
+      <FreightTypeView
+        freightType={FREIGHT_TYPE.FREIGHT_CHARGES}
+        options={[]}
+        label1='Amount'
+        label2='HSN Code'
+      />
       <Spacer height={20} />
       <FreightTypeView
         freightType={FREIGHT_TYPE.PICKUP_CHARGES}

@@ -42,6 +42,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 0.5,
     borderColor: COLOR_GRAY2,
+    marginBottom: 10,
   },
   itemContentContainer: {
     width: '100%',
