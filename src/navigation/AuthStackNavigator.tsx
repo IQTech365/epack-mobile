@@ -10,6 +10,7 @@ import SubscriptionPlanView from "../views/subscriptionPlan";
 import CompanyBasicDetailsView from "../views/company/CompanyBasicDetailsView";
 import CompanyLogoPageView from "../views/company/CompanyLogoView";
 import SignatureViewPage from "../views/company/CompanySignatureView";
+import CheckoutPage from "../views/checkout";
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 
@@ -26,6 +27,7 @@ const AuthStackNavigator = () => {
             <AuthStack.Screen name="CompanyBasicInfo" component={CompanyBasicDetailsView} />
             <AuthStack.Screen name="CompanyLogo" component={CompanyLogoPageView} />
             <AuthStack.Screen name="CompanySignature" component={SignatureViewPage} />
+            <AuthStack.Screen name="Checkout" component={CheckoutPage} />
         </AuthStack.Navigator>
     );
 }

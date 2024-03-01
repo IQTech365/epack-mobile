@@ -2,8 +2,6 @@ import React from 'react';
 import {View} from 'react-native';
 import styles from './style';
 import Label from '../../../../../../../../../common/Label';
-import Input from '../../../../../../../../../common/Input';
-import {COLOR_BLACK} from '../../../../../../../../../utils/colors';
 import Spacer from '../../../../../../../../../common/Spacer';
 import {useInvoiceFormContextHook} from '../../../../../../../../../provider/InvoiceFormContextProvider';
 import DropdownComponent from '../../../../../../../../../common/DropdownComponent';
@@ -14,6 +12,8 @@ interface Props {}
 const FreightSurchargeView: React.FC<Props> = ({}) => {
   const {setSurcharge, setSurchargePercent} = useInvoiceFormContextHook();
 
+  const surchargeOptions2 = surchargeOptions.slice(0,2);
+
   return (
     <>
       <View style={styles.fullWidhCompContainer2}>
@@ -21,7 +21,7 @@ const FreightSurchargeView: React.FC<Props> = ({}) => {
       </View>
       <View style={styles.container}>
         <View style={styles.compContainer}>
-          <DropdownComponent data={surchargeOptions} onSelect={(item:TDropdownItem) => {
+          <DropdownComponent data={surchargeOptions2} onSelect={(item:TDropdownItem) => {
             setSurcharge(item.label);
           }} />
         </View>

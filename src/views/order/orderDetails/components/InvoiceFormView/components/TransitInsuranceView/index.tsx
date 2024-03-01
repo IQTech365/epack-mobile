@@ -198,6 +198,7 @@ const TransitInsuranceView: React.FC<Props> = () => {
               selectionColor={COLOR_BLACK}
               placeholder="Enter value of goods"
               placeholderTextColor={COLOR_GRAY4}
+              inputType="numeric"
             />
           </View>
           <Spacer height={12} />

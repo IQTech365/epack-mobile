@@ -5,6 +5,7 @@ import {
   discountPercentOptions,
   doorDeliveryChargeOptions,
   gstOptions,
+  gstPaidByOptions,
   gstPercentOptions,
   gstTypeOptions,
   loadTypeOptions,
@@ -16,6 +17,7 @@ import {
   transitInsuranceOptions,
   unloadingChargeOptions,
 } from './utils';
+import insurnaceTypeOptions from '../../../../../data/insuranceTypeOptions.json';
 
 export enum ACTION {
   BILING_TYPE = 'BILING_TYPE',
@@ -285,10 +287,10 @@ export const initialState: State = {
   gst_on_invoice: gstOptions[0],
   gst_percent: gstPercentOptions[0].value,
   gst_type: gstTypeOptions[0].label,
-  gst_paid_by: '',
+  gst_paid_by: gstPaidByOptions[0],
   // **** Insurace ****
   transit_insurance: transitInsuranceOptions[1],
-  transit_insurance_type: '',
+  transit_insurance_type: insurnaceTypeOptions[0].label,
   transit_charges: [],
   // **** Storage ****
   storage: transitInsuranceOptions[1],
