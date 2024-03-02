@@ -467,7 +467,7 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
         <Spacer height={4} />
         <CollapsibleView title="FREIGHT DETAILS" collapsed={true}>
           <View style={styles.elementContainer3}>
-            <FreightDetailsView />
+            <FreightDetailsView isEdit={isEdit} invoiceData={invoiceData} />
           </View>
         </CollapsibleView>
         <Spacer height={4} />

@@ -15,9 +15,13 @@ import Button from '../../../../../../../../../common/Button';
 import OtherChargeItem from './OtherChargeItem';
 import { particularOptions } from '../../../../../../../../quotation/addQuotation/components/FreightDetailsView/components/utils';
 import DropdownWithTextInput from '../../../../../../../../../common/DropdownWithTextInput';
-interface Props {}
+import { IInvoice } from '../../../../../../../../../interface/order/IGetInvoiceListResponse';
+interface Props {
+  isEdit?:boolean;
+  invoiceData?:IInvoice;
+}
 
-const FreightOtherChargesView: React.FC<Props> = ({}) => {
+const FreightOtherChargesView: React.FC<Props> = ({isEdit, invoiceData}) => {
   const {setOtherCharges} = useInvoiceFormContextHook();
   const [shouldAdd, setShouldAdd] = useState<boolean>(false);
   const [otherItems, setOtherItems] = useState<IOtherCharge[]>([]);
@@ -32,6 +36,31 @@ const FreightOtherChargesView: React.FC<Props> = ({}) => {
   const ratePerItemCompRef = useRef(null);
   const amountCompRef = useRef(null);
   const hsnCodeCompRef = useRef(null);
+
+  const _initValues = () => {
+    if(isEdit && invoiceData) {
+      const {otherCharges} = invoiceData || {};
+      if(otherCharges && Array.isArray(otherCharges) && otherCharges.length > 0) {
+        setShouldAdd(true);
+        const transform = otherCharges.map(e => {
+          //@ts-ignore
+          const item:IOtherCharge = {
+            //@ts-ignore
+            particular_name: e.item,
+            //@ts-ignore
+            quantity: e.quantity,
+            //@ts-ignore
+            amount: e.amount,
+            //@ts-ignore
+            hsn_code: e.HSNCode,
+          }
+          return item;
+        });
+        setOtherItems(transform);
+        setOtherCharges(transform);
+      }
+    }
+  }
 
   const resetInputCompAndState = () => {
     if (
@@ -84,6 +113,10 @@ const FreightOtherChargesView: React.FC<Props> = ({}) => {
     setOtherItems(clone);
     setOtherCharges(clone);
   };
+
+  useEffect(() => {
+    _initValues();
+  }, []);
 
   useEffect(() => {
     if(quantity && ratePerItem) {

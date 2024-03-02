@@ -15,10 +15,14 @@ import FreightOtherChargesView from './components/FreightOtherChargesView';
 import FreightSurchargeView from './components/FreightSurchargeView';
 import FreightDiscountView from './components/FreightDiscountView';
 import FreightGSTView from './components/FreightGSTView';
+import { IInvoice } from '../../../../../../../interface/order/IGetInvoiceListResponse';
 
-interface Props {}
+interface Props {
+  isEdit?:boolean;
+  invoiceData?:IInvoice;
+}
 
-const FreightDetailsView: React.FC<Props> = () => {
+const FreightDetailsView: React.FC<Props> = ({isEdit, invoiceData}) => {
   return (
     <View style={styles.container}>
       <FreightTypeView
@@ -83,7 +87,7 @@ const FreightDetailsView: React.FC<Props> = () => {
         label2='HSN Code'
       />
       <Spacer height={20} />
-      <FreightOtherChargesView />
+      <FreightOtherChargesView isEdit={isEdit} invoiceData={invoiceData}/>
       <Spacer height={20} />
       <FreightSurchargeView />
       <Spacer height={20} />

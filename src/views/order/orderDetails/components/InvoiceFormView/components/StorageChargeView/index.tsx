@@ -6,7 +6,7 @@ import Input from '../../../../../../../common/Input';
 import {COLOR_BLACK, COLOR_BLUE} from '../../../../../../../utils/colors';
 import Spacer from '../../../../../../../common/Spacer';
 import DropdownComponent from '../../../../../../../common/DropdownComponent';
-import {approvalAuthorityOptions, transitInsuranceOptions} from '../../utils';
+import {transitInsuranceOptions} from '../../utils';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {useInvoiceFormContextHook} from '../../../../../../../provider/InvoiceFormContextProvider';
 import {TDropdownItem} from '../../../../../../../type/TDropdownItem';
