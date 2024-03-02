@@ -30,12 +30,16 @@ const FreightDetailsView: React.FC<Props> = ({isEdit, invoiceData}) => {
         options={loadTypeOptions}
         label1='Freight Charges'
         label2='HSN Code'
+        isEdit={isEdit} 
+        invoiceData={invoiceData}
       />
       <FreightTypeView
         freightType={FREIGHT_TYPE.FREIGHT_CHARGES}
         options={[]}
         label1='Amount'
         label2='HSN Code'
+        isEdit={isEdit} 
+        invoiceData={invoiceData}
       />
       <Spacer height={20} />
       <FreightTypeView
@@ -43,6 +47,8 @@ const FreightDetailsView: React.FC<Props> = ({isEdit, invoiceData}) => {
         options={pickupChargeOptions}
         label1='Amount'
         label2='HSN Code'
+        isEdit={isEdit} 
+        invoiceData={invoiceData}
       />
       <Spacer height={20} />
       <FreightTypeView
@@ -50,6 +56,8 @@ const FreightDetailsView: React.FC<Props> = ({isEdit, invoiceData}) => {
         options={doorDeliveryChargeOptions}
         label1='Amount'
         label2='HSN Code'
+        isEdit={isEdit} 
+        invoiceData={invoiceData}
       />
       <Spacer height={20} />
       <FreightTypeView
@@ -57,6 +65,8 @@ const FreightDetailsView: React.FC<Props> = ({isEdit, invoiceData}) => {
         options={doorDeliveryChargeOptions}
         label1='Amount'
         label2='HSN Code'
+        isEdit={isEdit} 
+        invoiceData={invoiceData}
       />
       <Spacer height={20} />
       <FreightTypeView
@@ -64,6 +74,8 @@ const FreightDetailsView: React.FC<Props> = ({isEdit, invoiceData}) => {
         options={doorDeliveryChargeOptions}
         label1='Amount'
         label2='HSN Code'
+        isEdit={isEdit} 
+        invoiceData={invoiceData}
       />
       <Spacer height={20} />
       <FreightTypeView
@@ -71,6 +83,8 @@ const FreightDetailsView: React.FC<Props> = ({isEdit, invoiceData}) => {
         options={loadingChargeOptions}
         label1='Amount'
         label2='HSN Code'
+        isEdit={isEdit} 
+        invoiceData={invoiceData}
       />
       <Spacer height={20} />
       <FreightTypeView
@@ -78,6 +92,8 @@ const FreightDetailsView: React.FC<Props> = ({isEdit, invoiceData}) => {
         options={unloadingChargeOptions}
         label1='Amount'
         label2='HSN Code'
+        isEdit={isEdit} 
+        invoiceData={invoiceData}
       />
       <Spacer height={20} />
       <FreightTypeView
@@ -85,15 +101,17 @@ const FreightDetailsView: React.FC<Props> = ({isEdit, invoiceData}) => {
         options={doorDeliveryChargeOptions}
         label1='Amount'
         label2='HSN Code'
+        isEdit={isEdit} 
+        invoiceData={invoiceData}
       />
       <Spacer height={20} />
       <FreightOtherChargesView isEdit={isEdit} invoiceData={invoiceData}/>
       <Spacer height={20} />
-      <FreightSurchargeView />
+      <FreightSurchargeView isEdit={isEdit} invoiceData={invoiceData} />
       <Spacer height={20} />
-      <FreightDiscountView />
+      <FreightDiscountView isEdit={isEdit} invoiceData={invoiceData} />
       <Spacer height={20} />
-      <FreightGSTView />
+      <FreightGSTView isEdit={isEdit} invoiceData={invoiceData} />
     </View>
   );
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {View, Text} from 'react-native';
 import styles from './style';
 import {
@@ -13,12 +13,67 @@ import Spacer from '../../../../../../../../../common/Spacer';
 import {useInvoiceFormContextHook} from '../../../../../../../../../provider/InvoiceFormContextProvider';
 import DropdownComponent from '../../../../../../../../../common/DropdownComponent';
 import {TDropdownItem} from '../../../../../../../../../type/TDropdownItem';
+import { IInvoice } from '../../../../../../../../../interface/order/IGetInvoiceListResponse';
 
-interface Props {}
+interface Props {
+  isEdit?:boolean;
+  invoiceData?:IInvoice;
+}
 
-const FreightGSTView: React.FC<Props> = ({}) => {
-  const {state, setGSTOnInvoice, setGSTPercent, setGSTType, setGSTPaidBy} =
-    useInvoiceFormContextHook();
+const FreightGSTView: React.FC<Props> = ({isEdit, invoiceData}) => {
+  const {state, setGSTOnInvoice, setGSTPercent, setGSTType, setGSTPaidBy} = useInvoiceFormContextHook();
+  const gstPercentRef = useRef(null);
+  const gstTypeRef = useRef(null);
+
+    const _initFormValues = () => {
+      if(isEdit && invoiceData) {
+        const {gstStatus, gstType, gstPercentage, gstPaidBy} = invoiceData || {};
+        setGSTOnInvoice(gstStatus);
+        setGSTPaidBy(gstPaidBy);
+        // const gstPercentItem:TDropdownItem = gstPercentOptions.find((e:TDropdownItem) => e.value === gstPercentage) as TDropdownItem;
+        // if(gstPercentItem !== undefined){
+        //   //@ts-ignore
+        //   gstPercentRef && gstPercentRef?.current?.setDefaultValue(gstPercentItem);
+        //   setGSTPercent(gstPercentage);
+        // }
+
+        // const gstTypeItem:TDropdownItem = gstTypeOptions.find((e:TDropdownItem) => e.label === gstType) as TDropdownItem;
+        // if(gstTypeItem !== undefined){
+        //   //@ts-ignore
+        //   gstTypeRef && gstTypeRef?.current?.setDefaultValue(gstTypeItem);
+        //   setGSTType(gstType);
+        // }
+      }
+    }
+
+    const _setGstPercentAndType = () => {
+      if(isEdit && invoiceData) {
+        const {gstType, gstPercentage} = invoiceData || {};
+        const gstPercentItem:TDropdownItem = gstPercentOptions.find((e:TDropdownItem) => e.value === gstPercentage) as TDropdownItem;
+        if(gstPercentItem !== undefined){
+          //@ts-ignore
+          gstPercentRef && gstPercentRef?.current?.setDefaultValue(gstPercentItem);
+          setGSTPercent(gstPercentage);
+        }
+
+        const gstTypeItem:TDropdownItem = gstTypeOptions.find((e:TDropdownItem) => e.label === gstType) as TDropdownItem;
+        if(gstTypeItem !== undefined){
+          //@ts-ignore
+          gstTypeRef && gstTypeRef?.current?.setDefaultValue(gstTypeItem);
+          setGSTType(gstType);
+        }
+      }
+    }
+
+    useEffect(() => {
+      _initFormValues();
+    }, []);
+
+    useEffect(() => {
+      _setGstPercentAndType();
+    }, [state.gst_on_invoice]);
+
+
 
   return (
     <View style={styles.mainWrapper}>
@@ -53,6 +108,8 @@ const FreightGSTView: React.FC<Props> = ({}) => {
           <View style={styles.fullWidthContainer}>
             <View style={styles.compContainer}>
               <DropdownComponent
+                //@ts-ignore
+                ref={gstPercentRef}
                 data={gstPercentOptions}
                 onSelect={(item: TDropdownItem) => {
                   setGSTPercent(item.value);
@@ -61,6 +118,8 @@ const FreightGSTView: React.FC<Props> = ({}) => {
             </View>
             <View style={styles.compContainer}>
               <DropdownComponent
+                //@ts-ignore
+                ref={gstTypeRef}
                 data={gstTypeOptions}
                 onSelect={(item: TDropdownItem) => {
                   setGSTType(item.label);

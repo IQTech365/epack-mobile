@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {View, Text} from 'react-native';
 import styles from './style';
 import {FREIGHT_TYPE} from '../../../../utils';
@@ -7,12 +7,15 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import Spacer from '../../../../../../../../../common/Spacer';
 import FreightInputView from '../FreightInputView';
 import {useInvoiceFormContextHook} from '../../../../../../../../../provider/InvoiceFormContextProvider';
+import { IInvoice } from '../../../../../../../../../interface/order/IGetInvoiceListResponse';
 
 interface Props {
   freightType: FREIGHT_TYPE;
   options: string[];
   label1: string;
   label2: string;
+  isEdit?:boolean;
+  invoiceData?:IInvoice;
 }
 
 const FreightTypeView: React.FC<Props> = ({
@@ -20,6 +23,8 @@ const FreightTypeView: React.FC<Props> = ({
   options,
   label1,
   label2,
+  isEdit,
+  invoiceData
 }) => {
   const {
     state,
@@ -31,9 +36,51 @@ const FreightTypeView: React.FC<Props> = ({
     setLoadingCharge,
     setUnloadingCharge,
     setUnpackingCharge,
-    setFreightCharges,
-    setFreightHSN,
   } = useInvoiceFormContextHook();
+
+  const _initCheckboxOption = () => {
+    if(isEdit && invoiceData) {
+      const {isPartLoad, isFullLoad, 
+        pickupChargesStatus, 
+        packagingChargesStatus, 
+        doorDeliveryStatus, 
+        packingMaterialChargesStatus, 
+        loadingChargesStatus, 
+        unLoadingChargesStatus, unPackagingChargesStatus} = invoiceData || {};
+      switch (freightType) {
+        case FREIGHT_TYPE.LOAD_TYPE:
+          if(isPartLoad == 'true'){
+            setLoadType('Part Load');
+          } else if(isFullLoad == 'true'){
+            setLoadType('Full Load');
+          }
+          break;
+        case FREIGHT_TYPE.PICKUP_CHARGES:
+          setPickupCharge(pickupChargesStatus);
+          break;
+        case FREIGHT_TYPE.PACKING_CHARGES:
+          setPackingCharge(packagingChargesStatus);
+          break;
+        case FREIGHT_TYPE.DOOR_DELIVERY_CHARGE:
+          setDoorDeliveryCharge(doorDeliveryStatus);
+          break;
+        case FREIGHT_TYPE.PACKING_MATERIAL_CHARGES:
+          setPackingMaterialCharge(packingMaterialChargesStatus);
+          break;
+        case FREIGHT_TYPE.LOADING_CHARGES:
+          setLoadingCharge(loadingChargesStatus);
+          break;
+        case FREIGHT_TYPE.UNLOADING_CHARGES:
+          setUnloadingCharge(unLoadingChargesStatus);
+          break;
+        case FREIGHT_TYPE.UNPACKING_CHARGES:
+          setUnpackingCharge(unPackagingChargesStatus);
+          break;
+        default:
+          break;
+      }
+    }
+  };
 
   const _getFreightTypeText = () => {
     let text: string = '';
@@ -141,6 +188,10 @@ const FreightTypeView: React.FC<Props> = ({
     }
   };
 
+  useEffect(() => {
+    _initCheckboxOption();
+  }, []);
+
   return (
     <View style={styles.mainWrapper}>
       <View style={styles.container}>
@@ -175,6 +226,8 @@ const FreightTypeView: React.FC<Props> = ({
         freightType={freightType}
         label1={label1}
         label2={label2}
+        isEdit={isEdit}
+        invoiceData={invoiceData}
       /> : null}
     </View>
   );

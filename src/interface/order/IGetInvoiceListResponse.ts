@@ -59,6 +59,7 @@ export interface IInvoice {
   biltyDate: string;
   biltyNo: string;
   otherCharges: [];
+  surchargeStatus: string;
   surchargeCharges: string;
   discountType: string;
   discountAmount: string;

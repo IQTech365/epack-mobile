@@ -35,9 +35,11 @@ const DropdownComponent: React.FC<IDropdownProps> = forwardRef(
   ) => {
     const [value, setValue] = useState<TDropdownItem>(data[0]);
     const [isFocus, setIsFocus] = useState<boolean>(false);
+    const [refresh, setRefresh] = useState<boolean>(false);
 
     React.useImperativeHandle(ref, () => ({
       setDefaultValue,
+      refreshComp,
     }));
 
     useEffect(() => {
@@ -48,6 +50,10 @@ const DropdownComponent: React.FC<IDropdownProps> = forwardRef(
 
     const setDefaultValue = (value: TDropdownItem) => {
       setValue(value);
+    }
+
+    const refreshComp = () => {
+      setRefresh(!refresh);
     }
 
     const errorBorderColor = error
