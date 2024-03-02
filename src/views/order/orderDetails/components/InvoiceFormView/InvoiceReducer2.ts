@@ -18,6 +18,8 @@ import {
   unloadingChargeOptions,
 } from './utils';
 import insurnaceTypeOptions from '../../../../../data/insuranceTypeOptions.json';
+import storageDurationOptions from '../../../../../data/storageDurationOptions.json';
+
 
 export enum ACTION {
   BILING_TYPE = 'BILING_TYPE',
@@ -294,7 +296,7 @@ export const initialState: State = {
   transit_charges: [],
   // **** Storage ****
   storage: transitInsuranceOptions[1],
-  storage_duration: '',
+  storage_duration: storageDurationOptions[0].label,
   storage_from_date: '',
   storage_to_date: '',
   storage_amount: '',

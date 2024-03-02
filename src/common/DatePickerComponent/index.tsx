@@ -13,7 +13,7 @@ interface IDatePickerProps {
   defaultValue?: Date;
   mode?: 'date' | 'time' | 'datetime';
   disabled?: boolean;
-  minimumDate?: Date;
+  minimumDate?: Date | null;
 }
 
 const DatePickerComponent: React.FC<IDatePickerProps> = forwardRef(
@@ -80,7 +80,7 @@ const DatePickerComponent: React.FC<IDatePickerProps> = forwardRef(
               setDate(date);
               onDateSelect && onDateSelect(date);
             }}
-            minimumDate={minimumDate}
+            // minimumDate={minimumDate}
             onCancel={() => {
               setOpen(false);
             }}

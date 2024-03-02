@@ -71,6 +71,7 @@ export interface IInvoice {
     transitType: string;
     charges: [];
   };
+  strorageStatus: string;
   storageCharges: {
     isRequired: string;
     storageChargesType: string;

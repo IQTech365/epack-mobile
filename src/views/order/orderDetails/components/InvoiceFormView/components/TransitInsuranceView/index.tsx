@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import styles from './style';
 import Label from '../../../../../../../common/Label';
@@ -19,10 +19,15 @@ import { useAppSelector } from '../../../../../../../redux/hooks';
 import useUtilityHook from '../../../../../../../hooks/useUtilityHook';
 import { ISingleEnquiryData } from '../../../../../../../interface/enquiry/ISingleEnquiryResponse';
 import DropdownWithTextInput from '../../../../../../../common/DropdownWithTextInput';
+import { IInvoice } from '../../../../../../../interface/order/IGetInvoiceListResponse';
+import { IInvoiceTransitInsurance, IInvoiceTransitInsuranceCharge } from '../../../../../../../interface/order/ICreateInvoiceRequest';
 
-interface Props {}
+interface Props {
+  isEdit?:boolean;
+  invoiceData?:IInvoice;
+}
 
-const TransitInsuranceView: React.FC<Props> = () => {
+const TransitInsuranceView: React.FC<Props> = ({isEdit, invoiceData}) => {
   const {
     state,
     setTransitInsurance,
@@ -33,12 +38,33 @@ const TransitInsuranceView: React.FC<Props> = () => {
   const {order} = useAppSelector(state => state.Order);
   const {data: orderData} = order || {};
 
-  const [transitInsuranceCharge, setTransitInsuranceCharge] =
-    useState<string>('');
+  const [transitInsuranceCharge, setTransitInsuranceCharge] = useState<string>('');
   const [transitInsuranceGST, setTransitInsuranceGST] = useState<string>('');
   const [transitLuggage, setTransitLuggage] = useState<string>('');
   const [transitGoodsValue, setTransitGoodsValue] = useState<string>('');
   const {getInsurancePercentageList} = useUtilityHook();
+
+  const initFormValue = () => {
+    if(isEdit && invoiceData) {
+      const _transitInsurance:IInvoiceTransitInsurance = invoiceData.transitInsurance;
+      if(_transitInsurance !== null && _transitInsurance !== undefined) {
+        setTransitInsurance(_transitInsurance.isRequired);
+        setTransitInsuranceType(_transitInsurance.transitType);
+        const {transit_charges} = state;
+        const prevDataArr:ITransitCharge[] = _transitInsurance.charges.map((e:IInvoiceTransitInsuranceCharge)=> {
+          const transitChargeItem: ITransitCharge = {
+            transit_insurance_charge: e.insurancePerc,
+            transit_luggage: e.luggageType,
+            transit_insurance_gst: e.gst,
+            transit_goods_value: e.value,
+          };
+          return transitChargeItem;
+        });
+        const clone = [...transit_charges, ...prevDataArr];
+        setTransitCharges(clone);
+      }
+    }
+  }
 
   const handleAddTransitInsurance = () => {
     const {transit_charges} = state;
@@ -121,6 +147,10 @@ const TransitInsuranceView: React.FC<Props> = () => {
     }
     return null;
   };
+
+  useEffect(() => {
+    initFormValue();
+  }, []);
 
   return (
     <>

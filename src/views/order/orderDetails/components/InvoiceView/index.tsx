@@ -24,6 +24,7 @@ import TemplateViewer from '../../../../../common/TemplateViewer';
 import {startShare} from '../../../../../utils/utility';
 import useTemplateIdHook from '../../../../../hooks/useTemplateIdHook';
 import ActionHeaderView from '../../../../../common/ActionHeaderView';
+import { useNavigation } from '@react-navigation/native';
 
 interface IInvoiceViewProps {
   orderId: string;
@@ -32,6 +33,8 @@ interface IInvoiceViewProps {
 
 const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item}) => {
   const dispatch = useAppDispatch();
+  const navigation = useNavigation();
+
   const {
     getInvoicesRequesting,
     invoices,
@@ -48,7 +51,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item}) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const templateId = useTemplateIdHook('658d3ce2585e3dde644da98c');
 
-  console.log('invoices----', JSON.stringify(invoices));
+  // console.log('invoices----', JSON.stringify(invoices));
   
 
   const handleCreateNewInvoice = () => {
@@ -100,6 +103,11 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item}) => {
     return list;
   };
 
+  const _handleEditInvoice = (invoice: IInvoice) => {
+    //@ts-ignore
+    navigation.navigate("EditInvoice", {item: invoice, enquiry: item, orderID: orderId});
+  }
+
   useEffect(() => {
     dispatch(getInvoiceListRequest(orderId));
   }, []);
@@ -149,7 +157,9 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item}) => {
                   setShowShare(false);
                   handleDocDownload(item._id);
                 }}
-                onEdit={() => {}}
+                onEdit={() => {
+                  _handleEditInvoice(item);
+                }}
               />
             )}
             ListEmptyComponent={showEmptyView()}

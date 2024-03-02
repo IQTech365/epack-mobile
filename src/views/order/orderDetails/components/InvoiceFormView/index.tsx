@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {Text, View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
@@ -40,14 +40,17 @@ import { getCurrentCompanyId } from '../../../../../utils/storage';
 import { DOCUMENT_TYPE, IGetSerialNoRequest } from '../../../../../interface/setting/serialNo/serialNo';
 import { getSerialNoRequest, resetGetSerialNoRequest } from '../../../../../redux/slices/SerialNoSettingSlice';
 import useSerialNoHook from '../../../../../hooks/useSerialNo';
+import { IInvoice } from '../../../../../interface/order/IGetInvoiceListResponse';
 
 interface IInvoiceFormViewProps {
   orderId: string;
   item: ISingleEnquiryData;
   onSuccess: () => void;
+  isEdit?:boolean;
+  invoiceData?:IInvoice;
 }
 
-const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSuccess}) => {
+const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSuccess, isEdit = false, invoiceData}) => {
   const {
     state,
     setSameAsClientAddress,
@@ -66,8 +69,11 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
 
   const {initialValue, prefix} = useInitialValueHook('658d3ce2585e3dde644da98c');
   const serialNo:number = useSerialNoHook();
-  console.log('Invoice-orderData--', orderData);
-  
+  const invoiceDateRef = useRef(null);
+  const dateOfDeliveryRef = useRef(null);
+  const vehicleInputRef = useRef(null);
+  const movingModeRef = useRef(null);
+  const consignmentNoRef = useRef(null);
 
   const getSingleOrder = () => {
     let order: ISingleEnquiryData;
@@ -280,14 +286,40 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
     }).catch(err => console.log('err--', err));
   };
 
+  const _initFormValues = () => {
+    setInvoiceNo(invoiceData?.serialNo as string);
+    //@ts-ignore
+    invoiceDateRef && invoiceDateRef?.current?.setDefaultValue(new Date(invoiceData?.invoiceData));
+    setDateOfInvoice(invoiceData?.invoiceData as string);
+    //@ts-ignore
+    dateOfDeliveryRef && dateOfDeliveryRef?.current.setDefaultValue(new Date(invoiceData?.deliveryDate));
+    setDateOfDelivery(invoiceData?.deliveryDate as string);
+    //@ts-ignore
+    vehicleInputRef && vehicleInputRef?.current?.setValue(invoiceData?.vehicleNo);
+    setVehicleNo(invoiceData?.vehicleNo as string);
+    const dropdownItem:TDropdownItem = modeOfMovingOptions.find((e:TDropdownItem) => e.label == invoiceData?.movingMode) as TDropdownItem;
+    if(dropdownItem !== undefined) {
+      //@ts-ignore
+      movingModeRef?.current?.setDefaultValue(dropdownItem);
+      setModeOfMoving(invoiceData?.movingMode as string);
+    }
+    //@ts-ignore
+    consignmentNoRef && consignmentNoRef?.current?.setValue(invoiceData?.consignmentNo as string);
+    setConsignmentNo(invoiceData?.consignmentNo as string);
+  }
+
   useEffect(() => {
-    _getSerialNoRequest();
-    setBillingType(getSingleOrder()?.billingBy);
-    _setShiftingLuggage();
+    if(isEdit){
+      _initFormValues();
+      setBillingType(getSingleOrder()?.billingBy);
+      _setShiftingLuggage();
+    } else {
+      _getSerialNoRequest();
+    }
   }, []);
 
   useEffect(() => {
-    if(serialNo){
+    if(serialNo && !isEdit){
       setInvoiceNo(serialNo.toString());
     }
   }, [serialNo]);
@@ -325,9 +357,13 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Date of Invoice" style={styles.label} />
-                <DatePickerComponent onDateSelect={(date:Date) => {
-                  setDateOfInvoice(formatDate4(date));
-                }} />
+                <DatePickerComponent
+                  //@ts-ignore
+                  ref={invoiceDateRef}
+                  onDateSelect={(date:Date) => {
+                    setDateOfInvoice(formatDate4(date));
+                  }}
+                />
               </View>
             </View>
             <View style={styles.elementContainer}>
@@ -342,9 +378,13 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Date of Delivery" style={styles.label} />
-                <DatePickerComponent onDateSelect={(date:Date) => {
+                <DatePickerComponent
+                  //@ts-ignore
+                  ref={dateOfDeliveryRef}
+                  onDateSelect={(date:Date) => {
                   setDateOfDelivery(formatDate4(date));
-                }} />
+                }}
+                />
               </View>
             </View>
             <Spacer height={4} />
@@ -352,6 +392,8 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
               <View style={styles.itemContainer}>
                 <Label text="Vehicle No." style={styles.label} />
                 <Input
+                  //@ts-ignore
+                  ref={vehicleInputRef}
                   onChangeText={setVehicleNo}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
@@ -363,6 +405,8 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
               <View style={styles.itemContainer}>
                 <Label text="Mode of Moving" style={styles.label} />
                 <DropdownComponent
+                  //@ts-ignore
+                  ref={movingModeRef}
                   data={modeOfMovingOptions}
                   onSelect={(item:TDropdownItem) => {
                     setModeOfMoving(item.label);
@@ -374,6 +418,8 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
             <View style={styles.elementContainer2}>
               <Label text="Consignmnet No." style={styles.label} />
               <Input
+                //@ts-ignore
+                ref={consignmentNoRef}
                 onChangeText={setConsignmentNo}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
@@ -427,18 +473,18 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
         <Spacer height={4} />
         <CollapsibleView title="TRANSIT INSURANCE" collapsed={true}>
           <View style={styles.elementContainer3}>
-            <TransitInsuranceView />
+            <TransitInsuranceView isEdit={isEdit} invoiceData={invoiceData} />
           </View>
         </CollapsibleView>
         <Spacer height={4} />
         <CollapsibleView title="STORAGE CHARGE" collapsed={true}>
           <View style={styles.elementContainer3}>
-            <StorageChargeView />
+            <StorageChargeView isEdit={isEdit} invoiceData={invoiceData} />
           </View>
         </CollapsibleView>
         <Spacer height={12} />
         <Button
-          text="CREATE"
+          text={isEdit ? "UPDATE" : "CREATE"}
           onPress={handleCreateInvoice}
           disabled={false}
           style={styles.previewButtonStyle}

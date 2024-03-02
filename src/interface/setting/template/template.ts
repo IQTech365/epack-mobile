@@ -3,6 +3,7 @@ export interface ITemplate {
   templateName: string;
   moduleId: string;
   templateVersion: string;
+  templateThumbnail: string;
   templateHTML: string;
   isActive: boolean;
   isDeleted: boolean;

@@ -20,13 +20,15 @@ const TemplateCard:FC<IProps> = ({item, index, category, activeTemplateId, onCha
         onChangeTemplateId(item.templateVersion, item.moduleId, item._id);
     }
 
+    const tumbnailUri = item.templateThumbnail ? {uri: item.templateThumbnail} : noPreviewThumbnailImage;
+
     return (
       <TouchableOpacity
         style={container}
         key={`${index}`}
         onPress={handleChange}>
         {/* <Text style={styles.text}>{item.templateName}</Text> */}
-        <Image source={noPreviewThumbnailImage} style={styles.tumbnail} />
+        <Image source={tumbnailUri} style={styles.tumbnail} />
       </TouchableOpacity>
     );
 }
