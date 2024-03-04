@@ -31,14 +31,15 @@ import {
 import { ToastType, showToast } from '../../../../utils/utility';
 import { getCurrentCompanyId } from '../../../../utils/storage';
 import DropdownWithTextInput from '../../../../common/DropdownWithTextInput';
+import useAuthId from '../../../../hooks/useAuthId';
 
 const AddFranchiseUpdateView: React.FC<{}> = ({}) => {
   const [state, dispatch] = useReducer(addFranchiseReducer, initialState);
   const [states, setStates] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
   const [localities, setLocalities] = useState<string[]>([]);
+  const authId = useAuthId();
 
-  const {otpData} = useAppSelector(state => state.OTP);
   const {addFranchiseRequesting, addFranchiseuccess, addFranchiseFailure} =
     useAppSelector(state => state.Myprofile);
   const dispatch2 = useAppDispatch();
@@ -142,7 +143,7 @@ const AddFranchiseUpdateView: React.FC<{}> = ({}) => {
         landmark: state.landmark,
         email: state.email,
         address: state.address,
-        createdBy: otpData?.data.id as string,
+        createdBy: authId,
       };
       dispatch2(addFranchiseRequest(payload));
     }).catch(err => console.log(err));

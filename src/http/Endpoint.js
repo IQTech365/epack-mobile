@@ -40,6 +40,7 @@ export const CREATE_CAR_CONDITION = `/car-condition/add`;
 export const CREATE_MONEY_RECEIPT = `/money-receipt/add`;
 export const CREATE_BILTY = `/bilty/add`;
 export const CREATE_INVOICE = `/invoice/add`;
+export const UPDATE_INVOICE = (invoice_id) => `/invoice/edit/${invoice_id}`;
 export const GET_CAR_CONDITION_LIST = (order_id) => `/car-condition/${order_id}`;
 export const GET_MONEY_RECEIPT_LIST = (order_id) => `/money-receipt/${order_id}`;
 export const EDIT_MONEY_RECEIPT_LIST = (order_id) => `/money-receipt/edit/${order_id}`;
@@ -175,7 +176,7 @@ export const GET_BILTY_SERIAL_NO = `/bilty/get/serialNo`;
 export const GET_CAR_CONDITION_SERIAL_NO = `/car-condition/get/serialNo`;
 export const GET_INVOICE_SERIAL_NO = `/invoice/get/serialNo`;
 export const GET_MONEY_RECEIPT_SERIAL_NO = `/money-receipt/get/serialNo`;
-export const GET_SURVEY_ITEM_SERIAL_NO = `/survey/survey-item/get/serialNo`;
+export const GET_SURVEY_ITEM_SERIAL_NO = `/survey/get/serialNo`;
 export const GET_PACKING_LIST_SERIAL_NO = `/packing-item/get/serialNo`;
 
 // Dashboard

@@ -22,6 +22,7 @@ import {
   GET_ORDER_LIST,
   GET_PACKING_LIST,
   GET_PACKING_LIST_TEMPLATE,
+  UPDATE_INVOICE,
   UPDATE_PACKING_LIST,
 } from '../http/Endpoint';
 import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
@@ -48,6 +49,7 @@ import { IHtmlBiltyTemplateRequest, IHtmlCarConditionTemplateRequest, IHtmlInvoi
 import { ICreatePackingMaterialRequest, ICreatePackingMaterialResponse, IDeletePackingListItemResponse, IGetPackingListRequest, IPackingListResponse, IUpdatePackingListPayload, IUpdatePackingListRequest, IUpdatePackingListResponse } from '../interface/order/IPackingMaterialResponse';
 import { IGetInvoiceListResponse } from '../interface/order/IGetInvoiceListResponse';
 import { IPackingListTemplatePayload, IPackingListTemplateResponse } from '../interface/order/IPackingListTemplate';
+import { IUpdateInvoicePayload, IUpdateInvoiceResponse } from '../interface/order/IUpdateInvoiceResponse';
 
 export const GetOrderDetailsService = async (payload: string): Promise<IOrderDetailsResponse> => {
     const api = Api.getInstance();
@@ -97,6 +99,11 @@ export const EditMoneyReceiptListService = async (id:string, requestBody: any): 
 export const CreateInvoiceService = async (payload: ICreateInvoiceRequest): Promise<ICreateInvoiceResponse> => {
     const api = Api.getInstance();
     return await api.post<ICreateInvoiceRequest, AxiosResponse<ICreateInvoiceResponse>>(payload, CREATE_INVOICE);
+}
+
+export const UpdateInvoiceService = async (payload: IUpdateInvoicePayload): Promise<IUpdateInvoiceResponse> => {
+    const api = Api.getInstance();
+    return await api.update<ICreateInvoiceRequest, AxiosResponse<IUpdateInvoiceResponse>>(payload.data, UPDATE_INVOICE(payload.id));
 }
 
 export const GetInvoiceListService = async (payload: string): Promise<IGetInvoiceListResponse> => {

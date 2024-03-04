@@ -41,6 +41,7 @@ const CheckoutPage: FC<Props> = ({route, navigation}) => {
     'LALIT50',
     'SARITA20',
     'POONAM20',
+    'EPACKBOOK10',
     'EPACKBOOK25',
     'EPACKBOOKCRM100',
   ];
@@ -100,9 +101,12 @@ const CheckoutPage: FC<Props> = ({route, navigation}) => {
           discountPercent = 20;
           break;
         case COUPONS[3]:
+            discountPercent = 10;
+            break;
+        case COUPONS[4]:
           discountPercent = 25;
           break;
-        case COUPONS[4]:
+        case COUPONS[5]:
           discountPercent = 100;
           break;
         default:

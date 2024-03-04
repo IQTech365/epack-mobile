@@ -28,7 +28,7 @@ const TemplateCard:FC<IProps> = ({item, index, category, activeTemplateId, onCha
         key={`${index}`}
         onPress={handleChange}>
         {/* <Text style={styles.text}>{item.templateName}</Text> */}
-        <Image source={tumbnailUri} style={styles.tumbnail} />
+        <Image source={tumbnailUri} style={styles.tumbnail} resizeMode="contain" />
       </TouchableOpacity>
     );
 }

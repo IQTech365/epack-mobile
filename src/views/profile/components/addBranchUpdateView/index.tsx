@@ -24,13 +24,14 @@ import {getCities, getLocalities, getStates} from '../../../../utils/formatter';
 import { ToastType, showToast } from '../../../../utils/utility';
 import { getCurrentCompanyId } from '../../../../utils/storage';
 import DropdownWithTextInput from '../../../../common/DropdownWithTextInput';
+import useAuthId from '../../../../hooks/useAuthId';
 
 const AddBranchUpdateView: React.FC<{}> = ({}) => {
   const [state, dispatch] = useReducer(addBranchReducer, initialState);
-  const {otpData} = useAppSelector(state => state.OTP);
   const [states, setStates] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
   const [localities, setLocalities] = useState<string[]>([]);
+  const authId = useAuthId();
 
   const {addBranchRequesting, addBranchSuccess, addBranchFailure} =
     useAppSelector(state => state.Myprofile);
@@ -119,7 +120,7 @@ const AddBranchUpdateView: React.FC<{}> = ({}) => {
         landmark: state.landmark,
         email: state.email,
         address: state.address,
-        createdBy: otpData?.data.id as string,
+        createdBy: authId,
       };
       dispatch2(addBranchRequest(payload));
     }).catch(err => console.log(err));

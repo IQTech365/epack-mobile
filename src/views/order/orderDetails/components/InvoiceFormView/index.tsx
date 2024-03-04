@@ -31,7 +31,7 @@ import {
 import { IOtherCharge, ITransitCharge } from './InvoiceReducer2';
 import { formatDate4 } from '../../../../../utils/formatter';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
-import { createInvoiceRequest, resetCreateInvoiceRequest } from '../../../../../redux/slices/OrderSlice';
+import { createInvoiceRequest, getInvoiceListRequest, resetCreateInvoiceRequest, resetUpdateInvoiceRequest, updateInvoiceRequest } from '../../../../../redux/slices/OrderSlice';
 import Spinner from '../../../../../common/Spinner';
 import { ToastType, showToast } from '../../../../../utils/utility';
 import { ISingleEnquiryData } from '../../../../../interface/enquiry/ISingleEnquiryResponse';
@@ -41,6 +41,7 @@ import { DOCUMENT_TYPE, IGetSerialNoRequest } from '../../../../../interface/set
 import { getSerialNoRequest, resetGetSerialNoRequest } from '../../../../../redux/slices/SerialNoSettingSlice';
 import useSerialNoHook from '../../../../../hooks/useSerialNo';
 import { IInvoice } from '../../../../../interface/order/IGetInvoiceListResponse';
+import { IUpdateInvoicePayload } from '../../../../../interface/order/IUpdateInvoiceResponse';
 
 interface IInvoiceFormViewProps {
   orderId: string;
@@ -64,7 +65,16 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
     setShiftingLuggage,
   } = useInvoiceFormContextHook();
   const dispatch = useAppDispatch();
-  const {createInvoiceRequesting, createInvoiceSuccess, createInvoiceFailure, order} = useAppSelector(state => state.Order);
+  const {
+    createInvoiceRequesting,
+    createInvoiceSuccess,
+    createInvoiceFailure,
+    order,
+    //
+    updateInvoiceRequesting,
+    updateInvoiceSuccess,
+    updateInvoiceFailure,
+  } = useAppSelector(state => state.Order);
   const {data: orderData} = order || {};
 
   const {initialValue, prefix} = useInitialValueHook('658d3ce2585e3dde644da98c');
@@ -282,7 +292,15 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
         storageCharges: _getStorageCharge(),
       };
       console.log('Invoice-payload--', JSON.stringify(payload));
-      dispatch(createInvoiceRequest(payload));
+      if(isEdit) {
+        const updatePayload:IUpdateInvoicePayload = {
+          id: invoiceData?._id as string,
+          data: payload,
+        }
+        dispatch(updateInvoiceRequest(updatePayload));
+      } else {
+        dispatch(createInvoiceRequest(payload));
+      }
     }).catch(err => console.log('err--', err));
   };
 
@@ -335,6 +353,18 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
       dispatch(resetCreateInvoiceRequest());
     }
   }, [createInvoiceRequesting, createInvoiceSuccess, createInvoiceFailure]);
+
+  useEffect(() => {
+    if(!updateInvoiceRequesting && updateInvoiceSuccess) {
+      showToast('Invoice Updated', ToastType.SUCCESS);
+      dispatch(resetUpdateInvoiceRequest());
+      dispatch(getInvoiceListRequest(orderId));
+      onSuccess && onSuccess();
+    } else if(!updateInvoiceRequesting && updateInvoiceFailure) {
+      showToast('Invoice Not Updated. Try again!', ToastType.ERROR);
+      dispatch(resetUpdateInvoiceRequest());
+    }
+  }, [updateInvoiceRequesting, updateInvoiceSuccess, updateInvoiceFailure]);
 
   return (
     <AvoidSoftInputViewHOC>
@@ -491,7 +521,7 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
           textStyle={styles.textStyle2}
         />
         <Spacer height={12} />
-        <Spinner show={createInvoiceRequesting} />
+        <Spinner show={createInvoiceRequesting || updateInvoiceRequesting} />
       </View>
     </AvoidSoftInputViewHOC>
   );

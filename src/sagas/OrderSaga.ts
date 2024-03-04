@@ -65,6 +65,9 @@ import {
   getPackingMaterialsFailure,
   getPackingMaterialsRequest,
   getPackingMaterialsSuccess,
+  updateInvoiceFailure,
+  updateInvoiceRequest,
+  updateInvoiceSuccess,
   updatePackingListFailure,
   updatePackingListRequest,
   updatePackingListSuccess,
@@ -89,6 +92,7 @@ import { ICreateInvoiceRequest } from '../interface/order/ICreateInvoiceRequest'
 import { ICreateInvoiceResponse } from '../interface/order/ICreateInvoiceResponse';
 import { IGetInvoiceListResponse } from '../interface/order/IGetInvoiceListResponse';
 import { IPackingListTemplatePayload, IPackingListTemplateResponse } from '../interface/order/IPackingListTemplate';
+import { IUpdateInvoiceResponse } from '../interface/order/IUpdateInvoiceResponse';
 
 export function* addOrderSaga(action: PayloadAction<IAddOrderRequest>) {
   try {
@@ -282,6 +286,15 @@ export function* createCarConditionSaga(
     }
   }
 
+  export function* updateInvoiceSaga(action: PayloadAction<ICreateInvoiceRequest>) {
+    try {
+        const response: IUpdateInvoiceResponse = yield call(OrderService.UpdateInvoiceService, action.payload);
+        yield put(updateInvoiceSuccess(response));
+    } catch (error) {
+        yield put(updateInvoiceFailure(error));
+    }
+  }
+
   export function* getInvoiceListSaga(action: PayloadAction<string>) {
     try {
         const response: IGetInvoiceListResponse = yield call(OrderService.GetInvoiceListService, action.payload);
@@ -328,6 +341,7 @@ export function* watcherOrderSaga() {
   yield takeLatest(getPackingMaterialsRequest.type, getPackingListSaga);
   yield takeLatest(deletePackingMaterialItemRequest.type, deletePackingListItemSaga);
   yield takeLatest(createInvoiceRequest.type, createInvoiceSaga);
+  yield takeLatest(updateInvoiceRequest.type, updateInvoiceSaga);
   yield takeLatest(getInvoiceListRequest.type, getInvoiceListSaga);
   yield takeLatest(getInvoiceHtmlRequest.type, getInvoiceTemplateHtmlSaga);
   yield takeLatest(getPackingListTemplateRequest.type, getPackingListTemplateSaga);

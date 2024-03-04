@@ -24,6 +24,7 @@ import {
 import { ICreatePackingMaterialRequest, ICreatePackingMaterialResponse, IDeletePackingListItemResponse, IGetPackingListRequest, IPackingListResponse, IUpdatePackingListPayload, IUpdatePackingListRequest, IUpdatePackingListResponse } from '../../interface/order/IPackingMaterialResponse';
 import { IGetInvoiceListResponse } from '../../interface/order/IGetInvoiceListResponse';
 import { IPackingListTemplateResponse, IPackingListTemplatePayload } from '../../interface/order/IPackingListTemplate';
+import { IUpdateInvoicePayload, IUpdateInvoiceResponse } from '../../interface/order/IUpdateInvoiceResponse';
 
 interface IOrderState {
   // Add Order
@@ -124,6 +125,12 @@ interface IOrderState {
   createInvoiceSuccess: boolean;
   createInvoiceFailure: boolean;
   createInvoiceError: any;
+  // Update Invoice
+  updateInvoiceInfo: IUpdateInvoiceResponse | null;
+  updateInvoiceRequesting: boolean;
+  updateInvoiceSuccess: boolean;
+  updateInvoiceFailure: boolean;
+  updateInvoiceError: any;
   // Invoice List
   invoices: IGetInvoiceListResponse | null;
   getInvoicesRequesting: boolean;
@@ -266,6 +273,12 @@ const initialState: IOrderState = {
   createInvoiceSuccess: false,
   createInvoiceFailure: false,
   createInvoiceError: null,
+  // Update Invoice
+  updateInvoiceInfo: null,
+  updateInvoiceRequesting: false,
+  updateInvoiceSuccess: false,
+  updateInvoiceFailure: false,
+  updateInvoiceError: null,
   // Invoice List
   invoices: null,
   getInvoicesRequesting: false,
@@ -686,6 +699,34 @@ export const OrderSlice = createSlice({
       state.createInvoiceError = null;
       state.createInvoiceInfo = null;
     },
+    // Update Invoice
+    updateInvoiceRequest: (
+      state,
+      action: PayloadAction<IUpdateInvoicePayload>,
+    ) => {
+      state.updateInvoiceRequesting = true;
+    },
+    updateInvoiceSuccess: (
+      state,
+      action: PayloadAction<IUpdateInvoiceResponse>,
+    ) => {
+      state.updateInvoiceRequesting = false;
+      state.updateInvoiceSuccess = true;
+      state.updateInvoiceInfo = action.payload;
+    },
+    updateInvoiceFailure: (state, action: PayloadAction<any>) => {
+      state.updateInvoiceRequesting = false;
+      state.updateInvoiceSuccess = false;
+      state.updateInvoiceFailure = true;
+      state.updateInvoiceError = action.payload;
+    },
+    resetUpdateInvoiceRequest: (state) => {
+      state.updateInvoiceRequesting = false;
+      state.updateInvoiceSuccess = false;
+      state.updateInvoiceFailure = false;
+      state.updateInvoiceError = null;
+      state.updateInvoiceInfo = null;
+    },
     // Get Invoice List
     getInvoiceListRequest: (
       state,
@@ -936,6 +977,11 @@ export const {
   createInvoiceSuccess,
   createInvoiceFailure,
   resetCreateInvoiceRequest,
+  // Update Invoice
+  updateInvoiceRequest,
+  updateInvoiceSuccess,
+  updateInvoiceFailure,
+  resetUpdateInvoiceRequest,
   // Get Invoice List
   getInvoiceListRequest,
   getInvoiceListSuccess,
