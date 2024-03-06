@@ -19,6 +19,7 @@ import {
   GET_INVOICE_SERIAL_NO,
   GET_MONEY_RECEIPT_SERIAL_NO,
   GET_OTP,
+  GET_PACKING_LIST_SERIAL_NO,
   GET_PAYMENT_METHODS,
   GET_QUOTATION_SERIAL_NO,
   GET_ROLE_TYPES,
@@ -247,7 +248,7 @@ export const GetSerialNoService = async (
       uri = GET_SURVEY_ITEM_SERIAL_NO;
       break;
     case DOCUMENT_TYPE.PACKING_LIST:
-        uri = GET_SURVEY_ITEM_SERIAL_NO;
+        uri = GET_PACKING_LIST_SERIAL_NO;
         break;
     default:
       break;

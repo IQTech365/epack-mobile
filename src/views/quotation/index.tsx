@@ -181,6 +181,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
           fromDestination: _getFromDestination(quotation),
           toDestination: _getToDestination(quotation),
           shiftingType: _getShiftingType(quotation),
+          shiftingLuggage: quotation.shiftingLuggage,
           quotationAmount: quotationAmount,
           quotationDate: quotationDate,
           phoneNumber: _getMobile(quotation),

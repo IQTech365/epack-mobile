@@ -17,6 +17,7 @@ export interface IQuotationItem {
   fromDestination: string;
   toDestination: string;
   shiftingType: string;
+  shiftingLuggage:string;
   quotationAmount: string;
   quotationDate: string;
   phoneNumber: string;
@@ -135,12 +136,12 @@ const QuotationListItem: React.FC<IQuotationListItemProps> = ({
                 </View>
                 <View style={styles.rowItemContainer}>
                   <View style={styles.iconContainer}>
-                    <RupeeIcon width={18} height={18} />
+                    <ShippingTypeIcon width={18} height={18} />
                   </View>
                   <View>
-                    <Text style={styles.destinationTypeText}>Amount</Text>
+                    <Text style={styles.destinationTypeText}>Shifting Luggage</Text>
                     <Text style={styles.destinationText}>
-                      {item.quotationAmount}
+                      {item.shiftingLuggage}
                     </Text>
                   </View>
                 </View>

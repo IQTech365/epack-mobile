@@ -4,6 +4,9 @@ import shiftingTypes from '../../../data/shiftingType.json';
 import shiftingLuggages from '../../../data/shiftingLuggage.json';
 import liftStatusOptions from '../../../data/liftStatusOptions.json';
 import floorOptions from '../../../data/floorOptions.json';
+import surchargePercentOptions from '../../../data/surchargePercentOptions.json';
+import surchargeOptions from '../../../data/surchargeOptions.json';
+import insuranceTypeOptions from '../../../data/insuranceTypeOptions.json';
 import {
   discountInQuotationOptions,
   gstInQuotationOptions,
@@ -355,8 +358,8 @@ export const initialState: IState = {
   other_charges: [],
   advance_amount: '',
   // **** Surcharge ****
-  surcharge: '',
-  surcharge_percent: '',
+  surcharge: surchargeOptions[0].label,
+  surcharge_percent: surchargePercentOptions[0].value,
   // **** Discount In Quotation
   discount_in_quotation: discountInQuotationOptions[2].value,
   discount_percent_or_value: '',
@@ -367,7 +370,7 @@ export const initialState: IState = {
   // **** Transit Insurance ****
   transit_insurance: options2[1],
   transit_shifting_luggage: '',
-  transit_insurance_type: '',
+  transit_insurance_type: insuranceTypeOptions[0].label,
   transit_insurance_charge: '',
   transit_insurance_gst: '',
   transit_goods_value: '',

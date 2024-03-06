@@ -140,7 +140,7 @@ const DropAddressView: React.FC<Props> = ({fromEnquiry = false}) => {
       <View>
         <View style={styles.twoColumnContainer}>
           <View style={styles.compContainer}>
-            <Label text="Pincode" style={styles.label} required={true} />
+            <Label text="Pincode" style={styles.label} required={false} />
             <Input
               onChangeText={handlePincodeChange}
               containerStyle={styles.inputContainer}
@@ -153,7 +153,7 @@ const DropAddressView: React.FC<Props> = ({fromEnquiry = false}) => {
               error={state.errors.drop_pincode}
               value={state?.drop_pincode}
               inputType="numeric"
-              required={true}
+              required={false}
             />
           </View>
           <View style={styles.compContainer}>

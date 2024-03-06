@@ -26,6 +26,46 @@ const useInvoiceFormContext = () => {
     [state.billing_type],
   );
 
+  const setVehicleType = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.VECHILE_TYPE,
+        payload: text,
+      });
+    },
+    [state.vehicleType],
+  );
+
+  const setVehicleManufacturer = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.VECHILE_MANUFACTURER,
+        payload: text,
+      });
+    },
+    [state.manufacture],
+  );
+
+  const setVehicleModel = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.VECHILE_MODEL,
+        payload: text,
+      });
+    },
+    [state.model],
+  );
+  
+  const setLorryType = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.VEHICLE_LOAD_SIZE,
+        payload: text,
+      });
+    },
+    [state.vehicle_load_size],
+  );
+
   const setSameAsClientAddress = useCallback(
     (value: boolean) => {
       dispatch({
@@ -625,6 +665,10 @@ const useInvoiceFormContext = () => {
     setSameAsClientAddress,
     setFreightCharges,
     setFreightHSN,
+    setVehicleType,
+    setVehicleManufacturer,
+    setVehicleModel,
+    setLorryType,
     // Pickup Charge
     setPickupCharge,
     setPickupChargeAmount,
@@ -714,6 +758,10 @@ const initInvoiceFormContextState: UseInvoiceFormContextType = {
   setSameAsClientAddress: (value: boolean) => {},
   setFreightCharges: (text: string) => {},
   setFreightHSN: (text: string) => {},
+  setVehicleType: (text: string) => {},
+  setVehicleManufacturer: (text: string) => {},
+  setVehicleModel: (text: string) => {},
+  setLorryType: (text: string) => {},
   // Pickup Charge
   setPickupCharge: (text: string) => {},
   setPickupChargeAmount: (text: string) => {},

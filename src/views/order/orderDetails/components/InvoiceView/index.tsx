@@ -25,6 +25,8 @@ import {startShare} from '../../../../../utils/utility';
 import useTemplateIdHook from '../../../../../hooks/useTemplateIdHook';
 import ActionHeaderView from '../../../../../common/ActionHeaderView';
 import { useNavigation } from '@react-navigation/native';
+import { getVehicleCompanyRequest, getVehicleModelsRequest, getVehicleTypesRequest } from '../../../../../redux/slices/CommonSlice';
+import { getVehicleSizeRequest } from '../../../../../redux/slices/VehicleSlice';
 
 interface IInvoiceViewProps {
   orderId: string;
@@ -110,6 +112,10 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item}) => {
 
   useEffect(() => {
     dispatch(getInvoiceListRequest(orderId));
+    dispatch(getVehicleCompanyRequest());
+    dispatch(getVehicleModelsRequest());
+    dispatch(getVehicleTypesRequest());
+    dispatch(getVehicleSizeRequest());
   }, []);
 
   const handleOnRefresh = useCallback(() => {

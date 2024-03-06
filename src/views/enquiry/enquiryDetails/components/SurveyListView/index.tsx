@@ -134,6 +134,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
     getCurrentCompanyId()
       .then(id => {
         const payload: IAddSurveyItemRequest = {
+          companyId: id as string,
           enquiryId: enquiryId,
           surveyListNo: serialNo.toString(),
           surveyDate: date,
@@ -172,6 +173,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
     if (!addSurveyItemRequesting && addSurveyItemSuccess) {
       showToast('Survey Item List Created.', ToastType.SUCCESS);
       dispatch(resetAddSurveyItemRequest());
+      dispatch(resetGetSerialNoRequest());
       setSurveyItems([]);
       _getSurveyItemListRequest();
     } else if (!addSurveyItemRequesting && addSurveyItemFailure) {

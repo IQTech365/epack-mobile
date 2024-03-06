@@ -32,6 +32,10 @@ export enum ACTION {
   MODE_OF_MOVING = 'MODE_OF_MOVING',
   VEHICLE_NO = 'VEHICLE_NO',
   CONSIGNMENT_NO = 'CONSIGNMENT_NO',
+  VECHILE_TYPE = 'VECHILE_TYPE',
+  VECHILE_MANUFACTURER = 'VECHILE_MANUFACTURER',
+  VECHILE_MODEL = 'VECHILE_MODEL',
+  VEHICLE_LOAD_SIZE = 'VEHICLE_LOAD_SIZE',
   //
   PARTY_NAME = 'PARTY_NAME',
   PARTY_MOBILE_NO = 'PARTY_MOBILE_NO',
@@ -137,6 +141,11 @@ interface State {
   mode_of_moving: string;
   vehicle_no: string;
   consignment_no: string;
+  // **** Vehicle Info
+  vehicleType: string;
+  manufacture: string;
+  model: string;
+  vehicle_load_size:string;
   // **** Billing Details Individual ****
   party_name: string;
   party_mobile_no: string;
@@ -228,6 +237,11 @@ export const initialState: State = {
   mode_of_moving: modeOfMovingOptions[0].label,
   vehicle_no: '',
   consignment_no: '',
+  // **** Vehicle Info
+  vehicleType: '',
+  manufacture: '',
+  model: '',
+  vehicle_load_size: '',
   // **** Billing Details Individual ****
   party_name: '',
   party_mobile_no: '',
@@ -324,6 +338,15 @@ export const invoiceReducer = (state: State, action: Action) => {
       return {...state, vehicle_no: payload as string};
     case ACTION.CONSIGNMENT_NO:
       return {...state, consignment_no: payload as string};
+      // **** Vehicle Info ****
+    case ACTION.VECHILE_TYPE:
+      return {...state, vehicleType: payload as string};
+    case ACTION.VECHILE_MANUFACTURER:
+      return {...state, manufacture: payload as string};
+    case ACTION.VECHILE_MODEL:
+      return {...state, model: payload as string};
+    case ACTION.VEHICLE_LOAD_SIZE:
+      return {...state, vehicle_load_size: payload as string};
     // // *** Billing Details Individual ****
     case ACTION.PARTY_NAME:
       return {...state, party_name: payload as string};

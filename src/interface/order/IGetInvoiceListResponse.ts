@@ -12,6 +12,7 @@ export interface IInvoice {
   vehicleType: string;
   manufacture: string;
   model: string;
+  vehicleLoadSize: string;
   partyName: string;
   mobile: string;
   billingBy: string;

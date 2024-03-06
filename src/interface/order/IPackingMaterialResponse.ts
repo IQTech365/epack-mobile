@@ -8,6 +8,7 @@ export interface IPackingItem {
   description: string;
 }
 export interface ICreatePackingMaterialRequest {
+  companyId: string;
   enquiryId: string;
   packingListNo: string;
   packingDate: string;

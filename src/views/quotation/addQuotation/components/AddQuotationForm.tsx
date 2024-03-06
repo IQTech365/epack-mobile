@@ -195,14 +195,14 @@ const AddQuotationForm: React.FC<Props> = ({
       //   valid = false;
       // }
     }
-    if (Validator.isEmpty(pickup_pincode)) {
-      setPickupPincodeError('Pincode required');
-      valid = false;
-    }
-    if (Validator.isEmpty(drop_pincode)) {
-      setDropPincodeError('Pincode required');
-      valid = false;
-    }
+    // if (Validator.isEmpty(pickup_pincode)) {
+    //   setPickupPincodeError('Pincode required');
+    //   valid = false;
+    // }
+    // if (Validator.isEmpty(drop_pincode)) {
+    //   setDropPincodeError('Pincode required');
+    //   valid = false;
+    // }
     return valid;
   };
 
@@ -430,9 +430,10 @@ const AddQuotationForm: React.FC<Props> = ({
       <Button
         text={isEdit ? 'UPDATE' : 'CREATE'}
         onPress={hanldeSubmit}
-        disabled={false}
+        disabled={addQuotationRequesting}
         style={styles.previewButtonStyle}
         textStyle={styles.textStyle}
+      
       />
       <Spacer height={12} />
       <Spinner

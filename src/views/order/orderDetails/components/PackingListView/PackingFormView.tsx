@@ -27,7 +27,7 @@ import { ToastType, showToast } from '../../../../../utils/utility';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
 import { DOCUMENT_TYPE, IGetSerialNoRequest } from '../../../../../interface/setting/serialNo/serialNo';
 import useInitialValueHook from '../../../../../hooks/useInitialValueHook';
-import { getSerialNoRequest } from '../../../../../redux/slices/SerialNoSettingSlice';
+import { getSerialNoRequest, resetGetSerialNoRequest } from '../../../../../redux/slices/SerialNoSettingSlice';
 import useSerialNoHook from '../../../../../hooks/useSerialNo';
 
 interface Props {
@@ -52,7 +52,6 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   const {packingTypes} = useAppSelector(state => state.Common);
   const {initialValue, prefix} = useInitialValueHook('658d3cc6585e3dde644da985');
   const serialNo:number = useSerialNoHook();
-  console.log('Packing-List-serialNo--', serialNo);
 
   const _getPackingTypes = () => {
     let packTypes: TDropdownItem[] = [];
@@ -73,14 +72,17 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   const dispatch2 = useAppDispatch();
 
   const handleCreate = () => {
-    const payload: ICreatePackingMaterialRequest = {
-      enquiryId: orderId,
-      packingListNo: state.packing_no,
-      packingDate: state.packing_date,
-      packingItems: items,
-      addedBy: authId,
-    };
-    dispatch2(createPackingMaterialsRequest(payload));
+    getCurrentCompanyId().then(id => {
+      const payload: ICreatePackingMaterialRequest = {
+        companyId: id as string,
+        enquiryId: orderId,
+        packingListNo: state.packing_no,
+        packingDate: state.packing_date,
+        packingItems: items,
+        addedBy: authId,
+      };
+      dispatch2(createPackingMaterialsRequest(payload));
+    }).catch(err => console.log('error in getting company id'));
   };
 
   const addPackingItem = () => {
@@ -177,9 +179,24 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   }
 
   useEffect(() => {
+    dispatch2(resetGetSerialNoRequest());
+    _getSerialNoRequest();
+  }, []);
+
+  useEffect(() => {
+    if (serialNo) {
+      dispatch({
+        type: ACTION.PACKING_NO,
+        payload: serialNo.toString(),
+      });
+    }
+  }, [serialNo]);
+
+  useEffect(() => {
     if(!createPackingMaterialRequesting && createPackingMaterialSuccess) {
       showToast("Packing Item List Created", ToastType.SUCCESS);
-      dispatch2(resetCreatePackingMaterialsRequest())
+      dispatch2(resetCreatePackingMaterialsRequest());
+      dispatch2(resetGetSerialNoRequest());
       onSuccess && onSuccess();
     } else if(!createPackingMaterialRequesting && createPackingMaterialFailure) {
       showToast("Packing Item List Not Created", ToastType.ERROR);
@@ -204,6 +221,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
                     payload: text,
                   });
                 }}
+                value={state.packing_no}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}

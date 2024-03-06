@@ -6,6 +6,7 @@ export interface ISurveyListItem {
 }
 
 export interface IAddSurveyItemRequest {
+  companyId:string;
   enquiryId: string;
   surveyListNo: string;
   surveyDate: string;

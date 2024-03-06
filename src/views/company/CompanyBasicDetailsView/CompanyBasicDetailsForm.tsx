@@ -129,7 +129,7 @@ const CompanyBasicDetailsForm: FC<IProps> = ({navigation}) => {
         state: state.state,
         city: state.city,
         pincode: state.pincode,
-        companyWebsite: 'www.abc.com',
+        companyWebsite: '',
         companyLogo: '',
         punchLine: 'NA',
         companyProfile: '',

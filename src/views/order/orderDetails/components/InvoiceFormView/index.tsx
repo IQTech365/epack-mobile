@@ -42,6 +42,7 @@ import { getSerialNoRequest, resetGetSerialNoRequest } from '../../../../../redu
 import useSerialNoHook from '../../../../../hooks/useSerialNo';
 import { IInvoice } from '../../../../../interface/order/IGetInvoiceListResponse';
 import { IUpdateInvoicePayload } from '../../../../../interface/order/IUpdateInvoiceResponse';
+import VehicleInfoView from './components/VehicleInfoView';
 
 interface IInvoiceFormViewProps {
   orderId: string;
@@ -231,9 +232,10 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
         consignmentNo: state.consignment_no,
         movingMode: state.mode_of_moving,
         deliveryDate: state.date_of_delivery,
-        vehicleType: '',
-        manufacture: '',
-        model: '',
+        vehicleType: state.vehicleType,
+        manufacture: state.manufacture,
+        model: state.model,
+        vehicleLoadSize: state.vehicle_load_size,
         partyName: state.party_name,
         mobile: state.party_mobile_no,
         billingBy: state.billing_type,
@@ -291,7 +293,6 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
         strorageStatus: state.storage,
         storageCharges: _getStorageCharge(),
       };
-      console.log('Invoice-payload--', JSON.stringify(payload));
       if(isEdit) {
         const updatePayload:IUpdateInvoicePayload = {
           id: invoiceData?._id as string,
@@ -333,6 +334,8 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
       _setShiftingLuggage();
     } else {
       _getSerialNoRequest();
+      setBillingType(getSingleOrder()?.billingBy);
+      _setShiftingLuggage();
     }
   }, []);
 
@@ -444,6 +447,10 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
                 />
               </View>
             </View>
+            {state.shifting_luggage == 'Vehicle' ? <>
+            <Spacer height={4} />
+            <VehicleInfoView isEdit={isEdit} invoiceData={invoiceData} />
+            </> : null}
             <Spacer height={4} />
             <View style={styles.elementContainer2}>
               <Label text="Consignmnet No." style={styles.label} />
