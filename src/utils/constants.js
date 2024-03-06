@@ -52,6 +52,7 @@ const SettingStackRoute = {
   SerialNoSetting: 'SerialNoSetting',
   RoleSetting: 'RoleSetting',
   TemplateSetting: 'TemplateSetting',
+  AccountEditView: 'AccountEditView',
 };
 
 const MyProfileStackRoute = {

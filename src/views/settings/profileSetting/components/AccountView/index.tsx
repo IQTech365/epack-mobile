@@ -11,8 +11,11 @@ import Spinner from '../../../../../common/Spinner';
 import { IGetPaymentMethodData } from '../../../../../interface/setting/packerProfile/paymentMethod/IGetPaymentMethodsResponse';
 import PaymentMethodListItem from './component/PaymentMethodListItem';
 import { ToastType, showToast } from '../../../../../utils/utility';
+import { useNavigation } from '@react-navigation/native';
+import { SettingStackRoute } from '../../../../../utils/constants';
 
 const AddAccountView = () => {
+  const navigation = useNavigation();
   const [showPaymentMethodList, setShowPaymentMethodList] =
     useState<boolean>(false);
   const [showAddPaymentMehod, setShowAddPaymentMethod] =
@@ -51,6 +54,11 @@ const AddAccountView = () => {
     dispatch(deletePaymentMethodRequest(id));
   }
 
+  const _onEdit = (data:IGetPaymentMethodData) => {
+    //@ts-ignore
+    navigation.navigate("AccountEditView", {paymentInfo: data});
+  }
+
   useEffect(() => {
     _getPaymentMethodsRequest();
     _getBankListRequest();
@@ -76,7 +84,14 @@ const AddAccountView = () => {
 
   const showForm = () => {
     if (showAddPaymentMehod) {
-      return <AccountDetailUpdateView />;
+      return (
+        <AccountDetailUpdateView
+          onSuccess={() => {
+            _getPaymentMethodsRequest();
+            setShowPaymentMethodList(true);
+          }}
+        />
+      );
     }
     return null;
   };
@@ -91,6 +106,8 @@ const AddAccountView = () => {
               item={item}
               index={index}
               onDelete={_onDelete}
+              onEdit={_onEdit}
+              
             />
           )}
           ListEmptyComponent={showEmptyView()}

@@ -4,16 +4,19 @@ import styles from './style';
 import {IGetPaymentMethodData} from '../../../../../../interface/setting/packerProfile/paymentMethod/IGetPaymentMethodsResponse';
 import {Shadow} from 'react-native-shadow-2';
 import DeleteIcon from '../../../../../../images/icons/delete.svg';
+import EditIcon from '../../../../../../images/icons/edit.svg';
 import { useAppSelector } from '../../../../../../redux/hooks';
 import { IBank } from '../../../../../../interface/common/common';
+import Spacer from '../../../../../../common/Spacer';
 
 interface IProps {
   item: IGetPaymentMethodData;
   index: number;
   onDelete: (id: string) => void;
+  onEdit: (data: IGetPaymentMethodData) => void;
 }
 
-const PaymentMethodListItem: FC<IProps> = ({item, index, onDelete}) => {
+const PaymentMethodListItem: FC<IProps> = ({item, index, onDelete, onEdit}) => {
     const {banks} = useAppSelector(state => state.Common);
     const _getBankList = ():IBank[] => {
         let list:IBank[] = [];
@@ -75,7 +78,15 @@ const PaymentMethodListItem: FC<IProps> = ({item, index, onDelete}) => {
               onPress={() => {
                 onDelete(item._id);
               }}>
-              <DeleteIcon width={30} height={30} />
+              <DeleteIcon width={28} height={28} />
+            </TouchableOpacity>
+            <Spacer width={20} />
+            <TouchableOpacity
+              activeOpacity={0.4}
+              onPress={() => {
+                onEdit(item);
+              }}>
+              <EditIcon width={28} height={28} />
             </TouchableOpacity>
           </View>
           <View style={[styles.rowContainer, styles.bb]}>

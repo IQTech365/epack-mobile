@@ -20,14 +20,19 @@ import Spinner from '../../../../../common/Spinner';
 import { ToastType, showToast } from '../../../../../utils/utility';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
 import { IBank, ISubmodule } from '../../../../../interface/common/common';
-interface IAccountDetailsProps {}
+import { IGetPaymentMethodData } from '../../../../../interface/setting/packerProfile/paymentMethod/IGetPaymentMethodsResponse';
+interface IAccountDetailsProps {
+  isEdit?:boolean;
+  paymentInfo?:IGetPaymentMethodData;
+  onSuccess:() => void;
+}
 
 interface IAccountOptions {
   label: string;
   value: string;
 }
 
-const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
+const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({isEdit, paymentInfo, onSuccess}) => {
   const [accountType, setAccountType] = useState<string>(accountTypeOptions[0].label);
   const [selectedUPI, setSelectedUPI] = useState<string>('');
   const [accountHolder, setAccountHolder] = useState<string>('');
@@ -45,13 +50,18 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
   } = useAppSelector(state => state.Setting);
   const {submodules, banks} = useAppSelector(state => state.Common);
   const accountOptionDropdownRef = useRef(null);
+  const accountTypeRef = useRef(null);
 
   const handleAccountType = (item: TDropdownItem) => {
     setAccountType(item.label);
   };
 
   const handleSelectedAccountOption = (item: TDropdownItem) => {
+    if(accountType == "Bank Account") {
+      setSelectedUPI(item.value);
+    } else {
       setSelectedUPI(item.label);
+    }
   }
 
   const handleChangeAccountHolder = (text: string)=>{
@@ -145,9 +155,56 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
       .catch(err => console.log(err));
   };
 
+  useEffect(() => {
+    if(isEdit && paymentInfo) {
+      const {accountType, accountHolderName, accountNumber, ifscCode, bankId} = paymentInfo || {};
+      setAccountType(accountType);
+      if(accountType == 'Bank Account') {
+        setAccountOptions(_getBankList());
+        setAccountHolder(accountHolderName);
+        setAccountNumber(accountNumber);
+        setIfscCode(ifscCode);
+      } else if(accountType == 'UPI') {
+        setAccountOptions(UPIOptions);
+      }
+      const accountTypeItem:TDropdownItem = accountTypeOptions.find((d:TDropdownItem) => d.label == accountType) as TDropdownItem;
+      if(accountTypeItem !== undefined){
+        //@ts-ignore
+        accountTypeRef && accountTypeRef?.current?.setDefaultValue(accountTypeItem);
+      }
+    }
+  }, [isEdit]);
+
+  useEffect(() => {
+    if(isEdit && paymentInfo) {
+      const {bankId, accountType} = paymentInfo || {};
+      if(accountType == 'Bank Account') {
+        const bankList = _getBankList();
+        if(bankList && bankList.length > 0) {
+          const bankItem:TDropdownItem = bankList.find((d:TDropdownItem) => d.value == bankId) as TDropdownItem;
+          if(bankItem !== undefined){
+            setSelectedUPI(bankItem.value);
+            //@ts-ignore
+            accountOptionDropdownRef && accountOptionDropdownRef?.current?.setDefaultValue(bankItem);
+          }
+        }
+      } else {
+          const upiItem:TDropdownItem = UPIOptions.find((d:TDropdownItem) => d.label == bankId) as TDropdownItem;
+          if(upiItem !== undefined){
+            setSelectedUPI(upiItem.label);
+            //@ts-ignore
+            accountOptionDropdownRef && accountOptionDropdownRef?.current?.setDefaultValue(upiItem);
+          }
+      }
+      
+    }
+  }, [accountType]);
+
   useEffect(()=> {
-    setAccountOptions(_getBankList());
-    _setDefaultAccountOption();
+    if(!isEdit){
+      setAccountOptions(_getBankList());
+      _setDefaultAccountOption();
+    }
   }, [banks]);
 
   useEffect(() => {
@@ -163,6 +220,7 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
       showToast('Account Detail Added.', ToastType.SUCCESS);
       _getPaymentMethodsRequest();
       dispatch(resetAddPaymentMethodRequest());
+      onSuccess && onSuccess();
     } else if (!addPaymentMethodRequesting && addPaymentMethodFailure) {
       showToast('Account Detail Not Added.', ToastType.ERROR);
       dispatch(resetAddPaymentMethodRequest());
@@ -184,6 +242,7 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
+              value={accountHolder}
             />
           </View>
           <View style={styles.textContainer}>
@@ -193,6 +252,7 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
+              value={accountNumber}
             />
           </View>
         </View>
@@ -204,6 +264,7 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
+            value={ifscCode}
           />
         </View>
       </>
@@ -251,6 +312,8 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({}) => {
           <DropdownComponent
             data={accountTypeOptions}
             onSelect={handleAccountType}
+            //@ts-ignore
+            ref={accountTypeRef}
           />
         </View>
         <View style={styles.textContainer2}>

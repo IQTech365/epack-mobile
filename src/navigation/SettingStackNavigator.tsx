@@ -6,6 +6,7 @@ import SettingsView from '../views/settings';
 import AddSerialNoView from '../views/settings/serialNoSettings';
 import RoleManagementView from '../views/settings/roleManagement';
 import TemplateSettingPageView from '../views/settings/templateSettings';
+import AccountEditView from '../views/settings/profileSetting/components/AccountEditView';
 
 const SettingStack = createNativeStackNavigator();
 
@@ -19,6 +20,10 @@ const SettingStackNavigator = () => {
             <SettingStack.Screen
                 name={SettingStackRoute.ProfileSetting}
                 component={PackersProfileSetting}
+            />
+            <SettingStack.Screen
+                name={SettingStackRoute.AccountEditView}
+                component={AccountEditView}
             />
             <SettingStack.Screen
                 name={SettingStackRoute.SerialNoSetting}
