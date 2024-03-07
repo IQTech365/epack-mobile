@@ -13,15 +13,17 @@ import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import usePincodeHook from '../../../../../hooks/usePincodeHook';
 import { getCities2, getStates2 } from '../../../../../utils/formatter';
 import Spinner from '../../../../../common/Spinner';
-import { IDropAddress, IEnquiry } from '../../../../../interface/quotation/IGetQuotationsResponse';
+import { IDropAddress, IEnquiry, IGetQuotationData } from '../../../../../interface/quotation/IGetQuotationsResponse';
 import useUtilityHook from '../../../../../hooks/useUtilityHook';
 import DropdownWithTextInput from '../../../../../common/DropdownWithTextInput';
 
 interface Props {
   fromEnquiry?:boolean;
+  isEdit?:boolean;
+  item?:IGetQuotationData;
 }
 
-const DropAddressView: React.FC<Props> = ({fromEnquiry = false}) => {
+const DropAddressView: React.FC<Props> = ({fromEnquiry = false, isEdit, item}) => {
   const {
     state,
     setDropPincode,
@@ -72,7 +74,7 @@ const DropAddressView: React.FC<Props> = ({fromEnquiry = false}) => {
       stateDropdownCompRef &&
       cityDropdownCompRef
     ) {
-      if(!state.editQuotation && !state.item) {
+      if(!isEdit) {
         //@ts-ignore
         stateDropdownCompRef?.current?.setValue(states[0]);
         setDropState(states[0]);
@@ -101,12 +103,11 @@ const DropAddressView: React.FC<Props> = ({fromEnquiry = false}) => {
   }, [state.enquiryItem]);
 
   useEffect(() => {
-    if(state.editQuotation && state.item) {
-      const {item} = state;
-      if(item) {
-        const enquiry:IEnquiry = item.enquiries;
-        if(enquiry) {
-          const dropAddress:IDropAddress = enquiry.dropAddress as IDropAddress;
+    if(isEdit && item) {
+      const _enquires:IEnquiry[] = item.enquiries;
+      if(_enquires && _enquires.length > 0) {
+        const singleEnquiry:IEnquiry = _enquires[0];
+          const dropAddress:IDropAddress = singleEnquiry.dropAddress as IDropAddress;
           if(dropAddress) {
             setDropPincode(dropAddress?.pincode);
             setPincode(dropAddress?.pincode);
@@ -130,10 +131,10 @@ const DropAddressView: React.FC<Props> = ({fromEnquiry = false}) => {
                 liftDropdownCompRef && liftDropdownCompRef?.current?.setDefaultValue(liftItem);
             }
           }
-        }
       }
+        
     }
-  }, [state.editQuotation, state.item]);
+  }, [isEdit]);
 
   return (
     <CollapsibleView title="DROP ADDRESS" collapsed={true}>

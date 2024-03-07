@@ -10,11 +10,16 @@ import DropdownComponent from '../../../../../../../common/DropdownComponent';
 import {TDropdownItem} from '../../../../../../../type/TDropdownItem';
 import gstPercentOptions from '../../../../../../../data/gstPercentOptions.json';
 import gstTypeOptions from '../../../../../../../data/gstTypeOptions.json';
-import { IQuotationFreight } from '../../../../../../../interface/quotation/IGetSingleQuotationResponse';
+import { IQuotationFreight, ISingleQuotationData } from '../../../../../../../interface/quotation/IGetSingleQuotationResponse';
+import { IGetQuotationData } from '../../../../../../../interface/quotation/IGetQuotationsResponse';
 
-interface Props {}
+interface Props {
+  isEdit?:boolean;
+  item?:IGetQuotationData;
+  quotationData?:ISingleQuotationData;
+}
 
-const GstView: React.FC<Props> = ({}) => {
+const GstView: React.FC<Props> = ({isEdit, item, quotationData}) => {
   const {state, setGstInQuotation, setGstPercent, setGstType} = useQuotationFormContextHook();
   const gstPercentDropdownCompRef = useRef(null);
   const gstTypeDropdownCompRef = useRef(null);
@@ -50,22 +55,17 @@ const GstView: React.FC<Props> = ({}) => {
   };
 
   useEffect(() => {
-    if(state.editQuotation && state.item) {
-      const {item} = state;
-      if(item) {
-        const quotationfreight:IQuotationFreight = item.quotationfreights;
+    if(isEdit && quotationData) {
+        const quotationfreight:IQuotationFreight = quotationData.quotationfreights;
         if(quotationfreight) {
           setGstInQuotation(quotationfreight.gstStatus);
         }
-      }
     }
-  }, [state.editQuotation, state.item]);
+  }, [isEdit, quotationData]);
 
   useEffect(() => {
-    if(state.editQuotation && state.item && state.gst_in_quotation == gstInQuotationOptions[0]) {
-      const {item} = state;
-      if(item) {
-        const quotationfreight:IQuotationFreight = item.quotationfreights;
+    if(isEdit && quotationData && state.item && state.gst_in_quotation == gstInQuotationOptions[0]) {
+        const quotationfreight:IQuotationFreight = quotationData.quotationfreights;
         if(quotationfreight) {
           const gstPercentItem:TDropdownItem = gstPercentOptions.find((d:TDropdownItem) => d.value == quotationfreight.gstPercentage) as TDropdownItem;
           if(gstPercentItem) {
@@ -80,7 +80,6 @@ const GstView: React.FC<Props> = ({}) => {
             setGstType(gstTypeItem.label);
           }
         }
-      }
     }
   }, [state.gst_in_quotation]);
 

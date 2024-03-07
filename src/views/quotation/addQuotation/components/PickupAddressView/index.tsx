@@ -15,6 +15,7 @@ import {getCities2, getStates2} from '../../../../../utils/formatter';
 import Spinner from '../../../../../common/Spinner';
 import {
   IEnquiry,
+  IGetQuotationData,
   IPickupAddress,
 } from '../../../../../interface/quotation/IGetQuotationsResponse';
 import useUtilityHook from '../../../../../hooks/useUtilityHook';
@@ -22,9 +23,11 @@ import DropdownWithTextInput from '../../../../../common/DropdownWithTextInput';
 
 interface Props {
   fromEnquiry?: boolean;
+  isEdit?:boolean;
+  item?:IGetQuotationData;
 }
 
-const PickupAddressView: React.FC<Props> = ({fromEnquiry = false}) => {
+const PickupAddressView: React.FC<Props> = ({fromEnquiry = false, isEdit, item}) => {
   const {
     state,
     setPickupPincode,
@@ -75,7 +78,7 @@ const PickupAddressView: React.FC<Props> = ({fromEnquiry = false}) => {
       stateDropdownCompRef &&
       cityDropdownCompRef
     ) {
-      if (!state.editQuotation && !state.item) {
+      if (!isEdit) {
         //@ts-ignore
         stateDropdownCompRef?.current?.setValue(states[0]);
         setPickupState(states[0]);
@@ -104,13 +107,11 @@ const PickupAddressView: React.FC<Props> = ({fromEnquiry = false}) => {
   }, [state.enquiryItem]);
 
   useEffect(() => {
-    if (state.editQuotation && state.item) {
-      const {item} = state;
-      if (item) {
-        const enquiry: IEnquiry = item.enquiries;
-        if (enquiry) {
-          const pickupAddress: IPickupAddress =
-            enquiry.pickupAddress as IPickupAddress;
+    if (isEdit && item) {
+        const _enquires:IEnquiry[] = item.enquiries;
+        if(_enquires && _enquires.length > 0) {
+          const singleEnquiry:IEnquiry = _enquires[0];
+          const pickupAddress: IPickupAddress = singleEnquiry.pickupAddress as IPickupAddress;
           if (pickupAddress) {
             setPickupPincode(pickupAddress?.pincode);
             setPincode(pickupAddress?.pincode);
@@ -139,9 +140,8 @@ const PickupAddressView: React.FC<Props> = ({fromEnquiry = false}) => {
             }
           }
         }
-      }
     }
-  }, [state.editQuotation, state.item]);
+  }, [isEdit]);
 
   return (
     <CollapsibleView title="PICKUP ADDRESS" collapsed={true}>

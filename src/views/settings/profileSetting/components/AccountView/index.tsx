@@ -89,6 +89,7 @@ const AddAccountView = () => {
           onSuccess={() => {
             _getPaymentMethodsRequest();
             setShowPaymentMethodList(true);
+            setShowAddPaymentMethod(false);
           }}
         />
       );

@@ -44,7 +44,6 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
     getQuotationTemplateHtmlFailure,
   } = useAppSelector(state => state.Quotation);
   const {data: quotationData} = quotations || {};
-  // console.log('quotationData----', JSON.stringify(quotationData));
   
   const dispatch = useAppDispatch();
   const [showQuotationList, setShowQuotationList] = useState<boolean>(false);
@@ -155,6 +154,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
             fromDestination: _getFromDestination(quotation),
             toDestination: _getToDestination(quotation),
             shiftingType: _getShiftingType(quotation),
+            shiftingLuggage: quotation.shiftingLuggage,
             quotationAmount: quotationAmount,
             quotationDate: quotationDate,
             phoneNumber: _getMobile(quotation),

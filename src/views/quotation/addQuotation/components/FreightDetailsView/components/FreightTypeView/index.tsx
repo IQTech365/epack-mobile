@@ -9,13 +9,17 @@ import {useQuotationFormContextHook} from '../../../../../../../provider/Quotati
 import SingleChargeInputView from '../SingleChargeInputView';
 import BothChargeInputView from '../BothChargeInputView';
 import shiftingLuggages from '../../../../../../../data/shiftingLuggage.json';
-import { IQuotationFreight } from '../../../../../../../interface/quotation/IGetSingleQuotationResponse';
+import { IQuotationFreight, ISingleQuotationData } from '../../../../../../../interface/quotation/IGetSingleQuotationResponse';
+import { IGetQuotationData } from '../../../../../../../interface/quotation/IGetQuotationsResponse';
 interface Props {
   freightType: FREIGHT_TYPE;
   options: string[];
+  isEdit?:boolean;
+  item?:IGetQuotationData;
+  quotationData?:ISingleQuotationData;
 }
 
-const FreightTypeView: React.FC<Props> = ({freightType, options}) => {
+const FreightTypeView: React.FC<Props> = ({freightType, options, isEdit, item, quotationData}) => {
   const {
     state,
     setFreightPartLoad,
@@ -173,11 +177,9 @@ const FreightTypeView: React.FC<Props> = ({freightType, options}) => {
   }, [state.freight_part_load, state.freight_full_load]);
 
   useEffect(() => {
-    if(state.editQuotation && state.item) {
-      const {item} = state;
-      if(item) {
-        const quotationfreight:IQuotationFreight = item.quotationfreights;
-        if(quotationfreight) {
+    if(isEdit && quotationData) {
+        const quotationfreight:IQuotationFreight = quotationData.quotationfreights;
+        console.log('quotationfreight-----', JSON.stringify(quotationfreight));
           const isPartLoad = quotationfreight.isPartLoad == 'true';
           setFreightPartLoad(isPartLoad);
           const isFullLoad = quotationfreight.isFullLoad == 'true';
@@ -187,14 +189,12 @@ const FreightTypeView: React.FC<Props> = ({freightType, options}) => {
           setLoadingCharge(quotationfreight.loadingChargesStatus);
           setUnloadingCharge(quotationfreight.unLoadingChargesStatus);
           setUnpackingCharge(quotationfreight.unPackagingChargesStatus);
-        }
-      }
     }
-  }, [state.editQuotation, state.item]);
+  }, [isEdit, quotationData]);
 
   return (
     <View style={styles.mainWrapper}>
-        <Spacer height={10} />
+      <Spacer height={10} />
       <View style={styles.container}>
         <Text style={styles.labelText}>{_getFreightTypeText()}</Text>
       </View>
@@ -207,8 +207,16 @@ const FreightTypeView: React.FC<Props> = ({freightType, options}) => {
             unfillColor="#FFFFFF"
             text={option}
             fillColor={COLOR_BLUE}
-            iconStyle={freightType == FREIGHT_TYPE.LOAD_TYPE ? styles.iconStyle : styles.iconStyle2}
-            innerIconStyle={freightType == FREIGHT_TYPE.LOAD_TYPE ? styles.innerIconStyle : styles.innerIconStyle2}
+            iconStyle={
+              freightType == FREIGHT_TYPE.LOAD_TYPE
+                ? styles.iconStyle
+                : styles.iconStyle2
+            }
+            innerIconStyle={
+              freightType == FREIGHT_TYPE.LOAD_TYPE
+                ? styles.innerIconStyle
+                : styles.innerIconStyle2
+            }
             textStyle={styles.textStyle}
             style={styles.style}
             textContainerStyle={styles.textContainerStyle}
@@ -222,7 +230,21 @@ const FreightTypeView: React.FC<Props> = ({freightType, options}) => {
       </View>
       {showLoadTypeRequiredErrorView()}
       <Spacer height={10} />
-      {isBothLoadType ? <BothChargeInputView freightType={freightType} /> : <SingleChargeInputView freightType={freightType} />}
+      {isBothLoadType ? (
+        <BothChargeInputView
+          freightType={freightType}
+          item={item}
+          isEdit={isEdit}
+          quotationData={quotationData}
+        />
+      ) : (
+        <SingleChargeInputView
+          freightType={freightType}
+          item={item}
+          isEdit={isEdit}
+          quotationData={quotationData}
+        />
+      )}
       <Spacer height={10} />
     </View>
   );

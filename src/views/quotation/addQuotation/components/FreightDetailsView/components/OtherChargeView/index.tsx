@@ -16,10 +16,15 @@ import { particularOptions } from '../utils';
 import { ToastType, showToast } from '../../../../../../../utils/utility';
 import * as SQuotation from '../../../../../../../interface/quotation/IGetSingleQuotationResponse';
 import DropdownWithTextInput from '../../../../../../../common/DropdownWithTextInput';
+import { IGetQuotationData, } from '../../../../../../../interface/quotation/IGetQuotationsResponse';
 
-interface Props {}
+interface Props {
+  isEdit?:boolean;
+  item?:IGetQuotationData;
+  quotationData?:SQuotation.ISingleQuotationData;
+}
 
-const OtherChargeView: React.FC<Props> = ({}) => {
+const OtherChargeView: React.FC<Props> = ({isEdit, item, quotationData}) => {
   const {state, setOtherCharges} = useQuotationFormContextHook();
   const [shouldAdd, setShouldAdd] = useState<boolean>(false);
   const particularsInputCompRef = useRef(null);
@@ -240,10 +245,8 @@ const OtherChargeView: React.FC<Props> = ({}) => {
   };
 
   useEffect(() => {
-    if(state.editQuotation && state.item) {
-      const {item} = state;
-      if(item) {
-        const quotationfreight:SQuotation.IQuotationFreight = item.quotationfreights;
+    if(isEdit && quotationData) {
+        const quotationfreight:SQuotation.IQuotationFreight = quotationData.quotationfreights;
         if(quotationfreight) {
           const otherCharges:SQuotation.IOtherCharge[] = quotationfreight.otherCharges;
           if(otherCharges && otherCharges.length > 0) {
@@ -262,9 +265,8 @@ const OtherChargeView: React.FC<Props> = ({}) => {
             setItems(localOtherCharges);
           }
         }
-      }
     }
-  }, [state.editQuotation, state.item]);
+  }, [isEdit, quotationData]);
 
   return (
     <>

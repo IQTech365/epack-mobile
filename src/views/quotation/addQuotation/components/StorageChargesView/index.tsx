@@ -14,13 +14,16 @@ import Input from '../../../../../common/Input';
 import storageDurationOptions from '../../../../../data/storageDurationOptions.json';
 import DatePickerComponent from '../../../../../common/DatePickerComponent';
 import {formatDate4} from '../../../../../utils/formatter';
-import { IQuotationFreight, IStorage } from '../../../../../interface/quotation/IGetSingleQuotationResponse';
+import { IQuotationFreight, ISingleQuotationData, IStorage } from '../../../../../interface/quotation/IGetSingleQuotationResponse';
+import { IGetQuotationData } from '../../../../../interface/quotation/IGetQuotationsResponse';
 
 interface Props {
-  //
+  isEdit?:boolean;
+  item?:IGetQuotationData;
+  quotationData?:ISingleQuotationData;
 }
 
-const StorageChargesView: React.FC<Props> = ({}) => {
+const StorageChargesView: React.FC<Props> = ({isEdit, item, quotationData}) => {
   const {
     state,
     setStorage,
@@ -35,25 +38,20 @@ const StorageChargesView: React.FC<Props> = ({}) => {
   const amountInputCompRef = useRef(null);
 
   useEffect(() => {
-    if(state.editQuotation && state.item) {
-      const {item} = state;
-      if(item) {
-        const quotationfreight:IQuotationFreight = item.quotationfreights;
+    if(isEdit && quotationData) {
+        const quotationfreight:IQuotationFreight = quotationData.quotationfreights;
         if(quotationfreight) {
           const storageCharge:IStorage = quotationfreight.storageCharges;
           if(storageCharge) {
             setStorage(storageCharge?.isRequired);
           }
         }
-      }
     }
-  }, [state.editQuotation, state.item]);
+  }, [isEdit, quotationData]);
 
   useEffect(() => {
-    if(state.editQuotation && state.item) {
-      const {item} = state;
-      if(item) {
-        const quotationfreight:IQuotationFreight = item.quotationfreights;
+    if(isEdit && quotationData) {
+        const quotationfreight:IQuotationFreight = quotationData.quotationfreights;
         if(quotationfreight) {
           const storageCharge:IStorage = quotationfreight.storageCharges;
           if(storageCharge) {
@@ -74,7 +72,6 @@ const StorageChargesView: React.FC<Props> = ({}) => {
             }
           }
         }
-      }
     }
   }, [state.storage]);
 

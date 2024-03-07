@@ -8,13 +8,16 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {COLOR_BLACK, COLOR_BLUE} from '../../../../../utils/colors';
 import {useQuotationFormContextHook} from '../../../../../provider/QuotationFormContextProvider';
 import Input from '../../../../../common/Input';
-import { IQuotationFreight } from '../../../../../interface/quotation/IGetSingleQuotationResponse';
+import { IQuotationFreight, ISingleQuotationData } from '../../../../../interface/quotation/IGetSingleQuotationResponse';
+import { IGetQuotationData } from '../../../../../interface/quotation/IGetQuotationsResponse';
 
 interface Props {
-  //
+  isEdit?:boolean;
+  item?:IGetQuotationData;
+  quotationData?:ISingleQuotationData
 }
 
-const OtherDetailsView: React.FC<Props> = ({}) => {
+const OtherDetailsView: React.FC<Props> = ({isEdit, item, quotationData}) => {
   const {
     state,
     setOtherDetail1,
@@ -26,19 +29,16 @@ const OtherDetailsView: React.FC<Props> = ({}) => {
   const otherDetail4InputCompRef = useRef(null);
 
   useEffect(() => {
-    if(state.editQuotation && state.item) {
-      const {item} = state;
-      if(item) {
-        const quotationfreight:IQuotationFreight = item.quotationfreights;
+    if(isEdit && quotationData) {
+        const quotationfreight:IQuotationFreight = quotationData.quotationfreights;
         if(quotationfreight) {
           setOtherDetail1(quotationfreight?.otherDetail1);
           setOtherDetail2(quotationfreight?.otherDetail2);
           setOtherDetail3(quotationfreight?.easy_access_for_loading_unloading);
           setOtherDetail4(quotationfreight?.any_restrcition_for_loading_unloading);
         }
-      }
     }
-  }, [state.editQuotation, state.item]);
+  }, [isEdit, quotationData]);
 
   return (
     <CollapsibleView title="OTHER DETAILS" collapsed={true}>

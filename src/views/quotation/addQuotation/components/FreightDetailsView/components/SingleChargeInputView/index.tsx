@@ -7,12 +7,16 @@ import {COLOR_BLACK} from '../../../../../../../utils/colors';
 import {useQuotationFormContextHook} from '../../../../../../../provider/QuotationFormContextProvider';
 import {FREIGHT_TYPE, options} from '../utils';
 import shiftingLuggages from '../../../../../../../data/shiftingLuggage.json';
-import { IQuotationFreight } from '../../../../../../../interface/quotation/IGetSingleQuotationResponse';
+import { IQuotationFreight, ISingleQuotationData } from '../../../../../../../interface/quotation/IGetSingleQuotationResponse';
+import { IGetQuotationData } from '../../../../../../../interface/quotation/IGetQuotationsResponse';
 interface Props {
   freightType: FREIGHT_TYPE;
+  isEdit?:boolean;
+  item?:IGetQuotationData;
+  quotationData?:ISingleQuotationData;
 }
 
-const SingleChargeInputView: React.FC<Props> = ({freightType}) => {
+const SingleChargeInputView: React.FC<Props> = ({freightType, isEdit, item, quotationData}) => {
   const input1Ref = useRef();
 
   const {
@@ -32,10 +36,8 @@ const SingleChargeInputView: React.FC<Props> = ({freightType}) => {
   } = useQuotationFormContextHook();
 
   useEffect(() => {
-    if(state.editQuotation && state.item) {
-      const {item} = state;
-      if(item) {
-        const quotationfreight:IQuotationFreight = item.quotationfreights;
+    if(isEdit && quotationData) {
+        const quotationfreight:IQuotationFreight = quotationData.quotationfreights;
         if(quotationfreight) {
           if(quotationfreight.isPartLoad == "true") {
             setFreightPartCharge(quotationfreight.partLoadCharge);
@@ -56,9 +58,8 @@ const SingleChargeInputView: React.FC<Props> = ({freightType}) => {
           }
          
         }
-      }
     }
-  }, [state.editQuotation, state.item]);
+  }, [isEdit, quotationData]);
 
   const _getLabelText = () => {
     let text: string = state.freight_part_load ? 'Part Load' : 'Full Load';

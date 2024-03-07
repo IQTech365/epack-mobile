@@ -19,11 +19,15 @@ import GstView from './components/GstView';
 import VehicleLoadSizeView from '../VehicleLoadSizeView';
 import {useQuotationFormContextHook} from '../../../../../provider/QuotationFormContextProvider';
 import shiftingLuggages from '../../../../../data/shiftingLuggage.json';
+import { IGetQuotationData } from '../../../../../interface/quotation/IGetQuotationsResponse';
+import { ISingleQuotationData } from '../../../../../interface/quotation/IGetSingleQuotationResponse';
 interface Props {
-  //
+  isEdit?:boolean;
+  item?:IGetQuotationData;
+  quotationData?:ISingleQuotationData;
 }
 
-const FreightDetailsView: React.FC<Props> = ({}) => {
+const FreightDetailsView: React.FC<Props> = ({isEdit, item, quotationData}) => {
   const {state} = useQuotationFormContextHook();
 
   return (
@@ -36,43 +40,61 @@ const FreightDetailsView: React.FC<Props> = ({}) => {
               : loadOptions
           }
           freightType={FREIGHT_TYPE.LOAD_TYPE}
+          isEdit={isEdit} 
+          item={item}
+          quotationData={quotationData}
         />
-        <VehicleLoadSizeView />
+        <VehicleLoadSizeView isEdit={isEdit} item={item} />
         <Spacer height={4} />
         <FreightTypeView
           options={options}
           freightType={FREIGHT_TYPE.PACKING_CHARGE}
+          isEdit={isEdit} 
+          item={item}
+          quotationData={quotationData}
         />
         <Spacer height={4} />
         <FreightTypeView
           options={options}
           freightType={FREIGHT_TYPE.PACKING_MATERIAL_CHARGE}
+          isEdit={isEdit} 
+          item={item}
+          quotationData={quotationData}
         />
         <Spacer height={4} />
         <FreightTypeView
           options={loadingChargeOptions}
           freightType={FREIGHT_TYPE.LOADING_CHARGE}
+          isEdit={isEdit} 
+          item={item}
+          quotationData={quotationData}
         />
         <Spacer height={4} />
         <FreightTypeView
           options={unloadingChargeOptions}
           freightType={FREIGHT_TYPE.UNLOADING_CHARGE}
+          isEdit={isEdit} 
+          item={item}
+          quotationData={quotationData}
         />
         <Spacer height={4} />
         <FreightTypeView
           options={options}
           freightType={FREIGHT_TYPE.UNPACKING_CHARGE}
+          isEdit={isEdit} 
+          item={item}
+          quotationData={quotationData}
         />
         <Spacer height={4} />
-        <OtherChargeView />
+        <OtherChargeView isEdit={isEdit} item={item} quotationData={quotationData} />
         <Spacer height={4} />
-        <AdvanceAmountView />
+        <AdvanceAmountView isEdit={isEdit} item={item} quotationData={quotationData} />
         <Spacer height={4} />
-        <SurchargeView />
+        <SurchargeView isEdit={isEdit} item={item} quotationData={quotationData} />
         <Spacer height={4} />
-        <DiscountView />
+        <DiscountView isEdit={isEdit} item={item} quotationData={quotationData}/>
         <Spacer height={4} />
-        <GstView />
+        <GstView isEdit={isEdit} item={item} quotationData={quotationData} />
         <Spacer height={2} />
       </View>
     </CollapsibleView>

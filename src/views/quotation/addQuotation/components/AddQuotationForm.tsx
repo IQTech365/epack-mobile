@@ -90,6 +90,8 @@ const AddQuotationForm: React.FC<Props> = ({
   } = useAppSelector(state => state.Quotation);
   // console.log('Single-quotation--', JSON.stringify(quotation));
   // console.log('Single-quotation-state-1--', JSON.stringify(state));
+  console.log('Quotation-item--', JSON.stringify(item));
+  
   const {
     vehicleTypesRequesting,
     vehicleCompaniesRequesting,
@@ -360,20 +362,20 @@ const AddQuotationForm: React.FC<Props> = ({
 
   useEffect(() => {
     if(isEdit) {
-      resetAll();
-      setItem(_getQuotationItem() as ISingleQuotationData)
-      setIsEditQuotation(isEdit);
+      // resetAll();
+      // setItem(_getQuotationItem() as ISingleQuotationData)
+      // setIsEditQuotation(isEdit);
     }
     if(fromEnquiry) {
       setEnquiryItem(_getSingleEnquiry());
     }
   }, []);
 
-  useEffect(() => {
-    return () => {
-      resetAll();
-    }
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     resetAll();
+  //   }
+  // }, []);
 
   useEffect(() => {
     if (!addQuotationRequesting && addQuotationSuccess) {
@@ -413,19 +415,19 @@ const AddQuotationForm: React.FC<Props> = ({
 
   return (
     <>
-      <BasicDetails fromEnquiry={fromEnquiry} />
+      <BasicDetails fromEnquiry={fromEnquiry} isEdit={isEdit} item={item} />
       <Spacer height={4} />
-      <PickupAddressView fromEnquiry={fromEnquiry} />
+      <PickupAddressView fromEnquiry={fromEnquiry} isEdit={isEdit} item={item} />
       <Spacer height={4} />
-      <DropAddressView fromEnquiry={fromEnquiry} />
+      <DropAddressView fromEnquiry={fromEnquiry} isEdit={isEdit} item={item} />
       <Spacer height={4} />
-      <FreightDetailsView />
+      <FreightDetailsView isEdit={isEdit} item={item} quotationData={_getQuotationItem()} />
       <Spacer height={4} />
-      <InsuranceDetailsView />
+      <InsuranceDetailsView isEdit={isEdit} item={item} quotationData={_getQuotationItem()} />
       <Spacer height={4} />
-      <StorageChargesView />
+      <StorageChargesView isEdit={isEdit} item={item} quotationData={_getQuotationItem()} />
       <Spacer height={4} />
-      <OtherDetailsView />
+      <OtherDetailsView isEdit={isEdit} item={item} quotationData={_getQuotationItem()} />
       <Spacer height={12} />
       <Button
         text={isEdit ? 'UPDATE' : 'CREATE'}

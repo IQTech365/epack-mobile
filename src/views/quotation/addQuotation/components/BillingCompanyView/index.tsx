@@ -23,15 +23,17 @@ import {
 import {Validator} from '../../../../../utils/validation';
 import CompanyAddressView from '../CompanyAddressView';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
-import { IEnquiry } from '../../../../../interface/quotation/IGetQuotationsResponse';
+import { IEnquiry, IGetQuotationData } from '../../../../../interface/quotation/IGetQuotationsResponse';
 import { IBillingInfo } from '../../../../../interface/enquiry/ISingleEnquiryResponse';
 
 
 interface Props {
   fromEnquiry?:boolean;
+  isEdit?:boolean;
+  item?:IGetQuotationData;
 }
 
-const BillingCompanyView: React.FC<Props> = ({fromEnquiry = false}) => {
+const BillingCompanyView: React.FC<Props> = ({fromEnquiry = false, isEdit, item}) => {
   const {
     state,
     setCompanyName,
@@ -165,13 +167,12 @@ const BillingCompanyView: React.FC<Props> = ({fromEnquiry = false}) => {
   }, [selectedCompanyOption]);
 
   useEffect(() => {
-    if(state.editQuotation && state.item) {
-      const {item} = state;
-      if(item) {
-        const enquiry:IEnquiry = item.enquiries;
-        if(enquiry) {
-          if(enquiry.billingBy == "by Company") {
-            const billingInfo:ICustomerBillingInfo = enquiry.billingDetails as ICustomerBillingInfo;
+    if(isEdit && item) {
+      const _enquires:IEnquiry[] = item.enquiries;
+      if(_enquires && _enquires.length > 0) {
+        const singleEnquiry:IEnquiry = _enquires[0];
+          if(singleEnquiry?.billingBy == "by Company") {
+            const billingInfo:ICustomerBillingInfo = singleEnquiry.billingDetails as ICustomerBillingInfo;
             if(billingInfo) {
               setCompanyName(billingInfo.companyName);
               setApprovalAuthority(billingInfo.approvalAuthority);
@@ -187,13 +188,11 @@ const BillingCompanyView: React.FC<Props> = ({fromEnquiry = false}) => {
               setEmployeeDesignation(billingInfo.employeeDesignation);
               setEmployeeMobileNo(billingInfo.employeeMobile);
               setCompanyAddress(billingInfo.companyAddress);
-          
             }
           }
-        }
       }
     }
-  }, [state.editQuotation, state.item]);
+  }, [isEdit]);
 
   return (
     <>
@@ -345,7 +344,7 @@ const BillingCompanyView: React.FC<Props> = ({fromEnquiry = false}) => {
         />
       </View>
       <Spacer height={4} />
-      <CompanyAddressView fromEnquiry={fromEnquiry} />
+      <CompanyAddressView fromEnquiry={fromEnquiry} isEdit={isEdit} item={item} />
     </>
   );
 };

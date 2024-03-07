@@ -7,25 +7,26 @@ import {TDropdownItem} from '../../../../../../../type/TDropdownItem';
 import surchargeOptions from '../../../../../../../data/surchargeOptions.json';
 import surchargePercentOptions from '../../../../../../../data/surchargePercentOptions.json';
 import {useQuotationFormContextHook} from '../../../../../../../provider/QuotationFormContextProvider';
-import { IQuotationFreight } from '../../../../../../../interface/quotation/IGetSingleQuotationResponse';
+import { IQuotationFreight, ISingleQuotationData } from '../../../../../../../interface/quotation/IGetSingleQuotationResponse';
+import { IGetQuotationData } from '../../../../../../../interface/quotation/IGetQuotationsResponse';
 
-interface Props {}
+interface Props {
+  isEdit?:boolean;
+  item?:IGetQuotationData;
+  quotationData?:ISingleQuotationData;
+}
 
-const SurchargeView: React.FC<Props> = ({}) => {
+const SurchargeView: React.FC<Props> = ({isEdit, item, quotationData}) => {
   const {state, setSurcharge, setSurchargePercent} = useQuotationFormContextHook();
   const surchargeTypeDropdownRef = useRef(null);
   const surchargePercentDropdownRef = useRef(null);
 
   useEffect(() => {
-    if(state.editQuotation && state.item) {
-      const {item} = state;
-      if(item) {
-        const quotationfreight:IQuotationFreight = item.quotationfreights;
+    if(isEdit && quotationData) {
+        const quotationfreight:IQuotationFreight = quotationData.quotationfreights;
         if(quotationfreight) {
           const surchargeTypeItem:TDropdownItem = surchargeOptions.find((d:TDropdownItem) => d.label == quotationfreight.surchargeIsRequired) as TDropdownItem;
           if(surchargeTypeItem) {
-            console.log('surchargeTypeDropdownRef---', JSON.stringify(surchargeTypeDropdownRef));
-            
             //@ts-ignore
             surchargeTypeDropdownRef && surchargeTypeDropdownRef?.current?.setDefaultValue(surchargeTypeItem);
             setSurcharge(surchargeTypeItem.label);
@@ -37,9 +38,8 @@ const SurchargeView: React.FC<Props> = ({}) => {
             setSurchargePercent(surchargePercentItem.value);
           }
         }
-      }
     }
-  }, [state.editQuotation, state.item]);
+  }, [isEdit, quotationData]);
 
   return (
     <>

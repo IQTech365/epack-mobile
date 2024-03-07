@@ -7,13 +7,17 @@ import Input from '../../../../../../../common/Input';
 import {useQuotationFormContextHook} from '../../../../../../../provider/QuotationFormContextProvider';
 import {FREIGHT_TYPE, options} from '../utils';
 import shiftingLuggages from '../../../../../../../data/shiftingLuggage.json';
-import { IQuotationFreight } from '../../../../../../../interface/quotation/IGetSingleQuotationResponse';
+import { IQuotationFreight, ISingleQuotationData } from '../../../../../../../interface/quotation/IGetSingleQuotationResponse';
+import { IGetQuotationData } from '../../../../../../../interface/quotation/IGetQuotationsResponse';
 
 interface Props {
   freightType: FREIGHT_TYPE;
+  isEdit?:boolean;
+  item?:IGetQuotationData;
+  quotationData?:ISingleQuotationData;
 }
 
-const BothChargeInputView: React.FC<Props> = ({freightType}) => {
+const BothChargeInputView: React.FC<Props> = ({freightType, isEdit, item, quotationData}) => {
   const input1Ref = useRef(null);
   const input2Ref = useRef(null);
 
@@ -34,10 +38,8 @@ const BothChargeInputView: React.FC<Props> = ({freightType}) => {
   } = useQuotationFormContextHook();
 
   useEffect(() => {
-    if(state.editQuotation && state.item) {
-      const {item} = state;
-      if(item) {
-        const quotationfreight:IQuotationFreight = item.quotationfreights;
+    if(isEdit && quotationData) {
+        const quotationfreight:IQuotationFreight = quotationData.quotationfreights;
         if(quotationfreight) {
           setFreightPartCharge(quotationfreight.partLoadCharge);
           setFreightFullCharge(quotationfreight.fullLoadCharge);
@@ -53,9 +55,8 @@ const BothChargeInputView: React.FC<Props> = ({freightType}) => {
           setUnpackingChargeFullLoad(quotationfreight.unPackagingFullLoadCharges);
           _inputValue(quotationfreight);
         }
-      }
     }
-  }, [state.editQuotation, state.item]);
+  }, [isEdit, quotationData]);
 
   const _getLabelText = () => {
     let label1: string = 'Part Load', label2: string = 'Full Load';

@@ -10,11 +10,16 @@ import DropdownComponent from '../../../../../../../common/DropdownComponent';
 import {TDropdownItem} from '../../../../../../../type/TDropdownItem';
 import discountPercentOptions from '../../../../../../../data/discountPercentOptions.json';
 import Input from '../../../../../../../common/Input';
-import { IQuotationFreight } from '../../../../../../../interface/quotation/IGetSingleQuotationResponse';
+import { IQuotationFreight, ISingleQuotationData } from '../../../../../../../interface/quotation/IGetSingleQuotationResponse';
+import { IGetQuotationData } from '../../../../../../../interface/quotation/IGetQuotationsResponse';
 
-interface Props {}
+interface Props {
+  isEdit?:boolean;
+  item?:IGetQuotationData;
+  quotationData?:ISingleQuotationData;
+}
 
-const DiscountView: React.FC<Props> = ({}) => {
+const DiscountView: React.FC<Props> = ({isEdit, item, quotationData}) => {
   const {state, setDiscountInQuotation, setDiscountPercentOrValue} = useQuotationFormContextHook();
   const flatDiscountInputCompRef = useRef(null);
   const discountPercentDropdownCompRef = useRef(null);
@@ -60,22 +65,17 @@ const DiscountView: React.FC<Props> = ({}) => {
   };
 
   useEffect(() => {
-    if(state.editQuotation && state.item) {
-      const {item} = state;
-      if(item) {
-        const quotationfreight:IQuotationFreight = item.quotationfreights;
+    if(isEdit && quotationData) {
+        const quotationfreight:IQuotationFreight = quotationData.quotationfreights;
         if(quotationfreight) {
           setDiscountInQuotation(quotationfreight.discountType);
         }
-      }
     }
-  }, [state.editQuotation, state.item]);
+  }, [isEdit, quotationData]);
 
   useEffect(() => {
-    if(state.editQuotation && state.item && state.discount_in_quotation !== discountInQuotationOptions[2].value) {
-      const {item} = state;
-      if(item) {
-        const quotationfreight:IQuotationFreight = item.quotationfreights;
+    if(isEdit && quotationData && state.item && state.discount_in_quotation !== discountInQuotationOptions[2].value) {
+        const quotationfreight:IQuotationFreight = quotationData.quotationfreights;
         if(quotationfreight) {
           if(quotationfreight.discountType == discountInQuotationOptions[0].value) {
             const discountPercentItem:TDropdownItem = discountPercentOptions.find((d:TDropdownItem) => d.value == quotationfreight.discountAmount) as TDropdownItem;
@@ -88,7 +88,6 @@ const DiscountView: React.FC<Props> = ({}) => {
               setDiscountPercentOrValue(quotationfreight.discountAmount);
           }
         }
-      }
     }
   }, [state.discount_in_quotation]);
 

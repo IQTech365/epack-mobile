@@ -18,13 +18,15 @@ import {
 import { debounce } from '../../../../../utils/utility';
 import { Validator } from '../../../../../utils/validation';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
-import { IEnquiry } from '../../../../../interface/quotation/IGetQuotationsResponse';
+import { IEnquiry, IGetQuotationData } from '../../../../../interface/quotation/IGetQuotationsResponse';
 
 interface Props {
-  fromEnquiry?:boolean
+  fromEnquiry?:boolean;
+  isEdit?:boolean;
+  item?:IGetQuotationData;
 }
 
-const BillingIndividualView: React.FC<Props> = ({fromEnquiry = false}) => {
+const BillingIndividualView: React.FC<Props> = ({fromEnquiry = false, isEdit, item}) => {
   const {state, setPartyName, setPartyMobileNo, setCustomerId} = useQuotationFormContextHook();
   const partyNameInputCompRef = useRef(null);
   const partyMobileNoInputCompRef = useRef(null);
@@ -102,23 +104,21 @@ const BillingIndividualView: React.FC<Props> = ({fromEnquiry = false}) => {
   }, [state.enquiryItem]);
 
   useEffect(() => {
-    if(state.editQuotation && state.item) {
-      const {item} = state;
-      if(item) {
-        const enquiry:IEnquiry = item.enquiries;
-        if(enquiry) {
-          if(enquiry.billingBy == "by Individual") {
-            setPartyName(enquiry.partyName);
-            //@ts-ignore
-            partyMobileNoInputCompRef && partyMobileNoInputCompRef?.current?.setValue(enquiry.partyName);
-            setPartyMobileNo(enquiry.mobile);
-            //@ts-ignore
-            partyNameInputCompRef && partyNameInputCompRef?.current?.setValue(enquiry.mobile);
-          }
+    if(isEdit && item) {
+        const _enquires:IEnquiry[] = item.enquiries;
+        if(_enquires && _enquires.length > 0) {
+          const singleEnquiry:IEnquiry = _enquires[0];
+            if(singleEnquiry.billingBy == "by Individual") {
+              setPartyName(singleEnquiry.partyName);
+              //@ts-ignore
+              partyMobileNoInputCompRef && partyMobileNoInputCompRef?.current?.setValue(singleEnquiry.partyName);
+              setPartyMobileNo(singleEnquiry.mobile);
+              //@ts-ignore
+              partyNameInputCompRef && partyNameInputCompRef?.current?.setValue(singleEnquiry.mobile);
+            }
         }
-      }
     }
-  }, [state.editQuotation, state.item]);
+  }, [isEdit]);
 
   return (
     <>

@@ -18,13 +18,15 @@ import {formatDate4} from '../../../../../utils/formatter';
 import BillingIndividualView from '../BillingIndividualView';
 import BillingCompanyView from '../BillingCompanyView';
 import VehicleInfoView from '../VehicleInfoView';
-import { IEnquiry } from '../../../../../interface/quotation/IGetQuotationsResponse';
+import { IEnquiry, IGetQuotationData } from '../../../../../interface/quotation/IGetQuotationsResponse';
 import useSerialNoHook from '../../../../../hooks/useSerialNo';
 interface Props {
   fromEnquiry?:boolean;
+  isEdit?:boolean;
+  item?:IGetQuotationData;
 }
 
-const BasicDetails: React.FC<Props> = ({fromEnquiry = false}) => {
+const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item}) => {
   const [switchState, setSwitchState] = useState<boolean>(true);
   const serialNo:number = useSerialNoHook();
   
@@ -62,15 +64,13 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false}) => {
   }, []);
 
   useEffect(() => {
-    if(!state.editQuotation) {
-      if(serialNo) {
+    if(!isEdit && serialNo) {
         setQuotationNo(serialNo.toString());
-      }
     }
   }, [serialNo]);
 
   useEffect(() => {
-    if(!state.editQuotation) {
+    if(!isEdit) {
       if(switchState) {
         setIsSerialNoAutomatic(true);
         if(serialNo) {
@@ -103,31 +103,29 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false}) => {
     }
   }, [state.billing_by]);
 
-  useEffect(() => {
-    if (fromEnquiry && state.enquiryItem) {
-      const {enquiryItem} = state;
-      setShiftingType(enquiryItem.shiftingType);
-      const shiftingTypeItem:TDropdownItem = shiftingTypes.find((d:TDropdownItem) => d.label.toLowerCase() == enquiryItem.shiftingType.toLowerCase()) as TDropdownItem;
-      if(shiftingTypeItem) {
-        //@ts-ignore
-        shiftingTypeDropdownCompRef && shiftingTypeDropdownCompRef?.current?.setDefaultValue(shiftingTypeItem);
-      }
-      setBillingBy(enquiryItem.billingBy);
-      const billingByItem:TDropdownItem = billingByOptions.find((d:TDropdownItem) => d.label == enquiryItem.billingBy) as TDropdownItem;
-      if(billingByItem) {
-       //@ts-ignore
-       billingByDropdownCompRef && billingByDropdownCompRef?.current?.setDefaultValue(billingByItem);
-      }
-      //@ts-ignore
-      dateOfMovingCompRef && dateOfMovingCompRef?.current?.setDefaultValue(new Date(enquiryItem.shiftingDate));
+  // useEffect(() => {
+  //   if (fromEnquiry && state.enquiryItem) {
+  //     const {enquiryItem} = state;
+  //     setShiftingType(enquiryItem.shiftingType);
+  //     const shiftingTypeItem:TDropdownItem = shiftingTypes.find((d:TDropdownItem) => d.label.toLowerCase() == enquiryItem.shiftingType.toLowerCase()) as TDropdownItem;
+  //     if(shiftingTypeItem) {
+  //       //@ts-ignore
+  //       shiftingTypeDropdownCompRef && shiftingTypeDropdownCompRef?.current?.setDefaultValue(shiftingTypeItem);
+  //     }
+  //     setBillingBy(enquiryItem.billingBy);
+  //     const billingByItem:TDropdownItem = billingByOptions.find((d:TDropdownItem) => d.label == enquiryItem.billingBy) as TDropdownItem;
+  //     if(billingByItem) {
+  //      //@ts-ignore
+  //      billingByDropdownCompRef && billingByDropdownCompRef?.current?.setDefaultValue(billingByItem);
+  //     }
+  //     //@ts-ignore
+  //     dateOfMovingCompRef && dateOfMovingCompRef?.current?.setDefaultValue(new Date(enquiryItem.shiftingDate));
       
-    }
-  }, [state.enquiryItem]);
+  //   }
+  // }, [state.enquiryItem]);
 
   useEffect(() => {
-    if(state.editQuotation && state.item) {
-      const {item} = state;
-      if(item) {
+    if(isEdit && item) {
         const shiftingLuggageItem:TDropdownItem = shiftingLuggages.find((d:TDropdownItem) => d.label == item.shiftingLuggage) as TDropdownItem;
         if(shiftingLuggageItem) {
           //@ts-ignore
@@ -135,27 +133,31 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false}) => {
         }
         setQuotationNo(item.quotationNumber);
         //@ts-ignore
+        quotationNoInputCompRef && quotationNoInputCompRef?.current?.setValue(item.quotationNumber);
+        //@ts-ignore
         dateOfQuotationCompRef && dateOfQuotationCompRef?.current?.setDefaultValue(new Date(item.quotationDate));
-        const enquiry:IEnquiry = item.enquiries;
-        if(enquiry) {
-          setShiftingType(enquiry.shiftingType);
-          const shiftingTypeItem:TDropdownItem = shiftingTypes.find((d:TDropdownItem) => d.label.toLowerCase() == enquiry.shiftingType.toLowerCase()) as TDropdownItem;
-          if(shiftingTypeItem) {
+        const _enquires:IEnquiry[] = item.enquiries;
+        if(_enquires && _enquires.length > 0) {
+          const singleEnquiry:IEnquiry = _enquires[0];
+          if(singleEnquiry) {
+            setShiftingType(singleEnquiry.shiftingType);
+            const shiftingTypeItem:TDropdownItem = shiftingTypes.find((d:TDropdownItem) => d.label.toLowerCase() == singleEnquiry.shiftingType.toLowerCase()) as TDropdownItem;
+            if(shiftingTypeItem) {
+              //@ts-ignore
+              shiftingTypeDropdownCompRef && shiftingTypeDropdownCompRef?.current?.setDefaultValue(shiftingTypeItem);
+            }
             //@ts-ignore
-            shiftingTypeDropdownCompRef && shiftingTypeDropdownCompRef?.current?.setDefaultValue(shiftingTypeItem);
-          }
-          //@ts-ignore
-          dateOfMovingCompRef && dateOfMovingCompRef?.current?.setDefaultValue(new Date(enquiry.shiftingDate));
-          setBillingBy(enquiry.billingBy);
-          const billingByItem:TDropdownItem = billingByOptions.find((d:TDropdownItem) => d.label == enquiry.billingBy) as TDropdownItem;
-          if(billingByItem) {
-            //@ts-ignore
-            billingByDropdownCompRef && billingByDropdownCompRef?.current?.setDefaultValue(billingByItem);
+            dateOfMovingCompRef && dateOfMovingCompRef?.current?.setDefaultValue(new Date(singleEnquiry.shiftingDate));
+            setBillingBy(singleEnquiry.billingBy);
+            const billingByItem:TDropdownItem = billingByOptions.find((d:TDropdownItem) => d.label == singleEnquiry.billingBy) as TDropdownItem;
+            if(billingByItem) {
+              //@ts-ignore
+              billingByDropdownCompRef && billingByDropdownCompRef?.current?.setDefaultValue(billingByItem);
+            }
           }
         }
-      }
     }
-  }, [state.editQuotation, state.item]);
+  }, [isEdit]);
 
   return (
     <CollapsibleView title="BASIC DETAILS" collapsed={false}>
@@ -258,9 +260,9 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false}) => {
         </View>
         <Spacer height={4} />
         {state.billing_by == billingByOptions[0].label ? (
-          <BillingIndividualView fromEnquiry={fromEnquiry} />
+          <BillingIndividualView fromEnquiry={fromEnquiry} isEdit={isEdit} item={item} />
         ) : (
-          <BillingCompanyView fromEnquiry={fromEnquiry} />
+          <BillingCompanyView fromEnquiry={fromEnquiry} isEdit={isEdit} item={item} />
         )}
       </View>
     </CollapsibleView>

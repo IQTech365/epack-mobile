@@ -5,22 +5,24 @@ import Label from '../../../../../../../common/Label';
 import Input from '../../../../../../../common/Input';
 import {COLOR_BLACK} from '../../../../../../../utils/colors';
 import {useQuotationFormContextHook} from '../../../../../../../provider/QuotationFormContextProvider';
-import { IQuotationFreight } from '../../../../../../../interface/quotation/IGetSingleQuotationResponse';
+import { IQuotationFreight, ISingleQuotationData } from '../../../../../../../interface/quotation/IGetSingleQuotationResponse';
+import { IGetQuotationData } from '../../../../../../../interface/quotation/IGetQuotationsResponse';
 
-interface Props {}
+interface Props {
+  isEdit?:boolean;
+  item?:IGetQuotationData;
+  quotationData?:ISingleQuotationData;
+}
 
-const AdvanceAmountView: React.FC<Props> = ({}) => {
+const AdvanceAmountView: React.FC<Props> = ({isEdit, item, quotationData}) => {
   const {state, setAdvanceAmount} = useQuotationFormContextHook();
   const advanceAmountCompRef = useRef(null);
 
   useEffect(() => {
-    if(state.editQuotation && state.item) {
-      const {item} = state;
-      if(item) {
-        setAdvanceAmount(item.advanceAmount);
-      }
+    if(isEdit && quotationData) {
+        setAdvanceAmount(quotationData.advanceAmount);
     }
-  }, [state.editQuotation, state.item]);
+  }, [isEdit, quotationData]);
 
   return (
     <View style={styles.fullWidthContainer}>

@@ -14,15 +14,18 @@ import insuranceTypeOptions from '../../../../../data/insuranceTypeOptions.json'
 import gstPercentOptions from '../../../../../data/gstPercentOptions.json';
 import Spacer from '../../../../../common/Spacer';
 import Input from '../../../../../common/Input';
-import { ICharge, IQuotationFreight, IStorage, ITransitInsurance } from '../../../../../interface/quotation/IGetSingleQuotationResponse';
+import { ICharge, IQuotationFreight, ISingleQuotationData, IStorage, ITransitInsurance } from '../../../../../interface/quotation/IGetSingleQuotationResponse';
 import useUtilityHook from '../../../../../hooks/useUtilityHook';
 import DropdownWithTextInput from '../../../../../common/DropdownWithTextInput';
+import { IGetQuotationData } from '../../../../../interface/quotation/IGetQuotationsResponse';
 
 interface Props {
-  //
+  isEdit?:boolean;
+  item?:IGetQuotationData;
+  quotationData?:ISingleQuotationData;
 }
 
-const InsuranceDetailsView: React.FC<Props> = ({}) => {
+const InsuranceDetailsView: React.FC<Props> = ({isEdit, item, quotationData}) => {
   const {
     state,
     setTransitInsurance,
@@ -41,25 +44,20 @@ const InsuranceDetailsView: React.FC<Props> = ({}) => {
   const insurancePercentOptions = getInsurancePercentageList();
   
   useEffect(() => {
-    if(state.editQuotation && state.item) {
-      const {item} = state;
-      if(item) {
-        const quotationfreight:IQuotationFreight = item.quotationfreights;
+    if(isEdit && quotationData) {
+        const quotationfreight:IQuotationFreight = quotationData.quotationfreights;
         if(quotationfreight) {
           const transitInsurance:ITransitInsurance = quotationfreight.transitInsurance;
           if(transitInsurance) {
             setTransitInsurance(transitInsurance.isRequired);
           }
         }
-      }
     }
-  }, [state.editQuotation, state.item]);
+  }, [isEdit, quotationData]);
 
   useEffect(() => {
-    if(state.editQuotation && state.item && state.transit_insurance == options2[0]) {
-      const {item} = state;
-      if(item) {
-        const quotationfreight:IQuotationFreight = item.quotationfreights;
+    if(isEdit && quotationData && state.item && state.transit_insurance == options2[0]) {
+        const quotationfreight:IQuotationFreight = quotationData.quotationfreights;
         if(quotationfreight) {
           const transitInsurance:ITransitInsurance = quotationfreight.transitInsurance;
           if(transitInsurance) {
@@ -96,7 +94,6 @@ const InsuranceDetailsView: React.FC<Props> = ({}) => {
             }
           }
         }
-      }
     }
   }, [state.transit_insurance]);
 

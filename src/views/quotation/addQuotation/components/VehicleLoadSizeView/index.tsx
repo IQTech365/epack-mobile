@@ -10,11 +10,13 @@ import {useQuotationFormContextHook} from '../../../../../provider/QuotationForm
 import Spacer from '../../../../../common/Spacer';
 import shiftingLuggages from '../../../../../data/shiftingLuggage.json';
 import { IQuotationFreight } from '../../../../../interface/quotation/IGetSingleQuotationResponse';
+import { IGetQuotationData } from '../../../../../interface/quotation/IGetQuotationsResponse';
 interface IProps {
-  //
+  isEdit?:boolean;
+  item?:IGetQuotationData;
 }
 
-const VehicleLoadSizeView: React.FC<IProps> = ({}) => {
+const VehicleLoadSizeView: React.FC<IProps> = ({isEdit, item}) => {
   const {vehicleSizeData} = useAppSelector(state => state.Vehicle);
   const {state, setLorryType} = useQuotationFormContextHook();
   const lorryTypeDropdownRef = useRef(null);

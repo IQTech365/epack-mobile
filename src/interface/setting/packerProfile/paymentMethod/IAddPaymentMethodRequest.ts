@@ -8,4 +8,5 @@ export interface IAddPaymentMethodRequest {
     ifscCode:string;
     upiType:string;
     upiId:string;
+    moduleId:string[];
 }

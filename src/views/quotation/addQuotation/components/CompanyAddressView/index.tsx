@@ -9,16 +9,18 @@ import Spacer from '../../../../../common/Spacer';
 import usePincodeHook from '../../../../../hooks/usePincodeHook';
 import {getCities2, getStates2} from '../../../../../utils/formatter';
 import Spinner from '../../../../../common/Spinner';
-import { IEnquiry } from '../../../../../interface/quotation/IGetQuotationsResponse';
+import { IEnquiry, IGetQuotationData } from '../../../../../interface/quotation/IGetQuotationsResponse';
 import { ICustomerBillingInfo } from '../../../../../interface/common/common';
 import DropdownWithTextInput from '../../../../../common/DropdownWithTextInput';
 import { IBillingInfo } from '../../../../../interface/enquiry/ISingleEnquiryResponse';
 
 interface Props {
   fromEnquiry:boolean;
+  isEdit?:boolean;
+  item?:IGetQuotationData;
 }
 
-const CompanyAddressView: React.FC<Props> = ({fromEnquiry}) => {
+const CompanyAddressView: React.FC<Props> = ({fromEnquiry, isEdit, item}) => {
   const {
     state,
     setCompanyPincode,
@@ -60,7 +62,7 @@ const CompanyAddressView: React.FC<Props> = ({fromEnquiry}) => {
       stateDropdownCompRef &&
       cityDropdownCompRef
     ) {
-      if(!state.editQuotation && !state.item){
+      if(!isEdit){
         //@ts-ignore
         stateDropdownCompRef?.current?.setValue(states[0]);
         setCompanyState(states[0]);
@@ -91,13 +93,13 @@ const CompanyAddressView: React.FC<Props> = ({fromEnquiry}) => {
   }, [state.enquiryItem]);
 
   useEffect(() => {
-    if(state.editQuotation && state.item) {
-      const {item} = state;
+    if(isEdit && item) {
       if(item) {
-        const enquiry:IEnquiry = item.enquiries;
-        if(enquiry) {
-          if(enquiry.billingBy == "by Company") {
-            const billingInfo:ICustomerBillingInfo = enquiry.billingDetails as ICustomerBillingInfo;
+        const _enquires:IEnquiry[] = item.enquiries;
+        if(_enquires && _enquires.length > 0) {
+          const singleEnquiry:IEnquiry = _enquires[0];
+          if(singleEnquiry.billingBy == "by Company") {
+            const billingInfo:ICustomerBillingInfo = singleEnquiry.billingDetails as ICustomerBillingInfo;
             if(billingInfo) {
               setCompanyPincode(billingInfo.pincode);
               setPincode(billingInfo.pincode);
@@ -112,7 +114,7 @@ const CompanyAddressView: React.FC<Props> = ({fromEnquiry}) => {
         }
       }
     }
-  }, [state.editQuotation, state.item]);
+  }, [isEdit]);
 
   return (
       <View>
