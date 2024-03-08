@@ -16,8 +16,10 @@ import {IGetContactDetailsData} from '../../../../../interface/setting/packerPro
 import {getCurrentCompanyId} from '../../../../../utils/storage';
 import {ToastType, showToast} from '../../../../../utils/utility';
 import ActionHeaderView from '../../../../../common/ActionHeaderView';
+import { useNavigation } from '@react-navigation/native';
 
 const AddContactView = () => {
+  const navigation = useNavigation();
   const [showContactList, setShowContactList] = useState<boolean>(false);
   const [showAddContact, setShowAddContact] = useState<boolean>(true);
   const dispatch = useAppDispatch();
@@ -79,6 +81,11 @@ const AddContactView = () => {
     dispatch(deleteContactRequest(contactId));
   };
 
+  const _handleEditContact = (item: IContactListItem) => {
+    //@ts-ignore
+    navigation.navigate("ContactEditView", {contactInfo: item});
+  };
+
   const showList = () => {
     if (showContactList) {
       return (
@@ -86,7 +93,11 @@ const AddContactView = () => {
           contentContainerStyle={{alignItems: 'center'}}
           data={getTransformedData()}
           renderItem={({item, index}) => (
-            <ContactListItem item={item} onDelete={_handleDeleteContact} />
+            <ContactListItem
+              item={item}
+              onDelete={_handleDeleteContact}
+              onEdit={_handleEditContact}
+            />
           )}
           ListEmptyComponent={showEmptyView()}
         />

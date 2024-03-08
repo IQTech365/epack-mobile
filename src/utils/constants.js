@@ -53,6 +53,8 @@ const SettingStackRoute = {
   RoleSetting: 'RoleSetting',
   TemplateSetting: 'TemplateSetting',
   AccountEditView: 'AccountEditView',
+  ContactEditView: 'ContactEditView',
+  DocumentEditView: 'DocumentEditView',
 };
 
 const MyProfileStackRoute = {

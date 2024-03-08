@@ -16,6 +16,9 @@ import { IGetPaymentMethodsResponse } from '../../interface/setting/packerProfil
 import { IGetUnitTypeResponse } from '../../interface/setting/unitType/IGetunitTypeResponse';
 import { IDeleteAccountResponse, IDeleteContactResponse, IDeleteDocumentResponse, IDeleteFooterContentResponse } from '../../interface/setting/packerProfile/contact';
 import { IUpdatePaymentMethodPayload, IUpdatePaymentMethodResponse } from '../../interface/setting/packerProfile/paymentMethod/IUpdatePaymentMethod';
+import { IUpdateContactDetailPayload } from '../../interface/setting/packerProfile/contactDetail/IUpdateContactDetail';
+import { IUpdateContactDetailResponse } from '../../interface/order/IUpdateContactDetails';
+import { IUpdateDocumentPayload, IUpdateDocumentResponse } from '../../interface/setting/packerProfile/document/IUpdateDocument';
 
 interface ISettingState {
     // Add Payment Method
@@ -85,7 +88,7 @@ interface ISettingState {
     deleteDocumentFailure: boolean;
     deleteDocumentError: any;
     // Update  Document
-    updateDocumentInfo: any;
+    updateDocumentInfo: IUpdateDocumentResponse | null;
     updateDocumentRequesting: boolean;
     updateDocumentSuccess: boolean;
     updateDocumentFailure: boolean;
@@ -133,7 +136,7 @@ interface ISettingState {
     deleteContactFailure: boolean;
     deleteContactError: any;
     // Update  Contact
-    updateContactInfo: any;
+    updateContactInfo: IUpdateContactDetailResponse | null;
     updateContactRequesting: boolean;
     updateContactSuccess: boolean;
     updateContactFailure: boolean;
@@ -527,10 +530,10 @@ export const SettingSlice = createSlice({
         },
         // ***** Update Document *****
         // ******************************
-        updateDocumentRequest: (state, action: PayloadAction<IAddPaymentMethodRequest>) => {
+        updateDocumentRequest: (state, action: PayloadAction<IUpdateDocumentPayload>) => {
             state.updateDocumentRequesting = true;
         },
-        updateDocumentSuccess: (state, action: PayloadAction<IAddPaymentMethodResponse>) => {
+        updateDocumentSuccess: (state, action: PayloadAction<IUpdateDocumentResponse>) => {
             state.updateDocumentRequesting = false;
             state.updateDocumentSuccess = true;
             state.updateDocumentInfo = action.payload;
@@ -675,10 +678,10 @@ export const SettingSlice = createSlice({
         },
         // ***** Update Contact *****
         // ******************************
-        updateContactRequest: (state, action: PayloadAction<IAddPaymentMethodRequest>) => {
+        updateContactRequest: (state, action: PayloadAction<IUpdateContactDetailPayload>) => {
             state.updateContactRequesting = true;
         },
-        updateContactSuccess: (state, action: PayloadAction<IAddPaymentMethodResponse>) => {
+        updateContactSuccess: (state, action: PayloadAction<IUpdateContactDetailResponse>) => {
             state.updateContactRequesting = false;
             state.updateContactSuccess = true;
             state.updateContactInfo = action.payload;

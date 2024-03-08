@@ -3,6 +3,7 @@ import {View, Text, TouchableOpacity} from 'react-native';
 import Spacer from '../../../../../../../common/Spacer';
 import styles from './style';
 import DeleteIcon from '../../../../../../../images/icons/delete.svg';
+import EditIcon from '../../../../../../..//images/icons/edit_icon.svg';
 import {useAppSelector} from '../../../../../../../redux/hooks';
 import {ISubmodule} from '../../../../../../../interface/common/common';
 import {Shadow} from 'react-native-shadow-2';
@@ -17,9 +18,10 @@ export interface IContactListItem {
 interface IContactListItemProps {
   item: IContactListItem;
   onDelete: (id: string) => void;
+  onEdit: (item:IContactListItem) => void;
 }
 
-const ContactListItem: React.FC<IContactListItemProps> = ({item, onDelete}) => {
+const ContactListItem: React.FC<IContactListItemProps> = ({item, onDelete, onEdit}) => {
   const {submodules} = useAppSelector(state => state.Common);
 
   const _getSubmodules = (): ISubmodule[] => {
@@ -76,6 +78,13 @@ const ContactListItem: React.FC<IContactListItemProps> = ({item, onDelete}) => {
             </View>
           </View>
           <View style={styles.actionContainer}>
+          <TouchableOpacity
+              onPress={() => {
+                onEdit(item);
+              }}>
+              <EditIcon width={25} height={25} />
+            </TouchableOpacity>
+            <Spacer height={10} />
             <TouchableOpacity
               onPress={() => {
                 onDelete(item.id);

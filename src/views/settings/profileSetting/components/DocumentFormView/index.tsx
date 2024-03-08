@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
-import React, {useEffect, useState} from 'react';
-import {Text, View} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../../../common/Spacer';
 import Label from '../../../../../common/Label';
@@ -15,21 +15,23 @@ import isoTypeOptions from '../../../../../data/isoTypeOptions.json';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import DatePickerComponent from '../../../../../common/DatePickerComponent';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
-import { formatDate } from '../../../../../utils/formatter';
-import { IAddDocumentRequest } from '../../../../../interface/setting/packerProfile/document/IAddDocumentRequest';
-import { addDocumentRequest, getDocumentsRequest, resetAddDocumentRequest } from '../../../../../redux/slices/ProfileSettingSlice';
-import Toast from 'react-native-toast-message';
+import { IAddDocumentRequest, IUpdateDocumentRequest } from '../../../../../interface/setting/packerProfile/document/IAddDocumentRequest';
+import { addDocumentRequest, getDocumentsRequest, resetAddDocumentRequest, resetUpdateDocumentRequest, updateDocumentRequest } from '../../../../../redux/slices/ProfileSettingSlice';
 import Spinner from '../../../../../common/Spinner';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
 import useAuthId from '../../../../../hooks/useAuthId';
 import { ISubmodule } from '../../../../../interface/common/common';
 import { ToastType, showToast } from '../../../../../utils/utility';
+import { IGetDocumentData } from '../../../../../interface/setting/packerProfile/document/IGetDocumentsResponse';
+import { IUpdateDocumentPayload } from '../../../../../interface/setting/packerProfile/document/IUpdateDocument';
 
 interface IDocumentFormViewProps {
   onSuccess:() => void;
+  isEdit?:boolean;
+  documentInfo?:IGetDocumentData;
 }
 
-const DocumentFormView: React.FC<IDocumentFormViewProps> = ({onSuccess}) => {
+const DocumentFormView: React.FC<IDocumentFormViewProps> = ({onSuccess, isEdit, documentInfo}) => {
   const [documentType, setDocumentType] = useState<string>(documentTypeOptions[0].label);
   const [isoType, setISOType] = useState<string>(isoTypeOptions[0].label);
   const [isoNumber, setISONumber] = useState<string>('');
@@ -38,9 +40,25 @@ const DocumentFormView: React.FC<IDocumentFormViewProps> = ({onSuccess}) => {
   const [documentNumber, setDocumentNumber] = useState<string>('');
   const [documentTitle, setDocumentTitle] = useState<string>('');
   const [modules, setModules] = useState<string[]>([]);
+  const [showCalender, setShowCalender] = useState<boolean>(false);
   const dispatch = useAppDispatch();
-  const {addDocumentRequesting, addDocumentSuccess, addDocumentFailure} = useAppSelector(state => state.Setting);
+  const {
+    addDocumentRequesting,
+    addDocumentSuccess,
+    addDocumentFailure,
+    updateDocumentRequesting,
+    updateDocumentSuccess,
+    updateDocumentFailure,
+  } = useAppSelector(state => state.Setting);
   const {submodules} = useAppSelector(state => state.Common);
+
+  const documentTypeRef = useRef(null);
+  const docNumberInputRef = useRef(null);
+  const isoTypeRef = useRef(null);
+  const isoNumberInputRef = useRef(null);
+  const ibaCodeInputRef = useRef(null);
+  const ibaValidTillDateRef = useRef(null);
+  const otherDocTitleInputRef = useRef(null);
 
   const authId = useAuthId();
   const handleDocumentType = (item: TDropdownItem) => {
@@ -60,7 +78,8 @@ const DocumentFormView: React.FC<IDocumentFormViewProps> = ({onSuccess}) => {
   }
 
   const handleValidTillDate = (date: Date) => {
-    setIBAValidTillDate(formatDate(date));
+    setIBAValidTillDate(date.toDateString());
+    setShowCalender(false);
   };
 
   const handleDocumentNumber = (text: string) => {
@@ -73,22 +92,20 @@ const DocumentFormView: React.FC<IDocumentFormViewProps> = ({onSuccess}) => {
 
   const handleModulesApplyFor = (moduleName: string, isChecked: boolean) => {
     const tempArr = [...modules];
-    if(isChecked) {
       const itemIndex = tempArr.findIndex(e => e == moduleName);
       if(itemIndex == -1) {
         tempArr.push(moduleName);
         setModules(tempArr);
+      } else {
+        const filterArr = tempArr.filter(e => e !== moduleName);
+        setModules(filterArr);
       }
-    } else {
-      const filterArr = tempArr.filter(e => e !== moduleName);
-      setModules(filterArr);
-    }
   }
 
   const getDocumentValue = () => {
     let _value:string = documentNumber;
     if(documentType == 'ISO Certificate') {
-      _value = isoNumber;
+      _value = isoType == "Other" ?  isoNumber : isoType;
     } else if(documentType == 'IBA Approval') {
       _value = ibaCode;
     }
@@ -114,7 +131,23 @@ const DocumentFormView: React.FC<IDocumentFormViewProps> = ({onSuccess}) => {
         ibaValidTillDate: ibaValidTillDate,
         createdBy: authId,
       }
-      dispatch(addDocumentRequest(payload));
+      if(isEdit) {
+        const payload:IUpdateDocumentRequest = {
+          id: documentInfo?._id as string,
+          moduleId: modules,
+          documentType: documentType,
+          documentTypeValue: getDocumentValue(),
+          documentTypeTitle: getDocumentTitle(),
+          ibaValidTillDate: ibaValidTillDate,
+        }
+        const data:IUpdateDocumentPayload = {
+          id: id as string,
+          payload: payload,
+        }
+        dispatch(updateDocumentRequest(data));
+      } else {
+        dispatch(addDocumentRequest(payload));
+      }
     }).catch(err => console.log(err));
     
   }
@@ -137,6 +170,54 @@ const DocumentFormView: React.FC<IDocumentFormViewProps> = ({onSuccess}) => {
   };
 
   useEffect(() => {
+    if(isEdit && documentInfo) {
+      const {ibaValidTillDate, documentType, moduleId, documentTypeValue, documentTypeTitle, createdBy} = documentInfo || {};
+      setModules(moduleId);
+      setDocumentType(documentType);
+      setDocumentNumber(documentTypeValue)
+      //@ts-ignore
+      docNumberInputRef && docNumberInputRef?.current?.setValue(documentTypeValue);
+
+      const documentTypeItem:TDropdownItem = documentTypeOptions.find((d:TDropdownItem) => d.label == documentType) as TDropdownItem;
+      if(documentTypeItem !== undefined){
+        //@ts-ignore
+        documentTypeRef && documentTypeRef?.current?.setDefaultValue(documentTypeItem);
+      }
+      if(documentType == 'ISO Certificate') {
+        setISOType(documentTypeValue);
+        const isoTypeItem:TDropdownItem = isoTypeOptions.find((d:TDropdownItem) => d.label == documentTypeValue) as TDropdownItem;
+        if(isoTypeItem !== undefined){
+          //@ts-ignore
+          isoTypeRef && isoTypeRef?.current?.setDefaultValue(isoTypeItem);
+        }
+      }
+      if(documentType == 'ISO Certificate' && documentTypeTitle == "Other") {
+        setISOType(documentTypeTitle);
+        const isoTypeItem:TDropdownItem = isoTypeOptions.find((d:TDropdownItem) => d.label == documentTypeTitle) as TDropdownItem;
+        if(isoTypeItem !== undefined){
+          //@ts-ignore
+          isoTypeRef && isoTypeRef?.current?.setDefaultValue(isoTypeItem);
+        }
+        //@ts-ignore
+        isoNumberInputRef && isoNumberInputRef?.current?.setValue(documentTypeValue);
+      }
+      if(documentType == 'IBA Approval') {
+        setIBACode(documentTypeValue);
+        //@ts-ignore
+        ibaCodeInputRef && ibaCodeInputRef?.current?.setValue(documentTypeValue);
+        //@ts-ignore
+        ibaValidTillDateRef && ibaValidTillDateRef?.current?.setDefaultValue(new Date(ibaValidTillDate));
+      }
+
+      if(documentType == 'Other') {
+        setDocumentTitle(documentTypeTitle);
+        //@ts-ignore
+        otherDocTitleInputRef && otherDocTitleInputRef?.current?.setValue(documentTypeTitle);
+      }
+    }
+  }, [isEdit]);
+
+  useEffect(() => {
     if (!addDocumentRequesting && addDocumentSuccess) {
       showToast('Document Added.', ToastType.SUCCESS);
       dispatch(resetAddDocumentRequest());
@@ -148,13 +229,30 @@ const DocumentFormView: React.FC<IDocumentFormViewProps> = ({onSuccess}) => {
     }
   }, [addDocumentRequesting, addDocumentSuccess, addDocumentFailure]);
 
+  useEffect(() => {
+    if (!updateDocumentRequesting && updateDocumentSuccess) {
+      showToast('Document Updated.', ToastType.SUCCESS);
+      dispatch(resetUpdateDocumentRequest());
+      _getDocumentsRequest();
+      onSuccess && onSuccess();
+    } else if (!updateDocumentRequesting && updateDocumentFailure) {
+      showToast('Document Not Updated. Try again!', ToastType.ERROR);
+      dispatch(resetUpdateDocumentRequest());
+    }
+  }, [updateDocumentRequesting, updateDocumentSuccess, updateDocumentFailure]);
+
   const showISOTypeSelectionView = () => {
     if (documentType == 'ISO Certificate') {
       return (
         <>
           <View style={styles.textContainer2}>
             <Label text="Choose ISO Type" style={styles.label} />
-            <DropdownComponent data={isoTypeOptions} onSelect={handleISOType} />
+            <DropdownComponent 
+              data={isoTypeOptions} 
+              onSelect={handleISOType}
+              //@ts-ignore
+              ref={isoTypeRef}
+            />
           </View>
           {isoType == 'Other' ? (
             <>
@@ -167,6 +265,8 @@ const DocumentFormView: React.FC<IDocumentFormViewProps> = ({onSuccess}) => {
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
                   placeholder='Enter document ID'
+                  //@ts-ignore
+                  ref={isoNumberInputRef}
                 />
               </View>
             </>
@@ -190,11 +290,17 @@ const DocumentFormView: React.FC<IDocumentFormViewProps> = ({onSuccess}) => {
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 placeholder='Enter document ID'
+                //@ts-ignore
+                ref={ibaCodeInputRef}
               />
             </View>
             <View style={styles.textContainer}>
               <Label text="Valid Till" style={styles.label} />
-              <DatePickerComponent onDateSelect={handleValidTillDate} />
+              <DatePickerComponent 
+                onDateSelect={handleValidTillDate}
+                //@ts-ignore
+                ref={ibaValidTillDateRef}
+              />
             </View>
           </View>
         </>
@@ -211,6 +317,8 @@ const DocumentFormView: React.FC<IDocumentFormViewProps> = ({onSuccess}) => {
           <DropdownComponent
             data={documentTypeOptions}
             onSelect={handleDocumentType}
+            //@ts-ignore
+            ref={documentTypeRef}
           />
         </View>
         {showISOTypeSelectionView()}
@@ -225,6 +333,8 @@ const DocumentFormView: React.FC<IDocumentFormViewProps> = ({onSuccess}) => {
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 placeholder='Enter Document Title'
+                //@ts-ignore
+                ref={otherDocTitleInputRef}
               />
             </View>
           </>
@@ -239,6 +349,8 @@ const DocumentFormView: React.FC<IDocumentFormViewProps> = ({onSuccess}) => {
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 placeholder='Enter Document Number'
+                //@ts-ignore
+                ref={docNumberInputRef}
               />
             </View>
           </>
@@ -264,7 +376,8 @@ const DocumentFormView: React.FC<IDocumentFormViewProps> = ({onSuccess}) => {
                   onPress={(isChecked: boolean) => {
                     handleModulesApplyFor(item._id, isChecked);
                   }}
-                  isChecked={false}
+                  isChecked={modules.includes(item._id)}
+                  disableBuiltInState={true}
                 />
               </View>
             );
@@ -272,7 +385,7 @@ const DocumentFormView: React.FC<IDocumentFormViewProps> = ({onSuccess}) => {
         </View>
         <Spacer height={12} />
         <Button
-          text="SAVE"
+          text={isEdit ? "UPDATE" : "SAVE"}
           onPress={handleSave}
           disabled={false}
           style={styles.previewButtonStyle}

@@ -8,8 +8,10 @@ import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import {getDocumentsRequest} from '../../../../../redux/slices/ProfileSettingSlice';
 import {IGetDocumentData} from '../../../../../interface/setting/packerProfile/document/IGetDocumentsResponse';
 import DocumentListItem from './components/DocumentListItem';
+import { useNavigation } from '@react-navigation/native';
 
 const AddDocumentView = () => {
+  const navigation = useNavigation();
   const [showDocumentList, setShowDocumentList] = useState<boolean>(false);
   const [showAddDocument, setShowAddDocument] = useState<boolean>(true);
   const dispatch = useAppDispatch();
@@ -58,13 +60,18 @@ const AddDocumentView = () => {
     //
   };
 
+  const _handleDocumentEdit = (item:IGetDocumentData) => {
+    //@ts-ignore
+    navigation.navigate("DocumentEditView", {documentInfo: item});
+  }
+
   const showList = () => {
     if (showDocumentList) {
       return (
         <FlatList
           data={_getDocumentList()}
           renderItem={({item, index}) => (
-            <DocumentListItem item={item} index={index} onDelete={_onDelete} />
+            <DocumentListItem item={item} index={index} onDelete={_onDelete} onEdit={_handleDocumentEdit} />
           )}
           ListEmptyComponent={showEmptyView()}
         />

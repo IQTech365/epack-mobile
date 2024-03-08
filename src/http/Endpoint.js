@@ -66,7 +66,7 @@ export const GET_FOOTER_CONTENTS = (company_id) => `/content-management/footer-s
 
 export const ADD_DOCUMENT = `/content-management/govt-registration/add`;
 export const DELETE_DOCUMENT = (company_id) => ``;
-export const UPDATE_DOCUMENT = (company_id) => ``;
+export const UPDATE_DOCUMENT = (doc_id) => `/content-management/govt-registration/update/${doc_id}`;
 export const GET_DOCUMENTS = (company_id) => `/content-management/govt-registration/${company_id}`;
 
 export const ADD_SIGNATURE = (company_id) => `/`;
@@ -75,7 +75,7 @@ export const GET_SIGNATURES = (company_id) => ``;
 
 export const ADD_CONTACT_DETAIL = `/content-management/contact/add`;
 export const DELETE_CONTACT_DETAIL = (contact_id) => `/content-management/contact/${contact_id}`;
-export const UPDATE_CONTACT_DETAIL = (company_id) => ``;
+export const UPDATE_CONTACT_DETAIL = (contact_id) => `/content-management/contact/update/${contact_id}`;
 export const GET_CONTACTS = (company_id) => `/content-management/contact/${company_id}`;
 
 // My Profile

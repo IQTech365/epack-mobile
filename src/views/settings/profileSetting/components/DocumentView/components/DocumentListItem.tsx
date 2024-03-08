@@ -4,14 +4,17 @@ import styles from './style';
 import {IGetDocumentData} from '../../../../../../interface/setting/packerProfile/document/IGetDocumentsResponse';
 import {Shadow} from 'react-native-shadow-2';
 import DeleteIcon from '../../../../../../images/icons/delete.svg';
+import EditIcon from '../../../../../../images/icons/edit_icon.svg';
+import Spacer from '../../../../../../common/Spacer';
 
 interface IProps {
   item: IGetDocumentData;
   index: number;
   onDelete: (id: string) => void;
+  onEdit: (item:IGetDocumentData) => void;
 }
 
-const DocumentListItem: FC<IProps> = ({item, index, onDelete}) => {
+const DocumentListItem: FC<IProps> = ({item, index, onDelete, onEdit}) => {
   return (
     <View style={styles.mainWrapper} key={`${index}`}>
       <Shadow style={styles.cardWrapper} distance={4}>
@@ -35,6 +38,13 @@ const DocumentListItem: FC<IProps> = ({item, index, onDelete}) => {
             </View>
           </View>
           <View style={styles.actionContainer}>
+          <TouchableOpacity
+              onPress={() => {
+                onEdit(item);
+              }}>
+              <EditIcon width={25} height={25} />
+            </TouchableOpacity>
+            <Spacer height={10} />
             <TouchableOpacity
               onPress={() => {
                 onDelete(item._id);

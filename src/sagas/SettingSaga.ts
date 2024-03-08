@@ -3,7 +3,7 @@ import {PayloadAction} from '@reduxjs/toolkit';
 import * as SettingService from '../service/SettingService';
 import { IAddFooterContentRequest } from '../interface/setting/packerProfile/footerContent/IAddFooterContentRequest';
 import { IAddFooterContentResponse } from '../interface/setting/packerProfile/footerContent/IAddFooterContentResponse';
-import { addContactFailure, addContactRequest, addContactSuccess, addDocumentFailure, addDocumentRequest, addDocumentSuccess, addFooterContentFailure, addFooterContentRequest, addFooterContentSuccess, addPaymentMethodFailure, addPaymentMethodRequest, addPaymentMethodSuccess, deleteContactFailure, deleteContactRequest, deleteContactSuccess, deleteFooterContentFailure, deleteFooterContentRequest, deleteFooterContentSuccess, deletePaymentMethodFailure, deletePaymentMethodRequest, deletePaymentMethodSuccess, getContactsFailure, getContactsRequest, getContactsSuccess, getDocumentsFailure, getDocumentsRequest, getDocumentsSuccess, getFooterContentsFailure, getFooterContentsRequest, getFooterContentsSuccess, getPaymentMethodsFailure, getPaymentMethodsRequest, getPaymentMethodsSuccess, getSubmodulesFailure, getSubmodulesRequest, getSubmodulesSuccess, getUnitTypeFailure, getUnitTypeRequest, getUnitTypeSuccess, updatePaymentMethodFailure, updatePaymentMethodRequest, updatePaymentMethodSuccess } from '../redux/slices/ProfileSettingSlice';
+import { addContactFailure, addContactRequest, addContactSuccess, addDocumentFailure, addDocumentRequest, addDocumentSuccess, addFooterContentFailure, addFooterContentRequest, addFooterContentSuccess, addPaymentMethodFailure, addPaymentMethodRequest, addPaymentMethodSuccess, deleteContactFailure, deleteContactRequest, deleteContactSuccess, deleteFooterContentFailure, deleteFooterContentRequest, deleteFooterContentSuccess, deletePaymentMethodFailure, deletePaymentMethodRequest, deletePaymentMethodSuccess, getContactsFailure, getContactsRequest, getContactsSuccess, getDocumentsFailure, getDocumentsRequest, getDocumentsSuccess, getFooterContentsFailure, getFooterContentsRequest, getFooterContentsSuccess, getPaymentMethodsFailure, getPaymentMethodsRequest, getPaymentMethodsSuccess, getSubmodulesFailure, getSubmodulesRequest, getSubmodulesSuccess, getUnitTypeFailure, getUnitTypeRequest, getUnitTypeSuccess, updateContactFailure, updateContactRequest, updateContactSuccess, updateDocumentFailure, updateDocumentRequest, updateDocumentSuccess, updatePaymentMethodFailure, updatePaymentMethodRequest, updatePaymentMethodSuccess } from '../redux/slices/ProfileSettingSlice';
 import { IGetFooterContentsResponse } from '../interface/setting/packerProfile/footerContent/IGetFooterContentsResponse';
 import { IAddPaymentMethodRequest } from '../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodRequest';
 import { IAddPaymentMethodResponse } from '../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodResponse';
@@ -26,6 +26,11 @@ import { getSavedDocumentTemplateIdListFailure, getSavedDocumentTemplateIdListRe
 import { ICreateSerialNoRequest, ICreateSerialNoResponse, IGetSerialNoRequest, IGetSerialNoResponse } from '../interface/setting/serialNo/serialNo';
 import { IDeleteAccountResponse, IDeleteContactResponse, IDeleteFooterContentResponse } from '../interface/setting/packerProfile/contact';
 import { IUpdatePaymentMethodPayload, IUpdatePaymentMethodResponse } from '../interface/setting/packerProfile/paymentMethod/IUpdatePaymentMethod';
+import { IUpdateContactDetailPayload } from '../interface/setting/packerProfile/contactDetail/IUpdateContactDetail';
+import { IUpdateContactDetailResponse } from '../interface/order/IUpdateContactDetails';
+import { updateContactDetailsFailure, updateContactDetailsRequest, updateContactDetailsSuccess } from '../redux/slices/EnquirySlice';
+import { updateContactDetailsSaga } from './EnquirySaga';
+import { IUpdateDocumentPayload, IUpdateDocumentResponse } from '../interface/setting/packerProfile/document/IUpdateDocument';
 
 export function* addFooterContentSaga(action: PayloadAction<IAddFooterContentRequest>) {
     try {
@@ -102,6 +107,15 @@ export function* addContactDetailSaga(action: PayloadAction<IAddContactDetailReq
     }
 }
 
+export function* updateContactDetailSaga(action: PayloadAction<IUpdateContactDetailPayload>) {
+    try {
+        const response: IUpdateContactDetailResponse = yield call(SettingService.UpdateContactDetailService, action.payload);
+        yield put(updateContactSuccess(response));
+    } catch (error) {
+        yield put(updateContactFailure(JSON.stringify(error)));
+    }
+}
+
 export function* getContactDetailsSaga(action: PayloadAction<string>) {
     try {
         const response: IGetContactDetailsResponse = yield call(SettingService.GetContactDetailsService, action.payload);
@@ -126,6 +140,15 @@ export function* addCompanyDocumentSaga(action: PayloadAction<IAddDocumentReques
         yield put(addDocumentSuccess(response));
     } catch (error) {
         yield put(addDocumentFailure(JSON.stringify(error)));
+    }
+}
+
+export function* updateCompanyDocumentSaga(action: PayloadAction<IUpdateDocumentPayload>) {
+    try {
+        const response: IUpdateDocumentResponse = yield call(SettingService.UpdateCompanyDocumentService, action.payload);
+        yield put(updateDocumentSuccess(response));
+    } catch (error) {
+        yield put(updateDocumentFailure(JSON.stringify(error)));
     }
 }
 
@@ -246,9 +269,11 @@ export function* watcherSettingSaga() {
     yield takeLatest(getPaymentMethodsRequest.type, getPaymentMethodSaga);
     yield takeLatest(deletePaymentMethodRequest.type, deletePaymentMethodSaga);
     yield takeLatest(addContactRequest.type, addContactDetailSaga);
+    yield takeLatest(updateContactRequest.type, updateContactDetailSaga);
     yield takeLatest(deleteContactRequest.type, deleteContactDetailSaga);
     yield takeLatest(getContactsRequest.type, getContactDetailsSaga);
     yield takeLatest(addDocumentRequest.type, addCompanyDocumentSaga);
+    yield takeLatest(updateDocumentRequest.type, updateCompanyDocumentSaga);
     yield takeLatest(getDocumentsRequest.type, getCompanyDocumentsSaga);
     yield takeLatest(addUserRoleRequest.type, addUserRoleSaga);
     yield takeLatest(getRoleTypesRequest.type, getRoleTypesSaga);

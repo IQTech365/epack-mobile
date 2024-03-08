@@ -32,13 +32,15 @@ import {
   MODULES,
   SAVE_DOCUMENT_TEMPLATE_ID,
   SERIAL_NO,
+  UPDATE_CONTACT_DETAIL,
+  UPDATE_DOCUMENT,
   UPDATE_PAYMENT_METHOD,
   VERIFY_OTP,
 } from '../http/Endpoint';
 import {IAddContactDetailRequest} from '../interface/setting/packerProfile/contactDetail/IAddContactDetailRequest';
 import {IAddContactDetailResponse} from '../interface/setting/packerProfile/contactDetail/IAddContactDetailResponse';
 import {IGetContactDetailsResponse} from '../interface/setting/packerProfile/contactDetail/IGetContactDetailsResponse';
-import {IAddDocumentRequest} from '../interface/setting/packerProfile/document/IAddDocumentRequest';
+import {IAddDocumentRequest, IUpdateDocumentRequest} from '../interface/setting/packerProfile/document/IAddDocumentRequest';
 import {IAddDocumentResponse} from '../interface/setting/packerProfile/document/IAddDocumentResponse';
 import {IGetDocumentsResponse} from '../interface/setting/packerProfile/document/IGetDocumentsResponse';
 import {IAddFooterContentRequest} from '../interface/setting/packerProfile/footerContent/IAddFooterContentRequest';
@@ -78,6 +80,9 @@ import {
 } from '../interface/setting/serialNo/serialNo';
 import { IDeleteAccountResponse, IDeleteContactResponse, IDeleteFooterContentResponse } from '../interface/setting/packerProfile/contact';
 import { IUpdatePaymentMethodPayload, IUpdatePaymentMethodResponse } from '../interface/setting/packerProfile/paymentMethod/IUpdatePaymentMethod';
+import { IUpdateContactDetailPayload } from '../interface/setting/packerProfile/contactDetail/IUpdateContactDetail';
+import { IUpdateContactDetailResponse } from '../interface/order/IUpdateContactDetails';
+import { IUpdateDocumentPayload, IUpdateDocumentResponse } from '../interface/setting/packerProfile/document/IUpdateDocument';
 
 // PAYMENT
 export const AddPaymentMethodService = async (
@@ -136,7 +141,7 @@ export const DeleteFooterContentService = async (
   return await api.delete<any,AxiosResponse<IDeleteFooterContentResponse>>(null, DELETE_FOOTER_CONTENT(payload));
 };
 
-// PAYMENT
+// CONTACT DETAILS
 export const AddContactDetailService = async (
   payload: IAddContactDetailRequest,
 ): Promise<IAddContactDetailResponse> => {
@@ -145,6 +150,16 @@ export const AddContactDetailService = async (
     IAddContactDetailRequest,
     AxiosResponse<IAddContactDetailResponse>
   >(payload, ADD_CONTACT_DETAIL);
+};
+
+export const UpdateContactDetailService = async (
+  payload: IUpdateContactDetailPayload,
+): Promise<IUpdateContactDetailResponse> => {
+  const api = Api.getInstance();
+  return await api.update<
+    IAddContactDetailRequest,
+    AxiosResponse<IUpdateContactDetailResponse>
+  >(payload.payload, UPDATE_CONTACT_DETAIL(payload.id));
 };
 
 export const GetContactDetailsService = async (
@@ -170,6 +185,16 @@ export const AddCompanyDocumentService = async (
     IAddDocumentRequest,
     AxiosResponse<IAddDocumentResponse>
   >(payload, ADD_DOCUMENT);
+};
+
+export const UpdateCompanyDocumentService = async (
+  payload: IUpdateDocumentPayload,
+): Promise<IUpdateDocumentResponse> => {
+  const api = Api.getInstance();
+  return await api.update<
+  IUpdateDocumentRequest,
+    AxiosResponse<IUpdateDocumentResponse>
+  >(payload.payload, UPDATE_DOCUMENT(payload.id));
 };
 
 export const GetCompanyDocumentsService = async (

@@ -1,42 +1,56 @@
 /* eslint-disable prettier/prettier */
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../../../common/Spacer';
 import Label from '../../../../../common/Label';
 import DropdownComponent from '../../../../../common/DropdownComponent';
 import Input from '../../../../../common/Input';
-import {COLOR_BLACK, COLOR_BLUE} from '../../../../../utils/colors';
+import {COLOR_BLACK, COLOR_BLUE, COLOR_GRAY, COLOR_GRAY2} from '../../../../../utils/colors';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import styles from './style';
 import contactDetail from '../../../../../data/contactDetail.json';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import Button from '../../../../../common/Button';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
-import Toast from 'react-native-toast-message';
-import { addContactRequest, getContactsRequest, resetAddContactRequest } from '../../../../../redux/slices/ProfileSettingSlice';
+import { addContactRequest, getContactsRequest, resetAddContactRequest, resetUpdateContactRequest, updateContactRequest } from '../../../../../redux/slices/ProfileSettingSlice';
 import { IAddContactDetailRequest } from '../../../../../interface/setting/packerProfile/contactDetail/IAddContactDetailRequest';
 import Spinner from '../../../../../common/Spinner';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
 import { ISubmodule } from '../../../../../interface/common/common';
 import useAuthId from '../../../../../hooks/useAuthId';
+import { IContactListItem } from '../ContactView/components/ContactDetailListItem';
+import { ToastType, showToast } from '../../../../../utils/utility';
+import { IUpdateContactDetailPayload } from '../../../../../interface/setting/packerProfile/contactDetail/IUpdateContactDetail';
 
-interface IContactDetailsProps {}
+interface IContactDetailsProps {
+  isEdit?: boolean;
+  contactInfo?:IContactListItem;
+  onSuccess?: () => void;
+}
 
-const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
+const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({isEdit, contactInfo, onSuccess}) => {
   const [contactType, setContactType] = useState<string>('EMAIL');
   const [contactNumber, setContactNumber] = useState<string>('');
   const [contactNumberError, setContactNumberError] = useState<string>('');
   const [modules, setModules] = useState<string[]>([]);
+  const [labelText, setLabelText] = useState<string>('EMAIL');
+  const [helperText, setHelperText] = useState<string>('Enter Email address');
   const {
     addContactRequesting,
     addContactSuccess,
     addContactFailure,
+    updateContactRequesting,
+    updateContactSuccess,
+    updateContactFailure
   } = useAppSelector(state => state.Setting);
   const {submodules} = useAppSelector(state => state.Common);
   
   const dispatch = useAppDispatch()
   const authId = useAuthId();
+
+  const contactTypeRef = useRef(null);
+  const inputRef = useRef(null);
 
   const handleTextInputChange = (text: string) => {
     if(contactNumberError) {
@@ -45,70 +59,37 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
     setContactNumber(text);
   }
 
-  const handleSwitchContactDetail = () => {
-    switch (contactType) {
-      case 'EMAIL':
-        return (
-          <View style={styles.textContainer2}>
-            <Label text="Email" style={styles.label} required={true} />
-            <Input
-              onChangeText={handleTextInputChange}
-              containerStyle={styles.inputContainer}
-              inputStyle={styles.input}
-              selectionColor={COLOR_BLACK}
-              error={contactNumberError}
-            />
-          </View>
-        );
-      case 'LANDLINE':
-        return (
-          <View style={styles.textContainer2}>
-            <Label text="Landline" style={styles.label} required={true} />
-            <Input
-              onChangeText={handleTextInputChange}
-              containerStyle={styles.inputContainer}
-              inputStyle={styles.input}
-              selectionColor={COLOR_BLACK}
-              error={contactNumberError}
-            />
-          </View>
-        );
-      case 'MOBILE':
-        return (
-          <View style={styles.textContainer2}>
-            <Label text="Mobile" style={styles.label} required={true} />
-            <Input
-              onChangeText={handleTextInputChange}
-              containerStyle={styles.inputContainer}
-              inputStyle={styles.input}
-              selectionColor={COLOR_BLACK}
-              error={contactNumberError}
-            />
-          </View>
-        );
-    }
-  };
-
   const handleModulesApplyFor = (moduleName: string, isChecked: boolean) => {
     const tempArr = [...modules];
-    if(isChecked) {
       const itemIndex = tempArr.findIndex(e => e == moduleName);
       if(itemIndex == -1) {
         tempArr.push(moduleName);
         setModules(tempArr);
+      } else {
+        const filterArr = tempArr.filter(e => e !== moduleName);
+        setModules(filterArr);
       }
-    } else {
-      const filterArr = tempArr.filter(e => e !== moduleName);
-      setModules(filterArr);
-    }
   }
 
   const handleContactDetail = (item: TDropdownItem) => {
     setContactType(item.label);
+    if(contactNumber) {
+      setContactNumber('');
+      //@ts-ignore
+      inputRef && inputRef?.current?.reset();
+    }
+    if(item.label == "EMAIL"){
+      setHelperText("Enter Email");
+    } else if(item.label == "LANDLINE"){
+      setHelperText("Enter Landline No#");
+    } if(item.label == "MOBILE"){
+      setHelperText("Enter Mobile No#");
+    }
+    setLabelText(item.label);
   };
 
   const handleSave = () => {
-    if(contactNumber && modules.length > 0) {
+    if(contactNumber) {
       setContactNumberError('');
       getCurrentCompanyId().then(id => {
         const payload: IAddContactDetailRequest = {
@@ -119,16 +100,18 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
           otherTitle: '',
           createdBy: authId,
         }
-        dispatch(addContactRequest(payload));
+        if(isEdit) {
+          const data:IUpdateContactDetailPayload = {
+            id: contactInfo?.id as string,
+            payload: payload,
+          }
+          dispatch(updateContactRequest(data));
+        } else {
+          dispatch(addContactRequest(payload));
+        }
       }).catch(err => console.log(err));
     } else if(contactNumber == '') {
       setContactNumberError(`${contactType} field is required.`);
-    } else if(modules.length == 0) {
-      Toast.show({
-        type: 'error',
-        text1: 'Modules',
-        text2: `Please select atleast one module for which this ${contactNumber}`,
-      });
     }
    
   }
@@ -149,24 +132,46 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
   };
 
   useEffect(() => {
+    if(isEdit && contactInfo) {
+      const {contactType, contactNumber, modules} = contactInfo || {};
+      setContactType(contactType);
+      setModules(modules);
+      setLabelText(contactType);
+      setContactNumber(contactNumber);
+      //@ts-ignore
+      inputRef && inputRef?.current?.setValue(contactNumber);
+      const contactTypeItem:TDropdownItem = contactDetail.find((d:TDropdownItem) => d.label == contactType) as TDropdownItem;
+      if(contactTypeItem !== undefined){
+        //@ts-ignore
+        contactTypeRef && contactTypeRef?.current?.setDefaultValue(contactTypeItem);
+      }
+    }
+  }, [isEdit]);
+
+  useEffect(() => {
     if (!addContactRequesting && addContactSuccess) {
-      Toast.show({
-        type: 'success',
-        text1: 'Contact Detail',
-        text2: 'Contact detail has been added successfully',
-      });
+      showToast('Contact Added', ToastType.SUCCESS);
       setContactNumber('');
       dispatch(resetAddContactRequest());
       _getContactsRequest();
     } else if (!addContactRequesting && addContactFailure) {
-      Toast.show({
-        type: 'error',
-        text1: 'Contact Detail',
-        text2: 'Error in adding Contact Detail. Please try again!',
-      });
+      showToast('Contact Not Added. Try again!', ToastType.ERROR);
       dispatch(resetAddContactRequest());
     }
   }, [addContactRequesting, addContactSuccess, addContactFailure]);
+
+  useEffect(() => {
+    if (!updateContactRequesting && updateContactSuccess) {
+      showToast('Contact Updated', ToastType.SUCCESS);
+      setContactNumber('');
+      dispatch(resetUpdateContactRequest());
+      _getContactsRequest();
+      onSuccess && onSuccess();
+    } else if (!updateContactRequesting && updateContactFailure) {
+      showToast('Contact Not Updated. Try again!', ToastType.ERROR);
+      dispatch(resetUpdateContactRequest());
+    }
+  }, [updateContactRequesting, updateContactSuccess, updateContactFailure]);
 
   return (
     <AvoidSoftInputViewHOC>
@@ -178,10 +183,25 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
           <DropdownComponent
             data={contactDetail}
             onSelect={handleContactDetail}
+            //@ts-ignore
+            ref={contactTypeRef}
           />
         </View>
         <Spacer height={12} />
-        {handleSwitchContactDetail()}
+        <View style={styles.textContainer2}>
+            <Label text={labelText} style={styles.label} required={true} />
+            <Input
+              onChangeText={handleTextInputChange}
+              containerStyle={styles.inputContainer}
+              inputStyle={styles.input}
+              selectionColor={COLOR_BLACK}
+              error={contactNumberError}
+              //@ts-ignore
+              ref={inputRef}
+              placeholder={helperText}
+              placeholderTextColor={COLOR_GRAY}
+            />
+          </View>
         <Spacer height={12} />
         <View style={styles.textContainer2}>
           <Label text="Applicable For" style={styles.label} />
@@ -203,7 +223,8 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
                   onPress={(isChecked: boolean) => {
                     handleModulesApplyFor(item._id, isChecked);
                   }}
-                  isChecked={false}
+                  isChecked={modules.includes(item._id)}
+                  disableBuiltInState={true}
                 />
               </View>
             );
@@ -211,7 +232,7 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({}) => {
         </View>
         <Spacer height={20} />
         <Button
-          text="SAVE"
+          text={isEdit ? "UPDATE" : "SAVE"}
           onPress={handleSave}
           disabled={false}
           style={styles.previewButtonStyle}

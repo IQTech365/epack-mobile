@@ -34,8 +34,6 @@ interface IAccountOptions {
 }
 
 const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({isEdit, paymentInfo, onSuccess}) => {
-  console.log('paymentInfo----', JSON.stringify(paymentInfo));
-  
   const [accountType, setAccountType] = useState<string>(accountTypeOptions[0].label);
   const [selectedUPI, setSelectedUPI] = useState<string>('');
   const [accountHolder, setAccountHolder] = useState<string>('');
@@ -362,8 +360,6 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({isEdit, paymen
         </View>
         <View style={styles.applicableWrapper}>
           {_getSubmodules()?.map((item:ISubmodule, index: number) => {
-            console.log('modules---', JSON.stringify(modules));
-            console.log('modules.includes(item._id)---', modules.includes(item._id));
             return (
               <View style={styles.checkboxItem}  key={`${index}`}>
                 <BouncyCheckbox

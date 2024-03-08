@@ -7,6 +7,8 @@ import AddSerialNoView from '../views/settings/serialNoSettings';
 import RoleManagementView from '../views/settings/roleManagement';
 import TemplateSettingPageView from '../views/settings/templateSettings';
 import AccountEditView from '../views/settings/profileSetting/components/AccountEditView';
+import ContactEditView from '../views/settings/profileSetting/components/ContactEditView';
+import DocumentEditView from '../views/settings/profileSetting/components/DocumentEditView';
 
 const SettingStack = createNativeStackNavigator();
 
@@ -24,6 +26,14 @@ const SettingStackNavigator = () => {
             <SettingStack.Screen
                 name={SettingStackRoute.AccountEditView}
                 component={AccountEditView}
+            />
+            <SettingStack.Screen
+                name={SettingStackRoute.ContactEditView}
+                component={ContactEditView}
+            />
+            <SettingStack.Screen
+                name={SettingStackRoute.DocumentEditView}
+                component={DocumentEditView}
             />
             <SettingStack.Screen
                 name={SettingStackRoute.SerialNoSetting}
