@@ -19,6 +19,7 @@ import { IUpdatePaymentMethodPayload, IUpdatePaymentMethodResponse } from '../..
 import { IUpdateContactDetailPayload } from '../../interface/setting/packerProfile/contactDetail/IUpdateContactDetail';
 import { IUpdateContactDetailResponse } from '../../interface/order/IUpdateContactDetails';
 import { IUpdateDocumentPayload, IUpdateDocumentResponse } from '../../interface/setting/packerProfile/document/IUpdateDocument';
+import { IUpdateFooterContentResponse } from '../../interface/setting/packerProfile/footerContent/IUpdateFooterContent';
 
 interface ISettingState {
     // Add Payment Method
@@ -61,7 +62,7 @@ interface ISettingState {
     deleteFooterContentFailure: boolean;
     deleteFooterContentError: any;
     // Update  Footer Content
-    updateFooterContentInfo: any;
+    updateFooterContentInfo: IUpdateFooterContentResponse | null;
     updateFooterContentRequesting: boolean;
     updateFooterContentSuccess: boolean;
     updateFooterContentFailure: boolean;
