@@ -19,8 +19,10 @@ import {IGetFooterContentData} from '../../../../../interface/setting/packerProf
 import FooterContentListItem from './FooterContentListItem';
 import {ToastType, showToast} from '../../../../../utils/utility';
 import ActionHeaderView from '../../../../../common/ActionHeaderView';
+import { useNavigation } from '@react-navigation/native';
 
 const AddFooterContentView = () => {
+  const navigation = useNavigation();
   const [showContentList, setShowContentList] = useState<boolean>(false);
   const [showAddContent, setShowAddContent] = useState<boolean>(true);
   const dispatch = useAppDispatch();
@@ -52,7 +54,7 @@ const AddFooterContentView = () => {
 
   const showForm = () => {
     if (showAddContent) {
-      return <FooterContentUpdateView />;
+      return <FooterContentUpdateView onSuccess={handleShowContent}/>;
     }
     return null;
   };
@@ -67,6 +69,7 @@ const AddFooterContentView = () => {
               item={item}
               index={index}
               onDelete={_handleDeleteContent}
+              onEdit={_handleEditContent}
             />
           )}
           ListEmptyComponent={showEmptyView()}
@@ -96,6 +99,11 @@ const AddFooterContentView = () => {
   const _handleDeleteContent = (id: string) => {
     dispatch(deleteFooterContentRequest(id));
   };
+
+  const _handleEditContent = (item:IGetFooterContentData) => {
+    //@ts-ignore
+    navigation.navigate('FooterContentEditView', {footerInfo: item});
+  }
 
   useEffect(() => {
     _getFooterContentsRequest();

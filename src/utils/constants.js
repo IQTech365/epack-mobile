@@ -55,6 +55,7 @@ const SettingStackRoute = {
   AccountEditView: 'AccountEditView',
   ContactEditView: 'ContactEditView',
   DocumentEditView: 'DocumentEditView',
+  FooterContentEditView: 'FooterContentEditView',
 };
 
 const MyProfileStackRoute = {

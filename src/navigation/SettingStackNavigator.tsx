@@ -9,6 +9,7 @@ import TemplateSettingPageView from '../views/settings/templateSettings';
 import AccountEditView from '../views/settings/profileSetting/components/AccountEditView';
 import ContactEditView from '../views/settings/profileSetting/components/ContactEditView';
 import DocumentEditView from '../views/settings/profileSetting/components/DocumentEditView';
+import FooterContentEditView from '../views/settings/profileSetting/components/FooterContentEditView';
 
 const SettingStack = createNativeStackNavigator();
 
@@ -30,6 +31,10 @@ const SettingStackNavigator = () => {
             <SettingStack.Screen
                 name={SettingStackRoute.ContactEditView}
                 component={ContactEditView}
+            />
+            <SettingStack.Screen
+                name={SettingStackRoute.FooterContentEditView}
+                component={FooterContentEditView}
             />
             <SettingStack.Screen
                 name={SettingStackRoute.DocumentEditView}

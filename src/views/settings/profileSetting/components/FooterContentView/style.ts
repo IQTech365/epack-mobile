@@ -64,15 +64,17 @@ const styles = StyleSheet.create({
         paddingBottom: 5,
       },
       contentContainer: {
-        width: '85%',
+        width: '70%',
         alignItems: 'flex-start',
         justifyContent: 'center',
         padding: 8,
       },
       actionContainer: {
-        width: '15%',
+        width: '30%',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
+        flexDirection: 'row',
+        paddingRight: 10
       },
       contentTypeText: {
         color: COLOR_BLACK,
