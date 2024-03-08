@@ -15,6 +15,7 @@ import { IAddPaymentMethodResponse } from '../../interface/setting/packerProfile
 import { IGetPaymentMethodsResponse } from '../../interface/setting/packerProfile/paymentMethod/IGetPaymentMethodsResponse';
 import { IGetUnitTypeResponse } from '../../interface/setting/unitType/IGetunitTypeResponse';
 import { IDeleteAccountResponse, IDeleteContactResponse, IDeleteDocumentResponse, IDeleteFooterContentResponse } from '../../interface/setting/packerProfile/contact';
+import { IUpdatePaymentMethodPayload, IUpdatePaymentMethodResponse } from '../../interface/setting/packerProfile/paymentMethod/IUpdatePaymentMethod';
 
 interface ISettingState {
     // Add Payment Method
@@ -30,7 +31,7 @@ interface ISettingState {
     deletePaymentMethodFailure: boolean;
     deletePaymentMethodError: any;
     // Update Payment Method
-    updatePaymentMethodInfo: any;
+    updatePaymentMethodInfo: IUpdatePaymentMethodResponse | null;
     updatePaymentMethodRequesting: boolean;
     updatePaymentMethodSuccess: boolean;
     updatePaymentMethodFailure: boolean;
@@ -362,10 +363,10 @@ export const SettingSlice = createSlice({
         },
         // ***** Update Payment Method *****
         // ******************************
-        updatePaymentMethodRequest: (state, action: PayloadAction<IAddPaymentMethodRequest>) => {
+        updatePaymentMethodRequest: (state, action: PayloadAction<IUpdatePaymentMethodPayload>) => {
             state.updatePaymentMethodRequesting = true;
         },
-        updatePaymentMethodSuccess: (state, action: PayloadAction<IAddPaymentMethodResponse>) => {
+        updatePaymentMethodSuccess: (state, action: PayloadAction<IUpdatePaymentMethodResponse>) => {
             state.updatePaymentMethodRequesting = false;
             state.updatePaymentMethodSuccess = true;
             state.updatePaymentMethodInfo = action.payload;

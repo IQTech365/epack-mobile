@@ -15,12 +15,13 @@ import UPIOptions from '../../../../../data/UPIOptions.json';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import { IAddPaymentMethodRequest } from '../../../../../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodRequest';
-import { addPaymentMethodRequest, getPaymentMethodsRequest, resetAddPaymentMethodRequest } from '../../../../../redux/slices/ProfileSettingSlice';
+import { addPaymentMethodRequest, getPaymentMethodsRequest, resetAddPaymentMethodRequest, resetUpdatePaymentMethodRequest, updatePaymentMethodRequest } from '../../../../../redux/slices/ProfileSettingSlice';
 import Spinner from '../../../../../common/Spinner';
 import { ToastType, showToast } from '../../../../../utils/utility';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
 import { IBank, ISubmodule } from '../../../../../interface/common/common';
 import { IGetPaymentMethodData } from '../../../../../interface/setting/packerProfile/paymentMethod/IGetPaymentMethodsResponse';
+import { IUpdatePaymentMethodPayload } from '../../../../../interface/setting/packerProfile/paymentMethod/IUpdatePaymentMethod';
 interface IAccountDetailsProps {
   isEdit?:boolean;
   paymentInfo?:IGetPaymentMethodData;
@@ -49,6 +50,10 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({isEdit, paymen
     addPaymentMethodRequesting,
     addPaymentMethodSuccess,
     addPaymentMethodFailure,
+    //
+    updatePaymentMethodRequesting,
+    updatePaymentMethodSuccess,
+    updatePaymentMethodFailure
   } = useAppSelector(state => state.Setting);
   const {submodules, banks} = useAppSelector(state => state.Common);
   const accountOptionDropdownRef = useRef(null);
@@ -85,16 +90,14 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({isEdit, paymen
 
   const handleModulesApplyFor = (moduleName: string, isChecked: boolean) => {
     const tempArr = [...modules];
-    if(isChecked) {
       const itemIndex = tempArr.findIndex(e => e == moduleName);
       if(itemIndex == -1) {
         tempArr.push(moduleName);
         setModules(tempArr);
+      } else {
+        const filterArr = tempArr.filter(e => e !== moduleName);
+        setModules(filterArr);
       }
-    } else {
-      const filterArr = tempArr.filter(e => e !== moduleName);
-      setModules(filterArr);
-    }
   }
 
   const _getBankList = ():IAccountOptions[] => {
@@ -127,7 +130,15 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({isEdit, paymen
         qrCode: "",
         moduleId: modules
       }
-      dispatch(addPaymentMethodRequest(payload));
+      if(isEdit) {
+        const data:IUpdatePaymentMethodPayload = {
+          id: paymentInfo?._id as string,
+          payload: payload,
+        }
+        dispatch(updatePaymentMethodRequest(data));
+      } else {
+        dispatch(addPaymentMethodRequest(payload));
+      }
     }).catch(err => console.log(err));
   };
 
@@ -160,8 +171,9 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({isEdit, paymen
 
   useEffect(() => {
     if(isEdit && paymentInfo) {
-      const {accountType, accountHolderName, accountNumber, ifscCode, bankId} = paymentInfo || {};
+      const {accountType, accountHolderName, accountNumber, ifscCode, moduleId} = paymentInfo || {};
       setAccountType(accountType);
+      setModules(moduleId);
       if(accountType == 'Bank Account') {
         setAccountOptions(_getBankList());
         setAccountHolder(accountHolderName);
@@ -180,8 +192,9 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({isEdit, paymen
 
   useEffect(() => {
     if(isEdit && paymentInfo) {
-      const {bankId, accountType} = paymentInfo || {};
+      const {bankId, accountType, moduleId} = paymentInfo || {};
       if(accountType == 'Bank Account') {
+        
         const bankList = _getBankList();
         if(bankList && bankList.length > 0) {
           const bankItem:TDropdownItem = bankList.find((d:TDropdownItem) => d.value == bankId) as TDropdownItem;
@@ -229,6 +242,18 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({isEdit, paymen
       dispatch(resetAddPaymentMethodRequest());
     }
   }, [addPaymentMethodRequesting, addPaymentMethodSuccess, addPaymentMethodFailure]);
+
+  useEffect(() => {
+    if (!updatePaymentMethodRequesting && updatePaymentMethodSuccess) {
+      showToast('Account Detail Updated.', ToastType.SUCCESS);
+      _getPaymentMethodsRequest();
+      dispatch(resetUpdatePaymentMethodRequest());
+      onSuccess && onSuccess();
+    } else if (!updatePaymentMethodRequesting && updatePaymentMethodFailure) {
+      showToast('Account Detail Not Updated.', ToastType.ERROR);
+      dispatch(resetUpdatePaymentMethodRequest());
+    }
+  }, [updatePaymentMethodRequesting, updatePaymentMethodSuccess, updatePaymentMethodFailure]);
 
   const accountTypeLabel =
     accountType == 'Bank Account' ? 'Select Bank' : 'Select UPI';
@@ -339,7 +364,6 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({isEdit, paymen
           {_getSubmodules()?.map((item:ISubmodule, index: number) => {
             console.log('modules---', JSON.stringify(modules));
             console.log('modules.includes(item._id)---', modules.includes(item._id));
-            
             return (
               <View style={styles.checkboxItem}  key={`${index}`}>
                 <BouncyCheckbox
@@ -364,7 +388,7 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({isEdit, paymen
         </View>
         <Spacer height={8} />
         <Button
-          text="SAVE"
+          text={isEdit ? "UPDATE" : "SAVE"}
           onPress={handleSave}
           disabled={false}
           style={styles.previewButtonStyle}

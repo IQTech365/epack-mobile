@@ -32,6 +32,7 @@ import {
   MODULES,
   SAVE_DOCUMENT_TEMPLATE_ID,
   SERIAL_NO,
+  UPDATE_PAYMENT_METHOD,
   VERIFY_OTP,
 } from '../http/Endpoint';
 import {IAddContactDetailRequest} from '../interface/setting/packerProfile/contactDetail/IAddContactDetailRequest';
@@ -76,6 +77,7 @@ import {
   IGetSerialNoResponse,
 } from '../interface/setting/serialNo/serialNo';
 import { IDeleteAccountResponse, IDeleteContactResponse, IDeleteFooterContentResponse } from '../interface/setting/packerProfile/contact';
+import { IUpdatePaymentMethodPayload, IUpdatePaymentMethodResponse } from '../interface/setting/packerProfile/paymentMethod/IUpdatePaymentMethod';
 
 // PAYMENT
 export const AddPaymentMethodService = async (
@@ -93,6 +95,11 @@ export const GetPaymentMethodService = async (
 ): Promise<IAddPaymentMethodResponse> => {
   const api = Api.getInstance();
   return await api.get<IAddPaymentMethodResponse>(GET_PAYMENT_METHODS(payload));
+};
+
+export const UpdatePaymentMethodService = async (payload: IUpdatePaymentMethodPayload): Promise<IUpdatePaymentMethodResponse> => {
+  const api = Api.getInstance();
+  return await api.update<IAddPaymentMethodRequest,AxiosResponse<IUpdatePaymentMethodResponse>>(payload.payload, UPDATE_PAYMENT_METHOD(payload.id));
 };
 
 export const DeletePaymentMethodService = async (
