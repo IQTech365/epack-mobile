@@ -9,7 +9,7 @@ import {FREIGHT_TYPE, options} from '../utils';
 import shiftingLuggages from '../../../../../../../data/shiftingLuggage.json';
 import { IQuotationFreight, ISingleQuotationData } from '../../../../../../../interface/quotation/IGetSingleQuotationResponse';
 import { IGetQuotationData } from '../../../../../../../interface/quotation/IGetQuotationsResponse';
-
+import _ from 'underscore';
 interface Props {
   freightType: FREIGHT_TYPE;
   isEdit?:boolean;
@@ -40,7 +40,7 @@ const BothChargeInputView: React.FC<Props> = ({freightType, isEdit, item, quotat
   useEffect(() => {
     if(isEdit && quotationData) {
         const quotationfreight:IQuotationFreight = quotationData.quotationfreights;
-        if(quotationfreight) {
+        if(_.isObject(quotationfreight)) {
           setFreightPartCharge(quotationfreight.partLoadCharge);
           setFreightFullCharge(quotationfreight.fullLoadCharge);
           setPackingChargePartLoad(quotationfreight.packagingPartLoadCharges);

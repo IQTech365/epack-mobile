@@ -50,6 +50,7 @@ const DropdownComponent: React.FC<IDropdownProps> = forwardRef(
 
     const setDefaultValue = (value: TDropdownItem) => {
       setValue(value);
+      setRefresh(!refresh);
     }
 
     const refreshComp = () => {

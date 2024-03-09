@@ -64,7 +64,7 @@ const GstView: React.FC<Props> = ({isEdit, item, quotationData}) => {
   }, [isEdit, quotationData]);
 
   useEffect(() => {
-    if(isEdit && quotationData && state.item && state.gst_in_quotation == gstInQuotationOptions[0]) {
+    if(isEdit && quotationData && state.gst_in_quotation == gstInQuotationOptions[0]) {
         const quotationfreight:IQuotationFreight = quotationData.quotationfreights;
         if(quotationfreight) {
           const gstPercentItem:TDropdownItem = gstPercentOptions.find((d:TDropdownItem) => d.value == quotationfreight.gstPercentage) as TDropdownItem;

@@ -68,11 +68,6 @@ const AddQuotationForm: React.FC<Props> = ({
     setEmployeeNameError,
     setAuthorityMobileNoError,
     setEmployeeMobileNoError,
-    setPickupPincodeError,
-    setDropPincodeError,
-    setItem,
-    resetItem,
-    setIsEditQuotation,
     setEnquiryItem,
     resetAll,
   } = useQuotationFormContextHook();
@@ -89,8 +84,7 @@ const AddQuotationForm: React.FC<Props> = ({
     updateQuotationFailure,
   } = useAppSelector(state => state.Quotation);
   // console.log('Single-quotation--', JSON.stringify(quotation));
-  // console.log('Single-quotation-state-1--', JSON.stringify(state));
-  console.log('Quotation-item--', JSON.stringify(item));
+  console.log('Quotation-Reducer-State--', JSON.stringify(state));
   
   const {
     vehicleTypesRequesting,
@@ -361,21 +355,13 @@ const AddQuotationForm: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    if(isEdit) {
-      // resetAll();
-      // setItem(_getQuotationItem() as ISingleQuotationData)
-      // setIsEditQuotation(isEdit);
-    }
+    // if(isEdit) {
+    //   resetAll();
+    // }
     if(fromEnquiry) {
       setEnquiryItem(_getSingleEnquiry());
     }
   }, []);
-
-  // useEffect(() => {
-  //   return () => {
-  //     resetAll();
-  //   }
-  // }, []);
 
   useEffect(() => {
     if (!addQuotationRequesting && addQuotationSuccess) {

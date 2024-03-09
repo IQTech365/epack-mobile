@@ -16,7 +16,7 @@ import DatePickerComponent from '../../../../../common/DatePickerComponent';
 import {formatDate4} from '../../../../../utils/formatter';
 import { IQuotationFreight, ISingleQuotationData, IStorage } from '../../../../../interface/quotation/IGetSingleQuotationResponse';
 import { IGetQuotationData } from '../../../../../interface/quotation/IGetQuotationsResponse';
-
+import _ from 'underscore';
 interface Props {
   isEdit?:boolean;
   item?:IGetQuotationData;
@@ -40,10 +40,12 @@ const StorageChargesView: React.FC<Props> = ({isEdit, item, quotationData}) => {
   useEffect(() => {
     if(isEdit && quotationData) {
         const quotationfreight:IQuotationFreight = quotationData.quotationfreights;
-        if(quotationfreight) {
+        if(_.isObject(quotationfreight)) {
           const storageCharge:IStorage = quotationfreight.storageCharges;
-          if(storageCharge) {
+          if(_.isObject(storageCharge)) {
             setStorage(storageCharge?.isRequired);
+          } else if(_.isNull(storageCharge)) {
+            setStorage(options2[1]);
           }
         }
     }
@@ -51,10 +53,11 @@ const StorageChargesView: React.FC<Props> = ({isEdit, item, quotationData}) => {
 
   useEffect(() => {
     if(isEdit && quotationData) {
+      if(state.storage == options2[0]) {
         const quotationfreight:IQuotationFreight = quotationData.quotationfreights;
-        if(quotationfreight) {
+        if(_.isObject(quotationfreight)) {
           const storageCharge:IStorage = quotationfreight.storageCharges;
-          if(storageCharge) {
+          if(_.isObject(storageCharge)) {
             const storageDurationItem:TDropdownItem = storageDurationOptions.find((d:TDropdownItem) => d.label == storageCharge?.storageChargesType) as TDropdownItem;
             if(storageDurationItem) {
               setStorageDuration(storageDurationItem?.label);
@@ -72,6 +75,12 @@ const StorageChargesView: React.FC<Props> = ({isEdit, item, quotationData}) => {
             }
           }
         }
+      } else if(state.storage == options2[1]) {
+        setStorageDuration('');
+        setStorageAmount('');
+        setStorageFromDate('');
+        setStorageToDate('');
+      }
     }
   }, [state.storage]);
 

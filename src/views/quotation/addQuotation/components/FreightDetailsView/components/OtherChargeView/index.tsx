@@ -263,6 +263,7 @@ const OtherChargeView: React.FC<Props> = ({isEdit, item, quotationData}) => {
             });
             setOtherCharges(localOtherCharges);
             setItems(localOtherCharges);
+            setShouldAdd(true);
           }
         }
     }

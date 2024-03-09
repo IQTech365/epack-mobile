@@ -74,7 +74,7 @@ const DiscountView: React.FC<Props> = ({isEdit, item, quotationData}) => {
   }, [isEdit, quotationData]);
 
   useEffect(() => {
-    if(isEdit && quotationData && state.item && state.discount_in_quotation !== discountInQuotationOptions[2].value) {
+    if(isEdit && quotationData && state.discount_in_quotation !== discountInQuotationOptions[2].value) {
         const quotationfreight:IQuotationFreight = quotationData.quotationfreights;
         if(quotationfreight) {
           if(quotationfreight.discountType == discountInQuotationOptions[0].value) {

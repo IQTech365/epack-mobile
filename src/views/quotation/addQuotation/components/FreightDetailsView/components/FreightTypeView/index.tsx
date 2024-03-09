@@ -31,6 +31,16 @@ const FreightTypeView: React.FC<Props> = ({freightType, options, isEdit, item, q
     setUnpackingCharge,
     resetAllPartLoad,
     resetAllFullLoad,
+    setPackingChargePartLoad,
+    setPackingChargeFullLoad,
+    setPackingMaterialChargePartLoad,
+    setPackingMaterialChargeFullLoad,
+    setLoadingChargePartLoad,
+    setLoadingChargeFullLoad,
+    setUnloadingChargePartLoad,
+    setUnloadingChargeFullLoad,
+    setUnpackingChargePartLoad,
+    setUnpackingChargeFullLoad
   } = useQuotationFormContextHook();
 
   const _getFreightTypeText = () => {
@@ -110,18 +120,38 @@ const FreightTypeView: React.FC<Props> = ({freightType, options, isEdit, item, q
         break;
       case FREIGHT_TYPE.PACKING_CHARGE:
         setPackingCharge(option);
+        if(isEdit) {
+          setPackingChargePartLoad('');
+          setPackingChargeFullLoad('');
+        }
         break;
       case FREIGHT_TYPE.PACKING_MATERIAL_CHARGE:
         setPackingMaterialCharge(option);
+        if(isEdit) {
+          setPackingMaterialChargePartLoad('');
+          setPackingMaterialChargeFullLoad('');
+        }
         break;
       case FREIGHT_TYPE.LOADING_CHARGE:
         setLoadingCharge(option);
+        if(isEdit) {
+          setLoadingChargePartLoad('');
+          setLoadingChargeFullLoad('');
+        }
         break;
       case FREIGHT_TYPE.UNLOADING_CHARGE:
         setUnloadingCharge(option);
+        if(isEdit) {
+          setUnloadingChargePartLoad('');
+          setUnloadingChargeFullLoad('');
+        }
         break;
       case FREIGHT_TYPE.UNPACKING_CHARGE:
         setUnpackingCharge(option);
+        if(isEdit) {
+          setUnpackingChargePartLoad('');
+          setUnpackingChargeFullLoad('');
+        }
         break;
       default:
         break;
@@ -167,14 +197,14 @@ const FreightTypeView: React.FC<Props> = ({freightType, options, isEdit, item, q
   }, [state.shifting_luggage]);
 
   useEffect(() => {
-    if(freightType == FREIGHT_TYPE.LOAD_TYPE) {
-        if(state.freight_part_load && !state.freight_full_load) {
-            resetAllFullLoad();
-        } else if(!state.freight_part_load && state.freight_full_load) {
-            resetAllPartLoad();
-        }
-    }
-  }, [state.freight_part_load, state.freight_full_load]);
+    if (freightType == FREIGHT_TYPE.LOAD_TYPE) {
+      if (state.freight_part_load && !state.freight_full_load) {
+        resetAllFullLoad();
+      } else if (!state.freight_part_load && state.freight_full_load) {
+        resetAllPartLoad();
+      }
+    } 
+  }, [state.freight_part_load,state.freight_full_load]);
 
   useEffect(() => {
     if(isEdit && quotationData) {

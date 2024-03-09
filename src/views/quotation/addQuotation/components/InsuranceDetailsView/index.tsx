@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {View} from 'react-native';
 import styles from './style';
 import CollapsibleView from '../../../../../common/CollapsibleView';
@@ -18,6 +18,7 @@ import { ICharge, IQuotationFreight, ISingleQuotationData, IStorage, ITransitIns
 import useUtilityHook from '../../../../../hooks/useUtilityHook';
 import DropdownWithTextInput from '../../../../../common/DropdownWithTextInput';
 import { IGetQuotationData } from '../../../../../interface/quotation/IGetQuotationsResponse';
+import _ from "underscore";
 
 interface Props {
   isEdit?:boolean;
@@ -48,19 +49,22 @@ const InsuranceDetailsView: React.FC<Props> = ({isEdit, item, quotationData}) =>
         const quotationfreight:IQuotationFreight = quotationData.quotationfreights;
         if(quotationfreight) {
           const transitInsurance:ITransitInsurance = quotationfreight.transitInsurance;
-          if(transitInsurance) {
+          if(_.isObject(transitInsurance)) {
             setTransitInsurance(transitInsurance.isRequired);
+          } else if(_.isNull(transitInsurance)) {
+            setTransitInsurance(options2[1]);
           }
         }
     }
   }, [isEdit, quotationData]);
 
   useEffect(() => {
-    if(isEdit && quotationData && state.item && state.transit_insurance == options2[0]) {
+    if(isEdit && quotationData) {
+      if(state.transit_insurance == options2[0]) {
         const quotationfreight:IQuotationFreight = quotationData.quotationfreights;
-        if(quotationfreight) {
+        if(_.isObject(quotationfreight)) {
           const transitInsurance:ITransitInsurance = quotationfreight.transitInsurance;
-          if(transitInsurance) {
+          if(_.isObject(transitInsurance)) {
             setTransitInsurance(transitInsurance.isRequired);
             const insuraceTypeItem:TDropdownItem = insuranceTypeOptions.find((d:TDropdownItem) => d.label == transitInsurance.transitType) as TDropdownItem;
             if(insuraceTypeItem) {
@@ -68,7 +72,7 @@ const InsuranceDetailsView: React.FC<Props> = ({isEdit, item, quotationData}) =>
               //@ts-ignore
               insuranceTypeDropdownCompRef && insuranceTypeDropdownCompRef?.current?.setDefaultValue(insuraceTypeItem);
             }
-            if(transitInsurance.charges.length > 0) {
+            if(_.isArray(transitInsurance.charges) && transitInsurance.charges.length > 0) {
               const charge:ICharge = transitInsurance.charges[0];
               if(charge) {
                 const shiftingLuggageItem:string = shiftingLuggageOptions.map(({label}) => label).find((d:string) => d == charge.luggageType) as string;
@@ -94,6 +98,13 @@ const InsuranceDetailsView: React.FC<Props> = ({isEdit, item, quotationData}) =>
             }
           }
         }
+      } else if(state.transit_insurance == options2[1]) {
+            setTransitInsuranceType(insuranceTypeOptions[0].label);
+            setTransitShiftingLuggage('');
+            setTransitInsuranceCharge('');
+            setTransitInsuranceGst('');
+            setTransitGoodsValue('');
+      }
     }
   }, [state.transit_insurance]);
 
