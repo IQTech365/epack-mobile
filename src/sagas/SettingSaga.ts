@@ -3,7 +3,7 @@ import {PayloadAction} from '@reduxjs/toolkit';
 import * as SettingService from '../service/SettingService';
 import { IAddFooterContentRequest } from '../interface/setting/packerProfile/footerContent/IAddFooterContentRequest';
 import { IAddFooterContentResponse } from '../interface/setting/packerProfile/footerContent/IAddFooterContentResponse';
-import { addContactFailure, addContactRequest, addContactSuccess, addDocumentFailure, addDocumentRequest, addDocumentSuccess, addFooterContentFailure, addFooterContentRequest, addFooterContentSuccess, addPaymentMethodFailure, addPaymentMethodRequest, addPaymentMethodSuccess, deleteContactFailure, deleteContactRequest, deleteContactSuccess, deleteFooterContentFailure, deleteFooterContentRequest, deleteFooterContentSuccess, deletePaymentMethodFailure, deletePaymentMethodRequest, deletePaymentMethodSuccess, getContactsFailure, getContactsRequest, getContactsSuccess, getDocumentsFailure, getDocumentsRequest, getDocumentsSuccess, getFooterContentsFailure, getFooterContentsRequest, getFooterContentsSuccess, getPaymentMethodsFailure, getPaymentMethodsRequest, getPaymentMethodsSuccess, getSubmodulesFailure, getSubmodulesRequest, getSubmodulesSuccess, getUnitTypeFailure, getUnitTypeRequest, getUnitTypeSuccess, updateContactFailure, updateContactRequest, updateContactSuccess, updateDocumentFailure, updateDocumentRequest, updateDocumentSuccess, updatePaymentMethodFailure, updatePaymentMethodRequest, updatePaymentMethodSuccess } from '../redux/slices/ProfileSettingSlice';
+import { addContactFailure, addContactRequest, addContactSuccess, addDocumentFailure, addDocumentRequest, addDocumentSuccess, addFooterContentFailure, addFooterContentRequest, addFooterContentSuccess, addPaymentMethodFailure, addPaymentMethodRequest, addPaymentMethodSuccess, deleteContactFailure, deleteContactRequest, deleteContactSuccess, deleteFooterContentFailure, deleteFooterContentRequest, deleteFooterContentSuccess, deletePaymentMethodFailure, deletePaymentMethodRequest, deletePaymentMethodSuccess, getContactsFailure, getContactsRequest, getContactsSuccess, getDocumentsFailure, getDocumentsRequest, getDocumentsSuccess, getFooterContentsFailure, getFooterContentsRequest, getFooterContentsSuccess, getPaymentMethodsFailure, getPaymentMethodsRequest, getPaymentMethodsSuccess, getSubmodulesFailure, getSubmodulesRequest, getSubmodulesSuccess, getUnitTypeFailure, getUnitTypeRequest, getUnitTypeSuccess, updateContactFailure, updateContactRequest, updateContactSuccess, updateDocumentFailure, updateDocumentRequest, updateDocumentSuccess, updateFooterContentFailure, updateFooterContentRequest, updateFooterContentSuccess, updatePaymentMethodFailure, updatePaymentMethodRequest, updatePaymentMethodSuccess } from '../redux/slices/ProfileSettingSlice';
 import { IGetFooterContentsResponse } from '../interface/setting/packerProfile/footerContent/IGetFooterContentsResponse';
 import { IAddPaymentMethodRequest } from '../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodRequest';
 import { IAddPaymentMethodResponse } from '../interface/setting/packerProfile/paymentMethod/IAddPaymentMethodResponse';
@@ -31,6 +31,7 @@ import { IUpdateContactDetailResponse } from '../interface/order/IUpdateContactD
 import { updateContactDetailsFailure, updateContactDetailsRequest, updateContactDetailsSuccess } from '../redux/slices/EnquirySlice';
 import { updateContactDetailsSaga } from './EnquirySaga';
 import { IUpdateDocumentPayload, IUpdateDocumentResponse } from '../interface/setting/packerProfile/document/IUpdateDocument';
+import { IUpdateFooterContentPayload, IUpdateFooterContentResponse } from '../interface/setting/packerProfile/footerContent/IUpdateFooterContent';
 
 export function* addFooterContentSaga(action: PayloadAction<IAddFooterContentRequest>) {
     try {
@@ -38,6 +39,15 @@ export function* addFooterContentSaga(action: PayloadAction<IAddFooterContentReq
         yield put(addFooterContentSuccess(response));
     } catch (error) {
         yield put(addFooterContentFailure(JSON.stringify(error)));
+    }
+}
+
+export function* updateFooterContentSaga(action: PayloadAction<IUpdateFooterContentPayload>) {
+    try {
+        const response: IUpdateFooterContentResponse = yield call(SettingService.UpdateFooterContentService, action.payload);
+        yield put(updateFooterContentSuccess(response));
+    } catch (error) {
+        yield put(updateFooterContentFailure(JSON.stringify(error)));
     }
 }
 
@@ -262,6 +272,7 @@ export function* getSavedDocumentTemplateIdListSaga(action: PayloadAction<string
 
 export function* watcherSettingSaga() {
     yield takeLatest(addFooterContentRequest.type, addFooterContentSaga);
+    yield takeLatest(updateFooterContentRequest.type, updateFooterContentSaga);
     yield takeLatest(getFooterContentsRequest.type, getFooterContentsSaga);
     yield takeLatest(deleteFooterContentRequest.type, deleteFooterContentSaga);
     yield takeLatest(addPaymentMethodRequest.type, addPaymentMethodSaga);

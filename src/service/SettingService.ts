@@ -34,6 +34,7 @@ import {
   SERIAL_NO,
   UPDATE_CONTACT_DETAIL,
   UPDATE_DOCUMENT,
+  UPDATE_FOOTER_CONTENT,
   UPDATE_PAYMENT_METHOD,
   VERIFY_OTP,
 } from '../http/Endpoint';
@@ -83,6 +84,7 @@ import { IUpdatePaymentMethodPayload, IUpdatePaymentMethodResponse } from '../in
 import { IUpdateContactDetailPayload } from '../interface/setting/packerProfile/contactDetail/IUpdateContactDetail';
 import { IUpdateContactDetailResponse } from '../interface/order/IUpdateContactDetails';
 import { IUpdateDocumentPayload, IUpdateDocumentResponse } from '../interface/setting/packerProfile/document/IUpdateDocument';
+import { IUpdateFooterContent, IUpdateFooterContentPayload, IUpdateFooterContentResponse } from '../interface/setting/packerProfile/footerContent/IUpdateFooterContent';
 
 // PAYMENT
 export const AddPaymentMethodService = async (
@@ -123,6 +125,11 @@ export const AddFooterContentService = async (
     IAddFooterContentRequest,
     AxiosResponse<IAddFooterContentResponse>
   >(payload, ADD_FOOTER_CONTENT);
+};
+
+export const UpdateFooterContentService = async (payload: IUpdateFooterContentPayload): Promise<IUpdateFooterContentResponse> => {
+  const api = Api.getInstance();
+  return await api.update<IUpdateFooterContent,AxiosResponse<IUpdateFooterContentResponse>>(payload.payload, UPDATE_FOOTER_CONTENT(payload.id));
 };
 
 export const GetFooterContentsService = async (

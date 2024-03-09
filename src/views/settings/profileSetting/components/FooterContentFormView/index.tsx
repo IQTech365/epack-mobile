@@ -22,13 +22,14 @@ import {actions, RichEditor, RichToolbar} from 'react-native-pell-rich-editor';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import { TDropdownItem } from '../../../../../type/TDropdownItem';
 import { IAddFooterContentRequest } from '../../../../../interface/setting/packerProfile/footerContent/IAddFooterContentRequest';
-import { addFooterContentRequest, getFooterContentsRequest, resetFooterContentRequest } from '../../../../../redux/slices/ProfileSettingSlice';
+import { addFooterContentRequest, getFooterContentsRequest, resetFooterContentRequest, resetUpdateFooterContentRequest, updateFooterContentRequest } from '../../../../../redux/slices/ProfileSettingSlice';
 import Spinner from '../../../../../common/Spinner';
 import { ToastType, showToast } from '../../../../../utils/utility';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
 import useAuthId from '../../../../../hooks/useAuthId';
 import { ISubmodule } from '../../../../../interface/common/common';
 import { IGetFooterContentData } from '../../../../../interface/setting/packerProfile/footerContent/IGetFooterContentsResponse';
+import { IUpdateFooterContent, IUpdateFooterContentPayload } from '../../../../../interface/setting/packerProfile/footerContent/IUpdateFooterContent';
 
 interface IContentUpdateProps {
   isEdit?:boolean;
@@ -40,16 +41,22 @@ interface IContentUpdateProps {
 const handleHead = ({tintColor}) => <Text style={{color: tintColor}}>H1</Text>;
 
 const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({isEdit, footerInfo, onSuccess}) => {
-  const [accountType, setAccountType] = useState<string>('');
+  const [accountType, setAccountType] = useState<string>(footerContentOptions[0].label);
   const [title, setTitle] = useState<string>('');
-  const [content, setContent] = useState<string>('asdfasdasdfas');
+  const [content, setContent] = useState<string>('');
   const [modules, setModules] = useState<string[]>([]);
   const dispatch = useAppDispatch();
   const {submodules} = useAppSelector(state => state.Common);
 
-  const {addFooterContentRequesting, addFooterContentSuccess, addFooterContentFailure} = useAppSelector(state => state.Setting);
+  const {
+    addFooterContentRequesting, 
+    addFooterContentSuccess, 
+    addFooterContentFailure,
+    updateFooterContentRequesting,
+    updateFooterContentSuccess,
+    updateFooterContentFailure
+  } = useAppSelector(state => state.Setting);
   const richText = React.useRef();
-  const authId = useAuthId();
   const contentTypeRef = useRef(null);
 
   const handleAccountType = (item: TDropdownItem) => {
@@ -80,7 +87,22 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({isEdit, footerI
         contentType: accountType,
         content: content,
       }
-      dispatch(addFooterContentRequest(payload));
+      if(isEdit) {
+        const payload:IUpdateFooterContent = {
+          moduleId: modules,
+          contentType: accountType,
+          content: content,
+          isAdmin: false,
+          title: ""
+        }
+        const data:IUpdateFooterContentPayload = {
+          id: footerInfo?._id as string,
+          payload: payload,
+        }
+        dispatch(updateFooterContentRequest(data));
+      } else {
+        dispatch(addFooterContentRequest(payload));
+      }
     }).catch(err => console.log(err));
   }
 
@@ -105,6 +127,7 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({isEdit, footerI
     if(isEdit && footerInfo) {
       const {contentType, moduleId} = footerInfo || {}
       setModules(moduleId);
+      setAccountType(contentType);
       const contentTypeItem:TDropdownItem = footerContentOptions.find((e:TDropdownItem) => e.label == contentType) as TDropdownItem;
       if(contentTypeItem !== undefined) {
         //@ts-ignore
@@ -119,12 +142,23 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({isEdit, footerI
       dispatch(resetFooterContentRequest());
       _getFooterContentsRequest();
       onSuccess && onSuccess();
-      // navigation.goBack();
     } else if (!addFooterContentRequesting && addFooterContentFailure) {
       showToast('Footer Content Not Added', ToastType.ERROR);
       dispatch(resetFooterContentRequest());
     }
   }, [addFooterContentRequesting, addFooterContentSuccess, addFooterContentFailure]);
+
+  useEffect(() => {
+    if (!updateFooterContentRequesting && updateFooterContentSuccess) {
+      showToast('Footer Content Updated.', ToastType.SUCCESS);
+      dispatch(resetUpdateFooterContentRequest());
+      _getFooterContentsRequest();
+      onSuccess && onSuccess();
+    } else if (!updateFooterContentRequesting && updateFooterContentFailure) {
+      showToast('Footer Content Not Updated', ToastType.ERROR);
+      dispatch(resetUpdateFooterContentRequest());
+    }
+  }, [updateFooterContentRequesting, updateFooterContentSuccess, updateFooterContentFailure]);
 
   return (
     <AvoidSoftInputViewHOC>

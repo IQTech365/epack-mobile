@@ -19,7 +19,7 @@ import { IUpdatePaymentMethodPayload, IUpdatePaymentMethodResponse } from '../..
 import { IUpdateContactDetailPayload } from '../../interface/setting/packerProfile/contactDetail/IUpdateContactDetail';
 import { IUpdateContactDetailResponse } from '../../interface/order/IUpdateContactDetails';
 import { IUpdateDocumentPayload, IUpdateDocumentResponse } from '../../interface/setting/packerProfile/document/IUpdateDocument';
-import { IUpdateFooterContentResponse } from '../../interface/setting/packerProfile/footerContent/IUpdateFooterContent';
+import { IUpdateFooterContentPayload, IUpdateFooterContentResponse } from '../../interface/setting/packerProfile/footerContent/IUpdateFooterContent';
 
 interface ISettingState {
     // Add Payment Method
@@ -449,10 +449,10 @@ export const SettingSlice = createSlice({
         },
         // ***** Update Footer Content *****
         // ******************************
-        updateFooterContentRequest: (state, action: PayloadAction<IAddPaymentMethodRequest>) => {
+        updateFooterContentRequest: (state, action: PayloadAction<IUpdateFooterContentPayload>) => {
             state.updateFooterContentRequesting = true;
         },
-        updateFooterContentSuccess: (state, action: PayloadAction<IAddPaymentMethodResponse>) => {
+        updateFooterContentSuccess: (state, action: PayloadAction<IUpdateFooterContentResponse>) => {
             state.updateFooterContentRequesting = false;
             state.updateFooterContentSuccess = true;
             state.updatePaymentMethodInfo = action.payload;

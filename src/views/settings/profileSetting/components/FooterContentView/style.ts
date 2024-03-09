@@ -44,7 +44,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderRadius: 5,
         borderWidth: 1,
-        borderColor: COLOR_BLACK,
+        borderColor: COLOR_GRAY2,
+        marginBottom: 10,
       },
       listContentContainer:{
         width: '100%',
