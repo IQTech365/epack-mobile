@@ -56,13 +56,6 @@ const SurveyItemListView: React.FC<ISurveyItemListViewProps> = ({
           <ShareIcon width={24} height={24} />
           <Text style={styles.actionText}>Share</Text>
         </TouchableOpacity>
-        {/* <TouchableOpacity
-          style={styles.action}
-          onPress={() => {}}
-          activeOpacity={0.6}>
-          <DownloadIcon width={24} height={24} />
-          <Text style={styles.actionText}>Download</Text>
-        </TouchableOpacity> */}
         <TouchableOpacity
           style={styles.action}
           onPress={() => {

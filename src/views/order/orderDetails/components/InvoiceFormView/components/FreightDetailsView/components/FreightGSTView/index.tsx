@@ -27,40 +27,31 @@ const FreightGSTView: React.FC<Props> = ({isEdit, invoiceData}) => {
 
     const _initFormValues = () => {
       if(isEdit && invoiceData) {
-        const {gstStatus, gstType, gstPercentage, gstPaidBy} = invoiceData || {};
+        const {gstStatus, gstPaidBy} = invoiceData || {};
         setGSTOnInvoice(gstStatus);
         setGSTPaidBy(gstPaidBy);
-        // const gstPercentItem:TDropdownItem = gstPercentOptions.find((e:TDropdownItem) => e.value === gstPercentage) as TDropdownItem;
-        // if(gstPercentItem !== undefined){
-        //   //@ts-ignore
-        //   gstPercentRef && gstPercentRef?.current?.setDefaultValue(gstPercentItem);
-        //   setGSTPercent(gstPercentage);
-        // }
-
-        // const gstTypeItem:TDropdownItem = gstTypeOptions.find((e:TDropdownItem) => e.label === gstType) as TDropdownItem;
-        // if(gstTypeItem !== undefined){
-        //   //@ts-ignore
-        //   gstTypeRef && gstTypeRef?.current?.setDefaultValue(gstTypeItem);
-        //   setGSTType(gstType);
-        // }
       }
     }
 
     const _setGstPercentAndType = () => {
       if(isEdit && invoiceData) {
-        const {gstType, gstPercentage} = invoiceData || {};
-        const gstPercentItem:TDropdownItem = gstPercentOptions.find((e:TDropdownItem) => e.value === gstPercentage) as TDropdownItem;
-        if(gstPercentItem !== undefined){
-          //@ts-ignore
-          gstPercentRef && gstPercentRef?.current?.setDefaultValue(gstPercentItem);
-          setGSTPercent(gstPercentage);
-        }
-
-        const gstTypeItem:TDropdownItem = gstTypeOptions.find((e:TDropdownItem) => e.label === gstType) as TDropdownItem;
-        if(gstTypeItem !== undefined){
-          //@ts-ignore
-          gstTypeRef && gstTypeRef?.current?.setDefaultValue(gstTypeItem);
-          setGSTType(gstType);
+        if(state.gst_on_invoice == gstOptions[0]) {
+          const {gstType, gstPercentage} = invoiceData || {};
+          const gstPercentItem:TDropdownItem = gstPercentOptions.find((e:TDropdownItem) => e.value === gstPercentage) as TDropdownItem;
+          if(gstPercentItem !== undefined){
+            //@ts-ignore
+            gstPercentRef && gstPercentRef?.current?.setDefaultValue(gstPercentItem);
+            setGSTPercent(gstPercentage);
+          }
+          const gstTypeItem:TDropdownItem = gstTypeOptions.find((e:TDropdownItem) => e.label === gstType) as TDropdownItem;
+          if(gstTypeItem !== undefined){
+            //@ts-ignore
+            gstTypeRef && gstTypeRef?.current?.setDefaultValue(gstTypeItem);
+            setGSTType(gstType);
+          }
+        } else {
+          setGSTPercent('');
+          setGSTType('');
         }
       }
     }

@@ -14,6 +14,7 @@ import DatePickerComponent from '../../../../../../../common/DatePickerComponent
 import storageDurationOptions from '../../../../../../../data/storageDurationOptions.json';
 import {formatDate4} from '../../../../../../../utils/formatter';
 import { IInvoice } from '../../../../../../../interface/order/IGetInvoiceListResponse';
+import _ from 'underscore';
 interface Props {
   isEdit?:boolean;
   invoiceData?:IInvoice;
@@ -36,27 +37,11 @@ const StorageChargeView: React.FC<Props> = ({isEdit, invoiceData}) => {
 
   const _initFormValues = () => {
     if(isEdit && invoiceData) {
-      const {storageCharges, strorageStatus} = invoiceData || {};
-      setStorage(strorageStatus);
-      if(storageCharges !== null){
-        const durationItem:TDropdownItem = storageDurationOptions.find((e:TDropdownItem) => e.label == storageCharges.storageChargesType) as TDropdownItem;
-        if(durationItem !== undefined){
-          //@ts-ignore
-          storageDropdownRef && storageDropdownRef?.current?.setDefaultValue(durationItem);
-          setStorageDuration(storageCharges.storageChargesType);
-        }
-
-        //@ts-ignore
-        fromDateRef && fromDateRef?.current?.setDefaultValue(new Date(storageCharges.fromDate));
-        setStorageFromDate(storageCharges.fromDate);
-
-        //@ts-ignore
-        toDateRef && toDateRef?.current?.setDefaultValue(new Date(storageCharges.toDate));
-        setStorageToDate(storageCharges.toDate);
-
-        //@ts-ignore
-        storageAmountInputRef && storageAmountInputRef?.current?.setValue(storageCharges.amount);
-        setStorageAmount(storageCharges.amount);
+      const {storageCharges} = invoiceData || {};
+      if(_.isObject(storageCharges)) {
+        setStorage(storageCharges.isRequired);
+      } else if(_.isNull(storageCharges)) {
+        setStorage(transitInsuranceOptions[1]);
       }
     }
   }
@@ -64,6 +49,40 @@ const StorageChargeView: React.FC<Props> = ({isEdit, invoiceData}) => {
   useEffect(() => {
     _initFormValues();
   }, []);
+
+  useEffect(() => {
+    if(isEdit && invoiceData) {
+      if(state.storage == transitInsuranceOptions[0]) {
+        const {storageCharges, strorageStatus} = invoiceData || {};
+        setStorage(strorageStatus);
+        if(storageCharges !== null){
+          const durationItem:TDropdownItem = storageDurationOptions.find((e:TDropdownItem) => e.label == storageCharges.storageChargesType) as TDropdownItem;
+          if(durationItem !== undefined){
+            //@ts-ignore
+            storageDropdownRef && storageDropdownRef?.current?.setDefaultValue(durationItem);
+            setStorageDuration(storageCharges.storageChargesType);
+          }
+  
+          //@ts-ignore
+          fromDateRef && fromDateRef?.current?.setDefaultValue(new Date(storageCharges.fromDate));
+          setStorageFromDate(storageCharges.fromDate);
+  
+          //@ts-ignore
+          toDateRef && toDateRef?.current?.setDefaultValue(new Date(storageCharges.toDate));
+          setStorageToDate(storageCharges.toDate);
+  
+          //@ts-ignore
+          storageAmountInputRef && storageAmountInputRef?.current?.setValue(storageCharges.amount);
+          setStorageAmount(storageCharges.amount);
+        }
+      } else if(state.storage == transitInsuranceOptions[1]) {
+        setStorageDuration('');
+        setStorageFromDate('');
+        setStorageToDate('');
+        setStorageAmount('');
+      }
+    }
+  }, [state.storage]);
 
   return (
     <>

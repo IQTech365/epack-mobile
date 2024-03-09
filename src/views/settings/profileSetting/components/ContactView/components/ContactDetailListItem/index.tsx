@@ -85,12 +85,12 @@ const ContactListItem: React.FC<IContactListItemProps> = ({item, onDelete, onEdi
               <EditIcon width={25} height={25} />
             </TouchableOpacity>
             <Spacer height={10} />
-            <TouchableOpacity
+            {/* <TouchableOpacity
               onPress={() => {
                 onDelete(item.id);
               }}>
               <DeleteIcon width={25} height={25} />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
       </Shadow>

@@ -175,7 +175,7 @@ const CheckoutPage: FC<Props> = ({route, navigation}) => {
       description: 'Epack Book Subscription',
       image: 'https://i.imgur.com/3g7nmJC.jpg',
       currency: 'INR',
-      key: 'rzp_test_M4tXt01eZSLSLA',
+      key: 'rzp_live_j5tX1ai8KB8hvs',//'rzp_test_M4tXt01eZSLSLA',
       amount: amount * 100,
       name: 'EpackBook',
       order_id: orderId, //'order_NJN9VIkIQc0G9J'

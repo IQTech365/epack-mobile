@@ -55,8 +55,8 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
   const [taskData, setTaskData] = useState<string>('');
   const [showTemplate, setShowTemplate] = useState<boolean>(false);
   const [shouldShare, setShouldShare] = useState<boolean>(false);
-  // const templateId = useTemplateIdHook('65d48f14ad0f8972472d49ca');
-  const templateId = "65d48f14ad0f8972472d49ca";
+  const templateId = useTemplateIdHook('658d3d2f585e3dde644da9b2');
+  // const templateId = "65d48f14ad0f8972472d49ca";
 
   console.log('surveyItem-templateId---', templateId);
 

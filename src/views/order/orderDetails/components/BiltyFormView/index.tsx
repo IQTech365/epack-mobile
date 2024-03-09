@@ -78,7 +78,6 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess}) => {
         enquiryId: orderId as string,
         isAuto: true,
         isHeadOffice: true,
-        templateId: 'fds32131',
         biltyNumber: state.bilty_lr_cr_no,
         biltyDate: state.date_of_bilty_lr_cr_no,
         consigner: {

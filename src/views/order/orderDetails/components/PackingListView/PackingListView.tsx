@@ -11,6 +11,7 @@ import { ToastType, showToast, startShare } from '../../../../../utils/utility';
 import { IPackingListTemplatePayload } from '../../../../../interface/order/IPackingListTemplate';
 import ModalHOC from '../../../../../common/ModalHOC';
 import TemplateViewer from '../../../../../common/TemplateViewer';
+import useTemplateIdHook from '../../../../../hooks/useTemplateIdHook';
 
 interface Props {
   orderId: string;
@@ -20,8 +21,8 @@ const PackingListView: React.FC<Props> = ({orderId}) => {
   const dispatch = useAppDispatch();
   const [showTemplate, setShowTemplate] = useState<boolean>(false);
   const [shouldShare, setShouldShare] = useState<boolean>(false);
-  // const templateId = useTemplateIdHook('65d48f14ad0f8972472d49ca');
-  const templateId = "65d724058f60045a67469a80";
+  const templateId = useTemplateIdHook('658d3cc6585e3dde644da985');
+  // const templateId = "65d724058f60045a67469a80";
   const {
     getPackingMaterialsRequesting,
     packingMaterials,

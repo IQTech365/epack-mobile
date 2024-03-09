@@ -4,7 +4,7 @@ import styles from './style';
 import {IGetPaymentMethodData} from '../../../../../../interface/setting/packerProfile/paymentMethod/IGetPaymentMethodsResponse';
 import {Shadow} from 'react-native-shadow-2';
 import DeleteIcon from '../../../../../../images/icons/delete.svg';
-import EditIcon from '../../../../../../images/icons/edit.svg';
+import EditIcon from '../../../../../../images/icons/edit_icon.svg';
 import { useAppSelector } from '../../../../../../redux/hooks';
 import { IBank } from '../../../../../../interface/common/common';
 import Spacer from '../../../../../../common/Spacer';
@@ -73,13 +73,13 @@ const PaymentMethodListItem: FC<IProps> = ({item, index, onDelete, onEdit}) => {
         <View style={styles.container}>
           <View
             style={[styles.rowContainer, styles.btlr, styles.btrr, styles.top]}>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               activeOpacity={0.4}
               onPress={() => {
                 onDelete(item._id);
               }}>
               <DeleteIcon width={28} height={28} />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <Spacer width={20} />
             <TouchableOpacity
               activeOpacity={0.4}
@@ -95,6 +95,14 @@ const PaymentMethodListItem: FC<IProps> = ({item, index, onDelete, onEdit}) => {
             </View>
             <View style={[styles.valueContainer]}>
               <Text style={styles.value}>{item.accountType}</Text>
+            </View>
+          </View>
+          <View style={[styles.rowContainer, styles.bb]}>
+            <View style={[styles.labelContainer]}>
+              <Text style={styles.label}>Account Holder</Text>
+            </View>
+            <View style={[styles.valueContainer]}>
+              <Text style={styles.value}>{item.accountHolderName}</Text>
             </View>
           </View>
           <View style={[styles.rowContainer, styles.bb]}>

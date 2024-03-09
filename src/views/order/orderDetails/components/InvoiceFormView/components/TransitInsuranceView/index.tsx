@@ -21,7 +21,7 @@ import { ISingleEnquiryData } from '../../../../../../../interface/enquiry/ISing
 import DropdownWithTextInput from '../../../../../../../common/DropdownWithTextInput';
 import { IInvoice } from '../../../../../../../interface/order/IGetInvoiceListResponse';
 import { IInvoiceTransitInsurance, IInvoiceTransitInsuranceCharge } from '../../../../../../../interface/order/ICreateInvoiceRequest';
-
+import _ from 'underscore';
 interface Props {
   isEdit?:boolean;
   invoiceData?:IInvoice;
@@ -47,21 +47,9 @@ const TransitInsuranceView: React.FC<Props> = ({isEdit, invoiceData}) => {
   const initFormValue = () => {
     if(isEdit && invoiceData) {
       const _transitInsurance:IInvoiceTransitInsurance = invoiceData.transitInsurance;
-      if(_transitInsurance !== null && _transitInsurance !== undefined) {
+      if(_.isObject(_transitInsurance)) {
         setTransitInsurance(_transitInsurance.isRequired);
         setTransitInsuranceType(_transitInsurance.transitType);
-        const {transit_charges} = state;
-        const prevDataArr:ITransitCharge[] = _transitInsurance.charges.map((e:IInvoiceTransitInsuranceCharge)=> {
-          const transitChargeItem: ITransitCharge = {
-            transit_insurance_charge: e.insurancePerc,
-            transit_luggage: e.luggageType,
-            transit_insurance_gst: e.gst,
-            transit_goods_value: e.value,
-          };
-          return transitChargeItem;
-        });
-        const clone = [...transit_charges, ...prevDataArr];
-        setTransitCharges(clone);
       }
     }
   }
@@ -151,6 +139,32 @@ const TransitInsuranceView: React.FC<Props> = ({isEdit, invoiceData}) => {
   useEffect(() => {
     initFormValue();
   }, []);
+
+  useEffect(() => {
+    if(isEdit && invoiceData) {
+      if(state.transit_insurance == transitInsuranceOptions[0]) {
+        const _transitInsurance:IInvoiceTransitInsurance = invoiceData.transitInsurance;
+        if(_.isObject(_transitInsurance)) {
+          setTransitInsurance(_transitInsurance.isRequired);
+          setTransitInsuranceType(_transitInsurance.transitType);
+          const {transit_charges} = state;
+          const prevDataArr:ITransitCharge[] = _transitInsurance.charges.map((e:IInvoiceTransitInsuranceCharge)=> {
+            const transitChargeItem: ITransitCharge = {
+              transit_insurance_charge: e.insurancePerc,
+              transit_luggage: e.luggageType,
+              transit_insurance_gst: e.gst,
+              transit_goods_value: e.value,
+            };
+            return transitChargeItem;
+          });
+          const clone = [...transit_charges, ...prevDataArr];
+          setTransitCharges(clone);
+        }
+      } else if(state.transit_insurance == transitInsuranceOptions[1]) {
+        setTransitCharges([]);
+      }
+    }
+  }, [state.transit_insurance]);
 
   return (
     <>

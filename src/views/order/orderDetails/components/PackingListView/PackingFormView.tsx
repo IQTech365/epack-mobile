@@ -1,4 +1,4 @@
-import React, {useEffect, useReducer, useState} from 'react';
+import React, {useEffect, useReducer, useRef, useState} from 'react';
 import {View, FlatList, Text, TouchableOpacity} from 'react-native';
 import styles from './style';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
@@ -53,6 +53,12 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   const {initialValue, prefix} = useInitialValueHook('658d3cc6585e3dde644da985');
   const serialNo:number = useSerialNoHook();
 
+  const itemNameInputRef = useRef(null);
+  const quntityInputRef = useRef(null);
+  const productCodeInputRef = useRef(null);
+  const amountInputRef = useRef(null);
+  const descriptionInputRef = useRef(null);
+
   const _getPackingTypes = () => {
     let packTypes: TDropdownItem[] = [];
     const {data} = packingTypes || {};
@@ -67,6 +73,28 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
     }
     return packTypes;
   };
+
+  const _resetInputs = () => {
+    setParticularName('');
+    //@ts-ignore
+    itemNameInputRef && itemNameInputRef?.current?.reset();
+
+    setQuantity('');
+    //@ts-ignore
+    quntityInputRef && quntityInputRef?.current?.reset();
+
+    setProductCode('');
+    //@ts-ignore
+    productCodeInputRef && productCodeInputRef?.current?.reset();
+
+    setValueOfGoods('');
+    //@ts-ignore
+    amountInputRef && amountInputRef?.current?.reset();
+
+    setDescription('');
+    //@ts-ignore
+    descriptionInputRef && descriptionInputRef?.current?.reset();
+  }
 
   const authId = useAuthId();
   const dispatch2 = useAppDispatch();
@@ -97,6 +125,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
     };
     clone.push(item);
     setItems(clone);
+    _resetInputs();
   };
 
   const deletePackingItem = (index:number) => {
@@ -248,6 +277,9 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
+              placeholder="Enter item name"
+              //@ts-ignore
+              ref={itemNameInputRef}
             />
           </View>
           <Spacer height={4} />
@@ -259,6 +291,9 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
+                placeholder="Enter quantity"
+                //@ts-ignore
+                ref={quntityInputRef}
               />
             </View>
             <View style={styles.itemContainer}>
@@ -280,6 +315,9 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
+                placeholder="Enter code"
+                //@ts-ignore
+                ref={productCodeInputRef}
               />
             </View>
             <View style={styles.itemContainer}>
@@ -289,7 +327,9 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
-                placeholder="2000"
+                placeholder="Enter amount"
+                //@ts-ignore
+                ref={amountInputRef}
               />
             </View>
           </View>
@@ -301,6 +341,9 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
+              placeholder="Enter Description"
+              //@ts-ignore
+              ref={descriptionInputRef}
             />
           </View>
         </View>

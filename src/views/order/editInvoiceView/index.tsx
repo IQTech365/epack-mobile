@@ -8,6 +8,7 @@ import {InvoiceFormContextProvider} from '../../../provider/InvoiceFormContextPr
 import InvoiceFormView from '../orderDetails/components/InvoiceFormView';
 import Header from '../../../common/Header';
 import styles from './style';
+import { useNavigation } from '@react-navigation/native';
 
 type Props = NativeStackScreenProps<OrderStackParamList, 'EditInvoice'>;
 
@@ -20,7 +21,7 @@ const EditInvoiceView: FC<Props> = ({route, navigation}) => {
   console.log('Enquiry--', JSON.stringify(enquiry));
 
   const _onEditDone = () => {
-    //
+    navigation.goBack();
   };
 
   return (

@@ -140,6 +140,8 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
           surveyDate: date,
           surveyItems: surveyItems,
           addedBy: authId,
+          isAuto: true,
+          isHeadOffice: true,
         };
         dispatch(addSurveyItemRequest(payload));
       })

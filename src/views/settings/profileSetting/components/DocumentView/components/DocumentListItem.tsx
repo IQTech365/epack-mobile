@@ -45,12 +45,12 @@ const DocumentListItem: FC<IProps> = ({item, index, onDelete, onEdit}) => {
               <EditIcon width={25} height={25} />
             </TouchableOpacity>
             <Spacer height={10} />
-            <TouchableOpacity
+            {/* <TouchableOpacity
               onPress={() => {
                 onDelete(item._id);
               }}>
               <DeleteIcon width={25} height={25} />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
       </Shadow>

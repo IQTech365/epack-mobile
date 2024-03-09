@@ -36,6 +36,20 @@ const FreightTypeView: React.FC<Props> = ({
     setLoadingCharge,
     setUnloadingCharge,
     setUnpackingCharge,
+    setPickupChargeAmount,
+    setPickupChargeHSN,
+    setPackingAmount,
+    setPackingHSN,
+    setDoorDeliveryAmount,
+    setDoorDeliveryHSN,
+    setPackingMaterialAmount,
+    setPackingMaterialHSN,
+    setLoadingAmount,
+    setLoadingHSN,
+    setUnloadingAmount,
+    setUnloadingHSN,
+    setUnpackingAmount,
+    setUnpackingHSN,
   } = useInvoiceFormContextHook();
 
   const _initCheckboxOption = () => {
@@ -161,27 +175,52 @@ const FreightTypeView: React.FC<Props> = ({
         break;
       case FREIGHT_TYPE.PICKUP_CHARGES:
         setPickupCharge(option);
-        break;
-      case FREIGHT_TYPE.PICKUP_CHARGES:
-        setPickupCharge(option);
+        if(isEdit && option !== 'Additional') {
+          setPickupChargeAmount('');
+          setPickupChargeHSN('');
+        }
         break;
       case FREIGHT_TYPE.PACKING_CHARGES:
         setPackingCharge(option);
+        if(isEdit && option !== 'Additional') {
+          setPackingAmount('');
+          setPackingHSN('');
+        }
         break;
       case FREIGHT_TYPE.DOOR_DELIVERY_CHARGE:
         setDoorDeliveryCharge(option);
+        if(isEdit && option !== 'Additional') {
+          setDoorDeliveryAmount('');
+          setDoorDeliveryHSN('');
+        }
         break;
       case FREIGHT_TYPE.PACKING_MATERIAL_CHARGES:
         setPackingMaterialCharge(option);
+        if(isEdit && option !== 'Additional') {
+          setPackingMaterialAmount('');
+          setPackingMaterialHSN('');
+        }
         break;
       case FREIGHT_TYPE.LOADING_CHARGES:
         setLoadingCharge(option);
+        if(isEdit && option !== 'Additional') {
+          setLoadingAmount('');
+          setLoadingHSN('');
+        }
         break;
       case FREIGHT_TYPE.UNLOADING_CHARGES:
         setUnloadingCharge(option);
+        if(isEdit && option !== 'Additional') {
+          setUnloadingAmount('');
+          setUnloadingHSN('');
+        }
         break;
       case FREIGHT_TYPE.UNPACKING_CHARGES:
         setUnpackingCharge(option);
+        if(isEdit && option !== 'Additional') {
+          setUnpackingAmount('');
+          setUnpackingHSN('');
+        }
         break;
       default:
         break;

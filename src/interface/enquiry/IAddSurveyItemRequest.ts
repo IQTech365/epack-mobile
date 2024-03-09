@@ -12,4 +12,6 @@ export interface IAddSurveyItemRequest {
   surveyDate: string;
   surveyItems: ISurveyListItem[];
   addedBy: string;
+  isAuto: boolean;
+  isHeadOffice:boolean;
 }

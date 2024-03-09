@@ -6,15 +6,12 @@
         "label": "MONEY RECEIPT" 
     },
     {
-        "label": "CAR CONDITION" 
-    },
-    {
-        "label": "BILTY/LR/CN" 
+        "label": "VEHICLE CONDITION" 
     },
     {
         "label": "INVOICE" 
     },
     {
-        "label": "PACKING" 
+        "label": "PACKING LIST" 
     }
 ]

@@ -104,13 +104,22 @@ const SettingCard: React.FC<ISettingCardProps> = ({
     }
   };
 
+  const _getCardText = ():string => {
+    let cardText:string = item;
+    if(item == "Role Management") {
+      cardText = `${item}\n Coming Soon`
+    }
+    return cardText;
+  }
+
   return (
     <Shadow style={[styles.cardWrapper, getCardBackgroundColor()]} distance={1} startColor="#D9D9D9">
       <TouchableOpacity
         style={styles.container}
         activeOpacity={0.6}
+        disabled={item == "Role Management"}
         onPress={onPress}>
-        <Text style={styles.cardTitleText}>{item}</Text>
+        <Text style={styles.cardTitleText}>{_getCardText()}</Text>
         <View style={[styles.iconContainer, getCardIconStyle()]}>
           {getCardIcon()}
         </View>

@@ -15,7 +15,6 @@ export interface ICreateBiltyRequest {
   enquiryId: string;
   isAuto: boolean;
   isHeadOffice: boolean;
-  templateId: string;
   biltyNumber: string;
   biltyDate: string;
 

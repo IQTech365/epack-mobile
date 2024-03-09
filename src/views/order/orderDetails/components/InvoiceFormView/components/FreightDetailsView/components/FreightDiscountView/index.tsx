@@ -29,71 +29,32 @@ const FreightDiscountView: React.FC<Props> = ({isEdit, invoiceData}) => {
 
   const _initFormValues = () => {
     if (isEdit && invoiceData) {
-      const {discountType, discountAmount} = invoiceData || {};
+      const {discountType} = invoiceData || {};
       setDiscountInInvoice(discountType);
-      // const discountOption:TDropdownItem = discountPercentOptions.find((e:TDropdownItem) => e.value = discountAmount) as TDropdownItem;
-      // if(discountType === 'Discount @%' && discountOption !== undefined) {
-      //   //@ts-ignore
-      //   dropdownRef && dropdownRef?.current?.setDefaultValue(discountOption);
-      //   setDiscountValueOrPercent(discountAmount);
-      // } else {
-      //   //@ts-ignore
-      //   inputRef && inputRef?.current?.setValue(discountAmount);
-      //   setDiscountValueOrPercent(discountAmount);
-      // }
     }
   };
 
   const _initDiscountAmountOrPercent = () => {
     if (isEdit && invoiceData) {
-      const {discountType, discountAmount} = invoiceData || {};
-      const discountOption: TDropdownItem = discountPercentOptions.find(
-        (e: TDropdownItem) => (e.value = discountAmount),
-      ) as TDropdownItem;
-      console.log('discountOption----', JSON.stringify(discountOption));
-      if (discountType == 'Discount @%' && discountOption !== undefined) {
-        //@ts-ignore
-        dropdownRef && dropdownRef?.current?.setDefaultValue(discountOption);
-        //@ts-ignore
-        dropdownRef && dropdownRef?.current?.refreshComp();
-        setDiscountValueOrPercent(discountAmount);
+      if(state.discount_in_invoice !== discountOptions[2]) {
+        const {discountType, discountAmount} = invoiceData || {};
+        const discountOption: TDropdownItem = discountPercentOptions.find(
+          (e: TDropdownItem) => (e.value == discountAmount.toString()),
+        ) as TDropdownItem;
+        if (discountType == 'Discount @%' && discountOption !== undefined) {
+          //@ts-ignore
+          dropdownRef && dropdownRef?.current?.setDefaultValue(discountOption);
+          //@ts-ignore
+          setDiscountValueOrPercent(discountAmount);
+        } else {
+          //@ts-ignore
+          inputRef && inputRef?.current?.setValue(discountAmount);
+          setDiscountValueOrPercent(discountAmount);
+        }
       } else {
-        //@ts-ignore
-        inputRef && inputRef?.current?.setValue(discountAmount);
-        setDiscountValueOrPercent(discountAmount);
+        setDiscountValueOrPercent('');
       }
     }
-  };
-
-  const showDiscountInputView = () => {
-    if (state.discount_in_invoice == discountOptions[0]) {
-      return (
-        <DropdownComponent
-          //@ts-ignore
-          ref={dropdownRef}
-          data={discountPercentOptions}
-          onSelect={(item: TDropdownItem) => {
-            setDiscountValueOrPercent(item.value);
-          }}
-        />
-      );
-    } else if (state.discount_in_invoice == discountOptions[1]) {
-      return (
-        <Input
-          //@ts-ignore
-          ref={inputRef}
-          onChangeText={setDiscountValueOrPercent}
-          containerStyle={styles.inputContainer}
-          inputStyle={styles.input}
-          selectionColor={COLOR_BLACK}
-          value={state.discount_value_or_percent}
-          placeholder="Enter flat discount amount"
-          placeholderTextColor={COLOR_GRAY4}
-          inputType="numeric"
-        />
-      );
-    }
-    return null;
   };
 
   useEffect(() => {
