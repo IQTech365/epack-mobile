@@ -8,15 +8,23 @@
     "value": "2"
   },
   {
-    "label": "BHIM UPI",
+    "label": "Google Pay",
     "value": "3"
   },
   {
-    "label": "Bharat Pay",
+    "label": "BHIM UPI",
     "value": "4"
   },
   {
-    "label": "Other",
+    "label": "Bharat Pay",
     "value": "5"
+  },
+  {
+    "label": "Amazon Pay",
+    "value": "6"
+  },
+  {
+    "label": "Other",
+    "value": "7"
   }
 ]
