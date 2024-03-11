@@ -195,6 +195,7 @@ const CheckoutPage: FC<Props> = ({route, navigation}) => {
           _addPurchase(orderId);
         })
         .catch((error: any) => {
+          console.log('Razorpay-Error--', JSON.stringify(error));
           showToast(
             `Error: ${error.code} | ${error.description}`,
             ToastType.ERROR,

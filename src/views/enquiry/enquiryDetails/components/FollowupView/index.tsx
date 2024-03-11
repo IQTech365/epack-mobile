@@ -46,7 +46,7 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
   } = useAppSelector(state => state.Enquiry);
   const {data} = followups || {};
   const {data: surveyItemData} = surveyItemList || {};
-  console.log('surveyItemData---', JSON.stringify(surveyItemData));
+  console.log('surveyListTemplate---', JSON.stringify(surveyListTemplate));
   
   const {surveyList, getSurveyListRequesting} = useAppSelector(
     state => state.Enquiry,
@@ -171,7 +171,7 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
       if(shouldShare) {
         startShare(
           surveyListTemplate,
-          'Survey List',
+          'SurveyList',
           dispatch(resetGetSurveyListTemplateRequest()),
         );
       } else {
