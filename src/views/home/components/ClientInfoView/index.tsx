@@ -13,7 +13,6 @@ const ClientInfoView = () => {
   const {companies} = useAppSelector(state => state.Company);
   const [company, setCompany] = useState<ICompanyInfoData>();
   const {purchasedSubscriptions} = useAppSelector(state => state.Subscription);
-  console.log('purchasedSubscriptions--', JSON.stringify(purchasedSubscriptions));
 
   const _getCompany = () => {
     getCurrentCompanyId()
