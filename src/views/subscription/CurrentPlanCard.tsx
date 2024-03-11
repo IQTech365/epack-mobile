@@ -2,10 +2,10 @@ import React, {FC} from 'react';
 import {Text, View} from 'react-native';
 import styles from './style';
 import Spacer from '../../common/Spacer';
-import {IPurchasedSubscription} from '../../interface/subscription/subscription';
+import {IPurchasedSubscription, ISubscription} from '../../interface/subscription/subscription';
 import {formatDate5, getDaysDifference} from '../../utils/formatter';
 import LinearGradient from 'react-native-linear-gradient';
-
+import _ from 'underscore';
 interface IProps {
   data: IPurchasedSubscription | null;
 }
@@ -21,6 +21,20 @@ const CurrentPlanCard: FC<IProps> = ({data}) => {
         <Spacer height={10} />
       </>
     );
+  };
+
+  const _getCurrentPlanInfo = () => {
+    let planName:string = '';
+    const {subscription} = data || {}
+    if (_.isObject(data)) {
+        if(_?.isArray(subscription) && subscription.length > 0) {
+          const firstSubscription:ISubscription = subscription[0];
+          if(_.isObject(firstSubscription)) {
+            planName = `${data.subscriptionPlan}-${firstSubscription.subscriptionType}`
+          }
+        }
+    }
+    return planName;
   };
 
   const _showExpirationMessage = () => {
@@ -43,7 +57,7 @@ const CurrentPlanCard: FC<IProps> = ({data}) => {
         angle={45}>
         <View style={styles.currentPlanContainer}>
           <Text style={styles.planNameText}>
-            {data?.subscriptionPlan.toUpperCase() || 'NA'}
+            {_getCurrentPlanInfo().toUpperCase() || 'NA'}
           </Text>
           {_showDaysLeftView()}
           {_showExpirationMessage()}

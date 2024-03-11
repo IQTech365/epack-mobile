@@ -5,13 +5,15 @@ import {Shadow} from 'react-native-shadow-2';
 import {useAppSelector} from '../../../../redux/hooks';
 import {ICompanyInfoData} from '../../../../interface/companyRegistration/IGetCompaniesResponse';
 import {getCurrentCompanyId} from '../../../../utils/storage';
-import {IPurchasedSubscription} from '../../../../interface/subscription/subscription';
+import {IPurchasedSubscription, ISubscription} from '../../../../interface/subscription/subscription';
 import LinearGradient from 'react-native-linear-gradient';
+import _ from "underscore";
 
 const ClientInfoView = () => {
   const {companies} = useAppSelector(state => state.Company);
   const [company, setCompany] = useState<ICompanyInfoData>();
   const {purchasedSubscriptions} = useAppSelector(state => state.Subscription);
+  console.log('purchasedSubscriptions--', JSON.stringify(purchasedSubscriptions));
 
   const _getCompany = () => {
     getCurrentCompanyId()
@@ -50,12 +52,22 @@ const ClientInfoView = () => {
   };
 
   const _getCurrentPlanInfo = () => {
+    let planName:string = '';
     const {data} = purchasedSubscriptions || {};
     let plan: IPurchasedSubscription | null = null;
     if (data && Array.isArray(data) && data.length > 0) {
       plan = data[0] as IPurchasedSubscription;
+      if(_.isObject(plan)) {
+        const {subscription} = plan || {};
+        if(_?.isArray(subscription) && subscription.length > 0) {
+          const firstSubscription:ISubscription = subscription[0];
+          if(_.isObject(firstSubscription)) {
+            planName = `${plan.subscriptionPlan}-${firstSubscription.subscriptionType}`
+          }
+        }
+      }
     }
-    return plan;
+    return planName;
   };
 
   useEffect(() => {
@@ -84,7 +96,7 @@ const ClientInfoView = () => {
               useAngle={true}
               angle={45}>
               <Text style={styles.planText}>
-                {_getCurrentPlanInfo()?.subscriptionPlan.toUpperCase()}
+                {_getCurrentPlanInfo().toUpperCase()}
               </Text>
             </LinearGradient>
           </View>
