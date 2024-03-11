@@ -1,3 +1,5 @@
+import { formatDate4 } from "../../../../../utils/formatter";
+
 export enum ACTION {
   PACKING_NO = 'PACKING_NO',
   PACKING_DATE = 'PACKING_DATE',
@@ -21,7 +23,7 @@ export interface IState {
 
 export const initialState: IState = {
   packing_no: '',
-  packing_date: '',
+  packing_date: formatDate4(new Date()),
   packing_items: [],
 };
 

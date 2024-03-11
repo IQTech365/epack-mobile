@@ -17,6 +17,7 @@ import {ISingleOrderRequest} from '../../../../../interface/order/ISingleOrderRe
 import Spinner from '../../../../../common/Spinner';
 import {ISingleEnquiryData} from '../../../../../interface/enquiry/ISingleEnquiryResponse';
 import { COLOR_BLACK, COLOR_GREEN } from '../../../../../utils/colors';
+import { formatDate4 } from '../../../../../utils/formatter';
 interface IDetailsViewProps {
   enquiryId: string;
 }
@@ -384,11 +385,11 @@ const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
             />
             <OrderDetailListItem
               label="Delivery Date"
-              value={item?.deliveryDate || 'Not Available'}
+              value={formatDate4(new Date(item?.deliveryDate)) || 'Not Available'}
             />
             <OrderDetailListItem
               label="Delivered Date"
-              value={item?.deliveredDate || 'Not Available'}
+              value={formatDate4(new Date(item?.deliveredDate)) || 'Not Available'}
               isLast={true}
             />
           </View>

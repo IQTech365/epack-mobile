@@ -80,22 +80,22 @@ const AddMoneyReceiptListItem: React.FC<IAddMoneyReceiptListItemProps> = ({
               <Text style={styles.valueText}>{item.receiptAgainst}</Text>
             </View>
           </View>
-          <View style={styles.rowContainer}>
+          {item.receiptAgainst == "Bill" ? <View style={styles.rowContainer}>
             <View style={styles.rowItemContainer}>
               <Text style={styles.labelText}>Bill Number</Text>
             </View>
             <View style={styles.rowItemContainer2}>
               <Text style={styles.valueText}>{item.billNumber}</Text>
             </View>
-          </View>
-          <View style={styles.rowContainer}>
+          </View> : null}
+          {item.receiptAgainst == "Quotation" ? <View style={styles.rowContainer}>
             <View style={styles.rowItemContainer}>
               <Text style={styles.labelText}>Quotation Number</Text>
             </View>
             <View style={styles.rowItemContainer2}>
               <Text style={styles.valueText}>{item.quotationNumber}</Text>
             </View>
-          </View>
+          </View> : null}
           <View style={styles.rowContainer}>
             <View style={styles.rowItemContainer}>
               <Text style={styles.labelText}>Payment Amount</Text>

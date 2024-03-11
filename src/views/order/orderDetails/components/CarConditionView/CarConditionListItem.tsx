@@ -61,7 +61,6 @@ const CarConditionListItem: React.FC<Props> = ({
               <Text style={styles.label}>Condition Date:</Text>
             </View>
             <View style={styles.valueContainer}>
-            <Text style={styles.value}>{item.vehicle_condition_no}</Text>
               <Text style={styles.value}>
                 {formatDate4(new Date(item.car_condition_date))}
               </Text>
