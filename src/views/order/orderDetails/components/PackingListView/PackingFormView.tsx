@@ -108,6 +108,8 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
         packingDate: state.packing_date,
         packingItems: items,
         addedBy: authId,
+        isAuto:true,
+        isHeadOffice: true,
       };
       dispatch2(createPackingMaterialsRequest(payload));
     }).catch(err => console.log('error in getting company id'));

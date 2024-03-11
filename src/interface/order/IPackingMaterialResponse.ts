@@ -14,6 +14,8 @@ export interface ICreatePackingMaterialRequest {
   packingDate: string;
   packingItems: IPackingItem[];
   addedBy: string;
+  isAuto:boolean;
+  isHeadOffice:boolean;
 }
 export interface ICreatePackingMaterialResponse {
   data: any;
