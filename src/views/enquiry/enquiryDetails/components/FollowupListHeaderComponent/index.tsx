@@ -31,12 +31,13 @@ interface IFollowupListHeaderComponentProps {
   enquiryId: string;
   nextFollowupOrSurveyDate?: string;
   taskNameCallback:(data: string)=>void
+  isOrder:boolean;
 }
 
-const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> = ({ taskName, assigneeRole, enquiryId, nextFollowupOrSurveyDate, taskNameCallback }) => {
+const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> = ({ taskName, assigneeRole, enquiryId, nextFollowupOrSurveyDate, taskNameCallback, isOrder = false }) => {
   const [comment, setComment] = useState<string>('');
   const [date, setDate] = useState<Date>(new Date());
-  const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
+  const [activeTabIndex, setActiveTabIndex] = useState<number>(isOrder ? 1 : 0);
 
   const dispatch = useAppDispatch();
   const {

@@ -19,6 +19,9 @@ import Spinner from '../../../common/Spinner';
 import PackingListView from './components/PackingListView';
 import {ISingleEnquiryData} from '../../../interface/enquiry/ISingleEnquiryResponse';
 import {resetGetSerialNoRequest} from '../../../redux/slices/SerialNoSettingSlice';
+import SurveyView from '../../enquiry/enquiryDetails/components/FollowupView'
+import QuotationView from '../../enquiry/enquiryDetails/components/QuotationsView';
+import PackingMaterialsView from '../../enquiry/enquiryDetails/components/PackingMaterialsView';
 
 const tabData = [tabOptions];
 
@@ -56,6 +59,26 @@ const OrderDetailsView: React.FC<Props> = ({route, navigation}) => {
         return <InvoiceView orderId={orderId as string} item={item} />;
       case 5:
         return <PackingListView orderId={orderId as string} />;
+      case 6:
+        return (
+          <SurveyView
+            taskName="SURVEY"
+            assigneeRole="Survey"
+            enquiryId={orderId as string}
+            isOrder={true}
+          />
+        );
+      case 7:
+        return (
+          <QuotationView
+            enquiryId={orderId as string}
+            navigation={navigation}
+            onItemClick={handleTabChange}
+            isOrder={true}
+          />
+        );
+      case 8:
+          return <PackingMaterialsView enquiryId={orderId as string} />;
       default:
         return null;
     }

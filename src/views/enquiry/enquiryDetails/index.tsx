@@ -43,6 +43,7 @@ const EnquiryDetailsView: React.FC<Props> = ({route, navigation}) => {
             taskName="FOLLOW UP"
             assigneeRole="Enquiry"
             enquiryId={enquiryId as string}
+            isOrder={false}
           />
         );
       case 2:
@@ -51,6 +52,7 @@ const EnquiryDetailsView: React.FC<Props> = ({route, navigation}) => {
             taskName="SURVEY"
             assigneeRole="Survey"
             enquiryId={enquiryId as string}
+            isOrder={false}
           />
         );
       case 3:

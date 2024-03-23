@@ -27,12 +27,14 @@ interface IFollowupViewProps {
   taskName: string;
   assigneeRole: string;
   enquiryId: string;
+  isOrder:boolean;
 }
 
 const FollowupView: React.FC<IFollowupViewProps> = ({
   taskName,
   assigneeRole,
   enquiryId,
+  isOrder = false,
 }) => {
   const dispatch = useAppDispatch();
   const {
@@ -46,20 +48,16 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
   } = useAppSelector(state => state.Enquiry);
   const {data} = followups || {};
   const {data: surveyItemData} = surveyItemList || {};
-  console.log('surveyListTemplate---', JSON.stringify(surveyListTemplate));
   
   const {surveyList, getSurveyListRequesting} = useAppSelector(
     state => state.Enquiry,
   );
   const {data: surveyData} = surveyList || {};
-  const [taskData, setTaskData] = useState<string>('');
+  const [taskData, setTaskData] = useState<string>(!isOrder ? '' : 'SURVEY ITEM');
   const [showTemplate, setShowTemplate] = useState<boolean>(false);
   const [shouldShare, setShouldShare] = useState<boolean>(false);
   const templateId = useTemplateIdHook('658d3d2f585e3dde644da9b2');
   // const templateId = "65d48f14ad0f8972472d49ca";
-
-  console.log('surveyItem-templateId---', templateId);
-
   const _getSurveyItemListRequest = () => {
     getCurrentCompanyId().then(id => {
       const payload :IGetSurvyeItemListRequestPayload= {
@@ -223,14 +221,15 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
               </View>
             )}
             ListHeaderComponent={
-              <FollowupListHeaderComponent
+             !isOrder ? <FollowupListHeaderComponent
                 taskName={taskName}
                 assigneeRole={assigneeRole}
                 enquiryId={enquiryId}
                 nextFollowupOrSurveyDate={getNextFollowupOrSurveyDate()}
                 taskNameCallback={taskNameCallback}
+                isOrder={isOrder}
               />
-            }
+            : null}
             extraData={getDataSet()}
           />
         </View>

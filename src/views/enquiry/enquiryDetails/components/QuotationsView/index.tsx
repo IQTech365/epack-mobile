@@ -28,12 +28,14 @@ interface IQuotationViewProps {
   enquiryId: string;
   navigation: any;
   onItemClick: (tabIndex: number) => void;
+  isOrder?:boolean;
 }
 
 const QuotationView: React.FC<IQuotationViewProps> = ({
   enquiryId,
   navigation,
   onItemClick,
+  isOrder = false,
 }) => {
   const {
     quotations,
@@ -327,14 +329,14 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
 
   return (
     <View style={{alignItems: 'center'}}>
-      <ActionHeaderView
+      {!isOrder ? <ActionHeaderView
         count={transformQuotationData().length}
         onShow={handleShowQuotationList}
         onCreate={handleCreateNewQuotation}
-      />
-      {showForm()}
+      /> : null}
+      {!isOrder ? showForm() : null}
       {showList()}
-      {showEditForm()}
+      {!isOrder ? showEditForm() : null}
       <Spinner show={getQuotationTemplateHtmlRequesting} />
       <ModalHOC
         visible={showModal}
