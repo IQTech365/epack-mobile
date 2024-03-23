@@ -132,7 +132,6 @@ const SignatureCaptureView: React.FC<IProps> = ({
               dispatch(imageUploadRequest(formData));
             }}
             onDragEvent={() => {
-              console.log('dragged');
             }}
             saveImageFileInExtStorage={true}
             showNativeButtons={false}

@@ -232,7 +232,6 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess}) => {
         remarks: state.remark,
         addedBy: authId,
       };
-      console.log('BiltyForm-payload',JSON.stringify(payload));
       dispatch(createBiltyRequest(payload));
     }).catch(err => console.log(err));
     

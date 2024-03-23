@@ -16,9 +16,6 @@ const EditInvoiceView: FC<Props> = ({route, navigation}) => {
   const orderID: string = route.params?.orderID;
   const item: IInvoice = route.params?.item;
   const enquiry: ISingleEnquiryData = route.params?.enquiry;
-  console.log('OrderID--', orderID);
-  console.log('Invoice--', JSON.stringify(item));
-  console.log('Enquiry--', JSON.stringify(enquiry));
 
   const _onEditDone = () => {
     navigation.goBack();

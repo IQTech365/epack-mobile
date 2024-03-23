@@ -209,7 +209,6 @@ const FreightTypeView: React.FC<Props> = ({freightType, options, isEdit, item, q
   useEffect(() => {
     if(isEdit && quotationData) {
         const quotationfreight:IQuotationFreight = quotationData.quotationfreights;
-        console.log('quotationfreight-----', JSON.stringify(quotationfreight));
           const isPartLoad = quotationfreight.isPartLoad == 'true';
           setFreightPartLoad(isPartLoad);
           const isFullLoad = quotationfreight.isFullLoad == 'true';

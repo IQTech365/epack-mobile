@@ -83,8 +83,6 @@ const AddQuotationForm: React.FC<Props> = ({
     updateQuotationSuccess,
     updateQuotationFailure,
   } = useAppSelector(state => state.Quotation);
-  // console.log('Single-quotation--', JSON.stringify(quotation));
-  console.log('Quotation-Reducer-State--', JSON.stringify(state));
   
   const {
     vehicleTypesRequesting,

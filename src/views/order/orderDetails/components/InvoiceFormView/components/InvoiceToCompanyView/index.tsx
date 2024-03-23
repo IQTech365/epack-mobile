@@ -91,8 +91,6 @@ const InvoiceToCompanyView: React.FC<Props> = () => {
       const singleOrder:ISingleEnquiryData = getSingleOrder();
       if(singleOrder) {
         const billingInfo:IBillingInfo = singleOrder.billingDetails as IBillingInfo;
-        console.log('billingInfo--', JSON.stringify(billingInfo));
-        
         if(billingInfo) {
         //@ts-ignore
         companyNameInputRef && companyNameInputRef?.current?.setValue(billingInfo?.companyName);

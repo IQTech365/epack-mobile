@@ -168,8 +168,6 @@ const FreightInputView: React.FC<Props> = ({label1, label2, freightType, isEdit,
           break;
       }
     }
-    console.log('amount----', amount);
-    console.log('hsnCode----', hsnCode);
     return {amount, hsnCode}
   }
 

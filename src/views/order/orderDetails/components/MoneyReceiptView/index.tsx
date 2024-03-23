@@ -62,8 +62,6 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
   const [shouldDownload, setShouldDownload] = useState<boolean>(false);
   const [moneyReceiptId, setMoneyReceiptId] = useState<string>('');
   const templateId = useTemplateIdHook('658d3c9c585e3dde644da970');
-  console.log('MoneyReceiptData--', JSON.stringify(MoneyReceiptData));
-  
 
   const _getDocCount = ():number => {
     let count:number = 0;

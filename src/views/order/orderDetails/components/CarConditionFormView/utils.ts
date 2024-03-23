@@ -44,7 +44,6 @@ export const getVehicleCompanyList = (vehicleTypeId:string,response:IVehicleComp
           });
       }
     }
-    console.log('getVehicleCompanyList--', JSON.stringify(items));
     return items;
 }
 
