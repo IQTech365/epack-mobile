@@ -35,7 +35,7 @@ const ConsignerDetails: React.FC<{}> = ({}) => {
 
   const [states, setStates] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
-  const {getOrderRequesting, order} = useAppSelector(state => state.Order);
+  const {order} = useAppSelector(state => state.Order);
   const {data: orderData} = order || {};
 
   const getSingleOrder = () => {
@@ -46,13 +46,10 @@ const ConsignerDetails: React.FC<{}> = ({}) => {
     //@ts-ignore
     return order;
   };
-  console.log('SingleOrder----', JSON.stringify(getSingleOrder()));
 
   const consignerNameInputRef = useRef<InputMethods>(null);
   const gstInputRef = useRef<InputMethods>(null);
   const mobileInputRef = useRef<InputMethods>(null);
-  // const consingerStateDDRef = useRef<DropdownMethods>(null);
-  // const consignerCityDDRef = useRef<DropdownMethods>(null);
   const consignerAddressInputRef = useRef<InputMethods>(null);
   const consignerPincodeInputRef = useRef<InputMethods>(null);
 
@@ -78,7 +75,10 @@ const ConsignerDetails: React.FC<{}> = ({}) => {
         setConsignerMobileNo(mobile);
         mobileInputRef.current?.setValue(mobile);
       } else if(billingBy == "by Individual") {
-        //TODO: fill for individual case
+        setConsignerName(partyName);
+        consignerNameInputRef.current?.setValue(partyName);
+        setConsignerMobileNo(mobile);
+        mobileInputRef.current?.setValue(mobile);
       }
       //*** address */
       const {city, state, address, pincode} = pickupAddress || {};
