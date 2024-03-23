@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {View, ScrollView} from 'react-native';
 import Header from '../../common/Header';
 import styles from './style';
@@ -8,7 +8,7 @@ import TaskView from './components/TaskView';
 import {FEATURE_TYPE, TASK_NAME} from './utils';
 import BannerView from './components/BannerView';
 import FeatureView from './components/FeatureView';
-import {useNavigation} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {getCurrentCompanyId} from '../../utils/storage';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {getSavedDocumentTemplateIdListRequest, getTemplateListRequest, resetSaveDocumentTemplateIdRequest, saveDocumentTemplateIdRequest} from '../../redux/slices/TemplateSettingSlice';
@@ -27,8 +27,12 @@ import { getPurchasedSubscriptionRequest } from '../../redux/slices/Subscription
 import { EventRegister } from 'react-native-event-listeners';
 import { ISaveDocumentTemplateIdPayload, ISavedDocumentTemplateId, ITemplate, ITemplateData } from '../../interface/setting/template/template';
 
-const HomePageView = () => {
-  const navigation = useNavigation();
+interface IProps {
+  navigation: NavigationProp<any, any>;
+}
+
+const HomePageView:FC<IProps> = ({navigation}) => {
+  // const navigation = useNavigation();
   const dispatch = useAppDispatch();
   const authId = useAuthId();
   const {dashboard, submodules} = useAppSelector(state => state.Common);
@@ -36,6 +40,7 @@ const HomePageView = () => {
   const [initDefaultTemplates, setInitDefaultTemplates] = useState<boolean>(true);
 
   const handleFeatureClick = (featureType: FEATURE_TYPE) => {
+    
     if (featureType == FEATURE_TYPE.BRANCHES) {
       //@ts-ignore
       navigation.navigate('Branch Management');
@@ -212,26 +217,32 @@ const HomePageView = () => {
           <TaskView
             taskName={TASK_NAME.NEW_ENQUIRIES}
             count={_getTaskCountDataObj()?.newEnquiry as number}
+            navigation={navigation}
           />
           <TaskView
             taskName={TASK_NAME.TODAY_FOLLOW_UPS}
             count={_getTaskCountDataObj()?.todayfollowup as number}
+            navigation={navigation}
           />
           <TaskView
             taskName={TASK_NAME.TODAY_SURVEY}
             count={_getTaskCountDataObj()?.todaySurvey as number}
+            navigation={navigation}
           />
           <TaskView
             taskName={TASK_NAME.NEW_ORDERS}
             count={_getTaskCountDataObj()?.newOrder as number}
+            navigation={navigation}
           />
           <TaskView
             taskName={TASK_NAME.DELIVERED_ORDERS}
             count={_getTaskCountDataObj()?.deliveredOrder as number}
+            navigation={navigation}
           />
           <TaskView
             taskName={TASK_NAME.TOTAL_CUSTOMERS}
             count={_getTaskCountDataObj()?.totalCustomer as number}
+            navigation={navigation}
           />
         </View>
         <BannerView />

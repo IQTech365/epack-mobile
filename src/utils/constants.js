@@ -23,6 +23,9 @@ const AuthStackRoute = {
 }
 const HomeStackRoute = {
   Home: 'Home',
+  TodayFollowup: 'TodayFollowup',
+  TodaySurvey: 'TodaySurvey',
+  TodayShiftings: 'TodayShiftings',
 };
 
 const QuotationStackRoute = {
