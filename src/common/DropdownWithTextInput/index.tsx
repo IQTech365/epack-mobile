@@ -15,7 +15,11 @@ interface IProps {
   initialValue?: string;
 }
 
-const DropdownWithTextInput: FC<IProps> = forwardRef(
+export interface DropdownMethods {
+  setValue:(text:string) => void;
+}
+
+const DropdownWithTextInput = forwardRef<DropdownMethods, IProps>(
   (
     {
       options,
@@ -51,12 +55,10 @@ const DropdownWithTextInput: FC<IProps> = forwardRef(
     };
 
     React.useImperativeHandle(ref, () => ({
-      setValue,
+      setValue: (value: string) => {
+        setText(value);
+      },
     }));
-
-    const setValue = (value: string) => {
-      setText(value);
-    };
 
     useEffect(() => {
       if (initialValue) {

@@ -37,6 +37,15 @@ const useBiltyFormContext = () => {
   );
 
   // **** Consigner Details ****
+  const setIsConsignerAddressSameAsClient = useCallback(
+    (value: boolean) => {
+      dispatch({
+        type: ACTION.CONSIGNER_ADDRESS_SAME_AS_CLIENT_ADDRESS,
+        payload: value,
+      });
+    },
+    [state.consigner_address_same_as_client],
+  );
   const setConsignerName = useCallback(
     (text: string) => {
       dispatch({
@@ -732,6 +741,7 @@ const useBiltyFormContext = () => {
     setBiltyLrCrNo,
     setDateOfBiltyLrCrNo,
     // **** Consigner Details ****
+    setIsConsignerAddressSameAsClient,
     setConsignerName,
     setConsignerGst,
     setConsignerMobileNo,
@@ -827,6 +837,7 @@ const initBiltyFormContextState: UseBiltyFormContextType = {
   setBiltyLrCrNo: (text: string) => {},
   setDateOfBiltyLrCrNo: (text: string) => {},
   // **** Consigner Details ****
+  setIsConsignerAddressSameAsClient: (value: boolean) => {},
   setConsignerName: (text: string) => {},
   setConsignerGst: (text: string) => {},
   setConsignerMobileNo: (text: string) => {},

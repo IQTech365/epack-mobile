@@ -40,9 +40,7 @@ const OrderDetailsView: React.FC<Props> = ({route, navigation}) => {
     setActiveTabIndex(index);
   };
 
-  const handleSuccess = (index:number) => {
-
-  }
+  const handleSuccess = (index: number) => {};
 
   const showTabItem = () => {
     switch (activeTabIndex) {
@@ -52,11 +50,11 @@ const OrderDetailsView: React.FC<Props> = ({route, navigation}) => {
         return <MoneyReceiptView orderId={orderId as string} />;
       case 2:
         return <CarConditionView orderId={orderId as string} />;
-      // case 3:
-      //   return <BiltyView orderId={orderId as string} />;
       case 3:
-        return <InvoiceView orderId={orderId as string} item={item} />;
+        return <BiltyView orderId={orderId as string} />;
       case 4:
+        return <InvoiceView orderId={orderId as string} item={item} />;
+      case 5:
         return <PackingListView orderId={orderId as string} />;
       default:
         return null;

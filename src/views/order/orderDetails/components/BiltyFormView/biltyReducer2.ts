@@ -5,6 +5,7 @@ export enum ACTION {
   DATE_OF_BILTY_LR_CR = 'DATE_OF_BILTY_LR_CR',
   BILTY_TEMPLATE_ID = 'BILTY_TEMPLATE_ID',
   // Consigner Details
+  CONSIGNER_ADDRESS_SAME_AS_CLIENT_ADDRESS = 'CONSIGNER_ADDRESS_SAME_AS_CLIENT_ADDRESS',
   CONSIGNER_NAME = 'CONSIGNER_NAME',
   CONSIGNER_GST = 'CONSIGNER_GST',
   CONSIGNER_MOBILE_NO = 'CONSIGNER_MOBILE_NO',
@@ -119,6 +120,7 @@ export interface IState {
   bilty_template_id: string;
 
   // **** Consigner Details ****
+  consigner_address_same_as_client: boolean;
   consigner_name: string;
   consigner_gst: string;
   consigner_mobile_no: string;
@@ -233,6 +235,7 @@ export const initialState: IState = {
   date_of_bilty_lr_cr_no: '',
   bilty_template_id: '',
   // **** Consigner Details ****
+  consigner_address_same_as_client: true,
   consigner_name: '',
   consigner_gst: '',
   consigner_mobile_no: '',
@@ -352,6 +355,8 @@ export const biltyReducer: Reducer<IState, IAction> = (
       return {...state, date_of_bilty_lr_cr_no: payload as string};
 
     // **** Consigner Details ****
+    case ACTION.CONSIGNER_ADDRESS_SAME_AS_CLIENT_ADDRESS:
+      return {...state, consigner_address_same_as_client: payload as boolean};
     case ACTION.CONSIGNER_NAME:
       return {...state, consigner_name: payload as string};
     case ACTION.CONSIGNER_GST:

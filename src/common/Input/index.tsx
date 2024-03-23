@@ -32,7 +32,12 @@ interface InputProps {
   placeholderTextColor?: string;
 }
 
-const Input: React.FC<InputProps> = forwardRef(
+export interface InputMethods {
+  reset:() => void;
+  setValue:(text:string) => void;
+}
+
+const Input = forwardRef<InputMethods, InputProps>(
   (
     {
       icon,
@@ -67,18 +72,14 @@ const Input: React.FC<InputProps> = forwardRef(
     }, [value]);
 
     React.useImperativeHandle(ref, () => ({
-      reset,
-      setValue,
+      reset: () => {
+        _handleTextChange('');
+      },
+      setValue: (text:string) => {
+        setText(text);
+      },
     }));
-
-    const reset = () => {
-      _handleTextChange('');
-    };
-
-    const setValue = (text:string) => {
-      setText(text);
-    }
-
+    
     const _handleTextChange = (text: string) => {
       setText(text);
       onChangeText && onChangeText(text);

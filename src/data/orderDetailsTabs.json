@@ -1,17 +1,20 @@
 [
     {
-        "label": "DETAILS" 
+        "label": "DETAILS"
     },
     {
-        "label": "MONEY RECEIPT" 
+        "label": "MONEY RECEIPT"
     },
     {
-        "label": "VEHICLE CONDITION" 
+        "label": "VEHICLE CONDITION"
     },
     {
-        "label": "INVOICE" 
+        "label": "BILTY"
     },
     {
-        "label": "PACKING LIST" 
+        "label": "INVOICE"
+    },
+    {
+        "label": "PACKING LIST"
     }
 ]
