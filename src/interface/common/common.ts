@@ -343,3 +343,83 @@ export interface IGetBankListResponse {
   status: number;
   error: boolean;
 }
+
+export interface ITodayFollowUp {
+  _id: string,
+  authId: string,
+  companyId: string,
+  enquiryId: string,
+  followUpDate: string,
+  comment: string,
+  isActive: boolean,
+  isDeleted:boolean,
+  createdAt: string
+  //
+}
+
+export interface ITodayFollowpsResponse {
+  data: ITodayFollowUp[];
+  status: number;
+  error: boolean;
+}
+
+
+export interface ITodaySurvey {
+  _id: string,
+  companyId: string,
+  enquiryId: string,
+  surveyDate: string,
+  addedBy: string,
+  comment: string,
+  isActive: boolean,
+  isDeleted:boolean,
+  createdAt: string
+}
+
+export interface ITodaySurveyResponse {
+  data: ITodaySurvey[];
+  status: number;
+  error: boolean;
+}
+
+export interface ITodayShifting {
+  _id: string;
+  alternateNumbers: string;
+  authId: string;
+  billingBy: string;
+  billingDetails: string;
+  branchId: string;
+  companyId: string;
+  createdAt: string;
+  customerId: string;
+  deliveredDate: string;
+  deliveryDate: string;
+  dropAddress: string;
+  enquiryManager: string;
+  enquirySource: string;
+  gstNumber: string;
+  isActive: boolean;
+  isDeleted: boolean;
+  landline: string;
+  manufacture: string;
+  mobile: string;
+  model: string;
+  orderAmount: string;
+  orderDate: string;
+  partyCompanyName: string;
+  partyName: string;
+  pickupAddress: string;
+  shiftingDate: string;
+  shiftingLuggage: string;
+  shiftingType: string;
+  sn: string;
+  status: string;
+  tokenAmount: string;
+  vehicleType: string;
+}
+
+export interface ITodayShiftingResponse {
+  data: ITodayShifting[];
+  status: number;
+  error: boolean;
+}

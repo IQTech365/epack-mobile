@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 import {Api} from '../http/Api';
-import { GET_APP_SETTINGS, GET_BANKS, GET_BANK_LIST, GET_BANNERS, GET_DASHBOARD_DATA, GET_FLOOR_LIST, GET_INSURANCE_PERCENTAGE_LIST, GET_PACKING_TYPES, GET_PENDING_REGISTRATION, GET_SERIAL_NO_SUBMODULES, GET_VEHICLE_ACCESSORIES, GET_VEHICLE_COLORS, GET_VEHICLE_COMPANIES, GET_VEHICLE_MODELS, GET_VEHICLE_TYPES, IMAGE_UPLOAD, SEARCH_CUSTOMER } from '../http/Endpoint';
-import { IAppSettingResponse, IBannerListResponse, ICustomersRequest, ICustomersResponse, IDashboardDataResponse, IDashboardPaylod, IFloorResponse, IGetBankListResponse, IInsurancePercentageResponse, IPackingTypeResponse, IPendingRegistrationResponse, ISubmoduleResponse, IVehicleAccessoryResponse, IVehicleColorResponse, IVehicleCompanyResponse, IVehicleModelResponse, IVehicleTypesResponse } from '../interface/common/common';
+import { GET_APP_SETTINGS, GET_BANKS, GET_BANK_LIST, GET_BANNERS, GET_DASHBOARD_DATA, GET_FLOOR_LIST, GET_INSURANCE_PERCENTAGE_LIST, GET_PACKING_TYPES, GET_PENDING_REGISTRATION, GET_SERIAL_NO_SUBMODULES, GET_TODAY_FOLLOWUPS, GET_TODAY_SHIFTING, GET_TODAY_SURVEY, GET_VEHICLE_ACCESSORIES, GET_VEHICLE_COLORS, GET_VEHICLE_COMPANIES, GET_VEHICLE_MODELS, GET_VEHICLE_TYPES, IMAGE_UPLOAD, SEARCH_CUSTOMER } from '../http/Endpoint';
+import { IAppSettingResponse, IBannerListResponse, ICustomersRequest, ICustomersResponse, IDashboardDataResponse, IDashboardPaylod, IFloorResponse, IGetBankListResponse, IInsurancePercentageResponse, IPackingTypeResponse, IPendingRegistrationResponse, ISubmoduleResponse, ITodayFollowpsResponse, ITodayShiftingResponse, ITodaySurveyResponse, IVehicleAccessoryResponse, IVehicleColorResponse, IVehicleCompanyResponse, IVehicleModelResponse, IVehicleTypesResponse } from '../interface/common/common';
 
 export const GetPackingTypesService = async (): Promise<IPackingTypeResponse> => {
     const api = Api.getInstance();
@@ -96,4 +96,24 @@ export const GetPendingRegistrationService = async (payload:string): Promise<IPe
 export const GetBankListService = async (payload:string): Promise<IGetBankListResponse> => {
     const api = Api.getInstance();
     return await api.get<IGetBankListResponse>(GET_BANK_LIST);
+}
+
+// Today followup
+export const GetTodayFollowups = async(payload:string): Promise<ITodayFollowpsResponse> =>{
+    const api = Api.getInstance();
+    return await api.get<ITodayFollowpsResponse>(GET_TODAY_FOLLOWUPS(payload));
+}
+
+// Today Survey
+
+export const GetTodaySurvey = async(payload:string): Promise<ITodaySurveyResponse> =>{
+    const api = Api.getInstance();
+    return await api.get<ITodaySurveyResponse>(GET_TODAY_SURVEY(payload));
+}
+
+// Today Shifting
+
+export const GetTodayShiftings = async(payload:string): Promise<ITodayShiftingResponse> =>{
+    const api = Api.getInstance();
+    return await api.get<ITodayShiftingResponse>(GET_TODAY_SHIFTING(payload));
 }

@@ -17,15 +17,18 @@ import {
   IDashboardPaylod,
   IPendingRegistrationResponse,
   IGetBankListResponse,
+  ITodayFollowpsResponse,
+  ITodaySurveyResponse,
+  ITodayShiftingResponse,
 } from '../../interface/common/common';
 
 interface ICommonState {
   // Vehicle Type
   vehicleTypes: IVehicleTypesResponse | null;
-  vehicleTypesRequesting:boolean;
-  vehicleTypesRequestSuccess:boolean;
-  vehicleTypesRequestFailure:boolean;
-  vehicleTypesError:any;
+  vehicleTypesRequesting: boolean;
+  vehicleTypesRequestSuccess: boolean;
+  vehicleTypesRequestFailure: boolean;
+  vehicleTypesError: any;
   // Get PackingType
   packingTypes: IPackingTypeResponse | null;
   packingTypesRequesting: boolean;
@@ -58,28 +61,28 @@ interface ICommonState {
   vehicleModelsError: any;
   // SubModule
   submodules: ISubmoduleResponse | null;
-  getSubmodulesRequesting:boolean;
-  getSubmodulesSuccess:boolean;
-  getSubmoduleFailure:boolean;
-  getSubmoduleError:any;
+  getSubmodulesRequesting: boolean;
+  getSubmodulesSuccess: boolean;
+  getSubmoduleFailure: boolean;
+  getSubmoduleError: any;
   // App Serial No Settings
   appSettings: IAppSettingResponse | null;
   getAppSettingsRequesting: boolean;
-  getAppSettingsSuccess:boolean;
-  getAppSettingsFailure:boolean;
-  getAppSettingsError:any;
+  getAppSettingsSuccess: boolean;
+  getAppSettingsFailure: boolean;
+  getAppSettingsError: any;
   // Searched Customers
   customers: ICustomersResponse | null;
-  getCustomersRequesting:boolean;
-  getCustomersSuccess:boolean;
-  getCustomersFailure:boolean;
-  getCustomersError:any;
+  getCustomersRequesting: boolean;
+  getCustomersSuccess: boolean;
+  getCustomersFailure: boolean;
+  getCustomersError: any;
   // Upload Image
-  uploadedImage:any;
-  imageUploading:boolean;
-  imageUploadSuccess:boolean;
-  imageUploadFailure:boolean;
-  imageUploadError:any;
+  uploadedImage: any;
+  imageUploading: boolean;
+  imageUploadSuccess: boolean;
+  imageUploadFailure: boolean;
+  imageUploadError: any;
   // Banners
   banners: IBannerListResponse | null;
   getBannersRequesting: boolean;
@@ -89,42 +92,65 @@ interface ICommonState {
   // Dashboard
   dashboard: IDashboardDataResponse | null;
   getDashboardDataRequesting: boolean;
-  getDashboardDataSuccess:boolean;
+  getDashboardDataSuccess: boolean;
   getDashboardDataFailure: boolean;
   getDashboardDataError: any;
   // Insurance Percentages
   insurancePercentages: IInsurancePercentageResponse | null;
-  getInsurancePercentagesRequesting:boolean;
-  getInsurancePercentagesSuccess:boolean;
-  getInsurancePercentagesFailure:boolean;
+  getInsurancePercentagesRequesting: boolean;
+  getInsurancePercentagesSuccess: boolean;
+  getInsurancePercentagesFailure: boolean;
   getInsurancePercentagesError: any;
   // Floors
   floors: IFloorResponse | null;
-  getFloorsRequesting:boolean;
-  getFloorsSuccess:boolean;
-  getFloorsFailure:boolean;
-  getFloorsError:any;
+  getFloorsRequesting: boolean;
+  getFloorsSuccess: boolean;
+  getFloorsFailure: boolean;
+  getFloorsError: any;
   // Pending Registration
-  pendingRegistrationInfo:IPendingRegistrationResponse | null;
-  getPendingRegistrationRequesting:boolean;
-  getPendingRegistrationSuccess:boolean;
-  getPendingRegistrationFailure:boolean;
-  getPendingRegistrationError:any;
+  pendingRegistrationInfo: IPendingRegistrationResponse | null;
+  getPendingRegistrationRequesting: boolean;
+  getPendingRegistrationSuccess: boolean;
+  getPendingRegistrationFailure: boolean;
+  getPendingRegistrationError: any;
   // Bank List
-  banks:IGetBankListResponse | null;
+  banks: IGetBankListResponse | null;
   getBankListRequesting: boolean;
-  getBankListRequestSuccess:boolean;
-  getBankListRequestFailure:boolean;
-  getBankListRequestError:any;
+  getBankListRequestSuccess: boolean;
+  getBankListRequestFailure: boolean;
+  getBankListRequestError: any;
+
+  // Today Followups
+  followups: ITodayFollowpsResponse | null;
+  getTodayFollowupsListRequesting: boolean;
+  getTodayFollowupsListRequestSuccess: boolean;
+  getTodayFollowupsListRequestFailure: boolean;
+  getTodayFollowupsListRequestError: any;
+
+ // Today Survey
+ 
+ survey: ITodaySurveyResponse | null;
+ getTodaySurveyListRequesting: boolean;
+ getTodaySurveyListRequestSuccess: boolean;
+ getTodaySurveyListRequestFailure: boolean;
+ getTodaySurveyListRequestError: any;
+
+//  Today Shiftings
+
+shifting: ITodayShiftingResponse | null;
+getTodayShiftingListRequesting: boolean;
+getTodayShiftingListRequestSuccess: boolean;
+getTodayShiftingListRequestFailure: boolean;
+getTodayShiftingListRequestError: any;
 }
 
 const initialState: ICommonState = {
   // Vehicle Type
   vehicleTypes: null,
-  vehicleTypesRequesting:false,
-  vehicleTypesRequestSuccess:false,
-  vehicleTypesRequestFailure:false,
-  vehicleTypesError:null,
+  vehicleTypesRequesting: false,
+  vehicleTypesRequestSuccess: false,
+  vehicleTypesRequestFailure: false,
+  vehicleTypesError: null,
   // Get PackingType
   packingTypes: null,
   packingTypesRequesting: false,
@@ -157,28 +183,28 @@ const initialState: ICommonState = {
   vehicleModelsError: null,
   // SubModule
   submodules: null,
-  getSubmodulesRequesting:false,
-  getSubmodulesSuccess:false,
-  getSubmoduleFailure:false,
-  getSubmoduleError:null,
+  getSubmodulesRequesting: false,
+  getSubmodulesSuccess: false,
+  getSubmoduleFailure: false,
+  getSubmoduleError: null,
   // App Serial No Settings
   appSettings: null,
   getAppSettingsRequesting: false,
-  getAppSettingsSuccess:false,
-  getAppSettingsFailure:false,
-  getAppSettingsError:null,
+  getAppSettingsSuccess: false,
+  getAppSettingsFailure: false,
+  getAppSettingsError: null,
   // Searched Customers
   customers: null,
-  getCustomersRequesting:false,
-  getCustomersSuccess:false,
-  getCustomersFailure:false,
-  getCustomersError:null,
+  getCustomersRequesting: false,
+  getCustomersSuccess: false,
+  getCustomersFailure: false,
+  getCustomersError: null,
   // Upload Image
-  uploadedImage:null,
-  imageUploading:false,
-  imageUploadSuccess:false,
-  imageUploadFailure:false,
-  imageUploadError:null,
+  uploadedImage: null,
+  imageUploading: false,
+  imageUploadSuccess: false,
+  imageUploadFailure: false,
+  imageUploadError: null,
   // Banners
   banners: null,
   getBannersRequesting: false,
@@ -188,33 +214,56 @@ const initialState: ICommonState = {
   // Dashboard
   dashboard: null,
   getDashboardDataRequesting: false,
-  getDashboardDataSuccess:false,
+  getDashboardDataSuccess: false,
   getDashboardDataFailure: false,
   getDashboardDataError: null,
   // Insurance Percentages
   insurancePercentages: null,
-  getInsurancePercentagesRequesting:false,
-  getInsurancePercentagesSuccess:false,
-  getInsurancePercentagesFailure:false,
+  getInsurancePercentagesRequesting: false,
+  getInsurancePercentagesSuccess: false,
+  getInsurancePercentagesFailure: false,
   getInsurancePercentagesError: null,
   // Floors
   floors: null,
-  getFloorsRequesting:false,
-  getFloorsSuccess:false,
-  getFloorsFailure:false,
-  getFloorsError:null,
+  getFloorsRequesting: false,
+  getFloorsSuccess: false,
+  getFloorsFailure: false,
+  getFloorsError: null,
   // Pending Registration
   pendingRegistrationInfo: null,
-  getPendingRegistrationRequesting:false,
-  getPendingRegistrationSuccess:false,
-  getPendingRegistrationFailure:false,
-  getPendingRegistrationError:null,
+  getPendingRegistrationRequesting: false,
+  getPendingRegistrationSuccess: false,
+  getPendingRegistrationFailure: false,
+  getPendingRegistrationError: null,
   // Bank List
-  banks:null,
+  banks: null,
   getBankListRequesting: false,
-  getBankListRequestSuccess:false,
-  getBankListRequestFailure:false,
-  getBankListRequestError:null,
+  getBankListRequestSuccess: false,
+  getBankListRequestFailure: false,
+  getBankListRequestError: null,
+
+  //  Today followps List
+  followups: null,
+  getTodayFollowupsListRequesting: false,
+  getTodayFollowupsListRequestSuccess: false,
+  getTodayFollowupsListRequestFailure: false,
+  getTodayFollowupsListRequestError: null,
+
+  // Today Survey List
+
+  survey: null,
+  getTodaySurveyListRequesting: false,
+  getTodaySurveyListRequestSuccess: false,
+  getTodaySurveyListRequestFailure: false,
+  getTodaySurveyListRequestError: null,
+
+  // Today Shifting List
+
+  shifting: null,
+  getTodayShiftingListRequesting: false,
+  getTodayShiftingListRequestSuccess: false,
+  getTodayShiftingListRequestFailure: false,
+  getTodayShiftingListRequestError: null,
 };
 
 export const CommonSlice = createSlice({
@@ -333,10 +382,7 @@ export const CommonSlice = createSlice({
     getSubmoduleRequest: state => {
       state.getSubmodulesRequesting = true;
     },
-    getSubmoduleSuccess: (
-      state,
-      action: PayloadAction<ISubmoduleResponse>,
-    ) => {
+    getSubmoduleSuccess: (state, action: PayloadAction<ISubmoduleResponse>) => {
       state.getSubmodulesRequesting = false;
       state.getSubmodulesSuccess = true;
       state.submodules = action.payload;
@@ -369,10 +415,7 @@ export const CommonSlice = createSlice({
     getCustomersRequest: (state, action: PayloadAction<ICustomersRequest>) => {
       state.getCustomersRequesting = true;
     },
-    getCustomersSuccess: (
-      state,
-      action: PayloadAction<ICustomersResponse>,
-    ) => {
+    getCustomersSuccess: (state, action: PayloadAction<ICustomersResponse>) => {
       state.getCustomersRequesting = false;
       state.getCustomersSuccess = true;
       state.customers = action.payload;
@@ -383,7 +426,7 @@ export const CommonSlice = createSlice({
       state.getCustomersFailure = true;
       state.getCustomersError = action.payload;
     },
-    resetGetCustomersRequest: (state) => {
+    resetGetCustomersRequest: state => {
       state.getCustomersRequesting = false;
       state.getCustomersSuccess = false;
       state.getCustomersFailure = false;
@@ -394,10 +437,7 @@ export const CommonSlice = createSlice({
     imageUploadRequest: (state, action: PayloadAction<any>) => {
       state.imageUploading = true;
     },
-    imageUploadSuccess: (
-      state,
-      action: PayloadAction<any>,
-    ) => {
+    imageUploadSuccess: (state, action: PayloadAction<any>) => {
       state.imageUploading = false;
       state.imageUploadSuccess = true;
       state.uploadedImage = action.payload;
@@ -408,7 +448,7 @@ export const CommonSlice = createSlice({
       state.imageUploadFailure = true;
       state.imageUploadError = action.payload;
     },
-    resetImageUploadRequest: (state) => {
+    resetImageUploadRequest: state => {
       state.imageUploading = false;
       state.imageUploadSuccess = false;
       state.imageUploadFailure = false;
@@ -416,13 +456,10 @@ export const CommonSlice = createSlice({
       state.uploadedImage = null;
     },
     // Banners
-    getBannersRequest: (state) => {
+    getBannersRequest: state => {
       state.getBannersRequesting = true;
     },
-    getBannersSuccess: (
-      state,
-      action: PayloadAction<IBannerListResponse>,
-    ) => {
+    getBannersSuccess: (state, action: PayloadAction<IBannerListResponse>) => {
       state.getBannersRequesting = false;
       state.getBannersSuccess = true;
       state.banners = action.payload;
@@ -434,7 +471,10 @@ export const CommonSlice = createSlice({
       state.getBannersError = action.payload;
     },
     // Dashbaord
-    getDashboardDataRequest: (state, action: PayloadAction<IDashboardPaylod>) => {
+    getDashboardDataRequest: (
+      state,
+      action: PayloadAction<IDashboardPaylod>,
+    ) => {
       state.getDashboardDataRequesting = true;
     },
     getDashboardDataSuccess: (
@@ -473,10 +513,7 @@ export const CommonSlice = createSlice({
     getFloorsRequest: state => {
       state.getFloorsRequesting = true;
     },
-    getFloorsSuccess: (
-      state,
-      action: PayloadAction<IFloorResponse>,
-    ) => {
+    getFloorsSuccess: (state, action: PayloadAction<IFloorResponse>) => {
       state.getFloorsRequesting = false;
       state.getFloorsSuccess = true;
       state.floors = action.payload;
@@ -505,13 +542,13 @@ export const CommonSlice = createSlice({
       state.getPendingRegistrationFailure = true;
       state.getPendingRegistrationError = action.payload;
     },
-    resetGetPendingRegisrationRequest: (state) => {
+    resetGetPendingRegisrationRequest: state => {
       state.getPendingRegistrationRequesting = false;
       state.getPendingRegistrationSuccess = false;
       state.getPendingRegistrationFailure = false;
       state.getPendingRegistrationError = null;
     },
-    resetPendingRegistrationInfoPayload: (state) => {
+    resetPendingRegistrationInfoPayload: state => {
       state.pendingRegistrationInfo = null;
     },
     // Bank List
@@ -532,6 +569,72 @@ export const CommonSlice = createSlice({
       state.getBankListRequestFailure = true;
       state.getBankListRequestError = action.payload;
     },
+
+    // Today Followups
+    getTodayFollowupsListRequest: (state, action: PayloadAction<string>) => {
+      state.getTodayFollowupsListRequesting = true;
+    },
+
+    getTodayFollowupsListSuccess: (
+      state,
+      action: PayloadAction<ITodayFollowpsResponse>,
+    ) => {
+      state.getTodayFollowupsListRequesting = false;
+      state.getTodayFollowupsListRequestSuccess = true;
+      state.followups = action.payload;
+    },
+
+    getTodayFollowupsListFailure: (state, action: PayloadAction<any>) => {
+      state.getTodayFollowupsListRequesting = false;
+      state.getTodayFollowupsListRequestSuccess = false;
+      state.getTodayFollowupsListRequestFailure = true;
+      state.getTodayFollowupsListRequestError = action.payload;
+    },
+
+   // Today Surveys
+
+   getTodaySurveyListRequest: (state, action: PayloadAction<string>) => {
+    state.getTodaySurveyListRequesting = true;
+  },
+
+  getTodaySurveyListSuccess: (
+    state,
+    action: PayloadAction<ITodaySurveyResponse>,
+  ) => {
+    state.getTodaySurveyListRequesting = false;
+    state.getTodaySurveyListRequestSuccess = true;
+    state.survey = action.payload;
+  },
+
+  getTodaySurveyListFailure: (state, action: PayloadAction<any>) => {
+    state.getTodaySurveyListRequesting = false;
+    state.getTodaySurveyListRequestSuccess = false;
+    state.getTodaySurveyListRequestFailure = true;
+    state.getTodaySurveyListRequestError = action.payload;
+  },
+
+  // Today Shiftings
+
+  getTodayShiftingListRequest: (state, action: PayloadAction<string>) => {
+    state.getTodayShiftingListRequesting = true;
+  },
+
+  getTodayShiftingListSuccess: (
+    state,
+    action: PayloadAction<ITodayShiftingResponse>,
+  ) => {
+    state.getTodayShiftingListRequesting = false;
+    state.getTodayShiftingListRequestSuccess = true;
+    state.shifting = action.payload;
+  },
+
+  getTodayShiftingListFailure: (state, action: PayloadAction<any>) => {
+    state.getTodayShiftingListRequesting = false;
+    state.getTodayShiftingListRequestSuccess = false;
+    state.getTodayShiftingListRequestFailure = true;
+    state.getTodayShiftingListRequestError = action.payload;
+  },
+
   },
 });
 
@@ -606,5 +709,22 @@ export const {
   getBankListRequest,
   getBankListSuccess,
   getBankListFailure,
-} = CommonSlice.actions;
 
+  // Today Followups
+  getTodayFollowupsListRequest,
+  getTodayFollowupsListSuccess,
+  getTodayFollowupsListFailure,
+
+ // Today Survey
+ getTodaySurveyListRequest,
+ getTodaySurveyListSuccess,
+ getTodaySurveyListFailure,
+
+
+//  Today Shifting
+
+getTodayShiftingListRequest,
+getTodayShiftingListSuccess,
+getTodayShiftingListFailure
+
+} = CommonSlice.actions;

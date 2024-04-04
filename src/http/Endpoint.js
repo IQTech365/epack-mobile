@@ -187,3 +187,17 @@ export const GET_INSURANCE_PERCENTAGE_LIST = `/shifting-management/insurance-per
 export const GET_FLOOR_LIST = `/shifting-management/floors/getAll`;
 // Pending Registration
 export const GET_PENDING_REGISTRATION = (auth_id) => `/auth/incomplete-subscription/${auth_id}`;
+
+// Todays's Followup
+
+export const GET_TODAY_FOLLOWUPS =(company_id) => `/followup/latest/${company_id}`
+
+
+// Today's Survey
+
+export const GET_TODAY_SURVEY = (company_id) => `/survey/latest/${company_id}`
+
+
+// Today's Shifting
+
+export const GET_TODAY_SHIFTING =(company_id) => `/order/latest/${company_id}`
