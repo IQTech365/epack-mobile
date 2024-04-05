@@ -284,7 +284,7 @@ export function* getTodaySurveySaga(action: PayloadAction<string>) {
       CommonService.GetTodaySurvey,
       action.payload,
     );
-    console.log('getTodayFollowupsSaga-response--', JSON.stringify(response));
+    console.log('getTodaySurveySaga-response--', JSON.stringify(response));
     yield put(getTodaySurveyListSuccess(response));
   } catch (error) {
     yield put(getTodaySurveyListFailure(error));
@@ -298,7 +298,7 @@ export function* getTodayShiftingSaga(action: PayloadAction<string>) {
       CommonService.GetTodayShiftings,
       action.payload,
     );
-    console.log('getTodayFollowupsSaga-response--', JSON.stringify(response));
+    console.log('getTodayShiftingSaga-response--', JSON.stringify(response));
     yield put(getTodayShiftingListSuccess(response));
   } catch (error) {
     yield put(getTodayShiftingListFailure(error));

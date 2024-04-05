@@ -22,18 +22,24 @@ import {
 } from '../../../../../interface/common/common';
 import {Validator} from '../../../../../utils/validation';
 import CompanyAddressView from '../CompanyAddressView';
-import { getCurrentCompanyId } from '../../../../../utils/storage';
-import { IEnquiry, IGetQuotationData } from '../../../../../interface/quotation/IGetQuotationsResponse';
-import { IBillingInfo } from '../../../../../interface/enquiry/ISingleEnquiryResponse';
-
+import {getCurrentCompanyId} from '../../../../../utils/storage';
+import {
+  IEnquiry,
+  IGetQuotationData,
+} from '../../../../../interface/quotation/IGetQuotationsResponse';
+import {IBillingInfo} from '../../../../../interface/enquiry/ISingleEnquiryResponse';
 
 interface Props {
-  fromEnquiry?:boolean;
-  isEdit?:boolean;
-  item?:IGetQuotationData;
+  fromEnquiry?: boolean;
+  isEdit?: boolean;
+  item?: IGetQuotationData;
 }
 
-const BillingCompanyView: React.FC<Props> = ({fromEnquiry = false, isEdit, item}) => {
+const BillingCompanyView: React.FC<Props> = ({
+  fromEnquiry = false,
+  isEdit,
+  item,
+}) => {
   const {
     state,
     setCompanyName,
@@ -73,13 +79,15 @@ const BillingCompanyView: React.FC<Props> = ({fromEnquiry = false, isEdit, item}
   const handleCompanyName = (text: string) => {
     setCompanyName(text);
     if (!Validator.isEmpty(text)) {
-      getCurrentCompanyId().then(id => {
-        const payload: ICustomersRequest = {
-          companyId: id as string,
-          searchKey: text,
-        };
-        debounce(dispatch(getCustomersRequest(payload)), 3000);
-      }).catch(err => console.log(err));
+      getCurrentCompanyId()
+        .then(id => {
+          const payload: ICustomersRequest = {
+            companyId: id as string,
+            searchKey: text,
+          };
+          debounce(dispatch(getCustomersRequest(payload)), 3000);
+        })
+        .catch(err => console.log(err));
     }
   };
 
@@ -132,7 +140,7 @@ const BillingCompanyView: React.FC<Props> = ({fromEnquiry = false, isEdit, item}
   //         setEmployeeDesignation(billingInfo.employeeDesignation);
   //         setEmployeeMobileNo(billingInfo.employeeMobile);
   //         setCompanyAddress(billingInfo.companyAddress);
-      
+
   //       }
   //     }
   //   }
@@ -149,7 +157,8 @@ const BillingCompanyView: React.FC<Props> = ({fromEnquiry = false, isEdit, item}
           );
         if (approvalAuthorityOptionIndex !== -1) {
           //@ts-ignore
-          approvalAuthorityDropdownCompRef && approvalAuthorityDropdownCompRef.current.setDefaultValue(
+          approvalAuthorityDropdownCompRef &&
+            approvalAuthorityDropdownCompRef.current.setDefaultValue(
               approvalAuthorityOptions[approvalAuthorityOptionIndex],
             );
         }
@@ -167,29 +176,36 @@ const BillingCompanyView: React.FC<Props> = ({fromEnquiry = false, isEdit, item}
   }, [selectedCompanyOption]);
 
   useEffect(() => {
-    if(isEdit && item) {
-      const _enquires:IEnquiry[] = item.enquiries;
-      if(_enquires && _enquires.length > 0) {
-        const singleEnquiry:IEnquiry = _enquires[0];
-          if(singleEnquiry?.billingBy == "by Company") {
-            const billingInfo:ICustomerBillingInfo = singleEnquiry.billingDetails as ICustomerBillingInfo;
-            if(billingInfo) {
-              setCompanyName(billingInfo.companyName);
-              setApprovalAuthority(billingInfo.approvalAuthority);
-              const approvalAuthorityItem:TDropdownItem = approvalAuthorityOptions.find((d:TDropdownItem) => d.label == billingInfo.approvalAuthority) as TDropdownItem;
-              if(approvalAuthorityItem) {
-                //@ts-ignore
-                approvalAuthorityDropdownCompRef && approvalAuthorityDropdownCompRef?.current?.setDefaultValue(approvalAuthorityItem);
-              }
-              setAuthorityPersonName(billingInfo.authorityPersonName);
-              setAuthorityMobileNo(billingInfo.authorityPersonMobile);
-              setCompanyGSt(billingInfo.companyGST);
-              setEmployeeName(billingInfo.employeeName);
-              setEmployeeDesignation(billingInfo.employeeDesignation);
-              setEmployeeMobileNo(billingInfo.employeeMobile);
-              setCompanyAddress(billingInfo.companyAddress);
+    if (isEdit && item) {
+      const _enquires: IEnquiry[] = item.enquiries;
+      if (_enquires && _enquires.length > 0) {
+        const singleEnquiry: IEnquiry = _enquires[0];
+        if (singleEnquiry?.billingBy == 'by Company') {
+          const billingInfo: ICustomerBillingInfo =
+            singleEnquiry.billingDetails as ICustomerBillingInfo;
+          if (billingInfo) {
+            setCompanyName(billingInfo.companyName);
+            setApprovalAuthority(billingInfo.approvalAuthority);
+            const approvalAuthorityItem: TDropdownItem =
+              approvalAuthorityOptions.find(
+                (d: TDropdownItem) => d.label == billingInfo.approvalAuthority,
+              ) as TDropdownItem;
+            if (approvalAuthorityItem) {
+              //@ts-ignore
+              approvalAuthorityDropdownCompRef &&
+                approvalAuthorityDropdownCompRef?.current?.setDefaultValue(
+                  approvalAuthorityItem,
+                );
             }
+            setAuthorityPersonName(billingInfo.authorityPersonName);
+            setAuthorityMobileNo(billingInfo.authorityPersonMobile);
+            setCompanyGSt(billingInfo.companyGST);
+            setEmployeeName(billingInfo.employeeName);
+            setEmployeeDesignation(billingInfo.employeeDesignation);
+            setEmployeeMobileNo(billingInfo.employeeMobile);
+            setCompanyAddress(billingInfo.companyAddress);
           }
+        }
       }
     }
   }, [isEdit]);
@@ -344,7 +360,11 @@ const BillingCompanyView: React.FC<Props> = ({fromEnquiry = false, isEdit, item}
         />
       </View>
       <Spacer height={4} />
-      <CompanyAddressView fromEnquiry={fromEnquiry} isEdit={isEdit} item={item} />
+      <CompanyAddressView
+        fromEnquiry={fromEnquiry}
+        isEdit={isEdit}
+        item={item}
+      />
     </>
   );
 };

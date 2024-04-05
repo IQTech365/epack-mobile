@@ -23,11 +23,15 @@ import DropdownWithTextInput from '../../../../../common/DropdownWithTextInput';
 
 interface Props {
   fromEnquiry?: boolean;
-  isEdit?:boolean;
-  item?:IGetQuotationData;
+  isEdit?: boolean;
+  item?: IGetQuotationData;
 }
 
-const PickupAddressView: React.FC<Props> = ({fromEnquiry = false, isEdit, item}) => {
+const PickupAddressView: React.FC<Props> = ({
+  fromEnquiry = false,
+  isEdit,
+  item,
+}) => {
   const {
     state,
     setPickupPincode,
@@ -108,38 +112,41 @@ const PickupAddressView: React.FC<Props> = ({fromEnquiry = false, isEdit, item})
 
   useEffect(() => {
     if (isEdit && item) {
-        const _enquires:IEnquiry[] = item.enquiries;
-        if(_enquires && _enquires.length > 0) {
-          const singleEnquiry:IEnquiry = _enquires[0];
-          const pickupAddress: IPickupAddress = singleEnquiry.pickupAddress as IPickupAddress;
-          if (pickupAddress) {
-            setPickupPincode(pickupAddress?.pincode);
-            setPincode(pickupAddress?.pincode);
-            setPickupState(pickupAddress?.state);
-            setPickupAddress(pickupAddress?.address)
+      const _enquires: IEnquiry[] = item.enquiries;
+      if (_enquires && _enquires.length > 0) {
+        const singleEnquiry: IEnquiry = _enquires[0];
+        const pickupAddress: IPickupAddress =
+          singleEnquiry.pickupAddress as IPickupAddress;
+        if (pickupAddress) {
+          setPickupPincode(pickupAddress?.pincode);
+          setPincode(pickupAddress?.pincode);
+          setPickupState(pickupAddress?.state);
+          setPickupAddress(pickupAddress?.address);
+          //@ts-ignore
+          stateDropdownCompRef?.current?.setValue(pickupAddress?.state);
+          setPickupCity(pickupAddress?.city);
+          //@ts-ignore
+          cityDropdownCompRef?.current?.setValue(pickupAddress?.city);
+          setPickupCurrentFloor(pickupAddress?.floor);
+          const floorItem: TDropdownItem = floorOptions.find(
+            (d: TDropdownItem) => d.label == pickupAddress?.floor,
+          ) as TDropdownItem;
+          if (floorItem) {
             //@ts-ignore
-            stateDropdownCompRef?.current?.setValue(pickupAddress?.state);
-            setPickupCity(pickupAddress?.city);
+            floorDropdownCompRef &&
+              floorDropdownCompRef?.current?.setDefaultValue(floorItem);
+          }
+          setPickupLiftStatus(pickupAddress.isLiftAvailable);
+          const liftItem: TDropdownItem = liftStatusOptions.find(
+            (d: TDropdownItem) => d.label == pickupAddress.isLiftAvailable,
+          ) as TDropdownItem;
+          if (liftItem) {
             //@ts-ignore
-            cityDropdownCompRef?.current?.setValue(pickupAddress?.city);
-            setPickupCurrentFloor(pickupAddress?.floor);
-            const floorItem: TDropdownItem = floorOptions.find(
-              (d: TDropdownItem) => d.label == pickupAddress?.floor,
-            ) as TDropdownItem;
-            if (floorItem) {
-              //@ts-ignore
-              floorDropdownCompRef && floorDropdownCompRef?.current?.setDefaultValue(floorItem);
-            }
-            setPickupLiftStatus(pickupAddress.isLiftAvailable);
-            const liftItem: TDropdownItem = liftStatusOptions.find(
-              (d: TDropdownItem) => d.label == pickupAddress.isLiftAvailable,
-            ) as TDropdownItem;
-            if (liftItem) {
-              //@ts-ignore
-              liftDropdownCompRef && liftDropdownCompRef?.current?.setDefaultValue(liftItem);
-            }
+            liftDropdownCompRef &&
+              liftDropdownCompRef?.current?.setDefaultValue(liftItem);
           }
         }
+      }
     }
   }, [isEdit]);
 
@@ -193,7 +200,7 @@ const PickupAddressView: React.FC<Props> = ({fromEnquiry = false, isEdit, item})
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
-            placeholder='Enter address'
+            placeholder="Enter address"
             //@ts-ignore
             ref={addressInputCompRef}
             //@ts-ignore

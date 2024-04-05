@@ -1,5 +1,12 @@
 import React, {FC, useEffect} from 'react';
-import {Dimensions, FlatList, StyleSheet, Text, View} from 'react-native';
+import {
+  Dimensions,
+  FlatList,
+  Linking,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import Header from '../../common/Header';
 import {getCurrentCompanyId} from '../../utils/storage';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
@@ -9,7 +16,9 @@ import WhatsupIcon from '../../images/icons/whatsapp.svg';
 import CallIcon from '../../images/icons/phone_call2.svg';
 import {Shadow} from 'react-native-shadow-2';
 import {
+  COLOR_BLACK,
   COLOR_GRAY,
+  COLOR_GRAY2,
   COLOR_GRAY3,
   COLOR_GRAY4,
   COLOR_GRAY5,
@@ -17,6 +26,7 @@ import {
 } from '../../utils/colors';
 import {ITodaySurvey} from '../../interface/common/common';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {IBillingInfo} from '../../interface/enquiry/IAddEnquiryRequest';
 
 interface IProps {}
 
@@ -41,6 +51,45 @@ const TodaySurvey: FC<IProps> = ({}) => {
     return list;
   };
 
+  const handleCall = (item: ITodaySurvey) => {
+    const {phone} = getClientNameAndMobile(item);
+    if (phone) {
+      Linking.openURL(`tel:${phone}`);
+    }
+  };
+
+  const handleWhatsappCall = (item: ITodaySurvey) => {
+    const {phone} = getClientNameAndMobile(item);
+    if (phone) {
+      Linking.openURL(`whatsapp://send?phone=+91${phone}`);
+    }
+  };
+
+  const getClientNameAndMobile = (item: ITodaySurvey) => {
+    let name: string = '';
+    let phone: string = '';
+
+    const {enquiries} = item || {};
+    if (enquiries && enquiries.length > 0) {
+      const firstEnquiry = enquiries[0];
+      const {partyName, mobile, billingBy, billingDetails} = firstEnquiry || {};
+      if (billingBy === 'by Individual') {
+        name = partyName;
+        phone = mobile;
+      } else if (billingBy === 'by Company') {
+        const {
+          employeeName,
+          employeeMobile,
+          authorityPersonName,
+          authorityPersonMobile,
+        } = billingDetails as IBillingInfo;
+        name = employeeName || authorityPersonName;
+        phone = employeeMobile || authorityPersonMobile;
+      }
+    }
+    return {name, phone};
+  };
+
   useEffect(() => {
     getTodaysSurvey();
   }, []);
@@ -56,26 +105,40 @@ const TodaySurvey: FC<IProps> = ({}) => {
             <Shadow distance={2.5}>
               <View style={styles.cardWrapper}>
                 <View style={styles.cardHeader}>
-                  <Text style={styles.cardHeading}>Lalit</Text>
+                  <Text style={styles.cardHeading}>
+                    {getClientNameAndMobile(item).name}
+                  </Text>
                   <View style={styles.iconWrapper}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleWhatsappCall(item)}>
                       <WhatsupIcon width={22} height={22} />
                     </TouchableOpacity>
                     <Spacer width={20} />
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleCall(item)}>
                       <CallIcon width={22} height={22} />
                     </TouchableOpacity>
                   </View>
                 </View>
                 <View style={styles.commentContainer}>
-                  <Text>
-                    <Text style={{fontWeight: 'bold'}}>Date:- </Text>
-                    {new Date(item.surveyDate).toLocaleString()}
-                  </Text>
-                  <Text>
-                    <Text style={{fontWeight: 'bold'}}>Last Comment:- </Text>
-                    {item.comment}
-                  </Text>
+                  <View style={[styles.contentWrapper]}>
+                    <View style={styles.labelContainer}>
+                      <Text style={{fontWeight: 'bold', color: COLOR_BLACK}}>
+                        Date:-
+                      </Text>
+                    </View>
+                    <View style={styles.contentContainer}>
+                      <Text>{new Date(item.surveyDate).toLocaleString()}</Text>
+                    </View>
+                  </View>
+                  <View style={[styles.contentWrapper, {borderBottomWidth: 0}]}>
+                    <View style={styles.labelContainer}>
+                      <Text style={{fontWeight: 'bold', color: COLOR_BLACK}}>
+                        Last Comment:-
+                      </Text>
+                    </View>
+                    <View style={styles.contentContainer}>
+                      <Text>{item.comment}</Text>
+                    </View>
+                  </View>
                 </View>
               </View>
             </Shadow>
@@ -102,7 +165,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: COLOR_GRAY6,
+    backgroundColor: COLOR_GRAY2,
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderTopLeftRadius: 8,
@@ -121,5 +184,23 @@ const styles = StyleSheet.create({
     padding: 10,
     borderBottomLeftRadius: 8,
     borderBottomRightRadius: 8,
+  },
+  contentWrapper: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: COLOR_GRAY5,
+  },
+  labelContainer: {
+    width: '50%',
+    alignItems: 'flex-start',
+    backgroundColor: COLOR_GRAY6,
+    paddingLeft: 10,
+    paddingVertical: 10,
+  },
+  contentContainer: {
+    width: '50%',
+    alignItems: 'flex-start',
+    paddingLeft: 10,
+    paddingVertical: 10,
   },
 });

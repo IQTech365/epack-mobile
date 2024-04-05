@@ -1,3 +1,5 @@
+import {IAddEnquiryRequest, IBillingInfo} from '../enquiry/IAddEnquiryRequest';
+
 export interface IPackingType {
   _id: string;
   packingType: string;
@@ -345,15 +347,16 @@ export interface IGetBankListResponse {
 }
 
 export interface ITodayFollowUp {
-  _id: string,
-  authId: string,
-  companyId: string,
-  enquiryId: string,
-  followUpDate: string,
-  comment: string,
-  isActive: boolean,
-  isDeleted:boolean,
-  createdAt: string
+  _id: string;
+  authId: string;
+  companyId: string;
+  enquiryId: string;
+  followUpDate: string;
+  comment: string;
+  enquiries: IAddEnquiryRequest[];
+  isActive: boolean;
+  isDeleted: boolean;
+  createdAt: string;
   //
 }
 
@@ -363,17 +366,17 @@ export interface ITodayFollowpsResponse {
   error: boolean;
 }
 
-
 export interface ITodaySurvey {
-  _id: string,
-  companyId: string,
-  enquiryId: string,
-  surveyDate: string,
-  addedBy: string,
-  comment: string,
-  isActive: boolean,
-  isDeleted:boolean,
-  createdAt: string
+  _id: string;
+  companyId: string;
+  enquiryId: string;
+  surveyDate: string;
+  addedBy: string;
+  comment: string;
+  enquiries: IAddEnquiryRequest[];
+  isActive: boolean;
+  isDeleted: boolean;
+  createdAt: string;
 }
 
 export interface ITodaySurveyResponse {
@@ -387,7 +390,7 @@ export interface ITodayShifting {
   alternateNumbers: string;
   authId: string;
   billingBy: string;
-  billingDetails: string;
+  billingDetails: IBillingInfo;
   branchId: string;
   companyId: string;
   createdAt: string;

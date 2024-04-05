@@ -1,5 +1,12 @@
 import React, {FC, useEffect} from 'react';
-import {Dimensions, FlatList, StyleSheet, Text, View} from 'react-native';
+import {
+  Dimensions,
+  FlatList,
+  Linking,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import Header from '../../common/Header';
 import {getCurrentCompanyId} from '../../utils/storage';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
@@ -17,6 +24,7 @@ import {
   COLOR_GRAY6,
 } from '../../utils/colors';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {IBillingInfo} from '../../interface/enquiry/IAddEnquiryRequest';
 
 interface IProps {}
 
@@ -42,6 +50,41 @@ const TodayShiftings: FC<IProps> = ({}) => {
     return list;
   };
 
+  const handleCall = (item: ITodayShifting) => {
+    const {phone} = getClientNameAndMobile(item);
+    if (phone) {
+      Linking.openURL(`tel:${phone}`);
+    }
+  };
+
+  const handleWhatsappCall = (item: ITodayShifting) => {
+    const {phone} = getClientNameAndMobile(item);
+    if (phone) {
+      Linking.openURL(`whatsapp://send?phone=+91${phone}`);
+    }
+  };
+
+  const getClientNameAndMobile = (item: ITodayShifting) => {
+    let name: string = '';
+    let phone: string = '';
+
+    const {partyName, mobile, billingBy, billingDetails} = item || {};
+    if (billingBy === 'by Individual') {
+      name = partyName;
+      phone = mobile;
+    } else if (billingBy === 'by Company') {
+      const {
+        employeeName,
+        employeeMobile,
+        authorityPersonName,
+        authorityPersonMobile,
+      } = billingDetails as IBillingInfo;
+      name = employeeName || authorityPersonName;
+      phone = employeeMobile || authorityPersonMobile;
+    }
+    return {name, phone};
+  };
+
   useEffect(() => {
     getTodaysShifting();
   }, []);
@@ -57,26 +100,40 @@ const TodayShiftings: FC<IProps> = ({}) => {
             <Shadow distance={2.5}>
               <View style={styles.cardWrapper}>
                 <View style={styles.cardHeader}>
-                  <Text style={styles.cardHeading}>{item.partyName}</Text>
+                  <Text style={styles.cardHeading}>
+                    {getClientNameAndMobile(item).name}
+                  </Text>
                   <View style={styles.iconWrapper}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleWhatsappCall(item)}>
                       <WhatsupIcon width={22} height={22} />
                     </TouchableOpacity>
                     <Spacer width={20} />
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleCall(item)}>
                       <CallIcon width={22} height={22} />
                     </TouchableOpacity>
                   </View>
                 </View>
                 <View style={styles.commentContainer}>
-                  <Text>
-                    <Text style={{fontWeight: 'bold'}}>Date:- </Text>
-                    {new Date(item.shiftingDate).toLocaleString()}
-                  </Text>
-                  <Text>
-                    <Text style={{fontWeight: 'bold'}}>Company ID:- </Text>
-                    {item.sn}
-                  </Text>
+                  <View style={styles.contentWrapper}>
+                    <View style={styles.labelContainer}>
+                      <Text style={{fontWeight: 'bold'}}>Date:- </Text>
+                    </View>
+                    <View style={styles.contentContainer}>
+                      <Text>
+                        {new Date(item.shiftingDate).toLocaleString()}
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={[styles.contentWrapper, {borderBottomWidth: 0}]}>
+                    <View style={styles.labelContainer}>
+                      <Text>
+                        <Text style={{fontWeight: 'bold'}}>Company ID:- </Text>
+                      </Text>
+                    </View>
+                    <View style={styles.contentContainer}>
+                      <Text>{item.sn}</Text>
+                    </View>
+                  </View>
                 </View>
               </View>
             </Shadow>
@@ -122,5 +179,23 @@ const styles = StyleSheet.create({
     padding: 10,
     borderBottomLeftRadius: 8,
     borderBottomRightRadius: 8,
+  },
+  contentWrapper: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: COLOR_GRAY5,
+  },
+  labelContainer: {
+    width: '50%',
+    alignItems: 'flex-start',
+    backgroundColor: COLOR_GRAY6,
+    paddingLeft: 10,
+    paddingVertical: 10,
+  },
+  contentContainer: {
+    width: '50%',
+    alignItems: 'flex-start',
+    paddingLeft: 10,
+    paddingVertical: 10,
   },
 });

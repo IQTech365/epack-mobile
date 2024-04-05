@@ -20,7 +20,7 @@ interface IDropAddress {
   isLiftAvailable: string;
 }
 
-interface IBillingInfo {
+export interface IBillingInfo {
   companyName: string;
   approvalAuthority: string;
   authorityPersonName: string;
@@ -30,14 +30,14 @@ interface IBillingInfo {
   employeeName: string;
   employeeDesignation: string;
   employeeMobile: string;
-  state:string;
-  city:string;
-  pincode:string;
+  state: string;
+  city: string;
+  pincode: string;
 }
 
 export interface IAddEnquiryRequest {
   companyId: string;
-  customerId:string;
+  customerId: string;
   authId: string;
   enquiryManager: string;
   shiftingType: string;

@@ -1,5 +1,13 @@
 import React, {FC, useEffect} from 'react';
-import {Dimensions, StyleSheet, Text, View,FlatList, TouchableOpacity,} from 'react-native';
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  TouchableOpacity,
+  Linking,
+} from 'react-native';
 import Header from '../../common/Header';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {getCurrentCompanyId} from '../../utils/storage';
@@ -10,14 +18,17 @@ import Spacer from '../../common/Spacer';
 import style from '../../common/CollapsibleView/style';
 import {Shadow} from 'react-native-shadow-2';
 import {
+  COLOR_BLACK,
   COLOR_GRAY,
+  COLOR_GRAY2,
   COLOR_GRAY3,
   COLOR_GRAY4,
   COLOR_GRAY5,
   COLOR_GRAY6,
 } from '../../utils/colors';
 import {ITodayFollowUp} from '../../interface/common/common';
-import { ScrollView} from 'react-native-gesture-handler';
+import {ScrollView} from 'react-native-gesture-handler';
+import {IBillingInfo} from '../../interface/enquiry/IAddEnquiryRequest';
 
 interface IProps {}
 
@@ -25,6 +36,8 @@ const TodayFollowup: FC<IProps> = ({}) => {
   const dispatch = useAppDispatch();
 
   const {followups} = useAppSelector(state => state.Common);
+
+  console.log(followups);
 
   const getTodaysFollowup = () => {
     getCurrentCompanyId()
@@ -37,7 +50,7 @@ const TodayFollowup: FC<IProps> = ({}) => {
     getTodaysFollowup();
   }, []);
 
-  console.log(followups);
+  console.log('Robin---', JSON.stringify(followups));
 
   const _getTodayFollowup = (): ITodayFollowUp[] => {
     let list: ITodayFollowUp[] = [];
@@ -46,6 +59,45 @@ const TodayFollowup: FC<IProps> = ({}) => {
       list = data;
     }
     return list;
+  };
+
+  const handleCall = (item: ITodayFollowUp) => {
+    const {phone} = getClientNameAndMobile(item);
+    if (phone) {
+      Linking.openURL(`tel:${phone}`);
+    }
+  };
+
+  const handleWhatsappCall = (item: ITodayFollowUp) => {
+    const {phone} = getClientNameAndMobile(item);
+    if (phone) {
+      Linking.openURL(`whatsapp://send?phone=+91${phone}`);
+    }
+  };
+
+  const getClientNameAndMobile = (item: ITodayFollowUp) => {
+    let name: string = '';
+    let phone: string = '';
+
+    const {enquiries} = item || {};
+    if (enquiries && enquiries.length > 0) {
+      const firstEnquiry = enquiries[0];
+      const {partyName, mobile, billingBy, billingDetails} = firstEnquiry || {};
+      if (billingBy === 'by Individual') {
+        name = partyName;
+        phone = mobile;
+      } else if (billingBy === 'by Company') {
+        const {
+          employeeName,
+          employeeMobile,
+          authorityPersonName,
+          authorityPersonMobile,
+        } = billingDetails as IBillingInfo;
+        name = employeeName || authorityPersonName;
+        phone = employeeMobile || authorityPersonMobile;
+      }
+    }
+    return {name, phone};
   };
 
   return (
@@ -59,26 +111,42 @@ const TodayFollowup: FC<IProps> = ({}) => {
             <Shadow distance={2.5}>
               <View style={styles.cardWrapper}>
                 <View style={styles.cardHeader}>
-                  <Text style={styles.cardHeading}>Lalit</Text>
+                  <Text style={styles.cardHeading}>
+                    {getClientNameAndMobile(item).name}
+                  </Text>
                   <View style={styles.iconWrapper}>
-                    <TouchableOpacity>
-                    <WhatsupIcon width={22} height={22} />
+                    <TouchableOpacity onPress={() => handleWhatsappCall(item)}>
+                      <WhatsupIcon width={22} height={22} />
                     </TouchableOpacity>
                     <Spacer width={20} />
-                    <TouchableOpacity>
-                    <CallIcon width={22} height={22} />
+                    <TouchableOpacity onPress={() => handleCall(item)}>
+                      <CallIcon width={22} height={22} />
                     </TouchableOpacity>
                   </View>
                 </View>
                 <View style={styles.commentContainer}>
-                  <Text>
-                    <Text style={{fontWeight: 'bold'}}>Date:- </Text>
-                    {new Date(item.followUpDate).toLocaleString()}
-                  </Text>
-                  <Text>
-                    <Text style={{fontWeight: 'bold'}}>Last Comment:- </Text>
-                    {item.comment}
-                  </Text>
+                  <View style={[styles.contentWrapper]}>
+                    <View style={styles.labelContainer}>
+                      <Text style={{fontWeight: 'bold', color: COLOR_BLACK}}>
+                        Date:-
+                      </Text>
+                    </View>
+                    <View style={styles.contentContainer}>
+                      <Text>
+                        {new Date(item.followUpDate).toLocaleString()}
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={[styles.contentWrapper, {borderBottomWidth: 0}]}>
+                    <View style={styles.labelContainer}>
+                      <Text style={{fontWeight: 'bold', color: COLOR_BLACK}}>
+                        Last Comment:-
+                      </Text>
+                    </View>
+                    <View style={styles.contentContainer}>
+                      <Text>{item.comment}</Text>
+                    </View>
+                  </View>
                 </View>
               </View>
             </Shadow>
@@ -105,7 +173,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: COLOR_GRAY6,
+    backgroundColor: COLOR_GRAY2,
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderTopLeftRadius: 8,
@@ -119,10 +187,28 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     fontFamily: 'WorkSans',
+    color: COLOR_BLACK,
   },
   commentContainer: {
-    padding: 10,
     borderBottomLeftRadius: 8,
     borderBottomRightRadius: 8,
+  },
+  contentWrapper: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: COLOR_GRAY5,
+  },
+  labelContainer: {
+    width: '50%',
+    alignItems: 'flex-start',
+    backgroundColor: COLOR_GRAY6,
+    paddingLeft: 10,
+    paddingVertical: 10,
+  },
+  contentContainer: {
+    width: '50%',
+    alignItems: 'flex-start',
+    paddingLeft: 10,
+    paddingVertical: 10,
   },
 });

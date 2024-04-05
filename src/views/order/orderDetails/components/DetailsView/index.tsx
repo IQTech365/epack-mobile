@@ -10,14 +10,14 @@ import AddressForm, {ADDRESS_TYPE} from './Forms/AddressForm';
 import ContactDetailForm from './Forms/ContactDetailForm';
 import ShifingDetailForm from './Forms/ShifingDetailForm';
 import styles from './style';
-import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message';
+import Toast, {BaseToast, ErrorToast} from 'react-native-toast-message';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import {getOrderRequest} from '../../../../../redux/slices/OrderSlice';
 import {ISingleOrderRequest} from '../../../../../interface/order/ISingleOrderRequest';
 import Spinner from '../../../../../common/Spinner';
 import {ISingleEnquiryData} from '../../../../../interface/enquiry/ISingleEnquiryResponse';
-import { COLOR_BLACK, COLOR_GREEN } from '../../../../../utils/colors';
-import { formatDate4 } from '../../../../../utils/formatter';
+import {COLOR_BLACK, COLOR_GREEN} from '../../../../../utils/colors';
+import {formatDate4} from '../../../../../utils/formatter';
 interface IDetailsViewProps {
   enquiryId: string;
 }
@@ -30,7 +30,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
   const dispatch = useAppDispatch();
   const {getOrderRequesting, order} = useAppSelector(state => state.Order);
   const {data: orderData} = order || {};
-  
+
   const toastConfig = {
     success: (props: any) => (
       <BaseToast
@@ -358,169 +358,182 @@ const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
 
   return (
     <AvoidSoftInputViewHOC>
-    <View style={styles.container}>
-      <Spacer height={4} />
-      <CollapsibleView
-        title="SHIFTING DETAILS"
-        collapsed={false}
-        isEdit={true}
-        onEditPress={handleEditShiftingDetail}>
-        <View>
-          <View style={styles.elementContainer}>
-            <OrderDetailListItem
-              label="Shifting Type"
-              value={item?.shiftingType}
-            />
-            <OrderDetailListItem
-              label="Shifting From"
-              value={_shiftingFromAddress(item)}
-            />
-            <OrderDetailListItem
-              label="Shifting To"
-              value={_shiftingToAddress(item)}
-            />
-            <OrderDetailListItem
-              label="Shifting Luggage"
-              value={getShiftingLuggages(item)}
-            />
-            <OrderDetailListItem
-              label="Delivery Date"
-              value={formatDate4(new Date(item?.deliveryDate)) || 'Not Available'}
-            />
-            <OrderDetailListItem
-              label="Delivered Date"
-              value={formatDate4(new Date(item?.deliveredDate)) || 'Not Available'}
-              isLast={true}
-            />
+      <View style={styles.container}>
+        <Spacer height={4} />
+        <CollapsibleView
+          title="SHIFTING DETAILS"
+          collapsed={false}
+          isEdit={true}
+          onEditPress={handleEditShiftingDetail}>
+          <View>
+            <View style={styles.elementContainer}>
+              <OrderDetailListItem
+                label="Shifting Type"
+                value={item?.shiftingType}
+              />
+              <OrderDetailListItem
+                label="Shifting From"
+                value={_shiftingFromAddress(item)}
+              />
+              <OrderDetailListItem
+                label="Shifting To"
+                value={_shiftingToAddress(item)}
+              />
+              <OrderDetailListItem
+                label="Shifting Luggage"
+                value={getShiftingLuggages(item)}
+              />
+              <OrderDetailListItem
+                label="Moving Date"
+                value={
+                  formatDate4(new Date(item?.shiftingDate)) || 'Not Available'
+                }
+              />
+              <OrderDetailListItem
+                label="Delivery Date"
+                value={
+                  formatDate4(new Date(item?.deliveryDate)) || 'Not Available'
+                }
+              />
+              <OrderDetailListItem
+                label="Delivered Date"
+                value={
+                  formatDate4(new Date(item?.deliveredDate)) || 'Not Available'
+                }
+                isLast={true}
+              />
+            </View>
           </View>
-        </View>
-      </CollapsibleView>
-      <Spacer height={8} />
-      <CollapsibleView
-        title="CONTACT DETAILS"
-        collapsed={true}
-        isEdit={true}
-        onEditPress={handleEditContactDetail}>
-        <View>
-          <View style={styles.elementContainer}>
-            {item?.billingBy == 'by Company'
-              ? showCompanyContactDetails()
-              : showIndividualContactDetails()}
+        </CollapsibleView>
+        <Spacer height={8} />
+        <CollapsibleView
+          title="CONTACT DETAILS"
+          collapsed={true}
+          isEdit={true}
+          onEditPress={handleEditContactDetail}>
+          <View>
+            <View style={styles.elementContainer}>
+              {item?.billingBy == 'by Company'
+                ? showCompanyContactDetails()
+                : showIndividualContactDetails()}
+            </View>
           </View>
-        </View>
-      </CollapsibleView>
-      <Spacer height={8} />
-      <CollapsibleView
-        title="PICKUP ADDRESS"
-        collapsed={true}
-        isEdit={true}
-        onEditPress={handleEditPickupAddress}>
-        <View>
-          <View style={styles.elementContainer}>
-            <OrderDetailListItem
-              label="Shifting From"
-              value={item?.pickupAddress?.shiftingFrom}
-            />
-            <OrderDetailListItem
-              label="State"
-              value={item?.pickupAddress?.state}
-            />
-            <OrderDetailListItem
-              label="City"
-              value={item?.pickupAddress?.city}
-            />
-            <OrderDetailListItem
-              label="Address"
-              value={item?.pickupAddress?.address}
-            />
-            <OrderDetailListItem
-              label="Landmark"
-              value={item?.pickupAddress?.landmark || 'Not Available'}
-            />
-            <OrderDetailListItem
-              label="Locality"
-              value={item?.pickupAddress?.locality || 'Not Available'}
-            />
-            <OrderDetailListItem
-              label="Pincode"
-              value={item?.pickupAddress?.pincode}
-            />
-            <OrderDetailListItem
-              label="Floor"
-              value={item?.pickupAddress?.floor}
-            />
-            <OrderDetailListItem
-              label="Lift Available"
-              value={item?.pickupAddress?.isLiftAvailable}
-              isLast={true}
-            />
+        </CollapsibleView>
+        <Spacer height={8} />
+        <CollapsibleView
+          title="PICKUP ADDRESS"
+          collapsed={true}
+          isEdit={true}
+          onEditPress={handleEditPickupAddress}>
+          <View>
+            <View style={styles.elementContainer}>
+              <OrderDetailListItem
+                label="Shifting From"
+                value={item?.pickupAddress?.shiftingFrom}
+              />
+              <OrderDetailListItem
+                label="State"
+                value={item?.pickupAddress?.state}
+              />
+              <OrderDetailListItem
+                label="City"
+                value={item?.pickupAddress?.city}
+              />
+              <OrderDetailListItem
+                label="Address"
+                value={item?.pickupAddress?.address}
+              />
+              <OrderDetailListItem
+                label="Landmark"
+                value={item?.pickupAddress?.landmark || 'Not Available'}
+              />
+              <OrderDetailListItem
+                label="Locality"
+                value={item?.pickupAddress?.locality || 'Not Available'}
+              />
+              <OrderDetailListItem
+                label="Pincode"
+                value={item?.pickupAddress?.pincode}
+              />
+              <OrderDetailListItem
+                label="Floor"
+                value={item?.pickupAddress?.floor}
+              />
+              <OrderDetailListItem
+                label="Lift Available"
+                value={item?.pickupAddress?.isLiftAvailable}
+                isLast={true}
+              />
+            </View>
           </View>
-        </View>
-      </CollapsibleView>
-      <Spacer height={8} />
-      <CollapsibleView
-        title="DELIVERY ADDRESS"
-        collapsed={true}
-        isEdit={true}
-        onEditPress={handleEditDropAddress}>
-        <View>
-          <View style={styles.elementContainer}>
-            <OrderDetailListItem
-              label="Shifting To"
-              value={item?.dropAddress?.shiftingTo}
-            />
-            <OrderDetailListItem
-              label="State"
-              value={item?.dropAddress?.state}
-            />
-            <OrderDetailListItem label="City" value={item?.dropAddress?.city} />
-            <OrderDetailListItem
-              label="Address"
-              value={item?.dropAddress?.address}
-            />
-            <OrderDetailListItem
-              label="Landmark"
-              value={item?.dropAddress?.landmark || 'Not Available'}
-            />
-            <OrderDetailListItem
-              label="Locality"
-              value={item?.dropAddress?.locality || 'Not Available'}
-            />
-            <OrderDetailListItem
-              label="Pincode"
-              value={item?.dropAddress?.pincode}
-            />
-            <OrderDetailListItem
-              label="Floor"
-              value={item?.dropAddress?.floor}
-            />
-            <OrderDetailListItem
-              label="Lift Available"
-              value={item?.dropAddress?.isLiftAvailable}
-              isLast={true}
-            />
+        </CollapsibleView>
+        <Spacer height={8} />
+        <CollapsibleView
+          title="DELIVERY ADDRESS"
+          collapsed={true}
+          isEdit={true}
+          onEditPress={handleEditDropAddress}>
+          <View>
+            <View style={styles.elementContainer}>
+              <OrderDetailListItem
+                label="Shifting To"
+                value={item?.dropAddress?.shiftingTo}
+              />
+              <OrderDetailListItem
+                label="State"
+                value={item?.dropAddress?.state}
+              />
+              <OrderDetailListItem
+                label="City"
+                value={item?.dropAddress?.city}
+              />
+              <OrderDetailListItem
+                label="Address"
+                value={item?.dropAddress?.address}
+              />
+              <OrderDetailListItem
+                label="Landmark"
+                value={item?.dropAddress?.landmark || 'Not Available'}
+              />
+              <OrderDetailListItem
+                label="Locality"
+                value={item?.dropAddress?.locality || 'Not Available'}
+              />
+              <OrderDetailListItem
+                label="Pincode"
+                value={item?.dropAddress?.pincode}
+              />
+              <OrderDetailListItem
+                label="Floor"
+                value={item?.dropAddress?.floor}
+              />
+              <OrderDetailListItem
+                label="Lift Available"
+                value={item?.dropAddress?.isLiftAvailable}
+                isLast={true}
+              />
+            </View>
           </View>
-        </View>
-      </CollapsibleView>
-      <Spacer height={8} />
-      <ModalHOC
-        visible={
-          editShiftingDetail ||
-          editContactDetail ||
-          editPickupAddress ||
-          editDropAddress
-        }
-        modalStyle={styles.modalStyle}
-        headerStyle={styles.headerStyle}
-        onClose={handleModalClose}
-        title={getModalTitle()}>
+        </CollapsibleView>
+        <Spacer height={8} />
+        <ModalHOC
+          visible={
+            editShiftingDetail ||
+            editContactDetail ||
+            editPickupAddress ||
+            editDropAddress
+          }
+          modalStyle={styles.modalStyle}
+          headerStyle={styles.headerStyle}
+          onClose={handleModalClose}
+          title={getModalTitle()}>
           <View>
             {getForm()}
             <Toast config={toastConfig} />
           </View>
-      </ModalHOC>
-      <Spinner show={getOrderRequesting} />
-    </View>
+        </ModalHOC>
+        <Spinner show={getOrderRequesting} />
+      </View>
     </AvoidSoftInputViewHOC>
   );
 };

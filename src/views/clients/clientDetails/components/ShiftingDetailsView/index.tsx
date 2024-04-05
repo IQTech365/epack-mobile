@@ -11,7 +11,7 @@ import {getOrdersRequest} from '../../../../../redux/slices/OrderSlice';
 import Spinner from '../../../../../common/Spinner';
 import {IGetOrdersData} from '../../../../../interface/order/IGetOrdersResponse';
 import {formatDate4} from '../../../../../utils/formatter';
-import { getCurrentCompanyId } from '../../../../../utils/storage';
+import {getCurrentCompanyId} from '../../../../../utils/storage';
 
 interface IShiftingDetailsViewProps {
   item: ICustomer;
@@ -22,15 +22,15 @@ const ShiftingDetailsView: React.FC<IShiftingDetailsViewProps> = ({item}) => {
   const dispatch = useAppDispatch();
 
   const _fetchOrders = () => {
-    getCurrentCompanyId().then(id => {
-      const payload: Partial<IGetOrdersRequest> = {
-        companyId: id as string,
-        customerId: item._id,
-
-      };
-      dispatch(getOrdersRequest(payload));
-    }).catch(err => console.log(err));
-    
+    getCurrentCompanyId()
+      .then(id => {
+        const payload: Partial<IGetOrdersRequest> = {
+          companyId: id as string,
+          customerId: item._id,
+        };
+        dispatch(getOrdersRequest(payload));
+      })
+      .catch(err => console.log(err));
   };
 
   const _getOrderList = (): IGetOrdersData[] => {
