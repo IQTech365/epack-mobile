@@ -93,55 +93,66 @@ const TodayShiftings: FC<IProps> = ({}) => {
     <View style={{alignItems: 'center'}}>
       <Header label="Today's Shifting" canGoBack={true} />
       <Spacer height={10} />
-      <FlatList
-        data={_getTodayShifting()}
-        renderItem={({item}) => (
-          <View style={{alignItems: 'center'}}>
-            <Shadow distance={2.5}>
-              <View style={styles.cardWrapper}>
-                <View style={styles.cardHeader}>
-                  <Text style={styles.cardHeading}>
-                    {getClientNameAndMobile(item).name}
-                  </Text>
-                  <View style={styles.iconWrapper}>
-                    <TouchableOpacity onPress={() => handleWhatsappCall(item)}>
-                      <WhatsupIcon width={22} height={22} />
-                    </TouchableOpacity>
-                    <Spacer width={20} />
-                    <TouchableOpacity onPress={() => handleCall(item)}>
-                      <CallIcon width={22} height={22} />
-                    </TouchableOpacity>
+      {_getTodayShifting().length > 0 ? (
+        <FlatList
+          data={_getTodayShifting()}
+          renderItem={({item}) => (
+            <View style={{alignItems: 'center'}}>
+              <Shadow distance={2.5}>
+                <View style={styles.cardWrapper}>
+                  <View style={styles.cardHeader}>
+                    <Text style={styles.cardHeading}>
+                      {getClientNameAndMobile(item).name}
+                    </Text>
+                    <View style={styles.iconWrapper}>
+                      <TouchableOpacity
+                        onPress={() => handleWhatsappCall(item)}>
+                        <WhatsupIcon width={22} height={22} />
+                      </TouchableOpacity>
+                      <Spacer width={20} />
+                      <TouchableOpacity onPress={() => handleCall(item)}>
+                        <CallIcon width={22} height={22} />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                  <View style={styles.commentContainer}>
+                    <View style={styles.contentWrapper}>
+                      <View style={styles.labelContainer}>
+                        <Text style={{fontWeight: 'bold'}}>Date:- </Text>
+                      </View>
+                      <View style={styles.contentContainer}>
+                        <Text>
+                          {new Date(item.shiftingDate).toLocaleString()}
+                        </Text>
+                      </View>
+                    </View>
+                    <View
+                      style={[styles.contentWrapper, {borderBottomWidth: 0}]}>
+                      <View style={styles.labelContainer}>
+                        <Text>
+                          <Text style={{fontWeight: 'bold'}}>
+                            Company ID:-{' '}
+                          </Text>
+                        </Text>
+                      </View>
+                      <View style={styles.contentContainer}>
+                        <Text>{item.sn}</Text>
+                      </View>
+                    </View>
                   </View>
                 </View>
-                <View style={styles.commentContainer}>
-                  <View style={styles.contentWrapper}>
-                    <View style={styles.labelContainer}>
-                      <Text style={{fontWeight: 'bold'}}>Date:- </Text>
-                    </View>
-                    <View style={styles.contentContainer}>
-                      <Text>
-                        {new Date(item.shiftingDate).toLocaleString()}
-                      </Text>
-                    </View>
-                  </View>
-                  <View style={[styles.contentWrapper, {borderBottomWidth: 0}]}>
-                    <View style={styles.labelContainer}>
-                      <Text>
-                        <Text style={{fontWeight: 'bold'}}>Company ID:- </Text>
-                      </Text>
-                    </View>
-                    <View style={styles.contentContainer}>
-                      <Text>{item.sn}</Text>
-                    </View>
-                  </View>
-                </View>
-              </View>
-            </Shadow>
-            <Spacer height={10} />
-          </View>
-        )}
-        keyExtractor={item => item._id}
-      />
+              </Shadow>
+              <Spacer height={10} />
+            </View>
+          )}
+          keyExtractor={item => item._id}
+        />
+      ) : (
+        <Text
+          style={{fontWeight: 'bold', fontSize: 22, fontFamily: 'workSens'}}>
+          No more Shifting Today
+        </Text>
+      )}
     </View>
   );
 };

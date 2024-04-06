@@ -5,6 +5,7 @@ import {
   RefreshControl,
   Text,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import BiltyFormView from '../BiltyFormView';
@@ -33,6 +34,7 @@ import TemplateViewer from '../../../../../common/TemplateViewer';
 import {startShare} from '../../../../../utils/utility';
 import useTemplateIdHook from '../../../../../hooks/useTemplateIdHook';
 import ActionHeaderView from '../../../../../common/ActionHeaderView';
+import useUtilityHook from '../../../../../hooks/useUtilityHook';
 
 interface IBiltyViewProps {
   orderId: string;
@@ -58,8 +60,18 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [documentId, setDocumentId] = useState<string>('');
   const templateId = useTemplateIdHook('658d3cb5585e3dde644da97e');
+  const {getDocumentLimitCount} = useUtilityHook();
 
   const bottomSheetRef = useRef<BottomSheet>(null);
+
+  const getTotalBilty = () => {
+    const {data} = biltyList || {};
+    let _count = 0;
+    if (data && Array.isArray(data) && data.length > 0) {
+      _count = data.length;
+    }
+    return _count;
+  };
 
   const _getBiltyType = (bilty: IBilty) => {
     let biltyType: string = '';
@@ -110,8 +122,14 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
   };
 
   const handleCreateNewBilty = () => {
-    setShowBiltyList(false);
-    setCreateNewBilty(true);
+    const docLimit: number = getDocumentLimitCount('');
+    const currentDocCount: number = getTotalBilty();
+    if (docLimit == -1 || currentDocCount < docLimit) {
+      setShowBiltyList(true);
+      setCreateNewBilty(false);
+    } else {
+      Alert.alert('Limit', 'Document limit reached');
+    }
   };
 
   const handleShowBiltyList = () => {
