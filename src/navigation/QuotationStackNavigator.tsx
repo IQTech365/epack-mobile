@@ -5,6 +5,7 @@ import QuotationPageView from "../views/quotation";
 import AddQuotationView from "../views/quotation/addQuotation/index";
 import EnquiryDetailsView from "../views/enquiry/enquiryDetails";
 import { QuotationStackParamList } from "./params/QuotationStackParamList";
+import SubscriptionPlanView from "../views/subscriptionPlan";
 
 const QuotationStack = createNativeStackNavigator<QuotationStackParamList>();
 
@@ -14,7 +15,7 @@ const QuotationStackNavigator = () => {
         <QuotationStack.Navigator screenOptions={{headerShown: false}} >
             <QuotationStack.Screen name="QuotationRoot" component={QuotationPageView} />
             <QuotationStack.Screen name="AddQuotation" component={AddQuotationView} />
-            {/* <QuotationStack.Screen name="QuotationDetails" component={EnquiryDetailsView} /> */}
+            <QuotationStack.Screen name="QuotationSubscription" component={SubscriptionPlanView} />
         </QuotationStack.Navigator>
     );
 }

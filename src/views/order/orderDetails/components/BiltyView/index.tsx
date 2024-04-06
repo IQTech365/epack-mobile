@@ -1,13 +1,12 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   View,
   FlatList,
   RefreshControl,
   Text,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
-import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import BiltyFormView from '../BiltyFormView';
 import styles from './styles';
 import {
@@ -16,31 +15,34 @@ import {
   resetGetBiltyHtmlRequest,
 } from '../../../../../redux/slices/OrderSlice';
 import Spinner from '../../../../../common/Spinner';
-import {BiltyFormContextProvider} from '../../../../../provider/BiltyFormContextProvider';
+import { BiltyFormContextProvider } from '../../../../../provider/BiltyFormContextProvider';
 import BiltyListItem from './BiltyListItem';
-import {IBiltyItem} from './IBiltyItem';
+import { IBiltyItem } from './IBiltyItem';
 import {
   IBilty,
   IBiltyFreight,
 } from '../../../../../interface/order/IGetBiltyListResponse';
 import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
 import FormModal from '../../../../settings/formModal';
-import {downloadOptions} from './downloadOptions';
+import { downloadOptions } from './downloadOptions';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import {COLOR_BLACK, COLOR_BLUE} from '../../../../../utils/colors';
-import {IHtmlTemplateRequest} from '../../../../../interface/order/templates/ITemplateResponse';
+import { COLOR_BLACK, COLOR_BLUE } from '../../../../../utils/colors';
+import { IHtmlTemplateRequest } from '../../../../../interface/order/templates/ITemplateResponse';
 import ModalHOC from '../../../../../common/ModalHOC';
 import TemplateViewer from '../../../../../common/TemplateViewer';
-import {startShare} from '../../../../../utils/utility';
+import { startShare } from '../../../../../utils/utility';
 import useTemplateIdHook from '../../../../../hooks/useTemplateIdHook';
 import ActionHeaderView from '../../../../../common/ActionHeaderView';
 import useUtilityHook from '../../../../../hooks/useUtilityHook';
+import AlertModal from '../../../../../common/AlertModal';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 
 interface IBiltyViewProps {
   orderId: string;
+  navigation: NavigationProp<any, any>;
 }
 
-const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
+const BiltyView: React.FC<IBiltyViewProps> = ({ orderId, navigation }) => {
   const dispatch = useAppDispatch();
   const {
     biltyList,
@@ -59,13 +61,14 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
   const [showDownload, setShowDownload] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [documentId, setDocumentId] = useState<string>('');
+  const [showLimitModal, setShowLimitModal] = useState<boolean>(false);
   const templateId = useTemplateIdHook('658d3cb5585e3dde644da97e');
-  const {getDocumentLimitCount} = useUtilityHook();
+  const { getDocumentLimitCount } = useUtilityHook();
 
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   const getTotalBilty = () => {
-    const {data} = biltyList || {};
+    const { data } = biltyList || {};
     let _count = 0;
     if (data && Array.isArray(data) && data.length > 0) {
       _count = data.length;
@@ -75,7 +78,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
 
   const _getBiltyType = (bilty: IBilty) => {
     let biltyType: string = '';
-    const {biltyfreights} = bilty;
+    const { biltyfreights } = bilty;
     if (biltyfreights && biltyfreights.length > 0) {
       const biltyFreight: IBiltyFreight = biltyfreights[0];
       biltyType = biltyFreight.freightDetails.billingStatus;
@@ -96,7 +99,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
   };
 
   const _getBiltyData = () => {
-    const {data} = biltyList || {};
+    const { data } = biltyList || {};
     let items: IBiltyItem[] = [];
     if (data && Array.isArray(data) && data.length > 0) {
       items = data.map((bilty: IBilty) => {
@@ -128,7 +131,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
       setShowBiltyList(true);
       setCreateNewBilty(false);
     } else {
-      Alert.alert('Limit', 'Document limit reached');
+      setShowLimitModal(true);
     }
   };
 
@@ -176,7 +179,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
     return null;
   };
 
-  const onEdit = () => {};
+  const onEdit = () => { };
 
   const handleDocumentDownload = async () => {
     bottomSheetRef.current?.close();
@@ -188,12 +191,21 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
     dispatch(getBiltyHtmlRequest(payload));
   };
 
+  const hanldeAlertModalClose = () => {
+    setShowLimitModal(false);
+  }
+
+  const handlePlanUpgrade = () => {
+    setShowLimitModal(false);
+    navigation.navigate("OrderSubscription", {isUpgrade: true});
+  }
+
   const showList = () => {
     if (showBiltyList) {
       return (
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <FlatList
-            contentContainerStyle={{alignItems: 'center', paddingVertical: 10}}
+            contentContainerStyle={{ alignItems: 'center', paddingVertical: 10 }}
             data={_getBiltyData()}
             refreshControl={
               <RefreshControl
@@ -201,7 +213,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
                 onRefresh={handleOnRefresh}
               />
             }
-            renderItem={({item, index}) => (
+            renderItem={({ item, index }) => (
               <BiltyListItem
                 item={item}
                 index={index}
@@ -242,8 +254,8 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
                       fillColor={COLOR_BLUE}
                       unfillColor="#FFFFFF"
                       text={option}
-                      iconStyle={{borderColor: 'red', borderRadius: 0}}
-                      innerIconStyle={{borderWidth: 1, borderRadius: 0}}
+                      iconStyle={{ borderColor: 'red', borderRadius: 0 }}
+                      innerIconStyle={{ borderWidth: 1, borderRadius: 0 }}
                       onPress={(isChecked: boolean) => {
                         setDownloadOption(option);
                       }}
@@ -253,8 +265,8 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
                         fontSize: 14,
                         color: COLOR_BLACK,
                       }}
-                      style={{paddingRight: 8, marginBottom: 20}}
-                      textContainerStyle={{marginLeft: 10, marginRight: 4}}
+                      style={{ paddingRight: 8, marginBottom: 20 }}
+                      textContainerStyle={{ marginLeft: 10, marginRight: 4 }}
                       isChecked={option == downloadOption}
                       disableBuiltInState={true}
                     />
@@ -276,10 +288,11 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
             modalStyle={styles.modalStyle}
             headerStyle={styles.headerStyle}
             title="Preview">
-            <View style={{flex: 1}}>
+            <View style={{ flex: 1 }}>
               <TemplateViewer html={biltyTemplateHtml} />
             </View>
           </ModalHOC>
+          <AlertModal visible={showLimitModal} onClose={hanldeAlertModalClose} onUpgrade={handlePlanUpgrade} />
         </View>
       );
     }

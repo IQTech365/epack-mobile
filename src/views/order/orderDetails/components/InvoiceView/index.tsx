@@ -19,7 +19,7 @@ import TemplateViewer from '../../../../../common/TemplateViewer';
 import {startShare} from '../../../../../utils/utility';
 import useTemplateIdHook from '../../../../../hooks/useTemplateIdHook';
 import ActionHeaderView from '../../../../../common/ActionHeaderView';
-import {useNavigation} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {
   getVehicleCompanyRequest,
   getVehicleModelsRequest,
@@ -27,15 +27,16 @@ import {
 } from '../../../../../redux/slices/CommonSlice';
 import {getVehicleSizeRequest} from '../../../../../redux/slices/VehicleSlice';
 import useUtilityHook from '../../../../../hooks/useUtilityHook';
+import AlertModal from '../../../../../common/AlertModal';
 
 interface IInvoiceViewProps {
   orderId: string;
   item: ISingleEnquiryData;
+  navigation: NavigationProp<any, any>;
 }
 
-const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item}) => {
+const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item, navigation}) => {
   const dispatch = useAppDispatch();
-  const navigation = useNavigation();
 
   const {
     getInvoicesRequesting,
@@ -51,6 +52,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item}) => {
   const [showPreview, setShowPreview] = useState<boolean>(false);
   const [showShare, setShowShare] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [showLimitModal, setShowLimitModal] = useState<boolean>(false);
   const templateId = useTemplateIdHook('658d3ce2585e3dde644da98c');
   const {getDocumentLimitCount} = useUtilityHook();
 
@@ -64,14 +66,13 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item}) => {
   };
 
   const handleCreateNewInvoice = () => {
-    //
     const docLimit: number = getDocumentLimitCount('');
     const currentDocCount: number = getTotalInvoice();
     if (docLimit == -1 || currentDocCount < docLimit) {
       setShowInvoiceList(true);
       setCreateNewInvoice(false);
     } else {
-      Alert.alert('Limit', 'Document limit reached');
+      setShowLimitModal(true);
     }
   };
 
@@ -101,6 +102,15 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item}) => {
   };
 
   const onEdit = () => {};
+
+  const hanldeAlertModalClose = () => {
+    setShowLimitModal(false);
+  }
+
+  const handlePlanUpgrade = () => {
+    setShowLimitModal(false);
+    navigation.navigate("OrderSubscription", {isUpgrade: true});
+  }
 
   const showEmptyView = () => {
     return (
@@ -202,6 +212,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item}) => {
               <TemplateViewer html={invoiceTemplateHtml} />
             </View>
           </ModalHOC>
+          <AlertModal visible={showLimitModal} onClose={hanldeAlertModalClose} onUpgrade={handlePlanUpgrade} />
         </View>
       );
     }

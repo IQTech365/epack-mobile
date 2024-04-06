@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {View, Dimensions, ImageBackground} from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import Header from '../../common/Header';
@@ -16,10 +16,10 @@ import {
 import {prepareSubscriptionPlanList} from './utils';
 import BackgroundImage from '../../images/subscription_bg.png';
 import SubscriptionPlanCard from './components/subscriptionPlanCard';
-import useAuthId from '../../hooks/useAuthId';
 
 const SubscriptionPlanView = (props: any) => {
-  const {navigation} = props;
+  const {navigation, route} = props;
+  const isUpgrade: boolean = route?.params?.isUpgrade;
   const dispatch = useAppDispatch();
   const {
     subscriptionPlans,
@@ -78,7 +78,7 @@ const SubscriptionPlanView = (props: any) => {
     <ImageBackground
       style={{flex: 1, height: height, width: width}}
       source={BackgroundImage}>
-      <Header canGoBack={false} label="CHOOSE YOUR PLAN" />
+      <Header canGoBack={isUpgrade} label="CHOOSE YOUR PLAN" />
       <Carousel
         loop
         width={width}

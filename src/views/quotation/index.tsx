@@ -6,7 +6,6 @@ import {
   FlatList,
   Text,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
 import AddNew from '../../common/AddNew';
 import Header from '../../common/Header';
@@ -43,6 +42,7 @@ import { getCurrentCompanyId } from '../../utils/storage';
 import useTemplateIdHook from '../../hooks/useTemplateIdHook';
 import Spinner from '../../common/Spinner';
 import useUtilityHook from '../../hooks/useUtilityHook';
+import AlertModal from '../../common/AlertModal';
 interface IQuotationPageViewProps {
   navigation: NavigationProp<any, any>;
 }
@@ -67,6 +67,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
   const [openPreview, setOpenPreview] = useState<boolean>(false);
   const [openShare, setOpenShare] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [showLimitModal, setShowLimitModal] = useState<boolean>(false);
   const templateId = useTemplateIdHook('658d3c6f585e3dde644da95b');
   const {getDocumentLimitCount} = useUtilityHook();
 
@@ -241,7 +242,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
     if(docLimit == -1 || (currentDocCount < docLimit)) {
       navigation.navigate(QuotationStackRoute.AddQuotation);
     } else {
-      Alert.alert('Limit', "Document limit reached");
+      setShowLimitModal(true);
     }
   };
 
@@ -323,6 +324,15 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
     setOpenPreview(false);
     setOpenShare(false);
   };
+
+  const hanldeAlertModalClose = () => {
+    setShowLimitModal(false);
+  }
+
+  const handlePlanUpgrade = () => {
+    setShowLimitModal(false);
+    navigation.navigate("QuotationSubscription", {isUpgrade: true});
+  }
 
   return (
     <View style={styles.container}>
@@ -413,6 +423,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
           <TemplateViewer html={quotationTemplateHtml} />
         </View>
       </ModalHOC>
+      <AlertModal visible={showLimitModal} onClose={hanldeAlertModalClose} onUpgrade={handlePlanUpgrade} />
       <Spinner show={getQuotationTemplateHtmlRequesting} />
     </View>
   );

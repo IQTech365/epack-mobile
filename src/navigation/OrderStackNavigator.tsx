@@ -7,6 +7,7 @@ import OrderDetailsView from "../views/order/orderDetails";
 import { OrderStackParamList } from "./params/OrderStackParamList";
 import EditPackingItemsView from "../views/order/editPackingItemsView";
 import EditInvoiceView from "../views/order/editInvoiceView";
+import SubscriptionPlanView from "../views/subscriptionPlan";
 
 const OrderStack = createNativeStackNavigator<OrderStackParamList>();
 
@@ -19,6 +20,7 @@ const OrderStackNavigator = () => {
             <OrderStack.Screen name="OrderDetails" component={OrderDetailsView} />
             <OrderStack.Screen name="EditPackingItems" component={EditPackingItemsView} />
             <OrderStack.Screen name="EditInvoice" component={EditInvoiceView} />
+            <OrderStack.Screen name="OrderSubscription" component={SubscriptionPlanView} />
         </OrderStack.Navigator>
     );
 }
