@@ -17,7 +17,12 @@ interface IDropdownProps {
   selectedTextStyle?:TextStyle;
 }
 
-const DropdownComponent: React.FC<IDropdownProps> = forwardRef(
+export interface IDropdownHandler {
+  setDefaultValue: (value:TDropdownItem) => void;
+  refreshComp: () => void;
+}
+
+const DropdownComponent = forwardRef<IDropdownHandler, IDropdownProps>(
   (
     {
       data,
@@ -38,8 +43,13 @@ const DropdownComponent: React.FC<IDropdownProps> = forwardRef(
     const [refresh, setRefresh] = useState<boolean>(false);
 
     React.useImperativeHandle(ref, () => ({
-      setDefaultValue,
-      refreshComp,
+      setDefaultValue: (value:TDropdownItem) => {
+        setValue(value);
+        setRefresh(!refresh);
+      },
+      refreshComp: () => {
+        setRefresh(!refresh);
+      },
     }));
 
     useEffect(() => {
@@ -47,15 +57,6 @@ const DropdownComponent: React.FC<IDropdownProps> = forwardRef(
         setValue(defaultValue);
       }
     }, []);
-
-    const setDefaultValue = (value: TDropdownItem) => {
-      setValue(value);
-      setRefresh(!refresh);
-    }
-
-    const refreshComp = () => {
-      setRefresh(!refresh);
-    }
 
     const errorBorderColor = error
       ? {borderColor: 'red', borderWidth: 1}

@@ -79,6 +79,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
   };
 
   const item = getSingleOrder() || {};
+  console.log('item-----', JSON.stringify(item));
 
   useEffect(() => {
     const payload: ISingleOrderRequest = {
@@ -391,15 +392,11 @@ const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
               />
               <OrderDetailListItem
                 label="Delivery Date"
-                value={
-                  formatDate4(new Date(item?.deliveryDate)) || 'Not Available'
-                }
+                value={ item.deliveryDate ? formatDate4(new Date(item?.deliveryDate)) : 'Not Available'}
               />
               <OrderDetailListItem
                 label="Delivered Date"
-                value={
-                  formatDate4(new Date(item?.deliveredDate)) || 'Not Available'
-                }
+                value={item?.deliveredDate ? formatDate4(new Date(item?.deliveredDate)) : 'Not Available'}
                 isLast={true}
               />
             </View>

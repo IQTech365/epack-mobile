@@ -3,11 +3,11 @@ import {View, Text} from 'react-native';
 import styles from './style';
 import CollapsibleView from '../../../../../common/CollapsibleView';
 import Label from '../../../../../common/Label';
-import Input from '../../../../../common/Input';
+import Input, { InputMethods } from '../../../../../common/Input';
 import {COLOR_BLACK} from '../../../../../utils/colors';
 import {useQuotationFormContextHook} from '../../../../../provider/QuotationFormContextProvider';
 import Spacer from '../../../../../common/Spacer';
-import DropdownComponent from '../../../../../common/DropdownComponent';
+import DropdownComponent, { IDropdownHandler } from '../../../../../common/DropdownComponent';
 import liftStatusOptions from '../../../../../data/liftStatusOptions.json';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import usePincodeHook from '../../../../../hooks/usePincodeHook';
@@ -19,7 +19,7 @@ import {
   IPickupAddress,
 } from '../../../../../interface/quotation/IGetQuotationsResponse';
 import useUtilityHook from '../../../../../hooks/useUtilityHook';
-import DropdownWithTextInput from '../../../../../common/DropdownWithTextInput';
+import DropdownWithTextInput, { DropdownMethods } from '../../../../../common/DropdownWithTextInput';
 
 interface Props {
   fromEnquiry?: boolean;
@@ -50,12 +50,12 @@ const PickupAddressView: React.FC<Props> = ({
   const {getFloorsList} = useUtilityHook();
   const floorOptions = getFloorsList();
 
-  const pincodeInputCompRef = useRef(null);
-  const addressInputCompRef = useRef(null);
-  const stateDropdownCompRef = useRef(null);
-  const cityDropdownCompRef = useRef(null);
-  const floorDropdownCompRef = useRef(null);
-  const liftDropdownCompRef = useRef(null);
+  const pincodeInputCompRef = useRef<InputMethods>(null);
+  const addressInputCompRef = useRef<InputMethods>(null);
+  const stateDropdownCompRef = useRef<DropdownMethods>(null);
+  const cityDropdownCompRef = useRef<DropdownMethods>(null);
+  const floorDropdownCompRef = useRef<IDropdownHandler>(null);
+  const liftDropdownCompRef = useRef<IDropdownHandler>(null);
 
   const [states, setStates] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
@@ -83,10 +83,8 @@ const PickupAddressView: React.FC<Props> = ({
       cityDropdownCompRef
     ) {
       if (!isEdit) {
-        //@ts-ignore
         stateDropdownCompRef?.current?.setValue(states[0]);
         setPickupState(states[0]);
-        //@ts-ignore
         cityDropdownCompRef?.current?.setValue(cities[0]);
         setPickupCity(cities[0]);
       }
@@ -101,11 +99,19 @@ const PickupAddressView: React.FC<Props> = ({
         setPincode(pickupAddress?.pincode);
         setPickupState(pickupAddress?.state);
         setPickupAddress(pickupAddress?.address);
-        //@ts-ignore
         stateDropdownCompRef?.current?.setValue(pickupAddress?.state);
         setPickupCity(pickupAddress?.city);
-        //@ts-ignore
         cityDropdownCompRef?.current?.setValue(pickupAddress?.city);
+        setPickupCurrentFloor(pickupAddress?.floor);
+        const floorItem: TDropdownItem = floorOptions.find((d: TDropdownItem) => d.label == pickupAddress?.floor) as TDropdownItem;
+        if (floorItem) {
+          floorDropdownCompRef?.current?.setDefaultValue(floorItem);
+        }
+        setPickupLiftStatus(pickupAddress.isLiftAvailable);
+        const liftItem: TDropdownItem = liftStatusOptions.find((d: TDropdownItem) => d.label == pickupAddress.isLiftAvailable) as TDropdownItem;
+        if (liftItem) {
+          liftDropdownCompRef?.current?.setDefaultValue(liftItem);
+        }
       }
     }
   }, [state.enquiryItem]);
@@ -122,18 +128,14 @@ const PickupAddressView: React.FC<Props> = ({
           setPincode(pickupAddress?.pincode);
           setPickupState(pickupAddress?.state);
           setPickupAddress(pickupAddress?.address);
-          //@ts-ignore
           stateDropdownCompRef?.current?.setValue(pickupAddress?.state);
           setPickupCity(pickupAddress?.city);
-          //@ts-ignore
           cityDropdownCompRef?.current?.setValue(pickupAddress?.city);
           setPickupCurrentFloor(pickupAddress?.floor);
           const floorItem: TDropdownItem = floorOptions.find(
             (d: TDropdownItem) => d.label == pickupAddress?.floor,
           ) as TDropdownItem;
           if (floorItem) {
-            //@ts-ignore
-            floorDropdownCompRef &&
               floorDropdownCompRef?.current?.setDefaultValue(floorItem);
           }
           setPickupLiftStatus(pickupAddress.isLiftAvailable);
@@ -141,8 +143,6 @@ const PickupAddressView: React.FC<Props> = ({
             (d: TDropdownItem) => d.label == pickupAddress.isLiftAvailable,
           ) as TDropdownItem;
           if (liftItem) {
-            //@ts-ignore
-            liftDropdownCompRef &&
               liftDropdownCompRef?.current?.setDefaultValue(liftItem);
           }
         }
@@ -162,7 +162,6 @@ const PickupAddressView: React.FC<Props> = ({
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
               placeholder="Enter Pincode"
-              //@ts-ignore
               ref={pincodeInputCompRef}
               //@ts-ignore
               error={state.errors.pickup_pincode}
@@ -176,7 +175,6 @@ const PickupAddressView: React.FC<Props> = ({
             <DropdownWithTextInput
               options={states}
               onSelect={setPickupState}
-              //@ts-ignore
               ref={stateDropdownCompRef}
               containerStyle={styles.compContainer}
             />
@@ -188,7 +186,6 @@ const PickupAddressView: React.FC<Props> = ({
           <DropdownWithTextInput
             options={cities}
             onSelect={setPickupCity}
-            //@ts-ignore
             ref={cityDropdownCompRef}
           />
         </View>
@@ -201,10 +198,7 @@ const PickupAddressView: React.FC<Props> = ({
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
             placeholder="Enter address"
-            //@ts-ignore
             ref={addressInputCompRef}
-            //@ts-ignore
-            // error={showErrors && errors.pickupPincode}
             value={state?.pickup_address}
             type="text"
           />

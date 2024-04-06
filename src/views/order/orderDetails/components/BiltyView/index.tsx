@@ -266,7 +266,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
                 style={downloadButtonStyle}
                 activeOpacity={0.6}
                 disabled={downloadOption == ''}>
-                <Text style={styles.downloadText}>Download</Text>
+                <Text style={styles.downloadText}>Preview</Text>
               </TouchableOpacity>
             </>
           </FormModal>
