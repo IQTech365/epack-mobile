@@ -123,7 +123,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
     setShowBiltyList(true);
     setCreateNewBilty(false);
     dispatch(getBiltyListRequest(orderId));
-  }
+  };
 
   const handleShowPreviewModalClose = () => {
     dispatch(resetGetBiltyHtmlRequest());
@@ -161,9 +161,11 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
   const onEdit = () => {};
 
   const handleDocumentDownload = async () => {
+    bottomSheetRef.current?.close();
     const payload: IHtmlTemplateRequest = {
       templateId: templateId,
       quotationId: documentId,
+      biltyCopyType: downloadOption,
     };
     dispatch(getBiltyHtmlRequest(payload));
   };
@@ -274,6 +276,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId}) => {
   useEffect(() => {
     if (!getBiltyHtmlRequesting && getBiltyHtmlSuccess) {
       if (showPreview) {
+        bottomSheetRef.current?.close();
         setShowModal(true);
       } else if (showShare) {
         startShare(

@@ -1,33 +1,35 @@
 // Quotation Template Request Payload
 export interface IHtmlTemplateRequest {
-    templateId:string;
-    quotationId:string;
+  templateId: string;
+  quotationId: string;
+  biltyCopyType?: string;
 }
 
 // Money Receipt Template Request Payload
 export interface IHtmlMoneyReceiptTemplateRequest {
-    templateId:string;
-    moneyReceiptId:string;
+  templateId: string;
+  moneyReceiptId: string;
 }
 
 // Bilty Template Request Payload
 export interface IHtmlBiltyTemplateRequest {
-    templateId:string;
-    biltyId:string;
+  templateId: string;
+  biltyId: string;
+  biltyCopyType: string;
 }
 
 // Car Condition Template Request Payload
 export interface IHtmlCarConditionTemplateRequest {
-    templateId:string;
-    carConditionId:string;
+  templateId: string;
+  carConditionId: string;
 }
 
 // Invoice Template Request Payload
 export interface IHtmlInvoiceTemplateRequest {
-    templateId:string;
-    invoiceId:string;
+  templateId: string;
+  invoiceId: string;
 }
 
 export interface IHtmlTemplateResponse {
-    html: any;
+  html: any;
 }
