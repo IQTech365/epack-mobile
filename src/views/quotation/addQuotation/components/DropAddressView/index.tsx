@@ -3,11 +3,11 @@ import {View} from 'react-native';
 import styles from './style';
 import CollapsibleView from '../../../../../common/CollapsibleView';
 import Label from '../../../../../common/Label';
-import Input from '../../../../../common/Input';
+import Input, { InputMethods } from '../../../../../common/Input';
 import {COLOR_BLACK} from '../../../../../utils/colors';
 import {useQuotationFormContextHook} from '../../../../../provider/QuotationFormContextProvider';
 import Spacer from '../../../../../common/Spacer';
-import DropdownComponent from '../../../../../common/DropdownComponent';
+import DropdownComponent, { IDropdownHandler } from '../../../../../common/DropdownComponent';
 import liftStatusOptions from '../../../../../data/liftStatusOptions.json';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import usePincodeHook from '../../../../../hooks/usePincodeHook';
@@ -15,7 +15,7 @@ import { getCities2, getStates2 } from '../../../../../utils/formatter';
 import Spinner from '../../../../../common/Spinner';
 import { IDropAddress, IEnquiry, IGetQuotationData } from '../../../../../interface/quotation/IGetQuotationsResponse';
 import useUtilityHook from '../../../../../hooks/useUtilityHook';
-import DropdownWithTextInput from '../../../../../common/DropdownWithTextInput';
+import DropdownWithTextInput, { DropdownMethods } from '../../../../../common/DropdownWithTextInput';
 
 interface Props {
   fromEnquiry?:boolean;
@@ -42,12 +42,12 @@ const DropAddressView: React.FC<Props> = ({fromEnquiry = false, isEdit, item}) =
   const {getFloorsList} = useUtilityHook();
   const floorOptions = getFloorsList();
 
-  const pincodeInputCompRef = useRef(null);
-  const addressInputCompRef = useRef(null);
-  const stateDropdownCompRef = useRef(null);
-  const cityDropdownCompRef = useRef(null);
-  const floorDropdownCompRef = useRef(null);
-  const liftDropdownCompRef = useRef(null);
+  const pincodeInputCompRef = useRef<InputMethods>(null);
+  const addressInputCompRef = useRef<InputMethods>(null);
+  const stateDropdownCompRef = useRef<DropdownMethods>(null);
+  const cityDropdownCompRef = useRef<DropdownMethods>(null);
+  const floorDropdownCompRef = useRef<IDropdownHandler>(null);
+  const liftDropdownCompRef = useRef<IDropdownHandler>(null);
 
   const [states, setStates] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
@@ -75,10 +75,8 @@ const DropAddressView: React.FC<Props> = ({fromEnquiry = false, isEdit, item}) =
       cityDropdownCompRef
     ) {
       if(!isEdit) {
-        //@ts-ignore
         stateDropdownCompRef?.current?.setValue(states[0]);
         setDropState(states[0]);
-        //@ts-ignore
         cityDropdownCompRef?.current?.setValue(cities[0]);
         setDropCity(cities[0]);
       }
@@ -93,11 +91,19 @@ const DropAddressView: React.FC<Props> = ({fromEnquiry = false, isEdit, item}) =
         setPincode(dropAddress?.pincode);
         setDropState(dropAddress?.state);
         setDropAddress(dropAddress?.address);
-        //@ts-ignore
         stateDropdownCompRef?.current?.setValue(dropAddress?.state);
         setDropCity(dropAddress?.city);
-        //@ts-ignore
         cityDropdownCompRef?.current?.setValue(dropAddress?.city);
+        setDropCurrentFloor(dropAddress?.floor);
+        const floorItem:TDropdownItem = floorOptions.find((d:TDropdownItem) => d.label == dropAddress?.floor) as TDropdownItem;
+        if(floorItem) {
+          floorDropdownCompRef?.current?.setDefaultValue(floorItem);
+        }
+        setDropLiftStatus(dropAddress.isLiftAvailable);
+        const liftItem:TDropdownItem = liftStatusOptions.find((d:TDropdownItem) => d.label == dropAddress?.isLiftAvailable) as TDropdownItem;
+        if(liftItem) {
+          liftDropdownCompRef?.current?.setDefaultValue(liftItem);
+        }
       }
     }
   }, [state.enquiryItem]);
@@ -113,22 +119,18 @@ const DropAddressView: React.FC<Props> = ({fromEnquiry = false, isEdit, item}) =
             setPincode(dropAddress?.pincode);
             setDropState(dropAddress?.state);
             setDropAddress(dropAddress?.address);
-            //@ts-ignore
             stateDropdownCompRef?.current?.setValue(dropAddress?.state);
             setDropCity(dropAddress?.city);
-            //@ts-ignore
             cityDropdownCompRef?.current?.setValue(dropAddress?.city);
             setDropCurrentFloor(dropAddress?.floor);
             const floorItem:TDropdownItem = floorOptions.find((d:TDropdownItem) => d.label == dropAddress?.floor) as TDropdownItem;
               if(floorItem) {
-                //@ts-ignore
-                floorDropdownCompRef && floorDropdownCompRef?.current?.setDefaultValue(floorItem);
+                floorDropdownCompRef?.current?.setDefaultValue(floorItem);
             }
             setDropLiftStatus(dropAddress.isLiftAvailable);
             const liftItem:TDropdownItem = liftStatusOptions.find((d:TDropdownItem) => d.label == dropAddress?.isLiftAvailable) as TDropdownItem;
-              if(liftItem) {
-                //@ts-ignore
-                liftDropdownCompRef && liftDropdownCompRef?.current?.setDefaultValue(liftItem);
+            if(liftItem) {
+              liftDropdownCompRef?.current?.setDefaultValue(liftItem);
             }
           }
       }
