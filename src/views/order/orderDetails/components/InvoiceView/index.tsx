@@ -1,10 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {
-  View,
-  FlatList,
-  RefreshControl,
-  Text,
-} from 'react-native';
+import {View, FlatList, RefreshControl, Text, Alert} from 'react-native';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import styles from './styles';
 import InvoiceFormView from '../InvoiceFormView';
@@ -24,9 +19,14 @@ import TemplateViewer from '../../../../../common/TemplateViewer';
 import {startShare} from '../../../../../utils/utility';
 import useTemplateIdHook from '../../../../../hooks/useTemplateIdHook';
 import ActionHeaderView from '../../../../../common/ActionHeaderView';
-import { useNavigation } from '@react-navigation/native';
-import { getVehicleCompanyRequest, getVehicleModelsRequest, getVehicleTypesRequest } from '../../../../../redux/slices/CommonSlice';
-import { getVehicleSizeRequest } from '../../../../../redux/slices/VehicleSlice';
+import {useNavigation} from '@react-navigation/native';
+import {
+  getVehicleCompanyRequest,
+  getVehicleModelsRequest,
+  getVehicleTypesRequest,
+} from '../../../../../redux/slices/CommonSlice';
+import {getVehicleSizeRequest} from '../../../../../redux/slices/VehicleSlice';
+import useUtilityHook from '../../../../../hooks/useUtilityHook';
 
 interface IInvoiceViewProps {
   orderId: string;
@@ -52,10 +52,27 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item}) => {
   const [showShare, setShowShare] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
   const templateId = useTemplateIdHook('658d3ce2585e3dde644da98c');
+  const {getDocumentLimitCount} = useUtilityHook();
+
+  const getTotalInvoice = () => {
+    const {data} = invoices || {};
+    let _count = 0;
+    if (data && Array.isArray(data) && data.length > 0) {
+      _count = data.length;
+    }
+    return _count;
+  };
 
   const handleCreateNewInvoice = () => {
-    setShowInvoiceList(false);
-    setCreateNewInvoice(true);
+    //
+    const docLimit: number = getDocumentLimitCount('');
+    const currentDocCount: number = getTotalInvoice();
+    if (docLimit == -1 || currentDocCount < docLimit) {
+      setShowInvoiceList(true);
+      setCreateNewInvoice(false);
+    } else {
+      Alert.alert('Limit', 'Document limit reached');
+    }
   };
 
   const handleShowInvoiceList = () => {
@@ -104,8 +121,12 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item}) => {
 
   const _handleEditInvoice = (invoice: IInvoice) => {
     //@ts-ignore
-    navigation.navigate("EditInvoice", {item: invoice, enquiry: item, orderID: orderId});
-  }
+    navigation.navigate('EditInvoice', {
+      item: invoice,
+      enquiry: item,
+      orderID: orderId,
+    });
+  };
 
   useEffect(() => {
     dispatch(getInvoiceListRequest(orderId));
@@ -123,7 +144,11 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item}) => {
     if (createNewInvoice) {
       return (
         <InvoiceFormContextProvider>
-          <InvoiceFormView orderId={orderId} item={item} onSuccess={onSuccess} />
+          <InvoiceFormView
+            orderId={orderId}
+            item={item}
+            onSuccess={onSuccess}
+          />
         </InvoiceFormContextProvider>
       );
     }

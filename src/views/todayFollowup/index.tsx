@@ -37,8 +37,6 @@ const TodayFollowup: FC<IProps> = ({}) => {
 
   const {followups} = useAppSelector(state => state.Common);
 
-  console.log(followups);
-
   const getTodaysFollowup = () => {
     getCurrentCompanyId()
       .then(id => {
@@ -49,8 +47,6 @@ const TodayFollowup: FC<IProps> = ({}) => {
   useEffect(() => {
     getTodaysFollowup();
   }, []);
-
-  console.log('Robin---', JSON.stringify(followups));
 
   const _getTodayFollowup = (): ITodayFollowUp[] => {
     let list: ITodayFollowUp[] = [];
@@ -104,57 +100,66 @@ const TodayFollowup: FC<IProps> = ({}) => {
     <View style={{alignItems: 'center'}}>
       <Header label="Today's Followup" canGoBack={true} />
       <Spacer height={10} />
-      <FlatList
-        data={_getTodayFollowup()}
-        renderItem={({item}) => (
-          <View style={{alignItems: 'center'}}>
-            <Shadow distance={2.5}>
-              <View style={styles.cardWrapper}>
-                <View style={styles.cardHeader}>
-                  <Text style={styles.cardHeading}>
-                    {getClientNameAndMobile(item).name}
-                  </Text>
-                  <View style={styles.iconWrapper}>
-                    <TouchableOpacity onPress={() => handleWhatsappCall(item)}>
-                      <WhatsupIcon width={22} height={22} />
-                    </TouchableOpacity>
-                    <Spacer width={20} />
-                    <TouchableOpacity onPress={() => handleCall(item)}>
-                      <CallIcon width={22} height={22} />
-                    </TouchableOpacity>
+      {_getTodayFollowup().length > 0 ? (
+        <FlatList
+          data={_getTodayFollowup()}
+          renderItem={({item}) => (
+            <View style={{alignItems: 'center'}}>
+              <Shadow distance={2.5}>
+                <View style={styles.cardWrapper}>
+                  <View style={styles.cardHeader}>
+                    <Text style={styles.cardHeading}>
+                      {getClientNameAndMobile(item).name}
+                    </Text>
+                    <View style={styles.iconWrapper}>
+                      <TouchableOpacity
+                        onPress={() => handleWhatsappCall(item)}>
+                        <WhatsupIcon width={22} height={22} />
+                      </TouchableOpacity>
+                      <Spacer width={20} />
+                      <TouchableOpacity onPress={() => handleCall(item)}>
+                        <CallIcon width={22} height={22} />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                  <View style={styles.commentContainer}>
+                    <View style={[styles.contentWrapper]}>
+                      <View style={styles.labelContainer}>
+                        <Text style={{fontWeight: 'bold', color: COLOR_BLACK}}>
+                          Date:-
+                        </Text>
+                      </View>
+                      <View style={styles.contentContainer}>
+                        <Text>
+                          {new Date(item.followUpDate).toLocaleString()}
+                        </Text>
+                      </View>
+                    </View>
+                    <View
+                      style={[styles.contentWrapper, {borderBottomWidth: 0}]}>
+                      <View style={styles.labelContainer}>
+                        <Text style={{fontWeight: 'bold', color: COLOR_BLACK}}>
+                          Last Comment:-
+                        </Text>
+                      </View>
+                      <View style={styles.contentContainer}>
+                        <Text>{item.comment}</Text>
+                      </View>
+                    </View>
                   </View>
                 </View>
-                <View style={styles.commentContainer}>
-                  <View style={[styles.contentWrapper]}>
-                    <View style={styles.labelContainer}>
-                      <Text style={{fontWeight: 'bold', color: COLOR_BLACK}}>
-                        Date:-
-                      </Text>
-                    </View>
-                    <View style={styles.contentContainer}>
-                      <Text>
-                        {new Date(item.followUpDate).toLocaleString()}
-                      </Text>
-                    </View>
-                  </View>
-                  <View style={[styles.contentWrapper, {borderBottomWidth: 0}]}>
-                    <View style={styles.labelContainer}>
-                      <Text style={{fontWeight: 'bold', color: COLOR_BLACK}}>
-                        Last Comment:-
-                      </Text>
-                    </View>
-                    <View style={styles.contentContainer}>
-                      <Text>{item.comment}</Text>
-                    </View>
-                  </View>
-                </View>
-              </View>
-            </Shadow>
-            <Spacer height={10} />
-          </View>
-        )}
-        keyExtractor={item => item._id}
-      />
+              </Shadow>
+              <Spacer height={10} />
+            </View>
+          )}
+          keyExtractor={item => item._id}
+        />
+      ) : (
+        <Text
+          style={{fontWeight: 'bold', fontSize: 22, fontFamily: 'workSens'}}>
+          No more Followup Today
+        </Text>
+      )}
     </View>
   );
 };

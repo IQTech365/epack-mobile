@@ -43,23 +43,23 @@ const ActionHeaderView: FC<IProps> = ({onShow, onCreate, count = 0}) => {
   }, []);
 
   return (
-      <View style={styles.container}>
-        <TouchableOpacity onPress={_handleOnShow} activeOpacity={0.4}>
-          {isList ? (
-            <ListIcon2 width={32} height={32} />
-          ) : (
-            <ListIcon width={32} height={32} />
-          )}
-        </TouchableOpacity>
-        <Spacer width={20} />
-        <TouchableOpacity onPress={_handleOnCreate} activeOpacity={0.4}>
-          {isForm ? (
-            <CreateIcon2 width={34} height={34} />
-          ) : (
-            <CreateIcon width={34} height={34} />
-          )}
-        </TouchableOpacity>
-      </View>
+    <View style={styles.container}>
+      <TouchableOpacity onPress={_handleOnShow} activeOpacity={0.4}>
+        {isList ? (
+          <ListIcon2 width={32} height={32} />
+        ) : (
+          <ListIcon width={32} height={32} />
+        )}
+      </TouchableOpacity>
+      <Spacer width={20} />
+      <TouchableOpacity onPress={_handleOnCreate} activeOpacity={0.4}>
+        {isForm ? (
+          <CreateIcon2 width={34} height={34} />
+        ) : (
+          <CreateIcon width={34} height={34} />
+        )}
+      </TouchableOpacity>
+    </View>
   );
 };
 
