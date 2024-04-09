@@ -1,4 +1,5 @@
 import {Reducer} from 'react';
+import {formatDate4} from '../../../../../utils/formatter';
 
 export enum ACTION {
   BILTY_LR_CN_NO = 'BILTY_LR_CN_NO',
@@ -178,7 +179,7 @@ export interface IState {
   materials: IMaterial[];
   add_material: string;
   risk_type: string;
-  liability_of_tax:string,
+  liability_of_tax: string;
 
   // **** Freight Details ****
   freight_type: string;
@@ -232,7 +233,7 @@ export interface IAction {
 
 export const initialState: IState = {
   bilty_lr_cr_no: '',
-  date_of_bilty_lr_cr_no: '',
+  date_of_bilty_lr_cr_no: formatDate4(new Date()),
   bilty_template_id: '',
   // **** Consigner Details ****
   consigner_address_same_as_client: true,
@@ -289,11 +290,11 @@ export const initialState: IState = {
   expirty_date: '',
 
   // **** Material Details ****
-  type_of_moving: '',
+  type_of_moving: 'Household',
   materials: [],
   add_material: 'NO',
-  risk_type: '',
-  liability_of_tax:'',
+  risk_type: 'Owners Risk',
+  liability_of_tax: 'Consigner',
 
   // **** Freight Details ****
   freight_type: '',
@@ -325,7 +326,7 @@ export const initialState: IState = {
   balance_amount: '',
 
   // **** Insurance Details ****
-  insurance: '',
+  insurance: 'Not Insured',
   insurance_company: '',
   policy_number: '',
   insurance_date: '',
@@ -460,7 +461,7 @@ export const biltyReducer: Reducer<IState, IAction> = (
     case ACTION.RISK_TYPE:
       return {...state, risk_type: payload as string};
     case ACTION.LIABILITY_OF_TAX:
-        return {...state, liability_of_tax: payload as string};
+      return {...state, liability_of_tax: payload as string};
     // **** Freight Details ****
     case ACTION.FREIGHT_TYPE:
       return {...state, freight_type: payload as string};

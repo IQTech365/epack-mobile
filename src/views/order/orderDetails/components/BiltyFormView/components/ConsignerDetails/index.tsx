@@ -3,8 +3,12 @@ import {View} from 'react-native';
 import styles from './style';
 import CollapsibleView from '../../../../../../../common/CollapsibleView';
 import Label from '../../../../../../../common/Label';
-import Input, { InputMethods } from '../../../../../../../common/Input';
-import {COLOR_BLACK, COLOR_BLUE, COLOR_GRAY4} from '../../../../../../../utils/colors';
+import Input, {InputMethods} from '../../../../../../../common/Input';
+import {
+  COLOR_BLACK,
+  COLOR_BLUE,
+  COLOR_GRAY4,
+} from '../../../../../../../utils/colors';
 import Spacer from '../../../../../../../common/Spacer';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
@@ -12,9 +16,11 @@ import LoadingAddressView from './LoadingAddressView';
 import usePincodeHook from '../../../../../../../hooks/usePincodeHook';
 import {getCities2, getStates2} from '../../../../../../../utils/formatter';
 import Spinner from '../../../../../../../common/Spinner';
-import DropdownWithTextInput, { DropdownMethods } from '../../../../../../../common/DropdownWithTextInput';
-import { useAppSelector } from '../../../../../../../redux/hooks';
-import { ISingleEnquiryData } from '../../../../../../../interface/enquiry/ISingleEnquiryResponse';
+import DropdownWithTextInput, {
+  DropdownMethods,
+} from '../../../../../../../common/DropdownWithTextInput';
+import {useAppSelector} from '../../../../../../../redux/hooks';
+import {ISingleEnquiryData} from '../../../../../../../interface/enquiry/ISingleEnquiryResponse';
 
 const ConsignerDetails: React.FC<{}> = ({}) => {
   const {
@@ -53,28 +59,35 @@ const ConsignerDetails: React.FC<{}> = ({}) => {
   const consignerAddressInputRef = useRef<InputMethods>(null);
   const consignerPincodeInputRef = useRef<InputMethods>(null);
 
-
   const {result, fetching, setPincode} = usePincodeHook(
     () => {},
     () => {},
   );
 
   const initConsingerAddressIfSameasClient = useCallback(() => {
-    const order:ISingleEnquiryData = getSingleOrder();
-    if(order && state.consigner_address_same_as_client) {
-      const {billingBy, billingDetails, pickupAddress, mobile, partyName} = order || {};
-      if(billingBy == "by Company") {
-        const {authorityPersonName, employeeName, companyGST, authorityPersonMobile, employeeMobile} = billingDetails || {};
-        const name:string = authorityPersonName || employeeName as string;
-        const gst:string = companyGST || '';
-        const mobile:string = authorityPersonMobile || employeeMobile as string;
+    const order: ISingleEnquiryData = getSingleOrder();
+    if (order && state.consigner_address_same_as_client) {
+      const {billingBy, billingDetails, pickupAddress, mobile, partyName} =
+        order || {};
+      if (billingBy == 'by Company') {
+        const {
+          authorityPersonName,
+          employeeName,
+          companyGST,
+          authorityPersonMobile,
+          employeeMobile,
+        } = billingDetails || {};
+        const name: string = authorityPersonName || (employeeName as string);
+        const gst: string = companyGST || '';
+        const mobile: string =
+          authorityPersonMobile || (employeeMobile as string);
         setConsignerName(name);
         consignerNameInputRef.current?.setValue(name);
         setConsignerGst(gst);
         gstInputRef.current?.setValue(gst);
         setConsignerMobileNo(mobile);
         mobileInputRef.current?.setValue(mobile);
-      } else if(billingBy == "by Individual") {
+      } else if (billingBy == 'by Individual') {
         setConsignerName(partyName);
         consignerNameInputRef.current?.setValue(partyName);
         setConsignerMobileNo(mobile);
@@ -91,22 +104,22 @@ const ConsignerDetails: React.FC<{}> = ({}) => {
       setConsignerPincode(pincode);
       consignerPincodeInputRef.current?.setValue(pincode);
     } else {
-        setConsignerName('');
-        consignerNameInputRef.current?.setValue('');
-        setConsignerGst('');
-        gstInputRef.current?.setValue('');
-        setConsignerMobileNo('');
-        mobileInputRef.current?.setValue('');
-        setConsignerAddress('');
-        consignerAddressInputRef.current?.setValue('');
-        setConsignerState('');
-        stateDropdownCompRef.current?.setValue('');
-        setConsignerCity('');
-        cityDropdownCompRef.current?.setValue('');
-        setConsignerPincode('');
-        consignerPincodeInputRef.current?.setValue('');
+      setConsignerName('');
+      consignerNameInputRef.current?.setValue('');
+      setConsignerGst('');
+      gstInputRef.current?.setValue('');
+      setConsignerMobileNo('');
+      mobileInputRef.current?.setValue('');
+      setConsignerAddress('');
+      consignerAddressInputRef.current?.setValue('');
+      setConsignerState('');
+      stateDropdownCompRef.current?.setValue('');
+      setConsignerCity('');
+      cityDropdownCompRef.current?.setValue('');
+      setConsignerPincode('');
+      consignerPincodeInputRef.current?.setValue('');
     }
-  }, [state.consigner_address_same_as_client])
+  }, [state.consigner_address_same_as_client]);
 
   const handlePincodeChange = useCallback(
     (text: string) => {
@@ -146,12 +159,12 @@ const ConsignerDetails: React.FC<{}> = ({}) => {
   return (
     <CollapsibleView title="CONSIGNER DETAILS" collapsed={true}>
       <View>
-      <View style={styles.elementContainer}>
+        <View style={styles.elementContainer}>
           <BouncyCheckbox
             size={25}
             fillColor={COLOR_BLUE}
             unfillColor="#FFFFFF"
-            text="Consigner Address same as Client"
+            text="Same as Pickup Address"
             iconStyle={styles.iconStyle}
             innerIconStyle={styles.innerIconStyle}
             textStyle={styles.textStyle2}
@@ -264,7 +277,7 @@ const ConsignerDetails: React.FC<{}> = ({}) => {
             size={25}
             fillColor={COLOR_BLUE}
             unfillColor="#FFFFFF"
-            text="Same as Consigner Address"
+            text="Same as Pickup Address"
             iconStyle={styles.iconStyle}
             innerIconStyle={styles.innerIconStyle}
             textStyle={styles.textStyle2}

@@ -1,26 +1,28 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  RefreshControl,
-} from 'react-native';
+import {View, Text, FlatList, RefreshControl} from 'react-native';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import AddQuotationView from '../../../../quotation/addQuotation';
 import QuotationListItem, {
   IQuotationItem,
 } from '../../../../quotation/quotationList/components/QuotationListItem';
 import styles from './style';
-import {getQuotationHtmlRequest, getQuotationsRequest, resetGetQuotationHtmlRequest} from '../../../../../redux/slices/QuotationSlice';
-import { IGetQuotationRequest } from '../../../../../interface/quotation/IGetQuotationRequest';
-import { IEnquiry, IGetQuotationData } from '../../../../../interface/quotation/IGetQuotationsResponse';
-import { getCurrentCompanyId } from '../../../../../utils/storage';
+import {
+  getQuotationHtmlRequest,
+  getQuotationsRequest,
+  resetGetQuotationHtmlRequest,
+} from '../../../../../redux/slices/QuotationSlice';
+import {IGetQuotationRequest} from '../../../../../interface/quotation/IGetQuotationRequest';
+import {
+  IEnquiry,
+  IGetQuotationData,
+} from '../../../../../interface/quotation/IGetQuotationsResponse';
+import {getCurrentCompanyId} from '../../../../../utils/storage';
 import ModalHOC from '../../../../../common/ModalHOC';
 import TemplateViewer from '../../../../../common/TemplateViewer';
 import useTemplateIdHook from '../../../../../hooks/useTemplateIdHook';
-import { IHtmlTemplateRequest } from '../../../../../interface/order/templates/ITemplateResponse';
-import { QuotationStackRoute } from '../../../../../utils/constants';
-import { startShare } from '../../../../../utils/utility';
+import {IHtmlTemplateRequest} from '../../../../../interface/order/templates/ITemplateResponse';
+import {QuotationStackRoute} from '../../../../../utils/constants';
+import {startShare} from '../../../../../utils/utility';
 import Spinner from '../../../../../common/Spinner';
 import ActionHeaderView from '../../../../../common/ActionHeaderView';
 
@@ -28,7 +30,7 @@ interface IQuotationViewProps {
   enquiryId: string;
   navigation: any;
   onItemClick: (tabIndex: number) => void;
-  isOrder?:boolean;
+  isOrder?: boolean;
 }
 
 const QuotationView: React.FC<IQuotationViewProps> = ({
@@ -46,7 +48,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
     getQuotationTemplateHtmlFailure,
   } = useAppSelector(state => state.Quotation);
   const {data: quotationData} = quotations || {};
-  
+
   const dispatch = useAppDispatch();
   const [showQuotationList, setShowQuotationList] = useState<boolean>(false);
   const [createNewQuotation, setCreateNewQuotation] = useState<boolean>(true);
@@ -57,87 +59,87 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
   const [showModal, setShowModal] = useState<boolean>(false);
   const templateId = useTemplateIdHook('658d3c6f585e3dde644da95b');
 
-  const _getClientName = (item:IGetQuotationData) => {
-    let name:string = 'NA';
+  const _getClientName = (item: IGetQuotationData) => {
+    let name: string = 'NA';
     //@ts-ignore
     const {enquiries} = item;
-    if(enquiries && Array.isArray(enquiries) && enquiries.length > 0) {
-      const enquiry:IEnquiry = enquiries[0];
-      if(enquiry?.partyName) {
+    if (enquiries && Array.isArray(enquiries) && enquiries.length > 0) {
+      const enquiry: IEnquiry = enquiries[0];
+      if (enquiry?.partyName) {
         name = enquiry?.partyName;
         //@ts-ignore
-      } else if(enquiry.billingDetails?.companyName) {
+      } else if (enquiry.billingDetails?.companyName) {
         //@ts-ignore
         name = enquiry.billingDetails?.companyName;
         //@ts-ignore
-      } else if(enquiry.billingDetails?.authorityPersonName) {
+      } else if (enquiry.billingDetails?.authorityPersonName) {
         //@ts-ignore
         name = enquiry.billingDetails?.authorityPersonName;
         //@ts-ignore
-      } else if(enquiry.billingDetails?.employeeName) {
+      } else if (enquiry.billingDetails?.employeeName) {
         //@ts-ignore
         name = enquiry.billingDetails?.employeeName;
       }
     }
     return name;
-  }
+  };
 
-  const _getFromDestination = (item:IGetQuotationData) => {
-    let destination:string = 'NA';
+  const _getFromDestination = (item: IGetQuotationData) => {
+    let destination: string = 'NA';
     const {enquiries} = item;
-    if(enquiries && Array.isArray(enquiries) && enquiries.length > 0) {
-      const enquiry:IEnquiry = enquiries[0];
-      if(enquiry?.pickupAddress.city) {
+    if (enquiries && Array.isArray(enquiries) && enquiries.length > 0) {
+      const enquiry: IEnquiry = enquiries[0];
+      if (enquiry?.pickupAddress.city) {
         destination = enquiry?.pickupAddress.city;
       }
     }
     return destination;
-  }
+  };
 
-  const _getToDestination = (item:IGetQuotationData) => {
-    let destination:string = 'NA';
+  const _getToDestination = (item: IGetQuotationData) => {
+    let destination: string = 'NA';
     const {enquiries} = item;
-    if(enquiries && Array.isArray(enquiries) && enquiries.length > 0) {
-      const enquiry:IEnquiry = enquiries[0];
-      if(enquiry?.dropAddress.city) {
+    if (enquiries && Array.isArray(enquiries) && enquiries.length > 0) {
+      const enquiry: IEnquiry = enquiries[0];
+      if (enquiry?.dropAddress.city) {
         destination = enquiry?.dropAddress.city;
       }
     }
     return destination;
-  }
+  };
 
-  const _getShiftingType = (item:IGetQuotationData) => {
-    let shiftingType:string = 'NA';
+  const _getShiftingType = (item: IGetQuotationData) => {
+    let shiftingType: string = 'NA';
     const {enquiries} = item;
-    if(enquiries && Array.isArray(enquiries) && enquiries.length > 0) {
-      const enquiry:IEnquiry = enquiries[0];
-      if(enquiry?.shiftingType) {
+    if (enquiries && Array.isArray(enquiries) && enquiries.length > 0) {
+      const enquiry: IEnquiry = enquiries[0];
+      if (enquiry?.shiftingType) {
         shiftingType = enquiry?.shiftingType;
       }
     }
     return shiftingType;
-  }
+  };
 
-  const _getMobile = (item:IGetQuotationData) => {
-    let mobile:string = 'NA';
+  const _getMobile = (item: IGetQuotationData) => {
+    let mobile: string = 'NA';
     //@ts-ignore
     const {enquiries} = item;
-    if(enquiries && Array.isArray(enquiries) && enquiries.length > 0) {
-      const enquiry:IEnquiry = enquiries[0];
-      if(enquiry?.mobile) {
+    if (enquiries && Array.isArray(enquiries) && enquiries.length > 0) {
+      const enquiry: IEnquiry = enquiries[0];
+      if (enquiry?.mobile) {
         mobile = enquiry?.mobile;
         //@ts-ignore
-      } else if(enquiry.billingDetails?.authorityPersonMobile) {
+      } else if (enquiry.billingDetails?.authorityPersonMobile) {
         //@ts-ignore
         mobile = enquiry.billingDetails?.authorityPersonMobile;
         //@ts-ignore
-      } else if(enquiry.billingDetails?.employeeMobile) {
+      } else if (enquiry.billingDetails?.employeeMobile) {
         //@ts-ignore
         mobile = enquiry.billingDetails?.employeeMobile;
       }
     }
     return mobile;
-  }
+  };
 
   const transformQuotationData = () => {
     let _data: IQuotationItem[] = [];
@@ -182,13 +184,15 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
   };
 
   const handleOnRefresh = useCallback(() => {
-    getCurrentCompanyId().then(id => {
-      const payload: IGetQuotationRequest = {
-        // id: enquiryId,
-        companyId:id as string
-      };
-      dispatch(getQuotationsRequest(payload));
-    }).catch(err => console.log(err));
+    getCurrentCompanyId()
+      .then(id => {
+        const payload: IGetQuotationRequest = {
+          // id: enquiryId,
+          companyId: id as string,
+        };
+        dispatch(getQuotationsRequest(payload));
+      })
+      .catch(err => console.log(err));
   }, []);
 
   const _hanldeCloseShowPreviewModal = () => {
@@ -243,12 +247,18 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
     setShowQuotationList(true);
     setCreateNewQuotation(false);
     setShowFormInEditMode(false);
-  }
+  };
 
   const showForm = () => {
     if (createNewQuotation) {
       //@ts-ignore
-      return <AddQuotationView showHeader={false} fromEnquiry={true} enquiryId={enquiryId} />;
+      return (
+        <AddQuotationView
+          showHeader={false}
+          fromEnquiry={true}
+          enquiryId={enquiryId}
+        />
+      );
     }
     return null;
   };
@@ -256,7 +266,16 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
   const showEditForm = () => {
     if (showFormInEditMode) {
       //@ts-ignore
-      return <AddQuotationView showHeader={false} fromEnquiry={true} enquiryId={enquiryId} editRequestFromEnquiry={true} itemFromEnquiry={quotationToEdit} onSuccess={_handleOnSuccess} />;
+      return (
+        <AddQuotationView
+          showHeader={false}
+          fromEnquiry={true}
+          enquiryId={enquiryId}
+          editRequestFromEnquiry={true}
+          itemFromEnquiry={quotationToEdit}
+          onSuccess={_handleOnSuccess}
+        />
+      );
     }
     return null;
   };
@@ -264,34 +283,34 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
   const showList = () => {
     if (showQuotationList) {
       return (
-          <FlatList
-            // contentContainerStyle={{alignItems: 'center', paddingVertical: 10, justifyContent: 'center'}}
-            data={transformQuotationData()}
-            refreshControl={
-              <RefreshControl
-                refreshing={getQuotationsRequesting}
-                onRefresh={handleOnRefresh}
-              />
-            }
-            renderItem={({item, index}) => (
-              <QuotationListItem
-                item={item}
-                index={index}
-                onPress={() => {
-                  onItemClick(0);
-                }}
-                onShare={() => {
-                  handleShareClick(item.id);
-                }}
-                onDownload={() => {}}
-                onPreview={() => {
-                  _handleShowPreview(item.id);
-                }}
-                onEdit={() => handleEditClick(item)}
-              />
-            )}
-            ListEmptyComponent={showEmptyView()}
-          />
+        <FlatList
+          // contentContainerStyle={{alignItems: 'center', paddingVertical: 10, justifyContent: 'center'}}
+          data={transformQuotationData()}
+          refreshControl={
+            <RefreshControl
+              refreshing={getQuotationsRequesting}
+              onRefresh={handleOnRefresh}
+            />
+          }
+          renderItem={({item, index}) => (
+            <QuotationListItem
+              item={item}
+              index={index}
+              onPress={() => {
+                onItemClick(0);
+              }}
+              onShare={() => {
+                handleShareClick(item.id);
+              }}
+              onDownload={() => {}}
+              onPreview={() => {
+                _handleShowPreview(item.id);
+              }}
+              onEdit={() => handleEditClick(item)}
+            />
+          )}
+          ListEmptyComponent={showEmptyView()}
+        />
       );
     }
     return null;
@@ -329,11 +348,13 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
 
   return (
     <View style={{alignItems: 'center'}}>
-      {!isOrder ? <ActionHeaderView
-        count={transformQuotationData().length}
-        onShow={handleShowQuotationList}
-        onCreate={handleCreateNewQuotation}
-      /> : null}
+      {!isOrder ? (
+        <ActionHeaderView
+          count={transformQuotationData().length}
+          onShow={handleShowQuotationList}
+          onCreate={handleCreateNewQuotation}
+        />
+      ) : null}
       {!isOrder ? showForm() : null}
       {showList()}
       {!isOrder ? showEditForm() : null}

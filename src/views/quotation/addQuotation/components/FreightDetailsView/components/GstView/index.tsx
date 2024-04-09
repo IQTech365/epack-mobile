@@ -10,17 +10,21 @@ import DropdownComponent from '../../../../../../../common/DropdownComponent';
 import {TDropdownItem} from '../../../../../../../type/TDropdownItem';
 import gstPercentOptions from '../../../../../../../data/gstPercentOptions.json';
 import gstTypeOptions from '../../../../../../../data/gstTypeOptions.json';
-import { IQuotationFreight, ISingleQuotationData } from '../../../../../../../interface/quotation/IGetSingleQuotationResponse';
-import { IGetQuotationData } from '../../../../../../../interface/quotation/IGetQuotationsResponse';
+import {
+  IQuotationFreight,
+  ISingleQuotationData,
+} from '../../../../../../../interface/quotation/IGetSingleQuotationResponse';
+import {IGetQuotationData} from '../../../../../../../interface/quotation/IGetQuotationsResponse';
 
 interface Props {
-  isEdit?:boolean;
-  item?:IGetQuotationData;
-  quotationData?:ISingleQuotationData;
+  isEdit?: boolean;
+  item?: IGetQuotationData;
+  quotationData?: ISingleQuotationData;
 }
 
 const GstView: React.FC<Props> = ({isEdit, item, quotationData}) => {
-  const {state, setGstInQuotation, setGstPercent, setGstType} = useQuotationFormContextHook();
+  const {state, setGstInQuotation, setGstPercent, setGstType} =
+    useQuotationFormContextHook();
   const gstPercentDropdownCompRef = useRef(null);
   const gstTypeDropdownCompRef = useRef(null);
 
@@ -55,31 +59,43 @@ const GstView: React.FC<Props> = ({isEdit, item, quotationData}) => {
   };
 
   useEffect(() => {
-    if(isEdit && quotationData) {
-        const quotationfreight:IQuotationFreight = quotationData.quotationfreights;
-        if(quotationfreight) {
-          setGstInQuotation(quotationfreight.gstStatus);
-        }
+    if (isEdit && quotationData) {
+      const quotationfreight: IQuotationFreight =
+        quotationData.quotationfreights;
+      if (quotationfreight) {
+        setGstInQuotation(quotationfreight.gstStatus);
+      }
     }
   }, [isEdit, quotationData]);
 
   useEffect(() => {
-    if(isEdit && quotationData && state.gst_in_quotation == gstInQuotationOptions[0]) {
-        const quotationfreight:IQuotationFreight = quotationData.quotationfreights;
-        if(quotationfreight) {
-          const gstPercentItem:TDropdownItem = gstPercentOptions.find((d:TDropdownItem) => d.value == quotationfreight.gstPercentage) as TDropdownItem;
-          if(gstPercentItem) {
-            //@ts-ignore
-            gstPercentDropdownCompRef && gstPercentDropdownCompRef?.current?.setDefaultValue(gstPercentItem);
-            setGstPercent(gstPercentItem.value);
-          }
-          const gstTypeItem:TDropdownItem = gstTypeOptions.find((d:TDropdownItem) => d.label == quotationfreight.gstType) as TDropdownItem;
-          if(gstTypeItem) {
-            //@ts-ignore
-            gstTypeDropdownCompRef && gstTypeDropdownCompRef?.current?.setDefaultValue(gstTypeItem);
-            setGstType(gstTypeItem.label);
-          }
+    if (
+      isEdit &&
+      quotationData &&
+      state.gst_in_quotation == gstInQuotationOptions[0]
+    ) {
+      const quotationfreight: IQuotationFreight =
+        quotationData.quotationfreights;
+      if (quotationfreight) {
+        const gstPercentItem: TDropdownItem = gstPercentOptions.find(
+          (d: TDropdownItem) => d.value == quotationfreight.gstPercentage,
+        ) as TDropdownItem;
+        if (gstPercentItem) {
+          //@ts-ignore
+          gstPercentDropdownCompRef &&
+            gstPercentDropdownCompRef?.current?.setDefaultValue(gstPercentItem);
+          setGstPercent(gstPercentItem.value);
         }
+        const gstTypeItem: TDropdownItem = gstTypeOptions.find(
+          (d: TDropdownItem) => d.label == quotationfreight.gstType,
+        ) as TDropdownItem;
+        if (gstTypeItem) {
+          //@ts-ignore
+          gstTypeDropdownCompRef &&
+            gstTypeDropdownCompRef?.current?.setDefaultValue(gstTypeItem);
+          setGstType(gstTypeItem.label);
+        }
+      }
     }
   }, [state.gst_in_quotation]);
 

@@ -18,9 +18,9 @@ import {
   riskTypeOptions,
   typeOfMovingOptions,
 } from './utils';
-import { useAppSelector } from '../../../../../../../redux/hooks';
-import { IUnitType } from '../../../../../../../interface/setting/unitType/IGetunitTypeResponse';
-import { IPackingType } from '../../../../../../../interface/common/common';
+import {useAppSelector} from '../../../../../../../redux/hooks';
+import {IUnitType} from '../../../../../../../interface/setting/unitType/IGetunitTypeResponse';
+import {IPackingType} from '../../../../../../../interface/common/common';
 
 const MaterialDetails: React.FC<{}> = ({}) => {
   const {
@@ -43,30 +43,33 @@ const MaterialDetails: React.FC<{}> = ({}) => {
 
   const {unitType} = useAppSelector(state => state.Setting);
   const {packingTypes} = useAppSelector(state => state.Common);
-  
+
   const _getUnitTypes = () => {
-    let unitTypes:TDropdownItem[] = [];
+    let unitTypes: TDropdownItem[] = [];
     const {data} = unitType || {};
-    if(data && Array.isArray(data) && data.length > 0) {
-      unitTypes = data.map((d:IUnitType) => {
-        const item:TDropdownItem = {label: d.unitType, value: d.unitType};
+    if (data && Array.isArray(data) && data.length > 0) {
+      unitTypes = data.map((d: IUnitType) => {
+        const item: TDropdownItem = {label: d.unitType, value: d.unitType};
         return item;
       });
     }
     return unitTypes;
-  }
+  };
 
   const _getPackingTypes = () => {
-    let packTypes:TDropdownItem[] = [];
+    let packTypes: TDropdownItem[] = [];
     const {data} = packingTypes || {};
-    if(data && Array.isArray(data) && data.length > 0) {
-      packTypes = data.map((d:IPackingType) => {
-        const item:TDropdownItem = {label: d.packingType, value: d.packingType};
+    if (data && Array.isArray(data) && data.length > 0) {
+      packTypes = data.map((d: IPackingType) => {
+        const item: TDropdownItem = {
+          label: d.packingType,
+          value: d.packingType,
+        };
         return item;
       });
     }
     return packTypes;
-  }
+  };
 
   const handleDeleteMaterialItem = (index: number) => {
     const clone = [...state.materials];

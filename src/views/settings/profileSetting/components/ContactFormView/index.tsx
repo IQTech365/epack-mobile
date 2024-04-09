@@ -6,30 +6,45 @@ import Spacer from '../../../../../common/Spacer';
 import Label from '../../../../../common/Label';
 import DropdownComponent from '../../../../../common/DropdownComponent';
 import Input from '../../../../../common/Input';
-import {COLOR_BLACK, COLOR_BLUE, COLOR_GRAY, COLOR_GRAY2} from '../../../../../utils/colors';
+import {
+  COLOR_BLACK,
+  COLOR_BLUE,
+  COLOR_GRAY,
+  COLOR_GRAY2,
+} from '../../../../../utils/colors';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import styles from './style';
 import contactDetail from '../../../../../data/contactDetail.json';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import Button from '../../../../../common/Button';
-import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
-import { addContactRequest, getContactsRequest, resetAddContactRequest, resetUpdateContactRequest, updateContactRequest } from '../../../../../redux/slices/ProfileSettingSlice';
-import { IAddContactDetailRequest } from '../../../../../interface/setting/packerProfile/contactDetail/IAddContactDetailRequest';
+import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
+import {
+  addContactRequest,
+  getContactsRequest,
+  resetAddContactRequest,
+  resetUpdateContactRequest,
+  updateContactRequest,
+} from '../../../../../redux/slices/ProfileSettingSlice';
+import {IAddContactDetailRequest} from '../../../../../interface/setting/packerProfile/contactDetail/IAddContactDetailRequest';
 import Spinner from '../../../../../common/Spinner';
-import { getCurrentCompanyId } from '../../../../../utils/storage';
-import { ISubmodule } from '../../../../../interface/common/common';
+import {getCurrentCompanyId} from '../../../../../utils/storage';
+import {ISubmodule} from '../../../../../interface/common/common';
 import useAuthId from '../../../../../hooks/useAuthId';
-import { IContactListItem } from '../ContactView/components/ContactDetailListItem';
-import { ToastType, showToast } from '../../../../../utils/utility';
-import { IUpdateContactDetailPayload } from '../../../../../interface/setting/packerProfile/contactDetail/IUpdateContactDetail';
+import {IContactListItem} from '../ContactView/components/ContactDetailListItem';
+import {ToastType, showToast} from '../../../../../utils/utility';
+import {IUpdateContactDetailPayload} from '../../../../../interface/setting/packerProfile/contactDetail/IUpdateContactDetail';
 
 interface IContactDetailsProps {
   isEdit?: boolean;
-  contactInfo?:IContactListItem;
+  contactInfo?: IContactListItem;
   onSuccess?: () => void;
 }
 
-const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({isEdit, contactInfo, onSuccess}) => {
+const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({
+  isEdit,
+  contactInfo,
+  onSuccess,
+}) => {
   const [contactType, setContactType] = useState<string>('EMAIL');
   const [contactNumber, setContactNumber] = useState<string>('');
   const [contactNumberError, setContactNumberError] = useState<string>('');
@@ -42,85 +57,92 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({isEdit, contac
     addContactFailure,
     updateContactRequesting,
     updateContactSuccess,
-    updateContactFailure
+    updateContactFailure,
   } = useAppSelector(state => state.Setting);
   const {submodules} = useAppSelector(state => state.Common);
-  
-  const dispatch = useAppDispatch()
+
+  const dispatch = useAppDispatch();
   const authId = useAuthId();
 
   const contactTypeRef = useRef(null);
   const inputRef = useRef(null);
 
   const handleTextInputChange = (text: string) => {
-    if(contactNumberError) {
+    if (contactNumberError) {
       setContactNumberError('');
     }
     setContactNumber(text);
-  }
+  };
 
   const handleModulesApplyFor = (moduleName: string, isChecked: boolean) => {
     const tempArr = [...modules];
-      const itemIndex = tempArr.findIndex(e => e == moduleName);
-      if(itemIndex == -1) {
-        tempArr.push(moduleName);
-        setModules(tempArr);
-      } else {
-        const filterArr = tempArr.filter(e => e !== moduleName);
-        setModules(filterArr);
-      }
-  }
+    const itemIndex = tempArr.findIndex(e => e == moduleName);
+    if (itemIndex == -1) {
+      tempArr.push(moduleName);
+      setModules(tempArr);
+    } else {
+      const filterArr = tempArr.filter(e => e !== moduleName);
+      setModules(filterArr);
+    }
+  };
 
   const handleContactDetail = (item: TDropdownItem) => {
     setContactType(item.label);
-    if(contactNumber) {
+    if (contactNumber) {
       setContactNumber('');
       //@ts-ignore
       inputRef && inputRef?.current?.reset();
     }
-    if(item.label == "EMAIL"){
-      setHelperText("Enter Email");
-    } else if(item.label == "LANDLINE"){
-      setHelperText("Enter Landline No#");
-    } if(item.label == "MOBILE"){
-      setHelperText("Enter Mobile No#");
+    if (item.label == 'EMAIL') {
+      setHelperText('Enter Email');
+    } else if (item.label == 'LANDLINE') {
+      setHelperText('Enter Landline No#');
+    }
+    if (item.label == 'MOBILE') {
+      setHelperText('Enter Mobile No#');
+    }
+    if (item.label == 'TOLL-FREE NUMBER') {
+      setHelperText('Enter Toll-free No#');
     }
     setLabelText(item.label);
   };
 
   const handleSave = () => {
-    if(contactNumber) {
+    if (contactNumber) {
       setContactNumberError('');
-      getCurrentCompanyId().then(id => {
-        const payload: IAddContactDetailRequest = {
-          companyId: id as string,
-          modulesView: modules,
-          contactType: contactType || contactDetail[0].label,
-          contactValue: contactNumber,
-          otherTitle: '',
-          createdBy: authId,
-        }
-        if(isEdit) {
-          const data:IUpdateContactDetailPayload = {
-            id: contactInfo?.id as string,
-            payload: payload,
+      getCurrentCompanyId()
+        .then(id => {
+          const payload: IAddContactDetailRequest = {
+            companyId: id as string,
+            modulesView: modules,
+            contactType: contactType || contactDetail[0].label,
+            contactValue: contactNumber,
+            otherTitle: '',
+            createdBy: authId,
+          };
+          if (isEdit) {
+            const data: IUpdateContactDetailPayload = {
+              id: contactInfo?.id as string,
+              payload: payload,
+            };
+            dispatch(updateContactRequest(data));
+          } else {
+            dispatch(addContactRequest(payload));
           }
-          dispatch(updateContactRequest(data));
-        } else {
-          dispatch(addContactRequest(payload));
-        }
-      }).catch(err => console.log(err));
-    } else if(contactNumber == '') {
+        })
+        .catch(err => console.log(err));
+    } else if (contactNumber == '') {
       setContactNumberError(`${contactType} field is required.`);
     }
-   
-  }
+  };
 
   const _getContactsRequest = () => {
-    getCurrentCompanyId().then(id => {
-      dispatch(getContactsRequest(id as string));
-    }).catch(err => console.log(err));
-  }
+    getCurrentCompanyId()
+      .then(id => {
+        dispatch(getContactsRequest(id as string));
+      })
+      .catch(err => console.log(err));
+  };
 
   const _getSubmodules = (): ISubmodule[] => {
     let items: ISubmodule[] = [];
@@ -128,11 +150,11 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({isEdit, contac
     if (data && Array.isArray(data) && data.length > 0) {
       items = data;
     }
-    return items.filter((d:ISubmodule) => d.availableOnDocument);
+    return items.filter((d: ISubmodule) => d.availableOnDocument);
   };
 
   useEffect(() => {
-    if(isEdit && contactInfo) {
+    if (isEdit && contactInfo) {
       const {contactType, contactNumber, modules} = contactInfo || {};
       setContactType(contactType);
       setModules(modules);
@@ -140,10 +162,13 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({isEdit, contac
       setContactNumber(contactNumber);
       //@ts-ignore
       inputRef && inputRef?.current?.setValue(contactNumber);
-      const contactTypeItem:TDropdownItem = contactDetail.find((d:TDropdownItem) => d.label == contactType) as TDropdownItem;
-      if(contactTypeItem !== undefined){
+      const contactTypeItem: TDropdownItem = contactDetail.find(
+        (d: TDropdownItem) => d.label == contactType,
+      ) as TDropdownItem;
+      if (contactTypeItem !== undefined) {
         //@ts-ignore
-        contactTypeRef && contactTypeRef?.current?.setDefaultValue(contactTypeItem);
+        contactTypeRef &&
+          contactTypeRef?.current?.setDefaultValue(contactTypeItem);
       }
     }
   }, [isEdit]);
@@ -189,25 +214,25 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({isEdit, contac
         </View>
         <Spacer height={12} />
         <View style={styles.textContainer2}>
-            <Label text={labelText} style={styles.label} required={true} />
-            <Input
-              onChangeText={handleTextInputChange}
-              containerStyle={styles.inputContainer}
-              inputStyle={styles.input}
-              selectionColor={COLOR_BLACK}
-              error={contactNumberError}
-              //@ts-ignore
-              ref={inputRef}
-              placeholder={helperText}
-              placeholderTextColor={COLOR_GRAY}
-            />
-          </View>
+          <Label text={labelText} style={styles.label} required={true} />
+          <Input
+            onChangeText={handleTextInputChange}
+            containerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+            selectionColor={COLOR_BLACK}
+            error={contactNumberError}
+            //@ts-ignore
+            ref={inputRef}
+            placeholder={helperText}
+            placeholderTextColor={COLOR_GRAY}
+          />
+        </View>
         <Spacer height={12} />
         <View style={styles.textContainer2}>
           <Label text="Applicable For" style={styles.label} />
         </View>
         <View style={styles.applicableWrapper}>
-          {_getSubmodules().map((item:ISubmodule, index: number) => {
+          {_getSubmodules().map((item: ISubmodule, index: number) => {
             return (
               <View style={styles.checkboxItem} key={`${index}`}>
                 <BouncyCheckbox
@@ -232,7 +257,7 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({isEdit, contac
         </View>
         <Spacer height={20} />
         <Button
-          text={isEdit ? "UPDATE" : "SAVE"}
+          text={isEdit ? 'UPDATE' : 'SAVE'}
           onPress={handleSave}
           disabled={false}
           style={styles.previewButtonStyle}

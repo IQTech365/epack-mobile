@@ -1,9 +1,9 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import {View} from 'react-native';
 import styles from './style';
 import CollapsibleView from '../../../../../../../common/CollapsibleView';
 import Label from '../../../../../../../common/Label';
-import Input from '../../../../../../../common/Input';
+import Input, {InputMethods} from '../../../../../../../common/Input';
 import Spacer from '../../../../../../../common/Spacer';
 import DropdownComponent from '../../../../../../../common/DropdownComponent';
 import DatePickerComponent from '../../../../../../../common/DatePickerComponent';
@@ -11,8 +11,8 @@ import {COLOR_BLACK} from '../../../../../../../utils/colors';
 import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
 import {TDropdownItem} from '../../../../../../../type/TDropdownItem';
 import {formatDate4} from '../../../../../../../utils/formatter';
-import { useAppSelector } from '../../../../../../../redux/hooks';
-import { IVehicleSize } from '../../../../../../../interface/vehicle/IGetVehicleSizeResponse';
+import {useAppSelector} from '../../../../../../../redux/hooks';
+import {IVehicleSize} from '../../../../../../../interface/vehicle/IGetVehicleSizeResponse';
 
 const VehicleDetails: React.FC<{}> = ({}) => {
   const {
@@ -31,20 +31,39 @@ const VehicleDetails: React.FC<{}> = ({}) => {
     setTransitDays,
     setExpectedDateOfDelivery,
   } = useBiltyFormContextHook();
-  
-  const {vehicleSizeData} = useAppSelector(state => state.Vehicle);
+
+  const {
+    Vehicle: {vehicleSizeData},
+    Order: {order},
+  } = useAppSelector(state => state);
+
+  const fromCityInputRef = useRef<InputMethods>(null);
+  const toCityInputRef = useRef<InputMethods>(null);
+
+  const {data: orderData} = order || {};
 
   const _getVehicleSizes = () => {
-    let vehicleSizes:TDropdownItem[] = [];
+    let vehicleSizes: TDropdownItem[] = [];
     const {data} = vehicleSizeData || {};
-    if(data && Array.isArray(data) && data.length > 0) {
-      vehicleSizes = data.map((d:IVehicleSize) => {
-        const item:TDropdownItem = {label: d.vehicleSize, value: d.vehicleSize};
+    if (data && Array.isArray(data) && data.length > 0) {
+      vehicleSizes = data.map((d: IVehicleSize) => {
+        const item: TDropdownItem = {
+          label: d.vehicleSize,
+          value: d.vehicleSize,
+        };
         return item;
       });
     }
     return vehicleSizes;
-  }
+  };
+
+  console.log(orderData?.pickupAddress?.city, 'orderData?.pickupAddress?.city');
+
+  useEffect(() => {
+    // get pickupaddress and dropaddress from order
+    fromCityInputRef.current?.setValue(orderData[0]?.pickupAddress?.city);
+    toCityInputRef.current?.setValue(orderData[0]?.dropAddress?.city);
+  }, []);
 
   return (
     <CollapsibleView title="VEHICLE DETAILS" collapsed={true}>
@@ -88,6 +107,7 @@ const VehicleDetails: React.FC<{}> = ({}) => {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
+              ref={fromCityInputRef}
             />
           </View>
           <View style={styles.itemContainer}>
@@ -97,6 +117,7 @@ const VehicleDetails: React.FC<{}> = ({}) => {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
+              ref={toCityInputRef}
             />
           </View>
         </View>

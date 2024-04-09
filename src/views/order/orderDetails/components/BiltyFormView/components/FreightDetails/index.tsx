@@ -40,6 +40,7 @@ const FreightDetails: React.FC<{}> = ({}) => {
 
   const calculateMaterialTotalAmount = () => {
     const {
+      freight_charge,
       pickup_charge_amount,
       packing_charge_amount,
       door_delivery_charge_amount,
@@ -49,6 +50,10 @@ const FreightDetails: React.FC<{}> = ({}) => {
       unloading_charge_amount,
     } = state;
     let totalAmount = 0;
+
+    if (freight_charge) {
+      totalAmount += parseInt(freight_charge);
+    }
     if (pickup_charge_amount) {
       totalAmount += parseInt(pickup_charge_amount);
     }
@@ -106,7 +111,9 @@ const FreightDetails: React.FC<{}> = ({}) => {
             onChangeText={setFreightCharge}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
+            value={state.freight_charge}
             selectionColor={COLOR_BLACK}
+            inputType="numeric"
           />
         </View>
         <Spacer height={4} />
@@ -297,6 +304,7 @@ const FreightDetails: React.FC<{}> = ({}) => {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
+              inputType="numeric"
             />
           </View>
           <View style={styles.itemContainer}>

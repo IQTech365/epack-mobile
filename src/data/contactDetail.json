@@ -1,14 +1,18 @@
 [
     {
-        "label": "EMAIL" ,
+        "label": "EMAIL",
         "value": "1"
     },
     {
-        "label": "LANDLINE" ,
+        "label": "LANDLINE",
         "value": "2"
     },
     {
-        "label": "MOBILE" ,
+        "label": "MOBILE",
+        "value": "3"
+    },
+    {
+        "label": "TOLL-FREE NUMBER",
         "value": "3"
     }
 ]

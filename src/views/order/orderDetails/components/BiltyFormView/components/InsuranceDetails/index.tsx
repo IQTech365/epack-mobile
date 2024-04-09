@@ -28,9 +28,8 @@ const InsuranceDetails: React.FC<{}> = ({}) => {
         <View style={styles.elementContainer}>
           <BouncyCheckboxGroup
             data={insuranceOptions}
-            onChange={(selectedItem: ICheckboxButton) => {
-              
-            }}
+            isChecked={state.insurance}
+            onChange={(selectedItem: ICheckboxButton) => {}}
           />
         </View>
         <Spacer height={4} />

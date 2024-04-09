@@ -14,13 +14,17 @@ import Input from '../../../../../common/Input';
 import storageDurationOptions from '../../../../../data/storageDurationOptions.json';
 import DatePickerComponent from '../../../../../common/DatePickerComponent';
 import {formatDate4} from '../../../../../utils/formatter';
-import { IQuotationFreight, ISingleQuotationData, IStorage } from '../../../../../interface/quotation/IGetSingleQuotationResponse';
-import { IGetQuotationData } from '../../../../../interface/quotation/IGetQuotationsResponse';
+import {
+  IQuotationFreight,
+  ISingleQuotationData,
+  IStorage,
+} from '../../../../../interface/quotation/IGetSingleQuotationResponse';
+import {IGetQuotationData} from '../../../../../interface/quotation/IGetQuotationsResponse';
 import _ from 'underscore';
 interface Props {
-  isEdit?:boolean;
-  item?:IGetQuotationData;
-  quotationData?:ISingleQuotationData;
+  isEdit?: boolean;
+  item?: IGetQuotationData;
+  quotationData?: ISingleQuotationData;
 }
 
 const StorageChargesView: React.FC<Props> = ({isEdit, item, quotationData}) => {
@@ -38,44 +42,64 @@ const StorageChargesView: React.FC<Props> = ({isEdit, item, quotationData}) => {
   const amountInputCompRef = useRef(null);
 
   useEffect(() => {
-    if(isEdit && quotationData) {
-        const quotationfreight:IQuotationFreight = quotationData.quotationfreights;
-        if(_.isObject(quotationfreight)) {
-          const storageCharge:IStorage = quotationfreight.storageCharges;
-          if(_.isObject(storageCharge)) {
-            setStorage(storageCharge?.isRequired);
-          } else if(_.isNull(storageCharge)) {
-            setStorage(options2[1]);
-          }
+    if (isEdit && quotationData) {
+      const quotationfreight: IQuotationFreight =
+        quotationData.quotationfreights;
+      if (_.isObject(quotationfreight)) {
+        const storageCharge: IStorage = quotationfreight.storageCharges;
+        if (_.isObject(storageCharge)) {
+          setStorage(storageCharge?.isRequired);
+        } else if (_.isNull(storageCharge)) {
+          setStorage(options2[1]);
         }
+      }
     }
   }, [isEdit, quotationData]);
 
   useEffect(() => {
-    if(isEdit && quotationData) {
-      if(state.storage == options2[0]) {
-        const quotationfreight:IQuotationFreight = quotationData.quotationfreights;
-        if(_.isObject(quotationfreight)) {
-          const storageCharge:IStorage = quotationfreight.storageCharges;
-          if(_.isObject(storageCharge)) {
-            const storageDurationItem:TDropdownItem = storageDurationOptions.find((d:TDropdownItem) => d.label == storageCharge?.storageChargesType) as TDropdownItem;
-            if(storageDurationItem) {
+    if (isEdit && quotationData) {
+      if (state.storage == options2[0]) {
+        const quotationfreight: IQuotationFreight =
+          quotationData.quotationfreights;
+        if (_.isObject(quotationfreight)) {
+          const storageCharge: IStorage = quotationfreight.storageCharges;
+          if (_.isObject(storageCharge)) {
+            const storageDurationItem: TDropdownItem =
+              storageDurationOptions.find(
+                (d: TDropdownItem) =>
+                  d.label == storageCharge?.storageChargesType,
+              ) as TDropdownItem;
+            if (storageDurationItem) {
               setStorageDuration(storageDurationItem?.label);
               //@ts-ignore
-              storageDurationDropdownCompRef && storageDurationDropdownCompRef?.current?.setDefaultValue(storageDurationItem);
+              storageDurationDropdownCompRef &&
+                storageDurationDropdownCompRef?.current?.setDefaultValue(
+                  storageDurationItem,
+                );
             }
             setStorageAmount(storageCharge?.amount);
-            if(storageCharge.storageChargesType == storageDurationOptions[2].label) {
+            if (
+              storageCharge.storageChargesType ==
+              storageDurationOptions[2].label
+            ) {
               //@ts-ignore
-              fromDateDropdownCompRef && fromDateDropdownCompRef?.current?.setDefaultValue(new Date(storageCharge?.fromDate));
-              setStorageFromDate(formatDate4(new Date(storageCharge?.fromDate)));
+              fromDateDropdownCompRef &&
+                fromDateDropdownCompRef?.current?.setDefaultValue(
+                  new Date(storageCharge?.fromDate),
+                );
+              setStorageFromDate(
+                formatDate4(new Date(storageCharge?.fromDate)),
+              );
               //@ts-ignore
-              toDateDropdownCompRef && toDateDropdownCompRef?.current?.setDefaultValue(new Date(storageCharge?.toDate));
+              toDateDropdownCompRef &&
+                toDateDropdownCompRef?.current?.setDefaultValue(
+                  new Date(storageCharge?.toDate),
+                );
               setStorageToDate(formatDate4(new Date(storageCharge?.toDate)));
             }
           }
         }
-      } else if(state.storage == options2[1]) {
+      } else if (state.storage == options2[1]) {
         setStorageDuration('');
         setStorageAmount('');
         setStorageFromDate('');
@@ -165,7 +189,9 @@ const StorageChargesView: React.FC<Props> = ({isEdit, item, quotationData}) => {
               />
             </View>
           </>
-        ) : <></>}
+        ) : (
+          <></>
+        )}
       </View>
     </CollapsibleView>
   );

@@ -12,16 +12,16 @@ import MinusIcon from '../../../../../../../images/icons/minus_red.svg';
 import OtherChargeListItem from './OtherChargeListItem';
 import {IOtherCharge} from '../../../../quotationReducer2';
 import {Shadow} from 'react-native-shadow-2';
-import { particularOptions } from '../utils';
-import { ToastType, showToast } from '../../../../../../../utils/utility';
+import {particularOptions} from '../utils';
+import {ToastType, showToast} from '../../../../../../../utils/utility';
 import * as SQuotation from '../../../../../../../interface/quotation/IGetSingleQuotationResponse';
 import DropdownWithTextInput from '../../../../../../../common/DropdownWithTextInput';
-import { IGetQuotationData, } from '../../../../../../../interface/quotation/IGetQuotationsResponse';
+import {IGetQuotationData} from '../../../../../../../interface/quotation/IGetQuotationsResponse';
 
 interface Props {
-  isEdit?:boolean;
-  item?:IGetQuotationData;
-  quotationData?:SQuotation.ISingleQuotationData;
+  isEdit?: boolean;
+  item?: IGetQuotationData;
+  quotationData?: SQuotation.ISingleQuotationData;
 }
 
 const OtherChargeView: React.FC<Props> = ({isEdit, item, quotationData}) => {
@@ -34,50 +34,60 @@ const OtherChargeView: React.FC<Props> = ({isEdit, item, quotationData}) => {
   const fullLoadRatePerItemInputCompRef = useRef(null);
   const fullLoadAmountInputCompRef = useRef(null);
 
-  const [particularName, setParticularName] = useState<string>(particularOptions[0]);
+  const [particularName, setParticularName] = useState<string>(
+    particularOptions[0],
+  );
   const [quantity, setQuantity] = useState<string>('');
   const [partLoadRatePerItem, setPartLoadRatePerItem] = useState<string>('');
   const [partLoadAmount, setPartLoadAmount] = useState<string>('');
   const [fullLoadRatePerItem, setFullLoadRatePerItem] = useState<string>('');
   const [fullLoadAmount, setFullLoadAmount] = useState<string>('');
   const [items, setItems] = useState<IOtherCharge[]>([]);
-  const [isPartLoadAmountEditable, setIsPartLoadAmountEditable] = useState<boolean>(true);
-  const [isFullLoadAmountEditable, setIsFullLoadAmountEditable] = useState<boolean>(true);
+  const [isPartLoadAmountEditable, setIsPartLoadAmountEditable] =
+    useState<boolean>(true);
+  const [isFullLoadAmountEditable, setIsFullLoadAmountEditable] =
+    useState<boolean>(true);
 
   const _calculatePartLoadAmount = () => {
-    let amount:string = '0';
-    if(quantity && partLoadRatePerItem) {
+    let amount: string = '0';
+    if (quantity && partLoadRatePerItem) {
       amount = (parseInt(quantity) * parseInt(partLoadRatePerItem)).toString();
     } else {
       amount = partLoadAmount;
     }
     return amount;
-  }
+  };
 
   const _calculateFullLoadAmount = () => {
-    let amount:string = '0';
-    if(quantity && fullLoadRatePerItem) {
+    let amount: string = '0';
+    if (quantity && fullLoadRatePerItem) {
       amount = (parseInt(quantity) * parseInt(fullLoadRatePerItem)).toString();
     } else {
       amount = fullLoadAmount;
     }
     return amount;
-  }
+  };
 
   const handleAddItem = () => {
-    if(!particularName) {
-      return showToast('Please Select or Enter particular name', ToastType.ERROR);
-    } else if(state.freight_part_load && state.freight_full_load) {
-      if(!_calculatePartLoadAmount() && !_calculateFullLoadAmount()) {
-        return showToast('Please enter Part & Full Load amount', ToastType.ERROR);
-      } else if(!_calculatePartLoadAmount()) {
+    if (!particularName) {
+      return showToast(
+        'Please Select or Enter particular name',
+        ToastType.ERROR,
+      );
+    } else if (state.freight_part_load && state.freight_full_load) {
+      if (!_calculatePartLoadAmount() && !_calculateFullLoadAmount()) {
+        return showToast(
+          'Please enter Part & Full Load amount',
+          ToastType.ERROR,
+        );
+      } else if (!_calculatePartLoadAmount()) {
         return showToast('Please enter Full Load amount', ToastType.ERROR);
-      } else if(!_calculateFullLoadAmount()) {
+      } else if (!_calculateFullLoadAmount()) {
         return showToast('Please enter Full Load amount', ToastType.ERROR);
       }
-    } else if(state.freight_part_load && !_calculatePartLoadAmount()) {
+    } else if (state.freight_part_load && !_calculatePartLoadAmount()) {
       return showToast('Please enter Part Load amount', ToastType.ERROR);
-    } else if(state.freight_full_load && !_calculateFullLoadAmount()) {
+    } else if (state.freight_full_load && !_calculateFullLoadAmount()) {
       return showToast('Please enter Full Load amount', ToastType.ERROR);
     }
     const item: IOtherCharge = {
@@ -99,7 +109,11 @@ const OtherChargeView: React.FC<Props> = ({isEdit, item, quotationData}) => {
     const copy = [...items];
     copy.splice(index, 1);
     setItems(copy);
+    setOtherCharges(copy);
+    console.log(copy, 'copyyyyyyy');
   };
+
+  // console.log(handleDeleteItem());
 
   const resetInputs = () => {
     if (particularsInputCompRef) {
@@ -135,23 +149,25 @@ const OtherChargeView: React.FC<Props> = ({isEdit, item, quotationData}) => {
   };
 
   useEffect(() => {
-    if(!partLoadRatePerItem && state.freight_part_load && shouldAdd) {
-        //@ts-ignore
-        partLoadAmountInputCompRef && partLoadAmountInputCompRef?.current.reset('');
-        setIsPartLoadAmountEditable(true);
-        setPartLoadAmount('');
-    } else if(partLoadRatePerItem && state.freight_part_load && shouldAdd) {
+    if (!partLoadRatePerItem && state.freight_part_load && shouldAdd) {
+      //@ts-ignore
+      partLoadAmountInputCompRef &&
+        partLoadAmountInputCompRef?.current.reset('');
+      setIsPartLoadAmountEditable(true);
+      setPartLoadAmount('');
+    } else if (partLoadRatePerItem && state.freight_part_load && shouldAdd) {
       setIsPartLoadAmountEditable(false);
     }
   }, [partLoadRatePerItem]);
 
   useEffect(() => {
-    if(!fullLoadRatePerItem && state.freight_full_load && shouldAdd) {
-        //@ts-ignore
-        fullLoadAmountInputCompRef && fullLoadAmountInputCompRef?.current.reset('');
-        setIsFullLoadAmountEditable(true);
-        setFullLoadAmount('');
-    } else if(fullLoadRatePerItem && state.freight_full_load && shouldAdd) {
+    if (!fullLoadRatePerItem && state.freight_full_load && shouldAdd) {
+      //@ts-ignore
+      fullLoadAmountInputCompRef &&
+        fullLoadAmountInputCompRef?.current.reset('');
+      setIsFullLoadAmountEditable(true);
+      setFullLoadAmount('');
+    } else if (fullLoadRatePerItem && state.freight_full_load && shouldAdd) {
       setIsFullLoadAmountEditable(false);
     }
   }, [fullLoadRatePerItem]);
@@ -170,7 +186,7 @@ const OtherChargeView: React.FC<Props> = ({isEdit, item, quotationData}) => {
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 value={partLoadRatePerItem}
-                placeholder='Enter rate'
+                placeholder="Enter rate"
                 //@ts-ignore
                 ref={partLoadRatePerItemInputCompRef}
                 inputType="numeric"
@@ -184,7 +200,7 @@ const OtherChargeView: React.FC<Props> = ({isEdit, item, quotationData}) => {
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 value={_calculatePartLoadAmount()}
-                placeholder='Enter amount'
+                placeholder="Enter amount"
                 //@ts-ignore
                 ref={partLoadAmountInputCompRef}
                 inputType="numeric"
@@ -212,7 +228,7 @@ const OtherChargeView: React.FC<Props> = ({isEdit, item, quotationData}) => {
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 value={fullLoadRatePerItem}
-                placeholder='Enter rate'
+                placeholder="Enter rate"
                 //@ts-ignore
                 ref={fullLoadRatePerItemInputCompRef}
                 inputType="numeric"
@@ -226,7 +242,7 @@ const OtherChargeView: React.FC<Props> = ({isEdit, item, quotationData}) => {
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 value={_calculateFullLoadAmount()}
-                placeholder='Enter amount'
+                placeholder="Enter amount"
                 //@ts-ignore
                 ref={fullLoadAmountInputCompRef}
                 inputType="numeric"
@@ -245,27 +261,31 @@ const OtherChargeView: React.FC<Props> = ({isEdit, item, quotationData}) => {
   };
 
   useEffect(() => {
-    if(isEdit && quotationData) {
-        const quotationfreight:SQuotation.IQuotationFreight = quotationData.quotationfreights;
-        if(quotationfreight) {
-          const otherCharges:SQuotation.IOtherCharge[] = quotationfreight.otherCharges;
-          if(otherCharges && otherCharges.length > 0) {
-            let localOtherCharges:IOtherCharge[] = otherCharges?.map((d: SQuotation.IOtherCharge) => {
-              const item:IOtherCharge = {
+    if (isEdit && quotationData) {
+      const quotationfreight: SQuotation.IQuotationFreight =
+        quotationData.quotationfreights;
+      if (quotationfreight) {
+        const otherCharges: SQuotation.IOtherCharge[] =
+          quotationfreight.otherCharges;
+        if (otherCharges && otherCharges.length > 0) {
+          let localOtherCharges: IOtherCharge[] = otherCharges?.map(
+            (d: SQuotation.IOtherCharge) => {
+              const item: IOtherCharge = {
                 particular_name: d.jobType,
                 quantity: d.qty,
                 part_load_rate_per_item: d.partLoad.ratePerItem,
                 part_load_amount: d.partLoad.amount,
                 full_load_rate_per_item: d.fullLoad.ratePerItem,
                 full_load_amount: d.fullLoad.amount,
-              }
+              };
               return item;
-            });
-            setOtherCharges(localOtherCharges);
-            setItems(localOtherCharges);
-            setShouldAdd(true);
-          }
+            },
+          );
+          setOtherCharges(localOtherCharges);
+          setItems(localOtherCharges);
+          setShouldAdd(true);
         }
+      }
     }
   }, [isEdit, quotationData]);
 

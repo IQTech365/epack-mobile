@@ -17,19 +17,20 @@ const BasicDetails: React.FC<{}> = ({}) => {
   const switchWrapperStyle = switchState
     ? styles.switchMainWrapper
     : styles.switchMainWrapper2;
-  const {state, setBiltyLrCrNo, setDateOfBiltyLrCrNo} =  useBiltyFormContextHook();
-  const serialNo:number = useSerialNoHook();
+  const {state, setBiltyLrCrNo, setDateOfBiltyLrCrNo} =
+    useBiltyFormContextHook();
+  const serialNo: number = useSerialNoHook();
   const biltyNoInputCompRef = useRef(null);
 
   useEffect(() => {
-    if(serialNo){
+    if (serialNo) {
       setBiltyLrCrNo(serialNo.toString());
     }
   }, [serialNo]);
 
   useEffect(() => {
-    if(switchState) {
-      if(serialNo){
+    if (switchState) {
+      if (serialNo) {
         setBiltyLrCrNo(serialNo.toString());
       }
       //@ts-ignore
@@ -39,7 +40,7 @@ const BasicDetails: React.FC<{}> = ({}) => {
       //@ts-ignore
       biltyNoInputCompRef && biltyNoInputCompRef?.current?.setValue('');
     }
-}, [switchState]);
+  }, [switchState]);
 
   return (
     <CollapsibleView title="BASIC DETAILS" collapsed={false}>
@@ -70,7 +71,7 @@ const BasicDetails: React.FC<{}> = ({}) => {
               selectionColor={COLOR_BLACK}
               editable={!switchState}
               value={state.bilty_lr_cr_no}
-              placeholder='Bilty / LR / CN No.'
+              placeholder="Bilty / LR / CN No."
               //@ts-ignore
               ref={biltyNoInputCompRef}
             />

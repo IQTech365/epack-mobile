@@ -282,7 +282,13 @@ export interface IState {
 
 export interface IAction {
   type: ACTION;
-  payload: string | boolean | IOtherCharge[] | ISingleQuotationData | ISingleEnquiryData | null;
+  payload:
+    | string
+    | boolean
+    | IOtherCharge[]
+    | ISingleQuotationData
+    | ISingleEnquiryData
+    | null;
 }
 
 export const initialState: IState = {
@@ -303,7 +309,7 @@ export const initialState: IState = {
   party_mobile_no: '',
   // **** Billing Company ****
   company_name: '',
-  approval_authority: '',
+  approval_authority: 'HR Manager',
   authority_person_name: '',
   authority_mobile_no: '',
   company_gst: '',
@@ -366,7 +372,7 @@ export const initialState: IState = {
   // **** GST in Quotation
   gst_in_quotation: gstInQuotationOptions[3],
   gst_percent: '',
-  gst_type: '',
+  gst_type: 'CGST/SGST',
   // **** Transit Insurance ****
   transit_insurance: options2[1],
   transit_shifting_luggage: '',
@@ -376,7 +382,7 @@ export const initialState: IState = {
   transit_goods_value: '',
   // **** Storage Charge ****
   storage: options2[1],
-  storage_duration: '',
+  storage_duration: 'Per Day Charges',
   storage_from_date: '',
   storage_to_date: '',
   storage_amount: '',
