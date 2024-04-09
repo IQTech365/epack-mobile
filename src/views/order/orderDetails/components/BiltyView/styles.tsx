@@ -98,6 +98,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'flex-start',
     alignSelf: 'center',
+    paddingHorizontal: 10
   },
   downloadDisabledButton: {
     alignSelf: 'center',

@@ -36,6 +36,7 @@ import ActionHeaderView from '../../../../../common/ActionHeaderView';
 import useUtilityHook from '../../../../../hooks/useUtilityHook';
 import AlertModal from '../../../../../common/AlertModal';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
+import { ScrollView } from 'react-native-gesture-handler';
 
 interface IBiltyViewProps {
   orderId: string;
@@ -97,6 +98,8 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
     // setShouldDownload(false);
     bottomSheetRef.current?.close();
   };
+
+  
 
   const _getBiltyData = () => {
     const {data} = biltyList || {};
@@ -246,7 +249,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
             ListEmptyComponent={showEmptyView()}
           />
           <FormModal ref={bottomSheetRef} onClose={dismissModal}>
-            <>
+            <ScrollView>
               <View style={styles.checkboxContainer}>
                 {downloadOptions.map((option, index) => {
                   return (
@@ -282,7 +285,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
                 disabled={downloadOption == ''}>
                 <Text style={styles.downloadText}>Preview</Text>
               </TouchableOpacity>
-            </>
+            </ScrollView>
           </FormModal>
           <ModalHOC
             visible={showModal}

@@ -2,6 +2,7 @@ import React from "react";
 import {View, Modal, StyleSheet, Dimensions, Text, Pressable} from 'react-native';
 import LimitReachImage from '../../images/icons/limit_reach.svg';
 import CloseIcon from '../../images/icons/close_icon.svg';
+import { COLOR_GRAY } from "../../utils/colors";
 
 interface IProps {
     visible:boolean;
@@ -90,6 +91,7 @@ const styles = StyleSheet.create({
       textAlign: 'center',
       fontFamily: 'WorkSans-Medium',
       fontSize: 16,
+      color: COLOR_GRAY,
     },
     headerContainer: {
       width: '100%',
