@@ -36,7 +36,7 @@ import ActionHeaderView from '../../../../../common/ActionHeaderView';
 import useUtilityHook from '../../../../../hooks/useUtilityHook';
 import AlertModal from '../../../../../common/AlertModal';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import { ScrollView } from 'react-native-gesture-handler';
+import {ScrollView} from 'react-native-gesture-handler';
 
 interface IBiltyViewProps {
   orderId: string;
@@ -53,6 +53,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
     getBiltyHtmlSuccess,
     getBiltyHtmlFailure,
   } = useAppSelector(state => state.Order);
+  // console.log(JSON.stringify(biltyList));
 
   const [showBiltyList, setShowBiltyList] = useState<boolean>(false);
   const [createNewBilty, setCreateNewBilty] = useState<boolean>(true);
@@ -70,6 +71,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
 
   const getTotalBilty = () => {
     const {data} = biltyList || {};
+
     let _count = 0;
     if (data && Array.isArray(data) && data.length > 0) {
       _count = data.length;
@@ -98,8 +100,6 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
     // setShouldDownload(false);
     bottomSheetRef.current?.close();
   };
-
-  
 
   const _getBiltyData = () => {
     const {data} = biltyList || {};

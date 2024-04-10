@@ -61,8 +61,10 @@ const VehicleDetails: React.FC<{}> = ({}) => {
 
   useEffect(() => {
     // get pickupaddress and dropaddress from order
-    fromCityInputRef && fromCityInputRef.current?.setValue(orderData[0]?.pickupAddress?.city);
-    toCityInputRef && toCityInputRef.current?.setValue(orderData[0]?.dropAddress?.city);
+    fromCityInputRef &&
+      fromCityInputRef.current?.setValue(orderData[0]?.pickupAddress?.city);
+    toCityInputRef &&
+      toCityInputRef.current?.setValue(orderData[0]?.dropAddress?.city);
   }, []);
 
   return (
@@ -75,6 +77,7 @@ const VehicleDetails: React.FC<{}> = ({}) => {
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
+            autoCapitalize="characters"
           />
         </View>
         <Spacer height={4} />
@@ -95,6 +98,7 @@ const VehicleDetails: React.FC<{}> = ({}) => {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
+              autoCapitalize="characters"
             />
           </View>
         </View>
@@ -150,6 +154,7 @@ const VehicleDetails: React.FC<{}> = ({}) => {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
+              autoCapitalize="characters"
             />
           </View>
         </View>
@@ -161,6 +166,7 @@ const VehicleDetails: React.FC<{}> = ({}) => {
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
+            autoCapitalize="characters"
           />
         </View>
         <Spacer height={4} />

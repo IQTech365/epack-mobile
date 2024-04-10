@@ -1,7 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../../../common/Spacer';
@@ -25,15 +22,21 @@ import DemurageDetails from './components/DemurrageDetails';
 import {useBiltyFormContextHook} from '../../../../../provider/BiltyFormContextProvider';
 import useAuthId from '../../../../../hooks/useAuthId';
 import {IMaterial} from './biltyReducer2';
-import { getVehicleSizeRequest } from '../../../../../redux/slices/VehicleSlice';
+import {getVehicleSizeRequest} from '../../../../../redux/slices/VehicleSlice';
 import Spinner from '../../../../../common/Spinner';
-import { getUnitTypeRequest } from '../../../../../redux/slices/ProfileSettingSlice';
-import { getPackingTypesRequest } from '../../../../../redux/slices/CommonSlice';
-import { ToastType, showToast } from '../../../../../utils/utility';
-import { getCurrentCompanyId } from '../../../../../utils/storage';
+import {getUnitTypeRequest} from '../../../../../redux/slices/ProfileSettingSlice';
+import {getPackingTypesRequest} from '../../../../../redux/slices/CommonSlice';
+import {ToastType, showToast} from '../../../../../utils/utility';
+import {getCurrentCompanyId} from '../../../../../utils/storage';
 import useInitialValueHook from '../../../../../hooks/useInitialValueHook';
-import { DOCUMENT_TYPE, IGetSerialNoRequest } from '../../../../../interface/setting/serialNo/serialNo';
-import { getSerialNoRequest, resetGetSerialNoRequest } from '../../../../../redux/slices/SerialNoSettingSlice';
+import {
+  DOCUMENT_TYPE,
+  IGetSerialNoRequest,
+} from '../../../../../interface/setting/serialNo/serialNo';
+import {
+  getSerialNoRequest,
+  resetGetSerialNoRequest,
+} from '../../../../../redux/slices/SerialNoSettingSlice';
 
 interface IBiltyFormViewProps {
   orderId: string | undefined;
@@ -42,6 +45,8 @@ interface IBiltyFormViewProps {
 
 const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess}) => {
   const {state} = useBiltyFormContextHook();
+  console.log(state, 'lalitvatssssssssa');
+
   const dispatch = useAppDispatch();
 
   const {
@@ -51,190 +56,194 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess}) => {
     createBiltyFailure,
   } = useAppSelector(state => state.Order);
 
-  
   const authId = useAuthId();
 
-  const {initialValue, prefix} = useInitialValueHook('658d3cb5585e3dde644da97e');
+  const {initialValue, prefix} = useInitialValueHook(
+    '658d3cb5585e3dde644da97e',
+  );
 
   const _getSerialNoRequest = () => {
-    getCurrentCompanyId().then(id => {
-      const payload: IGetSerialNoRequest = {
-        document: DOCUMENT_TYPE.BILTY,
-        payload: {
-          activeCount: initialValue,
-          companyId: id as string,
-          isAuto: true,
-          isHeadOffice: true,
-        }
-      }
-      dispatch(getSerialNoRequest(payload));
-    }).catch(err => console.log('err--', err));
-  }
+    getCurrentCompanyId()
+      .then(id => {
+        const payload: IGetSerialNoRequest = {
+          document: DOCUMENT_TYPE.BILTY,
+          payload: {
+            activeCount: initialValue,
+            companyId: id as string,
+            isAuto: true,
+            isHeadOffice: true,
+          },
+        };
+        dispatch(getSerialNoRequest(payload));
+      })
+      .catch(err => console.log('err--', err));
+  };
 
   const handleCreateBilty = useCallback(() => {
-    getCurrentCompanyId().then(id => {
-      const payload: ICreateBiltyRequest = {
-        companyId: id as string,
-        enquiryId: orderId as string,
-        isAuto: true,
-        isHeadOffice: true,
-        biltyNumber: state.bilty_lr_cr_no,
-        biltyDate: state.date_of_bilty_lr_cr_no,
-        consigner: {
-          name: state.consigner_name,
-          mobile: state.consigner_mobile_no,
-          gstin: state.consigner_gst,
-          street: '',
-          state: state.consigner_state,
-          landmark: '',
-          city: state.consigner_city,
-          district: '',
-          postOffice: '',
-          postalCode: state.consinger_pincode,
-          country: 'India',
-        },
-        consignee: {
-          name: state.consignee_name,
-          mobile: state.consignee_mobile_no,
-          gstin: state.consignee_gst,
-          street: '',
-          state: state.consigner_state,
-          landmark: '',
-          city: state.consigner_city,
-          district: '',
-          postOffice: '',
-          postalCode: state.consignee_pincode,
-          country: 'India',
-        },
-  
-        loadingAddress: {
-          address: state.loading_address_same_as_consigner
-            ? ''
-            : state.loading_address,
-          state: state.loading_address_same_as_consigner
-            ? state.consigner_state
-            : state.loading_state,
-          landmark: '',
-          city: state.loading_address_same_as_consigner
-            ? state.consigner_city
-            : state.loading_city,
-          district: '',
-          postOffice: '',
-          postalCode: state.loading_address_same_as_consigner
-            ? state.consinger_pincode
-            : state.loading_pincode,
-          country: 'India',
-        },
-        unloadingAddress: {
-          address: '',
-          state: state.delivery_address_same_as_consignee
-            ? state.consignee_state
-            : state.delivery_state,
-          landmark: '',
-          city: state.delivery_address_same_as_consignee
-            ? state.consignee_city
-            : state.delivery_city,
-          district: '',
-          postOffice: '',
-          postalCode: state.delivery_address_same_as_consignee
-            ? state.consignee_pincode
-            : state.delivery_pincode,
-          country: 'India',
-        },
-  
-        vehicle: {
-          invoiceNumber: state.invoice_no,
-          vehicleType: state.vehicle_type,
-          vehicleNumber: state.vehicle_no,
-          shiftingFrom: state.from_location,
-          shiftingTo: state.to_location,
-          sealNumber: state.seal_no,
-          inDate: state.in_date,
-          outDate: state.out_date,
-          transitDays: '',
-          expectedDateOfDelivery: '',
-        },
-        driver: {
-          name: state.driver_name,
-          mobile: state.driver_mobile_no,
-          license: state.driver_license_no,
-        },
-        eWayBill: {
-          number: state.e_way_bill_no,
-          generationDate: state.generated_on,
-          expiryDate: state.expirty_date,
-        },
-        materialsType: state.type_of_moving,
-        addMaterialsStatus: state.add_material,
-        materials: state.materials.map((m: IMaterial) => {
-          return {
-            name: m.material_name,
-            noOfArticles: m.no_of_articles,
-            packingType: m.packing_type,
-            HSNCode: m.hsn_code,
-            billNumber: m.bill_invoice_no,
-            actualWeight: m.actual_weight,
-            applicableWeight: m.applicable_weight,
-            unit: m.units,
-            valueOfGoods: m.value_of_goods,
-          };
-        }),
-        riskType: state.risk_type,
-        liabilityOfTax: '',
-        insuranceStatus: state.insurance,
-        insurance: {
-          companyName: state.insurance_company,
-          policyNumber: state.policy_number,
-          date: state.insurance_date,
-          amount: state.insurance_amount,
-        },
-        demurrage: {
-          charge: state.demurrage_charge,
-          rate: state.rate,
-          chargeAfterApplicable: state.charge_applicable_after,
-        },
-  
-        freightDetails: {
-          freightCharges: state.freight_charge,
-          billingStatus: state.freight_type,
-          totalAmount: state.total_amunt,
-          advanceAmount: state.advance_amount,
-          balanceAmount: state.balance_amount,
-        },
-        pickupCharges: {
-          status: state.pickup_charge,
-          charge: state.pickup_charge_amount,
-        },
-        packingCharges: {
-          status: state.packing_charge,
-          charge: state.packing_charge_amount,
-        },
-        unPackingCharges: {
-          status: state.unpacking_charge,
-          charge: state.unpacking_charge_amount,
-        },
-        unLoadingCharges: {
-          status: state.unloading_charge,
-          charge: state.unloading_charge_amount,
-        },
-        doorDeliveryCharges: {
-          status: state.door_delivery_charge,
-          charge: state.door_delivery_charge_amount,
-        },
-        packingMaterialCharges: {
-          status: state.packing_material_charge,
-          charge: state.packing_material_charge_amount,
-        },
-        loadingCharges: {
-          status: state.loading_charge,
-          charge: state.loading_charge_amount,
-        },
-        remarks: state.remark,
-        addedBy: authId,
-      };
-      dispatch(createBiltyRequest(payload));
-    }).catch(err => console.log(err));
-    
+    getCurrentCompanyId()
+      .then(id => {
+        const payload: ICreateBiltyRequest = {
+          companyId: id as string,
+          enquiryId: orderId as string,
+          isAuto: true,
+          isHeadOffice: true,
+          biltyNumber: state.bilty_lr_cr_no,
+          biltyDate: state.date_of_bilty_lr_cr_no,
+          consigner: {
+            name: state.consigner_name,
+            mobile: state.consigner_mobile_no,
+            gstin: state.consigner_gst,
+            street: '',
+            state: state.consigner_state,
+            landmark: '',
+            city: state.consigner_city,
+            district: '',
+            postOffice: '',
+            postalCode: state.consinger_pincode,
+            country: 'India',
+          },
+          consignee: {
+            name: state.consignee_name,
+            mobile: state.consignee_mobile_no,
+            gstin: state.consignee_gst,
+            street: '',
+            state: state.consigner_state,
+            landmark: '',
+            city: state.consigner_city,
+            district: '',
+            postOffice: '',
+            postalCode: state.consignee_pincode,
+            country: 'India',
+          },
+
+          loadingAddress: {
+            address: state.loading_address_same_as_consigner
+              ? ''
+              : state.loading_address,
+            state: state.loading_address_same_as_consigner
+              ? state.consigner_state
+              : state.loading_state,
+            landmark: '',
+            city: state.loading_address_same_as_consigner
+              ? state.consigner_city
+              : state.loading_city,
+            district: '',
+            postOffice: '',
+            postalCode: state.loading_address_same_as_consigner
+              ? state.consinger_pincode
+              : state.loading_pincode,
+            country: 'India',
+          },
+          unloadingAddress: {
+            address: '',
+            state: state.delivery_address_same_as_consignee
+              ? state.consignee_state
+              : state.delivery_state,
+            landmark: '',
+            city: state.delivery_address_same_as_consignee
+              ? state.consignee_city
+              : state.delivery_city,
+            district: '',
+            postOffice: '',
+            postalCode: state.delivery_address_same_as_consignee
+              ? state.consignee_pincode
+              : state.delivery_pincode,
+            country: 'India',
+          },
+
+          vehicle: {
+            invoiceNumber: state.invoice_no,
+            vehicleType: state.vehicle_type,
+            vehicleNumber: state.vehicle_no,
+            shiftingFrom: state.from_location,
+            shiftingTo: state.to_location,
+            sealNumber: state.seal_no,
+            inDate: state.in_date,
+            outDate: state.out_date,
+            transitDays: state.transit_days,
+            expectedDateOfDelivery: state.expected_date_of_delivery,
+          },
+          driver: {
+            name: state.driver_name,
+            mobile: state.driver_mobile_no,
+            license: state.driver_license_no,
+          },
+          eWayBill: {
+            number: state.e_way_bill_no,
+            generationDate: state.generated_on,
+            expiryDate: state.expirty_date,
+          },
+          materialsType: state.type_of_moving,
+          addMaterialsStatus: state.add_material,
+          materials: state.materials.map((m: IMaterial) => {
+            return {
+              name: m.material_name,
+              noOfArticles: m.no_of_articles,
+              packingType: m.packing_type,
+              HSNCode: m.hsn_code,
+              billNumber: m.bill_invoice_no,
+              actualWeight: m.actual_weight,
+              applicableWeight: m.applicable_weight,
+              unit: m.units,
+              valueOfGoods: m.value_of_goods,
+            };
+          }),
+          riskType: state.risk_type,
+          liabilityOfTax: state.liability_of_tax,
+          insuranceStatus: state.insurance,
+          insurance: {
+            companyName: state.insurance_company,
+            policyNumber: state.policy_number,
+            date: state.insurance_date,
+            amount: state.insurance_amount,
+          },
+          demurrage: {
+            charge: state.demurrage_charge,
+            rate: state.rate,
+            chargeAfterApplicable: state.charge_applicable_after,
+          },
+
+          freightDetails: {
+            freightCharges: state.freight_charge,
+            billingStatus: state.freight_type,
+            totalAmount: state.total_amunt,
+            advanceAmount: state.advance_amount,
+            balanceAmount: state.balance_amount,
+          },
+          pickupCharges: {
+            status: state.pickup_charge,
+            charge: state.pickup_charge_amount,
+          },
+          packingCharges: {
+            status: state.packing_charge,
+            charge: state.packing_charge_amount,
+          },
+          unPackingCharges: {
+            status: state.unpacking_charge,
+            charge: state.unpacking_charge_amount,
+          },
+          unLoadingCharges: {
+            status: state.unloading_charge,
+            charge: state.unloading_charge_amount,
+          },
+          doorDeliveryCharges: {
+            status: state.door_delivery_charge,
+            charge: state.door_delivery_charge_amount,
+          },
+          packingMaterialCharges: {
+            status: state.packing_material_charge,
+            charge: state.packing_material_charge_amount,
+          },
+          loadingCharges: {
+            status: state.loading_charge,
+            charge: state.loading_charge_amount,
+          },
+          remarks: state.remark,
+          addedBy: authId,
+        };
+        dispatch(createBiltyRequest(payload));
+      })
+      .catch(err => console.log(err));
   }, [state]);
 
   const {getVehicleSizeRequesting} = useAppSelector(state => state.Vehicle);
@@ -290,7 +299,13 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess}) => {
           textStyle={styles.textStyle}
         />
         <Spacer height={8} />
-        <Spinner show={getVehicleSizeRequesting || getunitTypeRequesting || packingTypesRequesting} />
+        <Spinner
+          show={
+            getVehicleSizeRequesting ||
+            getunitTypeRequesting ||
+            packingTypesRequesting
+          }
+        />
       </View>
     </AvoidSoftInputViewHOC>
   );

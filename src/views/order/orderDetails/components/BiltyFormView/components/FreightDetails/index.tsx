@@ -184,9 +184,7 @@ const FreightDetails: React.FC<{}> = ({}) => {
               selectionColor={COLOR_BLACK}
               inputType="numeric"
               value={state.packing_charge_amount}
-              editable={
-                state.packing_charge_amount == 'Additional from Freight'
-              }
+              editable={state.packing_charge == 'Additional from Freight'}
             />
           </View>
         </View>

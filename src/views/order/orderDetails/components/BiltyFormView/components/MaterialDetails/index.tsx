@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
 import styles from './style';
 import CollapsibleView from '../../../../../../../common/CollapsibleView';
 import Spacer from '../../../../../../../common/Spacer';
 import Label from '../../../../../../../common/Label';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import Input from '../../../../../../../common/Input';
+import Input, {InputMethods} from '../../../../../../../common/Input';
 import {COLOR_BLACK, COLOR_BLUE} from '../../../../../../../utils/colors';
 import DropdownComponent from '../../../../../../../common/DropdownComponent';
 import Button from '../../../../../../../common/Button';
@@ -23,6 +23,30 @@ import {IUnitType} from '../../../../../../../interface/setting/unitType/IGetuni
 import {IPackingType} from '../../../../../../../interface/common/common';
 
 const MaterialDetails: React.FC<{}> = ({}) => {
+  const materialInputRef = useRef<InputMethods>(null);
+  const articlesInputref = useRef<InputMethods>(null);
+  const hsnCodeInputref = useRef<InputMethods>(null);
+  const billInvoiceNoInputref = useRef<InputMethods>(null);
+  const actualWeightInputref = useRef<InputMethods>(null);
+  const applicableWeightInputref = useRef<InputMethods>(null);
+  const valueOfGoodsInputref = useRef<InputMethods>(null);
+
+  const handleClear = () => {
+    //@ts-ignore
+    materialInputRef && materialInputRef?.current.reset();
+    //@ts-ignore
+    articlesInputref && articlesInputref?.current.reset();
+    //@ts-ignore
+    hsnCodeInputref && hsnCodeInputref?.current.reset();
+    //@ts-ignore
+    billInvoiceNoInputref && billInvoiceNoInputref?.current.reset();
+    //@ts-ignore
+    actualWeightInputref && actualWeightInputref?.current.reset();
+    //@ts-ignore
+    applicableWeightInputref && applicableWeightInputref?.current.reset();
+    //@ts-ignore
+    valueOfGoodsInputref && valueOfGoodsInputref?.current.reset();
+  };
   const {
     state,
     setMaterials,
@@ -92,6 +116,7 @@ const MaterialDetails: React.FC<{}> = ({}) => {
     };
     clone.push(materil);
     setMaterials(clone);
+    handleClear();
   };
 
   const showMaterialList = () => {
@@ -238,6 +263,7 @@ const MaterialDetails: React.FC<{}> = ({}) => {
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
+                ref={materialInputRef}
               />
             </View>
             <Spacer height={4} />
@@ -249,6 +275,7 @@ const MaterialDetails: React.FC<{}> = ({}) => {
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
+                  ref={articlesInputref}
                 />
               </View>
               <View style={styles.itemContainer}>
@@ -270,6 +297,8 @@ const MaterialDetails: React.FC<{}> = ({}) => {
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
+                  autoCapitalize="characters"
+                  ref={hsnCodeInputref}
                 />
               </View>
               <View style={styles.itemContainer}>
@@ -279,6 +308,8 @@ const MaterialDetails: React.FC<{}> = ({}) => {
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
+                  autoCapitalize="characters"
+                  ref={billInvoiceNoInputref}
                 />
               </View>
             </View>
@@ -292,6 +323,7 @@ const MaterialDetails: React.FC<{}> = ({}) => {
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
                   inputType="numeric"
+                  ref={actualWeightInputref}
                 />
               </View>
               <View style={styles.itemContainer}>
@@ -302,6 +334,7 @@ const MaterialDetails: React.FC<{}> = ({}) => {
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
                   inputType="numeric"
+                  ref={applicableWeightInputref}
                 />
               </View>
             </View>
@@ -324,6 +357,7 @@ const MaterialDetails: React.FC<{}> = ({}) => {
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
                   inputType="numeric"
+                  ref={valueOfGoodsInputref}
                 />
               </View>
             </View>
