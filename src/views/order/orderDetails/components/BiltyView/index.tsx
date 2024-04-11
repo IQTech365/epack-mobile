@@ -53,7 +53,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
     getBiltyHtmlSuccess,
     getBiltyHtmlFailure,
   } = useAppSelector(state => state.Order);
-  // console.log(JSON.stringify(biltyList));
+  console.log(JSON.stringify(biltyList));
 
   const [showBiltyList, setShowBiltyList] = useState<boolean>(false);
   const [createNewBilty, setCreateNewBilty] = useState<boolean>(true);

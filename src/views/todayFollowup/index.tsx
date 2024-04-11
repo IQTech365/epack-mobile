@@ -83,13 +83,9 @@ const TodayFollowup: FC<IProps> = ({}) => {
         name = partyName;
         phone = mobile;
       } else if (billingBy === 'by Company') {
-        const {
-          employeeName,
-          employeeMobile,
-          authorityPersonName,
-          authorityPersonMobile,
-        } = billingDetails as IBillingInfo;
-        name = employeeName || authorityPersonName;
+        const {companyName, employeeMobile, authorityPersonMobile} =
+          billingDetails as IBillingInfo;
+        name = companyName;
         phone = employeeMobile || authorityPersonMobile;
       }
     }
@@ -126,7 +122,7 @@ const TodayFollowup: FC<IProps> = ({}) => {
                     <View style={[styles.contentWrapper]}>
                       <View style={styles.labelContainer}>
                         <Text style={{fontWeight: 'bold', color: COLOR_BLACK}}>
-                          Date:-
+                          Date
                         </Text>
                       </View>
                       <View style={styles.contentContainer}>
@@ -135,16 +131,25 @@ const TodayFollowup: FC<IProps> = ({}) => {
                         </Text>
                       </View>
                     </View>
-                    <View
-                      style={[styles.contentWrapper, {borderBottomWidth: 0}]}>
-                      <View style={styles.labelContainer}>
-                        <Text style={{fontWeight: 'bold', color: COLOR_BLACK}}>
-                          Last Comment:-
-                        </Text>
-                      </View>
-                      <View style={styles.contentContainer}>
-                        <Text>{item.comment}</Text>
-                      </View>
+                  </View>
+                  <View style={[styles.contentWrapper, {borderBottomWidth: 1}]}>
+                    <View style={styles.labelContainer}>
+                      <Text style={{fontWeight: 'bold', color: COLOR_BLACK}}>
+                        Phone No.
+                      </Text>
+                    </View>
+                    <View style={styles.contentContainer}>
+                      <Text>{getClientNameAndMobile(item).phone}</Text>
+                    </View>
+                  </View>
+                  <View style={[styles.contentWrapper, {borderBottomWidth: 0}]}>
+                    <View style={styles.labelContainer}>
+                      <Text style={{fontWeight: 'bold', color: COLOR_BLACK}}>
+                        Last Comment
+                      </Text>
+                    </View>
+                    <View style={styles.contentContainer}>
+                      <Text>{item.comment}</Text>
                     </View>
                   </View>
                 </View>

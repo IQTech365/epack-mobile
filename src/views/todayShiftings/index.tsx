@@ -17,7 +17,9 @@ import {Shadow} from 'react-native-shadow-2';
 import WhatsupIcon from '../../images/icons/whatsapp.svg';
 import CallIcon from '../../images/icons/phone_call2.svg';
 import {
+  COLOR_BLACK,
   COLOR_GRAY,
+  COLOR_GRAY2,
   COLOR_GRAY3,
   COLOR_GRAY4,
   COLOR_GRAY5,
@@ -32,6 +34,7 @@ const TodayShiftings: FC<IProps> = ({}) => {
   const dispatch = useAppDispatch();
 
   const {shifting} = useAppSelector(state => state.Common);
+  console.log('shifting--', JSON.stringify(shifting));
 
   const getTodaysShifting = () => {
     getCurrentCompanyId()
@@ -73,16 +76,22 @@ const TodayShiftings: FC<IProps> = ({}) => {
       name = partyName;
       phone = mobile;
     } else if (billingBy === 'by Company') {
-      const {
-        employeeName,
-        employeeMobile,
-        authorityPersonName,
-        authorityPersonMobile,
-      } = billingDetails as IBillingInfo;
-      name = employeeName || authorityPersonName;
-      phone = employeeMobile || authorityPersonMobile;
+      const {companyName, employeeMobile, authorityPersonMobile} =
+        billingDetails as IBillingInfo;
+      name = companyName;
+      phone = authorityPersonMobile || employeeMobile;
     }
     return {name, phone};
+  };
+
+  const formatAddress = (item: ITodayShifting) => {
+    let _pickupAddress = '',
+      _dropAddress = '';
+    const {pickupAddress: p, dropAddress: d} = item || {};
+    _pickupAddress = `${p.address}, ${p.city}, ${p.state}, ${p.pincode}`;
+    _dropAddress = `${d.address}, ${d.city}, ${d.state}, ${d.pincode}`;
+
+    return {_pickupAddress, _dropAddress};
   };
 
   useEffect(() => {
@@ -118,25 +127,67 @@ const TodayShiftings: FC<IProps> = ({}) => {
                   <View style={styles.commentContainer}>
                     <View style={styles.contentWrapper}>
                       <View style={styles.labelContainer}>
-                        <Text style={{fontWeight: 'bold'}}>Date:- </Text>
+                        <Text style={styles.labelText}>Date:- </Text>
                       </View>
                       <View style={styles.contentContainer}>
-                        <Text>
+                        <Text style={styles.valueText}>
                           {new Date(item.shiftingDate).toLocaleString()}
                         </Text>
                       </View>
                     </View>
                     <View
-                      style={[styles.contentWrapper, {borderBottomWidth: 0}]}>
+                      style={[styles.contentWrapper, {borderBottomWidth: 1}]}>
                       <View style={styles.labelContainer}>
                         <Text>
-                          <Text style={{fontWeight: 'bold'}}>
-                            Company ID:-{' '}
-                          </Text>
+                          <Text style={styles.labelText}>Phone No.</Text>
                         </Text>
                       </View>
                       <View style={styles.contentContainer}>
-                        <Text>{item.sn}</Text>
+                        <Text style={styles.valueText}>
+                          {getClientNameAndMobile(item).phone}
+                        </Text>
+                      </View>
+                    </View>
+                    <View
+                      style={[styles.contentWrapper, {borderBottomWidth: 1}]}>
+                      <View style={styles.labelContainer}>
+                        <Text>
+                          <Text style={styles.labelText}>Shifting Luggage</Text>
+                        </Text>
+                      </View>
+                      <View style={styles.contentContainer}>
+                        <Text style={styles.valueText}>
+                          {item.shiftingLuggage.join(', ')}
+                        </Text>
+                      </View>
+                    </View>
+                    <View
+                      style={[styles.contentWrapper, {borderBottomWidth: 1}]}>
+                      <View style={styles.labelContainer}>
+                        <Text>
+                          <Text style={styles.labelText}>Shifting From</Text>
+                        </Text>
+                      </View>
+                      <View style={styles.contentContainer}>
+                        <Text style={styles.valueText}>
+                          {formatAddress(item)._pickupAddress}
+                        </Text>
+                      </View>
+                    </View>
+                    <View
+                      style={[
+                        styles.contentWrapper,
+                        {borderBottomWidth: 0, borderBottomRightRadius: 8},
+                      ]}>
+                      <View style={styles.labelContainer}>
+                        <Text>
+                          <Text style={styles.labelText}>Shifting To</Text>
+                        </Text>
+                      </View>
+                      <View style={styles.contentContainer}>
+                        <Text style={styles.valueText}>
+                          {formatAddress(item)._dropAddress}
+                        </Text>
                       </View>
                     </View>
                   </View>
@@ -182,30 +233,39 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   cardHeading: {
+    color: COLOR_BLACK,
     fontSize: 18,
-    fontWeight: 'bold',
-    fontFamily: 'WorkSans',
+    fontFamily: 'WorkSans-Regular',
+  },
+  labelText: {
+    color: COLOR_BLACK,
+    fontSize: 16,
+    fontFamily: 'WorkSans-Regular',
+  },
+  valueText: {
+    color: COLOR_GRAY,
+    fontSize: 16,
+    fontFamily: 'WorkSans-Regular',
   },
   commentContainer: {
-    padding: 10,
     borderBottomLeftRadius: 8,
     borderBottomRightRadius: 8,
   },
   contentWrapper: {
     flexDirection: 'row',
     borderBottomWidth: 1,
-    borderBottomColor: COLOR_GRAY5,
+    borderBottomColor: COLOR_GRAY2,
   },
   labelContainer: {
     width: '50%',
     alignItems: 'flex-start',
-    backgroundColor: COLOR_GRAY6,
     paddingLeft: 10,
     paddingVertical: 10,
   },
   contentContainer: {
     width: '50%',
     alignItems: 'flex-start',
+    backgroundColor: COLOR_GRAY3,
     paddingLeft: 10,
     paddingVertical: 10,
   },

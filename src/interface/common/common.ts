@@ -385,6 +385,30 @@ export interface ITodaySurveyResponse {
   error: boolean;
 }
 
+export interface IShiftingPickupAddress {
+  shiftingFrom: string;
+  state: string;
+  city: string;
+  address: string;
+  pincode: string;
+  locality: string;
+  landmark: string;
+  floor: string;
+  isLiftAvailable: string;
+}
+
+export interface IShiftingDropAddress {
+  shiftingTo: string;
+  state: string;
+  city: string;
+  address: string;
+  pincode: string;
+  locality: string;
+  landmark: string;
+  floor: string;
+  isLiftAvailable: string;
+}
+
 export interface ITodayShifting {
   _id: string;
   alternateNumbers: string;
@@ -397,7 +421,7 @@ export interface ITodayShifting {
   customerId: string;
   deliveredDate: string;
   deliveryDate: string;
-  dropAddress: string;
+  dropAddress: IShiftingDropAddress;
   enquiryManager: string;
   enquirySource: string;
   gstNumber: string;
@@ -411,9 +435,9 @@ export interface ITodayShifting {
   orderDate: string;
   partyCompanyName: string;
   partyName: string;
-  pickupAddress: string;
+  pickupAddress: IShiftingPickupAddress;
   shiftingDate: string;
-  shiftingLuggage: string;
+  shiftingLuggage: string[];
   shiftingType: string;
   sn: string;
   status: string;
