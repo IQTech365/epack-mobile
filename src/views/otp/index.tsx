@@ -18,17 +18,20 @@ import {
 } from '../../redux/slices/OtpSlice';
 import Header from '../../common/Header';
 import {IOtpVerifyRequest} from '../../interface/otp/IOtpVerifyRequest';
+import {removeCurrentCompanyId, setAuthToken} from '../../utils/storage';
 import {
-  removeCurrentCompanyId,
-  setAuthToken,
-} from '../../utils/storage';
-import {getCompaniesRequest, resetGetCompaniesRequest} from '../../redux/slices/CompanySlice';
+  getCompaniesRequest,
+  resetGetCompaniesRequest,
+} from '../../redux/slices/CompanySlice';
 import {useAuthContext} from '../../provider/AuthProvider';
 import CompanyListModal from '../../common/CompanyListModal';
 import {ICompanyInfoData} from '../../interface/companyRegistration/IGetCompaniesResponse';
-import { ToastType, showToast } from '../../utils/utility';
-import { getPendingRegisrationRequest, resetGetPendingRegisrationRequest } from '../../redux/slices/CommonSlice';
-import { IPendingRegistration } from '../../interface/common/common';
+import {ToastType, showToast} from '../../utils/utility';
+import {
+  getPendingRegisrationRequest,
+  resetGetPendingRegisrationRequest,
+} from '../../redux/slices/CommonSlice';
+import {IPendingRegistration} from '../../interface/common/common';
 
 const OTPPageView = (props: any) => {
   const {navigation} = props;
@@ -56,7 +59,6 @@ const OTPPageView = (props: any) => {
     getPendingRegistrationSuccess,
     getPendingRegistrationFailure,
   } = useAppSelector(state => state.Common);
-
 
   const [otp1, setOtp1] = useState<string>('');
   const [otp2, setOtp2] = useState<string>('');
@@ -118,7 +120,7 @@ const OTPPageView = (props: any) => {
   const onChangeOtpText6 = (text: string) => {
     if (text.length == 1) {
       setOtp6(text);
-      if(!disabled) {
+      if (!disabled) {
         const payload: IOtpVerifyRequest = {
           _id: otpData?.data?._id as string,
           otp: `${otp1}${otp2}${otp3}${otp4}${otp5}${text}`,
@@ -136,12 +138,10 @@ const OTPPageView = (props: any) => {
     dispatch(verifyOtpRequest(payload));
   }, [otp1, otp2, otp3, otp4, otp5, otp6]);
 
-  
-
   const closeModal = async () => {
     await removeCurrentCompanyId();
     setShowCompaniesModal(false);
-    navigation.navigate("Subscription");
+    navigation.navigate('Subscription');
   };
 
   const _getCompaniesList = (): ICompanyInfoData[] => {
@@ -155,21 +155,21 @@ const OTPPageView = (props: any) => {
 
   const _doCompleteRegistration = (step: number) => {
     setShowCompaniesModal(false);
-    if(step == 2) {
-      navigation.navigate("CompanyLogo");
-    } else if(step == 3) {
-      navigation.navigate("CompanySignature");
+    if (step == 2) {
+      navigation.navigate('CompanyLogo');
+    } else if (step == 3) {
+      navigation.navigate('CompanySignature');
     }
-  }
+  };
 
   const _displayOTP = () => {
-    let otp:string = '';
+    let otp: string = '';
     const {data} = otpData || {};
-    if(data) {
+    if (data) {
       otp = data?.otp;
     }
     return otp;
-  }
+  };
 
   useEffect(() => {
     dispatch(resetGetCompaniesRequest());
@@ -180,7 +180,7 @@ const OTPPageView = (props: any) => {
       const {data} = verifiedData || {};
       if (data?.token) {
         setAuthToken(data.token);
-        dispatch(getPendingRegisrationRequest(otpData?.data?._id as string))
+        dispatch(getPendingRegisrationRequest(otpData?.data?._id as string));
       }
     } else if (!verifyOtpRequesting && verifyOtpFailure) {
       showToast('Otp verification failed. Try again!', ToastType.ERROR);
@@ -190,11 +190,16 @@ const OTPPageView = (props: any) => {
   useEffect(() => {
     if (!getPendingRegistrationRequesting && getPendingRegistrationSuccess) {
       const {data} = pendingRegistrationInfo;
-      if(data !== null) {
-        const pendingRegistrationData:IPendingRegistration = data as IPendingRegistration;
+      if (data !== null) {
+        const pendingRegistrationData: IPendingRegistration =
+          data as IPendingRegistration;
         //@ts-ignore
-        if(pendingRegistrationData.purchase && (pendingRegistrationData.purchase?.companyId == undefined || pendingRegistrationData.purchase?.companyId == null)) {
-          navigation.replace("CompanyBasicInfo");
+        if (
+          pendingRegistrationData.purchase &&
+          (pendingRegistrationData.purchase?.companyId == undefined ||
+            pendingRegistrationData.purchase?.companyId == null)
+        ) {
+          navigation.replace('CompanyBasicInfo');
           dispatch(resetGetPendingRegisrationRequest());
         } else {
           dispatch(getCompaniesRequest(otpData?.data?._id as string));
@@ -204,11 +209,21 @@ const OTPPageView = (props: any) => {
         dispatch(getCompaniesRequest(otpData?.data?._id as string));
         dispatch(resetGetPendingRegisrationRequest());
       }
-    } else if (!getPendingRegistrationRequesting && getPendingRegistrationFailure) {
+    } else if (
+      !getPendingRegistrationRequesting &&
+      getPendingRegistrationFailure
+    ) {
       dispatch(resetGetPendingRegisrationRequest());
-      showToast('Error Getting Incomplete Subscription. Try again!', ToastType.ERROR);
+      showToast(
+        'Error Getting Incomplete Subscription. Try again!',
+        ToastType.ERROR,
+      );
     }
-  }, [getPendingRegistrationRequesting, getPendingRegistrationSuccess, getPendingRegistrationFailure]);
+  }, [
+    getPendingRegistrationRequesting,
+    getPendingRegistrationSuccess,
+    getPendingRegistrationFailure,
+  ]);
 
   useEffect(() => {
     if (!getCompaniesRequesting && getCompaniesSuccess && verifyOtpSuccess) {
@@ -217,14 +232,19 @@ const OTPPageView = (props: any) => {
         setShowCompaniesModal(true);
       } else {
         setShowCompaniesModal(false);
-        navigation.replace("Subscription");
+        navigation.replace('Subscription');
       }
       dispatch(resetVerifyOtpRequest());
     } else if (!getCompaniesRequesting && getCompaniesFailure) {
       dispatch(resetVerifyOtpRequest());
       showToast('Error in Getting companies details.', ToastType.ERROR);
     }
-  }, [getCompaniesRequesting, getCompaniesSuccess, getCompaniesFailure, verifyOtpSuccess]);
+  }, [
+    getCompaniesRequesting,
+    getCompaniesSuccess,
+    getCompaniesFailure,
+    verifyOtpSuccess,
+  ]);
 
   return (
     <AvoidSoftInputViewHOC>
@@ -277,7 +297,7 @@ const OTPPageView = (props: any) => {
           />
         </View>
         <Spacer />
-        <Text>{_displayOTP()}</Text>
+        {/* <Text>{_displayOTP()}</Text> */}
         <Spacer height={50} />
         <Button
           text="Verify OTP"

@@ -1,11 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {
-  View,
-  FlatList,
-  RefreshControl,
-  Text,
-  TouchableOpacity,
-} from 'react-native';
+import {View, FlatList, RefreshControl, Text} from 'react-native';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import BiltyFormView from '../BiltyFormView';
 import styles from './styles';
@@ -22,11 +16,6 @@ import {
   IBilty,
   IBiltyFreight,
 } from '../../../../../interface/order/IGetBiltyListResponse';
-import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
-import FormModal from '../../../../settings/formModal';
-import {downloadOptions} from './downloadOptions';
-import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import {COLOR_BLACK, COLOR_BLUE} from '../../../../../utils/colors';
 import {IHtmlTemplateRequest} from '../../../../../interface/order/templates/ITemplateResponse';
 import ModalHOC from '../../../../../common/ModalHOC';
 import TemplateViewer from '../../../../../common/TemplateViewer';
@@ -35,8 +24,8 @@ import useTemplateIdHook from '../../../../../hooks/useTemplateIdHook';
 import ActionHeaderView from '../../../../../common/ActionHeaderView';
 import useUtilityHook from '../../../../../hooks/useUtilityHook';
 import AlertModal from '../../../../../common/AlertModal';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {ScrollView} from 'react-native-gesture-handler';
+import {NavigationProp} from '@react-navigation/native';
+import PreviewShareModal from '../../../../../common/PreviewShareModal';
 
 interface IBiltyViewProps {
   orderId: string;
@@ -64,10 +53,10 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [documentId, setDocumentId] = useState<string>('');
   const [showLimitModal, setShowLimitModal] = useState<boolean>(false);
+  const [showPreviewShareModal, setShowPreviewShareModal] =
+    useState<boolean>(false);
   const templateId = useTemplateIdHook('658d3cb5585e3dde644da97e');
   const {getDocumentLimitCount} = useUtilityHook();
-
-  const bottomSheetRef = useRef<BottomSheet>(null);
 
   const getTotalBilty = () => {
     const {data} = biltyList || {};
@@ -91,14 +80,12 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
 
   const presentModal = (docId: string) => {
     setDocumentId(docId);
-    bottomSheetRef.current?.snapToIndex(0);
+    setShowPreviewShareModal(true);
   };
 
   const dismissModal = () => {
     setDownloadOption('');
-    // setOpenShare(false);
-    // setShouldDownload(false);
-    bottomSheetRef.current?.close();
+    setShowPreviewShareModal(false);
   };
 
   const _getBiltyData = () => {
@@ -113,8 +100,8 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
           bilty_no: bilty.biltyNumber,
           billing_by: 'NA',
           moving_type: 'NA', // TODO: Not available in the api response
-          from_location: bilty.vehicle.shiftingFrom,
-          to_location: bilty.vehicle.shiftingTo,
+          from_location: bilty?.loadingAddress?.city,
+          to_location: bilty?.unloadingAddress?.city,
           transit_days: bilty.vehicle.transitDays,
           risk_type: bilty.riskType,
           tax_liability: 'NA', //TODO: Not available in the api response
@@ -187,7 +174,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
   const onEdit = () => {};
 
   const handleDocumentDownload = async () => {
-    bottomSheetRef.current?.close();
+    setShowPreviewShareModal(false);
     const payload: IHtmlTemplateRequest = {
       templateId: templateId,
       quotationId: documentId,
@@ -231,12 +218,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
                   setShowDownload(false);
                   presentModal(item.id);
                 }}
-                onDownload={() => {
-                  setShowShare(false);
-                  setShowPreview(false);
-                  setShowDownload(true);
-                  presentModal(item.id);
-                }}
+                onDownload={() => {}}
                 onPreview={() => {
                   setShowShare(false);
                   setShowPreview(true);
@@ -248,45 +230,14 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
             )}
             ListEmptyComponent={showEmptyView()}
           />
-          <FormModal ref={bottomSheetRef} onClose={dismissModal}>
-            <ScrollView>
-              <View style={styles.checkboxContainer}>
-                {downloadOptions.map((option, index) => {
-                  return (
-                    <BouncyCheckbox
-                      key={`${index}`}
-                      size={20}
-                      fillColor={COLOR_BLUE}
-                      unfillColor="#FFFFFF"
-                      text={option}
-                      iconStyle={{borderColor: 'red', borderRadius: 0}}
-                      innerIconStyle={{borderWidth: 1, borderRadius: 0}}
-                      onPress={(isChecked: boolean) => {
-                        setDownloadOption(option);
-                      }}
-                      textStyle={{
-                        fontFamily: 'JosefinSans-Regular',
-                        textDecorationLine: 'none',
-                        fontSize: 14,
-                        color: COLOR_BLACK,
-                      }}
-                      style={{paddingRight: 8, marginBottom: 20}}
-                      textContainerStyle={{marginLeft: 10, marginRight: 4}}
-                      isChecked={option == downloadOption}
-                      disableBuiltInState={true}
-                    />
-                  );
-                })}
-              </View>
-              <TouchableOpacity
-                onPress={handleDocumentDownload}
-                style={downloadButtonStyle}
-                activeOpacity={0.6}
-                disabled={downloadOption == ''}>
-                <Text style={styles.downloadText}>Preview</Text>
-              </TouchableOpacity>
-            </ScrollView>
-          </FormModal>
+          <PreviewShareModal
+            visible={showPreviewShareModal}
+            onClose={dismissModal}
+            onOk={handleDocumentDownload}
+            biltyCopyType={downloadOption}
+            onBiltyCopyTypeChange={setDownloadOption}
+            isShare={showShare}
+          />
           <ModalHOC
             visible={showModal}
             onClose={handleShowPreviewModalClose}
@@ -308,15 +259,10 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
     return null;
   };
 
-  const downloadButtonStyle =
-    downloadOption == ''
-      ? styles.downloadDisabledButton
-      : styles.downloadButton;
-
   useEffect(() => {
     if (!getBiltyHtmlRequesting && getBiltyHtmlSuccess) {
       if (showPreview) {
-        bottomSheetRef.current?.close();
+        setShowPreviewShareModal(false);
         setShowModal(true);
       } else if (showShare) {
         startShare(

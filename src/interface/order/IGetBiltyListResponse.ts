@@ -119,6 +119,8 @@ export interface IBilty {
   biltyNumber: string;
   biltyDate: string;
   vehicle: IVehicle;
+  loadingAddress: IAddress;
+  unloadingAddress: IAddress;
   driver: IDriver;
   eWayBill: IEWayBill;
   materials: IMaterial[];

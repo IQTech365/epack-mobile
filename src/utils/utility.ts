@@ -1,12 +1,14 @@
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import Share from 'react-native-share';
+import {Dimensions} from 'react-native';
 import Toast from 'react-native-toast-message';
 import {ISavedDocumentTemplateId} from '../interface/setting/template/template';
-import { IAppSetting } from '../interface/common/common';
-
+import {IAppSetting} from '../interface/common/common';
 export const startShare = async (html: any, docName: string, action: any) => {
   let options = {
     html: html,
+    height: 892,
+    width: 812,
     fileName: docName,
     directory: 'Documents',
   };
@@ -54,7 +56,7 @@ export const showToast = (message: string, toastType: ToastType) => {
 export const getTemplateIdBySubModuleId = (
   subModuleId: string,
   templateList: ISavedDocumentTemplateId[],
-):string => {
+): string => {
   let templateId: string = '';
   if (templateList && templateList.length > 0) {
     const template: ISavedDocumentTemplateId = templateList.find(
@@ -67,14 +69,18 @@ export const getTemplateIdBySubModuleId = (
   return templateId;
 };
 
-export const getSubmoduleInitialValue = (subModuleId:string, appSettings:IAppSetting[]) => {
-  let initialValue:string = '';
-  let prefix:string = '';
-  if(appSettings && appSettings.length > 0) {
-    const appSetting:IAppSetting = appSettings.find((d:IAppSetting) => d.subModuleId == subModuleId) as IAppSetting;
+export const getSubmoduleInitialValue = (
+  subModuleId: string,
+  appSettings: IAppSetting[],
+) => {
+  let initialValue: string = '';
+  let prefix: string = '';
+  if (appSettings && appSettings.length > 0) {
+    const appSetting: IAppSetting = appSettings.find(
+      (d: IAppSetting) => d.subModuleId == subModuleId,
+    ) as IAppSetting;
     initialValue = appSetting?.initialValue;
     prefix = appSetting?.prefix;
-
   }
   return {initialValue, prefix};
-}
+};

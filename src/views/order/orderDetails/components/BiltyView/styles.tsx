@@ -2,8 +2,6 @@ import {StyleSheet, Dimensions} from 'react-native';
 import {
   COLOR_BLACK,
   COLOR_BLUE,
-  COLOR_BLUE3,
-  COLOR_GRAY,
   COLOR_GRAY2,
   COLOR_GRAY5,
   COLOR_WHITE,
@@ -27,7 +25,7 @@ const styles = StyleSheet.create({
   text: {
     color: COLOR_BLACK,
     fontSize: 14,
-    fontFamily: 'WorkSans-Regular'
+    fontFamily: 'WorkSans-Regular',
   },
   // List Item Styles
   mainWrapper: {
@@ -62,19 +60,19 @@ const styles = StyleSheet.create({
   },
   label: {
     color: COLOR_BLACK,
-    fontSize: 16,
-    fontWeight: '500',
+    fontSize: 12,
+    fontFamily: 'WorkSans-Medium',
     marginRight: 8,
   },
   value: {
     color: COLOR_BLACK,
-    fontSize: 14,
-    fontWeight: '400',
+    fontSize: 12,
+    fontFamily: 'WorkSans-Regular',
   },
   text2: {
     color: COLOR_WHITE,
     fontSize: 14,
-    fontWeight: '500',
+    fontFamily: 'WorkSans-Medium',
   },
   viewDetailsContainer: {
     width: '100%',
@@ -98,14 +96,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'flex-start',
     alignSelf: 'center',
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
   },
   downloadDisabledButton: {
     alignSelf: 'center',
-    paddingHorizontal: 15,
-    paddingVertical: 6,
+    paddingHorizontal: 45,
+    paddingVertical: 10,
     alignItems: 'center',
-    borderRadius: 20,
+    borderRadius: 22,
     backgroundColor: COLOR_GRAY5,
   },
   downloadText: {
@@ -114,8 +112,8 @@ const styles = StyleSheet.create({
   },
   downloadButton: {
     alignSelf: 'center',
-    paddingHorizontal: 15,
-    paddingVertical: 6,
+    paddingHorizontal: 45,
+    paddingVertical: 10,
     alignItems: 'center',
     borderRadius: 20,
     backgroundColor: COLOR_BLUE,

@@ -115,9 +115,11 @@ const TodayShiftings: FC<IProps> = ({}) => {
               <Shadow distance={2.5}>
                 <View style={styles.cardWrapper}>
                   <View style={styles.cardHeader}>
-                    <Text style={styles.cardHeading}>
-                      {getClientNameAndMobile(item).name}
-                    </Text>
+                    <View style={styles.nameWrapper}>
+                      <Text style={styles.cardHeading}>
+                        {getClientNameAndMobile(item).name}
+                      </Text>
+                    </View>
                     <View style={styles.iconWrapper}>
                       <TouchableOpacity
                         onPress={() => handleWhatsappCall(item)}>
@@ -225,7 +227,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   cardHeader: {
-    display: 'flex',
+    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -235,8 +237,11 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
   },
+  nameWrapper: {
+    width: '80%',
+  },
   iconWrapper: {
-    display: 'flex',
+    width: '20%',
     flexDirection: 'row',
   },
   cardHeading: {

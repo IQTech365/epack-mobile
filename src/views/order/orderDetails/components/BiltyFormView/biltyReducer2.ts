@@ -1,5 +1,6 @@
 import {Reducer} from 'react';
 import {formatDate4} from '../../../../../utils/formatter';
+import packingOptions from '../../../../../data/packingOptions.json';
 
 export enum ACTION {
   BILTY_LR_CN_NO = 'BILTY_LR_CN_NO',
@@ -300,25 +301,25 @@ export const initialState: IState = {
   freight_type: '',
   freight_charge: '',
 
-  pickup_charge: '',
+  pickup_charge: packingOptions[0].label,
   pickup_charge_amount: '',
 
-  door_delivery_charge: '',
+  door_delivery_charge: packingOptions[0].label,
   door_delivery_charge_amount: '',
 
-  packing_charge: '',
+  packing_charge: packingOptions[0].label,
   packing_charge_amount: '',
 
-  packing_material_charge: '',
+  packing_material_charge: packingOptions[0].label,
   packing_material_charge_amount: '',
 
-  unpacking_charge: '',
+  unpacking_charge: packingOptions[0].label,
   unpacking_charge_amount: '',
 
-  loading_charge: '',
+  loading_charge: packingOptions[0].label,
   loading_charge_amount: '',
 
-  unloading_charge: '',
+  unloading_charge: packingOptions[0].label,
   unloading_charge_amount: '',
 
   total_amunt: '',

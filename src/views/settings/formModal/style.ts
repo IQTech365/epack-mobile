@@ -1,10 +1,10 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import { COLOR_GRAY4, COLOR_GRAY5 } from '../../../utils/colors';
+import {COLOR_GRAY4, COLOR_GRAY5} from '../../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
     padding: 24,
     backgroundColor: '#FAF9F6',
     borderTopLeftRadius: 20,
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     alignItems: 'flex-end',
     justifyContent: 'center',
-  }
+  },
 });
 
 export default styles;
