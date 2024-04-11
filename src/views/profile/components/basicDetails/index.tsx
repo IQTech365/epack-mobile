@@ -133,7 +133,7 @@ const BasicDetailsView: React.FC<IBasicDetailsViewProps> = ({}) => {
             />
             <EnquiryDetailListItem
               label="Website"
-              value={company?.companyWebite || 'Not Available'}
+              value={company?.companyWebsite || 'Not Available'}
             />
             <EnquiryDetailListItem label="Email" value={company?.email} />
             <EnquiryDetailListItem

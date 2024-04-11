@@ -27,6 +27,7 @@ import {
 } from '../../utils/colors';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {IBillingInfo} from '../../interface/enquiry/IAddEnquiryRequest';
+import {formatDate4, formatDate5} from '../../utils/formatter';
 
 interface IProps {}
 
@@ -76,10 +77,14 @@ const TodayShiftings: FC<IProps> = ({}) => {
       name = partyName;
       phone = mobile;
     } else if (billingBy === 'by Company') {
-      const {companyName, employeeMobile, authorityPersonMobile} =
-        billingDetails as IBillingInfo;
-      name = companyName;
-      phone = authorityPersonMobile || employeeMobile;
+      const {
+        companyName,
+        employeeMobile,
+        authorityPersonName,
+        authorityPersonMobile,
+      } = billingDetails as IBillingInfo;
+      name = companyName || authorityPersonName;
+      phone = employeeMobile || authorityPersonMobile;
     }
     return {name, phone};
   };
@@ -127,11 +132,11 @@ const TodayShiftings: FC<IProps> = ({}) => {
                   <View style={styles.commentContainer}>
                     <View style={styles.contentWrapper}>
                       <View style={styles.labelContainer}>
-                        <Text style={styles.labelText}>Date:- </Text>
+                        <Text style={styles.labelText}>Shifting Date: </Text>
                       </View>
                       <View style={styles.contentContainer}>
                         <Text style={styles.valueText}>
-                          {new Date(item.shiftingDate).toLocaleString()}
+                          {formatDate5(new Date(item.shiftingDate))}
                         </Text>
                       </View>
                     </View>
@@ -139,7 +144,7 @@ const TodayShiftings: FC<IProps> = ({}) => {
                       style={[styles.contentWrapper, {borderBottomWidth: 1}]}>
                       <View style={styles.labelContainer}>
                         <Text>
-                          <Text style={styles.labelText}>Phone No.</Text>
+                          <Text style={styles.valueText}>Phone No:</Text>
                         </Text>
                       </View>
                       <View style={styles.contentContainer}>
@@ -152,7 +157,9 @@ const TodayShiftings: FC<IProps> = ({}) => {
                       style={[styles.contentWrapper, {borderBottomWidth: 1}]}>
                       <View style={styles.labelContainer}>
                         <Text>
-                          <Text style={styles.labelText}>Shifting Luggage</Text>
+                          <Text style={styles.labelText}>
+                            Shifting Luggage:
+                          </Text>
                         </Text>
                       </View>
                       <View style={styles.contentContainer}>
@@ -165,7 +172,7 @@ const TodayShiftings: FC<IProps> = ({}) => {
                       style={[styles.contentWrapper, {borderBottomWidth: 1}]}>
                       <View style={styles.labelContainer}>
                         <Text>
-                          <Text style={styles.labelText}>Shifting From</Text>
+                          <Text style={styles.labelText}>Shifting From:</Text>
                         </Text>
                       </View>
                       <View style={styles.contentContainer}>
@@ -181,7 +188,7 @@ const TodayShiftings: FC<IProps> = ({}) => {
                       ]}>
                       <View style={styles.labelContainer}>
                         <Text>
-                          <Text style={styles.labelText}>Shifting To</Text>
+                          <Text style={styles.labelText}>Shifting To:</Text>
                         </Text>
                       </View>
                       <View style={styles.contentContainer}>
@@ -257,13 +264,13 @@ const styles = StyleSheet.create({
     borderBottomColor: COLOR_GRAY2,
   },
   labelContainer: {
-    width: '50%',
+    width: '45%',
     alignItems: 'flex-start',
     paddingLeft: 10,
     paddingVertical: 10,
   },
   contentContainer: {
-    width: '50%',
+    width: '55%',
     alignItems: 'flex-start',
     backgroundColor: COLOR_GRAY3,
     paddingLeft: 10,

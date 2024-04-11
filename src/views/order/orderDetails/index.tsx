@@ -75,6 +75,7 @@ const OrderDetailsView: React.FC<Props> = ({route, navigation}) => {
             navigation={navigation}
             onItemClick={handleTabChange}
             isOrder={true}
+            route={route}
           />
         );
       case 8:

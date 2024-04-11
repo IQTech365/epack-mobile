@@ -11,7 +11,7 @@ export interface ICompanyUpdatePayload {
     pincode?: string;
     ibaApprovalCode?: string;
     ibaValidDate?: string;
-    companyWebite?: string;
+    companyWebsite?: string;
     CINNumber?: string;
     companyLogo?: string;
     punchLine?: string;

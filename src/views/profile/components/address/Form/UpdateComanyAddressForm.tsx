@@ -182,7 +182,7 @@ const UpdateComanyAddressForm: React.FC<IUpdateComanyAddressFormProps> = ({
       pincode: pin,
       ibaApprovalCode: company?.govRegdDetails?.IBAcode as string,
       ibaValidDate: "2023-10-25",
-      companyWebite: company?.companyWebite as string,
+      companyWebsite: company?.companyWebsite as string,
       CINNumber: company?.govRegdDetails?.incorporationNumber as string,
       companyLogo: "",
       punchLine: company?.punchLine as string,
@@ -192,9 +192,13 @@ const UpdateComanyAddressForm: React.FC<IUpdateComanyAddressFormProps> = ({
       companySignature: company?.companySignature as string
       }
     };
+    console.log(payload,"payload");
+
     dispatch(editCompanyRequest(payload));
     // dispatch(updateAddressRequest({id: enquiryId, requestBody: payload}));
   };
+
+  
 
   useEffect(() => {
     if (!editCompanyRequesting &&editCompanySuccess) {

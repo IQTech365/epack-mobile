@@ -29,6 +29,7 @@ import {
 import {ITodayFollowUp} from '../../interface/common/common';
 import {ScrollView} from 'react-native-gesture-handler';
 import {IBillingInfo} from '../../interface/enquiry/IAddEnquiryRequest';
+import {formatDate2, formatDate3} from '../../utils/formatter';
 
 interface IProps {}
 
@@ -83,9 +84,13 @@ const TodayFollowup: FC<IProps> = ({}) => {
         name = partyName;
         phone = mobile;
       } else if (billingBy === 'by Company') {
-        const {companyName, employeeMobile, authorityPersonMobile} =
-          billingDetails as IBillingInfo;
-        name = companyName;
+        const {
+          companyName,
+          employeeMobile,
+          authorityPersonName,
+          authorityPersonMobile,
+        } = billingDetails as IBillingInfo;
+        name = companyName || authorityPersonName;
         phone = employeeMobile || authorityPersonMobile;
       }
     }
@@ -121,35 +126,31 @@ const TodayFollowup: FC<IProps> = ({}) => {
                   <View style={styles.commentContainer}>
                     <View style={[styles.contentWrapper]}>
                       <View style={styles.labelContainer}>
-                        <Text style={{fontWeight: 'bold', color: COLOR_BLACK}}>
-                          Date
-                        </Text>
+                        <Text style={styles.labelText}>FollowUp Date:</Text>
                       </View>
                       <View style={styles.contentContainer}>
-                        <Text>
-                          {new Date(item.followUpDate).toLocaleString()}
+                        <Text style={styles.valueText}>
+                          {formatDate3(new Date(item.followUpDate))}
                         </Text>
                       </View>
                     </View>
                   </View>
                   <View style={[styles.contentWrapper, {borderBottomWidth: 1}]}>
                     <View style={styles.labelContainer}>
-                      <Text style={{fontWeight: 'bold', color: COLOR_BLACK}}>
-                        Phone No.
-                      </Text>
+                      <Text style={styles.labelText}>Phone No:</Text>
                     </View>
                     <View style={styles.contentContainer}>
-                      <Text>{getClientNameAndMobile(item).phone}</Text>
+                      <Text style={styles.valueText}>
+                        {getClientNameAndMobile(item).phone}
+                      </Text>
                     </View>
                   </View>
                   <View style={[styles.contentWrapper, {borderBottomWidth: 0}]}>
                     <View style={styles.labelContainer}>
-                      <Text style={{fontWeight: 'bold', color: COLOR_BLACK}}>
-                        Last Comment
-                      </Text>
+                      <Text style={styles.labelText}>Last Comment:</Text>
                     </View>
                     <View style={styles.contentContainer}>
-                      <Text>{item.comment}</Text>
+                      <Text style={styles.valueText}>{item.comment}</Text>
                     </View>
                   </View>
                 </View>
@@ -195,8 +196,7 @@ const styles = StyleSheet.create({
   },
   cardHeading: {
     fontSize: 18,
-    fontWeight: 'bold',
-    fontFamily: 'WorkSans',
+    fontFamily: 'WorkSans-Medium',
     color: COLOR_BLACK,
   },
   commentContainer: {
@@ -209,16 +209,26 @@ const styles = StyleSheet.create({
     borderBottomColor: COLOR_GRAY5,
   },
   labelContainer: {
-    width: '50%',
+    width: '45%',
     alignItems: 'flex-start',
     backgroundColor: COLOR_GRAY6,
     paddingLeft: 10,
     paddingVertical: 10,
   },
   contentContainer: {
-    width: '50%',
+    width: '55%',
     alignItems: 'flex-start',
     paddingLeft: 10,
     paddingVertical: 10,
+  },
+  labelText: {
+    color: COLOR_BLACK,
+    fontSize: 16,
+    fontFamily: 'WorkSans-Regular',
+  },
+  valueText: {
+    color: COLOR_GRAY,
+    fontSize: 16,
+    fontFamily: 'WorkSans-Regular',
   },
 });
