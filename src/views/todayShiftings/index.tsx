@@ -74,12 +74,12 @@ const TodayShiftings: FC<IProps> = ({}) => {
       phone = mobile;
     } else if (billingBy === 'by Company') {
       const {
-        employeeName,
+        companyName,
         employeeMobile,
         authorityPersonName,
         authorityPersonMobile,
       } = billingDetails as IBillingInfo;
-      name = employeeName || authorityPersonName;
+      name = companyName || authorityPersonName;
       phone = employeeMobile || authorityPersonMobile;
     }
     return {name, phone};
@@ -131,7 +131,7 @@ const TodayShiftings: FC<IProps> = ({}) => {
                       <View style={styles.labelContainer}>
                         <Text>
                           <Text style={{fontWeight: 'bold'}}>
-                            Company ID:-{' '}
+                            Company ID:-
                           </Text>
                         </Text>
                       </View>

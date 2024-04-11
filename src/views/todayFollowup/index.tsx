@@ -84,12 +84,12 @@ const TodayFollowup: FC<IProps> = ({}) => {
         phone = mobile;
       } else if (billingBy === 'by Company') {
         const {
-          employeeName,
+          companyName,
           employeeMobile,
           authorityPersonName,
           authorityPersonMobile,
         } = billingDetails as IBillingInfo;
-        name = employeeName || authorityPersonName;
+        name = companyName || authorityPersonName;
         phone = employeeMobile || authorityPersonMobile;
       }
     }

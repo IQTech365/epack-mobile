@@ -84,7 +84,7 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({
         companyId: id as string,
         payload: {
           contactPerson: contactPerson || company?.contactPerson as string,
-          companyWebite: website || company?.companyWebite as string,
+          companyWebsite: website || company?.companyWebsite as string,
           companyLogo: companyLogoImage || (company?.companyLogo as string),
           punchLine: comapnyPunch || company?.punchLine as string,
           companyProfile: '',
@@ -167,7 +167,7 @@ const UpdateBasicDetailsForm: React.FC<IUpdateBasicDetailsFormProps> = ({
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
-              value={company?.companyWebite}
+              value={company?.companyWebsite}
             />
           </View>
           <Spacer height={20} />

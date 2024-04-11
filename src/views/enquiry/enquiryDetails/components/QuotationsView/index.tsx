@@ -31,6 +31,8 @@ interface IQuotationViewProps {
   navigation: any;
   onItemClick: (tabIndex: number) => void;
   isOrder?: boolean;
+  route:any;
+  disableQuotationEdit: boolean
 }
 
 const QuotationView: React.FC<IQuotationViewProps> = ({
@@ -38,6 +40,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
   navigation,
   onItemClick,
   isOrder = false,
+  route,
 }) => {
   const {
     quotations,
@@ -49,10 +52,13 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
   } = useAppSelector(state => state.Quotation);
   const {data: quotationData} = quotations || {};
 
+  
+
   const dispatch = useAppDispatch();
   const [showQuotationList, setShowQuotationList] = useState<boolean>(false);
   const [createNewQuotation, setCreateNewQuotation] = useState<boolean>(true);
   const [showFormInEditMode, setShowFormInEditMode] = useState<boolean>(false);
+  const [disableQuotationEdit, setDisableQuotationEdit] = useState<boolean>(false);
   const [quotationToEdit, setQuotationToEdit] = useState<IGetQuotationData>();
   const [openPreview, setOpenPreview] = useState<boolean>(false);
   const [openShare, setOpenShare] = useState<boolean>(false);
@@ -210,6 +216,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
     setShowQuotationList(false);
     setCreateNewQuotation(false);
     setShowFormInEditMode(true);
+    setDisableQuotationEdit(true)
   };
 
   const _handleShowPreview = (docId: string) => {
@@ -257,6 +264,8 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
           showHeader={false}
           fromEnquiry={true}
           enquiryId={enquiryId}
+          navigation={navigation}
+          route={route}
         />
       );
     }
@@ -274,6 +283,8 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
           editRequestFromEnquiry={true}
           itemFromEnquiry={quotationToEdit}
           onSuccess={_handleOnSuccess}
+          navigation={navigation}
+          route={route}
         />
       );
     }
@@ -315,6 +326,15 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
     }
     return null;
   };
+
+  useEffect(() => {
+    if(isOrder) {
+      setShowQuotationList(true);
+    }
+    if(disableQuotationEdit){
+      setDisableQuotationEdit(true)
+    }
+  }, []);
 
   useEffect(() => {
     if (
