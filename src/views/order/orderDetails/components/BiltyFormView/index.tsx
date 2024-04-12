@@ -107,9 +107,9 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess}) => {
             mobile: state.consignee_mobile_no,
             gstin: state.consignee_gst,
             street: '',
-            state: state.consigner_state,
+            state: state.consignee_state,
             landmark: '',
-            city: state.consigner_city,
+            city: state.consignee_city,
             district: '',
             postOffice: '',
             postalCode: state.consignee_pincode,
@@ -136,7 +136,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess}) => {
           },
           unloadingAddress: {
             address: state.delivery_address_same_as_consignee
-              ? state.consignee_state
+              ? state.consignee_address
               : state.delivery_address,
             state: state.delivery_address_same_as_consignee
               ? state.consignee_state
