@@ -269,6 +269,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
           biltyTemplateHtml,
           'Bilty',
           dispatch(resetGetBiltyHtmlRequest()),
+          true,
         );
       }
     } else if (!getBiltyHtmlRequesting && getBiltyHtmlFailure) {

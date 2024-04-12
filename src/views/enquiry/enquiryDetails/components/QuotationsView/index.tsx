@@ -31,8 +31,7 @@ interface IQuotationViewProps {
   navigation: any;
   onItemClick: (tabIndex: number) => void;
   isOrder?: boolean;
-  route:any;
-  disableQuotationEdit: boolean
+  route: any;
 }
 
 const QuotationView: React.FC<IQuotationViewProps> = ({
@@ -52,13 +51,10 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
   } = useAppSelector(state => state.Quotation);
   const {data: quotationData} = quotations || {};
 
-  
-
   const dispatch = useAppDispatch();
   const [showQuotationList, setShowQuotationList] = useState<boolean>(false);
   const [createNewQuotation, setCreateNewQuotation] = useState<boolean>(true);
   const [showFormInEditMode, setShowFormInEditMode] = useState<boolean>(false);
-  const [disableQuotationEdit, setDisableQuotationEdit] = useState<boolean>(false);
   const [quotationToEdit, setQuotationToEdit] = useState<IGetQuotationData>();
   const [openPreview, setOpenPreview] = useState<boolean>(false);
   const [openShare, setOpenShare] = useState<boolean>(false);
@@ -67,23 +63,16 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
 
   const _getClientName = (item: IGetQuotationData) => {
     let name: string = 'NA';
-    //@ts-ignore
     const {enquiries} = item;
     if (enquiries && Array.isArray(enquiries) && enquiries.length > 0) {
       const enquiry: IEnquiry = enquiries[0];
       if (enquiry?.partyName) {
         name = enquiry?.partyName;
-        //@ts-ignore
       } else if (enquiry.billingDetails?.companyName) {
-        //@ts-ignore
         name = enquiry.billingDetails?.companyName;
-        //@ts-ignore
       } else if (enquiry.billingDetails?.authorityPersonName) {
-        //@ts-ignore
         name = enquiry.billingDetails?.authorityPersonName;
-        //@ts-ignore
       } else if (enquiry.billingDetails?.employeeName) {
-        //@ts-ignore
         name = enquiry.billingDetails?.employeeName;
       }
     }
@@ -193,7 +182,6 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
     getCurrentCompanyId()
       .then(id => {
         const payload: IGetQuotationRequest = {
-          // id: enquiryId,
           companyId: id as string,
         };
         dispatch(getQuotationsRequest(payload));
@@ -216,7 +204,6 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
     setShowQuotationList(false);
     setCreateNewQuotation(false);
     setShowFormInEditMode(true);
-    setDisableQuotationEdit(true)
   };
 
   const _handleShowPreview = (docId: string) => {
@@ -307,6 +294,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
             <QuotationListItem
               item={item}
               index={index}
+              isOrder={isOrder}
               onPress={() => {
                 onItemClick(0);
               }}
@@ -328,11 +316,8 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
   };
 
   useEffect(() => {
-    if(isOrder) {
+    if (isOrder) {
       setShowQuotationList(true);
-    }
-    if(disableQuotationEdit){
-      setDisableQuotationEdit(true)
     }
   }, []);
 

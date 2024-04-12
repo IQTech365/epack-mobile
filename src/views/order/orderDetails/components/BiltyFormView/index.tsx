@@ -118,7 +118,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess}) => {
 
           loadingAddress: {
             address: state.loading_address_same_as_consigner
-              ? ''
+              ? state.consigner_address
               : state.loading_address,
             state: state.loading_address_same_as_consigner
               ? state.consigner_state
@@ -135,7 +135,9 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess}) => {
             country: 'India',
           },
           unloadingAddress: {
-            address: '',
+            address: state.delivery_address_same_as_consignee
+              ? state.consignee_state
+              : state.delivery_address,
             state: state.delivery_address_same_as_consignee
               ? state.consignee_state
               : state.delivery_state,

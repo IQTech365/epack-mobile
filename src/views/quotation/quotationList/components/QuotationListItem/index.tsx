@@ -17,17 +17,18 @@ export interface IQuotationItem {
   fromDestination: string;
   toDestination: string;
   shiftingType: string;
-  shiftingLuggage:string;
+  shiftingLuggage: string;
   quotationAmount: string;
   quotationDate: string;
   phoneNumber: string;
   id: string;
-  createdOn:string;
+  createdOn: string;
 }
 
 interface IQuotationListItemProps {
   item: IQuotationItem;
   index: number;
+  isOrder?: boolean;
   onPress: () => void;
   onDownload: () => void;
   onShare: () => void;
@@ -38,6 +39,7 @@ interface IQuotationListItemProps {
 const QuotationListItem: React.FC<IQuotationListItemProps> = ({
   item,
   index,
+  isOrder = false,
   onPress,
   onDownload,
   onShare,
@@ -63,13 +65,13 @@ const QuotationListItem: React.FC<IQuotationListItemProps> = ({
     ? {borderBottomLeftRadius: 0, borderBottomRightRadius: 0}
     : {borderBottomLeftRadius: 8, borderBottomRightRadius: 8};
 
-    const handlePhoneCall = () => {
-      Linking.openURL(`tel:${item.phoneNumber}`);
-    }
-  
-    const handleWhatsappCall = () => {
-      Linking.openURL(`whatsapp://send?phone=+91${item.phoneNumber}`);
-    }
+  const handlePhoneCall = () => {
+    Linking.openURL(`tel:${item.phoneNumber}`);
+  };
+
+  const handleWhatsappCall = () => {
+    Linking.openURL(`whatsapp://send?phone=+91${item.phoneNumber}`);
+  };
 
   return (
     <>
@@ -139,7 +141,9 @@ const QuotationListItem: React.FC<IQuotationListItemProps> = ({
                     <ShippingTypeIcon width={18} height={18} />
                   </View>
                   <View>
-                    <Text style={styles.destinationTypeText}>Shifting Luggage</Text>
+                    <Text style={styles.destinationTypeText}>
+                      Shifting Luggage
+                    </Text>
                     <Text style={styles.destinationText}>
                       {item.shiftingLuggage}
                     </Text>
@@ -184,6 +188,7 @@ const QuotationListItem: React.FC<IQuotationListItemProps> = ({
             </TouchableOpacity>
           </View>
           <DocumentActionView
+            isOrder={isOrder}
             onShare={onShare}
             onDownload={onDownload}
             onPreview={onPreview}

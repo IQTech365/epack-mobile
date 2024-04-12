@@ -4,11 +4,16 @@ import {Dimensions} from 'react-native';
 import Toast from 'react-native-toast-message';
 import {ISavedDocumentTemplateId} from '../interface/setting/template/template';
 import {IAppSetting} from '../interface/common/common';
-export const startShare = async (html: any, docName: string, action: any) => {
+export const startShare = async (
+  html: any,
+  docName: string,
+  action: any,
+  isBilty?: boolean,
+) => {
   let options = {
     html: html,
-    height: 892,
-    width: 812,
+    height: isBilty ? 892 : 792,
+    width: isBilty ? 812 : 612,
     fileName: docName,
     directory: 'Documents',
   };
