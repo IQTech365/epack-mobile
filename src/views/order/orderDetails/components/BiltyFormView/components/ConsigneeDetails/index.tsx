@@ -17,8 +17,14 @@ import DropdownWithTextInput, {
 } from '../../../../../../../common/DropdownWithTextInput';
 import {useAppSelector} from '../../../../../../../redux/hooks';
 import {ISingleEnquiryData} from '../../../../../../../interface/enquiry/ISingleEnquiryResponse';
+import { IBilty } from '../../../../../../../interface/order/IGetBiltyListResponse';
 
-const ConsigneeDetails: React.FC<{}> = ({}) => {
+interface IProps {
+  item?:IBilty;
+  isEdit?:boolean;
+}
+
+const ConsigneeDetails: React.FC<IProps> = ({item, isEdit}) => {
   const {
     state,
     setIsConsigneeAddressSameAsClient,

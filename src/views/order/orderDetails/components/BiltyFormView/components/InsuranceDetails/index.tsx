@@ -13,8 +13,14 @@ import {COLOR_BLACK} from '../../../../../../../utils/colors';
 import {insuranceOptions} from '../MaterialDetails/utils';
 import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
 import {formatDate4} from '../../../../../../../utils/formatter';
+import { IBilty } from '../../../../../../../interface/order/IGetBiltyListResponse';
 
-const InsuranceDetails: React.FC<{}> = ({}) => {
+interface IProps {
+  item?:IBilty;
+  isEdit?:boolean;
+}
+
+const InsuranceDetails: React.FC<IProps> = ({item, isEdit}) => {
   const {
     state,
     setInsuranceCompany,

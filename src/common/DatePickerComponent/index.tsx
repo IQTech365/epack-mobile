@@ -5,6 +5,10 @@ import {formatDate, formatDate3} from '../../utils/formatter';
 import CalendarIcon from '../../images/icons/calendar.svg';
 import styles from './style';
 
+export interface IDateMethods {
+  setDefaultValue: (date:Date) => void;
+}
+
 interface IDatePickerProps {
   onDateSelect: (date: Date) => void;
   style?: ViewStyle;
@@ -16,7 +20,7 @@ interface IDatePickerProps {
   minimumDate?: Date | null;
 }
 
-const DatePickerComponent: React.FC<IDatePickerProps> = forwardRef(
+const DatePickerComponent = forwardRef<IDateMethods, IDatePickerProps>(
   (
     {
       onDateSelect,
@@ -34,7 +38,9 @@ const DatePickerComponent: React.FC<IDatePickerProps> = forwardRef(
     const [open, setOpen] = useState<boolean>(false);
 
     React.useImperativeHandle(ref, () => ({
-      setDefaultValue,
+      setDefaultValue: (date: Date) => {
+        setDate(date);
+      },
     }));
 
     const errorBorderStyle = error ? styles.errorBorderColor : null;
@@ -45,10 +51,6 @@ const DatePickerComponent: React.FC<IDatePickerProps> = forwardRef(
         return formatDate3(date);
       }
       return formatDate(date);
-    };
-
-    const setDefaultValue = (value: Date) => {
-      setDate(value);
     };
 
     useEffect(() => {

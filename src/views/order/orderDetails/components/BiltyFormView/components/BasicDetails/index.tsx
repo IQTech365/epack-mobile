@@ -4,43 +4,57 @@ import CollapsibleView from '../../../../../../../common/CollapsibleView';
 import Label from '../../../../../../../common/Label';
 import styles from './style';
 import {Switch} from 'react-native-switch';
-import Input from '../../../../../../../common/Input';
-import DatePickerComponent from '../../../../../../../common/DatePickerComponent';
+import Input, { InputMethods } from '../../../../../../../common/Input';
+import DatePickerComponent, { IDateMethods } from '../../../../../../../common/DatePickerComponent';
 import Spacer from '../../../../../../../common/Spacer';
 import {COLOR_BLACK} from '../../../../../../../utils/colors';
 import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
 import {formatDate4} from '../../../../../../../utils/formatter';
 import useSerialNoHook from '../../../../../../../hooks/useSerialNo';
+import { IBilty } from '../../../../../../../interface/order/IGetBiltyListResponse';
 
-const BasicDetails: React.FC<{}> = ({}) => {
-  const [switchState, setSwitchState] = useState<boolean>(false);
-  const switchWrapperStyle = switchState
-    ? styles.switchMainWrapper
-    : styles.switchMainWrapper2;
-  const {state, setBiltyLrCrNo, setDateOfBiltyLrCrNo} =
-    useBiltyFormContextHook();
+interface IProps {
+  item?:IBilty;
+  isEdit?:boolean;
+}
+
+const BasicDetails: React.FC<IProps> = ({item, isEdit}) => {
+  const [switchState, setSwitchState] = useState<boolean>(true);
+  const switchWrapperStyle = switchState ? styles.switchMainWrapper : styles.switchMainWrapper2;
+  const {state, setBiltyLrCrNo, setDateOfBiltyLrCrNo} = useBiltyFormContextHook();
   const serialNo: number = useSerialNoHook();
-  const biltyNoInputCompRef = useRef(null);
+  const biltyNoInputCompRef = useRef<InputMethods>(null);
+  const dateCompRef = useRef<IDateMethods>(null);
 
   useEffect(() => {
-    if (serialNo) {
+    if (!isEdit && serialNo) {
       setBiltyLrCrNo(serialNo.toString());
     }
-  }, [serialNo]);
+  }, [serialNo, isEdit]);
 
   useEffect(() => {
     if (switchState) {
-      if (serialNo) {
+      if (!isEdit && serialNo) {
         setBiltyLrCrNo(serialNo.toString());
+        biltyNoInputCompRef && biltyNoInputCompRef?.current?.setValue(serialNo.toString());
       }
-      //@ts-ignore
-      biltyNoInputCompRef && biltyNoInputCompRef?.current?.setValue(serialNo);
     } else {
-      setBiltyLrCrNo('');
-      //@ts-ignore
-      biltyNoInputCompRef && biltyNoInputCompRef?.current?.setValue('');
+      if(!isEdit) {
+        setBiltyLrCrNo('');
+        biltyNoInputCompRef && biltyNoInputCompRef?.current?.setValue('');
+      }
     }
   }, [switchState]);
+
+  useEffect(() => {
+    if(isEdit && item) {
+      biltyNoInputCompRef.current?.setValue(item.biltyNumber);
+      setSwitchState(true);
+      setBiltyLrCrNo(item.biltyNumber);
+      dateCompRef.current?.setDefaultValue(new Date(item.biltyDate));
+      setDateOfBiltyLrCrNo(formatDate4(new Date(item.biltyDate)));
+    }
+  }, [isEdit, item]);
 
   return (
     <CollapsibleView title="BASIC DETAILS" collapsed={false}>
@@ -54,7 +68,7 @@ const BasicDetails: React.FC<{}> = ({}) => {
               containerStyle={styles.switchStyle}
               value={switchState}
               onValueChange={val => setSwitchState(val)}
-              disabled={false}
+              disabled={isEdit}
               activeText={'Auto'}
               inActiveText={'Manual'}
               outerCircleStyle={styles.outerCircleStyle}
@@ -72,7 +86,6 @@ const BasicDetails: React.FC<{}> = ({}) => {
               editable={!switchState}
               value={state.bilty_lr_cr_no}
               placeholder="Bilty / LR / CN No."
-              //@ts-ignore
               ref={biltyNoInputCompRef}
             />
           </View>
@@ -84,6 +97,7 @@ const BasicDetails: React.FC<{}> = ({}) => {
             onDateSelect={(date: Date) => {
               setDateOfBiltyLrCrNo(formatDate4(date));
             }}
+            ref={dateCompRef}
           />
         </View>
         <Spacer height={4} />

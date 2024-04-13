@@ -14,7 +14,14 @@ import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormCo
 import {payTypeOptions} from '../MaterialDetails/utils';
 import packingOptions from '../../../../../../../data/packingOptions.json';
 import {TDropdownItem} from '../../../../../../../type/TDropdownItem';
-const FreightDetails: React.FC<{}> = ({}) => {
+import { IBilty } from '../../../../../../../interface/order/IGetBiltyListResponse';
+
+interface IProps {
+  item?:IBilty;
+  isEdit?:boolean;
+}
+
+const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
   const {
     state,
     setBalanceAmount,

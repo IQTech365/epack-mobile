@@ -37,16 +37,17 @@ import {
   getSerialNoRequest,
   resetGetSerialNoRequest,
 } from '../../../../../redux/slices/SerialNoSettingSlice';
+import { IBilty } from '../../../../../interface/order/IGetBiltyListResponse';
 
 interface IBiltyFormViewProps {
   orderId: string | undefined;
   onSuccess: () => void;
+  item?:IBilty;
+  isEdit?:boolean;
 }
 
-const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess}) => {
+const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess, item, isEdit = false}) => {
   const {state} = useBiltyFormContextHook();
-  console.log(state, 'lalitvatssssssssa');
-
   const dispatch = useAppDispatch();
 
   const {
@@ -275,23 +276,23 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess}) => {
     <AvoidSoftInputViewHOC>
       <View style={styles.container}>
         <Spacer height={4} />
-        <BasicDetails />
+        <BasicDetails item={item} isEdit={isEdit} />
         <Spacer height={4} />
-        <ConsignerDetails />
+        <ConsignerDetails item={item} isEdit={isEdit} />
         <Spacer height={4} />
-        <ConsigneeDetails />
+        <ConsigneeDetails item={item} isEdit={isEdit} />
         <Spacer height={4} />
-        <VehicleDetails />
+        <VehicleDetails item={item} isEdit={isEdit} />
         <Spacer height={4} />
-        <EWayBillDetails />
+        <EWayBillDetails item={item} isEdit={isEdit} />
         <Spacer height={4} />
-        <MaterialDetails />
+        <MaterialDetails item={item} isEdit={isEdit} />
         <Spacer height={4} />
-        <FreightDetails />
+        <FreightDetails item={item} isEdit={isEdit} />
         <Spacer height={4} />
-        <InsuranceDetails />
+        <InsuranceDetails item={item} isEdit={isEdit} />
         <Spacer height={4} />
-        <DemurageDetails />
+        <DemurageDetails item={item} isEdit={isEdit} />
         <Spacer height={8} />
         <Button
           text="CREATE"

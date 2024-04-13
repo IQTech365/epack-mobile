@@ -21,8 +21,14 @@ import DropdownWithTextInput, {
 } from '../../../../../../../common/DropdownWithTextInput';
 import {useAppSelector} from '../../../../../../../redux/hooks';
 import {ISingleEnquiryData} from '../../../../../../../interface/enquiry/ISingleEnquiryResponse';
+import { IBilty } from '../../../../../../../interface/order/IGetBiltyListResponse';
 
-const ConsignerDetails: React.FC<{}> = ({}) => {
+interface IProps {
+  item?:IBilty;
+  isEdit?:boolean;
+}
+
+const ConsignerDetails: React.FC<IProps> = ({item, isEdit}) => {
   const {
     state,
     setIsConsignerAddressSameAsClient,
@@ -130,6 +136,16 @@ const ConsignerDetails: React.FC<{}> = ({}) => {
   );
 
   useEffect(() => {
+    if(isEdit && item) {
+      // biltyNoInputCompRef.current?.setValue(item.biltyNumber);
+      // setSwitchState(true);
+      // setBiltyLrCrNo(item.biltyNumber);
+      // dateCompRef.current?.setDefaultValue(new Date(item.biltyDate));
+      // setDateOfBiltyLrCrNo(formatDate4(new Date(item.biltyDate)));
+    }
+  }, [isEdit, item]);
+
+  useEffect(() => {
     initConsingerAddressIfSameasClient();
   }, [state.consigner_address_same_as_client]);
 
@@ -147,10 +163,8 @@ const ConsignerDetails: React.FC<{}> = ({}) => {
       stateDropdownCompRef &&
       cityDropdownCompRef
     ) {
-      //@ts-ignore
       stateDropdownCompRef?.current?.setValue(states[0]);
       setConsignerState(states[0]);
-      //@ts-ignore
       cityDropdownCompRef?.current?.setValue(cities[0]);
       setConsignerCity(cities[0]);
     }
@@ -252,7 +266,6 @@ const ConsignerDetails: React.FC<{}> = ({}) => {
             <DropdownWithTextInput
               options={states}
               onSelect={setConsignerState}
-              //@ts-ignore
               ref={stateDropdownCompRef}
               containerStyle={styles.itemContainer}
             />
@@ -262,7 +275,6 @@ const ConsignerDetails: React.FC<{}> = ({}) => {
             <DropdownWithTextInput
               options={cities}
               onSelect={setConsignerCity}
-              //@ts-ignore
               ref={cityDropdownCompRef}
               containerStyle={styles.itemContainer}
             />

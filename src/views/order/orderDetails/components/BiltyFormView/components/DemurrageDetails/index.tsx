@@ -10,8 +10,14 @@ import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormCo
 import DropdownComponent from '../../../../../../../common/DropdownComponent';
 import {TDropdownItem} from '../../../../../../../type/TDropdownItem';
 import {demurrageChargeRateOptions, perDayOptions, perHourOptions} from './utils';
+import { IBilty } from '../../../../../../../interface/order/IGetBiltyListResponse';
 
-const DemurageDetails: React.FC<{}> = ({}) => {
+interface IProps {
+  item?:IBilty;
+  isEdit?:boolean;
+}
+
+const DemurageDetails: React.FC<IProps> = ({item, isEdit}) => {
   const {state, setDemurrageCharge, setRate, setChargeApplicableAfter} =
     useBiltyFormContextHook();
 

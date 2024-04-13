@@ -60,7 +60,6 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
 
   const getTotalBilty = () => {
     const {data} = biltyList || {};
-
     let _count = 0;
     if (data && Array.isArray(data) && data.length > 0) {
       _count = data.length;
@@ -171,7 +170,13 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
     return null;
   };
 
-  const onEdit = () => {};
+  const onEdit = (id:String) => {
+    const {data} = biltyList || {};
+    if(data && Array.isArray(data) && data.length > 0) {
+      const bilty:IBilty = data.find((ele:IBilty) => ele._id === id);
+      navigation.navigate("EditBilty", {item: bilty, orderID: orderId})
+    }
+  };
 
   const handleDocumentDownload = async () => {
     setShowPreviewShareModal(false);
@@ -225,7 +230,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
                   setShowDownload(false);
                   presentModal(item.id);
                 }}
-                onEdit={onEdit}
+                onEdit={() => onEdit(item.id)}
               />
             )}
             ListEmptyComponent={showEmptyView()}

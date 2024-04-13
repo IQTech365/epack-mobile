@@ -9,8 +9,14 @@ import DatePickerComponent from '../../../../../../../common/DatePickerComponent
 import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
 import {COLOR_BLACK} from '../../../../../../../utils/colors';
 import {formatDate4} from '../../../../../../../utils/formatter';
+import { IBilty } from '../../../../../../../interface/order/IGetBiltyListResponse';
 
-const EWayBillDetails: React.FC<{}> = ({}) => {
+interface IProps {
+  item?:IBilty;
+  isEdit?:boolean;
+}
+
+const EWayBillDetails: React.FC<IProps> = ({item, isEdit}) => {
   const {state, setEWayBillNo, setGeneratedOn, setExpiryDate} =
     useBiltyFormContextHook();
   const ewayBillNoInputCompRef = useRef(null);

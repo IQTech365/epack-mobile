@@ -21,8 +21,14 @@ import {
 import {useAppSelector} from '../../../../../../../redux/hooks';
 import {IUnitType} from '../../../../../../../interface/setting/unitType/IGetunitTypeResponse';
 import {IPackingType} from '../../../../../../../interface/common/common';
+import { IBilty } from '../../../../../../../interface/order/IGetBiltyListResponse';
 
-const MaterialDetails: React.FC<{}> = ({}) => {
+interface IProps {
+  item?:IBilty;
+  isEdit?:boolean;
+}
+
+const MaterialDetails: React.FC<IProps> = ({item, isEdit}) => {
   const materialInputRef = useRef<InputMethods>(null);
   const articlesInputref = useRef<InputMethods>(null);
   const hsnCodeInputref = useRef<InputMethods>(null);

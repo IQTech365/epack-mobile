@@ -13,8 +13,14 @@ import {TDropdownItem} from '../../../../../../../type/TDropdownItem';
 import {formatDate4} from '../../../../../../../utils/formatter';
 import {useAppSelector} from '../../../../../../../redux/hooks';
 import {IVehicleSize} from '../../../../../../../interface/vehicle/IGetVehicleSizeResponse';
+import { IBilty } from '../../../../../../../interface/order/IGetBiltyListResponse';
 
-const VehicleDetails: React.FC<{}> = ({}) => {
+interface IProps {
+  item?:IBilty;
+  isEdit?:boolean;
+}
+
+const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
   const {
     state,
     setInvoiceNo,
