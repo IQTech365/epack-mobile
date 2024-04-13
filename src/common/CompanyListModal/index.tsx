@@ -83,7 +83,14 @@ const CompanyListModal: React.FC<IProps> = ({
 
   useEffect(() => {
     if(selectedCompany) {
-      _getSubscriptionList();
+      // _getSubscriptionList();
+      if(selectedCompany?.companyLogo && selectedCompany?.companySignature) {
+        completeRegistrationAndLoggedIn();
+      } else if(!selectedCompany?.companyLogo) {
+        _setCompanyIdAndDoCompleteRegistration(2);
+      } else if(!selectedCompany?.companySignature) {
+        _setCompanyIdAndDoCompleteRegistration(3);
+      }
     }
   }, [selectedCompany]);
 

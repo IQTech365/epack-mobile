@@ -111,7 +111,7 @@ const SubscriptionPlanCard: React.FC<ISubscriptionPlanCardProps> = ({
                 onSelect={handlePlanDuration}
                 dropDownStyle={styles.dropDownStyle}
                 container={styles.dropDownContainer}
-                containerStyle={{width: '80%', marginTop: 0}}
+                containerStyle={{width: '79%', marginTop: -100, marginLeft: -16}}
                 selectedTextStyle={styles.selectedTextStyle}
               />
             </View>: <Spacer height={6} />}

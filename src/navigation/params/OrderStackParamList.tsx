@@ -8,6 +8,5 @@ export type OrderStackParamList = {
     OrderDetails: {orderId: string, item: ISingleEnquiryData} | undefined,
     EditPackingItems: {item:IPackingListData, orderId: string} | undefined,
     EditInvoice: {item:IInvoice, enquiry: ISingleEnquiryData, orderID:string},
-    OrderSubscription: {isUpgrade: boolean},
     EditBilty: {item:IBilty, orderID:string},
 }

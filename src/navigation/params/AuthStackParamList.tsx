@@ -9,6 +9,4 @@ export type AuthStackParamList = {
     CompanyBasicInfo: undefined;
     CompanyLogo: undefined;
     CompanySignature:undefined;
-    Subscription: undefined,
-    Checkout: {subscriptionPlan: ISubscriptionPlan, amount:number, duration:string},
 }

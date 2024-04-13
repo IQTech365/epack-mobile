@@ -1,33 +1,34 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {View, FlatList, RefreshControl, Text, Alert} from 'react-native';
-import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
+import React, { useCallback, useEffect, useState } from 'react';
+import { View, FlatList, RefreshControl, Text, Alert } from 'react-native';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import styles from './styles';
 import InvoiceFormView from '../InvoiceFormView';
-import {InvoiceFormContextProvider} from '../../../../../provider/InvoiceFormContextProvider';
-import {ISingleEnquiryData} from '../../../../../interface/enquiry/ISingleEnquiryResponse';
+import { InvoiceFormContextProvider } from '../../../../../provider/InvoiceFormContextProvider';
+import { ISingleEnquiryData } from '../../../../../interface/enquiry/ISingleEnquiryResponse';
 import {
   getInvoiceHtmlRequest,
   getInvoiceListRequest,
   resetGetInvoiceHtmlRequest,
 } from '../../../../../redux/slices/OrderSlice';
 import Spinner from '../../../../../common/Spinner';
-import {IInvoice} from '../../../../../interface/order/IGetInvoiceListResponse';
+import { IInvoice } from '../../../../../interface/order/IGetInvoiceListResponse';
 import InvoiceListItem from './InvoiceListItem';
-import {IHtmlTemplateRequest} from '../../../../../interface/order/templates/ITemplateResponse';
+import { IHtmlTemplateRequest } from '../../../../../interface/order/templates/ITemplateResponse';
 import ModalHOC from '../../../../../common/ModalHOC';
 import TemplateViewer from '../../../../../common/TemplateViewer';
-import {startShare} from '../../../../../utils/utility';
+import { startShare } from '../../../../../utils/utility';
 import useTemplateIdHook from '../../../../../hooks/useTemplateIdHook';
 import ActionHeaderView from '../../../../../common/ActionHeaderView';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import {
   getVehicleCompanyRequest,
   getVehicleModelsRequest,
   getVehicleTypesRequest,
 } from '../../../../../redux/slices/CommonSlice';
-import {getVehicleSizeRequest} from '../../../../../redux/slices/VehicleSlice';
+import { getVehicleSizeRequest } from '../../../../../redux/slices/VehicleSlice';
 import useUtilityHook from '../../../../../hooks/useUtilityHook';
 import AlertModal from '../../../../../common/AlertModal';
+import LimitReachImage from '../../../../../images/icons/limit_reach.svg';
 
 interface IInvoiceViewProps {
   orderId: string;
@@ -35,7 +36,7 @@ interface IInvoiceViewProps {
   navigation: NavigationProp<any, any>;
 }
 
-const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item, navigation}) => {
+const InvoiceView: React.FC<IInvoiceViewProps> = ({ orderId, item, navigation }) => {
   const dispatch = useAppDispatch();
 
   const {
@@ -54,10 +55,10 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item, navigation}) =
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showLimitModal, setShowLimitModal] = useState<boolean>(false);
   const templateId = useTemplateIdHook('658d3ce2585e3dde644da98c');
-  const {getDocumentLimitCount} = useUtilityHook();
+  const { getDocumentLimitCount } = useUtilityHook();
 
   const getTotalInvoice = () => {
-    const {data} = invoices || {};
+    const { data } = invoices || {};
     let _count = 0;
     if (data && Array.isArray(data) && data.length > 0) {
       _count = data.length;
@@ -66,11 +67,12 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item, navigation}) =
   };
 
   const handleCreateNewInvoice = () => {
-    const docLimit: number = getDocumentLimitCount('');
+    const docLimit: number = getDocumentLimitCount('658d3ce2585e3dde644da98c');
     const currentDocCount: number = getTotalInvoice();
-    if (docLimit == -1 || currentDocCount < docLimit) {
+    if (docLimit.toString() == "-1" || currentDocCount < docLimit) {
       setShowInvoiceList(true);
       setCreateNewInvoice(false);
+      setShowLimitModal(false);
     } else {
       setShowLimitModal(true);
     }
@@ -79,6 +81,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item, navigation}) =
   const handleShowInvoiceList = () => {
     setShowInvoiceList(true);
     setCreateNewInvoice(false);
+    setShowLimitModal(false);
   };
 
   const onSuccess = () => {
@@ -101,7 +104,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item, navigation}) =
     dispatch(getInvoiceHtmlRequest(payload));
   };
 
-  const onEdit = () => {};
+  const onEdit = () => { };
 
   const hanldeAlertModalClose = () => {
     setShowLimitModal(false);
@@ -109,7 +112,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item, navigation}) =
 
   const handlePlanUpgrade = () => {
     setShowLimitModal(false);
-    navigation.navigate("OrderSubscription", {isUpgrade: true});
+    navigation.navigate("Subscription");
   }
 
   const showEmptyView = () => {
@@ -122,7 +125,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item, navigation}) =
 
   const _getInvoiceList = (): IInvoice[] => {
     let list: IInvoice[] = [];
-    const {data} = invoices || {};
+    const { data } = invoices || {};
     if (data && Array.isArray(data) && data.length > 0) {
       list = data;
     }
@@ -168,14 +171,14 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item, navigation}) =
   const showList = () => {
     if (showInvoiceList) {
       return (
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <FlatList
-            contentContainerStyle={{alignItems: 'center', paddingVertical: 10}}
+            contentContainerStyle={{ alignItems: 'center', paddingVertical: 10 }}
             data={_getInvoiceList()}
             refreshControl={
               <RefreshControl refreshing={false} onRefresh={handleOnRefresh} />
             }
-            renderItem={({item, index}) => (
+            renderItem={({ item, index }) => (
               <InvoiceListItem
                 item={item}
                 index={index}
@@ -208,11 +211,18 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({orderId, item, navigation}) =
             modalStyle={styles.modalStyle}
             headerStyle={styles.headerStyle}
             title="Preview">
-            <View style={{flex: 1}}>
+            <View style={{ flex: 1 }}>
               <TemplateViewer html={invoiceTemplateHtml} />
             </View>
           </ModalHOC>
-          <AlertModal visible={showLimitModal} onClose={hanldeAlertModalClose} onUpgrade={handlePlanUpgrade} />
+          <AlertModal 
+            visible={showLimitModal}
+            icon={<LimitReachImage width={200} height={200} />}
+            onClose={hanldeAlertModalClose} 
+            onUpgrade={handlePlanUpgrade} 
+            title='Your document create limit has been reached. Please upgrade your plan.'
+            buttonText='UPGRADE'
+          />
         </View>
       );
     }

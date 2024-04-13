@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 35,
     backgroundColor: COLOR_WHITE,
-    marginTop: -100,
+    marginTop: -80,
   },
   contentContainer: {
     width: '100%',

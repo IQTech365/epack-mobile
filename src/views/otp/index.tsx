@@ -191,9 +191,7 @@ const OTPPageView = (props: any) => {
     if (!getPendingRegistrationRequesting && getPendingRegistrationSuccess) {
       const {data} = pendingRegistrationInfo;
       if (data !== null) {
-        const pendingRegistrationData: IPendingRegistration =
-          data as IPendingRegistration;
-        //@ts-ignore
+        const pendingRegistrationData: IPendingRegistration = data as IPendingRegistration;
         if (
           pendingRegistrationData.purchase &&
           (pendingRegistrationData.purchase?.companyId == undefined ||
@@ -232,7 +230,8 @@ const OTPPageView = (props: any) => {
         setShowCompaniesModal(true);
       } else {
         setShowCompaniesModal(false);
-        navigation.replace('Subscription');
+        // navigation.replace('Subscription');
+        navigation.replace('CompanyBasicInfo');
       }
       dispatch(resetVerifyOtpRequest());
     } else if (!getCompaniesRequesting && getCompaniesFailure) {
@@ -297,7 +296,7 @@ const OTPPageView = (props: any) => {
           />
         </View>
         <Spacer />
-        {/* <Text>{_displayOTP()}</Text> */}
+        <Text>{_displayOTP()}</Text>
         <Spacer height={50} />
         <Button
           text="Verify OTP"
