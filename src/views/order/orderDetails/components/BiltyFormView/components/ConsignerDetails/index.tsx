@@ -137,17 +137,15 @@ const ConsignerDetails: React.FC<IProps> = ({item, isEdit}) => {
 
   useEffect(() => {
     if(isEdit && item) {
-      // biltyNoInputCompRef.current?.setValue(item.biltyNumber);
-      // setSwitchState(true);
-      // setBiltyLrCrNo(item.biltyNumber);
-      // dateCompRef.current?.setDefaultValue(new Date(item.biltyDate));
-      // setDateOfBiltyLrCrNo(formatDate4(new Date(item.biltyDate)));
+      //
     }
   }, [isEdit, item]);
 
   useEffect(() => {
-    initConsingerAddressIfSameasClient();
-  }, [state.consigner_address_same_as_client]);
+    if(!isEdit) {
+      initConsingerAddressIfSameasClient();
+    }
+  }, [state.consigner_address_same_as_client, isEdit]);
 
   useEffect(() => {
     if (result && result.Status != 'Error') {
