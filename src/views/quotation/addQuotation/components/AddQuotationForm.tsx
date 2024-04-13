@@ -116,8 +116,6 @@ const AddQuotationForm: React.FC<Props> = ({
   const prepareOtherCharges = (): IOtherCharges[] | null => {
     let otherCharges: IOtherCharges[] = [];
     if (state.other_charges.length > 0) {
-      console.log('state.other_charges', state.other_charges);
-
       otherCharges = state.other_charges.map(e => {
         const partLoad: IOtherCharge = {
           ratePerItem: e.part_load_rate_per_item,

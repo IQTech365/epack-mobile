@@ -110,7 +110,6 @@ export function* getQuotationTemplateHtmlSaga(
     );
     yield put(getQuotationHtmlSuccess(response));
   } catch (error) {
-    console.log('getQuotationTemplateHtmlSaga-error-', JSON.stringify(error));
     yield put(getQuotationHtmlFailure(error));
   }
 }

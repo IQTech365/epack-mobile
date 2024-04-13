@@ -136,7 +136,8 @@ export interface IBilty {
   isDeleted: boolean;
   updatedAt: string;
   createdAt: string;
-  biltyfreights: IBiltyFreight[];
+  freightDetails: IFreightDetail;
+  pickupCharges: ICharge;
   consigner: IBiltyConsigners;
   consignee: IBiltyConsigners;
 }

@@ -1,6 +1,4 @@
 import moment from 'moment';
-import { PINCODE } from '../http/Endpoint';
-import { PincodeService } from '../service/PincodeService';
 import { TDropdownItem } from '../type/TDropdownItem';
 
 export const formatDate = (date: Date): string => {

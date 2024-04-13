@@ -7,7 +7,7 @@ import Input, {InputMethods} from '../../../../../../../common/Input';
 import Spacer from '../../../../../../../common/Spacer';
 import {COLOR_BLACK} from '../../../../../../../utils/colors';
 import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
-import DropdownComponent from '../../../../../../../common/DropdownComponent';
+import DropdownComponent, { IDropdownHandler } from '../../../../../../../common/DropdownComponent';
 import {TDropdownItem} from '../../../../../../../type/TDropdownItem';
 import {
   demurrageChargeRateOptions,
@@ -26,18 +26,31 @@ const DemurageDetails: React.FC<IProps> = ({item, isEdit}) => {
     useBiltyFormContextHook();
 
   const demurrageChargeRef = useRef<InputMethods>(null);
-  const demurrageRateRef = useRef<InputMethods>(null);
-  const demurrageChargeApplicableAfterRef = useRef<InputMethods>(null);
+  const demurrageRateRef = useRef<IDropdownHandler>(null);
+  const demurrageChargeApplicableAfterRef = useRef<IDropdownHandler>(null);
 
   useEffect(() => {
     if (isEdit && item) {
       demurrageChargeRef.current?.setValue(item.demurrage?.charge);
       setDemurrageCharge(item.demurrage?.charge);
-      demurrageRateRef.current?.setValue(item.demurrage?.rate);
+      if(item.demurrage?.rate) {
+        const option:TDropdownItem = demurrageChargeRateOptions.find((e:TDropdownItem) => e.label === item.demurrage?.rate) as TDropdownItem;
+        if(option) {
+          demurrageRateRef.current?.setDefaultValue(option);
+          if(option.label === 'Per Day') {
+            if(item.demurrage?.chargeAfterApplicable) {
+              const perDayOption:TDropdownItem = perDayOptions.find((d:TDropdownItem) => d.label === item.demurrage?.chargeAfterApplicable) as TDropdownItem;
+              demurrageChargeApplicableAfterRef.current?.setDefaultValue(perDayOption);
+            }
+          } else if(option.label === 'Per Hour') {
+            if(item.demurrage?.chargeAfterApplicable) {
+              const perHourOption:TDropdownItem = perHourOptions.find((d:TDropdownItem) => d.label === item.demurrage?.chargeAfterApplicable) as TDropdownItem;
+              demurrageChargeApplicableAfterRef.current?.setDefaultValue(perHourOption);
+            }
+          }
+        }
+      }
       setRate(item?.demurrage?.rate);
-      demurrageChargeApplicableAfterRef.current?.setValue(
-        item.demurrage?.chargeAfterApplicable,
-      );
       setChargeApplicableAfter(item.demurrage?.chargeAfterApplicable);
     }
   }, [isEdit, item]);
@@ -65,6 +78,7 @@ const DemurageDetails: React.FC<IProps> = ({item, isEdit}) => {
               onSelect={(item: TDropdownItem) => {
                 setRate(item.label);
               }}
+              ref={demurrageRateRef}
             />
           </View>
           <View style={styles.itemContainer}>
@@ -78,6 +92,7 @@ const DemurageDetails: React.FC<IProps> = ({item, isEdit}) => {
               onSelect={(item: TDropdownItem) => {
                 setChargeApplicableAfter(item.label);
               }}
+              ref={demurrageChargeApplicableAfterRef}
             />
           </View>
         </View>

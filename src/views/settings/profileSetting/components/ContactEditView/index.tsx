@@ -10,7 +10,6 @@ import { IContactListItem } from '../ContactView/components/ContactDetailListIte
 const ContactEditView = (props: any) => {
   const navigation = useNavigation();
   const contactInfo: IContactListItem = props?.route?.params?.contactInfo;
-  console.log('ContactEditView--id--', JSON.stringify(contactInfo));
   return (
     <View style={{flex: 1, backgroundColor: COLOR_WHITE}}>
       <Header label="Contact-Edit" canGoBack={true} />

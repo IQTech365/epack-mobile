@@ -160,7 +160,6 @@ export function* getAppSettingsSaga(action: PayloadAction<string>) {
       CommonService.GetAppSettingsService,
       action.payload,
     );
-    console.log('getAppSettingsSaga-response--', JSON.stringify(response));
 
     yield put(getAppSettingsSuccess(response));
   } catch (error) {
@@ -210,10 +209,8 @@ export function* getDashboardSaga(action: PayloadAction<IDashboardPaylod>) {
       CommonService.GetDashboardService,
       action.payload,
     );
-    console.log('getDashboardSaga-response-', JSON.stringify(response));
     yield put(getDashboardDataSuccess(response));
   } catch (error) {
-    console.log('getDashboardSaga-response-', JSON.stringify(error));
     yield put(getDashboardDataFailure(error));
   }
 }
@@ -257,7 +254,6 @@ export function* getBankListSaga(action: PayloadAction<string>) {
   try {
     //@ts-ignore
     const response: any = yield call(CommonService.GetBankListService);
-    console.log('getBankListSaga-response--', JSON.stringify(response));
     yield put(getBankListSuccess(response));
   } catch (error) {
     yield put(getBankListFailure(error));
@@ -270,7 +266,6 @@ export function* getTodayFollowupsSaga(action: PayloadAction<string>) {
       CommonService.GetTodayFollowups,
       action.payload,
     );
-    console.log('getTodayFollowupsSaga-response--', JSON.stringify(response));
     yield put(getTodayFollowupsListSuccess(response));
   } catch (error) {
     yield put(getTodayFollowupsListFailure(error));
@@ -284,7 +279,6 @@ export function* getTodaySurveySaga(action: PayloadAction<string>) {
       CommonService.GetTodaySurvey,
       action.payload,
     );
-    console.log('getTodaySurveySaga-response--', JSON.stringify(response));
     yield put(getTodaySurveyListSuccess(response));
   } catch (error) {
     yield put(getTodaySurveyListFailure(error));
@@ -298,7 +292,6 @@ export function* getTodayShiftingSaga(action: PayloadAction<string>) {
       CommonService.GetTodayShiftings,
       action.payload,
     );
-    console.log('getTodayShiftingSaga-response--', JSON.stringify(response));
     yield put(getTodayShiftingListSuccess(response));
   } catch (error) {
     yield put(getTodayShiftingListFailure(error));

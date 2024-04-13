@@ -135,7 +135,6 @@ const ConsignerDetails: React.FC<IProps> = ({item, isEdit}) => {
     [state.consinger_pincode],
   );
 
-  console.log(item, 'robinkhan');
   useEffect(() => {
     if (isEdit && item) {
       //

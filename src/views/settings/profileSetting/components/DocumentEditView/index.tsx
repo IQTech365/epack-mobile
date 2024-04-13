@@ -10,7 +10,6 @@ import DocumentFormView from '../DocumentFormView';
 const DocumentEditView = (props: any) => {
   const navigation = useNavigation();
   const documentInfo: IGetDocumentData = props?.route?.params?.documentInfo;
-  console.log('DocumentEditView--id--', JSON.stringify(documentInfo));
   return (
     <View style={{flex: 1, backgroundColor: COLOR_WHITE}}>
       <Header label="Document-Edit" canGoBack={true} />

@@ -10,7 +10,6 @@ import { IGetFooterContentData } from '../../../../../interface/setting/packerPr
 const FooterContentEditView = (props: any) => {
   const navigation = useNavigation();
   const footerInfo: IGetFooterContentData = props?.route?.params?.footerInfo;
-  console.log('FooterContentEditView--id--', JSON.stringify(footerInfo));
   return (
     <View style={{flex: 1, backgroundColor: COLOR_WHITE}}>
       <Header label="Footer Content-Edit" canGoBack={true} />

@@ -25,7 +25,6 @@ export const startShare = async (
   };
   Share.open(shareOptions)
     .then(res => {
-      console.log(res);
       action();
     })
     .catch(err => {

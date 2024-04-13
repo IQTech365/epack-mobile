@@ -59,9 +59,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess, item,
 
   const authId = useAuthId();
 
-  const {initialValue, prefix} = useInitialValueHook(
-    '658d3cb5585e3dde644da97e',
-  );
+  const {initialValue, prefix} = useInitialValueHook('658d3cb5585e3dde644da97e');
 
   const _getSerialNoRequest = () => {
     getCurrentCompanyId()

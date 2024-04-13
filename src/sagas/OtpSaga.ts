@@ -20,11 +20,8 @@ export function* getOtpSaga(action: PayloadAction<Partial<IOtpGetRequest>>) {
       OtpService.GetOtpService,
       action.payload,
     );
-    console.log('response----', JSON.stringify(response));
-
     yield put(getOtpSuccess(response));
   } catch (error) {
-    console.log('error----', JSON.stringify(error));
     yield put(getOtpFailure(JSON.stringify(error)));
   }
 }

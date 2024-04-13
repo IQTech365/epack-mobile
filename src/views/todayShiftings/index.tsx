@@ -35,7 +35,6 @@ const TodayShiftings: FC<IProps> = ({}) => {
   const dispatch = useAppDispatch();
 
   const {shifting} = useAppSelector(state => state.Common);
-  console.log('shifting--', JSON.stringify(shifting));
 
   const getTodaysShifting = () => {
     getCurrentCompanyId()

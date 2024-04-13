@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {View} from 'react-native';
 import styles from './style';
 import CollapsibleView from '../../../../../../../common/CollapsibleView';
@@ -7,8 +7,8 @@ import BouncyCheckboxGroup, {
 } from 'react-native-bouncy-checkbox-group';
 import Spacer from '../../../../../../../common/Spacer';
 import Label from '../../../../../../../common/Label';
-import Input from '../../../../../../../common/Input';
-import DropdownComponent from '../../../../../../../common/DropdownComponent';
+import Input, { InputMethods } from '../../../../../../../common/Input';
+import DropdownComponent, { IDropdownHandler } from '../../../../../../../common/DropdownComponent';
 import {COLOR_BLACK} from '../../../../../../../utils/colors';
 import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
 import {payTypeOptions} from '../MaterialDetails/utils';
@@ -22,6 +22,11 @@ interface IProps {
 }
 
 const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
+
+  const freightInputRef = useRef<InputMethods>(null);
+  const pickupDropCompRef = useRef<IDropdownHandler>(null);
+  const pickupInputRef = useRef<InputMethods>(null);
+
   const {
     state,
     setBalanceAmount,
@@ -44,7 +49,6 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
     setAdvanceAmount,
     setTotalAmount,
   } = useBiltyFormContextHook();
-  console.log(state, 'forpayloaddddddddddd');
 
   const calculateMaterialTotalAmount = () => {
     const {
@@ -98,6 +102,20 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
   };
 
   useEffect(() => {
+    if(isEdit && item) {
+      freightInputRef.current?.setValue(item.freightDetails.freightCharges);
+      if(item.pickupCharges.status) {
+        setPickupChargeAmount(item.pickupCharges.charge);
+        const pickupOption:TDropdownItem = packingOptions.find((d:TDropdownItem) => d.label === item.pickupCharges.status) as TDropdownItem;
+        if(pickupOption) {
+          pickupDropCompRef.current?.setDefaultValue(pickupOption);
+          setPickupCharge(item.pickupCharges.status);
+        }
+      }
+    }
+  }, [isEdit, item]);
+
+  useEffect(() => {
     calculateBalanceAmount();
   }, [state.advance_amount]);
 
@@ -122,6 +140,7 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
             value={state.freight_charge}
             selectionColor={COLOR_BLACK}
             inputType="numeric"
+            ref={freightInputRef}
           />
         </View>
         <Spacer height={4} />
@@ -133,6 +152,7 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
               onSelect={(item: TDropdownItem) => {
                 setPickupCharge(item.label);
               }}
+              ref={pickupDropCompRef}
             />
           </View>
           <View style={styles.itemContainer}>
@@ -145,6 +165,7 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
               inputType="numeric"
               value={state.pickup_charge_amount}
               editable={state.pickup_charge == 'Additional from Freight'}
+              ref={pickupInputRef}
             />
           </View>
         </View>
@@ -199,7 +220,7 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
         <Spacer height={4} />
         <View style={styles.elementContainer}>
           <View style={styles.itemContainer}>
-            <Label text="Packing Material Charges" style={styles.label} />
+            <Label text="Packing Mat. Charges" style={styles.label} />
             <DropdownComponent
               data={packingOptions}
               onSelect={(item: TDropdownItem) => {

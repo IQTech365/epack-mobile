@@ -8,7 +8,7 @@ import BouncyCheckboxGroup, {
 import Spacer from '../../../../../../../common/Spacer';
 import Label from '../../../../../../../common/Label';
 import Input, {InputMethods} from '../../../../../../../common/Input';
-import DatePickerComponent from '../../../../../../../common/DatePickerComponent';
+import DatePickerComponent, { IDateMethods } from '../../../../../../../common/DatePickerComponent';
 import {COLOR_BLACK} from '../../../../../../../utils/colors';
 import {insuranceOptions} from '../MaterialDetails/utils';
 import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
@@ -32,7 +32,7 @@ const InsuranceDetails: React.FC<IProps> = ({item, isEdit}) => {
   const insuranceCompanyNameRef = useRef<InputMethods>(null);
   const insurancePolicyNoRef = useRef<InputMethods>(null);
   const insuranceAmountRef = useRef<InputMethods>(null);
-  const insuranceDateRef = useRef<InputMethods>(null);
+  const insuranceDateRef = useRef<IDateMethods>(null);
 
   useEffect(() => {
     if (isEdit && item) {
@@ -43,7 +43,7 @@ const InsuranceDetails: React.FC<IProps> = ({item, isEdit}) => {
       setPolicyNumber(item.insurance.policyNumber);
       insuranceAmountRef.current?.setValue(item.insurance.amount);
       setInsuranceAmount(item.insurance.amount);
-      insuranceDateRef.current?.setValue(item.insurance.date);
+      insuranceDateRef.current?.setDefaultValue(new Date(item.insurance.date));
       setInsuranceDate(item.insurance.date);
     }
   }, [isEdit, item]);
@@ -86,8 +86,9 @@ const InsuranceDetails: React.FC<IProps> = ({item, isEdit}) => {
             <Label text="Insurance Date" style={styles.label} />
             <DatePickerComponent
               onDateSelect={(date: Date) => {
-                setInsuranceDate(formatDate4(date));
+                setInsuranceDate(date.toISOString());
               }}
+              ref={insuranceDateRef}
             />
           </View>
           <View style={styles.itemContainer}>
