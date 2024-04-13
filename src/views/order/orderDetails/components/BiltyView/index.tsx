@@ -26,6 +26,8 @@ import useUtilityHook from '../../../../../hooks/useUtilityHook';
 import AlertModal from '../../../../../common/AlertModal';
 import {NavigationProp} from '@react-navigation/native';
 import PreviewShareModal from '../../../../../common/PreviewShareModal';
+import LimitReachImage from '../../../../../images/icons/limit_reach.svg';
+
 
 interface IBiltyViewProps {
   orderId: string;
@@ -114,21 +116,21 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
   };
 
   const handleCreateNewBilty = () => {
-    // const docLimit: number = getDocumentLimitCount('');
-    // const currentDocCount: number = getTotalBilty();
-    // if (docLimit == -1 || currentDocCount < docLimit) {
-    //   setShowBiltyList(true);
-    //   setCreateNewBilty(false);
-    // } else {
-    //   setShowLimitModal(true);
-    // }
-    setShowBiltyList(false);
-    setCreateNewBilty(true);
+    const docLimit: number = getDocumentLimitCount('');
+    const currentDocCount: number = getTotalBilty();
+    if (docLimit == -1 || currentDocCount < docLimit) {
+      setShowBiltyList(true);
+      setCreateNewBilty(false);
+      setShowLimitModal(false);
+    } else {
+      setShowLimitModal(true);
+    }
   };
 
   const handleShowBiltyList = () => {
     setShowBiltyList(true);
     setCreateNewBilty(false);
+    setShowLimitModal(false);
   };
 
   const onSuccess = () => {
@@ -194,7 +196,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
 
   const handlePlanUpgrade = () => {
     setShowLimitModal(false);
-    navigation.navigate('OrderSubscription', {isUpgrade: true});
+    navigation.navigate('Subscription');
   };
 
   const showList = () => {
@@ -255,8 +257,11 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
           </ModalHOC>
           <AlertModal
             visible={showLimitModal}
+            icon={<LimitReachImage width={200} height={200} />}
             onClose={hanldeAlertModalClose}
             onUpgrade={handlePlanUpgrade}
+            title='Your free document create limit has been reached. Please upgrade your plan.'
+            buttonText='UPGRADE'
           />
         </View>
       );

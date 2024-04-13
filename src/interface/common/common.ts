@@ -298,6 +298,7 @@ export interface IFloorResponse {
 export interface IPendingPurchase {
   _id: string;
   subscriptionId: string;
+  companyId: string;
   authId: string;
   purchaseOrderId: string;
   subscriptionPlan: string;

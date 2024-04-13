@@ -26,10 +26,14 @@ import {
   getNextRenewableDate,
 } from '../subscriptionPlan/utils';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {AuthStackParamList} from '../../navigation/params/AuthStackParamList';
 import Spinner from '../../common/Spinner';
 import {COLOR_BLACK} from '../../utils/colors';
-type Props = NativeStackScreenProps<AuthStackParamList, 'Checkout'>;
+import { RootStackParamList } from '../../navigation/params/RootStackParamList';
+import AlertModal from '../../common/AlertModal';
+import successIconJson from '../../images/success.json';
+import Lottie from 'lottie-react-native';
+
+type Props = NativeStackScreenProps<RootStackParamList, 'Checkout'>;
 
 const CheckoutPage: FC<Props> = ({route, navigation}) => {
   const plan: ISubscriptionPlan | undefined = route.params?.subscriptionPlan;
@@ -54,6 +58,8 @@ const CheckoutPage: FC<Props> = ({route, navigation}) => {
   const [gstAmount, setGstAmount] = useState<number>(0);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [firstRenderDone, setFirstRenderDone] = useState<boolean>(false);
+  const [showAlertModal, setShowAlertModal] = useState<boolean>(false);
+
   const inputRef = useRef(null);
 
   const dispatch = useAppDispatch();
@@ -207,6 +213,11 @@ const CheckoutPage: FC<Props> = ({route, navigation}) => {
     }
   };
 
+  const hanldeAlertModalClose = () => {
+    setShowAlertModal(false);
+    navigation.replace('Drawer');
+  }
+
   useEffect(() => {
     setDiscountedPrice(0);
     const _gstAmount = amount * (GST_PERCENT / 100);
@@ -219,7 +230,7 @@ const CheckoutPage: FC<Props> = ({route, navigation}) => {
   useEffect(() => {
     if (!addPurchaseRequesting && addPurchaseSuccess) {
       dispatch(resetAddPurchaseRequest());
-      navigation.replace('CompanyBasicInfo');
+      setShowAlertModal(true);
     } else if (!addPurchaseRequesting && addPurchaseFailure) {
       dispatch(resetAddPurchaseRequest());
     }
@@ -323,6 +334,16 @@ const CheckoutPage: FC<Props> = ({route, navigation}) => {
         textStyle={styles.buttonTextStyle}
         disabled={!firstRenderDone}
       />
+      <AlertModal
+            visible={showAlertModal}
+            title={`Congratulations. \nThanks for becoming a premium member with us. Now you can create unlimited Documents.`}
+            icon={<Lottie source={successIconJson} autoPlay style={{width: 150, height: 150}} />}
+            onClose={hanldeAlertModalClose}
+            onUpgrade={hanldeAlertModalClose}
+            showButton={true}
+            titleStyle={styles.successModalTitleText}
+            buttonText='Go to Home'
+          />
       <Spinner show={paymentProcessing || addPurchaseRequesting} />
     </View>
   );

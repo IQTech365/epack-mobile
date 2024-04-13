@@ -5,13 +5,13 @@ import {useAuthContext} from './provider/AuthProvider';
 import AuthStackNavigator from './navigation/AuthStackNavigator';
 import {Provider} from 'react-redux';
 import {store, persistor} from './redux/store';
-import {DrawerNavigator} from './navigation/DrawerNavigator';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import Toast, {BaseToast, ErrorToast} from 'react-native-toast-message';
 import {PersistGate} from 'redux-persist/integration/react';
 import {MenuProvider} from 'react-native-popup-menu';
 import {COLOR_BLACK, COLOR_GREEN} from './utils/colors';
+import RootStackNavigator from './navigation/RootStackNavigator';
 
 const Main = () => {
   const authContext = useAuthContext();
@@ -66,7 +66,7 @@ const Main = () => {
           <MenuProvider>
             <Provider store={store}>
               <PersistGate loading={null} persistor={persistor}>
-                {loggedIn ? <DrawerNavigator /> : <AuthStackNavigator />}
+                {loggedIn ? <RootStackNavigator /> : <AuthStackNavigator />}
                 <Toast config={toastConfig} />
               </PersistGate>
             </Provider>

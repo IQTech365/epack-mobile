@@ -1,13 +1,11 @@
 import React from "react";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { OrderStackRoute } from "../utils/constants";
 import OrderPageView from "../views/order";
 import AddOrderView from "../views/order/addOrder";
 import OrderDetailsView from "../views/order/orderDetails";
 import { OrderStackParamList } from "./params/OrderStackParamList";
 import EditPackingItemsView from "../views/order/editPackingItemsView";
 import EditInvoiceView from "../views/order/editInvoiceView";
-import SubscriptionPlanView from "../views/subscriptionPlan";
 import EditBiltyView from "../views/order/editBiltyView";
 
 const OrderStack = createNativeStackNavigator<OrderStackParamList>();
@@ -22,7 +20,6 @@ const OrderStackNavigator = () => {
             <OrderStack.Screen name="EditPackingItems" component={EditPackingItemsView} />
             <OrderStack.Screen name="EditInvoice" component={EditInvoiceView} />
             <OrderStack.Screen name="EditBilty" component={EditBiltyView} />
-            <OrderStack.Screen name="OrderSubscription" component={SubscriptionPlanView} />
         </OrderStack.Navigator>
     );
 }

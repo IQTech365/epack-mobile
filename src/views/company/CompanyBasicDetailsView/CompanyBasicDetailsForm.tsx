@@ -31,6 +31,8 @@ import { ToastType, showToast } from '../../../utils/utility';
 import { IPendingRegistration } from '../../../interface/common/common';
 import { resetPendingRegistrationInfoPayload } from '../../../redux/slices/CommonSlice';
 import DropdownWithTextInput from '../../../common/DropdownWithTextInput';
+import AlertModal from '../../../common/AlertModal';
+import ErrorIcon from '../../../images/icons/error_icon.svg';
 
 interface IProps {
   navigation: NavigationProp<any, any>;
@@ -56,6 +58,7 @@ const CompanyBasicDetailsForm: FC<IProps> = ({navigation}) => {
   const [states, setStates] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
   const [shouldValidate, setShouldValidate] = useState<boolean>(false);
+  const [showAlertModal, setShowAlertModal] = useState<boolean>(false);
   const cityDropdownRef = useRef(null);
   const stateDropwdownRef = useRef(null);
   const dispatch = useAppDispatch();
@@ -160,17 +163,23 @@ const CompanyBasicDetailsForm: FC<IProps> = ({navigation}) => {
     setPincode(text); // README: This `setPincode` is from usePincodeHook();
   };
 
-  useEffect(() => {
-    if (otpData?.data?.mobile) {
-      setMobile(otpData?.data?.mobile);
-    }
-  }, []);
+  
 
   const _setCompanyIdAndMoveToNextStep = async (companyId: string) => {
     await setCurrentCompanyId(companyId);
     //@ts-ignore
     navigation.replace('CompanyLogo');
   };
+
+  const hanldeAlertModalClose = () => {
+    setShowAlertModal(false);
+  }
+
+  useEffect(() => {
+    if (otpData?.data?.mobile) {
+      setMobile(otpData?.data?.mobile);
+    }
+  }, []);
 
   useEffect(() => {
     if (!requesting && success && !error) {
@@ -179,47 +188,49 @@ const CompanyBasicDetailsForm: FC<IProps> = ({navigation}) => {
       const {data:pendingPurchaseData} =  pendingRegistrationInfo || {};
       if (data) {
         const company: ICompanyInfoData = data as ICompanyInfoData;
-        const purchase: IPurchase = purchaseData as IPurchase;
-        const pendingPurchase: IPendingRegistration = pendingPurchaseData as IPendingRegistration;
-        let purchaseId:string = '';
-        if(purchase && purchase?.purchase?._id) {
-          purchaseId = purchase?.purchase?._id;
-        } else if(pendingPurchase && pendingPurchase?.purchase?._id) {
-          purchaseId = pendingPurchase?.purchase?._id;
-        }
-        const payload: IUpdateSubscriptionRequest = {
-          params: {
-            authId: authId,
-            purchaseId: purchaseId,
-          },
-          payload: {
-            companyId: company._id,
-          }
-        }
-        dispatch(updateSubscriptionRequest(payload));
+        // const purchase: IPurchase = purchaseData as IPurchase;
+        // const pendingPurchase: IPendingRegistration = pendingPurchaseData as IPendingRegistration;
+        // let purchaseId:string = '';
+        // if(purchase && purchase?.purchase?._id) {
+        //   purchaseId = purchase?.purchase?._id;
+        // } else if(pendingPurchase && pendingPurchase?.purchase?._id) {
+        //   purchaseId = pendingPurchase?.purchase?._id;
+        // }
+        // const payload: IUpdateSubscriptionRequest = {
+        //   params: {
+        //     authId: authId,
+        //     purchaseId: purchaseId,
+        //   },
+        //   payload: {
+        //     companyId: company._id,
+        //   }
+        // }
+        // dispatch(updateSubscriptionRequest(payload));
+        _setCompanyIdAndMoveToNextStep(company._id);
       }
       dispatch(resetAddCompanyRequest());
-      dispatch(resetPendingRegistrationInfoPayload());
+      // dispatch(resetPendingRegistrationInfoPayload());
     } else if (!requesting && !success && error) {
-      Alert.alert('Error in registering the company');
+      // Alert.alert('Error in registering the company');
+      setShowAlertModal(true);
       dispatch(resetAddCompanyRequest());
       dispatch(resetPendingRegistrationInfoPayload());
     }
   }, [requesting, success, error]);
 
-  useEffect(() => {
-    if (!updateSubscriptionRequesting && updateSubscriptionSuccess) {
-        const {data} = addCompanyInfo || {};
-        if (data) {
-          const company: ICompanyInfoData = data as ICompanyInfoData;
-          _setCompanyIdAndMoveToNextStep(company._id);
-          dispatch(resetUpdateSubscriptionRequest());
-        }
-    } else if (!updateSubscriptionRequesting && updateSubscriptionFailure) {
-      showToast('Error in updating company id', ToastType.ERROR);
-      dispatch(resetUpdateSubscriptionRequest());
-    }
-  }, [updateSubscriptionRequesting, updateSubscriptionSuccess, updateSubscriptionFailure]);
+  // useEffect(() => {
+  //   if (!updateSubscriptionRequesting && updateSubscriptionSuccess) {
+  //       const {data} = addCompanyInfo || {};
+  //       if (data) {
+  //         const company: ICompanyInfoData = data as ICompanyInfoData;
+  //         _setCompanyIdAndMoveToNextStep(company._id);
+  //         dispatch(resetUpdateSubscriptionRequest());
+  //       }
+  //   } else if (!updateSubscriptionRequesting && updateSubscriptionFailure) {
+  //     showToast('Error in updating company id', ToastType.ERROR);
+  //     dispatch(resetUpdateSubscriptionRequest());
+  //   }
+  // }, [updateSubscriptionRequesting, updateSubscriptionSuccess, updateSubscriptionFailure]);
 
   useEffect(() => {
     if (result && result.Status != 'Error') {
@@ -464,6 +475,13 @@ const CompanyBasicDetailsForm: FC<IProps> = ({navigation}) => {
           <Spinner
             show={fetching || requesting || updateSubscriptionRequesting}
           />
+          <AlertModal
+            visible={showAlertModal}
+            title='Error in Registration. Try again!'
+            icon={<ErrorIcon width={200} height={200} />}
+            onClose={hanldeAlertModalClose}
+            showButton={false}
+          />
         </View>
       </AvoidSoftInputViewHOC>
       <View style={styles.oneButtonContainer}>
@@ -476,6 +494,7 @@ const CompanyBasicDetailsForm: FC<IProps> = ({navigation}) => {
           />
         </View>
       </View>
+      
     </View>
   );
 };

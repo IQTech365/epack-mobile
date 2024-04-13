@@ -78,7 +78,7 @@ const SubscriptionPlanView = (props: any) => {
     <ImageBackground
       style={{flex: 1, height: height, width: width}}
       source={BackgroundImage}>
-      <Header canGoBack={isUpgrade} label="CHOOSE YOUR PLAN" />
+      <Header canGoBack={true} label="CHOOSE YOUR PLAN" />
       <Carousel
         loop
         width={width}

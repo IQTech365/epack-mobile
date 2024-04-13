@@ -111,7 +111,11 @@ const styles = StyleSheet.create({
     input: {
         color: COLOR_BLACK,
         fontSize: 14,
-      },
+    },
+    successModalTitleText: {
+        color: COLOR_GREEN,
+        fontSize: 16,
+    }
 });
 
 export default styles;
