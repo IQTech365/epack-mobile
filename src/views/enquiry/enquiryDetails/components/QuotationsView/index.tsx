@@ -25,6 +25,9 @@ import {QuotationStackRoute} from '../../../../../utils/constants';
 import {startShare} from '../../../../../utils/utility';
 import Spinner from '../../../../../common/Spinner';
 import ActionHeaderView from '../../../../../common/ActionHeaderView';
+import AlertModal from '../../../../../common/AlertModal';
+import LimitReachImage from '../../../../../images/icons/limit_reach.svg';
+import useUtilityHook from '../../../../../hooks/useUtilityHook';
 
 interface IQuotationViewProps {
   enquiryId: string;
@@ -59,7 +62,9 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
   const [openPreview, setOpenPreview] = useState<boolean>(false);
   const [openShare, setOpenShare] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [showLimitModal, setShowLimitModal] = useState<boolean>(false);
   const templateId = useTemplateIdHook('658d3c6f585e3dde644da95b');
+  const {getDocumentLimitCount} = useUtilityHook();
 
   const _getClientName = (item: IGetQuotationData) => {
     let name: string = 'NA';
@@ -136,6 +141,18 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
     return mobile;
   };
 
+  const getTotalQuotations = () => {
+    let _count = 0;
+    if (
+      quotationData &&
+      Array.isArray(quotationData) &&
+      quotationData.length > 0
+    ) {
+      _count = quotationData.length;
+    }
+    return _count;
+  };
+
   const transformQuotationData = () => {
     let _data: IQuotationItem[] = [];
     if (
@@ -167,15 +184,23 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
   };
 
   const handleCreateNewQuotation = () => {
-    setShowQuotationList(false);
-    setCreateNewQuotation(true);
-    setShowFormInEditMode(false);
+    const docLimit: number = getDocumentLimitCount('658d3c6f585e3dde644da95b');
+    const currentDocCount: number = getTotalQuotations();
+    if (docLimit.toString() == '-1' || currentDocCount < docLimit) {
+      setShowQuotationList(false);
+      setShowFormInEditMode(false);
+      setShowLimitModal(false);
+      setCreateNewQuotation(true);
+    } else {
+      setShowLimitModal(true);
+    }
   };
 
   const handleShowQuotationList = () => {
-    setShowQuotationList(true);
     setCreateNewQuotation(false);
     setShowFormInEditMode(false);
+    setShowLimitModal(false);
+    setShowQuotationList(true);
   };
 
   const handleOnRefresh = useCallback(() => {
@@ -226,6 +251,15 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
     dispatch(getQuotationHtmlRequest(payload));
   };
 
+  const hanldeAlertModalClose = () => {
+    setShowLimitModal(false);
+  };
+
+  const handlePlanUpgrade = () => {
+    setShowLimitModal(false);
+    navigation.navigate('Subscription');
+  };
+
   const showEmptyView = () => {
     return (
       <View style={styles.emptyContainer}>
@@ -241,6 +275,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
     setShowQuotationList(true);
     setCreateNewQuotation(false);
     setShowFormInEditMode(false);
+    setShowLimitModal(false);
   };
 
   const showForm = () => {
@@ -374,6 +409,14 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
           <TemplateViewer html={quotationTemplateHtml} />
         </View>
       </ModalHOC>
+      <AlertModal
+        visible={showLimitModal}
+        icon={<LimitReachImage width={200} height={200} />}
+        onClose={hanldeAlertModalClose}
+        onUpgrade={handlePlanUpgrade}
+        title="Your document create limit has been reached. Please upgrade your plan."
+        buttonText="UPGRADE"
+      />
     </View>
   );
 };

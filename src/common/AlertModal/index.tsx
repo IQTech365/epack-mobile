@@ -8,7 +8,6 @@ import {
   Pressable,
   TextStyle,
 } from 'react-native';
-import LimitReachImage from '../../images/icons/limit_reach.svg';
 import CloseIcon from '../../images/icons/close_icon.svg';
 import {COLOR_GRAY} from '../../utils/colors';
 

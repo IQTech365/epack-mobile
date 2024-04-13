@@ -116,9 +116,9 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
   };
 
   const handleCreateNewBilty = () => {
-    const docLimit: number = getDocumentLimitCount('');
+    const docLimit: number = getDocumentLimitCount('658d3cb5585e3dde644da97e');
     const currentDocCount: number = getTotalBilty();
-    if (docLimit == -1 || currentDocCount < docLimit) {
+    if (docLimit.toString() == "-1" || currentDocCount < docLimit) {
       setShowBiltyList(true);
       setCreateNewBilty(false);
       setShowLimitModal(false);
