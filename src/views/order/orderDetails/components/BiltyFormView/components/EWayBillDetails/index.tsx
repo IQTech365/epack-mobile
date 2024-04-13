@@ -1,25 +1,33 @@
-import React, {useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {View} from 'react-native';
 import styles from './style';
 import CollapsibleView from '../../../../../../../common/CollapsibleView';
 import Label from '../../../../../../../common/Label';
-import Input from '../../../../../../../common/Input';
+import Input, {InputMethods} from '../../../../../../../common/Input';
 import Spacer from '../../../../../../../common/Spacer';
 import DatePickerComponent from '../../../../../../../common/DatePickerComponent';
 import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
 import {COLOR_BLACK} from '../../../../../../../utils/colors';
 import {formatDate4} from '../../../../../../../utils/formatter';
-import { IBilty } from '../../../../../../../interface/order/IGetBiltyListResponse';
+import {IBilty} from '../../../../../../../interface/order/IGetBiltyListResponse';
 
 interface IProps {
-  item?:IBilty;
-  isEdit?:boolean;
+  item?: IBilty;
+  isEdit?: boolean;
 }
 
 const EWayBillDetails: React.FC<IProps> = ({item, isEdit}) => {
   const {state, setEWayBillNo, setGeneratedOn, setExpiryDate} =
     useBiltyFormContextHook();
-  const ewayBillNoInputCompRef = useRef(null);
+  const ewayBillNoInputCompRef = useRef<InputMethods>(null);
+
+  useEffect(() => {
+    if (isEdit && item) {
+      //
+      ewayBillNoInputCompRef.current?.setValue(item.eWayBill.number);
+      setEWayBillNo(item.eWayBill.number);
+    }
+  }, [isEdit, item]);
 
   return (
     <CollapsibleView title="E-Way BILL DETAILS" collapsed={true}>

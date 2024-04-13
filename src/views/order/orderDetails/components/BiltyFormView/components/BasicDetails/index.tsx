@@ -4,24 +4,29 @@ import CollapsibleView from '../../../../../../../common/CollapsibleView';
 import Label from '../../../../../../../common/Label';
 import styles from './style';
 import {Switch} from 'react-native-switch';
-import Input, { InputMethods } from '../../../../../../../common/Input';
-import DatePickerComponent, { IDateMethods } from '../../../../../../../common/DatePickerComponent';
+import Input, {InputMethods} from '../../../../../../../common/Input';
+import DatePickerComponent, {
+  IDateMethods,
+} from '../../../../../../../common/DatePickerComponent';
 import Spacer from '../../../../../../../common/Spacer';
 import {COLOR_BLACK} from '../../../../../../../utils/colors';
 import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
 import {formatDate4} from '../../../../../../../utils/formatter';
 import useSerialNoHook from '../../../../../../../hooks/useSerialNo';
-import { IBilty } from '../../../../../../../interface/order/IGetBiltyListResponse';
+import {IBilty} from '../../../../../../../interface/order/IGetBiltyListResponse';
 
 interface IProps {
-  item?:IBilty;
-  isEdit?:boolean;
+  item?: IBilty;
+  isEdit?: boolean;
 }
 
 const BasicDetails: React.FC<IProps> = ({item, isEdit}) => {
   const [switchState, setSwitchState] = useState<boolean>(true);
-  const switchWrapperStyle = switchState ? styles.switchMainWrapper : styles.switchMainWrapper2;
-  const {state, setBiltyLrCrNo, setDateOfBiltyLrCrNo} = useBiltyFormContextHook();
+  const switchWrapperStyle = switchState
+    ? styles.switchMainWrapper
+    : styles.switchMainWrapper2;
+  const {state, setBiltyLrCrNo, setDateOfBiltyLrCrNo} =
+    useBiltyFormContextHook();
   const serialNo: number = useSerialNoHook();
   const biltyNoInputCompRef = useRef<InputMethods>(null);
   const dateCompRef = useRef<IDateMethods>(null);
@@ -36,10 +41,11 @@ const BasicDetails: React.FC<IProps> = ({item, isEdit}) => {
     if (switchState) {
       if (!isEdit && serialNo) {
         setBiltyLrCrNo(serialNo.toString());
-        biltyNoInputCompRef && biltyNoInputCompRef?.current?.setValue(serialNo.toString());
+        biltyNoInputCompRef &&
+          biltyNoInputCompRef?.current?.setValue(serialNo.toString());
       }
     } else {
-      if(!isEdit) {
+      if (!isEdit) {
         setBiltyLrCrNo('');
         biltyNoInputCompRef && biltyNoInputCompRef?.current?.setValue('');
       }
@@ -47,7 +53,7 @@ const BasicDetails: React.FC<IProps> = ({item, isEdit}) => {
   }, [switchState]);
 
   useEffect(() => {
-    if(isEdit && item) {
+    if (isEdit && item) {
       biltyNoInputCompRef.current?.setValue(item.biltyNumber);
       setSwitchState(true);
       setBiltyLrCrNo(item.biltyNumber);

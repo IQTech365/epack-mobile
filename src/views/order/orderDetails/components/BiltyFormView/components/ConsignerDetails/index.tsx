@@ -21,11 +21,11 @@ import DropdownWithTextInput, {
 } from '../../../../../../../common/DropdownWithTextInput';
 import {useAppSelector} from '../../../../../../../redux/hooks';
 import {ISingleEnquiryData} from '../../../../../../../interface/enquiry/ISingleEnquiryResponse';
-import { IBilty } from '../../../../../../../interface/order/IGetBiltyListResponse';
+import {IBilty} from '../../../../../../../interface/order/IGetBiltyListResponse';
 
 interface IProps {
-  item?:IBilty;
-  isEdit?:boolean;
+  item?: IBilty;
+  isEdit?: boolean;
 }
 
 const ConsignerDetails: React.FC<IProps> = ({item, isEdit}) => {
@@ -135,14 +135,28 @@ const ConsignerDetails: React.FC<IProps> = ({item, isEdit}) => {
     [state.consinger_pincode],
   );
 
+  console.log(item, 'robinkhan');
   useEffect(() => {
-    if(isEdit && item) {
+    if (isEdit && item) {
       //
+      consignerNameInputRef.current?.setValue(item.consigner.name);
+      setConsignerName(item.consigner.name);
+      gstInputRef.current?.setValue(item.consigner.gstin);
+      setConsignerGst(item?.consigner.gstin);
+      mobileInputRef.current?.setValue(item.consigner.mobile);
+      setConsignerMobileNo(item.consigner.mobile);
+      consignerPincodeInputRef.current?.setValue(item?.consigner.postalCode);
+      stateDropdownCompRef.current?.setValue(item.consigner.state);
+      setConsignerState(item?.consigner?.state);
+      cityDropdownCompRef.current?.setValue(item?.consigner?.city);
+      setConsignerCity(item?.consigner?.city);
+      consignerAddressInputRef.current?.setValue(item?.loadingAddress?.address);
+      setConsignerAddress(item?.loadingAddress?.address);
     }
   }, [isEdit, item]);
 
   useEffect(() => {
-    if(!isEdit) {
+    if (!isEdit) {
       initConsingerAddressIfSameasClient();
     }
   }, [state.consigner_address_same_as_client, isEdit]);

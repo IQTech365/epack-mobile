@@ -17,11 +17,12 @@ import DropdownWithTextInput, {
 } from '../../../../../../../common/DropdownWithTextInput';
 import {useAppSelector} from '../../../../../../../redux/hooks';
 import {ISingleEnquiryData} from '../../../../../../../interface/enquiry/ISingleEnquiryResponse';
-import { IBilty } from '../../../../../../../interface/order/IGetBiltyListResponse';
+import {IBilty} from '../../../../../../../interface/order/IGetBiltyListResponse';
+import {current} from '@reduxjs/toolkit';
 
 interface IProps {
-  item?:IBilty;
-  isEdit?:boolean;
+  item?: IBilty;
+  isEdit?: boolean;
 }
 
 const ConsigneeDetails: React.FC<IProps> = ({item, isEdit}) => {
@@ -142,6 +143,21 @@ const ConsigneeDetails: React.FC<IProps> = ({item, isEdit}) => {
       setCities(getCities2(result));
     }
   }, [result]);
+
+  useEffect(() => {
+    if (isEdit && item) {
+      consigneeNameInputRef.current?.setValue(item.consignee.name);
+      setConsigneeName(item.consignee.name);
+      gstInputRef.current?.setValue(item.consignee.gstin);
+      setConsigneeGst(item.consignee.gstin);
+      mobileInputRef.current?.setValue(item.consignee.mobile);
+      setConsigneeMobileNo(item.consignee.mobile);
+      consigneeAddressInputRef.current?.setValue(
+        item?.unloadingAddress?.address,
+      );
+      setConsigneeAddress(item?.consignee?.unloadingAddress);
+    }
+  }, [isEdit, item]);
 
   useEffect(() => {
     if (

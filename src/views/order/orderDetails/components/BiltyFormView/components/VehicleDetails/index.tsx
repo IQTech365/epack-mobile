@@ -6,18 +6,20 @@ import Label from '../../../../../../../common/Label';
 import Input, {InputMethods} from '../../../../../../../common/Input';
 import Spacer from '../../../../../../../common/Spacer';
 import DropdownComponent from '../../../../../../../common/DropdownComponent';
-import DatePickerComponent from '../../../../../../../common/DatePickerComponent';
+import DatePickerComponent, {
+  IDateMethods,
+} from '../../../../../../../common/DatePickerComponent';
 import {COLOR_BLACK} from '../../../../../../../utils/colors';
 import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
 import {TDropdownItem} from '../../../../../../../type/TDropdownItem';
 import {formatDate4} from '../../../../../../../utils/formatter';
 import {useAppSelector} from '../../../../../../../redux/hooks';
 import {IVehicleSize} from '../../../../../../../interface/vehicle/IGetVehicleSizeResponse';
-import { IBilty } from '../../../../../../../interface/order/IGetBiltyListResponse';
+import {IBilty} from '../../../../../../../interface/order/IGetBiltyListResponse';
 
 interface IProps {
-  item?:IBilty;
-  isEdit?:boolean;
+  item?: IBilty;
+  isEdit?: boolean;
 }
 
 const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
@@ -45,6 +47,16 @@ const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
 
   const fromCityInputRef = useRef<InputMethods>(null);
   const toCityInputRef = useRef<InputMethods>(null);
+  const invoiceNoInputRef = useRef<InputMethods>(null);
+  const vehicleNoInputRef = useRef<InputMethods>(null);
+  const driverNameInputRef = useRef<InputMethods>(null);
+  const driverMobileInputRef = useRef<InputMethods>(null);
+  const driverLicenceInputRef = useRef<InputMethods>(null);
+  const sealNoInputRef = useRef<InputMethods>(null);
+  const transitDaysInputRef = useRef<InputMethods>(null);
+  const inDateRef = useRef<IDateMethods>(null);
+  const outDateRef = useRef<IDateMethods>(null);
+  const ExpectedDateofDeliveryRef = useRef<IDateMethods>(null);
 
   const {data: orderData} = order || {};
 
@@ -66,6 +78,30 @@ const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
   console.log(orderData?.pickupAddress?.city, 'orderData?.pickupAddress?.city');
 
   useEffect(() => {
+    if (isEdit && item) {
+      invoiceNoInputRef.current?.setValue(item.vehicle.invoiceNumber);
+      setInvoiceNo(item.vehicle.invoiceNumber);
+      vehicleNoInputRef.current?.setValue(item.vehicle.vehicleNumber);
+      setVehicleNo(item.vehicle.vehicleNumber);
+      driverNameInputRef.current?.setValue(item.driver.name);
+      setDriverName(item.driver.name);
+      driverMobileInputRef.current?.setValue(item.driver.mobile);
+      setDriverMobileNo(item.driver.mobile);
+      driverLicenceInputRef.current?.setValue(item.driver.license);
+      setDriverLicenseNo(item.driver.license);
+      sealNoInputRef.current?.setValue(item.vehicle.sealNumber);
+      setSealNo(item.vehicle.sealNumber);
+      transitDaysInputRef.current?.setValue(item.vehicle.transitDays);
+      setTransitDays(item.vehicle.transitDays);
+      // inDateRef.current?.setDefaultValue(new Date(item?.vehicle?.inDate));
+      setInDate(formatDate4(new Date(item?.vehicle?.inDate)));
+      // outDateRef.current?.setDefaultValue(new Date(item?.vehicle?.outDate));
+      setOutDate(formatDate4(new Date(item?.vehicle?.outDate)));
+      // ExpectedDateofDeliveryRef.current?.setDefaultValue(new Date(item?.vehicle?.expectedDate))
+    }
+  }, [isEdit, item]);
+
+  useEffect(() => {
     // get pickupaddress and dropaddress from order
     fromCityInputRef &&
       fromCityInputRef.current?.setValue(orderData[0]?.pickupAddress?.city);
@@ -84,6 +120,7 @@ const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
             autoCapitalize="characters"
+            ref={invoiceNoInputRef}
           />
         </View>
         <Spacer height={4} />
@@ -105,6 +142,7 @@ const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
               autoCapitalize="characters"
+              ref={vehicleNoInputRef}
             />
           </View>
         </View>
@@ -139,6 +177,7 @@ const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
+            ref={driverNameInputRef}
           />
         </View>
         <Spacer height={4} />
@@ -151,6 +190,7 @@ const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
               inputType="numeric"
+              ref={driverMobileInputRef}
             />
           </View>
           <View style={styles.itemContainer}>
@@ -161,6 +201,7 @@ const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
               autoCapitalize="characters"
+              ref={driverLicenceInputRef}
             />
           </View>
         </View>
@@ -173,6 +214,7 @@ const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
             autoCapitalize="characters"
+            ref={sealNoInputRef}
           />
         </View>
         <Spacer height={4} />
@@ -183,6 +225,7 @@ const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
               onDateSelect={(date: Date) => {
                 setInDate(formatDate4(date));
               }}
+              ref={inDateRef}
             />
           </View>
           <View style={styles.itemContainer}>
@@ -191,6 +234,7 @@ const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
               onDateSelect={(date: Date) => {
                 setOutDate(formatDate4(date));
               }}
+              ref={outDateRef}
             />
           </View>
         </View>
@@ -204,6 +248,7 @@ const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
               inputType="numeric"
+              ref={transitDaysInputRef}
             />
           </View>
           <View style={styles.itemContainer}>

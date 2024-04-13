@@ -102,14 +102,17 @@ export interface IAddress {
 }
 
 export interface IBiltyConsigners {
-  _id: string;
-  biltyId: string;
-  consigner: IClient;
-  consignee: IClient;
-  loadingAddress: IAddress;
-  unloadingAddress: IAddress;
-  updatedAt: string;
-  createdAt: string;
+  name: string;
+  mobile: string;
+  gstin: string;
+  street: string;
+  state: string;
+  landmark: string;
+  city: string;
+  district: string;
+  postOffice: string;
+  postalCode: string;
+  country: string;
 }
 
 export interface IBilty {
@@ -134,7 +137,8 @@ export interface IBilty {
   updatedAt: string;
   createdAt: string;
   biltyfreights: IBiltyFreight[];
-  biltyconsigners: IBiltyConsigners[];
+  consigner: IBiltyConsigners;
+  consignee: IBiltyConsigners;
 }
 
 export interface IGetBiltyListResponse {
