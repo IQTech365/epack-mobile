@@ -70,8 +70,8 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ orderId, item, navigation })
     const docLimit: number = getDocumentLimitCount('658d3ce2585e3dde644da98c');
     const currentDocCount: number = getTotalInvoice();
     if (docLimit.toString() == "-1" || currentDocCount < docLimit) {
-      setShowInvoiceList(true);
-      setCreateNewInvoice(false);
+      setShowInvoiceList(false);
+      setCreateNewInvoice(true);
       setShowLimitModal(false);
     } else {
       setShowLimitModal(true);
