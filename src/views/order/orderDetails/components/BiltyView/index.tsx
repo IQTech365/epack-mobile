@@ -44,7 +44,6 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
     getBiltyHtmlSuccess,
     getBiltyHtmlFailure,
   } = useAppSelector(state => state.Order);
-  console.log(JSON.stringify(biltyList));
 
   const [showBiltyList, setShowBiltyList] = useState<boolean>(false);
   const [createNewBilty, setCreateNewBilty] = useState<boolean>(true);
@@ -67,15 +66,16 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
       _count = data.length;
     }
     return _count;
+
   };
 
   const _getBiltyType = (bilty: IBilty) => {
     let biltyType: string = '';
-    const {biltyfreights} = bilty;
-    if (biltyfreights && biltyfreights.length > 0) {
-      const biltyFreight: IBiltyFreight = biltyfreights[0];
-      biltyType = biltyFreight.freightDetails.billingStatus;
-    }
+    // const {biltyfreights} = bilty;
+    // if (biltyfreights && biltyfreights.length > 0) {
+    //   const biltyFreight: IBiltyFreight = biltyfreights[0];
+    //   biltyType = biltyFreight.freightDetails.billingStatus;
+    // }
     return biltyType;
   };
 
@@ -118,10 +118,12 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
   const handleCreateNewBilty = () => {
     const docLimit: number = getDocumentLimitCount('658d3cb5585e3dde644da97e');
     const currentDocCount: number = getTotalBilty();
+    
     if (docLimit.toString() == "-1" || currentDocCount < docLimit) {
       setShowBiltyList(false);
       setCreateNewBilty(true);
       setShowLimitModal(false);
+      
     } else {
       setShowLimitModal(true);
     }

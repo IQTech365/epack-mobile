@@ -9,11 +9,12 @@ import Spacer from '../../../../../../../common/Spacer';
 import Label from '../../../../../../../common/Label';
 import Input, {InputMethods} from '../../../../../../../common/Input';
 import DatePickerComponent, { IDateMethods } from '../../../../../../../common/DatePickerComponent';
-import {COLOR_BLACK} from '../../../../../../../utils/colors';
+import {COLOR_BLACK, COLOR_BLUE} from '../../../../../../../utils/colors';
 import {insuranceOptions} from '../MaterialDetails/utils';
 import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
 import {formatDate4} from '../../../../../../../utils/formatter';
 import {IBilty} from '../../../../../../../interface/order/IGetBiltyListResponse';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
 
 interface IProps {
   item?: IBilty;
@@ -27,6 +28,7 @@ const InsuranceDetails: React.FC<IProps> = ({item, isEdit}) => {
     setPolicyNumber,
     setInsuranceDate,
     setInsuranceAmount,
+    setInsurance,
   } = useBiltyFormContextHook();
 
   const insuranceCompanyNameRef = useRef<InputMethods>(null);
@@ -36,7 +38,7 @@ const InsuranceDetails: React.FC<IProps> = ({item, isEdit}) => {
 
   useEffect(() => {
     if (isEdit && item) {
-      //
+      setInsurance(item.insuranceStatus)
       insuranceCompanyNameRef.current?.setValue(item.insurance.companyName);
       setInsuranceCompany(item.insurance.companyName);
       insurancePolicyNoRef.current?.setValue(item.insurance.policyNumber);
@@ -52,11 +54,25 @@ const InsuranceDetails: React.FC<IProps> = ({item, isEdit}) => {
     <CollapsibleView title="INSURANCE DETAILS" collapsed={true}>
       <View>
         <View style={styles.elementContainer}>
-          <BouncyCheckboxGroup
-            data={insuranceOptions}
-            // isChecked={state.insurance}
-            onChange={(selectedItem: ICheckboxButton) => {}}
-          />
+        {insuranceOptions.map((option: string, index: number) => (
+            <BouncyCheckbox
+              key={`${index}`}
+              size={25}
+              unfillColor="#FFFFFF"
+              text={option}
+              fillColor={COLOR_BLUE}
+              iconStyle={styles.iconStyle}
+              innerIconStyle={styles.innerIconStyle}
+              textStyle={styles.textStyle}
+              style={styles.style}
+              textContainerStyle={styles.textContainerStyle}
+              onPress={(isChecked: boolean) => {
+                setInsurance(option);
+              }}
+              isChecked={state.insurance == option}
+              disableBuiltInState={true}
+            />
+          ))}
         </View>
         <Spacer height={4} />
         <View style={styles.elementContainer2}>

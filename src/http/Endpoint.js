@@ -201,3 +201,7 @@ export const GET_TODAY_SURVEY = (company_id) => `/survey/latest/${company_id}`
 // Today's Shifting
 
 export const GET_TODAY_SHIFTING =(company_id) => `/order/latest/${company_id}`
+
+//  Update bilty
+
+export const UPDATE_BILTY = (id) => `bilty/edit/${id}`

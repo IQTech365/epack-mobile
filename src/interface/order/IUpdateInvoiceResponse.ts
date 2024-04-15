@@ -5,7 +5,7 @@ export interface IUpdateInvoicePayload {
     data:ICreateInvoiceRequest;
 }
 
-export interface IUpdateInvoiceResponse {
+export interface  IUpdateInvoiceResponse {
     data: any;
     status:number;
     error:boolean;

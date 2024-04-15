@@ -94,7 +94,9 @@ const styles = StyleSheet.create({
     width: width * 0.9,
   },
   textStyle: {
-    color: COLOR_WHITE,
+    color: COLOR_BLACK,
+    textDecorationLine: 'none',
+    fontFamily: 'WorkSans-Regular'
   },
   previewButtonStyle: {
     backgroundColor: COLOR_BLUE,
@@ -120,6 +122,25 @@ const styles = StyleSheet.create({
     color: COLOR_BLACK,
     fontSize: 14,
     fontWeight: '400',
+  },
+  iconStyle:{
+    borderRadius: 12,
+    width: 22,
+    height: 22,
+  },
+  innerIconStyle:{
+    borderWidth: 1,
+    borderRadius: 12,
+    width: 22,
+    height: 22,
+  },
+  textContainerStyle: {
+    paddingLeft: 0,
+    marginLeft: 6,
+  },
+  style: {
+    marginRight: 8,
+    marginBottom: 15,
   },
 });
 

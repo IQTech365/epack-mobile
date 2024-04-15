@@ -65,6 +65,8 @@ import {
   getPackingMaterialsFailure,
   getPackingMaterialsRequest,
   getPackingMaterialsSuccess,
+  updateBiltyFailure,
+  updateBiltySuccess,
   updateInvoiceFailure,
   updateInvoiceRequest,
   updateInvoiceSuccess,
@@ -78,11 +80,11 @@ import {ICreateMoneyReceiptRequest} from '../interface/order/ICreateMoneyReceipt
 import {ICreateMoneyReceiptResponse} from '../interface/order/ICreateMoneyReceiptResponse';
 import { ICreateCarConditionRequest } from '../interface/order/ICreateCarConditionRequest';
 import { ICreateBiltyRequest } from '../interface/order/ICreateBiltyRequest';
-import { ICreateBiltyResponse } from '../interface/order/ICreateBiltyResponse';
+import { ICreateBiltyResponse, IUpdateBiltyResponse } from '../interface/order/ICreateBiltyResponse';
 import { IGetOrdersResponse } from '../interface/order/IGetOrdersResponse';
 import { IGetMoneyReceiptsResponse } from '../interface/order/IGetMoneyReceiptsResponse';
 import { IGetCarConditionListResponse } from '../interface/order/IGetCarConditionListResponse';
-import { IGetBiltyListResponse } from '../interface/order/IGetBiltyListResponse';
+import { IGetBiltyListResponse, IUpdateBiltyPayload } from '../interface/order/IGetBiltyListResponse';
 import { IGetOrdersRequest } from '../interface/order/IGetOrdersRequest';
 import { ISingleOrderRequest } from '../interface/order/ISingleOrderRequest';
 import { ISingleEnquiryResponse } from '../interface/enquiry/ISingleEnquiryResponse';
@@ -245,6 +247,15 @@ export function* createCarConditionSaga(
         yield put(getBiltyListSuccess(response));
     } catch (error) {
         yield put(getBiltyListFailure(error));
+    }
+  }
+
+  export function* updateBiltySaga(action: PayloadAction<IUpdateBiltyPayload>) {
+    try {
+        const response: IUpdateBiltyResponse = yield call(OrderService.UpdateBiltyService, action.payload);
+        yield put(updateBiltySuccess(response));
+    } catch (error) {
+        yield put(updateBiltyFailure(error));
     }
   }
 

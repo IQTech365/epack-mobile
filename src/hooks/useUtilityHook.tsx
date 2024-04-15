@@ -63,7 +63,7 @@ const useUtilityHook = () => {
 
       }
     }
-    return count;
+    return count === 0 ? 10 : count;
   }
 
   return {getInsurancePercentageList, getFloorsList, getDocumentLimitCount};

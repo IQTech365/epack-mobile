@@ -92,13 +92,13 @@ const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
       setSealNo(item.vehicle.sealNumber);
       transitDaysInputRef.current?.setValue(item.vehicle.transitDays);
       setTransitDays(item.vehicle.transitDays);
-      if(item.vehicle.inDate) {
+      if(item?.vehicle?.inDate) {
        setInDate(item?.vehicle?.inDate);
-        inDateRef.current?.setDefaultValue(new Date(item.vehicle.inDate));
+        inDateRef.current?.setDefaultValue(new Date(item?.vehicle?.inDate));
       }
-      if(item.vehicle.outDate) {
+      if(item?.vehicle?.outDate) {
         setOutDate(item?.vehicle?.outDate);
-        outDateRef.current?.setDefaultValue(new Date(item.vehicle.outDate));
+        outDateRef.current?.setDefaultValue(new Date(item?.vehicle?.outDate));
       }
       if(item?.vehicle?.expectedDateOfDelivery) {
         setExpectedDateOfDelivery(item.vehicle.expectedDateOfDelivery);

@@ -227,6 +227,7 @@ const ConsignerDetails: React.FC<IProps> = ({item, isEdit}) => {
               placeholder="Enter GST#"
               placeholderTextColor={COLOR_GRAY4}
               ref={gstInputRef}
+              autoCapitalize="characters"
             />
           </View>
           <View style={styles.itemContainer}>

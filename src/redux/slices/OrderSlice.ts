@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {IOrderDetailsResponse} from '../../interface/order/IOrderDetailsResponse';
 import {ICreateCarConditionResponse} from '../../interface/order/ICreateCarConditionResponse';
-import {ICreateBiltyResponse} from '../../interface/order/ICreateBiltyResponse';
+import {ICreateBiltyResponse, IUpdateBiltyResponse} from '../../interface/order/ICreateBiltyResponse';
 import {ICreateInvoiceResponse} from '../../interface/order/ICreateInvoiceResponse';
 import {ICreateCarConditionRequest} from '../../interface/order/ICreateCarConditionRequest';
 import {ICreateBiltyRequest} from '../../interface/order/ICreateBiltyRequest';
@@ -13,7 +13,7 @@ import {IAddOrderRequest} from '../../interface/order/IAddOrderRequest';
 import {IGetOrdersResponse} from '../../interface/order/IGetOrdersResponse';
 import {IGetMoneyReceiptsResponse} from '../../interface/order/IGetMoneyReceiptsResponse';
 import {IGetCarConditionListResponse} from '../../interface/order/IGetCarConditionListResponse';
-import {IGetBiltyListResponse} from '../../interface/order/IGetBiltyListResponse';
+import {IGetBiltyListResponse, IUpdateBiltyPayload} from '../../interface/order/IGetBiltyListResponse';
 import {IGetOrdersRequest} from '../../interface/order/IGetOrdersRequest';
 import {ISingleEnquiryResponse} from '../../interface/enquiry/ISingleEnquiryResponse';
 import {ISingleOrderRequest} from '../../interface/order/ISingleOrderRequest';
@@ -113,6 +113,12 @@ interface IOrderState {
   getBiltyListSuccess: boolean;
   getBiltyListFailure: boolean;
   getBiltyListError: any;
+  // Update Bilty
+  updateBiltyData: IUpdateBiltyResponse | null;
+  updateBiltyRequesting: boolean;
+  updateBiltySuccess: boolean;
+  updateBiltyFailure: boolean;
+  updateBiltyError: any;
   // Bilty Template Html
   biltyTemplateHtml: IHtmlTemplateResponse | null;
   getBiltyHtmlRequesting: boolean;
@@ -261,6 +267,12 @@ const initialState: IOrderState = {
   getBiltyListSuccess: false,
   getBiltyListFailure: false,
   getBiltyListError: null,
+  // Update Bilty
+  updateBiltyData: null,
+  updateBiltyRequesting: false,
+  updateBiltySuccess: false,
+  updateBiltyFailure: false,
+  updateBiltyError: null,
   // Bilty Template Html
   biltyTemplateHtml: null,
   getBiltyHtmlRequesting: false,
@@ -623,7 +635,7 @@ export const OrderSlice = createSlice({
       state.createBiltyFailure = false;
       state.createBiltyError = null;
     },
-    // Get Bilty List
+    // Update Bilty List
     getBiltyListRequest: (state, action: PayloadAction<string>) => {
       state.getBiltyListRequesting = true;
     },
@@ -640,6 +652,30 @@ export const OrderSlice = createSlice({
       state.getBiltyListSuccess = false;
       state.getBiltyListFailure = true;
       state.getBiltyListError = action.payload;
+    },
+    // Update Bilty
+    updateBiltyRequest: (state, action: PayloadAction<IUpdateBiltyPayload>) => {
+      state.updateBiltyRequesting = true;
+    },
+    updateBiltySuccess: (
+      state,
+      action: PayloadAction<IUpdateBiltyResponse>,
+    ) => {
+      state.updateBiltyRequesting = false;
+      state.updateBiltySuccess = true;
+      state.updateBiltyData = action.payload;
+    },
+    updateBiltyFailure: (state, action: PayloadAction<any>) => {
+      state.updateBiltyRequesting = false;
+      state.updateBiltySuccess = false;
+      state.updateBiltyFailure = true;
+      state.updateBiltyError = action.payload;
+    },
+    resetUpdateBiltyRequest: (state, action: PayloadAction<any>) => {
+      state.updateBiltyRequesting = false;
+      state.updateBiltySuccess = false;
+      state.updateBiltyFailure = true;
+      state.updateBiltyError = action.payload;
     },
     // Bilty Template Html
     getBiltyHtmlRequest: (
@@ -967,6 +1003,11 @@ export const {
   getBiltyListRequest,
   getBiltyListSuccess,
   getBiltyListFailure,
+  // Update Bilty
+  updateBiltyRequest,
+  updateBiltySuccess,
+  updateBiltyFailure,
+  resetUpdateBiltyRequest,
   // Bilty Html
   getBiltyHtmlRequest,
   getBiltyHtmlSuccess,

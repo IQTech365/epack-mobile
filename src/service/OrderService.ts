@@ -22,6 +22,7 @@ import {
   GET_ORDER_LIST,
   GET_PACKING_LIST,
   GET_PACKING_LIST_TEMPLATE,
+  UPDATE_BILTY,
   UPDATE_INVOICE,
   UPDATE_PACKING_LIST,
 } from '../http/Endpoint';
@@ -33,14 +34,14 @@ import {IAddOrderResponse} from '../interface/order/IAddOrderResponse';
 import {ICreateCarConditionRequest} from '../interface/order/ICreateCarConditionRequest';
 import {ICreateCarConditionResponse} from '../interface/order/ICreateCarConditionResponse';
 import {ICreateBiltyRequest} from '../interface/order/ICreateBiltyRequest';
-import {ICreateBiltyResponse} from '../interface/order/ICreateBiltyResponse';
+import {ICreateBiltyResponse, IUpdateBiltyResponse} from '../interface/order/ICreateBiltyResponse';
 import {ICreateMoneyReceiptRequest} from '../interface/order/ICreateMoneyReceiptRequest';
 import {ICreateMoneyReceiptResponse} from '../interface/order/ICreateMoneyReceiptResponse';
 import {ICreateInvoiceRequest} from '../interface/order/ICreateInvoiceRequest';
 import {ICreateInvoiceResponse} from '../interface/order/ICreateInvoiceResponse';
 import {IGetOrdersResponse} from '../interface/order/IGetOrdersResponse';
 import {IGetMoneyReceiptsResponse} from '../interface/order/IGetMoneyReceiptsResponse';
-import {IGetBiltyListResponse} from '../interface/order/IGetBiltyListResponse';
+import {IGetBiltyListResponse, IUpdateBiltyPayload} from '../interface/order/IGetBiltyListResponse';
 import {IGetCarConditionListResponse} from '../interface/order/IGetCarConditionListResponse';
 import {IGetOrdersRequest} from '../interface/order/IGetOrdersRequest';
 import {ISingleOrderRequest} from '../interface/order/ISingleOrderRequest';
@@ -124,6 +125,12 @@ export const GetBiltyListService = async (
 ): Promise<IGetBiltyListResponse> => {
   const api = Api.getInstance();
   return await api.get<IGetBiltyListResponse>(GET_BILTY_LIST(payload));
+};
+
+//  Update Bilty
+export const UpdateBiltyService = async (payload: IUpdateBiltyPayload): Promise<IUpdateBiltyResponse> => {
+  const api = Api.getInstance();
+  return await api.update<ICreateBiltyRequest, AxiosResponse<IUpdateBiltyResponse>>(payload.payload, UPDATE_BILTY(payload.id));
 };
 
 export const CreateMoneyReceiptService = async (

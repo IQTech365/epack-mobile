@@ -9,6 +9,7 @@ import Button from '../../../../../common/Button';
 import {
   createBiltyRequest,
   resetCreateBiltyRequest,
+  updateBiltyRequest,
 } from '../../../../../redux/slices/OrderSlice';
 import BasicDetails from './components/BasicDetails';
 import ConsignerDetails from './components/ConsignerDetails';
@@ -37,7 +38,7 @@ import {
   getSerialNoRequest,
   resetGetSerialNoRequest,
 } from '../../../../../redux/slices/SerialNoSettingSlice';
-import { IBilty } from '../../../../../interface/order/IGetBiltyListResponse';
+import { IBilty, IUpdateBiltyPayload } from '../../../../../interface/order/IGetBiltyListResponse';
 
 interface IBiltyFormViewProps {
   orderId: string | undefined;
@@ -55,6 +56,10 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess, item,
     createBiltySuccess,
     createBiltyError,
     createBiltyFailure,
+    updateBiltyRequesting,
+    updateBiltySuccess,
+    updateBiltyFailure,
+    
   } = useAppSelector(state => state.Order);
 
   const authId = useAuthId();
@@ -242,7 +247,17 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess, item,
           remarks: state.remark,
           addedBy: authId,
         };
-        dispatch(createBiltyRequest(payload));
+        if(isEdit) {
+          const updatePayload: IUpdateBiltyPayload = {
+            id: item?._id as string,
+            payload: payload,
+          }
+          console.log('update-payload--', JSON.stringify(updatePayload));
+
+          dispatch(updateBiltyRequest(updatePayload));
+        } else {
+          dispatch(createBiltyRequest(payload));
+        }
       })
       .catch(err => console.log(err));
   }, [state]);
@@ -270,6 +285,18 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess, item,
     }
   }, [createBiltyRequesting, createBiltySuccess, createBiltyFailure]);
 
+  useEffect(() => {
+    if (!updateBiltyRequesting && updateBiltySuccess) {
+      showToast('Bilty data updated.', ToastType.SUCCESS);
+      dispatch(resetCreateBiltyRequest());
+      dispatch(resetGetSerialNoRequest());
+      // onSuccess && onSuccess();
+    } else if (!updateBiltyRequesting && updateBiltyFailure) {
+      showToast('Bilty not updated. Try again!', ToastType.ERROR);
+      dispatch(resetCreateBiltyRequest());
+    }
+  }, [updateBiltyRequesting, updateBiltySuccess, updateBiltyFailure]);
+
   return (
     <AvoidSoftInputViewHOC>
       <View style={styles.container}>
@@ -293,7 +320,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess, item,
         <DemurageDetails item={item} isEdit={isEdit} />
         <Spacer height={8} />
         <Button
-          text="CREATE"
+          text={isEdit ? "UPDATE" : "CREATE"}
           onPress={handleCreateBilty}
           disabled={false}
           style={styles.previewButtonStyle}
@@ -304,7 +331,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess, item,
           show={
             getVehicleSizeRequesting ||
             getunitTypeRequesting ||
-            packingTypesRequesting
+            packingTypesRequesting || updateBiltyRequesting
           }
         />
       </View>
