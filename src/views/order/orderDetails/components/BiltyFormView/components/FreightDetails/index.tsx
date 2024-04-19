@@ -62,6 +62,8 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
     setUnloadingChargeAmount,
     setAdvanceAmount,
     setTotalAmount,
+    setRemark,
+    setRemarksAtPOD
   } = useBiltyFormContextHook();
 
   const calculateMaterialTotalAmount = () => {
@@ -115,6 +117,9 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
     }
   };
 
+
+console.log(item,"itrrririririrriri");
+  
   
   useEffect(() => {
     if(isEdit && item) {
@@ -450,6 +455,25 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
               value={state.balance_amount}
               editable={false}
               ref={balanceAmountInputRef}
+            />
+          </View>
+          <Spacer height={12} />
+          <View style={styles.elementContainer2}>
+            <Label text="Remark at Loading" style={styles.label} />
+            <Input
+              onChangeText={setRemark}
+              containerStyle={styles.inputContainer}
+              inputStyle={styles.input}
+              selectionColor={COLOR_BLACK}
+            />
+          </View>
+          <View style={styles.elementContainer2}>
+            <Label text="Remark at POD" style={styles.label} />
+            <Input
+              onChangeText={setRemarksAtPOD}
+              containerStyle={styles.inputContainer}
+              inputStyle={styles.input}
+              selectionColor={COLOR_BLACK}
             />
           </View>
         </View>

@@ -299,6 +299,7 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
           data: payload,
         }
         dispatch(updateInvoiceRequest(updatePayload));
+        
       } else {
         dispatch(createInvoiceRequest(payload));
       }
@@ -433,6 +434,7 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
                   selectionColor={COLOR_BLACK}
                   placeholder='Vehicle#'
                   placeholderTextColor={COLOR_GRAY4}
+                  inputType="numeric"
                 />
               </View>
               <View style={styles.itemContainer}>
@@ -462,7 +464,9 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 placeholder='Enter Consignment #'
-                  placeholderTextColor={COLOR_GRAY4}
+                placeholderTextColor={COLOR_GRAY4}
+                autoCapitalize="characters"
+
               />
             </View>
           </View>

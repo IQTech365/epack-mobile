@@ -7,6 +7,7 @@ import styles from './style';
 
 export interface IDateMethods {
   setDefaultValue: (date:Date) => void;
+  refresh: () => void;
 }
 
 interface IDatePickerProps {
@@ -36,11 +37,15 @@ const DatePickerComponent = forwardRef<IDateMethods, IDatePickerProps>(
   ) => {
     const [date, setDate] = useState<Date>(new Date());
     const [open, setOpen] = useState<boolean>(false);
+    const [refresh, setRefresh] = useState<boolean>(false);
 
     React.useImperativeHandle(ref, () => ({
       setDefaultValue: (date: Date) => {
         setDate(date);
       },
+      refresh: () => {
+        setRefresh(!refresh);
+      }
     }));
 
     const errorBorderStyle = error ? styles.errorBorderColor : null;

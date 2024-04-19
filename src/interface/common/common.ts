@@ -75,6 +75,21 @@ export interface IVehicleAccessoryResponse {
   error: boolean;
 }
 
+// Vehicle Insurance Company
+export interface IVehicleInsuranceCompany {
+  _id: string;
+  vehicleInsuranceCompanyName: string;
+  isActive: boolean;
+  isDeleted: boolean;
+  createdDate: string;
+  __v: number;
+}
+export interface IVehicleInsuranceCompanyResponse {
+  data: IVehicleInsuranceCompany[];
+  status: number;
+  error: boolean;
+}
+
 // Vehicle Model
 export interface IVehicleModel {
   _id: string;

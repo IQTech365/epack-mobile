@@ -15,6 +15,10 @@ import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormCo
 import {formatDate4} from '../../../../../../../utils/formatter';
 import {IBilty} from '../../../../../../../interface/order/IGetBiltyListResponse';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import DropdownComponent from '../../../../../../../common/DropdownComponent';
+import { getVehicleInsuranceCompanyList } from '../../../CarConditionFormView/utils';
+import { useAppSelector } from '../../../../../../../redux/hooks';
+import { TDropdownItem } from '../../../../../../../type/TDropdownItem';
 
 interface IProps {
   item?: IBilty;
@@ -31,10 +35,15 @@ const InsuranceDetails: React.FC<IProps> = ({item, isEdit}) => {
     setInsurance,
   } = useBiltyFormContextHook();
 
+  const {
+    vehicleInsuranceCompany,
+  } = useAppSelector(state => state.Common);
+
   const insuranceCompanyNameRef = useRef<InputMethods>(null);
   const insurancePolicyNoRef = useRef<InputMethods>(null);
   const insuranceAmountRef = useRef<InputMethods>(null);
   const insuranceDateRef = useRef<IDateMethods>(null);
+  
 
   useEffect(() => {
     if (isEdit && item) {
@@ -45,8 +54,10 @@ const InsuranceDetails: React.FC<IProps> = ({item, isEdit}) => {
       setPolicyNumber(item.insurance.policyNumber);
       insuranceAmountRef.current?.setValue(item.insurance.amount);
       setInsuranceAmount(item.insurance.amount);
-      insuranceDateRef.current?.setDefaultValue(new Date(item.insurance.date));
-      setInsuranceDate(item.insurance.date);
+      if(item?.insurance?.date){
+        setInsuranceDate(item.insurance.date);
+        insuranceDateRef.current?.setDefaultValue(new Date(item.insurance.date));
+      }
     }
   }, [isEdit, item]);
 
@@ -77,13 +88,17 @@ const InsuranceDetails: React.FC<IProps> = ({item, isEdit}) => {
         <Spacer height={4} />
         <View style={styles.elementContainer2}>
           <Label text="Insurance Company" style={styles.label} />
-          <Input
-            onChangeText={setInsuranceCompany}
-            containerStyle={styles.inputContainer}
-            inputStyle={styles.input}
-            selectionColor={COLOR_BLACK}
-            ref={insuranceCompanyNameRef}
-          />
+          {/* <DropdownComponent
+            data={getVehicleInsuranceCompanyList(vehicleInsuranceCompany)}
+            onSelect={handleInsuranceCompany}
+            /> */}
+
+            <DropdownComponent
+              data={getVehicleInsuranceCompanyList(vehicleInsuranceCompany)}
+              onSelect={(item: TDropdownItem) => {
+                setInsuranceCompany(item.label);
+              }}
+            />
         </View>
         <Spacer height={4} />
         <View style={styles.elementContainer2}>

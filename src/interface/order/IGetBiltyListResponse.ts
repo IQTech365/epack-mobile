@@ -137,6 +137,7 @@ export interface IBilty {
   insurance: IInsurance;
   demurrage: IDemurrage;
   remarks: string;
+  remarksAtPOD: string;
   addedBy: string;
   isActive: boolean;
   isDeleted: boolean;

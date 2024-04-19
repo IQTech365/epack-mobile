@@ -38,6 +38,7 @@ const VehicleLoadSizeView: React.FC<IProps> = ({isEdit, item}) => {
 
   useEffect(() => {
     if(state.editQuotation && state.item) {
+      
       const {item} = state;
       if(item) {
         const quotationfreight:IQuotationFreight = item.quotationfreights;

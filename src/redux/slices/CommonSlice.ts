@@ -20,6 +20,7 @@ import {
   ITodayFollowpsResponse,
   ITodaySurveyResponse,
   ITodayShiftingResponse,
+  IVehicleInsuranceCompanyResponse,
 } from '../../interface/common/common';
 
 interface ICommonState {
@@ -59,6 +60,13 @@ interface ICommonState {
   vehicleModelsRequestSuccess: boolean;
   vehicleModelsRequestFailure: boolean;
   vehicleModelsError: any;
+
+  // Vehicle Insurance Company
+  vehicleInsuranceCompany: IVehicleInsuranceCompanyResponse | null;
+  vehicleInsuranceCompanyRequesting: boolean;
+  vehicleInsuranceCompanyRequestSuccess: boolean;
+  vehicleInsuranceCompanyRequestFailure: boolean;
+  vehicleInsuranceCompanyError: any;
   // SubModule
   submodules: ISubmoduleResponse | null;
   getSubmodulesRequesting: boolean;
@@ -181,6 +189,13 @@ const initialState: ICommonState = {
   vehicleModelsRequestSuccess: false,
   vehicleModelsRequestFailure: false,
   vehicleModelsError: null,
+
+  // Vehicle Insurance Company
+  vehicleInsuranceCompany: null,
+  vehicleInsuranceCompanyRequesting: false,
+  vehicleInsuranceCompanyRequestSuccess: false,
+  vehicleInsuranceCompanyRequestFailure: false,
+  vehicleInsuranceCompanyError: null,
   // SubModule
   submodules: null,
   getSubmodulesRequesting: false,
@@ -359,6 +374,25 @@ export const CommonSlice = createSlice({
       state.vehicleAccessoriesRequestSuccess = false;
       state.vehicleAccessoriesRequestFailure = true;
       state.vehicleAccessoriesError = action.payload;
+    },
+
+    // Vehicle Insurance Company
+    getVehicleInsuranceCompanyRequest: state => {
+      state.vehicleInsuranceCompanyRequesting = true;
+    },
+    getVehicleInsuranceCompanySuccess: (
+      state,
+      action: PayloadAction<IVehicleInsuranceCompanyResponse>,
+    ) => {
+      state.vehicleInsuranceCompanyRequesting = false;
+      state.vehicleInsuranceCompanyRequestSuccess = true;
+      state.vehicleInsuranceCompany = action.payload;
+    },
+    getVehicleInsuranceCompanyFailure: (state, action: PayloadAction<any>) => {
+      state.vehicleInsuranceCompanyRequesting = false;
+      state.vehicleInsuranceCompanyRequestSuccess = false;
+      state.vehicleInsuranceCompanyRequestFailure = true;
+      state.vehicleInsuranceCompanyError = action.payload;
     },
     // Vehicle Model
     getVehicleModelsRequest: state => {
@@ -661,6 +695,10 @@ export const {
   getVehicleAccessoriesRequest,
   getVehicleAccessoriesSuccess,
   getVehicleAccessoriesFailure,
+  // Vehicle Insurance
+  getVehicleInsuranceCompanyRequest,
+  getVehicleInsuranceCompanySuccess,
+  getVehicleInsuranceCompanyFailure,
   // Vehicle Model
   getVehicleModelsRequest,
   getVehicleModelsSuccess,

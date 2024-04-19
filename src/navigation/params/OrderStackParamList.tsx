@@ -1,5 +1,6 @@
 import { ISingleEnquiryData } from '../../interface/enquiry/ISingleEnquiryResponse';
 import { IBilty } from '../../interface/order/IGetBiltyListResponse';
+import { ICardConditionData } from '../../interface/order/IGetCarConditionListResponse';
 import { IInvoice } from '../../interface/order/IGetInvoiceListResponse';
 import { IPackingListData } from '../../interface/order/IPackingMaterialResponse';
 export type OrderStackParamList = {
@@ -9,4 +10,6 @@ export type OrderStackParamList = {
     EditPackingItems: {item:IPackingListData, orderId: string} | undefined,
     EditInvoice: {item:IInvoice, enquiry: ISingleEnquiryData, orderID:string},
     EditBilty: {item:IBilty, orderID:string},
+    EditCarCondition: {item:ICardConditionData, orderID:string},
+
 }

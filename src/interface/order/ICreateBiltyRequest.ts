@@ -88,6 +88,10 @@ export interface ICreateBiltyRequest {
     generationDate: string;
     expiryDate: string;
   };
+  
+  remarksAtPOD: string;
+  remarks: string;
+
   materialsType: string;
   addMaterialsStatus: string;
   materials: IMaterial[];

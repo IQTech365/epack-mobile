@@ -313,6 +313,7 @@ const MaterialDetails: React.FC<IProps> = ({item, isEdit}) => {
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
                   ref={articlesInputref}
+                  inputType="numeric"
                 />
               </View>
               <View style={styles.itemContainer}>
@@ -334,7 +335,7 @@ const MaterialDetails: React.FC<IProps> = ({item, isEdit}) => {
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
-                  autoCapitalize="characters"
+                  inputType="numeric"
                   ref={hsnCodeInputref}
                 />
               </View>

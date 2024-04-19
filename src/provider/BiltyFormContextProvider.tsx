@@ -735,6 +735,16 @@ const useBiltyFormContext = () => {
     [state.remark],
   );
 
+  const setRemarksAtPOD = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.REMARKS_AT_POD,
+        payload: text,
+      });
+    },
+    [state.remarksAtPOD],
+  );
+
   return {
     state,
     // **** Basic Details ****
@@ -826,6 +836,7 @@ const useBiltyFormContext = () => {
     setChargeApplicableAfter,
     // **** Other Details ****,
     setRemark,
+    setRemarksAtPOD
   };
 };
 
@@ -921,7 +932,9 @@ const initBiltyFormContextState: UseBiltyFormContextType = {
   setRate: (text: string) => {},
   setChargeApplicableAfter: (text: string) => {},
   // **** Other Details ****
-  setRemark: (text: string) => {}
+  setRemark: (text: string) => {},
+  setRemarksAtPOD: (text: string) => {}
+
 };
 
 const BiltyFormContext = createContext<UseBiltyFormContextType>(

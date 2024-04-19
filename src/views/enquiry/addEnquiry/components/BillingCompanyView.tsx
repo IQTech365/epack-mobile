@@ -126,9 +126,9 @@ const BillingCompanyView: FC<IProps> = ({}) => {
         setEmployeeDesignation(billingInfo.employeeDesignation);
         setCompanyGST(billingInfo.companyGST);
         setCompanyAddress(billingInfo.companyAddress);
-        setCompanyPincode(billingInfo.companyPincode);
-        setCompanyState(billingInfo.companyState);
-        setCompanyCity(billingInfo.companyCity);
+        setCompanyPincode(billingInfo.pincode);
+        setCompanyState(billingInfo.state);
+        setCompanyCity(billingInfo.city);
         setShowCompanyList(false);
         dispatch(resetGetCustomersRequest());
       }
@@ -311,6 +311,8 @@ const BillingCompanyView: FC<IProps> = ({}) => {
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
+            inputType="numeric"
+
           />
         </View>
         <View style={styles.textContainer}>

@@ -5,6 +5,8 @@ import {
   IVehicleColorResponse,
   IVehicleCompany,
   IVehicleCompanyResponse,
+  IVehicleInsuranceCompany,
+  IVehicleInsuranceCompanyResponse,
   IVehicleModel,
   IVehicleModelResponse,
   IVehicleType,
@@ -29,6 +31,7 @@ export const getVehicleTypeList = (response:IVehicleTypesResponse):IItem[] => {
         return item;
       });
     }
+    
     return items;
 }
 
@@ -57,6 +60,21 @@ export const getVehicleColorList = (response:IVehicleColorResponse):IItem[] => {
       });
     }
     return items;
+}
+
+
+export const getVehicleInsuranceCompanyList = (response:IVehicleInsuranceCompanyResponse):IItem[] => {
+  const {data} = response || {};
+  let items: IItem[] = [];
+  if (data && data.length > 0) {
+    items = data.map((d: IVehicleInsuranceCompany) => {
+      const item: IItem = {label: d.vehicleInsuranceCompanyName, value: d.vehicleInsuranceCompanyName};
+      return item;
+    });
+  }
+  console.log(items,"dddddddd------------");
+  
+  return items;
 }
 
 export const getVehicleAccessoryList = (response:IVehicleAccessoryResponse):IAccessory[] => {

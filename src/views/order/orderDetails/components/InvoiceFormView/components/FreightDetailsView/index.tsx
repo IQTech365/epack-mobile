@@ -49,6 +49,7 @@ const FreightDetailsView: React.FC<Props> = ({isEdit, invoiceData}) => {
         label2="HSN Code"
         isEdit={isEdit}
         invoiceData={invoiceData}
+        
       />
       <Spacer height={20} />
       <FreightTypeView

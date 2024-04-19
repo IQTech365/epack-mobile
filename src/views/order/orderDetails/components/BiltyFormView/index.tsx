@@ -216,6 +216,8 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess, item,
             advanceAmount: state.advance_amount,
             balanceAmount: state.balance_amount,
           },
+          remarks: state.remark,
+          remarksAtPOD: state.remarksAtPOD,
           pickupCharges: {
             status: state.pickup_charge,
             charge: state.pickup_charge_amount,
@@ -244,7 +246,6 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess, item,
             status: state.loading_charge,
             charge: state.loading_charge_amount,
           },
-          remarks: state.remark,
           addedBy: authId,
         };
         if(isEdit) {
@@ -252,8 +253,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess, item,
             id: item?._id as string,
             payload: payload,
           }
-          console.log('update-payload--', JSON.stringify(updatePayload));
-
+          console.log('update-payload--',JSON.stringify(updatePayload));
           dispatch(updateBiltyRequest(updatePayload));
         } else {
           dispatch(createBiltyRequest(payload));
@@ -290,7 +290,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess, item,
       showToast('Bilty data updated.', ToastType.SUCCESS);
       dispatch(resetCreateBiltyRequest());
       dispatch(resetGetSerialNoRequest());
-      // onSuccess && onSuccess();
+      onSuccess && onSuccess();
     } else if (!updateBiltyRequesting && updateBiltyFailure) {
       showToast('Bilty not updated. Try again!', ToastType.ERROR);
       dispatch(resetCreateBiltyRequest());

@@ -23,6 +23,7 @@ import {
   GET_PACKING_LIST,
   GET_PACKING_LIST_TEMPLATE,
   UPDATE_BILTY,
+  UPDATE_CAR_CONDITION,
   UPDATE_INVOICE,
   UPDATE_PACKING_LIST,
 } from '../http/Endpoint';
@@ -73,6 +74,7 @@ import {
   IUpdateInvoicePayload,
   IUpdateInvoiceResponse,
 } from '../interface/order/IUpdateInvoiceResponse';
+import { IUpdateCarConditionPayload, IUpdateCarConditionResponse } from '../interface/order/IUpdateCarConditionResponse';
 
 export const GetOrderDetailsService = async (
   payload: string,
@@ -325,4 +327,16 @@ export const UpdatePackingListService = async (
     IUpdatePackingListPayload,
     AxiosResponse<IUpdatePackingListResponse>
   >(payload.payload, UPDATE_PACKING_LIST(payload.packingListId));
+};
+
+
+export const UpdateCarConditionService = async (
+  payload: IUpdateCarConditionPayload,
+): Promise<IUpdateCarConditionResponse> => {
+  const api = Api.getInstance();
+  return await api.update<
+  ICreateCarConditionRequest,
+    AxiosResponse<IUpdateCarConditionResponse>
+  >(payload.data, UPDATE_CAR_CONDITION(payload.id));
+  
 };

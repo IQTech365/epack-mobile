@@ -12,6 +12,7 @@ import {
   IVehicleAccessoryResponse,
   IVehicleColorResponse,
   IVehicleCompanyResponse,
+  IVehicleInsuranceCompanyResponse,
   IVehicleModelResponse,
   IVehicleTypesResponse,
 } from '../interface/common/common';
@@ -64,6 +65,9 @@ import {
   getVehicleCompanyFailure,
   getVehicleCompanyRequest,
   getVehicleCompanySuccess,
+  getVehicleInsuranceCompanyFailure,
+  getVehicleInsuranceCompanyRequest,
+  getVehicleInsuranceCompanySuccess,
   getVehicleModelsFailure,
   getVehicleModelsRequest,
   getVehicleModelsSuccess,
@@ -129,6 +133,18 @@ export function* getVehicleAccessoriesSaga(action: PayloadAction<any>) {
     yield put(getVehicleAccessoriesSuccess(response));
   } catch (error) {
     yield put(getVehicleAccessoriesFailure(JSON.stringify(error)));
+  }
+}
+
+export function* getVehicleInsuranceCompanySaga(action: PayloadAction<any>) {
+  try {
+    const response: IVehicleInsuranceCompanyResponse = yield call(
+      CommonService.GetVehicleInsuranceCompanyService,
+    );    
+    yield put(getVehicleInsuranceCompanySuccess(response));
+  } catch (error) {
+
+    yield put(getVehicleInsuranceCompanyFailure(JSON.stringify(error)));
   }
 }
 
@@ -307,6 +323,7 @@ export function* watcherCommonSaga() {
     getVehicleAccessoriesRequest.type,
     getVehicleAccessoriesSaga,
   );
+  yield takeLatest(getVehicleInsuranceCompanyRequest.type, getVehicleInsuranceCompanySaga);
   yield takeLatest(getVehicleModelsRequest.type, getVehicleModelsSaga);
   yield takeLatest(getSubmoduleRequest.type, getSubmodulesSaga);
   yield takeLatest(getAppSettingsRequest.type, getAppSettingsSaga);

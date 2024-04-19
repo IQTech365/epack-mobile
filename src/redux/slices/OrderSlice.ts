@@ -25,6 +25,7 @@ import { ICreatePackingMaterialRequest, ICreatePackingMaterialResponse, IDeleteP
 import { IGetInvoiceListResponse } from '../../interface/order/IGetInvoiceListResponse';
 import { IPackingListTemplateResponse, IPackingListTemplatePayload } from '../../interface/order/IPackingListTemplate';
 import { IUpdateInvoicePayload, IUpdateInvoiceResponse } from '../../interface/order/IUpdateInvoiceResponse';
+import { IUpdateCarConditionPayload, IUpdateCarConditionResponse } from '../../interface/order/IUpdateCarConditionResponse';
 
 interface IOrderState {
   // Add Order
@@ -179,6 +180,13 @@ interface IOrderState {
   updatePackingListSuccess:boolean;
   updatePackingListFailure:boolean;
   updatePackingListError:any;
+
+  // Update Car Condition list
+  updateCarConditionInfo: IUpdateCarConditionResponse | null;
+  updateCarConditionRequesting: boolean;
+  updateCarConditionSuccess:boolean;
+  updateCarConditionFailure:boolean;
+  updateCarConditionError:any;
 }
 
 const initialState: IOrderState = {
@@ -333,6 +341,13 @@ const initialState: IOrderState = {
   updatePackingListSuccess:false,
   updatePackingListFailure:false,
   updatePackingListError:null,
+
+  // Update Car Condition
+  updateCarConditionInfo: null,
+  updateCarConditionRequesting:false,
+  updateCarConditionSuccess:false,
+  updateCarConditionFailure:false,
+  updateCarConditionError:null,
 };
 
 export const OrderSlice = createSlice({
@@ -674,8 +689,8 @@ export const OrderSlice = createSlice({
     resetUpdateBiltyRequest: (state, action: PayloadAction<any>) => {
       state.updateBiltyRequesting = false;
       state.updateBiltySuccess = false;
-      state.updateBiltyFailure = true;
-      state.updateBiltyError = action.payload;
+      state.updateBiltyFailure = false;
+      state.updateBiltyError = null;
     },
     // Bilty Template Html
     getBiltyHtmlRequest: (
@@ -932,7 +947,31 @@ export const OrderSlice = createSlice({
       state.updatePackingListSuccess = false;
       state.updatePackingListFailure = false;
       state.updatePackingListError = null;
+    },
+    // Update Car Condition
+    updateCarConditionRequest: (state, action:PayloadAction<IUpdateCarConditionPayload>) => {
+      state.updateCarConditionRequesting = true;
+    },
+    updateCarConditionSuccess:(state, action:PayloadAction<IUpdateCarConditionResponse>) => {
+      state.updateCarConditionRequesting = false;
+      state.updateCarConditionSuccess = true;
+      state.updateCarConditionFailure = false;
+      state.updateCarConditionInfo = action.payload;
+    },
+    updateCarConditionFailure:(state, action:PayloadAction<any>) => {
+      state.updateCarConditionRequesting = false;
+      state.updateCarConditionSuccess = false;
+      state.updateCarConditionFailure = true;
+      state.updateCarConditionError = action.payload;
+    },
+    resetUpdateCarConditionRequest:(state) => {
+      state.updateCarConditionRequesting = false;
+      state.updateCarConditionSuccess = false;
+      state.updateCarConditionFailure = false;
+      state.updateCarConditionError = null;
     }
+
+
   },
 });
 
@@ -1056,4 +1095,10 @@ export const {
   updatePackingListSuccess,
   updatePackingListFailure,
   resetUpdatePackingListRequest,
+
+  //  Update Car Condition
+  updateCarConditionRequest,
+  updateCarConditionSuccess,
+  updateCarConditionFailure,
+  resetUpdateCarConditionRequest
 } = OrderSlice.actions;

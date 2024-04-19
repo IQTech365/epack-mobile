@@ -27,10 +27,16 @@ const EWayBillDetails: React.FC<IProps> = ({item, isEdit}) => {
     if (isEdit && item) {
       setEWayBillNo(item.eWayBill.number);
       ewayBillNoInputCompRef.current?.setValue(item.eWayBill.number);
-      setGeneratedOn(item.eWayBill.generationDate);
-      generatedOnCompRef.current?.setDefaultValue(new Date(item.eWayBill.generationDate));
-      setExpiryDate(item.eWayBill.expiryDate);
-      expirayDateCompRef.current?.setDefaultValue(new Date(item.eWayBill.expiryDate));
+      if(item?.eWayBill?.generationDate){
+        setGeneratedOn(item.eWayBill.generationDate);
+        generatedOnCompRef.current?.setDefaultValue(new Date(item.eWayBill.generationDate));
+      }
+      if(item?.eWayBill?.expiryDate){
+        setExpiryDate(item.eWayBill.expiryDate);
+        expirayDateCompRef.current?.setDefaultValue(new Date(item.eWayBill.expiryDate));
+      }
+      
+
     }
   }, [isEdit, item]);
 

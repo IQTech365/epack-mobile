@@ -219,7 +219,7 @@ export const QuotationSlice = createSlice({
       state.updateQuotationSuccess = false;
       state.updateQuotationFailure = false;
       state.updateQuotationInfo = null;
-      state.updateQuotationError = null;
+      state.updateQuotationError = false;
     },
     // Quotations By Enquiry ID
     getQuotationsByEnquiryIdRequest: (

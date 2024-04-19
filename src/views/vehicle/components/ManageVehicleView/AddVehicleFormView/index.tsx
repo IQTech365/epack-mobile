@@ -35,6 +35,7 @@ import {
   getVehicleCompanyList,
   getVehicleModelList,
   getVehicleTypeList,
+  getYears,
 } from '../../../../order/orderDetails/components/CarConditionFormView/utils';
 import {getBranchList, getFirstVehicleType, getFranchiseList} from '../../utils';
 import { ToastType, showToast } from '../../../../../utils/utility';
@@ -251,14 +252,16 @@ const AddLorryView: React.FC<{}> = ({}) => {
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 placeholder="HR 55 hY 2259"
+                autoCapitalize="characters"
+
               />
             </View>
             <View style={styles.textContainer}>
               <Label text="Manufacturing Year" style={styles.label} />
-              <DatePickerComponent
-                onDateSelect={(date: Date) => {
-                  setManufacturingYear(formatDate4(date));
-                }}
+              <DropdownComponent data={getYears()}
+              onSelect={(item: TDropdownItem) => {
+                setManufacturingYear(item.value);
+              }}
               />
             </View>
           </View>
@@ -270,7 +273,8 @@ const AddLorryView: React.FC<{}> = ({}) => {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
-              placeholder="HR 55 hY 2259"
+              placeholder="Enter Chassis Number"
+              autoCapitalize="characters"
             />
           </View>
           <Spacer height={4} />
@@ -281,7 +285,8 @@ const AddLorryView: React.FC<{}> = ({}) => {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
-              placeholder="HR 55 hY 2259"
+              placeholder="Enter Engine Number"
+              autoCapitalize="characters"
             />
           </View>
           <Spacer height={4} />
@@ -292,7 +297,8 @@ const AddLorryView: React.FC<{}> = ({}) => {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
-              placeholder="HR 55 hY 2259"
+              placeholder="Enter RC Number"
+              autoCapitalize="characters"
             />
           </View>
 
@@ -307,6 +313,7 @@ const AddLorryView: React.FC<{}> = ({}) => {
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
+                autoCapitalize="characters"
               />
             </View>
             <View style={styles.textContainer}>
@@ -329,6 +336,8 @@ const AddLorryView: React.FC<{}> = ({}) => {
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
+                autoCapitalize="characters"
+
               />
             </View>
             <View style={styles.textContainer}>
@@ -341,7 +350,7 @@ const AddLorryView: React.FC<{}> = ({}) => {
             </View>
           </View>
           <Spacer height={4} />
-          <UploadPhotoView title="Upload Permit Phto" photo={PHOTO.PERMIT_DOC} />
+          <UploadPhotoView title="Upload Permit Photo" photo={PHOTO.PERMIT_DOC} />
           <Spacer height={12} />
           <Button
             text="SAVE"

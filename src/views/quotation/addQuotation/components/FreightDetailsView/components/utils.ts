@@ -34,7 +34,11 @@ export const particularOptions: string[] = [
   'Stationary Charge',
   'Octroi Green Tax',
   'Toll Tax Charges',
-  'Miscellaneous Charges',
   'Electrical Work',
   'Cleaning Work',
+  'Door Delivery Charges',
+  'Pickup Charges',
+  'Miscellaneous Charges',
+  'AC Installation Charges',
+  'AC Removal Charges'
 ];

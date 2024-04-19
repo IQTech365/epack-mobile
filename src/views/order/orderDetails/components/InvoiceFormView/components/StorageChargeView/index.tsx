@@ -2,17 +2,16 @@ import React, {useEffect, useRef} from 'react';
 import {View, Text} from 'react-native';
 import styles from './style';
 import Label from '../../../../../../../common/Label';
-import Input from '../../../../../../../common/Input';
+import Input, { InputMethods } from '../../../../../../../common/Input';
 import {COLOR_BLACK, COLOR_BLUE} from '../../../../../../../utils/colors';
 import Spacer from '../../../../../../../common/Spacer';
-import DropdownComponent from '../../../../../../../common/DropdownComponent';
+import DropdownComponent, { IDropdownHandler } from '../../../../../../../common/DropdownComponent';
 import {transitInsuranceOptions} from '../../utils';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {useInvoiceFormContextHook} from '../../../../../../../provider/InvoiceFormContextProvider';
 import {TDropdownItem} from '../../../../../../../type/TDropdownItem';
-import DatePickerComponent from '../../../../../../../common/DatePickerComponent';
+import DatePickerComponent, { IDateMethods } from '../../../../../../../common/DatePickerComponent';
 import storageDurationOptions from '../../../../../../../data/storageDurationOptions.json';
-import {formatDate4} from '../../../../../../../utils/formatter';
 import { IInvoice } from '../../../../../../../interface/order/IGetInvoiceListResponse';
 import _ from 'underscore';
 interface Props {
@@ -21,10 +20,10 @@ interface Props {
 }
 
 const StorageChargeView: React.FC<Props> = ({isEdit, invoiceData}) => {
-  const storageDropdownRef = useRef(null);
-  const storageAmountInputRef = useRef(null);
-  const fromDateRef = useRef(null);
-  const toDateRef = useRef(null);
+  const storageDropdownRef = useRef<IDropdownHandler>(null);
+  const storageAmountInputRef = useRef<InputMethods>(null);
+  const fromDateRef = useRef<IDateMethods>(null);
+  const toDateRef = useRef<IDateMethods>(null);
 
   const {
     state,
@@ -50,28 +49,23 @@ const StorageChargeView: React.FC<Props> = ({isEdit, invoiceData}) => {
     _initFormValues();
   }, []);
 
+  console.log("invoiceData",JSON.stringify(invoiceData));
+  
+
   useEffect(() => {
+
     if(isEdit && invoiceData) {
       if(state.storage == transitInsuranceOptions[0]) {
         const {storageCharges, strorageStatus} = invoiceData || {};
+        console.log(storageCharges.toDate);
+        
         setStorage(strorageStatus);
         if(storageCharges !== null){
           const durationItem:TDropdownItem = storageDurationOptions.find((e:TDropdownItem) => e.label == storageCharges.storageChargesType) as TDropdownItem;
           if(durationItem !== undefined){
-            //@ts-ignore
             storageDropdownRef && storageDropdownRef?.current?.setDefaultValue(durationItem);
             setStorageDuration(storageCharges.storageChargesType);
           }
-  
-          //@ts-ignore
-          fromDateRef && fromDateRef?.current?.setDefaultValue(new Date(storageCharges.fromDate));
-          setStorageFromDate(storageCharges.fromDate);
-  
-          //@ts-ignore
-          toDateRef && toDateRef?.current?.setDefaultValue(new Date(storageCharges.toDate));
-          setStorageToDate(storageCharges.toDate);
-  
-          //@ts-ignore
           storageAmountInputRef && storageAmountInputRef?.current?.setValue(storageCharges.amount);
           setStorageAmount(storageCharges.amount);
         }
@@ -83,6 +77,21 @@ const StorageChargeView: React.FC<Props> = ({isEdit, invoiceData}) => {
       }
     }
   }, [state.storage]);
+
+  useEffect(() => {
+    if(isEdit && invoiceData) {
+      const {storageCharges, strorageStatus} = invoiceData || {};
+      //@ts-ignore
+      fromDateRef && fromDateRef?.current?.setDefaultValue(new Date(storageCharges.fromDate));
+      fromDateRef && fromDateRef.current?.refresh();
+      setStorageFromDate(storageCharges.fromDate as string);
+
+      //@ts-ignore
+      toDateRef && toDateRef?.current?.setDefaultValue(new Date(storageCharges.toDate));
+      toDateRef && toDateRef.current?.refresh();
+      setStorageToDate(storageCharges.toDate as string);
+    }
+  }, [state.storage_duration]);
 
   return (
     <>
@@ -131,7 +140,7 @@ const StorageChargeView: React.FC<Props> = ({isEdit, invoiceData}) => {
                     //@ts-ignore
                     ref={fromDateRef}
                     onDateSelect={(date: Date) => {
-                      setStorageFromDate(formatDate4(date));
+                      setStorageFromDate(date.toISOString());
                     }}
                   />
                 </View>
@@ -141,7 +150,7 @@ const StorageChargeView: React.FC<Props> = ({isEdit, invoiceData}) => {
                     //@ts-ignore
                     ref={toDateRef}
                     onDateSelect={(date: Date) => {
-                      setStorageToDate(formatDate4(date));
+                      setStorageToDate(date.toISOString());
                     }}
                   />
                 </View>

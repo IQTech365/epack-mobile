@@ -105,6 +105,7 @@ const InvoiceToIndividualView: React.FC<Props> = () => {
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
+          autoCapitalize="characters"
           //@ts-ignore
           ref={partyNameInputRef}
         />
@@ -117,6 +118,7 @@ const InvoiceToIndividualView: React.FC<Props> = () => {
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
+          inputType="numeric"
           //@ts-ignore
           ref={mobileNoInputRef}
         />
@@ -132,6 +134,7 @@ const InvoiceToIndividualView: React.FC<Props> = () => {
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
+                inputType="numeric"
                 placeholder="Enter Pincode"
               />
             </View>
