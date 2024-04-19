@@ -270,6 +270,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
             title="Your free document create limit has been reached. Please upgrade your plan."
             buttonText="UPGRADE"
           />
+          <Spinner show={getBiltyHtmlRequesting} />
         </View>
       );
     }

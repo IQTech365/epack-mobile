@@ -78,6 +78,8 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
   item,
   isEdit = false,
 }) => {
+  console.log('CC-item--', JSON.stringify(item));
+  
   const [vehicleTypeId, setVehicleTypeId] = useState<string>('');
   const [vehicleCompanyId, setVehicleCompanyId] = useState<string>('');
   const [reducerState, dispatch] = useReducer(
@@ -351,8 +353,6 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
           remarks: reducerState.remarks,
           addedBy: authId,
         };
-        console.log(payload, 'payload----------');
-
         if (isEdit) {
           delete payload.companyId;
           delete payload.orderId;
@@ -397,50 +397,44 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
       scratcheRef.current?.setValue(item.scratches);
       dentRef.current?.setValue(item.dent);
       anyOtherObservationRef.current?.setValue(item.visibleObservation);
-      const vehicleTypeDropdownItem: TDropdownItem = getVehicleTypeList(
-        vehicleTypes,
-      ).find(
-        (e: TDropdownItem) => e.label == item?.vehicleType,
-      ) as TDropdownItem;
 
-      if (vehicleTypeDropdownItem! == undefined) {
+      const vehicleTypeDropdownItem: TDropdownItem = getVehicleTypeList(vehicleTypes).find((e: TDropdownItem) => e.label == item?.vehicleType) as TDropdownItem;
+      if (vehicleTypeDropdownItem) {
         vehicleTypeDropRef.current?.setDefaultValue(vehicleTypeDropdownItem);
-        vehicleTypeDropRef.current?.refreshComp();
+        handleVehicleType(vehicleTypeDropdownItem);
       }
-      const vehicleCompanyDropdownItem: TDropdownItem = getVehicleCompanyList(
-        vehicleTypeId,
-        vehicleCompanies,
-      ).find(
-        (e: TDropdownItem) => e.label == item?.manufacturer,
-      ) as TDropdownItem;
-      if (vehicleCompanyDropdownItem! == undefined) {
-        vehicleManufactureDropRef.current?.setDefaultValue(
-          vehicleCompanyDropdownItem,
-        );
-      }
-      const vehicleModelDropdownItem: TDropdownItem = getVehicleModelList(
-        vehicleCompanyId,
-        vehicleModels,
-      ).find((e: TDropdownItem) => e.label == item?.model) as TDropdownItem;
-      if (vehicleModelDropdownItem! == undefined) {
-        vehicleModelDropRef.current?.setDefaultValue(vehicleModelDropdownItem);
-      }
-      const vehicleColorDropdownItem: TDropdownItem = getVehicleColorList(
-        vehicleColors,
-      ).find((e: TDropdownItem) => e.label == item?.color) as TDropdownItem;
-      if (vehicleColorDropdownItem! == undefined) {
+
+      const vehicleColorDropdownItem: TDropdownItem = getVehicleColorList(vehicleColors).find((e: TDropdownItem) => e.label == item?.color) as TDropdownItem;
+      if (vehicleColorDropdownItem) {
         vehicleColorDropRef.current?.setDefaultValue(vehicleColorDropdownItem);
       }
-      const vehicleManufactureYearDropdownItem: TDropdownItem = getYears().find(
-        (e: TDropdownItem) => e.label == item?.yearOfManufacturing,
-      ) as TDropdownItem;
-      if (vehicleManufactureYearDropdownItem! == undefined) {
-        vehicleManufactureYearDropRef.current?.setDefaultValue(
-          vehicleManufactureYearDropdownItem,
-        );
+
+      const vehicleManufactureYearDropdownItem: TDropdownItem = getYears().find((e: TDropdownItem) => e.label == item?.yearOfManufacturing) as TDropdownItem;
+      if (vehicleManufactureYearDropdownItem) {
+        vehicleManufactureYearDropRef.current?.setDefaultValue(vehicleManufactureYearDropdownItem);
       }
     }
   }, [isEdit, item]);
+
+  useEffect(() => {
+    if(isEdit && item) {
+      const vehicleCompanyDropdownItem: TDropdownItem = getVehicleCompanyList(vehicleTypeId,vehicleCompanies).find((e: TDropdownItem) => e.label == item?.manufacturer) as TDropdownItem;
+      if (vehicleCompanyDropdownItem) {
+        vehicleManufactureDropRef.current?.setDefaultValue(vehicleCompanyDropdownItem);
+        handleManufacturer(vehicleCompanyDropdownItem);
+      }
+    }
+  }, [vehicleTypeId]);
+
+  useEffect(() => {
+    if(isEdit && item) {
+      const vehicleModelDropdownItem: TDropdownItem = getVehicleModelList(vehicleCompanyId, vehicleModels).find((e: TDropdownItem) => e.label == item?.model) as TDropdownItem;
+      if (vehicleModelDropdownItem) {
+        vehicleModelDropRef.current?.setDefaultValue(vehicleModelDropdownItem);
+        handleModel(vehicleModelDropdownItem);
+      }
+    }
+  }, [vehicleCompanyId]);
 
   useEffect(() => {
     if (!createCarConditionRequesting && createCarConditionSuccess) {
