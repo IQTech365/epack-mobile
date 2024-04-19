@@ -47,7 +47,6 @@ const OrderListItem: React.FC<IOrderListItemProps> = ({
       Linking.openURL(`whatsapp://send?phone=+91${item?.phoneNumber}`);
     }
   };
-  console.log(item, 'orderId nikalni hai');
 
   return (
     <View style={styles.wrapper}>

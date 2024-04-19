@@ -78,7 +78,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
   item,
   isEdit = false,
 }) => {
-  console.log('CC-item--', JSON.stringify(item));
+  // console.log('CC-item--', JSON.stringify(item));
   
   const [vehicleTypeId, setVehicleTypeId] = useState<string>('');
   const [vehicleCompanyId, setVehicleCompanyId] = useState<string>('');
@@ -353,6 +353,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
           remarks: reducerState.remarks,
           addedBy: authId,
         };
+        
         if (isEdit) {
           delete payload.companyId;
           delete payload.orderId;
@@ -361,7 +362,11 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
             id: item?._id as string,
             data: payload,
           };
+        console.log('CC-payload--', JSON.stringify(payload));
+
           dispatch2(updateCarConditionRequest(updatedPayload));
+          console.log(JSON.stringify(updatedPayload),"updatedPayloadupdatedPayload");
+
         } else {
           dispatch2(createCarConditionRequest(payload));
         }
@@ -383,20 +388,34 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
   useEffect(() => {
     if (isEdit && item) {
       carConditionNoInputRef.current?.setValue(item.carConditionNumber);
+      handleCarConditionNo(item.carConditionNumber);
       registrationNoRef.current?.setValue(item.vehicleRegistrationNumber);
+      handleVehicleRegNO(item.vehicleRegistrationNumber);
       vehicleKmRef.current?.setValue(item.vehicleCoveredDistanceInKM);
+      handleVehicleKm(item.vehicleCoveredDistanceInKM);
       cnLrBnRef.current?.setValue(item.biltyNo);
+      handleCnBiltyLrNO(item.biltyNo);
       insurancePolicyNoRef.current?.setValue(item.insurancePolicyNumber);
+      handlePolicyNo(item.insurancePolicyNumber);
       vehicleValueRef.current?.setValue(item.vehicleValue);
+      handleVehicleValue(item.vehicleValue);
       chassisNoRef.current?.setValue(item.chasisNumber);
+      handleChasisNo(item.chasisNumber);
       engineNoRef.current?.setValue(item.engineNumber);
+      handleEngineNo(item.engineNumber);
       batteryNoRef.current?.setValue(item.batteryNumber);
+      handleBatteryNo(item.batteryNumber);
       tyreNoRef.current?.setValue(item.tyreNumber);
+      handleTyreyNo(item.tyreNumber);
       anyOtherAccessoriesRef.current?.setValue(item.anyOtherAccessorie);
       remarkRef.current?.setValue(item.remarks);
+      handleRemark(item.remarks);
       scratcheRef.current?.setValue(item.scratches);
+      handleScratches(item.scratches);
       dentRef.current?.setValue(item.dent);
+      handleDent(item.dent);
       anyOtherObservationRef.current?.setValue(item.visibleObservation);
+      handleAnyOtherObservation(item.visibleObservation);
 
       const vehicleTypeDropdownItem: TDropdownItem = getVehicleTypeList(vehicleTypes).find((e: TDropdownItem) => e.label == item?.vehicleType) as TDropdownItem;
       if (vehicleTypeDropdownItem) {
@@ -407,11 +426,19 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
       const vehicleColorDropdownItem: TDropdownItem = getVehicleColorList(vehicleColors).find((e: TDropdownItem) => e.label == item?.color) as TDropdownItem;
       if (vehicleColorDropdownItem) {
         vehicleColorDropRef.current?.setDefaultValue(vehicleColorDropdownItem);
+        handleColor(vehicleColorDropdownItem);
       }
 
       const vehicleManufactureYearDropdownItem: TDropdownItem = getYears().find((e: TDropdownItem) => e.label == item?.yearOfManufacturing) as TDropdownItem;
       if (vehicleManufactureYearDropdownItem) {
         vehicleManufactureYearDropRef.current?.setDefaultValue(vehicleManufactureYearDropdownItem);
+        handleYear(vehicleManufactureYearDropdownItem);
+      }
+
+      const insuranceCompanyNameItem:TDropdownItem = getVehicleInsuranceCompanyList(vehicleInsuranceCompany).find((d:TDropdownItem) => d.label === item.insuranceCompany) as TDropdownItem;
+      if(insuranceCompanyNameItem) {
+        insuranceCompanyNameRef.current?.setDefaultValue(insuranceCompanyNameItem);
+        handleInsuranceCompany(insuranceCompanyNameItem);
       }
     }
   }, [isEdit, item]);

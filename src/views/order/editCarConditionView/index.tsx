@@ -7,15 +7,18 @@ import styles from './style';
 import { AddLorryFormContextProvider } from '../../../provider/AddLorryFormContextProvider';
 import CarConditionFormView from '../orderDetails/components/CarConditionFormView';
 import { ICardConditionData } from '../../../interface/order/IGetCarConditionListResponse';
+import { useAppDispatch } from '../../../redux/hooks';
+import { getCarConditionListRequest } from '../../../redux/slices/OrderSlice';
 
 type Props = NativeStackScreenProps<OrderStackParamList, 'EditCarCondition'>;
 
 const EditCarCondition: FC<Props> = ({route, navigation}) => {
   const orderID: string = route.params?.orderID;
   const item: ICardConditionData = route.params?.item;
-//   const enquiry: ISingleEnquiryData = route.params?.enquiry;
+  const dispatch = useAppDispatch();
 
   const _onEditDone = () => {
+    dispatch(getCarConditionListRequest(orderID));
     navigation.goBack();
   };
 
