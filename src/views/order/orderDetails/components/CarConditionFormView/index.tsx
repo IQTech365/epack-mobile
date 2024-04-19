@@ -379,7 +379,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
       handleCarConditionNo(serialNo.toString());
     }
   }, [serialNo]);
-  
+
   useEffect(() => {
     if (isEdit && item) {
       carConditionNoInputRef.current?.setValue(item.carConditionNumber);
@@ -596,28 +596,11 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
             <Spacer height={4} />
             <View style={styles.elementContainer2}>
               <Label text="Insurance Company Name" style={styles.label} />
-              {/* <Input
-                onChangeText={handleInsuranceCompany}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                value={reducerState.insuranceCompany}
-                placeholder='Insurance Company Name'
-                selectionColor={COLOR_BLACK}
-                ref={insuranceCompanyNameRef}
-              /> */}
-
-<<<<<<< HEAD
               <DropdownComponent
                 data={getVehicleInsuranceCompanyList(vehicleInsuranceCompany)}
                 onSelect={handleInsuranceCompany}
+                ref={insuranceCompanyNameRef}
               />
-=======
-                  <DropdownComponent
-                  data={getVehicleInsuranceCompanyList(vehicleInsuranceCompany)}
-                  onSelect={handleInsuranceCompany}
-                  ref={insuranceCompanyNameRef}
-                />
->>>>>>> ed3722600ab917451fc620e17d7d04244c11bb07
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
