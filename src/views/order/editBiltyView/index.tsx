@@ -12,15 +12,19 @@ import styles from './style';
 import { BiltyFormContextProvider } from '../../../provider/BiltyFormContextProvider';
 import BiltyFormView from '../orderDetails/components/BiltyFormView';
 import { IBilty } from '../../../interface/order/IGetBiltyListResponse';
+import { useAppDispatch } from '../../../redux/hooks';
+import { getBiltyListRequest } from '../../../redux/slices/OrderSlice';
 
 type Props = NativeStackScreenProps<OrderStackParamList, 'EditBilty'>;
 
 const EditBiltyView: FC<Props> = ({route, navigation}) => {
   const orderID: string = route.params?.orderID;
   const item: IBilty = route.params?.item;
-//   const enquiry: ISingleEnquiryData = route.params?.enquiry;
+
+  const dispatch = useAppDispatch();
 
   const _onEditDone = () => {
+    dispatch(getBiltyListRequest(orderID));
     navigation.goBack();
   };
 

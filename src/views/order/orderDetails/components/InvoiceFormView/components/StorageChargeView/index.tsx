@@ -49,7 +49,6 @@ const StorageChargeView: React.FC<Props> = ({isEdit, invoiceData}) => {
     _initFormValues();
   }, []);
 
-  console.log("invoiceData",JSON.stringify(invoiceData));
   
 
   useEffect(() => {
@@ -57,7 +56,6 @@ const StorageChargeView: React.FC<Props> = ({isEdit, invoiceData}) => {
     if(isEdit && invoiceData) {
       if(state.storage == transitInsuranceOptions[0]) {
         const {storageCharges, strorageStatus} = invoiceData || {};
-        console.log(storageCharges.toDate);
         
         setStorage(strorageStatus);
         if(storageCharges !== null){
@@ -170,6 +168,7 @@ const StorageChargeView: React.FC<Props> = ({isEdit, invoiceData}) => {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
+              inputType="numeric"
             />
           </View>
         </>

@@ -294,6 +294,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 placeholder="Enter quantity"
+                inputType="numeric"
                 //@ts-ignore
                 ref={quntityInputRef}
               />
@@ -318,6 +319,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 placeholder="Enter code"
+                autoCapitalize="characters"
                 //@ts-ignore
                 ref={productCodeInputRef}
               />
@@ -330,6 +332,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 placeholder="Enter amount"
+                inputType="numeric"
                 //@ts-ignore
                 ref={amountInputRef}
               />

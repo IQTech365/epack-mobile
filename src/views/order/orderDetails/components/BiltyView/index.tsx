@@ -53,8 +53,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [documentId, setDocumentId] = useState<string>('');
   const [showLimitModal, setShowLimitModal] = useState<boolean>(false);
-  const [showPreviewShareModal, setShowPreviewShareModal] =
-    useState<boolean>(false);
+  const [showPreviewShareModal, setShowPreviewShareModal] = useState<boolean>(false);
   const templateId = useTemplateIdHook('658d3cb5585e3dde644da97e');
   const {getDocumentLimitCount} = useUtilityHook();
 

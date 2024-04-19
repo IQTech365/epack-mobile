@@ -266,6 +266,7 @@ const FreightInputView: React.FC<Props> = ({label1, label2, freightType, isEdit,
           selectionColor={COLOR_BLACK}
           placeholder='Enter HSN code'
           value={_getInputValue().hsnCode}
+          inputType="numeric"
           placeholderTextColor={COLOR_GRAY4}
         />
       </View>

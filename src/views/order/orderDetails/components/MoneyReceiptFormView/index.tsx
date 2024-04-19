@@ -373,6 +373,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
                 selectionColor={COLOR_BLACK}
                 placeholder="Enter CN / Bilty / LR No."
                 placeholderTextColor={COLOR_GRAY4}
+                autoCapitalize="characters"
               />
             </View>
             <Spacer height={4} />

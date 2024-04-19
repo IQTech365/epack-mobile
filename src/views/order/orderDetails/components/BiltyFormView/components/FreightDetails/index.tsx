@@ -118,7 +118,6 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
   };
 
 
-console.log(item,"itrrririririrriri");
   
   
   useEffect(() => {

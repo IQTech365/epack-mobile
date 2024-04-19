@@ -9,6 +9,7 @@ import Button from '../../../../../common/Button';
 import {
   createBiltyRequest,
   resetCreateBiltyRequest,
+  resetUpdateBiltyRequest,
   updateBiltyRequest,
 } from '../../../../../redux/slices/OrderSlice';
 import BasicDetails from './components/BasicDetails';
@@ -50,7 +51,8 @@ interface IBiltyFormViewProps {
 const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess, item, isEdit = false}) => {
   const {state} = useBiltyFormContextHook();
   const dispatch = useAppDispatch();
-
+  console.log('BiltyForm-item--', JSON.stringify(item));
+  
   const {
     createBiltyRequesting,
     createBiltySuccess,
@@ -249,11 +251,14 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess, item,
           addedBy: authId,
         };
         if(isEdit) {
+          delete payload.companyId;
+          delete payload.enquiryId;
+          delete payload.addedBy;
+
           const updatePayload: IUpdateBiltyPayload = {
             id: item?._id as string,
             payload: payload,
           }
-          console.log('update-payload--',JSON.stringify(updatePayload));
           dispatch(updateBiltyRequest(updatePayload));
         } else {
           dispatch(createBiltyRequest(payload));
@@ -288,12 +293,11 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess, item,
   useEffect(() => {
     if (!updateBiltyRequesting && updateBiltySuccess) {
       showToast('Bilty data updated.', ToastType.SUCCESS);
-      dispatch(resetCreateBiltyRequest());
-      dispatch(resetGetSerialNoRequest());
+      dispatch(resetUpdateBiltyRequest());
       onSuccess && onSuccess();
     } else if (!updateBiltyRequesting && updateBiltyFailure) {
       showToast('Bilty not updated. Try again!', ToastType.ERROR);
-      dispatch(resetCreateBiltyRequest());
+      dispatch(resetUpdateBiltyRequest());
     }
   }, [updateBiltyRequesting, updateBiltySuccess, updateBiltyFailure]);
 

@@ -120,7 +120,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
   const vehicleManufactureYearDropRef = useRef<IDropdownHandler>(null);
   const registrationNoRef = useRef<InputMethods>(null);
   const vehicleKmRef = useRef<InputMethods>(null);
-  const insuranceCompanyNameRef = useRef<InputMethods>(null);
+  const insuranceCompanyNameRef = useRef<IDropdownHandler>(null);
   const insurancePolicyNoRef = useRef<InputMethods>(null);
   const vehicleValueRef = useRef<InputMethods>(null);
   const chassisNoRef = useRef<InputMethods>(null);
@@ -379,15 +379,12 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
       handleCarConditionNo(serialNo.toString());
     }
   }, [serialNo]);
-
-  console.log(item, 'item-------------');
-
+  
   useEffect(() => {
     if (isEdit && item) {
       carConditionNoInputRef.current?.setValue(item.carConditionNumber);
       registrationNoRef.current?.setValue(item.vehicleRegistrationNumber);
       vehicleKmRef.current?.setValue(item.vehicleCoveredDistanceInKM);
-      insuranceCompanyNameRef.current?.setValue(item.insuranceCompany);
       cnLrBnRef.current?.setValue(item.biltyNo);
       insurancePolicyNoRef.current?.setValue(item.insurancePolicyNumber);
       vehicleValueRef.current?.setValue(item.vehicleValue);
@@ -609,10 +606,18 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                 ref={insuranceCompanyNameRef}
               /> */}
 
+<<<<<<< HEAD
               <DropdownComponent
                 data={getVehicleInsuranceCompanyList(vehicleInsuranceCompany)}
                 onSelect={handleInsuranceCompany}
               />
+=======
+                  <DropdownComponent
+                  data={getVehicleInsuranceCompanyList(vehicleInsuranceCompany)}
+                  onSelect={handleInsuranceCompany}
+                  ref={insuranceCompanyNameRef}
+                />
+>>>>>>> ed3722600ab917451fc620e17d7d04244c11bb07
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>

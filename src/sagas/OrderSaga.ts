@@ -337,7 +337,6 @@ export function* createCarConditionSaga(
   }
 
   export function* updateCarConditionSaga(action: PayloadAction<IUpdateCarConditionPayload>) {
-   console.log("updateCarConditionSaga", JSON.stringify(action));
    
     try {
         const response: IUpdateCarConditionResponse = yield call(OrderService.UpdateCarConditionService, action.payload);

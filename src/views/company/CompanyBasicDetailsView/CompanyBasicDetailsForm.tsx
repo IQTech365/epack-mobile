@@ -95,16 +95,33 @@ const CompanyBasicDetailsForm: FC<IProps> = ({navigation}) => {
     return text;
   };
 
+  // const _getCompanyPAN = () => {
+  //   let pan: string = '';
+  //   if (
+  //     state.company_type == companyTypeOptions[0].label ||
+  //     state.company_type == companyTypeOptions[1].label
+  //   ) {
+  //     pan = state.govt_document;
+  //   }
+  //   return pan;
+  // };
+
   const _getCompanyPAN = () => {
-    let pan: string = '';
+    let pan = '';
+    const panRegex = /^([A-Za-z]{5})(\d{4})([A-Za-z])$/;
+    
     if (
-      state.company_type == companyTypeOptions[0].label ||
-      state.company_type == companyTypeOptions[1].label
+      (state.company_type === companyTypeOptions[0].label ||
+        state.company_type === companyTypeOptions[1].label) &&
+        panRegex.test(state.govt_document)
     ) {
       pan = state.govt_document;
+    } else {
     }
+  
     return pan;
   };
+  
 
   const _getCompanyCinOrIncorporationNo = () => {
     let cinNo: string = '';

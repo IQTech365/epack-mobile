@@ -346,7 +346,7 @@ const MaterialDetails: React.FC<IProps> = ({item, isEdit}) => {
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
-                  autoCapitalize="characters"
+                  inputType="numeric"
                   ref={billInvoiceNoInputref}
                 />
               </View>

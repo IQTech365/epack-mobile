@@ -147,6 +147,11 @@ export const gstPercentOptions = [
     label: '18%',
     value: '18',
   },
+
+  {
+    label: '28%',
+    value: '28',
+  },
 ];
 
 export const gstTypeOptions = [

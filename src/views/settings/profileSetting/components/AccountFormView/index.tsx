@@ -279,6 +279,7 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({isEdit, paymen
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
               value={accountNumber}
+              inputType='numeric'
             />
           </View>
         </View>
@@ -291,6 +292,7 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({isEdit, paymen
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
             value={ifscCode}
+            autoCapitalize="characters"
           />
         </View>
       </>
@@ -323,6 +325,7 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({isEdit, paymen
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
+            autoCapitalize="characters"
           />
         </View>
       </>

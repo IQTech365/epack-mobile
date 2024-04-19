@@ -105,7 +105,6 @@ const InvoiceToIndividualView: React.FC<Props> = () => {
           containerStyle={styles.inputContainer}
           inputStyle={styles.input}
           selectionColor={COLOR_BLACK}
-          autoCapitalize="characters"
           //@ts-ignore
           ref={partyNameInputRef}
         />

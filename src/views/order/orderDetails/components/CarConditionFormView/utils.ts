@@ -88,7 +88,6 @@ export const getVehicleInsuranceCompanyList = (
       return item;
     });
   }
-
   return items;
 };
 
