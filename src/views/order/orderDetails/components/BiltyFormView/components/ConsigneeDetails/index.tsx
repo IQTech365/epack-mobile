@@ -155,7 +155,7 @@ const ConsigneeDetails: React.FC<IProps> = ({item, isEdit}) => {
       consigneeAddressInputRef.current?.setValue(
         item?.unloadingAddress?.address,
       );
-      setConsigneeAddress(item?.consignee?.unloadingAddress);
+      setConsigneeAddress(item?.unloadingAddress.address);
     }
   }, [isEdit, item]);
 

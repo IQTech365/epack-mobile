@@ -3,6 +3,7 @@ export interface IHtmlTemplateRequest {
   templateId: string;
   quotationId: string;
   biltyCopyType?: string;
+  companyId?: string;
 }
 
 // Money Receipt Template Request Payload

@@ -27,7 +27,7 @@ import AlertModal from '../../../../../common/AlertModal';
 import {NavigationProp} from '@react-navigation/native';
 import PreviewShareModal from '../../../../../common/PreviewShareModal';
 import LimitReachImage from '../../../../../images/icons/limit_reach.svg';
-
+import {getCurrentCompanyId} from '../../../../../utils/storage';
 
 interface IBiltyViewProps {
   orderId: string;
@@ -118,7 +118,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
   const handleCreateNewBilty = () => {
     const docLimit: number = getDocumentLimitCount('658d3cb5585e3dde644da97e');
     const currentDocCount: number = getTotalBilty();
-    if (docLimit.toString() == "-1" || currentDocCount < docLimit) {
+    if (docLimit.toString() == '-1' || currentDocCount < docLimit) {
       setShowBiltyList(true);
       setCreateNewBilty(false);
       setShowLimitModal(false);
@@ -172,22 +172,27 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
     return null;
   };
 
-  const onEdit = (id:String) => {
+  const onEdit = (id: String) => {
     const {data} = biltyList || {};
-    if(data && Array.isArray(data) && data.length > 0) {
-      const bilty:IBilty = data.find((ele:IBilty) => ele._id === id);
-      navigation.navigate("EditBilty", {item: bilty, orderID: orderId})
+    if (data && Array.isArray(data) && data.length > 0) {
+      const bilty: IBilty = data.find((ele: IBilty) => ele._id === id);
+      navigation.navigate('EditBilty', {item: bilty, orderID: orderId});
     }
   };
 
   const handleDocumentDownload = async () => {
     setShowPreviewShareModal(false);
-    const payload: IHtmlTemplateRequest = {
-      templateId: templateId,
-      quotationId: documentId,
-      biltyCopyType: downloadOption,
-    };
-    dispatch(getBiltyHtmlRequest(payload));
+    getCurrentCompanyId()
+      .then(id => {
+        const payload: IHtmlTemplateRequest = {
+          templateId: templateId,
+          quotationId: documentId,
+          biltyCopyType: downloadOption,
+          companyId: id as string,
+        };
+        dispatch(getBiltyHtmlRequest(payload));
+      })
+      .catch(err => console.log('err'));
   };
 
   const hanldeAlertModalClose = () => {
@@ -260,8 +265,8 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
             icon={<LimitReachImage width={200} height={200} />}
             onClose={hanldeAlertModalClose}
             onUpgrade={handlePlanUpgrade}
-            title='Your free document create limit has been reached. Please upgrade your plan.'
-            buttonText='UPGRADE'
+            title="Your free document create limit has been reached. Please upgrade your plan."
+            buttonText="UPGRADE"
           />
         </View>
       );
