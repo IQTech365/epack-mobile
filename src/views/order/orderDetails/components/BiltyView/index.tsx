@@ -44,7 +44,6 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
     getBiltyHtmlSuccess,
     getBiltyHtmlFailure,
   } = useAppSelector(state => state.Order);
-
   const [showBiltyList, setShowBiltyList] = useState<boolean>(false);
   const [createNewBilty, setCreateNewBilty] = useState<boolean>(true);
   const [downloadOption, setDownloadOption] = useState<string>('');
@@ -87,7 +86,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
     setDownloadOption('');
     setShowPreviewShareModal(false);
   };
-
+  console.log(JSON.stringify(biltyList.data));
   const _getBiltyData = () => {
     const {data} = biltyList || {};
     let items: IBiltyItem[] = [];
@@ -116,14 +115,19 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
 
   const handleCreateNewBilty = () => {
     const docLimit: number = getDocumentLimitCount('658d3cb5585e3dde644da97e');
+
     const currentDocCount: number = getTotalBilty();
-    if (docLimit.toString() == '-1' || currentDocCount < docLimit) {
-      setShowBiltyList(true);
-      setCreateNewBilty(false);
-      setShowLimitModal(false);
-    } else {
-      setShowLimitModal(true);
-    }
+
+    // if (docLimit.toString() == '-1' || currentDocCount < docLimit) {
+    //   setShowBiltyList(true);
+    //   setCreateNewBilty(false);
+    //   setShowLimitModal(false);
+    // } else {
+    //   setShowLimitModal(true);
+    // }
+
+    setShowBiltyList(false);
+    setCreateNewBilty(true);
   };
 
   const handleShowBiltyList = () => {

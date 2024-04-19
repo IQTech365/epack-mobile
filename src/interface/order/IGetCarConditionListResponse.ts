@@ -1,7 +1,7 @@
 export interface IAccessory {
-    id:string;
-    accessoryName:string;
-    present:string;
+  id: string;
+  accessoryName: string;
+  present: string;
 }
 
 export interface ICardConditionData {
@@ -11,7 +11,7 @@ export interface ICardConditionData {
   templateId: string;
   carConditionNumber: string;
   dateOfCarCondition: string;
-  vehicleType:string;
+  vehicleType: string;
   manufacturer: string;
   model: string;
   yearOfManufacturing: string;
@@ -21,6 +21,7 @@ export interface ICardConditionData {
   vehicleValue: string;
   insurancePolicyNumber: string;
   insuranceCompany: string;
+  biltyNo: string;
   chasisNumber: string;
   engineNumber: string;
   batteryNumber: string;
@@ -28,7 +29,7 @@ export interface ICardConditionData {
   anyOtherAccessorie: string;
   scratches: string;
   dent: string;
-  visibleObservation:string;
+  visibleObservation: string;
   remarks: string;
   vehicleAccessories: IAccessory[];
   addedBy: string;

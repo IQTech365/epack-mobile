@@ -35,14 +35,20 @@ import {IAddOrderResponse} from '../interface/order/IAddOrderResponse';
 import {ICreateCarConditionRequest} from '../interface/order/ICreateCarConditionRequest';
 import {ICreateCarConditionResponse} from '../interface/order/ICreateCarConditionResponse';
 import {ICreateBiltyRequest} from '../interface/order/ICreateBiltyRequest';
-import {ICreateBiltyResponse, IUpdateBiltyResponse} from '../interface/order/ICreateBiltyResponse';
+import {
+  ICreateBiltyResponse,
+  IUpdateBiltyResponse,
+} from '../interface/order/ICreateBiltyResponse';
 import {ICreateMoneyReceiptRequest} from '../interface/order/ICreateMoneyReceiptRequest';
 import {ICreateMoneyReceiptResponse} from '../interface/order/ICreateMoneyReceiptResponse';
 import {ICreateInvoiceRequest} from '../interface/order/ICreateInvoiceRequest';
 import {ICreateInvoiceResponse} from '../interface/order/ICreateInvoiceResponse';
 import {IGetOrdersResponse} from '../interface/order/IGetOrdersResponse';
 import {IGetMoneyReceiptsResponse} from '../interface/order/IGetMoneyReceiptsResponse';
-import {IGetBiltyListResponse, IUpdateBiltyPayload} from '../interface/order/IGetBiltyListResponse';
+import {
+  IGetBiltyListResponse,
+  IUpdateBiltyPayload,
+} from '../interface/order/IGetBiltyListResponse';
 import {IGetCarConditionListResponse} from '../interface/order/IGetCarConditionListResponse';
 import {IGetOrdersRequest} from '../interface/order/IGetOrdersRequest';
 import {ISingleOrderRequest} from '../interface/order/ISingleOrderRequest';
@@ -74,7 +80,10 @@ import {
   IUpdateInvoicePayload,
   IUpdateInvoiceResponse,
 } from '../interface/order/IUpdateInvoiceResponse';
-import { IUpdateCarConditionPayload, IUpdateCarConditionResponse } from '../interface/order/IUpdateCarConditionResponse';
+import {
+  IUpdateCarConditionPayload,
+  IUpdateCarConditionResponse,
+} from '../interface/order/IUpdateCarConditionResponse';
 
 export const GetOrderDetailsService = async (
   payload: string,
@@ -130,9 +139,14 @@ export const GetBiltyListService = async (
 };
 
 //  Update Bilty
-export const UpdateBiltyService = async (payload: IUpdateBiltyPayload): Promise<IUpdateBiltyResponse> => {
+export const UpdateBiltyService = async (
+  payload: IUpdateBiltyPayload,
+): Promise<IUpdateBiltyResponse> => {
   const api = Api.getInstance();
-  return await api.update<ICreateBiltyRequest, AxiosResponse<IUpdateBiltyResponse>>(payload.payload, UPDATE_BILTY(payload.id));
+  return await api.update<
+    ICreateBiltyRequest,
+    AxiosResponse<IUpdateBiltyResponse>
+  >(payload.payload, UPDATE_BILTY(payload.id));
 };
 
 export const CreateMoneyReceiptService = async (
@@ -259,6 +273,7 @@ export const GetBiltyTemplateHtmlService = async (
     templateId: payload.templateId,
     biltyId: payload.quotationId,
     biltyCopyType: payload.biltyCopyType as string,
+    companyId: payload.companyId as string,
   };
   return await api.post<
     IHtmlBiltyTemplateRequest,
@@ -329,14 +344,12 @@ export const UpdatePackingListService = async (
   >(payload.payload, UPDATE_PACKING_LIST(payload.packingListId));
 };
 
-
 export const UpdateCarConditionService = async (
   payload: IUpdateCarConditionPayload,
 ): Promise<IUpdateCarConditionResponse> => {
   const api = Api.getInstance();
   return await api.update<
-  ICreateCarConditionRequest,
+    ICreateCarConditionRequest,
     AxiosResponse<IUpdateCarConditionResponse>
   >(payload.data, UPDATE_CAR_CONDITION(payload.id));
-  
 };

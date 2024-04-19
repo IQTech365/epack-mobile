@@ -7,7 +7,7 @@ import WhatsappIcon from '../../../../../images/icons/whatsapp.svg';
 import MoreIcon from '../../../../../images/icons/dots-vertical.svg';
 
 import Spacer from '../../../../../common/Spacer';
-import { formatDate5 } from '../../../../../utils/formatter';
+import {formatDate5} from '../../../../../utils/formatter';
 
 export interface IOrderItem {
   orderId: string;
@@ -36,26 +36,28 @@ const OrderListItem: React.FC<IOrderListItemProps> = ({
   index,
   onPress,
 }) => {
-
   const _handlePhoneCall = () => {
-    if(item?.phoneNumber) {
+    if (item?.phoneNumber) {
       Linking.openURL(`tel:${item?.phoneNumber}`);
     }
-  }
+  };
 
   const _handleWhatsappCall = () => {
-    if(item?.phoneNumber) {
+    if (item?.phoneNumber) {
       Linking.openURL(`whatsapp://send?phone=+91${item?.phoneNumber}`);
     }
-  }
-  
+  };
+  console.log(item, 'orderId nikalni hai');
+
   return (
     <View style={styles.wrapper}>
       <View style={styles.badgeWrapper}>
         <View style={styles.bageContainer}>
           <Text style={styles.badgeText}>{index + 1}</Text>
         </View>
-        <Text style={styles.orderDateText}>{formatDate5(new Date(item.createdAt))}</Text>
+        <Text style={styles.orderDateText}>
+          {formatDate5(new Date(item.createdAt))}
+        </Text>
       </View>
       <Shadow style={styles.cardWrapper} distance={1.5}>
         <TouchableOpacity
@@ -67,7 +69,9 @@ const OrderListItem: React.FC<IOrderListItemProps> = ({
               <Text style={styles.nameText}>{item.clientName}</Text>
             </View>
             <View style={styles.contactOptionsContainer}>
-              <TouchableOpacity activeOpacity={0.6} onPress={_handleWhatsappCall}>
+              <TouchableOpacity
+                activeOpacity={0.6}
+                onPress={_handleWhatsappCall}>
                 <WhatsappIcon width={24} height={24} />
               </TouchableOpacity>
               <Spacer width={12} height={0} />
@@ -109,11 +113,17 @@ const OrderListItem: React.FC<IOrderListItemProps> = ({
               </Text>
             </View>
           </View>
-          <View style={[styles.rowContainer, {borderBottomLeftRadius: 5, borderBottomRightRadius: 5}]}>
-            <View style={[styles.rowItemContainer, {borderBottomLeftRadius: 5}]}>
+          <View
+            style={[
+              styles.rowContainer,
+              {borderBottomLeftRadius: 5, borderBottomRightRadius: 5},
+            ]}>
+            <View
+              style={[styles.rowItemContainer, {borderBottomLeftRadius: 5}]}>
               <Text style={styles.labelText}>Shifting Luggage</Text>
             </View>
-            <View style={[styles.rowItemContainer2, {borderBottomRightRadius: 5}]}>
+            <View
+              style={[styles.rowItemContainer2, {borderBottomRightRadius: 5}]}>
               <Text style={styles.valueText}>{item.shiftingLuggage}</Text>
             </View>
           </View>

@@ -1,10 +1,20 @@
-import React, {useReducer, useState, useEffect, useRef, useCallback} from 'react';
+import React, {
+  useReducer,
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+} from 'react';
 import {View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
-import DatePickerComponent, { IDateMethods } from '../../../../../common/DatePickerComponent';
-import DropdownComponent, { IDropdownHandler } from '../../../../../common/DropdownComponent';
-import Input, { InputMethods } from '../../../../../common/Input';
+import DatePickerComponent, {
+  IDateMethods,
+} from '../../../../../common/DatePickerComponent';
+import DropdownComponent, {
+  IDropdownHandler,
+} from '../../../../../common/DropdownComponent';
+import Input, {InputMethods} from '../../../../../common/Input';
 import Label from '../../../../../common/Label';
 import Spacer from '../../../../../common/Spacer';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
@@ -22,7 +32,12 @@ import {formatDate3} from '../../../../../utils/formatter';
 import Button from '../../../../../common/Button';
 import {ICreateCarConditionRequest} from '../../../../../interface/order/ICreateCarConditionRequest';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
-import {createCarConditionRequest, resetCreateCarConditionRequest, updateCarConditionRequest, resetUpdateCarConditionRequest} from '../../../../../redux/slices/OrderSlice';
+import {
+  createCarConditionRequest,
+  resetCreateCarConditionRequest,
+  updateCarConditionRequest,
+  resetUpdateCarConditionRequest,
+} from '../../../../../redux/slices/OrderSlice';
 import Spinner from '../../../../../common/Spinner';
 import {
   getVehicleAccessoryList,
@@ -34,28 +49,35 @@ import {
   getYears,
 } from './utils';
 import useAuthId from '../../../../../hooks/useAuthId';
-import { getCurrentCompanyId } from '../../../../../utils/storage';
+import {getCurrentCompanyId} from '../../../../../utils/storage';
 import useInitialValueHook from '../../../../../hooks/useInitialValueHook';
 import useSerialNoHook from '../../../../../hooks/useSerialNo';
-import { DOCUMENT_TYPE, IGetSerialNoRequest } from '../../../../../interface/setting/serialNo/serialNo';
-import { getSerialNoRequest, resetGetSerialNoRequest } from '../../../../../redux/slices/SerialNoSettingSlice';
-import { ToastType, showToast } from '../../../../../utils/utility';
-import { ICardConditionData } from '../../../../../interface/order/IGetCarConditionListResponse';
-import { IUpdateCarConditionPayload } from '../../../../../interface/order/IUpdateCarConditionResponse';
-import { getVehicleInsuranceCompanyRequest } from '../../../../../redux/slices/CommonSlice';
+import {
+  DOCUMENT_TYPE,
+  IGetSerialNoRequest,
+} from '../../../../../interface/setting/serialNo/serialNo';
+import {
+  getSerialNoRequest,
+  resetGetSerialNoRequest,
+} from '../../../../../redux/slices/SerialNoSettingSlice';
+import {ToastType, showToast} from '../../../../../utils/utility';
+import {ICardConditionData} from '../../../../../interface/order/IGetCarConditionListResponse';
+import {IUpdateCarConditionPayload} from '../../../../../interface/order/IUpdateCarConditionResponse';
+import {getVehicleInsuranceCompanyRequest} from '../../../../../redux/slices/CommonSlice';
 
 interface ICarConditionFormViewProps {
   orderId: string | undefined;
   onSuccess: () => void;
-  item?:ICardConditionData;
-  isEdit?:boolean;
+  item?: ICardConditionData;
+  isEdit?: boolean;
 }
 
 const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
   orderId,
   onSuccess,
   item,
-  isEdit = false}) => {
+  isEdit = false,
+}) => {
   const [vehicleTypeId, setVehicleTypeId] = useState<string>('');
   const [vehicleCompanyId, setVehicleCompanyId] = useState<string>('');
   const [reducerState, dispatch] = useReducer(
@@ -70,8 +92,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
     orders,
     updateCarConditionRequesting,
     updateCarConditionSuccess,
-    updateCarConditionFailure
-
+    updateCarConditionFailure,
   } = useAppSelector(state => state.Order);
   const {
     vehicleTypes,
@@ -81,11 +102,13 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
     vehicleAccessories,
     vehicleModels,
   } = useAppSelector(state => state.Common);
-  
+
   const dispatch2 = useAppDispatch();
   const authId = useAuthId();
-  const {initialValue, prefix} = useInitialValueHook('658d3cab585e3dde644da977');
-  const serialNo:number = useSerialNoHook();
+  const {initialValue, prefix} = useInitialValueHook(
+    '658d3cab585e3dde644da977',
+  );
+  const serialNo: number = useSerialNoHook();
 
   const carConditionNoInputRef = useRef<InputMethods>(null);
   const DateInputRef = useRef<IDateMethods>(null);
@@ -111,19 +134,21 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
   const anyOtherObservationRef = useRef<InputMethods>(null);
 
   const _getSerialNoRequest = () => {
-    getCurrentCompanyId().then(id => {
-      const payload: IGetSerialNoRequest = {
-        document: DOCUMENT_TYPE.CAR_CONDITION,
-        payload: {
-          activeCount: initialValue,
-          companyId: id as string,
-          isAuto: true,
-          isHeadOffice: true,
-        }
-      }
-      dispatch2(getSerialNoRequest(payload));
-    }).catch(err => console.log('err--', err));
-  }
+    getCurrentCompanyId()
+      .then(id => {
+        const payload: IGetSerialNoRequest = {
+          document: DOCUMENT_TYPE.CAR_CONDITION,
+          payload: {
+            activeCount: initialValue,
+            companyId: id as string,
+            isAuto: true,
+            isHeadOffice: true,
+          },
+        };
+        dispatch2(getSerialNoRequest(payload));
+      })
+      .catch(err => console.log('err--', err));
+  };
 
   const handleCarConditionNo = (text: string) => {
     dispatch({
@@ -264,89 +289,98 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
     });
   };
 
-  const handleVehicleAccessories = (accessoryName:string, id:string, present:boolean) => {
+  const handleVehicleAccessories = (
+    accessoryName: string,
+    id: string,
+    present: boolean,
+  ) => {
     const {vehicleAccessories} = reducerState;
     const clone = [...vehicleAccessories];
-    if(present) {
-      const accessory:IAccessory = {accessoryName: accessoryName, id:id, present: present};
+    if (present) {
+      const accessory: IAccessory = {
+        accessoryName: accessoryName,
+        id: id,
+        present: present,
+      };
       clone.push(accessory);
       dispatch({
         type: CARCONDITION_FORM_ACTION.VEHICLE_ACCESSORIES,
         payload: clone,
       });
     } else {
-      const filters = clone.filter((acc:IAccessory) => acc.accessoryName !== accessoryName);
+      const filters = clone.filter(
+        (acc: IAccessory) => acc.accessoryName !== accessoryName,
+      );
       dispatch({
         type: CARCONDITION_FORM_ACTION.VEHICLE_ACCESSORIES,
         payload: filters,
       });
     }
-  }
+  };
 
   const handleCreateCarCondition = useCallback(() => {
-    getCurrentCompanyId().then(id => {
-      const payload: ICreateCarConditionRequest = {
-        companyId: id as string,
-        orderId: orderId as string,
-        isAuto: true,
-        isHeadOffice: true,
-        carConditionNumber: reducerState.carConditionNumber,
-        dateOfCarCondition: reducerState.dateOfCarCondition,
-        biltyNo:reducerState.cnBiltyLrNo,
-        vehicleType: reducerState.vehicleType,
-        manufacturer: reducerState.manufacturer,
-        model: reducerState.model,
-        yearOfManufacturing: reducerState.yearOfManufacturing,
-        vehicleAccessories: reducerState.vehicleAccessories,
-        color: reducerState.color,
-        vehicleRegistrationNumber: reducerState.vehicleRegistrationNumber,
-        vehicleCoveredDistanceInKM: reducerState.vehicleCoveredDistanceInKM,
-        vehicleValue: reducerState.vehicleValue,
-        insurancePolicyNumber: reducerState.insurancePolicyNumber,
-        insuranceCompany: reducerState.insuranceCompany,
-        chasisNumber: reducerState.chasisNumber,
-        engineNumber: reducerState.engineNumber,
-        batteryNumber: reducerState.batteryNumber,
-        tyreNumber: reducerState.tyreNumber,
-        anyOtherAccessorie: reducerState.anyOtherAccessorie,
-        scratches: reducerState.scaratches,
-        dent: reducerState.dent,
-        visibleObservation: reducerState.visibleObservation,
-        remarks: reducerState.remarks,
-        addedBy: authId,
-      };
-      if(isEdit){
-        delete payload.companyId;
-        delete payload.orderId;
-        delete payload.addedBy;
-        const updatedPayload: IUpdateCarConditionPayload = {
-          id: item?._id as string,
-          data: payload,
-        }
-        dispatch2(updateCarConditionRequest(updatedPayload)); 
-      } else {
-        dispatch2(createCarConditionRequest(payload));
-        console.log(payload,"payload----------");
-        
-      }
-    }).catch(err => console.log(err));
-    
-  },[reducerState]);
-  
-    useEffect(() => {
-    _getSerialNoRequest();
-    dispatch2(getVehicleInsuranceCompanyRequest())
-  }, []);
+    getCurrentCompanyId()
+      .then(id => {
+        const payload: ICreateCarConditionRequest = {
+          companyId: id as string,
+          orderId: orderId as string,
+          isAuto: true,
+          isHeadOffice: true,
+          carConditionNumber: reducerState.carConditionNumber,
+          dateOfCarCondition: reducerState.dateOfCarCondition,
+          biltyNo: reducerState.cnBiltyLrNo,
+          vehicleType: reducerState.vehicleType,
+          manufacturer: reducerState.manufacturer,
+          model: reducerState.model,
+          yearOfManufacturing: reducerState.yearOfManufacturing,
+          vehicleAccessories: reducerState.vehicleAccessories,
+          color: reducerState.color,
+          vehicleRegistrationNumber: reducerState.vehicleRegistrationNumber,
+          vehicleCoveredDistanceInKM: reducerState.vehicleCoveredDistanceInKM,
+          vehicleValue: reducerState.vehicleValue,
+          insurancePolicyNumber: reducerState.insurancePolicyNumber,
+          insuranceCompany: reducerState.insuranceCompany,
+          chasisNumber: reducerState.chasisNumber,
+          engineNumber: reducerState.engineNumber,
+          batteryNumber: reducerState.batteryNumber,
+          tyreNumber: reducerState.tyreNumber,
+          anyOtherAccessorie: reducerState.anyOtherAccessorie,
+          scratches: reducerState.scaratches,
+          dent: reducerState.dent,
+          visibleObservation: reducerState.visibleObservation,
+          remarks: reducerState.remarks,
+          addedBy: authId,
+        };
+        console.log(payload, 'payload----------');
 
+        if (isEdit) {
+          delete payload.companyId;
+          delete payload.orderId;
+          delete payload.addedBy;
+          const updatedPayload: IUpdateCarConditionPayload = {
+            id: item?._id as string,
+            data: payload,
+          };
+          dispatch2(updateCarConditionRequest(updatedPayload));
+        } else {
+          dispatch2(createCarConditionRequest(payload));
+        }
+      })
+      .catch(err => console.log(err));
+  }, [reducerState]);
 
   useEffect(() => {
-    if(serialNo){
+    _getSerialNoRequest();
+    dispatch2(getVehicleInsuranceCompanyRequest());
+  }, []);
+
+  useEffect(() => {
+    if (serialNo) {
       handleCarConditionNo(serialNo.toString());
     }
   }, [serialNo]);
-  
-  console.log(item,"item-------------");
-  
+
+  console.log(item, 'item-------------');
 
   useEffect(() => {
     if (isEdit && item) {
@@ -366,33 +400,50 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
       scratcheRef.current?.setValue(item.scratches);
       dentRef.current?.setValue(item.dent);
       anyOtherObservationRef.current?.setValue(item.visibleObservation);
-      const vehicleTypeDropdownItem:TDropdownItem = getVehicleTypeList(vehicleTypes).find((e:TDropdownItem) => e.label == item?.vehicleType) as TDropdownItem;
-      
-      if(vehicleTypeDropdownItem ! == undefined){
+      const vehicleTypeDropdownItem: TDropdownItem = getVehicleTypeList(
+        vehicleTypes,
+      ).find(
+        (e: TDropdownItem) => e.label == item?.vehicleType,
+      ) as TDropdownItem;
+
+      if (vehicleTypeDropdownItem! == undefined) {
         vehicleTypeDropRef.current?.setDefaultValue(vehicleTypeDropdownItem);
         vehicleTypeDropRef.current?.refreshComp();
       }
-      const vehicleCompanyDropdownItem:TDropdownItem = getVehicleCompanyList(vehicleTypeId, vehicleCompanies).find((e:TDropdownItem) => e.label == item?.manufacturer) as TDropdownItem;
-      if(vehicleCompanyDropdownItem ! == undefined){
-        vehicleManufactureDropRef.current?.setDefaultValue(vehicleCompanyDropdownItem);
+      const vehicleCompanyDropdownItem: TDropdownItem = getVehicleCompanyList(
+        vehicleTypeId,
+        vehicleCompanies,
+      ).find(
+        (e: TDropdownItem) => e.label == item?.manufacturer,
+      ) as TDropdownItem;
+      if (vehicleCompanyDropdownItem! == undefined) {
+        vehicleManufactureDropRef.current?.setDefaultValue(
+          vehicleCompanyDropdownItem,
+        );
       }
-      const vehicleModelDropdownItem:TDropdownItem = getVehicleModelList(vehicleCompanyId, vehicleModels).find((e:TDropdownItem) => e.label == item?.model) as TDropdownItem;
-      if(vehicleModelDropdownItem ! == undefined){
+      const vehicleModelDropdownItem: TDropdownItem = getVehicleModelList(
+        vehicleCompanyId,
+        vehicleModels,
+      ).find((e: TDropdownItem) => e.label == item?.model) as TDropdownItem;
+      if (vehicleModelDropdownItem! == undefined) {
         vehicleModelDropRef.current?.setDefaultValue(vehicleModelDropdownItem);
       }
-      const vehicleColorDropdownItem:TDropdownItem = getVehicleColorList(vehicleColors).find((e:TDropdownItem) => e.label == item?.color) as TDropdownItem;      
-      if(vehicleColorDropdownItem ! == undefined){
+      const vehicleColorDropdownItem: TDropdownItem = getVehicleColorList(
+        vehicleColors,
+      ).find((e: TDropdownItem) => e.label == item?.color) as TDropdownItem;
+      if (vehicleColorDropdownItem! == undefined) {
         vehicleColorDropRef.current?.setDefaultValue(vehicleColorDropdownItem);
-
       }
-      const vehicleManufactureYearDropdownItem:TDropdownItem = getYears().find((e:TDropdownItem) => e.label == item?.yearOfManufacturing) as TDropdownItem;      
-      if(vehicleManufactureYearDropdownItem ! == undefined){
-        vehicleManufactureYearDropRef.current?.setDefaultValue(vehicleManufactureYearDropdownItem);
+      const vehicleManufactureYearDropdownItem: TDropdownItem = getYears().find(
+        (e: TDropdownItem) => e.label == item?.yearOfManufacturing,
+      ) as TDropdownItem;
+      if (vehicleManufactureYearDropdownItem! == undefined) {
+        vehicleManufactureYearDropRef.current?.setDefaultValue(
+          vehicleManufactureYearDropdownItem,
+        );
       }
-      }
+    }
   }, [isEdit, item]);
-
-  
 
   useEffect(() => {
     if (!createCarConditionRequesting && createCarConditionSuccess) {
@@ -419,7 +470,11 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
       showToast(' Car Condition not updated. Try again!', ToastType.ERROR);
       dispatch2(resetUpdateCarConditionRequest());
     }
-  }, [updateCarConditionRequesting, updateCarConditionSuccess, updateCarConditionFailure]);
+  }, [
+    updateCarConditionRequesting,
+    updateCarConditionSuccess,
+    updateCarConditionFailure,
+  ]);
 
   return (
     <AvoidSoftInputViewHOC>
@@ -443,7 +498,10 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Date" style={styles.label} />
-                <DatePickerComponent onDateSelect={handleCarConditionDate}  ref={DateInputRef}/>
+                <DatePickerComponent
+                  onDateSelect={handleCarConditionDate}
+                  ref={DateInputRef}
+                />
               </View>
             </View>
             <Spacer height={4} />
@@ -454,7 +512,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                   onChangeText={handleCnBiltyLrNO}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
-                  placeholder='CN / Bilty / LR No.'
+                  placeholder="CN / Bilty / LR No."
                   // value={}
                   selectionColor={COLOR_BLACK}
                   value={reducerState.cnBiltyLrNo}
@@ -502,7 +560,11 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Year" style={styles.label} />
-                <DropdownComponent data={getYears()} onSelect={handleYear} ref={vehicleManufactureYearDropRef} />
+                <DropdownComponent
+                  data={getYears()}
+                  onSelect={handleYear}
+                  ref={vehicleManufactureYearDropRef}
+                />
               </View>
             </View>
             <Spacer height={4} />
@@ -514,7 +576,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   value={reducerState.vehicleRegistrationNumber}
-                  placeholder='Vehicle Reg.#'
+                  placeholder="Vehicle Reg.#"
                   selectionColor={COLOR_BLACK}
                   autoCapitalize="characters"
                   ref={registrationNoRef}
@@ -526,7 +588,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                   onChangeText={handleVehicleKm}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
-                  placeholder='KM'
+                  placeholder="KM"
                   value={reducerState.vehicleCoveredDistanceInKM}
                   selectionColor={COLOR_BLACK}
                   inputType="numeric"
@@ -547,10 +609,10 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                 ref={insuranceCompanyNameRef}
               /> */}
 
-                  <DropdownComponent
-                  data={getVehicleInsuranceCompanyList(vehicleInsuranceCompany)}
-                  onSelect={handleInsuranceCompany}
-                />
+              <DropdownComponent
+                data={getVehicleInsuranceCompanyList(vehicleInsuranceCompany)}
+                onSelect={handleInsuranceCompany}
+              />
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
@@ -560,7 +622,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                   onChangeText={handlePolicyNo}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
-                  placeholder='Policy#'
+                  placeholder="Policy#"
                   value={reducerState.insurancePolicyNumber}
                   selectionColor={COLOR_BLACK}
                   ref={insurancePolicyNoRef}
@@ -573,7 +635,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                   onChangeText={handleVehicleValue}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
-                  placeholder='Vehicle Value'
+                  placeholder="Vehicle Value"
                   value={reducerState.vehicleValue}
                   inputType="numeric"
                   selectionColor={COLOR_BLACK}
@@ -588,7 +650,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                 onChangeText={handleChasisNo}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
-                placeholder='Chasis No.'
+                placeholder="Chasis No."
                 value={reducerState.chasisNumber}
                 autoCapitalize="characters"
                 selectionColor={COLOR_BLACK}
@@ -602,7 +664,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                 onChangeText={handleEngineNo}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
-                placeholder='Engine No.'
+                placeholder="Engine No."
                 value={reducerState.engineNumber}
                 autoCapitalize="characters"
                 selectionColor={COLOR_BLACK}
@@ -614,18 +676,20 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
         <Spacer height={4} />
         <CollapsibleView title="ACCESSORIES DETAILS" collapsed={false}>
           <View>
-            {getVehicleAccessoryList(vehicleAccessories).map((accessory, index) => {
-              return (
-                <View key={index}>
-                  <AccessoryView
-                    label={accessory.label}
-                    id={accessory.id}
-                    onPress={handleVehicleAccessories}
-                  />
-                  <Spacer height={8} />
-                </View>
-              );
-            })}
+            {getVehicleAccessoryList(vehicleAccessories).map(
+              (accessory, index) => {
+                return (
+                  <View key={index}>
+                    <AccessoryView
+                      label={accessory.label}
+                      id={accessory.id}
+                      onPress={handleVehicleAccessories}
+                    />
+                    <Spacer height={8} />
+                  </View>
+                );
+              },
+            )}
             <View style={styles.elementContainer}>
               <View style={styles.itemContainer}>
                 <Label text="Battery No." style={styles.label} />
@@ -633,7 +697,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                   onChangeText={handleBatteryNo}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
-                  placeholder='Battery No.'
+                  placeholder="Battery No."
                   value={reducerState.batteryNumber}
                   autoCapitalize="characters"
                   selectionColor={COLOR_BLACK}
@@ -647,7 +711,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   value={reducerState.tyreNumber}
-                  placeholder='Tyre No.'
+                  placeholder="Tyre No."
                   inputType="numeric"
                   selectionColor={COLOR_BLACK}
                   ref={tyreNoRef}
@@ -662,7 +726,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                 containerStyle={styles.inputContainer}
                 value={reducerState.anyOtherAccessorie}
                 inputStyle={styles.input}
-                placeholder='Other accessories'
+                placeholder="Other accessories"
                 selectionColor={COLOR_BLACK}
                 ref={anyOtherAccessoriesRef}
               />
@@ -675,7 +739,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                 containerStyle={styles.inputContainer}
                 value={reducerState.remarks}
                 inputStyle={styles.input}
-                placeholder='Any Remarks'
+                placeholder="Any Remarks"
                 selectionColor={COLOR_BLACK}
                 ref={remarkRef}
               />
@@ -692,7 +756,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 value={reducerState.scaratches}
-                placeholder='Any Scratches'
+                placeholder="Any Scratches"
                 selectionColor={COLOR_BLACK}
                 ref={scratcheRef}
               />
@@ -705,7 +769,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 value={reducerState.dent}
-                placeholder='Any Dent'
+                placeholder="Any Dent"
                 selectionColor={COLOR_BLACK}
                 ref={dentRef}
               />
@@ -718,7 +782,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 value={reducerState.visibleObservation}
-                placeholder='Other Observations'
+                placeholder="Other Observations"
                 selectionColor={COLOR_BLACK}
                 ref={anyOtherObservationRef}
               />
@@ -727,7 +791,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
         </CollapsibleView>
         <Spacer height={8} />
         <Button
-          text={isEdit ? "UPDATE" : "CREATE"}
+          text={isEdit ? 'UPDATE' : 'CREATE'}
           onPress={handleCreateCarCondition}
           disabled={false}
           style={styles.previewButtonStyle}

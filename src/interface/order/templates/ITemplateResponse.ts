@@ -17,6 +17,7 @@ export interface IHtmlBiltyTemplateRequest {
   templateId: string;
   biltyId: string;
   biltyCopyType: string;
+  companyId: string;
 }
 
 // Car Condition Template Request Payload
