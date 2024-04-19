@@ -56,4 +56,14 @@ export class Api extends HttpClient {
     console.info('Payload-', JSON.stringify(data));
     return this.instance.delete<T, AxiosResponse<R>>(uri);
   };
+
+    // ** GET API for Pincode Only
+    public getPostalAddress = async <TResponse>(
+      url: string,
+      config: RequestInit = {},
+    ): Promise<TResponse> => {
+      return fetch(url, config)
+        .then(res => res.json())
+        .then(data => data as TResponse);
+    };
 }
