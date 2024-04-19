@@ -10,7 +10,6 @@ import {useNavigation} from '@react-navigation/native';
 const AccountEditView = (props: any) => {
   const navigation = useNavigation();
   const paymentInfo: IGetPaymentMethodData = props?.route?.params?.paymentInfo;
-  console.log('AccountEditView--id--', JSON.stringify(paymentInfo));
   return (
     <View style={{flex: 1, backgroundColor: COLOR_WHITE}}>
       <Header label="Account-Edit" canGoBack={true} />

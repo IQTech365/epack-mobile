@@ -8,12 +8,17 @@ import BouncyCheckboxGroup, {
 import Spacer from '../../../../../../../common/Spacer';
 import Label from '../../../../../../../common/Label';
 import Input, {InputMethods} from '../../../../../../../common/Input';
-import DatePickerComponent from '../../../../../../../common/DatePickerComponent';
-import {COLOR_BLACK} from '../../../../../../../utils/colors';
+import DatePickerComponent, { IDateMethods } from '../../../../../../../common/DatePickerComponent';
+import {COLOR_BLACK, COLOR_BLUE} from '../../../../../../../utils/colors';
 import {insuranceOptions} from '../MaterialDetails/utils';
 import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
 import {formatDate4} from '../../../../../../../utils/formatter';
 import {IBilty} from '../../../../../../../interface/order/IGetBiltyListResponse';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import DropdownComponent from '../../../../../../../common/DropdownComponent';
+import { getVehicleInsuranceCompanyList } from '../../../CarConditionFormView/utils';
+import { useAppSelector } from '../../../../../../../redux/hooks';
+import { TDropdownItem } from '../../../../../../../type/TDropdownItem';
 
 interface IProps {
   item?: IBilty;
@@ -27,24 +32,32 @@ const InsuranceDetails: React.FC<IProps> = ({item, isEdit}) => {
     setPolicyNumber,
     setInsuranceDate,
     setInsuranceAmount,
+    setInsurance,
   } = useBiltyFormContextHook();
+
+  const {
+    vehicleInsuranceCompany,
+  } = useAppSelector(state => state.Common);
 
   const insuranceCompanyNameRef = useRef<InputMethods>(null);
   const insurancePolicyNoRef = useRef<InputMethods>(null);
   const insuranceAmountRef = useRef<InputMethods>(null);
-  const insuranceDateRef = useRef<InputMethods>(null);
+  const insuranceDateRef = useRef<IDateMethods>(null);
+  
 
   useEffect(() => {
     if (isEdit && item) {
-      //
+      setInsurance(item.insuranceStatus)
       insuranceCompanyNameRef.current?.setValue(item.insurance.companyName);
       setInsuranceCompany(item.insurance.companyName);
       insurancePolicyNoRef.current?.setValue(item.insurance.policyNumber);
       setPolicyNumber(item.insurance.policyNumber);
       insuranceAmountRef.current?.setValue(item.insurance.amount);
       setInsuranceAmount(item.insurance.amount);
-      insuranceDateRef.current?.setValue(item.insurance.date);
-      setInsuranceDate(item.insurance.date);
+      if(item?.insurance?.date){
+        setInsuranceDate(item.insurance.date);
+        insuranceDateRef.current?.setDefaultValue(new Date(item.insurance.date));
+      }
     }
   }, [isEdit, item]);
 
@@ -52,22 +65,40 @@ const InsuranceDetails: React.FC<IProps> = ({item, isEdit}) => {
     <CollapsibleView title="INSURANCE DETAILS" collapsed={true}>
       <View>
         <View style={styles.elementContainer}>
-          <BouncyCheckboxGroup
-            data={insuranceOptions}
-            // isChecked={state.insurance}
-            onChange={(selectedItem: ICheckboxButton) => {}}
-          />
+        {insuranceOptions.map((option: string, index: number) => (
+            <BouncyCheckbox
+              key={`${index}`}
+              size={25}
+              unfillColor="#FFFFFF"
+              text={option}
+              fillColor={COLOR_BLUE}
+              iconStyle={styles.iconStyle}
+              innerIconStyle={styles.innerIconStyle}
+              textStyle={styles.textStyle}
+              style={styles.style}
+              textContainerStyle={styles.textContainerStyle}
+              onPress={(isChecked: boolean) => {
+                setInsurance(option);
+              }}
+              isChecked={state.insurance == option}
+              disableBuiltInState={true}
+            />
+          ))}
         </View>
         <Spacer height={4} />
         <View style={styles.elementContainer2}>
           <Label text="Insurance Company" style={styles.label} />
-          <Input
-            onChangeText={setInsuranceCompany}
-            containerStyle={styles.inputContainer}
-            inputStyle={styles.input}
-            selectionColor={COLOR_BLACK}
-            ref={insuranceCompanyNameRef}
-          />
+          {/* <DropdownComponent
+            data={getVehicleInsuranceCompanyList(vehicleInsuranceCompany)}
+            onSelect={handleInsuranceCompany}
+            /> */}
+
+            <DropdownComponent
+              data={getVehicleInsuranceCompanyList(vehicleInsuranceCompany)}
+              onSelect={(item: TDropdownItem) => {
+                setInsuranceCompany(item.label);
+              }}
+            />
         </View>
         <Spacer height={4} />
         <View style={styles.elementContainer2}>
@@ -86,8 +117,9 @@ const InsuranceDetails: React.FC<IProps> = ({item, isEdit}) => {
             <Label text="Insurance Date" style={styles.label} />
             <DatePickerComponent
               onDateSelect={(date: Date) => {
-                setInsuranceDate(formatDate4(date));
+                setInsuranceDate(date.toISOString());
               }}
+              ref={insuranceDateRef}
             />
           </View>
           <View style={styles.itemContainer}>

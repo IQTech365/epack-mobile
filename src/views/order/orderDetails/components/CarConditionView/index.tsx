@@ -26,6 +26,7 @@ import {ICardConditionData} from '../../../../../interface/order/IGetCarConditio
 import CarConditionListItem from './CarConditionListItem';
 import ModalHOC from '../../../../../common/ModalHOC';
 import TemplateViewer from '../../../../../common/TemplateViewer';
+import {NavigationProp} from '@react-navigation/native';
 import {startShare} from '../../../../../utils/utility';
 import {IHtmlTemplateRequest} from '../../../../../interface/order/templates/ITemplateResponse';
 import useTemplateIdHook from '../../../../../hooks/useTemplateIdHook';
@@ -33,9 +34,11 @@ import ActionHeaderView from '../../../../../common/ActionHeaderView';
 
 interface ICarConditionViewProps {
   orderId: string;
+  navigation: NavigationProp<any, any>;
+
 }
 
-const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId}) => {
+const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId,navigation}) => {
   const dispatch = useAppDispatch();
   const {
     carConditionList,
@@ -110,7 +113,6 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId}) => {
     setShowModal(false);
   };
 
-  const onEdit = () => {};
 
   useEffect(() => {
     dispatch(getCarConditionListRequest(orderId));
@@ -148,6 +150,14 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId}) => {
     return null;
   };
 
+  const onEdit = (id:String) => {
+    const {data} = carConditionList || {};
+    if(data && Array.isArray(data) && data.length > 0) {
+      const carCondition:ICardConditionData = data.find((ele:ICardConditionData) => ele._id === id);
+      navigation.navigate("EditCarCondition", {item: carCondition, orderID: orderId})
+    }
+  };
+
   const showList = () => {
     if (showCarConditionList) {
       return (
@@ -181,7 +191,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId}) => {
                   setShowShare(false);
                   handleDocDownload(item.id);
                 }}
-                onEdit={onEdit}
+                onEdit={() => onEdit(item.id)}
               />
             )}
             ListEmptyComponent={showEmptyView()}

@@ -1,20 +1,18 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {View} from 'react-native';
 import styles from './style';
 import CollapsibleView from '../../../../../../../common/CollapsibleView';
-import BouncyCheckboxGroup, {
-  ICheckboxButton,
-} from 'react-native-bouncy-checkbox-group';
 import Spacer from '../../../../../../../common/Spacer';
 import Label from '../../../../../../../common/Label';
-import Input from '../../../../../../../common/Input';
-import DropdownComponent from '../../../../../../../common/DropdownComponent';
-import {COLOR_BLACK} from '../../../../../../../utils/colors';
+import Input, { InputMethods } from '../../../../../../../common/Input';
+import DropdownComponent, { IDropdownHandler } from '../../../../../../../common/DropdownComponent';
+import {COLOR_BLACK, COLOR_BLUE} from '../../../../../../../utils/colors';
 import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
 import {payTypeOptions} from '../MaterialDetails/utils';
 import packingOptions from '../../../../../../../data/packingOptions.json';
 import {TDropdownItem} from '../../../../../../../type/TDropdownItem';
 import { IBilty } from '../../../../../../../interface/order/IGetBiltyListResponse';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
 
 interface IProps {
   item?:IBilty;
@@ -22,6 +20,27 @@ interface IProps {
 }
 
 const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
+
+  const freightInputRef = useRef<InputMethods>(null);
+  const pickupDropCompRef = useRef<IDropdownHandler>(null);
+  const pickupInputRef = useRef<InputMethods>(null);
+  const doorDeliveryDropCompRef = useRef<IDropdownHandler>(null);
+  const doorDeliveryInputRef = useRef<InputMethods>(null);
+  const packingDropCompRef = useRef<IDropdownHandler>(null);
+  const packingInputRef = useRef<InputMethods>(null);
+  const packingMaterialDropCompRef = useRef<IDropdownHandler>(null);
+  const packingMaterialInputRef = useRef<InputMethods>(null);
+  const unPackingDropCompRef = useRef<IDropdownHandler>(null);
+  const unPackingInputRef = useRef<InputMethods>(null);
+  const loadingDropCompRef = useRef<IDropdownHandler>(null);
+  const loadingInputRef = useRef<InputMethods>(null);
+  const unloadingDropCompRef = useRef<IDropdownHandler>(null);
+  const unloadingInputRef = useRef<InputMethods>(null);
+  const advanceAmountInputRef = useRef<InputMethods>(null);
+  const balanceAmountInputRef = useRef<InputMethods>(null);
+
+
+
   const {
     state,
     setBalanceAmount,
@@ -43,8 +62,9 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
     setUnloadingChargeAmount,
     setAdvanceAmount,
     setTotalAmount,
+    setRemark,
+    setRemarksAtPOD
   } = useBiltyFormContextHook();
-  console.log(state, 'forpayloaddddddddddd');
 
   const calculateMaterialTotalAmount = () => {
     const {
@@ -97,6 +117,89 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
     }
   };
 
+
+console.log(item,"itrrririririrriri");
+  
+  
+  useEffect(() => {
+    if(isEdit && item) {
+      setFreightType(item.freightDetails.billingStatus);
+      freightInputRef.current?.setValue(item.freightDetails.freightCharges);
+      if(item.pickupCharges.status) {
+        setPickupChargeAmount(item.pickupCharges.charge);
+        const pickupOption:TDropdownItem = packingOptions.find((d:TDropdownItem) => d.label === item.pickupCharges.status) as TDropdownItem;
+        if(pickupOption) {
+          pickupDropCompRef.current?.setDefaultValue(pickupOption);
+          setPickupCharge(item.pickupCharges.status);
+        }
+      }
+      if(item.doorDeliveryCharges.status) {
+        setDoorDeliveryChargeAmount(item.doorDeliveryCharges.charge);
+        const pickupOption:TDropdownItem = packingOptions.find((d:TDropdownItem) => d.label === item.doorDeliveryCharges.status) as TDropdownItem;
+        if(pickupOption) {
+          doorDeliveryDropCompRef.current?.setDefaultValue(pickupOption);
+          setDoorDeliveryCharge(item.doorDeliveryCharges.status);
+        }
+      }
+
+      if(item.packingCharges.status) {
+        setPackingChargeAmount(item.packingCharges.charge);
+        const pickupOption:TDropdownItem = packingOptions.find((d:TDropdownItem) => d.label === item.packingCharges.status) as TDropdownItem;
+        if(pickupOption) {
+          packingDropCompRef.current?.setDefaultValue(pickupOption);
+          setPackingCharge(item.doorDeliveryCharges.status);
+        }
+      }
+
+      if(item.packingMaterialCharges.status) {
+        setPackingMaterialChargeAmount(item.packingMaterialCharges.charge);
+        const pickupOption:TDropdownItem = packingOptions.find((d:TDropdownItem) => d.label === item.packingMaterialCharges.status) as TDropdownItem;
+        if(pickupOption) {
+          packingMaterialDropCompRef.current?.setDefaultValue(pickupOption);
+          setPackingMaterialCharge(item.doorDeliveryCharges.status);
+        }
+      }
+
+
+      if(item.packingMaterialCharges.status) {
+        setPackingMaterialChargeAmount(item.packingMaterialCharges.charge);
+        const pickupOption:TDropdownItem = packingOptions.find((d:TDropdownItem) => d.label === item.packingMaterialCharges.status) as TDropdownItem;
+        if(pickupOption) {
+          packingMaterialDropCompRef.current?.setDefaultValue(pickupOption);
+          setPackingMaterialCharge(item.doorDeliveryCharges.status);
+        }
+      }
+
+      if(item.unPackingCharges.status) {
+        setUnpackingChargeAmount(item.unPackingCharges.charge);
+        const pickupOption:TDropdownItem = packingOptions.find((d:TDropdownItem) => d.label === item.unPackingCharges.status) as TDropdownItem;
+        if(pickupOption) {
+          unPackingDropCompRef.current?.setDefaultValue(pickupOption);
+          setUnpackingCharge(item.doorDeliveryCharges.status);
+        }
+      }
+
+      if(item.loadingCharges.status) {
+        setLoadingChargeAmount(item.loadingCharges.charge);
+        const pickupOption:TDropdownItem = packingOptions.find((d:TDropdownItem) => d.label === item.loadingCharges.status) as TDropdownItem;
+        if(pickupOption) {
+          loadingDropCompRef.current?.setDefaultValue(pickupOption);
+          setLoadingCharge(item.doorDeliveryCharges.status);
+        }
+      }
+      if(item.unLoadingCharges.status) {
+        setUnloadingChargeAmount(item.unLoadingCharges.charge);
+        const pickupOption:TDropdownItem = packingOptions.find((d:TDropdownItem) => d.label === item.unLoadingCharges.status) as TDropdownItem;
+        if(pickupOption) {
+          unloadingDropCompRef.current?.setDefaultValue(pickupOption);
+          setUnloadingCharge(item.doorDeliveryCharges.status);
+        }
+      }
+      advanceAmountInputRef.current?.setValue(item.freightDetails.advanceAmount);
+      advanceAmountInputRef.current?.setValue(item.freightDetails.balanceAmount);
+    }
+  }, [isEdit, item]);
+
   useEffect(() => {
     calculateBalanceAmount();
   }, [state.advance_amount]);
@@ -105,12 +208,25 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
     <CollapsibleView title="FREIGHT DETAILS" collapsed={true}>
       <View>
         <View style={styles.elementContainer}>
-          <BouncyCheckboxGroup
-            data={payTypeOptions}
-            onChange={(selectedItem: ICheckboxButton) => {
-              setFreightType(selectedItem.text as string);
-            }}
-          />
+          {payTypeOptions.map((option: string, index: number) => (
+            <BouncyCheckbox
+              key={`${index}`}
+              size={25}
+              unfillColor="#FFFFFF"
+              text={option}
+              fillColor={COLOR_BLUE}
+              iconStyle={styles.iconStyle}
+              innerIconStyle={styles.innerIconStyle}
+              textStyle={styles.textStyle}
+              style={styles.style}
+              textContainerStyle={styles.textContainerStyle}
+              onPress={(isChecked: boolean) => {
+                setFreightType(option);
+              }}
+              isChecked={state.freight_type == option}
+              disableBuiltInState={true}
+            />
+          ))}
         </View>
         <Spacer height={12} />
         <View style={styles.elementContainer2}>
@@ -122,6 +238,7 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
             value={state.freight_charge}
             selectionColor={COLOR_BLACK}
             inputType="numeric"
+            ref={freightInputRef}
           />
         </View>
         <Spacer height={4} />
@@ -133,6 +250,7 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
               onSelect={(item: TDropdownItem) => {
                 setPickupCharge(item.label);
               }}
+              ref={pickupDropCompRef}
             />
           </View>
           <View style={styles.itemContainer}>
@@ -145,6 +263,7 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
               inputType="numeric"
               value={state.pickup_charge_amount}
               editable={state.pickup_charge == 'Additional from Freight'}
+              ref={pickupInputRef}
             />
           </View>
         </View>
@@ -157,6 +276,7 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
               onSelect={(item: TDropdownItem) => {
                 setDoorDeliveryCharge(item.label);
               }}
+              ref={doorDeliveryDropCompRef}
             />
           </View>
           <View style={styles.itemContainer}>
@@ -169,6 +289,7 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
               inputType="numeric"
               value={state.door_delivery_charge_amount}
               editable={state.door_delivery_charge == 'Additional from Freight'}
+              ref={doorDeliveryInputRef}
             />
           </View>
         </View>
@@ -181,6 +302,7 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
               onSelect={(item: TDropdownItem) => {
                 setPackingCharge(item.label);
               }}
+              ref={packingDropCompRef}
             />
           </View>
           <View style={styles.itemContainer}>
@@ -193,18 +315,20 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
               inputType="numeric"
               value={state.packing_charge_amount}
               editable={state.packing_charge == 'Additional from Freight'}
+              ref={packingInputRef}
             />
           </View>
         </View>
         <Spacer height={4} />
         <View style={styles.elementContainer}>
           <View style={styles.itemContainer}>
-            <Label text="Packing Material Charges" style={styles.label} />
+            <Label text="Packing Mat. Charges" style={styles.label} />
             <DropdownComponent
               data={packingOptions}
               onSelect={(item: TDropdownItem) => {
                 setPackingMaterialCharge(item.label);
               }}
+              ref={packingMaterialDropCompRef}
             />
           </View>
           <View style={styles.itemContainer}>
@@ -219,6 +343,7 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
               editable={
                 state.packing_material_charge == 'Additional from Freight'
               }
+              ref={packingMaterialInputRef}
             />
           </View>
         </View>
@@ -231,6 +356,7 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
               onSelect={(item: TDropdownItem) => {
                 setUnpackingCharge(item.label);
               }}
+              ref={unPackingDropCompRef}
             />
           </View>
           <View style={styles.itemContainer}>
@@ -243,6 +369,7 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
               inputType="numeric"
               value={state.unpacking_charge_amount}
               editable={state.unpacking_charge == 'Additional from Freight'}
+              ref={unPackingInputRef}
             />
           </View>
         </View>
@@ -255,6 +382,7 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
               onSelect={(item: TDropdownItem) => {
                 setLoadingCharge(item.label);
               }}
+              ref={loadingDropCompRef}
             />
           </View>
           <View style={styles.itemContainer}>
@@ -267,6 +395,7 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
               inputType="numeric"
               value={state.loading_charge_amount}
               editable={state.loading_charge == 'Additional from Freight'}
+              ref={loadingInputRef}
             />
           </View>
         </View>
@@ -279,6 +408,7 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
               onSelect={(item: TDropdownItem) => {
                 setUnloadingCharge(item.label);
               }}
+              ref={unloadingDropCompRef}
             />
           </View>
           <View style={styles.itemContainer}>
@@ -291,6 +421,7 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
               inputType="numeric"
               value={state.unloading_charge_amount}
               editable={state.unloading_charge == 'Additional from Freight'}
+              ref={unloadingInputRef}
             />
           </View>
         </View>
@@ -311,6 +442,7 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
               inputType="numeric"
+              ref={advanceAmountInputRef}
             />
           </View>
           <View style={styles.itemContainer}>
@@ -322,6 +454,26 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
               selectionColor={COLOR_BLACK}
               value={state.balance_amount}
               editable={false}
+              ref={balanceAmountInputRef}
+            />
+          </View>
+          <Spacer height={12} />
+          <View style={styles.elementContainer2}>
+            <Label text="Remark at Loading" style={styles.label} />
+            <Input
+              onChangeText={setRemark}
+              containerStyle={styles.inputContainer}
+              inputStyle={styles.input}
+              selectionColor={COLOR_BLACK}
+            />
+          </View>
+          <View style={styles.elementContainer2}>
+            <Label text="Remark at POD" style={styles.label} />
+            <Input
+              onChangeText={setRemarksAtPOD}
+              containerStyle={styles.inputContainer}
+              inputStyle={styles.input}
+              selectionColor={COLOR_BLACK}
             />
           </View>
         </View>

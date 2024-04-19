@@ -240,7 +240,10 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({ navigation }) =>
 
   const handleAddNew = () => {
     const docLimit: number = getDocumentLimitCount('658d3c6f585e3dde644da95b');
+    console.log('docLimit--', docLimit);
     const currentDocCount: number = getTotalQuotations();
+    console.log('currentDocCount--', currentDocCount);
+
     if (docLimit == -1 || (currentDocCount < docLimit)) {
       setShowLimitModal(false);
       navigation.navigate(QuotationStackRoute.AddQuotation);

@@ -51,6 +51,7 @@ export const GET_PACKING_LIST = `/packing-item/list`;
 export const GET_PACKING_LIST_TEMPLATE = `/template/packing-list-template`;
 export const DELETE_PACKING_LIST_ITEM = (item_id) => `/packing-item/${item_id}`;
 export const UPDATE_PACKING_LIST = (item_id) => `/packing-item/edit/${item_id}`;
+export const UPDATE_CAR_CONDITION =(vehicle_id) => `/car-condition/edit/${vehicle_id}`
 
 // Setting
 export const GET_BANK_LIST = `/account-management/bank/getAll`;    
@@ -137,6 +138,9 @@ export const GET_VEHICLE_COLORS = `/vehicle-management/vehicle-color/getAll`;
 export const GET_VEHICLE_ACCESSORIES = `/vehicle-management/vehicle-accessory/getAll`;
 // Vehicle Models
 export const GET_VEHICLE_MODELS = `/vehicle-management/vehicle-model/all`;
+
+//  Vehicle Insurance Company
+export const GET_VEHICLE_INSURANCE_COMPANY = `/vehicle-management/vehicle-insurance/getAll`
 // Submodules
 export const GET_SERIAL_NO_SUBMODULES = `/content-management/sub-module/all`;
 // App Settings
@@ -201,3 +205,7 @@ export const GET_TODAY_SURVEY = (company_id) => `/survey/latest/${company_id}`
 // Today's Shifting
 
 export const GET_TODAY_SHIFTING =(company_id) => `/order/latest/${company_id}`
+
+//  Update bilty
+
+export const UPDATE_BILTY = (id) => `bilty/edit/${id}`

@@ -221,6 +221,7 @@ const ConsigneeDetails: React.FC<IProps> = ({item, isEdit}) => {
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
               ref={gstInputRef}
+              autoCapitalize="characters"
             />
           </View>
           <View style={styles.itemContainer}>

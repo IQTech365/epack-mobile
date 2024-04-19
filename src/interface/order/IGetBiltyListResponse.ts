@@ -1,3 +1,5 @@
+import { ICreateBiltyRequest } from "./ICreateBiltyRequest";
+
 export interface IVehicle {
   invoiceNumber: string;
   vehicleType: string;
@@ -126,19 +128,36 @@ export interface IBilty {
   unloadingAddress: IAddress;
   driver: IDriver;
   eWayBill: IEWayBill;
+  addMaterialsStatus: string;
+  materialsType: string;
   materials: IMaterial[];
   riskType: string;
+  liabilityOfTax: string;
+  insuranceStatus: string;
   insurance: IInsurance;
   demurrage: IDemurrage;
   remarks: string;
+  remarksAtPOD: string;
   addedBy: string;
   isActive: boolean;
   isDeleted: boolean;
   updatedAt: string;
   createdAt: string;
-  biltyfreights: IBiltyFreight[];
+  freightDetails: IFreightDetail;
+  pickupCharges: ICharge;
+  doorDeliveryCharges:ICharge;
+  packingCharges: ICharge;
+  packingMaterialCharges: ICharge;
+  unPackingCharges: ICharge;
+  loadingCharges: ICharge;
+  unLoadingCharges: ICharge;
   consigner: IBiltyConsigners;
   consignee: IBiltyConsigners;
+}
+
+export interface IUpdateBiltyPayload {
+  id: string;
+  payload: ICreateBiltyRequest;
 }
 
 export interface IGetBiltyListResponse {

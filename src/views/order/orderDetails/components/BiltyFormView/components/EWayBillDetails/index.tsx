@@ -5,10 +5,9 @@ import CollapsibleView from '../../../../../../../common/CollapsibleView';
 import Label from '../../../../../../../common/Label';
 import Input, {InputMethods} from '../../../../../../../common/Input';
 import Spacer from '../../../../../../../common/Spacer';
-import DatePickerComponent from '../../../../../../../common/DatePickerComponent';
+import DatePickerComponent, { IDateMethods } from '../../../../../../../common/DatePickerComponent';
 import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
 import {COLOR_BLACK} from '../../../../../../../utils/colors';
-import {formatDate4} from '../../../../../../../utils/formatter';
 import {IBilty} from '../../../../../../../interface/order/IGetBiltyListResponse';
 
 interface IProps {
@@ -20,12 +19,24 @@ const EWayBillDetails: React.FC<IProps> = ({item, isEdit}) => {
   const {state, setEWayBillNo, setGeneratedOn, setExpiryDate} =
     useBiltyFormContextHook();
   const ewayBillNoInputCompRef = useRef<InputMethods>(null);
+  const generatedOnCompRef = useRef<IDateMethods>(null);
+  const expirayDateCompRef = useRef<IDateMethods>(null);
+
 
   useEffect(() => {
     if (isEdit && item) {
-      //
-      ewayBillNoInputCompRef.current?.setValue(item.eWayBill.number);
       setEWayBillNo(item.eWayBill.number);
+      ewayBillNoInputCompRef.current?.setValue(item.eWayBill.number);
+      if(item?.eWayBill?.generationDate){
+        setGeneratedOn(item.eWayBill.generationDate);
+        generatedOnCompRef.current?.setDefaultValue(new Date(item.eWayBill.generationDate));
+      }
+      if(item?.eWayBill?.expiryDate){
+        setExpiryDate(item.eWayBill.expiryDate);
+        expirayDateCompRef.current?.setDefaultValue(new Date(item.eWayBill.expiryDate));
+      }
+      
+
     }
   }, [isEdit, item]);
 
@@ -50,16 +61,18 @@ const EWayBillDetails: React.FC<IProps> = ({item, isEdit}) => {
             <Label text="Generated On" style={styles.label} />
             <DatePickerComponent
               onDateSelect={(date: Date) => {
-                setGeneratedOn(formatDate4(date));
+                setGeneratedOn(date.toISOString());
               }}
+              ref={generatedOnCompRef}
             />
           </View>
           <View style={styles.itemContainer}>
             <Label text="Expiry Date" style={styles.label} />
             <DatePickerComponent
               onDateSelect={(date: Date) => {
-                setExpiryDate(formatDate4(date));
+                setExpiryDate(date.toISOString());
               }}
+              ref={expirayDateCompRef}
             />
           </View>
         </View>

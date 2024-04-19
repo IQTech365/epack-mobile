@@ -45,7 +45,7 @@ const DropdownComponent = forwardRef<IDropdownHandler, IDropdownProps>(
     React.useImperativeHandle(ref, () => ({
       setDefaultValue: (value:TDropdownItem) => {
         setValue(value);
-        setRefresh(!refresh);
+        // setRefresh(!refresh);
       },
       refreshComp: () => {
         setRefresh(!refresh);

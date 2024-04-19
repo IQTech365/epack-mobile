@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
 import styles from './style';
 import CollapsibleView from '../../../../../../../common/CollapsibleView';
@@ -125,6 +125,37 @@ const MaterialDetails: React.FC<IProps> = ({item, isEdit}) => {
     handleClear();
   };
 
+  const initData = () => {
+    if(isEdit && item) {
+      let transformData:IMaterial[] = [];
+      if(item.materials && item.materials.length > 0) {
+        transformData = item.materials.map(e => {
+          const _item:IMaterial = {
+            material_name: e.name,
+            no_of_articles: e.noOfArticles,
+            packing_type: e.packingType,
+            hsn_code: e.HSNCode,
+            bill_invoice_no: e.billNumber,
+            actual_weight: e.actualWeight,
+            applicable_weight: e.applicableWeight,
+            units: e.unit,
+            value_of_goods: e.valueOfGoods,
+          }
+          return _item;
+        })
+      }
+      setMaterials(transformData);
+      setTypeOfMoving(item.materialsType);
+      setRiskType(item.riskType);
+      setLiabilityOfTax(item.liabilityOfTax)
+    }
+  }
+  
+
+  useEffect(()=> {
+    initData();
+  },[isEdit,item])
+
   const showMaterialList = () => {
     if (state.materials.length > 0) {
       return state.materials.map((item, index) => {
@@ -250,7 +281,7 @@ const MaterialDetails: React.FC<IProps> = ({item, isEdit}) => {
                 onPress={(isChecked: boolean) => {
                   setAddMaterial(state.add_material == 'YES' ? 'NO' : 'YES');
                 }}
-                isChecked={state.add_material == 'YES'}
+                isChecked={state.add_material == 'YES' || item?.addMaterialsStatus === 'YES'}
                 disableBuiltInState={true}
               />
             </View>
@@ -259,8 +290,8 @@ const MaterialDetails: React.FC<IProps> = ({item, isEdit}) => {
         <Spacer height={10} />
         {(state.type_of_moving == typeOfMovingOptions[0] &&
           state.add_material == 'YES') ||
-        state.type_of_moving == typeOfMovingOptions[2] ||
-        state.type_of_moving == typeOfMovingOptions[3] ? (
+          state.type_of_moving == typeOfMovingOptions[2] ||
+          state.type_of_moving == typeOfMovingOptions[3] ? (
           <>
             <View style={styles.elementContainer2}>
               <Label text="Material Name" style={styles.label} />
@@ -282,6 +313,7 @@ const MaterialDetails: React.FC<IProps> = ({item, isEdit}) => {
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
                   ref={articlesInputref}
+                  inputType="numeric"
                 />
               </View>
               <View style={styles.itemContainer}>
@@ -303,7 +335,7 @@ const MaterialDetails: React.FC<IProps> = ({item, isEdit}) => {
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
-                  autoCapitalize="characters"
+                  inputType="numeric"
                   ref={hsnCodeInputref}
                 />
               </View>

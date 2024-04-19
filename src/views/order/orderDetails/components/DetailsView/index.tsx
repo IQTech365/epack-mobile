@@ -79,7 +79,6 @@ const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
   };
 
   const item = getSingleOrder() || {};
-  console.log('item-----', JSON.stringify(item));
 
   useEffect(() => {
     const payload: ISingleOrderRequest = {

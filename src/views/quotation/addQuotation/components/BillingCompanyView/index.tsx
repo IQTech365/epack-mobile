@@ -343,6 +343,8 @@ const BillingCompanyView: React.FC<Props> = ({
           //@ts-ignore
           ref={companyGstInputCompRef}
           type="text"
+          autoCapitalize="characters"
+
         />
       </View>
       <Spacer height={4} />

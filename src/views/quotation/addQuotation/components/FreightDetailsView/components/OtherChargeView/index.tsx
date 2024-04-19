@@ -110,10 +110,7 @@ const OtherChargeView: React.FC<Props> = ({isEdit, item, quotationData}) => {
     copy.splice(index, 1);
     setItems(copy);
     setOtherCharges(copy);
-    console.log(copy, 'copyyyyyyy');
   };
-
-  // console.log(handleDeleteItem());
 
   const resetInputs = () => {
     if (particularsInputCompRef) {
@@ -151,8 +148,7 @@ const OtherChargeView: React.FC<Props> = ({isEdit, item, quotationData}) => {
   useEffect(() => {
     if (!partLoadRatePerItem && state.freight_part_load && shouldAdd) {
       //@ts-ignore
-      partLoadAmountInputCompRef &&
-        partLoadAmountInputCompRef?.current.reset('');
+      partLoadAmountInputCompRef && partLoadAmountInputCompRef?.current.reset('');
       setIsPartLoadAmountEditable(true);
       setPartLoadAmount('');
     } else if (partLoadRatePerItem && state.freight_part_load && shouldAdd) {
@@ -163,8 +159,7 @@ const OtherChargeView: React.FC<Props> = ({isEdit, item, quotationData}) => {
   useEffect(() => {
     if (!fullLoadRatePerItem && state.freight_full_load && shouldAdd) {
       //@ts-ignore
-      fullLoadAmountInputCompRef &&
-        fullLoadAmountInputCompRef?.current.reset('');
+      fullLoadAmountInputCompRef && fullLoadAmountInputCompRef?.current.reset('');
       setIsFullLoadAmountEditable(true);
       setFullLoadAmount('');
     } else if (fullLoadRatePerItem && state.freight_full_load && shouldAdd) {

@@ -102,6 +102,8 @@ export enum ACTION {
   CHARGE_APPLICABLE_AFTER = 'CHARGE_APPLICABLE_AFTER',
   // Other Details
   REMARK = 'REMARK',
+  // RemarksAtPOD
+  REMARKS_AT_POD = 'REMARKS_AT_POD'
 }
 
 export interface IMaterial {
@@ -225,6 +227,7 @@ export interface IState {
 
   // **** Other Details ****
   remark: string;
+  remarksAtPOD: string;
 }
 
 export interface IAction {
@@ -298,7 +301,7 @@ export const initialState: IState = {
   liability_of_tax: 'Consigner',
 
   // **** Freight Details ****
-  freight_type: '',
+  freight_type: 'To Pay',
   freight_charge: '',
 
   pickup_charge: packingOptions[0].label,
@@ -340,6 +343,7 @@ export const initialState: IState = {
 
   // **** Other Details ****
   remark: '',
+  remarksAtPOD: ''
 };
 
 export const biltyReducer: Reducer<IState, IAction> = (
@@ -526,6 +530,8 @@ export const biltyReducer: Reducer<IState, IAction> = (
     // **** Other Details ****
     case ACTION.REMARK:
       return {...state, remark: payload as string};
+    case ACTION.REMARKS_AT_POD:
+        return {...state, remarksAtPOD: payload as string};
     default:
       return state;
   }

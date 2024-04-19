@@ -4,12 +4,13 @@ export interface IAccessory {
 }
 
 export interface ICreateCarConditionRequest {
-  companyId: string;
-  orderId: string;
+  companyId?: string;
+  orderId?: string;
   isAuto: boolean;
   isHeadOffice: boolean;
   carConditionNumber: string;
   dateOfCarCondition: string;
+  biltyNo: string;
   vehicleType: string;
   manufacturer: string;
   model: string;
@@ -30,5 +31,5 @@ export interface ICreateCarConditionRequest {
   dent: string;
   visibleObservation: string;
   remarks: string;
-  addedBy: string;
+  addedBy?: string;
 }

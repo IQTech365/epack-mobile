@@ -12,6 +12,7 @@ import {
   IVehicleAccessoryResponse,
   IVehicleColorResponse,
   IVehicleCompanyResponse,
+  IVehicleInsuranceCompanyResponse,
   IVehicleModelResponse,
   IVehicleTypesResponse,
 } from '../interface/common/common';
@@ -64,6 +65,9 @@ import {
   getVehicleCompanyFailure,
   getVehicleCompanyRequest,
   getVehicleCompanySuccess,
+  getVehicleInsuranceCompanyFailure,
+  getVehicleInsuranceCompanyRequest,
+  getVehicleInsuranceCompanySuccess,
   getVehicleModelsFailure,
   getVehicleModelsRequest,
   getVehicleModelsSuccess,
@@ -132,6 +136,18 @@ export function* getVehicleAccessoriesSaga(action: PayloadAction<any>) {
   }
 }
 
+export function* getVehicleInsuranceCompanySaga(action: PayloadAction<any>) {
+  try {
+    const response: IVehicleInsuranceCompanyResponse = yield call(
+      CommonService.GetVehicleInsuranceCompanyService,
+    );    
+    yield put(getVehicleInsuranceCompanySuccess(response));
+  } catch (error) {
+
+    yield put(getVehicleInsuranceCompanyFailure(JSON.stringify(error)));
+  }
+}
+
 export function* getVehicleModelsSaga(action: PayloadAction<any>) {
   try {
     const response: IVehicleModelResponse = yield call(
@@ -160,7 +176,6 @@ export function* getAppSettingsSaga(action: PayloadAction<string>) {
       CommonService.GetAppSettingsService,
       action.payload,
     );
-    console.log('getAppSettingsSaga-response--', JSON.stringify(response));
 
     yield put(getAppSettingsSuccess(response));
   } catch (error) {
@@ -210,10 +225,8 @@ export function* getDashboardSaga(action: PayloadAction<IDashboardPaylod>) {
       CommonService.GetDashboardService,
       action.payload,
     );
-    console.log('getDashboardSaga-response-', JSON.stringify(response));
     yield put(getDashboardDataSuccess(response));
   } catch (error) {
-    console.log('getDashboardSaga-response-', JSON.stringify(error));
     yield put(getDashboardDataFailure(error));
   }
 }
@@ -257,7 +270,6 @@ export function* getBankListSaga(action: PayloadAction<string>) {
   try {
     //@ts-ignore
     const response: any = yield call(CommonService.GetBankListService);
-    console.log('getBankListSaga-response--', JSON.stringify(response));
     yield put(getBankListSuccess(response));
   } catch (error) {
     yield put(getBankListFailure(error));
@@ -270,7 +282,6 @@ export function* getTodayFollowupsSaga(action: PayloadAction<string>) {
       CommonService.GetTodayFollowups,
       action.payload,
     );
-    console.log('getTodayFollowupsSaga-response--', JSON.stringify(response));
     yield put(getTodayFollowupsListSuccess(response));
   } catch (error) {
     yield put(getTodayFollowupsListFailure(error));
@@ -284,7 +295,6 @@ export function* getTodaySurveySaga(action: PayloadAction<string>) {
       CommonService.GetTodaySurvey,
       action.payload,
     );
-    console.log('getTodaySurveySaga-response--', JSON.stringify(response));
     yield put(getTodaySurveyListSuccess(response));
   } catch (error) {
     yield put(getTodaySurveyListFailure(error));
@@ -298,7 +308,6 @@ export function* getTodayShiftingSaga(action: PayloadAction<string>) {
       CommonService.GetTodayShiftings,
       action.payload,
     );
-    console.log('getTodayShiftingSaga-response--', JSON.stringify(response));
     yield put(getTodayShiftingListSuccess(response));
   } catch (error) {
     yield put(getTodayShiftingListFailure(error));
@@ -314,6 +323,7 @@ export function* watcherCommonSaga() {
     getVehicleAccessoriesRequest.type,
     getVehicleAccessoriesSaga,
   );
+  yield takeLatest(getVehicleInsuranceCompanyRequest.type, getVehicleInsuranceCompanySaga);
   yield takeLatest(getVehicleModelsRequest.type, getVehicleModelsSaga);
   yield takeLatest(getSubmoduleRequest.type, getSubmodulesSaga);
   yield takeLatest(getAppSettingsRequest.type, getAppSettingsSaga);

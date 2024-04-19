@@ -57,6 +57,7 @@ const DiscountView: React.FC<Props> = ({isEdit, item, quotationData}) => {
             placeholder='Enter amount'
             //@ts-ignore
             ref={flatDiscountInputCompRef}
+            inputType="numeric"
           />
         </View>
       );

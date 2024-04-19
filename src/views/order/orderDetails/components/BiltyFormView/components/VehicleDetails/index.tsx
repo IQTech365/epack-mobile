@@ -16,6 +16,7 @@ import {formatDate4} from '../../../../../../../utils/formatter';
 import {useAppSelector} from '../../../../../../../redux/hooks';
 import {IVehicleSize} from '../../../../../../../interface/vehicle/IGetVehicleSizeResponse';
 import {IBilty} from '../../../../../../../interface/order/IGetBiltyListResponse';
+import moment from 'moment';
 
 interface IProps {
   item?: IBilty;
@@ -56,7 +57,7 @@ const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
   const transitDaysInputRef = useRef<InputMethods>(null);
   const inDateRef = useRef<IDateMethods>(null);
   const outDateRef = useRef<IDateMethods>(null);
-  const ExpectedDateofDeliveryRef = useRef<IDateMethods>(null);
+  const expectedDateofDeliveryRef = useRef<IDateMethods>(null);
 
   const {data: orderData} = order || {};
 
@@ -75,8 +76,6 @@ const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
     return vehicleSizes;
   };
 
-  console.log(orderData?.pickupAddress?.city, 'orderData?.pickupAddress?.city');
-
   useEffect(() => {
     if (isEdit && item) {
       invoiceNoInputRef.current?.setValue(item.vehicle.invoiceNumber);
@@ -93,20 +92,25 @@ const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
       setSealNo(item.vehicle.sealNumber);
       transitDaysInputRef.current?.setValue(item.vehicle.transitDays);
       setTransitDays(item.vehicle.transitDays);
-      // inDateRef.current?.setDefaultValue(new Date(item?.vehicle?.inDate));
-      setInDate(formatDate4(new Date(item?.vehicle?.inDate)));
-      // outDateRef.current?.setDefaultValue(new Date(item?.vehicle?.outDate));
-      setOutDate(formatDate4(new Date(item?.vehicle?.outDate)));
-      // ExpectedDateofDeliveryRef.current?.setDefaultValue(new Date(item?.vehicle?.expectedDate))
+      if(item?.vehicle?.inDate) {
+       setInDate(item?.vehicle?.inDate);
+        inDateRef.current?.setDefaultValue(new Date(item?.vehicle?.inDate));
+      }
+      if(item?.vehicle?.outDate) {
+        setOutDate(item?.vehicle?.outDate);
+        outDateRef.current?.setDefaultValue(new Date(item?.vehicle?.outDate));
+      }
+      if(item?.vehicle?.expectedDateOfDelivery) {
+        setExpectedDateOfDelivery(item.vehicle.expectedDateOfDelivery);
+        expectedDateofDeliveryRef.current?.setDefaultValue(new Date(item?.vehicle?.expectedDateOfDelivery))
+      }
     }
   }, [isEdit, item]);
 
   useEffect(() => {
     // get pickupaddress and dropaddress from order
-    fromCityInputRef &&
-      fromCityInputRef.current?.setValue(orderData[0]?.pickupAddress?.city);
-    toCityInputRef &&
-      toCityInputRef.current?.setValue(orderData[0]?.dropAddress?.city);
+    fromCityInputRef && fromCityInputRef.current?.setValue(orderData[0]?.pickupAddress?.city);
+    toCityInputRef && toCityInputRef.current?.setValue(orderData[0]?.dropAddress?.city);
   }, []);
 
   return (
@@ -223,7 +227,7 @@ const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
             <Label text="In Date" style={styles.label} />
             <DatePickerComponent
               onDateSelect={(date: Date) => {
-                setInDate(formatDate4(date));
+                setInDate(date.toISOString());
               }}
               ref={inDateRef}
             />
@@ -232,7 +236,7 @@ const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
             <Label text="Out Date" style={styles.label} />
             <DatePickerComponent
               onDateSelect={(date: Date) => {
-                setOutDate(formatDate4(date));
+                setOutDate(date.toISOString());
               }}
               ref={outDateRef}
             />
@@ -255,8 +259,9 @@ const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
             <Label text="Expected Date of Delivery" style={styles.label} />
             <DatePickerComponent
               onDateSelect={(date: Date) => {
-                setExpectedDateOfDelivery(formatDate4(date));
+                setExpectedDateOfDelivery(date.toISOString());
               }}
+              ref={expectedDateofDeliveryRef}
             />
           </View>
         </View>

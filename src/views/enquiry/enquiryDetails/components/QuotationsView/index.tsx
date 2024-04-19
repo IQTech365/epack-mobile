@@ -186,7 +186,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
   const handleCreateNewQuotation = () => {
     const docLimit: number = getDocumentLimitCount('658d3c6f585e3dde644da95b');
     const currentDocCount: number = getTotalQuotations();
-    if (docLimit.toString() == '-1' || currentDocCount < docLimit) {
+    if (docLimit == -1 || currentDocCount < docLimit) {
       setShowQuotationList(false);
       setShowFormInEditMode(false);
       setShowLimitModal(false);

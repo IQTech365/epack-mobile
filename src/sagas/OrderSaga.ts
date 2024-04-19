@@ -65,6 +65,12 @@ import {
   getPackingMaterialsFailure,
   getPackingMaterialsRequest,
   getPackingMaterialsSuccess,
+  updateBiltyFailure,
+  updateBiltyRequest,
+  updateBiltySuccess,
+  updateCarConditionFailure,
+  updateCarConditionRequest,
+  updateCarConditionSuccess,
   updateInvoiceFailure,
   updateInvoiceRequest,
   updateInvoiceSuccess,
@@ -78,11 +84,11 @@ import {ICreateMoneyReceiptRequest} from '../interface/order/ICreateMoneyReceipt
 import {ICreateMoneyReceiptResponse} from '../interface/order/ICreateMoneyReceiptResponse';
 import { ICreateCarConditionRequest } from '../interface/order/ICreateCarConditionRequest';
 import { ICreateBiltyRequest } from '../interface/order/ICreateBiltyRequest';
-import { ICreateBiltyResponse } from '../interface/order/ICreateBiltyResponse';
+import { ICreateBiltyResponse, IUpdateBiltyResponse } from '../interface/order/ICreateBiltyResponse';
 import { IGetOrdersResponse } from '../interface/order/IGetOrdersResponse';
 import { IGetMoneyReceiptsResponse } from '../interface/order/IGetMoneyReceiptsResponse';
 import { IGetCarConditionListResponse } from '../interface/order/IGetCarConditionListResponse';
-import { IGetBiltyListResponse } from '../interface/order/IGetBiltyListResponse';
+import { IGetBiltyListResponse, IUpdateBiltyPayload } from '../interface/order/IGetBiltyListResponse';
 import { IGetOrdersRequest } from '../interface/order/IGetOrdersRequest';
 import { ISingleOrderRequest } from '../interface/order/ISingleOrderRequest';
 import { ISingleEnquiryResponse } from '../interface/enquiry/ISingleEnquiryResponse';
@@ -92,7 +98,8 @@ import { ICreateInvoiceRequest } from '../interface/order/ICreateInvoiceRequest'
 import { ICreateInvoiceResponse } from '../interface/order/ICreateInvoiceResponse';
 import { IGetInvoiceListResponse } from '../interface/order/IGetInvoiceListResponse';
 import { IPackingListTemplatePayload, IPackingListTemplateResponse } from '../interface/order/IPackingListTemplate';
-import { IUpdateInvoiceResponse } from '../interface/order/IUpdateInvoiceResponse';
+import { IUpdateInvoicePayload, IUpdateInvoiceResponse } from '../interface/order/IUpdateInvoiceResponse';
+import { IUpdateCarConditionPayload, IUpdateCarConditionResponse } from '../interface/order/IUpdateCarConditionResponse';
 
 export function* addOrderSaga(action: PayloadAction<IAddOrderRequest>) {
   try {
@@ -201,8 +208,6 @@ export function* createCarConditionSaga(
   export function* getPackingListSaga(action: PayloadAction<IGetPackingListRequest>) {
     try {
         const response: IPackingListResponse = yield call(OrderService.GetPackingListService, action.payload);
-        console.log('getPackingListSaga-response--', JSON.stringify(response));
-        
         yield put(getPackingMaterialsSuccess(response));
     } catch (error) {
         yield put(getPackingMaterialsFailure(error));
@@ -250,6 +255,15 @@ export function* createCarConditionSaga(
     }
   }
 
+  export function* updateBiltySaga(action: PayloadAction<IUpdateBiltyPayload>) {
+    try {
+        const response: IUpdateBiltyResponse = yield call(OrderService.UpdateBiltyService, action.payload);
+        yield put(updateBiltySuccess(response));
+    } catch (error) {
+        yield put(updateBiltyFailure(error));
+    }
+  }
+
   export function* getMoneyReceiptTemplateHtmlSaga(action: PayloadAction<IHtmlTemplateRequest>) {
     try {
         const response: IHtmlTemplateResponse = yield call(OrderService.GetMoneyReceiptTemplateHtmlService, action.payload);
@@ -286,7 +300,7 @@ export function* createCarConditionSaga(
     }
   }
 
-  export function* updateInvoiceSaga(action: PayloadAction<ICreateInvoiceRequest>) {
+  export function* updateInvoiceSaga(action: PayloadAction<IUpdateInvoicePayload>) {
     try {
         const response: IUpdateInvoiceResponse = yield call(OrderService.UpdateInvoiceService, action.payload);
         yield put(updateInvoiceSuccess(response));
@@ -322,6 +336,20 @@ export function* createCarConditionSaga(
     }
   }
 
+  export function* updateCarConditionSaga(action: PayloadAction<IUpdateCarConditionPayload>) {
+   console.log("updateCarConditionSaga", JSON.stringify(action));
+   
+    try {
+        const response: IUpdateCarConditionResponse = yield call(OrderService.UpdateCarConditionService, action.payload);
+        console.log("responseVehicle----------",JSON.stringify(response));
+        yield put(updateCarConditionSuccess(response));
+    } catch (error) {
+      console.log(error,"error--------");
+      
+        yield put(updateCarConditionFailure(error));
+    }
+  }
+
 export function* watcherOrderSaga() {
   yield takeLatest(addOrderRequest.type, addOrderSaga);
   yield takeLatest(getOrdersRequest.type, getOrderListSaga);
@@ -333,6 +361,7 @@ export function* watcherOrderSaga() {
   yield takeLatest(getCarConditionListRequest.type, getCarConditionListSaga);
   yield takeLatest(createBiltyRequest.type, createBiltySaga);
   yield takeLatest(getBiltyListRequest.type, getBiltyListSaga);
+  yield takeLatest(updateBiltyRequest.type, updateBiltySaga);
   yield takeLatest(getApprovedOrdersRequest.type, getApprovedOrderListSaga);
   yield takeLatest(getMoneyReceiptHtmlRequest.type, getMoneyReceiptTemplateHtmlSaga);
   yield takeLatest(getBiltyHtmlRequest.type, getBiltyTemplateHtmlSaga);
@@ -346,4 +375,6 @@ export function* watcherOrderSaga() {
   yield takeLatest(getInvoiceHtmlRequest.type, getInvoiceTemplateHtmlSaga);
   yield takeLatest(getPackingListTemplateRequest.type, getPackingListTemplateSaga);
   yield takeLatest(updatePackingListRequest.type, updatePackingListSaga);
+  yield takeLatest(updateCarConditionRequest.type, updateCarConditionSaga);
+
 }

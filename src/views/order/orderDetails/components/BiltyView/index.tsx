@@ -44,7 +44,6 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
     getBiltyHtmlSuccess,
     getBiltyHtmlFailure,
   } = useAppSelector(state => state.Order);
-  console.log(JSON.stringify(biltyList));
 
   const [showBiltyList, setShowBiltyList] = useState<boolean>(false);
   const [createNewBilty, setCreateNewBilty] = useState<boolean>(true);
@@ -71,11 +70,11 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
 
   const _getBiltyType = (bilty: IBilty) => {
     let biltyType: string = '';
-    const {biltyfreights} = bilty;
-    if (biltyfreights && biltyfreights.length > 0) {
-      const biltyFreight: IBiltyFreight = biltyfreights[0];
-      biltyType = biltyFreight.freightDetails.billingStatus;
-    }
+    // const {biltyfreights} = bilty;
+    // if (biltyfreights && biltyfreights.length > 0) {
+    //   const biltyFreight: IBiltyFreight = biltyfreights[0];
+    //   biltyType = biltyFreight.freightDetails.billingStatus;
+    // }
     return biltyType;
   };
 

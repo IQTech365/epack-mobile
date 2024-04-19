@@ -7,3 +7,8 @@ export interface ICreateBiltyResponse {
   status: number;
   error: boolean;
 }
+export interface IUpdateBiltyResponse {
+  data: IBiltyData;
+  status: number;
+  error: boolean;
+}
