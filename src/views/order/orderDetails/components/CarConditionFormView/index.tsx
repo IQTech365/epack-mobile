@@ -78,7 +78,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
   item,
   isEdit = false,
 }) => {
-  // console.log('CC-item--', JSON.stringify(item));
+  console.log('CC-item--', JSON.stringify(item));
   
   const [vehicleTypeId, setVehicleTypeId] = useState<string>('');
   const [vehicleCompanyId, setVehicleCompanyId] = useState<string>('');
@@ -362,11 +362,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
             id: item?._id as string,
             data: payload,
           };
-        console.log('CC-payload--', JSON.stringify(payload));
-
           dispatch2(updateCarConditionRequest(updatedPayload));
-          console.log(JSON.stringify(updatedPayload),"updatedPayloadupdatedPayload");
-
         } else {
           dispatch2(createCarConditionRequest(payload));
         }
@@ -531,7 +527,6 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   placeholder="CN / Bilty / LR No."
-                  // value={}
                   selectionColor={COLOR_BLACK}
                   value={reducerState.cnBiltyLrNo}
                   autoCapitalize="characters"
