@@ -72,7 +72,6 @@ export const getVehicleInsuranceCompanyList = (response:IVehicleInsuranceCompany
       return item;
     });
   }
-  console.log(items,"dddddddd------------");
   
   return items;
 }

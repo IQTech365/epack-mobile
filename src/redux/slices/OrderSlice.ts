@@ -686,7 +686,7 @@ export const OrderSlice = createSlice({
       state.updateBiltyFailure = true;
       state.updateBiltyError = action.payload;
     },
-    resetUpdateBiltyRequest: (state, action: PayloadAction<any>) => {
+    resetUpdateBiltyRequest: (state) => {
       state.updateBiltyRequesting = false;
       state.updateBiltySuccess = false;
       state.updateBiltyFailure = false;

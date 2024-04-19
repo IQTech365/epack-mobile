@@ -4,8 +4,8 @@ import {View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../../../common/Spacer';
 import Label from '../../../../../common/Label';
-import DropdownComponent from '../../../../../common/DropdownComponent';
-import Input from '../../../../../common/Input';
+import DropdownComponent, { IDropdownHandler } from '../../../../../common/DropdownComponent';
+import Input, { InputMethods } from '../../../../../common/Input';
 import {
   COLOR_BLACK,
   COLOR_BLUE,
@@ -64,8 +64,8 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({
   const dispatch = useAppDispatch();
   const authId = useAuthId();
 
-  const contactTypeRef = useRef(null);
-  const inputRef = useRef(null);
+  const contactTypeRef = useRef<IDropdownHandler>(null);
+  const inputRef = useRef<InputMethods>(null);
 
   const handleTextInputChange = (text: string) => {
     if (contactNumberError) {
@@ -90,7 +90,6 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({
     setContactType(item.label);
     if (contactNumber) {
       setContactNumber('');
-      //@ts-ignore
       inputRef && inputRef?.current?.reset();
     }
     if (item.label == 'EMAIL') {
@@ -160,15 +159,12 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({
       setModules(modules);
       setLabelText(contactType);
       setContactNumber(contactNumber);
-      //@ts-ignore
       inputRef && inputRef?.current?.setValue(contactNumber);
       const contactTypeItem: TDropdownItem = contactDetail.find(
         (d: TDropdownItem) => d.label == contactType,
       ) as TDropdownItem;
       if (contactTypeItem !== undefined) {
-        //@ts-ignore
-        contactTypeRef &&
-          contactTypeRef?.current?.setDefaultValue(contactTypeItem);
+        contactTypeRef && contactTypeRef?.current?.setDefaultValue(contactTypeItem);
       }
     }
   }, [isEdit]);
@@ -225,6 +221,9 @@ const ContactDetailUpdateView: React.FC<IContactDetailsProps> = ({
             ref={inputRef}
             placeholder={helperText}
             placeholderTextColor={COLOR_GRAY}
+            // {helperText}
+            inputType={contactType == 'EMAIL' ? 'default' : 'numeric'}
+
           />
         </View>
         <Spacer height={12} />

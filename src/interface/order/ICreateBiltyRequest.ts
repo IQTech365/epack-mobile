@@ -11,8 +11,8 @@ export interface IMaterial {
 }
 
 export interface ICreateBiltyRequest {
-  companyId: string;
-  enquiryId: string;
+  companyId?: string;
+  enquiryId?: string;
   isAuto: boolean;
   isHeadOffice: boolean;
   biltyNumber: string;
@@ -90,8 +90,6 @@ export interface ICreateBiltyRequest {
   };
   
   remarksAtPOD: string;
-  remarks: string;
-
   materialsType: string;
   addMaterialsStatus: string;
   materials: IMaterial[];
@@ -151,5 +149,5 @@ export interface ICreateBiltyRequest {
     charge: string;
   };
   remarks: string;
-  addedBy: string;
+  addedBy?: string;
 }

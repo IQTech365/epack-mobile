@@ -228,7 +228,7 @@ const ConsigneeDetails: React.FC<IProps> = ({item, isEdit}) => {
             <Label text="Consignee Mobile No." style={styles.label} />
             <Input
               onChangeText={setConsigneeMobileNo}
-              placeholder="Enter consginee GST"
+              placeholder="Enter Mobile No"
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}

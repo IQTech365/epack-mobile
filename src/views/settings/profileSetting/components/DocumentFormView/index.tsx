@@ -265,6 +265,7 @@ const DocumentFormView: React.FC<IDocumentFormViewProps> = ({onSuccess, isEdit, 
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
                   placeholder='Enter document ID'
+                  autoCapitalize="characters"
                   //@ts-ignore
                   ref={isoNumberInputRef}
                 />
@@ -290,6 +291,7 @@ const DocumentFormView: React.FC<IDocumentFormViewProps> = ({onSuccess, isEdit, 
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 placeholder='Enter document ID'
+                autoCapitalize="characters"
                 //@ts-ignore
                 ref={ibaCodeInputRef}
               />
@@ -349,6 +351,7 @@ const DocumentFormView: React.FC<IDocumentFormViewProps> = ({onSuccess, isEdit, 
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 placeholder='Enter Document Number'
+                autoCapitalize="characters"
                 //@ts-ignore
                 ref={docNumberInputRef}
               />

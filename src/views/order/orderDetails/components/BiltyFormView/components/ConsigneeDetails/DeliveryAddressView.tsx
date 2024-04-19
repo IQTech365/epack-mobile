@@ -101,6 +101,7 @@ const DeliveryAddressView: React.FC<Props> = ({}) => {
             containerStyle={styles.itemContainer}
           />
         </View>
+        
         <View style={styles.itemContainer}>
           <Label text="City" style={styles.label} />
           <DropdownWithTextInput
@@ -108,6 +109,7 @@ const DeliveryAddressView: React.FC<Props> = ({}) => {
             onSelect={setDeliveryCity}
             //@ts-ignore
             ref={cityDropdownCompRef}
+            containerStyle={styles.itemContainer}
           />
         </View>
         <Spinner show={fetching} />

@@ -97,7 +97,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
   const vehicleManufactureYearDropRef = useRef<IDropdownHandler>(null);
   const registrationNoRef = useRef<InputMethods>(null);
   const vehicleKmRef = useRef<InputMethods>(null);
-  const insuranceCompanyNameRef = useRef<InputMethods>(null);
+  const insuranceCompanyNameRef = useRef<IDropdownHandler>(null);
   const insurancePolicyNoRef = useRef<InputMethods>(null);
   const vehicleValueRef = useRef<InputMethods>(null);
   const chassisNoRef = useRef<InputMethods>(null);
@@ -345,7 +345,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
     }
   }, [serialNo]);
   
-  console.log(item,"item-------------");
+  console.log(item,"hhhhhhhßß");
   
 
   useEffect(() => {
@@ -353,7 +353,6 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
       carConditionNoInputRef.current?.setValue(item.carConditionNumber);
       registrationNoRef.current?.setValue(item.vehicleRegistrationNumber);
       vehicleKmRef.current?.setValue(item.vehicleCoveredDistanceInKM);
-      insuranceCompanyNameRef.current?.setValue(item.insuranceCompany);
       cnLrBnRef.current?.setValue(item.biltyNo);
       insurancePolicyNoRef.current?.setValue(item.insurancePolicyNumber);
       vehicleValueRef.current?.setValue(item.vehicleValue);
@@ -366,8 +365,14 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
       scratcheRef.current?.setValue(item.scratches);
       dentRef.current?.setValue(item.dent);
       anyOtherObservationRef.current?.setValue(item.visibleObservation);
-      const vehicleTypeDropdownItem:TDropdownItem = getVehicleTypeList(vehicleTypes).find((e:TDropdownItem) => e.label == item?.vehicleType) as TDropdownItem;
+
+      const insuranceCompanyDropdownItem:TDropdownItem = getVehicleInsuranceCompanyList(vehicleInsuranceCompany).find((e:TDropdownItem) => e.label == item?.insuranceCompany) as TDropdownItem;
+      if(insuranceCompanyDropdownItem ! == undefined){
+        insuranceCompanyNameRef.current?.setDefaultValue(insuranceCompanyDropdownItem?.value);
+      }
+      console.log(insuranceCompanyDropdownItem?.value,"insuranceCompanyDropdownItem");
       
+      const vehicleTypeDropdownItem:TDropdownItem = getVehicleTypeList(vehicleTypes).find((e:TDropdownItem) => e.label == item?.vehicleType) as TDropdownItem;
       if(vehicleTypeDropdownItem ! == undefined){
         vehicleTypeDropRef.current?.setDefaultValue(vehicleTypeDropdownItem);
         vehicleTypeDropRef.current?.refreshComp();
@@ -383,7 +388,6 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
       const vehicleColorDropdownItem:TDropdownItem = getVehicleColorList(vehicleColors).find((e:TDropdownItem) => e.label == item?.color) as TDropdownItem;      
       if(vehicleColorDropdownItem ! == undefined){
         vehicleColorDropRef.current?.setDefaultValue(vehicleColorDropdownItem);
-
       }
       const vehicleManufactureYearDropdownItem:TDropdownItem = getYears().find((e:TDropdownItem) => e.label == item?.yearOfManufacturing) as TDropdownItem;      
       if(vehicleManufactureYearDropdownItem ! == undefined){
@@ -550,6 +554,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                   <DropdownComponent
                   data={getVehicleInsuranceCompanyList(vehicleInsuranceCompany)}
                   onSelect={handleInsuranceCompany}
+                  ref={insuranceCompanyNameRef}
                 />
             </View>
             <Spacer height={4} />
