@@ -84,6 +84,30 @@ counterContainer: {
     backgroundColor: COLOR_BLUE,
     borderRadius: 5,
   },
+  manageCountContainer: {
+    width: '100%',
+    alignItems: 'center',
+    display:'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+},
+countActionContainer: {
+  width: '30%',
+  alignItems: 'center',
+  justifyContent: 'center'
+},
+
+wrapper: {
+  width: width * 0.9,
+  alignSelf: 'center',
+  alignItems: 'center',
+},
+
+unitContainer: {
+  width: '45%',
+  alignItems: 'center',
+  justifyContent: 'center',
+},
 
   previewAddButtonStyle: {
     backgroundColor: COLOR_BLUE,

@@ -28,6 +28,7 @@ import {NavigationProp} from '@react-navigation/native';
 import PreviewShareModal from '../../../../../common/PreviewShareModal';
 import LimitReachImage from '../../../../../images/icons/limit_reach.svg';
 import {getCurrentCompanyId} from '../../../../../utils/storage';
+import { getVehicleInsuranceCompanyRequest } from '../../../../../redux/slices/CommonSlice';
 
 interface IBiltyViewProps {
   orderId: string;
@@ -85,7 +86,6 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
     setDownloadOption('');
     setShowPreviewShareModal(false);
   };
-  console.log(JSON.stringify(biltyList.data));
   const _getBiltyData = () => {
     const {data} = biltyList || {};
     let items: IBiltyItem[] = [];
@@ -149,6 +149,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
 
   useEffect(() => {
     dispatch(getBiltyListRequest(orderId));
+    dispatch(getVehicleInsuranceCompanyRequest());
   }, []);
 
   const showEmptyView = () => {

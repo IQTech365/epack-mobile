@@ -4,7 +4,10 @@ import styles from './style';
 import Header from '../../../common/Header';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {EnquiryStackParamList} from '../../../navigation/params/EnquiryStackParamList';
-import {IGetSurveyItemListData, IGetSurvyeItemListRequestPayload} from '../../../interface/enquiry/IGetSurveyItemListResponse';
+import {
+  IGetSurveyItemListData,
+  IGetSurvyeItemListRequestPayload,
+} from '../../../interface/enquiry/IGetSurveyItemListResponse';
 import Spacer from '../../../common/Spacer';
 import {ISurveyListItem} from '../../../interface/enquiry/IAddSurveyItemRequest';
 import {formatPrice} from '../../../utils/formatter';
@@ -13,9 +16,13 @@ import DeleteIcon from '../../../images/icons/delete.svg';
 import ModalHOC from '../../../common/ModalHOC';
 import UpdateSurveyItemView from './UpdateSurveyItemView';
 import {useAppDispatch, useAppSelector} from '../../../redux/hooks';
-import { IUpdateSurveyItemRequest } from '../../../interface/enquiry/enquiry';
-import { getSurveyItemListRequest, resetUpdateSurveryItemListRequest, updateSurveryItemListRequest } from '../../../redux/slices/EnquirySlice';
-import { ToastType, showToast } from '../../../utils/utility';
+import {IUpdateSurveyItemRequest} from '../../../interface/enquiry/enquiry';
+import {
+  getSurveyItemListRequest,
+  resetUpdateSurveryItemListRequest,
+  updateSurveryItemListRequest,
+} from '../../../redux/slices/EnquirySlice';
+import {ToastType, showToast} from '../../../utils/utility';
 
 type IProps = NativeStackScreenProps<EnquiryStackParamList, 'EditSurveyItems'>;
 
@@ -43,6 +50,8 @@ const EditSurveyItemsView: FC<IProps> = ({route, navigation}) => {
 
   const _handleDelete = (index: number) => {
     const copy = [...surveyItems];
+    console.log(surveyItems, 'surveyItems');
+
     copy.splice(index, 1);
     setSurveyItems(copy);
     setShouldSave(true);
@@ -60,7 +69,7 @@ const EditSurveyItemsView: FC<IProps> = ({route, navigation}) => {
 
   const _onUpdate = (index: number, item: ISurveyListItem) => {
     const copy = [...surveyItems];
-    if(addNew) {
+    if (addNew) {
       copy.push(item);
     } else {
       copy.splice(index, 1, item);
@@ -71,21 +80,21 @@ const EditSurveyItemsView: FC<IProps> = ({route, navigation}) => {
   };
 
   const _handleSaveChanges = () => {
-    const payload:IUpdateSurveyItemRequest = {
+    const payload: IUpdateSurveyItemRequest = {
       surveyId: item?._id as string,
       payload: {
         surveyListNo: item?.surveyListNo as string,
         surveyDate: item?.surveyDate as string,
-        surveyItems: surveyItems
-      }
-    }
+        surveyItems: surveyItems,
+      },
+    };
     dispatch(updateSurveryItemListRequest(payload));
   };
 
   const _handleAddNewItem = () => {
     setAddNew(true);
     setOpenModal(true);
-  }
+  };
 
   const _getSurveyItemListRequest = () => {
     const payload: IGetSurvyeItemListRequestPayload = {
@@ -95,26 +104,30 @@ const EditSurveyItemsView: FC<IProps> = ({route, navigation}) => {
   };
 
   useEffect(() => {
-    if(shouldSave) {
+    if (shouldSave) {
       _handleSaveChanges();
     }
   }, [shouldSave]);
 
   useEffect(() => {
-    if(!updateSurveyItemRequesting && updateSurveyItemSuccess) {
+    if (!updateSurveyItemRequesting && updateSurveyItemSuccess) {
       showToast('Survey Item List Updated', ToastType.SUCCESS);
       dispatch(resetUpdateSurveryItemListRequest());
       setShouldSave(false);
       setAddNew(false);
       _getSurveyItemListRequest();
       navigation.goBack();
-    } else if(!updateSurveyItemRequesting && updateSurveyItemFailure) {
+    } else if (!updateSurveyItemRequesting && updateSurveyItemFailure) {
       showToast('Survey Item List Not Updated. Try again!', ToastType.ERROR);
       dispatch(resetUpdateSurveryItemListRequest());
       setShouldSave(false);
       setAddNew(false);
     }
-  }, [updateSurveyItemRequesting, updateSurveyItemSuccess, updateSurveyItemFailure]);
+  }, [
+    updateSurveyItemRequesting,
+    updateSurveyItemSuccess,
+    updateSurveyItemFailure,
+  ]);
 
   return (
     <View style={styles.container}>

@@ -23,6 +23,7 @@ import { IAddPackingMaterialResponse } from '../../interface/enquiry/IAddPacking
 import { IAddPackingMaterialRequest } from '../../interface/enquiry/IAddPackingMaterialRequest';
 import { IGetPackingMaterialsRequest, IPackingMaterialsResponse } from '../../interface/enquiry/IPackingMaterialsResponse';
 import { ISurveyListTemlatePayload, ISurveyListTemplateResponse, IUpdateSurveyItemRequest, IUpdateSurveyItemResponse } from '../../interface/enquiry/enquiry';
+import { IUpdatePackingMaterialRequest, IUpdatePackingMaterialResponse } from '../../interface/enquiry/IUpdatePackingMaterialResponse';
 
 interface IEnquiryState {
   // Get Enquiries
@@ -127,6 +128,12 @@ interface IEnquiryState {
    getPackingMaterialsSuccess: boolean;
    getPackingMaterialsFailure: boolean;
    getPackingMaterialsError: any;
+  //  Update Packing Materials
+  updatePackingMaterialInfo: IUpdatePackingMaterialResponse | null;
+   updatePackingMaterialRequesting: boolean;
+   updatePackingMaterialSuccess:boolean;
+   updatePackingMaterialFailure:boolean;
+   updatePackingMaterialError: any;
    // Update Survey Item List
    updateSurveyItemInfo: IUpdateSurveyItemResponse | null;
    updateSurveyItemRequesting: boolean;
@@ -244,6 +251,12 @@ const initialState: IEnquiryState = {
    getPackingMaterialsSuccess: false,
    getPackingMaterialsFailure: false,
    getPackingMaterialsError: null,
+  //  Update Packing Materials
+  updatePackingMaterialInfo: null,
+  updatePackingMaterialRequesting: false,
+  updatePackingMaterialSuccess:false,
+  updatePackingMaterialFailure:false,
+  updatePackingMaterialError: null,
     // Update Survey Item List
     updateSurveyItemInfo: null,
     updateSurveyItemRequesting: false,
@@ -657,6 +670,28 @@ export const EnquirySlice = createSlice({
         state.getPackingMaterialsFailure = false;
         state.getPackingMaterialsError = null;
       },
+
+      // Update Packing Material
+      updatePackingMaterialListRequest: (state, action: PayloadAction<IUpdatePackingMaterialRequest>) => {
+        state.updatePackingMaterialRequesting = true;
+      },
+      updatePackingMaterialListSuccess: (state, action: PayloadAction<IUpdatePackingMaterialResponse>) => {
+        state.updatePackingMaterialRequesting = false;
+        state.updatePackingMaterialSuccess = true;
+        state.updatePackingMaterialInfo = action.payload;
+      },
+      updatePackingMaterialListFailure: (state, action: PayloadAction<any>) => {
+        state.updatePackingMaterialRequesting = false;
+        state.updatePackingMaterialFailure = true;
+        state.updatePackingMaterialError = action.payload;
+      },
+      resetUpdatePackingMaterialListRequest: (state) => {
+        state.updatePackingMaterialRequesting = false;
+        state.updatePackingMaterialSuccess = false;
+        state.updatePackingMaterialFailure = false;
+        state.updatePackingMaterialError = null;
+        state.updatePackingMaterialError = null;
+      },
       // Update Survey Item List
       updateSurveryItemListRequest: (state, action: PayloadAction<IUpdateSurveyItemRequest>) => {
         state.updateSurveyItemRequesting = true;
@@ -785,6 +820,11 @@ export const {
    getPackingMaterialsSuccess,
    getPackingMaterialsFailure,
    resetGetPackingMaterialsRequest,
+  //  Update Packing Materials
+   updatePackingMaterialListRequest,
+   updatePackingMaterialListSuccess,
+   updatePackingMaterialListFailure,
+   resetUpdatePackingMaterialListRequest,
    // Update Survey Item List
    updateSurveryItemListRequest,
    updateSurveryItemListSuccess,

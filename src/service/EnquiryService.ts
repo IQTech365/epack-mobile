@@ -1,6 +1,6 @@
 import {AxiosResponse} from 'axios';
 import {Api} from '../http/Api';
-import {ADD_ENQUIRY, EDIT_COMPANY, GET_ENQUIRY_LIST, ADD_FOLLOWUP, GET_FOLLOWUP_COMMENTS, ADD_SURVEY, GET_SURVEY_COMMENTS, EDIT_ENQUIRY, GET_ENQUIRY, ADD_SURVEY_ITEM, GET_SURVEY_ITEM, ADD_PACKING_MATERIAL, GET_PACKING_MATERIALS, EDIT_SURVEY_ITEM, GET_SURVEY_LIST_ITEM_TEMPLATE_HTML} from '../http/Endpoint';
+import {ADD_ENQUIRY, EDIT_COMPANY, GET_ENQUIRY_LIST, ADD_FOLLOWUP, GET_FOLLOWUP_COMMENTS, ADD_SURVEY, GET_SURVEY_COMMENTS, EDIT_ENQUIRY, GET_ENQUIRY, ADD_SURVEY_ITEM, GET_SURVEY_ITEM, ADD_PACKING_MATERIAL, GET_PACKING_MATERIALS, EDIT_SURVEY_ITEM, GET_SURVEY_LIST_ITEM_TEMPLATE_HTML, UPDATE_PACKING_MATERIALS} from '../http/Endpoint';
 import { IOtpVerifyRequest } from '../interface/otp/IOtpVerifyRequest';
 import { IOtpVerifyResponse } from '../interface/otp/IOtpVerifyResponse';
 import { IAddEnquiryRequest } from '../interface/enquiry/IAddEnquiryRequest';
@@ -25,6 +25,7 @@ import { IAddPackingMaterialRequest } from '../interface/enquiry/IAddPackingMate
 import { IAddPackingMaterialResponse } from '../interface/enquiry/IAddPackingMaterialResponse';
 import { IGetPackingMaterialsRequest, IPackingMaterialsResponse } from '../interface/enquiry/IPackingMaterialsResponse';
 import { ISurveyListTemlatePayload, ISurveyListTemplateResponse, IUpdateSurveyItemPayload, IUpdateSurveyItemRequest, IUpdateSurveyItemResponse } from '../interface/enquiry/enquiry';
+import { IUpdatePackingMaterialRequest, IUpdatePackingMaterialResponse } from '../interface/enquiry/IUpdatePackingMaterialResponse';
 
 export const AddEnquiryService = async (payload: IAddEnquiryRequest): Promise<IAddEnquiryResponse> => {
     const api = Api.getInstance();
@@ -100,6 +101,11 @@ export const UpdateShiftingInfoService = async (id:string, requestBody: IUpdateS
 export const AddPackingMaterialService = async (payload: IAddPackingMaterialRequest): Promise<IAddPackingMaterialResponse> => {
     const api = Api.getInstance();
     return await api.post<IAddPackingMaterialRequest, AxiosResponse<IAddPackingMaterialResponse>>(payload, ADD_PACKING_MATERIAL);
+}
+
+export const UpdatePackingMaterialService = async (id:string, requestBody: IUpdatePackingMaterialRequest): Promise<IUpdatePackingMaterialResponse> => {
+    const api = Api.getInstance();
+    return await api.update<IUpdatePackingMaterialRequest, AxiosResponse<IUpdatePackingMaterialResponse>>(requestBody, UPDATE_PACKING_MATERIALS(id));
 }
 
 export const GetPackingMaterialsService = async (payload: IGetPackingMaterialsRequest): Promise<IPackingMaterialsResponse> => {

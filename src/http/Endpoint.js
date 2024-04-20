@@ -116,6 +116,7 @@ export const GET_UNIT_TYPES = `/setting/unit-type/all`;
 
 // Packing Materials
 export const GET_PACKING_MATERIALS = `/enquiry/get-packing-material`;
+export const UPDATE_PACKING_MATERIALS = (id) => `/enquiry/update-packing-material/${id}`;
 
 // Templates
 export const GET_MONEY_RECEIPT_TEMPLATE_HTML = `/template/money-receipt-template`;

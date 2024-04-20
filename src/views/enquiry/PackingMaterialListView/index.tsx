@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {FlatList, View, Text, TouchableOpacity} from 'react-native';
 import styles from './style';
 import {useAppDispatch, useAppSelector} from '../../../redux/hooks';
@@ -19,6 +19,8 @@ import {EnquiryStackParamList} from '../../../navigation/params/EnquiryStackPara
 import Header from '../../../common/Header';
 import EditIcon from '../../../images/icons/edit2.svg';
 import DeleteIcon from '../../../images/icons/delete.svg';
+import ModalHOC from '../../../common/ModalHOC';
+import UpdatePackingMaterialView from '../enquiryDetails/components/PackingMaterialsView/UpdatePackingMaterial';
 
 type IProps = NativeStackScreenProps<
   EnquiryStackParamList,
@@ -26,6 +28,15 @@ type IProps = NativeStackScreenProps<
 >;
 
 const PackingMaterialListView: React.FC<IProps> = ({route, navigation}) => {
+  const [packingMaterial, setPackingMaterial] = useState<IMaterial | null>(
+    null,
+  );
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  // const [packingsMaterial,setPackingsMaterial] = useState<IPackingMaterial[]>([]);
+  const [packingsMaterial, setPackingsMaterial] = useState<IMaterial[]>([]);
+  const [shouldSave, setShouldSave] = useState<boolean>(false);
+  const [itemIndex, setItemIndex] = useState<number>(-1);
+  const [addNew, setAddNew] = useState<boolean>(false);
   const enquiryId: string | undefined = route.params?.enquiryId;
   const dispatch = useAppDispatch();
   const {
@@ -36,12 +47,42 @@ const PackingMaterialListView: React.FC<IProps> = ({route, navigation}) => {
   } = useAppSelector(state => state.Enquiry);
   const {data} = packingMaterials || {};
 
+
   useEffect(() => {
     const payload: IGetPackingMaterialsRequest = {
       enquiryId: enquiryId,
     };
     dispatch(getPackingMaterialsRequest(payload));
   }, []);
+
+  const _handleDelete = (index: number) => {
+    const copy = [...packingsMaterial];
+    copy.splice(index, 1);
+    setPackingsMaterial(copy);
+    setShouldSave(true);
+  };
+
+  const _handleUpdate = (index: number, item: IPackingMaterial) => {
+    setPackingMaterial(item);
+    setItemIndex(index);
+    setOpenModal(true);
+  };
+
+  const _handleModalClose = () => {
+    setOpenModal(false);
+  };
+
+  const _onUpdate = (index: number, item: IPackingMaterial) => {
+    const copy = [...packingsMaterial];
+    if (addNew) {
+      copy.push(item);
+    } else {
+      copy.splice(index, 1, item);
+    }
+    setOpenModal(false);
+    setPackingsMaterial(copy);
+    setShouldSave(true);
+  };
 
   useEffect(() => {
     if (
@@ -82,20 +123,20 @@ const PackingMaterialListView: React.FC<IProps> = ({route, navigation}) => {
             <Text style={styles.text}>{item.name}</Text>
           </View>
           <View style={styles.item}>
-            <Text style={styles.label}>{"Quantity: "}</Text>
+            <Text style={styles.label}>{'Quantity: '}</Text>
             <Text style={styles.text}>{item.quantity}</Text>
           </View>
           <View style={styles.item}>
-            <Text style={styles.label}>{"Unit: "}</Text>
+            <Text style={styles.label}>{'Unit: '}</Text>
             <Text style={styles.text}>{item.type ?? 'NA'}</Text>
           </View>
         </View>
         <View style={styles.itemActionContainer}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => _handleUpdate(index, item)}>
             <EditIcon width={24} height={24} />
           </TouchableOpacity>
           <Spacer height={10} />
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => _handleDelete(index)}>
             <DeleteIcon width={24} height={24} />
           </TouchableOpacity>
         </View>
@@ -129,6 +170,19 @@ const PackingMaterialListView: React.FC<IProps> = ({route, navigation}) => {
         // ListHeaderComponent={renderHeaderComponent(_getHeaderData())}
         ListEmptyComponent={_renderEmptyView()}
       />
+      <ModalHOC
+        visible={openModal}
+        onClose={_handleModalClose}
+        title="PACKING MATERIAL">
+        <View>
+          <UpdatePackingMaterialView
+            item={packingMaterial as IMaterial}
+            index={itemIndex}
+            onUpdate={_onUpdate}
+            // isNew={addNew}
+          />
+        </View>
+      </ModalHOC>
     </View>
   );
 };

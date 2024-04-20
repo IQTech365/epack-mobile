@@ -4,3 +4,11 @@ export interface IAddPackingMaterialRequest {
     packingMaterial: object[];
     addedBy: string;
 }
+
+export interface IPackingMaterial {
+
+}
+
+export interface IUpdatePackingMaterialRequest {
+    
+}
