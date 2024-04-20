@@ -11,7 +11,7 @@ import {
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../../../common/Spacer';
 import Label from '../../../../../common/Label';
-import DropdownComponent from '../../../../../common/DropdownComponent';
+import DropdownComponent, { IDropdownHandler } from '../../../../../common/DropdownComponent';
 import Input from '../../../../../common/Input';
 import {COLOR_BLACK, COLOR_BLUE} from '../../../../../utils/colors';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
@@ -26,7 +26,6 @@ import { addFooterContentRequest, getFooterContentsRequest, resetFooterContentRe
 import Spinner from '../../../../../common/Spinner';
 import { ToastType, showToast } from '../../../../../utils/utility';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
-import useAuthId from '../../../../../hooks/useAuthId';
 import { ISubmodule } from '../../../../../interface/common/common';
 import { IGetFooterContentData } from '../../../../../interface/setting/packerProfile/footerContent/IGetFooterContentsResponse';
 import { IUpdateFooterContent, IUpdateFooterContentPayload } from '../../../../../interface/setting/packerProfile/footerContent/IUpdateFooterContent';
@@ -56,8 +55,10 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({isEdit, footerI
     updateFooterContentSuccess,
     updateFooterContentFailure
   } = useAppSelector(state => state.Setting);
-  const richText = React.useRef();
-  const contentTypeRef = useRef(null);
+  const richText = React.useRef<RichEditor>(null);
+  const scrollRef = React.useRef<ScrollView>(null);
+
+  const contentTypeRef = useRef<IDropdownHandler>(null);
 
   const handleAccountType = (item: TDropdownItem) => {
     setAccountType(item.label);
@@ -130,7 +131,6 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({isEdit, footerI
       setAccountType(contentType);
       const contentTypeItem:TDropdownItem = footerContentOptions.find((e:TDropdownItem) => e.label == contentType) as TDropdownItem;
       if(contentTypeItem !== undefined) {
-        //@ts-ignore
         contentTypeRef && contentTypeRef?.current?.setDefaultValue(contentTypeItem);
       }
     }
@@ -168,7 +168,6 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({isEdit, footerI
           <DropdownComponent
             data={footerContentOptions}
             onSelect={handleAccountType}
-            //@ts-ignore
             ref={contentTypeRef}
           />
         </View>
@@ -200,15 +199,21 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({isEdit, footerI
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={{flex: 1}}>
-            <Text>Write here:</Text>
-            <RichEditor
-            //@ts-ignore
-              ref={richText}
-              onChange={descriptionText => {
-                setContent(descriptionText);
-              }}
-              initialContentHTML={footerInfo?.content}
-            />
+            <ScrollView ref={scrollRef}>
+              <RichEditor
+                ref={richText}
+                onChange={descriptionText => {
+                  setContent(descriptionText);
+                }}
+                initialContentHTML={footerInfo?.content}
+                useContainer={true}
+                placeholder='Write your content here...'
+                initialFocus={true}
+                onCursorPosition={(scrollY) => {
+                  scrollRef.current?.scrollTo({y: scrollY - 30, animated: true});
+                }}
+              />
+            </ScrollView>
           </KeyboardAvoidingView>
         </ScrollView>
 

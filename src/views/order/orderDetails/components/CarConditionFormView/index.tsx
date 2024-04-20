@@ -386,7 +386,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
       type: CARCONDITION_FORM_ACTION.VEHICLE_ACCESSORIES,
       payload: accessoryList,
     });
-  }, []);
+  }, [accessories]);
 
   useEffect(() => {
     if (serialNo) {

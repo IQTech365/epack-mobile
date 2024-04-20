@@ -28,38 +28,38 @@ const styles = StyleSheet.create({
   labelText: {
     color: COLOR_BLACK,
     fontSize: 18,
-    fontFamily: 'WorkSans-SemiBold'
+    fontFamily: 'WorkSans-SemiBold',
   },
   textContainer2: {
     width: width * 0.9,
     justifyContent: 'center',
     alignItems: 'flex-start',
     alignSelf: 'center',
-},
-label: {
+  },
+  label: {
     color: COLOR_BLACK,
     fontSize: 16,
-    textAlign:'center',
-    fontFamily: 'WorkSans-Medium'
-},
-mainWrapper: {
+    textAlign: 'center',
+    fontFamily: 'WorkSans-Medium',
+  },
+  mainWrapper: {
     width: width * 0.9,
     alignSelf: 'center',
     flexDirection: 'row',
     alignItems: 'center',
-},
-textContainer: {
+  },
+  textContainer: {
     width: width * 0.44,
     justifyContent: 'space-around',
     alignItems: 'flex-start',
     alignSelf: 'center',
-},
-wrapConatiner:{
+  },
+  wrapConatiner: {
     justifyContent: 'space-between',
     flexDirection: 'row',
-},
-counterContainer: {
-    width: width * 0.40,
+  },
+  counterContainer: {
+    width: width * 0.4,
     paddingVertical: 9,
     borderRadius: 5,
     borderWidth: 0.7,
@@ -67,7 +67,7 @@ counterContainer: {
     alignItems: 'flex-start',
     justifyContent: 'space-around',
     alignSelf: 'center',
-    flexDirection:'row',
+    flexDirection: 'row',
   },
   touchableContainer: {
     width: 30,
@@ -87,36 +87,36 @@ counterContainer: {
   manageCountContainer: {
     width: '100%',
     alignItems: 'center',
-    display:'flex',
+    display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-},
-countActionContainer: {
-  width: '30%',
-  alignItems: 'center',
-  justifyContent: 'center'
-},
+  },
+  countActionContainer: {
+    width: '30%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 
-wrapper: {
-  width: width * 0.9,
-  alignSelf: 'center',
-  alignItems: 'center',
-},
+  wrapper: {
+    width: width * 0.9,
+    alignSelf: 'center',
+    alignItems: 'center',
+  },
 
-unitContainer: {
-  width: '45%',
-  alignItems: 'center',
-  justifyContent: 'center',
-},
+  unitContainer: {
+    width: '45%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 
   previewAddButtonStyle: {
     backgroundColor: COLOR_BLUE,
     borderRadius: 5,
-    width: width*0.44
+    width: width * 0.44,
   },
-  dropDownStyle:{ 
-    width:  width * 0.44, 
-    left: width * 0.05 
+  dropDownStyle: {
+    width: width * 0.44,
+    left: width * 0.05,
   },
   inputContainer: {
     width: '100%',
@@ -139,11 +139,11 @@ unitContainer: {
   buttonText: {
     color: COLOR_WHITE,
     fontSize: 14,
-    fontFamily: 'WorkSans-Medium'
+    fontFamily: 'WorkSans-Medium',
   },
   modalStyle: {
     width: width * 0.9,
-  }
+  },
 });
 
 export default styles;

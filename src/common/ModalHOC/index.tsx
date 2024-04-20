@@ -21,6 +21,7 @@ const ModalHOC: React.FC<IModalProps> = ({
   headerStyle,
 }) => {
   return (
+    <View style={[styles.centeredView]}>
       <Modal
         animationType="slide"
         transparent={true}
@@ -38,6 +39,7 @@ const ModalHOC: React.FC<IModalProps> = ({
           </View>
         </View>
       </Modal>
+      </View>
   );
 };
 

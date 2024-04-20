@@ -44,7 +44,7 @@ const SurveyItemListView: React.FC<ISurveyItemListViewProps> = ({
       <View style={styles.contentContainer}>
         <Text style={styles.contentLabelText2}>{`TOTAL ITEMS: `}</Text>
         <Spacer width={4} />
-        <Text style={styles.contentLabelText}>{item.surveyItems.length}</Text>
+        <Text style={styles.contentLabelText}>{item?.surveyItems?.length}</Text>
       </View>
       <View style={styles.actionContainer}>
         <TouchableOpacity

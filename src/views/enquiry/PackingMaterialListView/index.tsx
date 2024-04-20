@@ -47,7 +47,6 @@ const PackingMaterialListView: React.FC<IProps> = ({route, navigation}) => {
   } = useAppSelector(state => state.Enquiry);
   const {data} = packingMaterials || {};
 
-
   useEffect(() => {
     const payload: IGetPackingMaterialsRequest = {
       enquiryId: enquiryId,
@@ -62,7 +61,7 @@ const PackingMaterialListView: React.FC<IProps> = ({route, navigation}) => {
     setShouldSave(true);
   };
 
-  const _handleUpdate = (index: number, item: IPackingMaterial) => {
+  const _handleUpdate = (index: number, item: IMaterial) => {
     setPackingMaterial(item);
     setItemIndex(index);
     setOpenModal(true);
@@ -72,7 +71,7 @@ const PackingMaterialListView: React.FC<IProps> = ({route, navigation}) => {
     setOpenModal(false);
   };
 
-  const _onUpdate = (index: number, item: IPackingMaterial) => {
+  const _onUpdate = (index: number, item: IMaterial) => {
     const copy = [...packingsMaterial];
     if (addNew) {
       copy.push(item);
@@ -173,13 +172,12 @@ const PackingMaterialListView: React.FC<IProps> = ({route, navigation}) => {
       <ModalHOC
         visible={openModal}
         onClose={_handleModalClose}
+        modalStyle={styles.modalStyle}
         title="PACKING MATERIAL">
         <View>
           <UpdatePackingMaterialView
             item={packingMaterial as IMaterial}
-            index={itemIndex}
             onUpdate={_onUpdate}
-            // isNew={addNew}
           />
         </View>
       </ModalHOC>
