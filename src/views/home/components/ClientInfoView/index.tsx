@@ -88,14 +88,14 @@ const ClientInfoView = () => {
               numberOfLines={1}>{` #${company?.sn}`}</Text>
           </Text>
           <View style={styles.planContainer}>
-            <Text style={styles.labelText}>Current Plan:</Text>
+            <Text style={styles.labelText}>Plan:</Text>
             <LinearGradient
               colors={['#051937', '#004d7a', '#008793', '#00bf72', '#a8eb12']}
               style={styles.planNameContainer}
               useAngle={true}
               angle={45}>
               <Text style={styles.planText}>
-                {_getCurrentPlanInfo().toUpperCase()}
+                {_getCurrentPlanInfo() ? _getCurrentPlanInfo().toUpperCase(): 'FREE MEMBER'}
               </Text>
             </LinearGradient>
           </View>

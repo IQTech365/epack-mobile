@@ -141,7 +141,7 @@ const OTPPageView = (props: any) => {
   const closeModal = async () => {
     await removeCurrentCompanyId();
     setShowCompaniesModal(false);
-    navigation.navigate('Subscription');
+    navigation.navigate('CompanyBasicInfo');
   };
 
   const _getCompaniesList = (): ICompanyInfoData[] => {
@@ -184,6 +184,7 @@ const OTPPageView = (props: any) => {
       }
     } else if (!verifyOtpRequesting && verifyOtpFailure) {
       showToast('Otp verification failed. Try again!', ToastType.ERROR);
+      dispatch(resetVerifyOtpRequest());
     }
   }, [verifyOtpRequesting, verifyOtpSuccess, verifyOtpFailure]);
 
