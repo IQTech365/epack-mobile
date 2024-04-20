@@ -82,7 +82,11 @@ const DrawerContent = (props: any) => {
   const handleReferAFriend = async () => {
     const options = {
       title: 'ePackBook Mobile App',
-      message: 'Please check this application for Packers & Movers Businesses',
+      message: `हे दोस्त, मैने ePackBook मोबाइल एप का प्रयोग किया है अपने Packers and Movers व्यापार को आगे बढ़ाने के लिए! 
+      आप भी ePackBook मोबाइल एप का प्रयोग करे अपने व्यापार को आगे बढ़ाने के लिए!  
+      ये बहुत ही अच्छी मोबाइल एप है  जिसके माध्यम से आप Quotation, Invoice, Bilty आदि सभी Documents बना सकते हो! Upto 10 Documents फ़्री बनाए! 
+      Enquiries, Customer Management & Followup/ Survey Reminder फ़्री प्रयोग करें! ePackBook से जुड़ी किसी भी प्रकार की जानकारी के लिए संपर्क करे 09355771100
+      अभी निचे दिए लिन्क पे Click करे एवं फ़्री ePackBook मोबाइल एप का प्रयोग करे!`,
       url: 'https://play.google.com/store/apps/details?id=com.epackbook',
     }
     try {
