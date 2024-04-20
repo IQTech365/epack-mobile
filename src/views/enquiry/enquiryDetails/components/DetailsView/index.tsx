@@ -25,6 +25,7 @@ interface IDetailsViewProps {
 }
 
 const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
+  // console.log('DetailsView-enquiryId-', enquiryId);
   const [editShiftingDetail, setEditShifingDetail] = useState<boolean>(false);
   const [editContactDetail, setEditContactDetail] = useState<boolean>(false);
   const [editPickupAddress, setEditPickupAddress] = useState<boolean>(false);

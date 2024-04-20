@@ -202,7 +202,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({ navigation }) =>
 
   const handleCardClick = (quotation: IQuotationItem) => {
     const item: IGetQuotationData = quotationData?.find(
-      (e: IGetQuotationData) => e.quotationNumber == quotation.quotationNo,
+      (e: IGetQuotationData) => e._id == quotation.id,
     );
     if (item !== undefined && item.enquiries.length > 0) {
       const enquiry: IEnquiry = item.enquiries[0];

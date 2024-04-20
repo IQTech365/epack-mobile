@@ -31,6 +31,7 @@ import NewsRoomIcon from '../images/icons/newsroom.svg';
 import BranchesIcon from '../images/icons/branches_black_icon.svg';
 import VehicleMgmtIcon from '../images/icons/vehicle_mgmt_black_icon.svg';
 import FranchiseMgmtIcon from '../images/icons/franchise_mgmt_black_icon.svg';
+import SendIcon from '../images/icons/send_icon.svg';
 import LogoutIcon from '../images/icons/logout.svg';
 import SubscriptionView from '../views/subscription';
 import HelpCenterView from '../views/helpCenter';
@@ -45,6 +46,7 @@ import AddFranchiseView from '../views/profile/components/addFranchiseDetail';
 import AddBranchView from '../views/profile/components/addBranchDetail';
 import { getCurrentCompanyId } from '../utils/storage';
 import TermsAndConditionsView from '../views/termsAndConditions';
+import Share from 'react-native-share';
 
 const Drawer = createDrawerNavigator();
 
@@ -76,6 +78,23 @@ const DrawerContent = (props: any) => {
     setLoggedIn(false);
     dispatch(logout());
   };
+
+  const handleReferAFriend = async () => {
+    const options = {
+      title: 'ePackBook Mobile App',
+      message: `हे दोस्त, मैने ePackBook मोबाइल एप का प्रयोग किया है अपने Packers and Movers व्यापार को आगे बढ़ाने के लिए! 
+      आप भी ePackBook मोबाइल एप का प्रयोग करे अपने व्यापार को आगे बढ़ाने के लिए!  
+      ये बहुत ही अच्छी मोबाइल एप है  जिसके माध्यम से आप Quotation, Invoice, Bilty आदि सभी Documents बना सकते हो! Upto 10 Documents फ़्री बनाए! 
+      Enquiries, Customer Management & Followup/ Survey Reminder फ़्री प्रयोग करें! ePackBook से जुड़ी किसी भी प्रकार की जानकारी के लिए संपर्क करे 09355771100
+      अभी निचे दिए लिन्क पे Click करे एवं फ़्री ePackBook मोबाइल एप का प्रयोग करे!`,
+      url: 'https://play.google.com/store/apps/details?id=com.epackbook',
+    }
+    try {
+      await Share.open(options);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   useEffect(() => {
     if(companies) {
@@ -131,6 +150,12 @@ const DrawerContent = (props: any) => {
           <DrawerItemList {...props} />
         </View>
       </DrawerContentScrollView>
+      <View style={styles.referFriendContainer}>
+        <SendIcon width={24} height={24} />
+        <TouchableOpacity activeOpacity={0.6} onPress={handleReferAFriend}>
+          <Text style={styles.logoutText}>Refer a Friend</Text>
+        </TouchableOpacity>
+      </View>
       <View style={styles.bottomContainer}>
         <LogoutIcon width={24} height={24} />
         <TouchableOpacity activeOpacity={0.6} onPress={handleLogout}>
@@ -275,6 +300,12 @@ const styles = StyleSheet.create({
     color: COLOR_WHITE,
     fontSize: 14,
     fontFamily: 'WorkSans-Regular',
+  },
+  referFriendContainer: {
+    padding: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
   },
   bottomContainer: {
     padding: 20,

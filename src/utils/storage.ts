@@ -95,3 +95,19 @@ export const removeCurrentCompanyId = async () => {
     console.log('AsyncStorage Error in removing company_id', e);
   }
 };
+
+export const setIntroVideoWatched = async () => {
+  try {
+    await AsyncStorage.setItem('intro_video_watched', 'true');
+  } catch (error) {
+    console.log('AsyncStorage Error in saving', error);
+  }
+};
+
+export const isIntroVideoWatched = async () => {
+  try {
+    return await AsyncStorage.getItem('intro_video_watched');
+  } catch (e) {
+    console.log('AsyncStorage Error in fetching company_id', e);
+  }
+};

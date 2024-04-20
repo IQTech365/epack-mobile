@@ -28,7 +28,7 @@ import {NavigationProp} from '@react-navigation/native';
 import PreviewShareModal from '../../../../../common/PreviewShareModal';
 import LimitReachImage from '../../../../../images/icons/limit_reach.svg';
 import {getCurrentCompanyId} from '../../../../../utils/storage';
-import { getVehicleInsuranceCompanyRequest } from '../../../../../redux/slices/CommonSlice';
+import {getVehicleInsuranceCompanyRequest} from '../../../../../redux/slices/CommonSlice';
 
 interface IBiltyViewProps {
   orderId: string;
@@ -54,7 +54,8 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [documentId, setDocumentId] = useState<string>('');
   const [showLimitModal, setShowLimitModal] = useState<boolean>(false);
-  const [showPreviewShareModal, setShowPreviewShareModal] = useState<boolean>(false);
+  const [showPreviewShareModal, setShowPreviewShareModal] =
+    useState<boolean>(false);
   const templateId = useTemplateIdHook('658d3cb5585e3dde644da97e');
   const {getDocumentLimitCount} = useUtilityHook();
 
@@ -86,6 +87,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
     setDownloadOption('');
     setShowPreviewShareModal(false);
   };
+
   const _getBiltyData = () => {
     const {data} = biltyList || {};
     let items: IBiltyItem[] = [];
@@ -114,19 +116,14 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
 
   const handleCreateNewBilty = () => {
     const docLimit: number = getDocumentLimitCount('658d3cb5585e3dde644da97e');
-
     const currentDocCount: number = getTotalBilty();
-
-    // if (docLimit.toString() == '-1' || currentDocCount < docLimit) {
-    //   setShowBiltyList(true);
-    //   setCreateNewBilty(false);
-    //   setShowLimitModal(false);
-    // } else {
-    //   setShowLimitModal(true);
-    // }
-
-    setShowBiltyList(false);
-    setCreateNewBilty(true);
+    if (docLimit.toString() == '-1' || currentDocCount < docLimit) {
+      setShowBiltyList(true);
+      setCreateNewBilty(false);
+      setShowLimitModal(false);
+    } else {
+      setShowLimitModal(true);
+    }
   };
 
   const handleShowBiltyList = () => {

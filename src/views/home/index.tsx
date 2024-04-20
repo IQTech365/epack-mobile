@@ -9,7 +9,7 @@ import {FEATURE_TYPE, TASK_NAME} from './utils';
 import BannerView from './components/BannerView';
 import FeatureView from './components/FeatureView';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {getCurrentCompanyId} from '../../utils/storage';
+import {getCurrentCompanyId, isIntroVideoWatched, setIntroVideoWatched} from '../../utils/storage';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {getSavedDocumentTemplateIdListRequest, getTemplateListRequest, resetSaveDocumentTemplateIdRequest, saveDocumentTemplateIdRequest} from '../../redux/slices/TemplateSettingSlice';
 import {
@@ -26,6 +26,7 @@ import { IGetPurchasedSubscriptionParams } from '../../interface/subscription/su
 import { getPurchasedSubscriptionRequest } from '../../redux/slices/SubscriptionSlice';
 import { EventRegister } from 'react-native-event-listeners';
 import { ISaveDocumentTemplateIdPayload, ISavedDocumentTemplateId, ITemplate, ITemplateData } from '../../interface/setting/template/template';
+import IntroVideoModal from '../../common/IntroVideoModal';
 
 interface IProps {
   navigation: NavigationProp<any, any>;
@@ -38,6 +39,12 @@ const HomePageView:FC<IProps> = ({navigation}) => {
   const {dashboard, submodules} = useAppSelector(state => state.Common);
   const {templates, savedDocumentTemplateIds, saveDocTemplateIdRequesting, saveDocTemplateIdSuccess, saveDocTemplateIdFailure} = useAppSelector(state => state.Template);
   const [initDefaultTemplates, setInitDefaultTemplates] = useState<boolean>(true);
+  const [showIntroVideoModal, setShowIntroVideoModal] = useState<boolean>(false);
+
+  const closeIntroVideoModal = async () => {
+    setShowIntroVideoModal(false);
+    await setIntroVideoWatched();
+  }
 
   const handleFeatureClick = (featureType: FEATURE_TYPE) => {
     
@@ -167,11 +174,21 @@ const HomePageView:FC<IProps> = ({navigation}) => {
       setInitDefaultTemplates(false);
     }
   }
+
+  const checkIntroVideoWatchStatus = async () => {
+    const watched = await isIntroVideoWatched();
+    if(watched === 'true') {
+      setShowIntroVideoModal(false);
+    } else {
+      setShowIntroVideoModal(true);
+    }
+  }
   
   useEffect(() => {
     EventRegister.addEventListener('onUpdateEvent', () => {
       _getDashboardData();
     });
+    checkIntroVideoWatchStatus();
   }, []);
 
   useEffect(() => {
@@ -264,6 +281,7 @@ const HomePageView:FC<IProps> = ({navigation}) => {
             onPress={handleFeatureClick}
           />
         </View>
+        <IntroVideoModal visible={showIntroVideoModal} onClose={closeIntroVideoModal} />
         <Spacer height={10} />
       </ScrollView>
     </View>

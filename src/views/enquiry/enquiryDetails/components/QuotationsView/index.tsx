@@ -34,7 +34,7 @@ interface IQuotationViewProps {
   navigation: any;
   onItemClick: (tabIndex: number) => void;
   isOrder?: boolean;
-  route: any;
+  route?: any;
 }
 
 const QuotationView: React.FC<IQuotationViewProps> = ({
