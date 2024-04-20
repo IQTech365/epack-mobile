@@ -12,14 +12,11 @@ import {
   IVehicleType,
   IVehicleTypesResponse,
 } from '../../../../../interface/common/common';
+import { IAccessory } from './carConditionReducer';
 
 interface IItem {
   label: string;
   value: string;
-}
-interface IAccessory {
-  label: string;
-  id: string;
 }
 
 export const getVehicleTypeList = (
@@ -98,7 +95,7 @@ export const getVehicleAccessoryList = (
   let items: IAccessory[] = [];
   if (data && data.length > 0) {
     items = data.map((d: IVehicleAccessory) => {
-      const item: IAccessory = {label: d.vehicleAccessory, id: d._id};
+      const item: IAccessory = {accessoryName: d.vehicleAccessory, id: d._id, present: false};
       return item;
     });
   }

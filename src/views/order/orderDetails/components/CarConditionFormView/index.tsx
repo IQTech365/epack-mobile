@@ -20,7 +20,6 @@ import Spacer from '../../../../../common/Spacer';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import {COLOR_BLACK} from '../../../../../utils/colors';
 import styles from './style';
-import carYear from '../../../../../data/carYear.json';
 import AccessoryView from '../AccessoryView';
 import {
   initialState,
@@ -78,7 +77,6 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
   item,
   isEdit = false,
 }) => {
-  console.log('CC-item--', JSON.stringify(item));
   
   const [vehicleTypeId, setVehicleTypeId] = useState<string>('');
   const [vehicleCompanyId, setVehicleCompanyId] = useState<string>('');
@@ -101,7 +99,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
     vehicleCompanies,
     vehicleInsuranceCompany,
     vehicleColors,
-    vehicleAccessories,
+    vehicleAccessories: accessories,
     vehicleModels,
   } = useAppSelector(state => state.Common);
 
@@ -295,30 +293,25 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
     accessoryName: string,
     id: string,
     present: boolean,
+    index: number,
   ) => {
     const {vehicleAccessories} = reducerState;
     const clone = [...vehicleAccessories];
-    if (present) {
       const accessory: IAccessory = {
         accessoryName: accessoryName,
         id: id,
         present: present,
       };
-      clone.push(accessory);
+      clone.splice(index, 1, accessory);
       dispatch({
         type: CARCONDITION_FORM_ACTION.VEHICLE_ACCESSORIES,
         payload: clone,
       });
-    } else {
-      const filters = clone.filter(
-        (acc: IAccessory) => acc.accessoryName !== accessoryName,
-      );
-      dispatch({
-        type: CARCONDITION_FORM_ACTION.VEHICLE_ACCESSORIES,
-        payload: filters,
-      });
-    }
   };
+
+  const getAvailableAccessories = () => {
+    return reducerState.vehicleAccessories.filter(va => va.present);
+  }
 
   const handleCreateCarCondition = useCallback(() => {
     getCurrentCompanyId()
@@ -335,7 +328,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
           manufacturer: reducerState.manufacturer,
           model: reducerState.model,
           yearOfManufacturing: reducerState.yearOfManufacturing,
-          vehicleAccessories: reducerState.vehicleAccessories,
+          vehicleAccessories: getAvailableAccessories(),
           color: reducerState.color,
           vehicleRegistrationNumber: reducerState.vehicleRegistrationNumber,
           vehicleCoveredDistanceInKM: reducerState.vehicleCoveredDistanceInKM,
@@ -370,9 +363,29 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
       .catch(err => console.log(err));
   }, [reducerState]);
 
+  const initAvailableAccessories = () => {
+    const accessoryList = getVehicleAccessoryList(accessories);
+    accessoryList.forEach((a, i) => {
+      const accessory = item?.vehicleAccessories.find((v) => a.accessoryName === v.accessoryName)
+      if(accessory){
+        //@ts-ignore
+        accessoryList.splice(i, 1, accessory);
+      }
+    });
+    dispatch({
+      type: CARCONDITION_FORM_ACTION.VEHICLE_ACCESSORIES,
+      payload: accessoryList,
+    });
+  }
+
   useEffect(() => {
     _getSerialNoRequest();
     dispatch2(getVehicleInsuranceCompanyRequest());
+    const accessoryList = getVehicleAccessoryList(accessories);
+    dispatch({
+      type: CARCONDITION_FORM_ACTION.VEHICLE_ACCESSORIES,
+      payload: accessoryList,
+    });
   }, []);
 
   useEffect(() => {
@@ -412,6 +425,8 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
       handleDent(item.dent);
       anyOtherObservationRef.current?.setValue(item.visibleObservation);
       handleAnyOtherObservation(item.visibleObservation);
+
+      initAvailableAccessories();
 
       const vehicleTypeDropdownItem: TDropdownItem = getVehicleTypeList(vehicleTypes).find((e: TDropdownItem) => e.label == item?.vehicleType) as TDropdownItem;
       if (vehicleTypeDropdownItem) {
@@ -680,13 +695,13 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
         <Spacer height={4} />
         <CollapsibleView title="ACCESSORIES DETAILS" collapsed={false}>
           <View>
-            {getVehicleAccessoryList(vehicleAccessories).map(
+            {reducerState.vehicleAccessories.map(
               (accessory, index) => {
                 return (
                   <View key={index}>
                     <AccessoryView
-                      label={accessory.label}
-                      id={accessory.id}
+                      item={accessory}
+                      index={index}
                       onPress={handleVehicleAccessories}
                     />
                     <Spacer height={8} />
