@@ -4,9 +4,7 @@ import {
   Modal,
   StyleSheet,
   Dimensions,
-  Text,
   Pressable,
-  TextStyle,
 } from 'react-native';
 import CloseIcon from '../../images/icons/close_icon.svg';
 import {COLOR_GRAY} from '../../utils/colors';
@@ -80,7 +78,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingVertical: 10,
     paddingHorizontal: 30,
-    // elevation: 2,
   },
   buttonOpen: {
     backgroundColor: '#F194FF',
