@@ -434,7 +434,7 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
                   selectionColor={COLOR_BLACK}
                   placeholder='Vehicle#'
                   placeholderTextColor={COLOR_GRAY4}
-                  inputType="numeric"
+                autoCapitalize="characters"
                 />
               </View>
               <View style={styles.itemContainer}>

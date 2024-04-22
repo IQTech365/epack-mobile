@@ -331,15 +331,15 @@ export const initialState: IState = {
 
   // **** Insurance Details ****
   insurance: 'Not Insured',
-  insurance_company: '',
+  insurance_company: 'National Insurance Company',
   policy_number: '',
   insurance_date: '',
   insurance_amount: '',
 
   // **** Demurrage Details
   demurrage_charge: '',
-  rate: '',
-  charge_applicable_after: '',
+  rate: 'Per Hour',
+  charge_applicable_after: '1 Day',
 
   // **** Other Details ****
   remark: '',

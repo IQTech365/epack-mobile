@@ -2,9 +2,6 @@ import React, {useEffect, useRef} from 'react';
 import {View} from 'react-native';
 import styles from './style';
 import CollapsibleView from '../../../../../../../common/CollapsibleView';
-import BouncyCheckboxGroup, {
-  ICheckboxButton,
-} from 'react-native-bouncy-checkbox-group';
 import Spacer from '../../../../../../../common/Spacer';
 import Label from '../../../../../../../common/Label';
 import Input, {InputMethods} from '../../../../../../../common/Input';
@@ -73,6 +70,7 @@ const InsuranceDetails: React.FC<IProps> = ({item, isEdit}) => {
       }
     }
   }, [state.insurance]);
+  
 
   return (
     <CollapsibleView title="INSURANCE DETAILS" collapsed={true}>

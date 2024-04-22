@@ -114,7 +114,7 @@ export const initialState: ICarConditionFormState = {
   yearOfManufacturing: '',
   vehicleRegistrationNumber: '',
   vehicleCoveredDistanceInKM: '',
-  insuranceCompany: '',
+  insuranceCompany: 'National Insurance Company',
   insurancePolicyNumber: '',
   vehicleValue: '',
   chasisNumber: '',

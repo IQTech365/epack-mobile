@@ -38,6 +38,8 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
   const unloadingInputRef = useRef<InputMethods>(null);
   const advanceAmountInputRef = useRef<InputMethods>(null);
   const balanceAmountInputRef = useRef<InputMethods>(null);
+  const remarksAtPODRef = useRef<InputMethods>(null);
+  const remarksAtLoadingRef = useRef<InputMethods>(null)
 
 
 
@@ -116,14 +118,12 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
       setBalanceAmount(`${calculateMaterialTotalAmount()}`);
     }
   };
-
-
-  
   
   useEffect(() => {
     if(isEdit && item) {
       setFreightType(item.freightDetails.billingStatus);
       freightInputRef.current?.setValue(item.freightDetails.freightCharges);
+      setFreightCharge(item.freightDetails.freightCharges)
       if(item.pickupCharges.status) {
         setPickupChargeAmount(item.pickupCharges.charge);
         const pickupOption:TDropdownItem = packingOptions.find((d:TDropdownItem) => d.label === item.pickupCharges.status) as TDropdownItem;
@@ -195,7 +195,11 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
         }
       }
       advanceAmountInputRef.current?.setValue(item.freightDetails.advanceAmount);
-      advanceAmountInputRef.current?.setValue(item.freightDetails.balanceAmount);
+      setAdvanceAmount(item.freightDetails.advanceAmount)
+      balanceAmountInputRef.current?.setValue(item.freightDetails.balanceAmount);
+      setBalanceAmount(item.freightDetails.balanceAmount);
+      remarksAtLoadingRef.current?.setValue(item.remarks);
+      remarksAtPODRef.current?.setValue(item.remarksAtPOD);
     }
   }, [isEdit, item]);
 
@@ -441,6 +445,7 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
               inputType="numeric"
+              value={state.advance_amount}
               ref={advanceAmountInputRef}
             />
           </View>
@@ -464,6 +469,8 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
+              value={state.remark}
+              ref={remarksAtLoadingRef}
             />
           </View>
           <View style={styles.elementContainer2}>
@@ -472,7 +479,9 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
               onChangeText={setRemarksAtPOD}
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
+              value={state.remarksAtPOD}
               selectionColor={COLOR_BLACK}
+              ref={remarksAtPODRef}
             />
           </View>
         </View>

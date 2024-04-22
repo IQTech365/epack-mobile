@@ -234,6 +234,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
         arivalDate: reducerState.arivalDate,
         receiptAgainst: reducerState.receiptAgainst,
         billNumber: reducerState.billQuotationNo,
+        referenceNumber: reducerState.referenceNumber,
         quotationNumber: reducerState.billQuotationNo,
         consignmentNumber: reducerState.cnBiltyLrNo,
         numbersOfArticles: reducerState.numbersOfArticles,

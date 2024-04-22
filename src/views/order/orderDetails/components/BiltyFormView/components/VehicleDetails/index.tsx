@@ -123,7 +123,7 @@ const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
-            inputType="numeric"
+            autoCapitalize="characters"
             ref={invoiceNoInputRef}
           />
         </View>
@@ -227,7 +227,7 @@ const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
             <Label text="In Date" style={styles.label} />
             <DatePickerComponent
               onDateSelect={(date: Date) => {
-                setInDate(date.toISOString());
+                setInDate(formatDate4(date));
               }}
               ref={inDateRef}
             />
@@ -236,7 +236,7 @@ const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
             <Label text="Out Date" style={styles.label} />
             <DatePickerComponent
               onDateSelect={(date: Date) => {
-                setOutDate(date.toISOString());
+                setOutDate(formatDate4(date));
               }}
               ref={outDateRef}
             />
