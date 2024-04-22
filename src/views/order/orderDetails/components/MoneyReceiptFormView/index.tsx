@@ -1,10 +1,10 @@
-import React, {useReducer, useEffect} from 'react';
+import React, {useReducer, useEffect, useRef} from 'react';
 import {View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
-import DatePickerComponent from '../../../../../common/DatePickerComponent';
-import DropdownComponent from '../../../../../common/DropdownComponent';
-import Input from '../../../../../common/Input';
+import DatePickerComponent, { IDateMethods } from '../../../../../common/DatePickerComponent';
+import DropdownComponent, { IDropdownHandler } from '../../../../../common/DropdownComponent';
+import Input, { InputMethods } from '../../../../../common/Input';
 import Label from '../../../../../common/Label';
 import Spacer from '../../../../../common/Spacer';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
@@ -24,6 +24,10 @@ import {ICreateMoneyReceiptRequest} from '../../../../../interface/order/ICreate
 import {
   createMoneyReceiptRequest,
   editMoneyReceiptListRequest,
+  editMoneyReceiptListSuccess,
+  editMoneyReceiptListFailure,
+  getMoneyReceiptListRequest,
+  resetEditMoneyReceiptRequest,
   resetCreateMoneyReceiptRequest,
 } from '../../../../../redux/slices/OrderSlice';
 import Spinner from '../../../../../common/Spinner';
@@ -37,8 +41,9 @@ import useInitialValueHook from '../../../../../hooks/useInitialValueHook';
 import { DOCUMENT_TYPE, IGetSerialNoRequest } from '../../../../../interface/setting/serialNo/serialNo';
 import { getSerialNoRequest, resetGetSerialNoRequest } from '../../../../../redux/slices/SerialNoSettingSlice';
 import useSerialNoHook from '../../../../../hooks/useSerialNo';
-import DropdownWithTextInput from '../../../../../common/DropdownWithTextInput';
+import DropdownWithTextInput, { DropdownMethods } from '../../../../../common/DropdownWithTextInput';
 import { IQuotation } from '../../../../../interface/quotation/quotation';
+import { formatDate4 } from '../../../../../utils/formatter';
 
 interface IMoneyReceiptFormViewProps {
   orderId: string | undefined;
@@ -64,6 +69,8 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
     createMoneyReceiptFailure,
     editMoneyReceiptListRequesting,
     editMoneyReceiptListSuccess,
+    editMoneyReceiptListFailure
+    
   } = useAppSelector(state => state.Order);
   
   const authId = useAuthId();
@@ -71,6 +78,19 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
   const dispatch2 = useAppDispatch();
   const {initialValue, prefix} = useInitialValueHook('658d3c9c585e3dde644da970');
   const serialNo:number = useSerialNoHook();
+
+  const paymentTypeDropCompRef = useRef<IDropdownHandler>(null);
+  const receiptAgainstDropCompRef = useRef<IDropdownHandler>(null);
+  const quotationNoDropCompRef = useRef<DropdownMethods>(null);
+  const modeOfPaymentDropCompRef = useRef<IDropdownHandler>(null);
+  const referenceNumberRef = useRef<InputMethods>(null);
+  const paymentAmountRef = useRef<InputMethods>(null);
+  const CnLrBiltyNoRef = useRef<InputMethods>(null);
+  const noOfArticlesRef = useRef<InputMethods>(null);
+  const dateOfArrivalRef  = useRef<IDateMethods>(null);
+
+
+
 
   const _getSerialNoRequest = () => {
     getCurrentCompanyId().then(id => {
@@ -247,17 +267,28 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
   }, [serialNo]);
 
   useEffect(() => {
-    if (
-      (!createMoneyReceiptRequesting && createMoneyReceiptSuccess) ||
-      (!editMoneyReceiptListRequesting && editMoneyReceiptListSuccess)
-    ) {
+    if(!editMoneyReceiptListRequesting && editMoneyReceiptListSuccess) {
+      showToast('Money Receipt Updated', ToastType.SUCCESS);
+      dispatch2(resetEditMoneyReceiptRequest());
+      dispatch2(getMoneyReceiptListRequest(orderId as string));
+      onSuccess && onSuccess();
+    } else if(!editMoneyReceiptListRequesting && editMoneyReceiptListFailure) {
+      showToast('Money Receipt Not Updated. Try again!', ToastType.ERROR);
+      dispatch2(resetEditMoneyReceiptRequest());
+    }
+  }, [editMoneyReceiptListRequesting, editMoneyReceiptListSuccess, editMoneyReceiptListFailure]);
+
+  useEffect(() => {
+    if 
+      (!createMoneyReceiptRequesting && createMoneyReceiptSuccess) 
+      
+     {
       showToast('Money Receipt Created.', ToastType.SUCCESS);
       dispatch2(resetCreateMoneyReceiptRequest());
       dispatch2(resetGetSerialNoRequest());
       onSuccess && onSuccess();
     } else if (
-      (!createMoneyReceiptRequesting && createMoneyReceiptError) ||
-      (!editMoneyReceiptListRequesting && editMoneyReceiptListSuccess)
+      (!createMoneyReceiptRequesting && createMoneyReceiptError)
     ) {
       showToast('Money Receipt Not Created. Try again!', ToastType.ERROR);
       dispatch2(resetCreateMoneyReceiptRequest());
@@ -268,11 +299,54 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
     createMoneyReceiptFailure,
   ]);
 
+  console.log(editData,"editData");
+
+  useEffect(()=>{
+    if(isEdit && editData){
+      const paymentTypeOption:TDropdownItem = paymentTypeOptions.find((d:TDropdownItem) => d.label === editData.paymentType) as TDropdownItem;
+      if (paymentTypeOption) {
+        paymentTypeDropCompRef.current?.setDefaultValue(paymentTypeOption);
+        handlePaymentType(paymentTypeOption)
+      }
+      const receiptAgainstOption:TDropdownItem = receiptAgainstOptions.find((d:TDropdownItem) => d.label === editData.receiptAgainst) as TDropdownItem;
+      if (receiptAgainstOption) {
+        receiptAgainstDropCompRef.current?.setDefaultValue(receiptAgainstOption);
+      }
+      const billNoOption:string = transformQuotationData().find((d:string) => d === editData.quotationNumber) as string;
+      console.log('billNoOption----', JSON.stringify(transformQuotationData()));
+      
+      if (billNoOption) {
+        quotationNoDropCompRef.current?.setValue(billNoOption);
+      }
+      const modeOfPayment:TDropdownItem = modeOfPaymentOptions.find((d:TDropdownItem) => d.label === editData.paymentMode) as TDropdownItem;
+      if (modeOfPayment) {
+        modeOfPaymentDropCompRef.current?.setDefaultValue(modeOfPayment);
+        handlePaymentMode(modeOfPayment)
+      }
+      referenceNumberRef.current?.setValue(editData.referenceNumber)
+      handleRefNo(editData.referenceNumber)
+
+      paymentAmountRef.current?.setValue(editData.paymentAmount)
+      handleEnterAmount(editData.paymentAmount)
+
+      CnLrBiltyNoRef.current?.setValue(editData.consignmentNumber)
+      handleBiltyLrNo(editData.consignmentNumber)
+
+      noOfArticlesRef.current?.setValue(editData.numbersOfArticles)
+      handleNoOfArticles(editData.numbersOfArticles)
+
+      dateOfArrivalRef && dateOfArrivalRef?.current?.setDefaultValue(new Date(editData?.arivalDate));
+      handleArivalDate(new Date(editData?.arivalDate));
+    }
+  },[isEdit,editData])
+  
+  
+
   return (
     <AvoidSoftInputViewHOC>
       <View style={styles.container}>
         <Spacer height={4} />
-        <CollapsibleView title="MONEY RECEIPT DETAILS" collapsed={false}>
+        <CollapsibleView title={isEdit ? "EDIT MONEY RECEIPT DETAILS": "MONEY RECEIPT DETAILS"} collapsed={false}>
           <View>
             <View style={styles.elementContainer}>
               <View style={styles.itemContainer}>
@@ -283,13 +357,17 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
                   value={reducerState.receiptNumber}
+                  // value={isEdit ? editData.receiptNumber : ''}
+
                   placeholder="Receipt#"
                   editable={false}
                 />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Receipt Date" style={styles.label} />
-                <DatePickerComponent onDateSelect={handleReceiptDate} />
+                <DatePickerComponent onDateSelect={(date: Date)=>{
+                  handleReceiptDate(new Date(formatDate4(date)))
+                }} />
               </View>
             </View>
             <Spacer height={4} />
@@ -299,6 +377,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
                 data={paymentTypeOptions}
                 onSelect={handlePaymentType}
                 defaultValue={isEdit ? editData.paymentType : ''}
+                ref={paymentTypeDropCompRef}
               />
             </View>
             <Spacer height={4} />
@@ -308,6 +387,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
                 <DropdownComponent
                   data={receiptAgainstOptions}
                   onSelect={handleReceiptAgainst}
+                  ref={receiptAgainstDropCompRef}
                 />
               </View>
               <View style={styles.itemContainer}>
@@ -316,6 +396,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
                   options={transformQuotationData()}
                   onSelect={handleBillQuotation}
                   containerStyle={styles.itemContainer}
+                  ref={quotationNoDropCompRef}
                 />
               </View>
             </View>
@@ -325,6 +406,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
               <DropdownComponent
                 data={modeOfPaymentOptions}
                 onSelect={handlePaymentMode}
+                ref={modeOfPaymentDropCompRef}
               />
             </View>
             {reducerState.paymentMode !== modeOfPaymentOptions[0].label ? (
@@ -338,8 +420,9 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
                     inputStyle={styles.input}
                     placeholder='Enter reference #'
                     selectionColor={COLOR_BLACK}
-                    value={isEdit ? editData.referenceNumber : ''}
+                    value={reducerState.referenceNumber}
                     autoCapitalize="characters"
+                    ref={referenceNumberRef}
                   />
                 </View>
               </>
@@ -353,10 +436,11 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
-                value={isEdit ? editData.paymentAmount : ''}
+                value={reducerState.paymentAmount}
                 inputType="numeric"
                 placeholder="Enter amount"
                 placeholderTextColor={COLOR_GRAY4}
+                ref={paymentAmountRef}
               />
             </View>
           </View>
@@ -372,8 +456,10 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 placeholder="Enter CN / Bilty / LR No."
+                value={reducerState.cnBiltyLrNo}
                 placeholderTextColor={COLOR_GRAY4}
                 autoCapitalize="characters"
+                ref={CnLrBiltyNoRef}
               />
             </View>
             <Spacer height={4} />
@@ -385,15 +471,18 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
-                  value={isEdit ? editData.numbersOfArticles : ''}
+                  value={reducerState.numbersOfArticles}
                   inputType="numeric"
                   placeholder="No. of Articles"
                   placeholderTextColor={COLOR_GRAY4}
+                  ref={noOfArticlesRef}
                 />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Date of Arrival" style={styles.label} />
-                <DatePickerComponent onDateSelect={handleArivalDate} />
+                <DatePickerComponent onDateSelect={(date: Date) =>{
+                  handleArivalDate(new Date(formatDate4((date))))
+                }} />
               </View>
             </View>
           </View>

@@ -519,6 +519,14 @@ export const OrderSlice = createSlice({
       state.editMoneyReceiptListFailure = true;
       state.editMoneyReceiptListError = action.payload;
     },
+
+    resetEditMoneyReceiptRequest: (state) => {
+      state.editMoneyReceiptListRequesting = false;
+      state.editMoneyReceiptListSuccess = false;
+      state.editMoneyReceiptListFailure = false;
+      state.editMoneyReceiptListError = null;
+      state.moneyReceiptData = null;
+    },
     // Money Receipt Template Html
     getMoneyReceiptHtmlRequest: (
       state,
@@ -1013,6 +1021,7 @@ export const {
   editMoneyReceiptListRequest,
   editMoneyReceiptListSuccess,
   editMoneyReceiptListFailure,
+  resetEditMoneyReceiptRequest,
   // Money Receipt Template Html
   getMoneyReceiptHtmlRequest,
   getMoneyReceiptHtmlSuccess,
