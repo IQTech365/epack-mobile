@@ -41,7 +41,11 @@ import {getBranchList, getFirstVehicleType, getFranchiseList} from '../../utils'
 import { ToastType, showToast } from '../../../../../utils/utility';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
 
-const AddLorryView: React.FC<{}> = ({}) => {
+interface IProps {
+  onSuccess: () => void;
+}
+
+const AddLorryView: React.FC<IProps> = ({onSuccess}) => {
   const {
     state,
     setEntity,
@@ -175,6 +179,7 @@ const AddLorryView: React.FC<{}> = ({}) => {
     if (!addLorryRequesting && addLorrySuccess) {
       showToast('Vehicle added successfully.', ToastType.SUCCESS);
       dispatch(restAddLorryRequest());
+      onSuccess && onSuccess();
     } else if (!addLorryRequesting && addLorryFailure) {
       showToast('Error added new Vehicle. Try again!', ToastType.ERROR);
       dispatch(restAddLorryRequest());
@@ -239,6 +244,7 @@ const AddLorryView: React.FC<{}> = ({}) => {
               data={getVehicleModelList(vehicleCompanyId, vehicleModels)}
               onSelect={(item: TDropdownItem) => {
                 setVehicleModel(item.value);
+
               }}
             />
           </View>

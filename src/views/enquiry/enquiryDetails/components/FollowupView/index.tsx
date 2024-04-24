@@ -199,6 +199,7 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
                   enquiryId={enquiryId}
                   onShowPreview={_showSurveyListItemTemplate}
                   onShare={_shareSurveyList}
+                  isOrder={isOrder}
                 />
               ) : (
                 <FollowupListItem

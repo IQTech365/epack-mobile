@@ -104,6 +104,7 @@ const AddDriverView: React.FC<{}> = ({}) => {
     if (!addDriverRequesting && addDriveruccess) {
       showToast('Driver added successfully.', ToastType.SUCCESS)
       dispatch(restaddDriverRequest());
+      onSucess && onSuccess();
     } else if (!addDriverRequesting && addDriverFailure) {
       showToast('Adding new Driver failed. Try again!', ToastType.ERROR)
       dispatch(restaddDriverRequest());
@@ -133,6 +134,7 @@ const AddDriverView: React.FC<{}> = ({}) => {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
+              inputType="numeric"
             />
           </View>
           <Spacer height={4} />

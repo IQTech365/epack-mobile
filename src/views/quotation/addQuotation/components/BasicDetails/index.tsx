@@ -14,7 +14,7 @@ import DatePickerComponent from '../../../../../common/DatePickerComponent';
 import {useQuotationFormContextHook} from '../../../../../provider/QuotationFormContextProvider';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import billingByOptions from '../../../../../data/billingByOptions.json';
-import {formatDate4} from '../../../../../utils/formatter';
+import {formatDate3, formatDate4} from '../../../../../utils/formatter';
 import BillingIndividualView from '../BillingIndividualView';
 import BillingCompanyView from '../BillingCompanyView';
 import VehicleInfoView from '../VehicleInfoView';
@@ -158,6 +158,7 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item}) => {
         }
     }
   }, [isEdit]);
+  
 
   return (
     <CollapsibleView title="BASIC DETAILS" collapsed={false}>

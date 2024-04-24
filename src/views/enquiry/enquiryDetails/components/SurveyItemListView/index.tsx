@@ -9,13 +9,15 @@ import ShareIcon from '../../../../../images/icons/share_icon.svg';
 import EditIcon from '../../../../../images/icons/edit2.svg';
 import PreviewIcon from '../../../../../images/icons/preview_icon.svg';
 import {useNavigation} from '@react-navigation/native';
+import EditDisabledIcon from '../../../../../../src/images/icons/edit_disabled.svg'
 
 interface ISurveyItemListViewProps {
   item: IGetSurveyItemListData;
   index: number;
-  enquiryId:string;
-  onShowPreview: (id:string) => void;
-  onShare: (id:string) => void;
+  enquiryId: string;
+  onShowPreview: (id: string) => void;
+  onShare: (id: string) => void;
+  isOrder?: boolean;
 }
 
 const SurveyItemListView: React.FC<ISurveyItemListViewProps> = ({
@@ -24,6 +26,7 @@ const SurveyItemListView: React.FC<ISurveyItemListViewProps> = ({
   enquiryId,
   onShowPreview,
   onShare,
+  isOrder,
 }) => {
   const navigation = useNavigation();
 
@@ -67,13 +70,18 @@ const SurveyItemListView: React.FC<ISurveyItemListViewProps> = ({
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.action}
+          disabled={isOrder}
           onPress={() => {
             //@ts-ignore
-            navigation.navigate('EditSurveyItems', {item: item, enquiryId: enquiryId});
+            navigation.navigate('EditSurveyItems', {
+              item: item,
+              enquiryId: enquiryId,
+            });
           }}
           activeOpacity={0.6}>
-          <EditIcon width={24} height={24} />
-          <Text style={styles.actionText}>Edit</Text>
+          {isOrder ?<EditDisabledIcon width={24} height={24} />:
+              <EditIcon width={24} height={24} />}
+          <Text style={isOrder ? styles.actionTextDisabled :styles.actionText}>Edit</Text>
         </TouchableOpacity>
       </View>
     </View>

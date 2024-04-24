@@ -110,6 +110,7 @@ const DriverCurrentAddressView: React.FC<Props> = ({}) => {
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 placeholder="Enter Pincode"
+                inputType="numeric"
               />
             </View>
             <View style={styles.textContainer}>
@@ -132,6 +133,7 @@ const DriverCurrentAddressView: React.FC<Props> = ({}) => {
                 onSelect={setCurrentAddCity}
                 //@ts-ignore
                 ref={cityDropdownCompRef}
+                containerStyle={styles.textContainer}
               />
             </View>
             <View style={styles.textContainer}>
@@ -141,6 +143,7 @@ const DriverCurrentAddressView: React.FC<Props> = ({}) => {
                 onSelect={setCurrentAddLocality}
                 //@ts-ignore
                 ref={localityDropdownCompRef}
+                containerStyle={styles.textContainer}
               />
             </View>
           </View>

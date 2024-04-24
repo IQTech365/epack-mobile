@@ -74,7 +74,7 @@ const ManageDriverView: React.FC<IAddDriverDetailViewProps> = ({}) => {
     if (createNewAddDriverDetail) {
       return (
         <AddDriverFormContextProvider>
-          <AddDriverView />
+          <AddDriverView  />
         </AddDriverFormContextProvider>
       );
     }

@@ -22,7 +22,9 @@ const DriverContactInfoView: React.FC<Props> = ({}) => {
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
-          />
+            inputType="numeric"
+
+            />
         </View>
         <View style={styles.textContainer}>
           <Label text="Driver License No" style={styles.label} />
@@ -31,6 +33,7 @@ const DriverContactInfoView: React.FC<Props> = ({}) => {
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
+            autoCapitalize="characters"
           />
         </View>
       </View>

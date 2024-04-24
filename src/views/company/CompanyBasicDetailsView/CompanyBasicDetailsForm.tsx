@@ -8,7 +8,10 @@ import Input from '../../../common/Input';
 import {formatDate4, getCities2, getStates2} from '../../../utils/formatter';
 import {ICompanyInfoData} from '../../../interface/companyRegistration/IGetCompaniesResponse';
 import {setCurrentCompanyId} from '../../../utils/storage';
-import {addCompanyRequest, resetAddCompanyRequest} from '../../../redux/slices/CompanySlice';
+import {
+  addCompanyRequest,
+  resetAddCompanyRequest,
+} from '../../../redux/slices/CompanySlice';
 import {ICompanyRegistrationRequest} from '../../../interface/companyRegistration/ICompanyRegistrationRequest';
 import {IError, getError, ibaApprovalOptions, validate} from '../utils';
 import companyTypeOptions from '../../../data/companyType.json';
@@ -25,11 +28,17 @@ import {TDropdownItem} from '../../../type/TDropdownItem';
 import Spinner from '../../../common/Spinner';
 import Button from '../../../common/Button';
 import Header from '../../../common/Header';
-import { resetUpdateSubscriptionRequest, updateSubscriptionRequest } from '../../../redux/slices/SubscriptionSlice';
-import { IPurchase, IUpdateSubscriptionRequest } from '../../../interface/subscription/subscription';
-import { ToastType, showToast } from '../../../utils/utility';
-import { IPendingRegistration } from '../../../interface/common/common';
-import { resetPendingRegistrationInfoPayload } from '../../../redux/slices/CommonSlice';
+import {
+  resetUpdateSubscriptionRequest,
+  updateSubscriptionRequest,
+} from '../../../redux/slices/SubscriptionSlice';
+import {
+  IPurchase,
+  IUpdateSubscriptionRequest,
+} from '../../../interface/subscription/subscription';
+import {ToastType, showToast} from '../../../utils/utility';
+import {IPendingRegistration} from '../../../interface/common/common';
+import {resetPendingRegistrationInfoPayload} from '../../../redux/slices/CommonSlice';
 import DropdownWithTextInput from '../../../common/DropdownWithTextInput';
 import AlertModal from '../../../common/AlertModal';
 import ErrorIcon from '../../../images/icons/error_icon.svg';
@@ -95,6 +104,16 @@ const CompanyBasicDetailsForm: FC<IProps> = ({navigation}) => {
     return text;
   };
 
+  const getGovtDocErrorMessage = () => {
+    let error: string = '';
+    if (_getCompanyTypeLabelText() === 'PAN') {
+      error = getError('GOVT_DOCUMENT', state, shouldValidate, 'PAN');
+    } else if (_getCompanyTypeLabelText() === 'CIN/Incorporation No.') {
+      error = getError('GOVT_DOCUMENT', state, shouldValidate);
+    }
+    return error;
+  };
+
   // const _getCompanyPAN = () => {
   //   let pan: string = '';
   //   if (
@@ -108,20 +127,19 @@ const CompanyBasicDetailsForm: FC<IProps> = ({navigation}) => {
 
   const _getCompanyPAN = () => {
     let pan = '';
-    const panRegex = /^([A-Za-z]{5})(\d{4})([A-Za-z])$/;
-    
+    const panRegex = /[A-Z]{5}[0-9]{4}[A-Z]{1}/;
+
     if (
       (state.company_type === companyTypeOptions[0].label ||
         state.company_type === companyTypeOptions[1].label) &&
-        panRegex.test(state.govt_document)
+      panRegex.test(state.govt_document)
     ) {
       pan = state.govt_document;
     } else {
     }
-  
+
     return pan;
   };
-  
 
   const _getCompanyCinOrIncorporationNo = () => {
     let cinNo: string = '';
@@ -180,8 +198,6 @@ const CompanyBasicDetailsForm: FC<IProps> = ({navigation}) => {
     setPincode(text); // README: This `setPincode` is from usePincodeHook();
   };
 
-  
-
   const _setCompanyIdAndMoveToNextStep = async (companyId: string) => {
     await setCurrentCompanyId(companyId);
     //@ts-ignore
@@ -190,7 +206,7 @@ const CompanyBasicDetailsForm: FC<IProps> = ({navigation}) => {
 
   const hanldeAlertModalClose = () => {
     setShowAlertModal(false);
-  }
+  };
 
   useEffect(() => {
     if (otpData?.data?.mobile) {
@@ -201,8 +217,8 @@ const CompanyBasicDetailsForm: FC<IProps> = ({navigation}) => {
   useEffect(() => {
     if (!requesting && success && !error) {
       const {data} = addCompanyInfo || {};
-      const {data:purchaseData} = addPurchaseInfo || {};
-      const {data:pendingPurchaseData} =  pendingRegistrationInfo || {};
+      const {data: purchaseData} = addPurchaseInfo || {};
+      const {data: pendingPurchaseData} = pendingRegistrationInfo || {};
       if (data) {
         const company: ICompanyInfoData = data as ICompanyInfoData;
         // const purchase: IPurchase = purchaseData as IPurchase;
@@ -480,7 +496,7 @@ const CompanyBasicDetailsForm: FC<IProps> = ({navigation}) => {
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 value={state.govt_document}
-                error={getError('GOVT_DOCUMENT', state, shouldValidate)}
+                error={getGovtDocErrorMessage()}
                 placeholder="Enter document number"
                 type="text"
                 required={true}
@@ -494,7 +510,7 @@ const CompanyBasicDetailsForm: FC<IProps> = ({navigation}) => {
           />
           <AlertModal
             visible={showAlertModal}
-            title='Error in Registration. Try again!'
+            title="Error in Registration. Try again!"
             icon={<ErrorIcon width={200} height={200} />}
             onClose={hanldeAlertModalClose}
             showButton={false}
@@ -511,7 +527,6 @@ const CompanyBasicDetailsForm: FC<IProps> = ({navigation}) => {
           />
         </View>
       </View>
-      
     </View>
   );
 };

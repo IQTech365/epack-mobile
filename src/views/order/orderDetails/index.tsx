@@ -78,6 +78,7 @@ const OrderDetailsView: React.FC<Props> = ({route, navigation}) => {
             route={route}
           />
         );
+        
       case 8:
           return <PackingMaterialsView enquiryId={orderId as string} />;
       default:

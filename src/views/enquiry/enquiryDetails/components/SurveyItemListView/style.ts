@@ -77,6 +77,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'WorkSans-Medium',
   },
+  actionTextDisabled: {
+    color: COLOR_GRAY4,
+    fontSize: 12,
+    fontFamily: 'WorkSans-Medium',
+  },
   nameText: {
     color: COLOR_BLUE,
     fontSize: 14,

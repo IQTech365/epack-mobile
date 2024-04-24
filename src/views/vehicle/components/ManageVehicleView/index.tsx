@@ -78,11 +78,15 @@ const ManageVehicleView: React.FC<IAddLorryDetailViewProps> = ({navigation}) => 
     navigation.navigate("VehicleDetails", {item: vehicle});
   }
 
+  const handleSuccess = () => {
+    setShowAddLorryDetailList(true);
+  }
+
   const showForm = () => {
     if (createNewAddLorryDetail) {
       return (
         <AddLorryFormContextProvider>
-          <AddLorryView />
+          <AddLorryView onSuccess={handleSuccess} />
         </AddLorryFormContextProvider>
       );
     }

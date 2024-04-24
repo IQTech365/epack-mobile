@@ -62,6 +62,10 @@ export const surchargePercentOptions = [
     value: '0',
   },
   {
+    label: '5%',
+    value: '5',
+  },
+  {
     label: '10%',
     value: '10',
   },
@@ -69,6 +73,30 @@ export const surchargePercentOptions = [
     label: '12%',
     value: '12',
   },
+  {
+    label: '13%',
+    value: '13',
+  },
+  {
+    label: '15%',
+    value: '15',
+  },
+  {
+    label: '18%',
+    value: '18',
+  },
+  {
+    label: '20%',
+    value: '20',
+  },
+  {
+    label: '25%',
+    value: '25',
+  },
+  {
+    label: '28%',
+    value: '28',
+  }
 ];
 
 export const discountOptions:string[] = ['Discount @%', 'Flat Discount', 'Not Required'];

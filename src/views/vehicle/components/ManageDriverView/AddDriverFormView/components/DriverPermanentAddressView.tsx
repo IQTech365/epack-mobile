@@ -82,6 +82,7 @@ const DriverPermanentAddressView: React.FC<Props> = ({}) => {
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
             placeholder="Enter Pincode"
+            inputType="numeric"
           />
         </View>
         <View style={styles.textContainer}>

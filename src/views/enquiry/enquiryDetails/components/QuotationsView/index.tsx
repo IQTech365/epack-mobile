@@ -314,7 +314,11 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
   };
 
   const showList = () => {
+    console.log("444");
+    
     if (showQuotationList) {
+      console.log("33333");
+      
       return (
         <FlatList
           // contentContainerStyle={{alignItems: 'center', paddingVertical: 10, justifyContent: 'center'}}
