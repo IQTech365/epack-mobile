@@ -82,9 +82,9 @@ const AddDriverListItem: React.FC<IAddDriverListItemProps> = ({
             </View>
             <View style={styles.rowItemContainer2}>
               <Text style={styles.valueText}>
-                {item.permanentAddress.address}
+                {item.permanentAddress.address},{item.permanentAddress.city},{item.permanentAddress.state}, {item.permanentAddress.pincode}
               </Text>
-              <Text style={styles.valueText}>{item.permanentAddress.city}</Text>
+              {/* <Text style={styles.valueText}>{item.permanentAddress.city}</Text> */}
             </View>
           </View>
           <View style={styles.rowContainer}>
@@ -93,9 +93,9 @@ const AddDriverListItem: React.FC<IAddDriverListItemProps> = ({
             </View>
             <View style={[styles.rowItemContainer2, {borderBottomWidth: 0}]}>
               <Text style={styles.valueText}>
-                {item.currentAddress.address}
+                {item.currentAddress.address},{item.currentAddress.city},{item.currentAddress.state}, {item.currentAddress.pincode}
               </Text>
-              <Text style={styles.valueText}>{item.currentAddress.city}</Text>
+              {/* <Text style={styles.valueText}>{item.currentAddress.city}</Text> */}
             </View>
           </View>
         </TouchableOpacity>

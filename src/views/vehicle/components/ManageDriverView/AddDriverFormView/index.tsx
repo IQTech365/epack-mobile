@@ -30,7 +30,11 @@ import entityOptions from '../../../../../data/entityOptions.json';
 import { ToastType, showToast } from '../../../../../utils/utility';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
 
-const AddDriverView: React.FC<{}> = ({}) => {
+interface IProps {
+  onSuccess: () => void;
+}
+
+const AddDriverView: React.FC<IProps> = ({onSuccess}) => {
   const {state, setAadharCardNo} = useAddDriverFormContextHook();
   const {addDriverRequesting, addDriveruccess, addDriverFailure} = useAppSelector(state => state.Vehicle);
   const {getBranchsRequesting, getFranchiseRequesting} = useAppSelector(
@@ -104,7 +108,7 @@ const AddDriverView: React.FC<{}> = ({}) => {
     if (!addDriverRequesting && addDriveruccess) {
       showToast('Driver added successfully.', ToastType.SUCCESS)
       dispatch(restaddDriverRequest());
-      onSucess && onSuccess();
+      onSuccess && onSuccess();
     } else if (!addDriverRequesting && addDriverFailure) {
       showToast('Adding new Driver failed. Try again!', ToastType.ERROR)
       dispatch(restaddDriverRequest());

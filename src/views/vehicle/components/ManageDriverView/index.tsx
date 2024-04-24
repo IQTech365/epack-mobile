@@ -70,11 +70,16 @@ const ManageDriverView: React.FC<IAddDriverDetailViewProps> = ({}) => {
     _getDriverRequest();
   }, []);
 
+  const handleSuccess = () =>{
+    setCreateNewAddDriverDetail(false);
+    setShowAddDriverDetailList(true);
+  }
+
   const showForm = () => {
     if (createNewAddDriverDetail) {
       return (
         <AddDriverFormContextProvider>
-          <AddDriverView  />
+          <AddDriverView onSuccess={handleSuccess}  />
         </AddDriverFormContextProvider>
       );
     }
