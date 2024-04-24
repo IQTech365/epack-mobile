@@ -4,13 +4,13 @@ import styles from './style';
 import CollapsibleView from '../../../../../common/CollapsibleView';
 import Spacer from '../../../../../common/Spacer';
 import Label from '../../../../../common/Label';
-import DropdownComponent from '../../../../../common/DropdownComponent';
+import DropdownComponent, { IDropdownHandler } from '../../../../../common/DropdownComponent';
 import shiftingTypes from '../../../../../data/shiftingType.json';
 import shiftingLuggages from '../../../../../data/shiftingLuggage.json';
 import {Switch} from 'react-native-switch';
-import Input from '../../../../../common/Input';
+import Input, { InputMethods } from '../../../../../common/Input';
 import {COLOR_BLACK} from '../../../../../utils/colors';
-import DatePickerComponent from '../../../../../common/DatePickerComponent';
+import DatePickerComponent, { IDateMethods } from '../../../../../common/DatePickerComponent';
 import {useQuotationFormContextHook} from '../../../../../provider/QuotationFormContextProvider';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import billingByOptions from '../../../../../data/billingByOptions.json';
@@ -27,6 +27,7 @@ interface Props {
 }
 
 const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item}) => {
+  console.log('BasicDetails-item-', JSON.stringify(item));
   const [switchState, setSwitchState] = useState<boolean>(true);
   const serialNo:number = useSerialNoHook();
   
@@ -52,12 +53,12 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item}) => {
     setIsSerialNoAutomatic,
   } = useQuotationFormContextHook();
 
-  const shiftingTypeDropdownCompRef = useRef(null);
-  const shiftingLuggageDropdownCompRef = useRef(null);
-  const quotationNoInputCompRef = useRef(null);
-  const dateOfQuotationCompRef = useRef(null);
-  const dateOfMovingCompRef = useRef(null);
-  const billingByDropdownCompRef = useRef(null);
+  const shiftingTypeDropdownCompRef = useRef<IDropdownHandler>(null);
+  const shiftingLuggageDropdownCompRef = useRef<IDropdownHandler>(null);
+  const quotationNoInputCompRef = useRef<InputMethods>(null);
+  const dateOfQuotationCompRef = useRef<IDateMethods>(null);
+  const dateOfMovingCompRef = useRef<IDateMethods>(null);
+  const billingByDropdownCompRef = useRef<IDropdownHandler>(null);
 
   useEffect(() => {
     setIsSerialNoAutomatic(switchState);
@@ -103,38 +104,15 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item}) => {
     }
   }, [state.billing_by]);
 
-  // useEffect(() => {
-  //   if (fromEnquiry && state.enquiryItem) {
-  //     const {enquiryItem} = state;
-  //     setShiftingType(enquiryItem.shiftingType);
-  //     const shiftingTypeItem:TDropdownItem = shiftingTypes.find((d:TDropdownItem) => d.label.toLowerCase() == enquiryItem.shiftingType.toLowerCase()) as TDropdownItem;
-  //     if(shiftingTypeItem) {
-  //       //@ts-ignore
-  //       shiftingTypeDropdownCompRef && shiftingTypeDropdownCompRef?.current?.setDefaultValue(shiftingTypeItem);
-  //     }
-  //     setBillingBy(enquiryItem.billingBy);
-  //     const billingByItem:TDropdownItem = billingByOptions.find((d:TDropdownItem) => d.label == enquiryItem.billingBy) as TDropdownItem;
-  //     if(billingByItem) {
-  //      //@ts-ignore
-  //      billingByDropdownCompRef && billingByDropdownCompRef?.current?.setDefaultValue(billingByItem);
-  //     }
-  //     //@ts-ignore
-  //     dateOfMovingCompRef && dateOfMovingCompRef?.current?.setDefaultValue(new Date(enquiryItem.shiftingDate));
-      
-  //   }
-  // }, [state.enquiryItem]);
-
   useEffect(() => {
     if(isEdit && item) {
         const shiftingLuggageItem:TDropdownItem = shiftingLuggages.find((d:TDropdownItem) => d.label == item.shiftingLuggage) as TDropdownItem;
         if(shiftingLuggageItem) {
-          //@ts-ignore
           shiftingLuggageDropdownCompRef && shiftingLuggageDropdownCompRef?.current?.setDefaultValue(shiftingLuggageItem);
+          setShiftingLuggage(item.shiftingLuggage);
         }
         setQuotationNo(item.quotationNumber);
-        //@ts-ignore
         quotationNoInputCompRef && quotationNoInputCompRef?.current?.setValue(item.quotationNumber);
-        //@ts-ignore
         dateOfQuotationCompRef && dateOfQuotationCompRef?.current?.setDefaultValue(new Date(item.quotationDate));
         const _enquires:IEnquiry[] = item.enquiries;
         if(_enquires && _enquires.length > 0) {
@@ -143,21 +121,18 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item}) => {
             setShiftingType(singleEnquiry.shiftingType);
             const shiftingTypeItem:TDropdownItem = shiftingTypes.find((d:TDropdownItem) => d.label.toLowerCase() == singleEnquiry.shiftingType.toLowerCase()) as TDropdownItem;
             if(shiftingTypeItem) {
-              //@ts-ignore
               shiftingTypeDropdownCompRef && shiftingTypeDropdownCompRef?.current?.setDefaultValue(shiftingTypeItem);
             }
-            //@ts-ignore
             dateOfMovingCompRef && dateOfMovingCompRef?.current?.setDefaultValue(new Date(singleEnquiry.shiftingDate));
             setBillingBy(singleEnquiry.billingBy);
             const billingByItem:TDropdownItem = billingByOptions.find((d:TDropdownItem) => d.label == singleEnquiry.billingBy) as TDropdownItem;
             if(billingByItem) {
-              //@ts-ignore
               billingByDropdownCompRef && billingByDropdownCompRef?.current?.setDefaultValue(billingByItem);
             }
           }
         }
     }
-  }, [isEdit]);
+  }, [isEdit, item]);
 
   return (
     <CollapsibleView title="BASIC DETAILS" collapsed={false}>
@@ -188,7 +163,7 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item}) => {
             />
           </View>
         </View>
-        <VehicleInfoView />
+        <VehicleInfoView isEdit={isEdit} item={item} fromEnquiry={fromEnquiry} />
         <Spacer height={4} />
         <View style={styles.labelContainer}>
           <Label text="Quotation No." style={styles.label} />

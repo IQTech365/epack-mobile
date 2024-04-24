@@ -106,6 +106,7 @@ const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
       }
     }
   }, [isEdit, item]);
+  
 
   useEffect(() => {
     // get pickupaddress and dropaddress from order
