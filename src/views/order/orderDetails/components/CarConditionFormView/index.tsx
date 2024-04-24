@@ -731,7 +731,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
                   inputStyle={styles.input}
                   value={reducerState.tyreNumber}
                   placeholder="Tyre No."
-                  inputType="numeric"
+                  autoCapitalize="characters"
                   selectionColor={COLOR_BLACK}
                   ref={tyreNoRef}
                 />

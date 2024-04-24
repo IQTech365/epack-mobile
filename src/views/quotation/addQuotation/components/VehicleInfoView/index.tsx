@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {View} from 'react-native';
 import styles from './style';
 import Label from '../../../../../common/Label';
-import DropdownComponent from '../../../../../common/DropdownComponent';
+import DropdownComponent, { IDropdownHandler } from '../../../../../common/DropdownComponent';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import {useQuotationFormContextHook} from '../../../../../provider/QuotationFormContextProvider';
 import shiftingLuggages from '../../../../../data/shiftingLuggage.json';
@@ -12,17 +12,22 @@ import {
   getVehicleModelList,
   getVehicleTypeList,
 } from '../../../../order/orderDetails/components/CarConditionFormView/utils';
+import { IGetQuotationData } from '../../../../../interface/quotation/IGetQuotationsResponse';
 
-interface IProps {}
+interface IProps {
+  fromEnquiry?:boolean;
+  isEdit?:boolean;
+  item?:IGetQuotationData;
+}
 
-const VehicleInfoView: React.FC<IProps> = ({}) => {
+const VehicleInfoView: React.FC<IProps> = ({fromEnquiry, isEdit, item}) => {
   const {state, setVehicleType, setVehicleManufacturer, setVehicleModel} =
     useQuotationFormContextHook();
   const [vehicleTypeId, setVehicleTypeId] = useState<string>('');
   const [vehicleCompanyId, setVehicleCompanyId] = useState<string>('');
-  const vehicleTypeCompRef = useRef(null);
-  const vehicleManufaturerCompRef = useRef(null);
-  const vehicleModelCompRef = useRef(null);
+  const vehicleTypeCompRef = useRef<IDropdownHandler>(null);
+  const vehicleManufaturerCompRef = useRef<IDropdownHandler>(null);
+  const vehicleModelCompRef = useRef<IDropdownHandler>(null);
 
   const {vehicleTypes, vehicleCompanies, vehicleModels} = useAppSelector(
     state => state.Common,
@@ -38,6 +43,38 @@ const VehicleInfoView: React.FC<IProps> = ({}) => {
       }
     }
   }, [vehicleTypes]);
+
+  useEffect(() => {
+    if(isEdit && item && state.shifting_luggage == shiftingLuggages[3].label) {
+      const vehicleTypeItem:TDropdownItem = getVehicleTypeList(vehicleTypes).find((d:TDropdownItem) => d.label === item.vehicleType) as TDropdownItem;
+      if(vehicleTypeItem) {
+        vehicleTypeCompRef.current?.setDefaultValue(vehicleTypeItem);
+        setVehicleTypeId(vehicleTypeItem.value);
+        setVehicleType(vehicleTypeItem.label);
+      }
+    }
+  }, [isEdit, item, state.shifting_luggage, vehicleTypes]);
+
+  useEffect(() => {
+    if(isEdit && item && vehicleTypeId) {
+      const vehicleCompanyItem:TDropdownItem = getVehicleCompanyList(vehicleTypeId, vehicleCompanies).find((d:TDropdownItem) => d.label === item.manufacture) as TDropdownItem;
+      if(vehicleCompanyItem) {
+        vehicleManufaturerCompRef.current?.setDefaultValue(vehicleCompanyItem);
+        setVehicleCompanyId(vehicleCompanyItem.value);
+        setVehicleManufacturer(vehicleCompanyItem.label);
+      }
+    }
+  }, [isEdit, item, vehicleTypeId]);
+
+  useEffect(() => {
+    if(isEdit && item && vehicleCompanyId) {
+      const vehicleModelItem:TDropdownItem = getVehicleModelList(vehicleCompanyId, vehicleModels).find((d:TDropdownItem) => d.label === item.model) as TDropdownItem;
+      if(vehicleModelItem) {
+        vehicleModelCompRef.current?.setDefaultValue(vehicleModelItem);
+        setVehicleModel(vehicleModelItem.label);
+      }
+    }
+  }, [isEdit, item, vehicleCompanyId]);
 
   if (state.shifting_luggage !== shiftingLuggages[3].label) return null;
 

@@ -55,6 +55,8 @@ const DemurageDetails: React.FC<IProps> = ({item, isEdit}) => {
     }
   }, [isEdit, item]);
 
+  
+
   return (
     <CollapsibleView title="DEMURRAGE DETAILS" collapsed={true}>
       <View>
@@ -78,6 +80,7 @@ const DemurageDetails: React.FC<IProps> = ({item, isEdit}) => {
               onSelect={(item: TDropdownItem) => {
                 setRate(item.label);
               }}
+              defaultValue={demurrageChargeRateOptions[0]}
               ref={demurrageRateRef}
             />
           </View>

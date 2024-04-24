@@ -53,6 +53,8 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
     getQuotationTemplateHtmlFailure,
   } = useAppSelector(state => state.Quotation);
   const {data: quotationData} = quotations || {};
+  console.log('enquiryId--', enquiryId);
+  
 
   const dispatch = useAppDispatch();
   const [showQuotationList, setShowQuotationList] = useState<boolean>(false);

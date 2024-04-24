@@ -275,7 +275,7 @@ export const initialState: IState = {
 
   // **** Vehicle Details ****
   invoice_no: '',
-  vehicle_type: '',
+  vehicle_type: '14 Feet',
   vehicle_no: '',
   from_location: '',
   to_location: '',
