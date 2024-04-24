@@ -71,7 +71,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({ navigation }) =>
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showLimitModal, setShowLimitModal] = useState<boolean>(false);
   const templateId = useTemplateIdHook('658d3c6f585e3dde644da95b');
-  const { getDocumentLimitCount } = useUtilityHook();
+  const { getAllDocCountWithSubscriptionStatus } = useUtilityHook();
 
   const getTotalQuotations = () => {
     let _count = 0;
@@ -240,16 +240,11 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({ navigation }) =>
   };
 
   const handleAddNew = () => {
-    const docLimit: number = getDocumentLimitCount('658d3c6f585e3dde644da95b');
-    
-    console.log('docLimit--', docLimit);
-    const currentDocCount: number = getTotalQuotations();
-    console.log('currentDocCount--', currentDocCount);
-
-    if (docLimit == -1 || (currentDocCount < docLimit)) {      
+    const {totalDocs, hasSubscription} = getAllDocCountWithSubscriptionStatus();
+    if (totalDocs < 10 || hasSubscription) {      
       setShowLimitModal(false);
       navigation.navigate(QuotationStackRoute.AddQuotation);
-    } else {
+    } else if (totalDocs >= 10 && !hasSubscription){
       setShowLimitModal(true);
     }
   };

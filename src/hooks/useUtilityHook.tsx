@@ -7,6 +7,59 @@ const useUtilityHook = () => {
   const {insurancePercentages, floors, submodules} = useAppSelector(state => state.Common);
   const {purchasedSubscriptions} = useAppSelector(state => state.Subscription);
 
+  // Quotation
+  const {quotations = []} = useAppSelector(state => state.Quotation);
+  const getTotalQuotations = () => {
+    const { data } = quotations || {};
+    let _count = 0;
+    if (data && Array.isArray(data)) {
+      _count = data.length;
+    }    
+    return _count;
+  };
+
+  // Bilty
+  const {biltyList, invoices, moneyReceiptList, carConditionList} = useAppSelector(state => state.Order);
+  const getTotalBilty = () => {
+    const {data} = biltyList || {};
+    let _count = 0;
+    if (data && Array.isArray(data)) {
+      _count = data.length;
+    }
+    return _count;
+  };
+
+  // Invoice
+  const getTotalInvoice = () => {
+    const { data } = invoices || {};
+    let _count = 0;
+    if (data && Array.isArray(data)) {
+      _count = data.length;
+    }
+    return _count;
+  };
+
+  // Money Receipt
+  const getMoneyReceiptDocCount = ():number => {
+    const {data} = moneyReceiptList || {};
+    let count:number = 0;
+    if(data && Array.isArray(data)) {
+      count = data.length;
+    }
+    return count;
+  }
+
+  // Vehicle Conditions
+  const getVehicleConditionsDocCount = ():number => {
+    const {data} = carConditionList || {};
+    let count:number = 0;
+    if(data && Array.isArray(data)) {
+      count = data.length;
+    }
+    return count;
+  }
+  
+
   const getInsurancePercentageList = (): TDropdownItem[] => {
     let list: TDropdownItem[] = [];
     const {data} = insurancePercentages || {};
@@ -46,7 +99,6 @@ const useUtilityHook = () => {
     return plan;
   };
 
-  //658d3c30585e3dde644da94d - Enquiry
   const getDocumentLimitCount = (submoduleId:string) => {
     let count:number = 0;
     const purchasedPlan:IPurchasedSubscription = _getCurrentPlanInfo() as IPurchasedSubscription;
@@ -65,7 +117,22 @@ const useUtilityHook = () => {
     }
     return count === 0 ? 10 : count;
   }
-  return {getInsurancePercentageList, getFloorsList, getDocumentLimitCount};
+
+  const getAllDocCountWithSubscriptionStatus = () => {
+    const quotationCount = getTotalQuotations();
+    const biltyCount = getTotalBilty();
+    const invoiceCount = getTotalInvoice();
+    const carConditionsCount = getVehicleConditionsDocCount();
+    const moneyReceiptCount = getMoneyReceiptDocCount();
+    const totalDocs = quotationCount + invoiceCount + biltyCount + carConditionsCount + moneyReceiptCount;
+    const hasSubscription = _getCurrentPlanInfo() !== null;
+    console.log('totalDocs----', totalDocs);
+    console.log('hasSubscription----', hasSubscription);
+    return {totalDocs, hasSubscription};
+  }
+
+
+  return {getInsurancePercentageList, getFloorsList, getDocumentLimitCount, getAllDocCountWithSubscriptionStatus};
 };
 
 export default useUtilityHook;

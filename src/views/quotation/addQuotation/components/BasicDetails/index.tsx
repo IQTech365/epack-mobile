@@ -34,7 +34,6 @@ interface Props {
 }
 
 const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item}) => {
-  console.log('BasicDetails-item-', JSON.stringify(item));
   const [switchState, setSwitchState] = useState<boolean>(true);
   const serialNo: number = useSerialNoHook();
 
@@ -87,7 +86,7 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item}) => {
           setQuotationNo(serialNo.toString());
           //@ts-ignore
           quotationNoInputCompRef &&
-            quotationNoInputCompRef?.current?.setValue(serialNo);
+            quotationNoInputCompRef?.current?.setValue(serialNo.toString());
         }
       } else {
         setIsSerialNoAutomatic(false);
