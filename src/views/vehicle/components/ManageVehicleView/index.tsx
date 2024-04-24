@@ -79,7 +79,9 @@ const ManageVehicleView: React.FC<IAddLorryDetailViewProps> = ({navigation}) => 
   }
 
   const handleSuccess = () => {
+    setCreateNewAddLorryDetail(false);
     setShowAddLorryDetailList(true);
+    
   }
 
   const showForm = () => {
