@@ -60,6 +60,7 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item}) => {
     setCompanyAddress,
     setIsSerialNoAutomatic,
   } = useQuotationFormContextHook();
+  console.log('state.errors.quotation_no', state.errors.quotation_no);
 
   const shiftingTypeDropdownCompRef = useRef<IDropdownHandler>(null);
   const shiftingLuggageDropdownCompRef = useRef<IDropdownHandler>(null);
@@ -165,6 +166,8 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item}) => {
     }
   }, [isEdit, item]);
 
+  console.log(switchState, 'sssss');
+
   return (
     <CollapsibleView title="BASIC DETAILS" collapsed={false}>
       <View>
@@ -226,9 +229,13 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item}) => {
               containerStyle={styles.switchInputContainer}
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
-              value={state.quotation_no}
+              value={
+                state.quotation_no ? state.quotation_no : 'Enter  Quotation No'
+              }
               placeholder="Quotation#"
+              error={state.errors.quotation_no}
               editable={!switchState}
+              inputType="numeric"
               //@ts-ignore
               ref={quotationNoInputCompRef}
             />

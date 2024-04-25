@@ -11,8 +11,8 @@ import {
   ACTION,
   IOtherCharge,
 } from '../views/quotation/addQuotation/quotationReducer2';
-import { ISingleQuotationData } from '../interface/quotation/IGetSingleQuotationResponse';
-import { ISingleEnquiryData } from '../interface/enquiry/ISingleEnquiryResponse';
+import {ISingleQuotationData} from '../interface/quotation/IGetSingleQuotationResponse';
+import {ISingleEnquiryData} from '../interface/enquiry/ISingleEnquiryResponse';
 
 const useQuotationFormContext = () => {
   const [state, dispatch] = useReducer(quotationReducer, initialState);
@@ -886,6 +886,16 @@ const useQuotationFormContext = () => {
     [state.errors.drop_pincode],
   );
 
+  const setQuotationNoError = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.QUOTATION_NO_ERROR,
+        payload: text,
+      });
+    },
+    [state.errors.quotation_no],
+  );
+
   const resetError = useCallback(() => {
     dispatch({
       type: ACTION.RESET_ERROR,
@@ -927,42 +937,42 @@ const useQuotationFormContext = () => {
       type: ACTION.QUOTATION_ITEM,
       payload: item,
     });
-  }
+  };
 
   const resetItem = () => {
     dispatch({
       type: ACTION.RESET_QUOTATION_ITEM,
       payload: null,
     });
-  }
+  };
 
   const setIsEditQuotation = (isEdit: boolean) => {
     dispatch({
       type: ACTION.IS_EDIT_QUOTATION,
       payload: isEdit,
     });
-  }
+  };
 
   const setIsSerialNoAutomatic = (isAuto: boolean) => {
     dispatch({
       type: ACTION.IS_SERIAL_NO_AUTOMATIC,
       payload: isAuto,
     });
-  }
+  };
 
   const setEnquiryItem = (item: ISingleEnquiryData) => {
     dispatch({
       type: ACTION.SET_ENQUIRY_ITEM,
       payload: item,
     });
-  }
+  };
 
   const resetAll = () => {
     dispatch({
       type: ACTION.RESET_ALL,
       payload: null,
     });
-  }
+  };
 
   return {
     state,
@@ -1077,6 +1087,7 @@ const useQuotationFormContext = () => {
     setEmployeeMobileNoError,
     setPickupPincodeError,
     setDropPincodeError,
+    setQuotationNoError,
     // **** Reset Errors ****
     resetError,
     validateForm,
@@ -1205,15 +1216,16 @@ const initQuotationFormContextState: UseQuotationFormContextType = {
   setEmployeeMobileNoError: (text: string) => {},
   setPickupPincodeError: (text: string) => {},
   setDropPincodeError: (text: string) => {},
+  setQuotationNoError: (text: string) => {},
   // **** Reset Errors ****
   resetError: () => {},
   validateForm: (validate: boolean) => {},
   validForm: (valid: boolean) => {},
-  setItem: (item:ISingleQuotationData) => {},
+  setItem: (item: ISingleQuotationData) => {},
   resetItem: () => {},
   setIsEditQuotation: (isEdit: boolean) => {},
   setIsSerialNoAutomatic: (isAuto: boolean) => {},
-  setEnquiryItem: (item:ISingleEnquiryData) => {},
+  setEnquiryItem: (item: ISingleEnquiryData) => {},
   resetAll: () => {},
 };
 

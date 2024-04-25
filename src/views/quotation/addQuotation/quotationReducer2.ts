@@ -130,6 +130,7 @@ export enum ACTION {
   EMPLOYEE_MOBILE_NO_ERROR = 'EMPLOYEE_MOBILE_NO_ERROR',
   PICKUP_PINCODE_ERROR = 'PICKUP_PINCODE_ERROR',
   DROP_PINCODE_ERROR = 'DROP_PINCODE_ERROR',
+  QUOTATION_NO_ERROR = 'QUOTATION_NO_ERROR',
   //
   RESET_ERROR = 'RESET_ERROR',
   VALIDATE_FORM = 'VALIDATE_FORM',
@@ -271,6 +272,7 @@ export interface IState {
     employee_mobile_no: string;
     pickup_pincode: string;
     drop_pincode: string;
+    quotation_no: string;
   };
   validate_form: boolean;
   valid_form: boolean;
@@ -401,6 +403,7 @@ export const initialState: IState = {
     employee_mobile_no: '',
     pickup_pincode: '',
     drop_pincode: '',
+    quotation_no: '',
   },
   validate_form: false,
   valid_form: false,
@@ -659,6 +662,11 @@ export const quotationReducer: Reducer<IState, IAction> = (
         ...state,
         errors: {...state.errors, drop_pincode: payload as string},
       };
+    case ACTION.QUOTATION_NO_ERROR:
+      return {
+        ...state,
+        errors: {...state.errors, quotation_no: payload as string},
+      };
     case ACTION.RESET_ERROR:
       return {
         ...state,
@@ -672,6 +680,7 @@ export const quotationReducer: Reducer<IState, IAction> = (
           employee_mobile_no: '',
           pickup_pincode: '',
           drop_pincode: '',
+          quotation_no: '',
         },
       };
     case ACTION.VALIDATE_FORM:

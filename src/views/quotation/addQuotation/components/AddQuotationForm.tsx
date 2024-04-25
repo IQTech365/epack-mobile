@@ -68,6 +68,7 @@ const AddQuotationForm: React.FC<Props> = ({
     setEmployeeNameError,
     setAuthorityMobileNoError,
     setEmployeeMobileNoError,
+    setQuotationNoError,
     setEnquiryItem,
     resetAll,
   } = useQuotationFormContextHook();
@@ -150,7 +151,12 @@ const AddQuotationForm: React.FC<Props> = ({
       pickup_pincode,
       drop_pincode,
       billing_by,
+      quotation_no,
     } = state;
+    if(Validator.isEmpty(quotation_no)) {
+      setQuotationNoError("Quotation# required");
+      valid = false;
+    }
     if (billing_by == billingByOptions[0].label) {
       setCompanyNameError('');
       setAuthorityMobileNoError('');
