@@ -1,11 +1,39 @@
+import { useEffect } from 'react';
 import {IFloor, IInsurancePercentage, ISubmodule} from '../interface/common/common';
 import { IList, IPurchasedSubscription, ISubscription } from '../interface/subscription/subscription';
 import {useAppSelector} from '../redux/hooks';
 import { TDropdownItem } from '../type/TDropdownItem';
+import { getQuotationHtmlRequest, getQuotationsRequest } from '../redux/slices/QuotationSlice';
+import { useDispatch } from 'react-redux';
+import { getBiltyListRequest, getCarConditionListRequest, getInvoiceListRequest, getMoneyReceiptListRequest } from '../redux/slices/OrderSlice';
+import { addSurveyItemRequest, getSurveyItemListRequest } from '../redux/slices/EnquirySlice';
+import { getCurrentCompanyId } from '../utils/storage';
+import { IGetQuotationRequest } from '../interface/quotation/IGetQuotationRequest';
 
 const useUtilityHook = () => {
+  const dispatch = useDispatch()
   const {insurancePercentages, floors, submodules} = useAppSelector(state => state.Common);
   const {purchasedSubscriptions} = useAppSelector(state => state.Subscription);
+
+
+  // useEffect(()=>{
+  //   _getQuotationsRequest();
+  //   dispatch(getMoneyReceiptListRequest())
+  //   dispatch(getCarConditionListRequest())
+  //   dispatch(getInvoiceListRequest())
+  // },[])
+
+
+  const _getQuotationsRequest = () => {
+    getCurrentCompanyId()
+      .then(id => {
+        const payload: IGetQuotationRequest = {
+          companyId: id as string,
+        };
+        dispatch(getQuotationsRequest(payload));
+      })
+      .catch(err => console.log(err));
+  };
 
   // Quotation
   const {quotations = []} = useAppSelector(state => state.Quotation);

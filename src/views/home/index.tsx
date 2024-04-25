@@ -91,7 +91,7 @@ const HomePageView:FC<IProps> = ({navigation}) => {
     const {data} = dashboard || {};
     if (data) {
       taskCountData = data as IDashboardData;
-    }
+    }    
     return taskCountData;
   };
 
@@ -253,7 +253,7 @@ const HomePageView:FC<IProps> = ({navigation}) => {
           />
           <TaskView
             taskName={TASK_NAME.DELIVERED_ORDERS}
-            count={_getTaskCountDataObj()?.deliveredOrder as number}
+            count={_getTaskCountDataObj()?.todayShifting as number}
             navigation={navigation}
           />
           <TaskView

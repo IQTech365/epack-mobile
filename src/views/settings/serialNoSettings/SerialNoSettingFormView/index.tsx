@@ -224,6 +224,8 @@ const SerialNoSettingFormView: React.FC<IMoneyReceiptSNProps> = ({
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
             placeholder="Ex. 101"
+            inputType="numeric"
+
           />
         </View>
       </View>

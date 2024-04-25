@@ -28,7 +28,7 @@ export const getVehicleTypeList = (
     items = data.map((d: IVehicleType) => {
       const item: IItem = {label: d.vehicleType, value: d._id};
       return item;
-    });
+    });    
   }
 
   return items;
@@ -48,7 +48,7 @@ export const getVehicleCompanyList = (
       items = filters.map((d: IVehicleCompany) => {
         const item: IItem = {label: d.vehicleCompanyName, value: d._id};
         return item;
-      });
+      });      
     }
   }
   return items;
@@ -84,6 +84,7 @@ export const getVehicleInsuranceCompanyList = (
       };
       return item;
     });
+    
   }
   return items;
 };

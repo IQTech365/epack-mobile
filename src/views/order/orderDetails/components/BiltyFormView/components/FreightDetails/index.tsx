@@ -159,7 +159,6 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
         }
       }
 
-
       if(item.packingMaterialCharges.status) {
         setPackingMaterialChargeAmount(item.packingMaterialCharges.charge);
         const pickupOption:TDropdownItem = packingOptions.find((d:TDropdownItem) => d.label === item.packingMaterialCharges.status) as TDropdownItem;
@@ -199,7 +198,10 @@ const FreightDetails: React.FC<IProps> = ({item, isEdit}) => {
       balanceAmountInputRef.current?.setValue(item.freightDetails.balanceAmount);
       setBalanceAmount(item.freightDetails.balanceAmount);
       remarksAtLoadingRef.current?.setValue(item.remarks);
+      setRemark(item.remarks)
       remarksAtPODRef.current?.setValue(item.remarksAtPOD);
+      setRemarksAtPOD(item.remarksAtPOD)
+
     }
   }, [isEdit, item]);
 

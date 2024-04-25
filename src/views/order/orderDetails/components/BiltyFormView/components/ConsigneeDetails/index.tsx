@@ -88,8 +88,9 @@ const ConsigneeDetails: React.FC<IProps> = ({item, isEdit}) => {
           companyGST,
           authorityPersonMobile,
           employeeMobile,
+          companyName
         } = billingDetails || {};
-        const name: string = authorityPersonName || (employeeName as string);
+        const name: string = companyName || (employeeName as string);
         const gst: string = companyGST || '';
         const mobile: string =
           authorityPersonMobile || (employeeMobile as string);

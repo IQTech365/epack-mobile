@@ -50,6 +50,9 @@ const ConsignerDetails: React.FC<IProps> = ({item, isEdit}) => {
   const {order} = useAppSelector(state => state.Order);
   const {data: orderData} = order || {};
 
+  console.log(item,"fcddddd");
+  
+
   const getSingleOrder = () => {
     let order: ISingleEnquiryData;
     if (orderData && Array.isArray(orderData) && orderData.length > 0) {
@@ -70,11 +73,13 @@ const ConsignerDetails: React.FC<IProps> = ({item, isEdit}) => {
     () => {},
   );
 
+
+  
   const initConsingerAddressIfSameasClient = useCallback(() => {
     const order: ISingleEnquiryData = getSingleOrder();
     if (order && state.consigner_address_same_as_client) {
       const {billingBy, billingDetails, pickupAddress, mobile, partyName} =
-        order || {};
+      order || {};
       if (billingBy == 'by Company') {
         const {
           authorityPersonName,
@@ -82,8 +87,9 @@ const ConsignerDetails: React.FC<IProps> = ({item, isEdit}) => {
           companyGST,
           authorityPersonMobile,
           employeeMobile,
+          companyName
         } = billingDetails || {};
-        const name: string = authorityPersonName || (employeeName as string);
+        const name: string = companyName || (employeeName as string);
         const gst: string = companyGST || '';
         const mobile: string =
           authorityPersonMobile || (employeeMobile as string);
@@ -137,6 +143,8 @@ const ConsignerDetails: React.FC<IProps> = ({item, isEdit}) => {
 
   useEffect(() => {
     if (isEdit && item) {
+      console.log(item);
+      
       //
       consignerNameInputRef.current?.setValue(item.consigner.name);
       setConsignerName(item.consigner.name);
@@ -153,6 +161,8 @@ const ConsignerDetails: React.FC<IProps> = ({item, isEdit}) => {
       setConsignerAddress(item?.loadingAddress?.address);
     }
   }, [isEdit, item]);
+  console.log(item,"fgh");
+  
 
   useEffect(() => {
     if (!isEdit) {

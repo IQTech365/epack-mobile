@@ -261,7 +261,7 @@ export interface IBannerListResponse {
 export interface IDashboardData {
   newEnquiry: number;
   newOrder: number;
-  deliveredOrder: number;
+  todayShifting: number;
   totalCustomer: number;
   todaySurvey: number;
   todayfollowup: number;
