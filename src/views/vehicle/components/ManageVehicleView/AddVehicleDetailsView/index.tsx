@@ -28,9 +28,9 @@ const AddVehicleDetailsView: React.FC<Props> = ({route, navigation}) => {
   const {vehicleTypes, vehicleModels} = useAppSelector(state => state.Common);
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImage, setSelectedImage] = useState('');
 
-  const openModal = (imageUri) => {
+  const openModal = (imageUri: string) => {
     
     setSelectedImage(imageUri);
     setModalVisible(true);
@@ -38,7 +38,7 @@ const AddVehicleDetailsView: React.FC<Props> = ({route, navigation}) => {
 
   const closeModal = () => {
     setModalVisible(false);
-    setSelectedImage(null);
+    setSelectedImage('');
   };
   return (
     <View style={{flex: 1, backgroundColor: COLOR_WHITE}}>
