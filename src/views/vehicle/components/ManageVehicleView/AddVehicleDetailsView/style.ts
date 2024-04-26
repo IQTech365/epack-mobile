@@ -1,5 +1,9 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import { COLOR_BLACK, COLOR_GRAY2, COLOR_GRAY3 } from '../../../../../utils/colors';
+import {
+  COLOR_BLACK,
+  COLOR_GRAY2,
+  COLOR_GRAY3,
+} from '../../../../../utils/colors';
 const {width} = Dimensions.get('window');
 const styles = StyleSheet.create({
   contentWrapper: {
@@ -48,7 +52,38 @@ const styles = StyleSheet.create({
     color: COLOR_BLACK,
     fontSize: 15,
     fontFamily: 'WorkSans-Regular',
-  }
+  },
+
+  imageStyle: {
+    width: 100,
+    height: 50,
+    resizeMode: 'contain',
+  },
+  imageStyle1: {
+    width: 350,
+    height: 300,
+    resizeMode: 'contain',
+  },
+
+  closeButton: {
+    alignSelf: 'flex-end',
+    padding: 10,
+    marginRight: 10,
+    backgroundColor: COLOR_BLACK,
+    borderRadius: 5,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+  },
 });
 
-export default styles
+export default styles;

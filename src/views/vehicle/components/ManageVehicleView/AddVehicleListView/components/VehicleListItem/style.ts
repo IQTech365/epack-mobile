@@ -147,6 +147,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     // fontWeight: '500'
   },
+    imageStyle: {
+      width: 100,
+      height: 50, 
+      resizeMode: 'contain',
+    },
   viewDetailsContainer: {
     width: '100%',
     flexDirection: 'row',

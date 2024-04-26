@@ -11,8 +11,11 @@ export interface IVehicle {
   vehicleChassisNo: string;
   vehicleEngineNo: string;
   permitNo: string;
+  permitDoc: string;
+  rcDoc: string;
   permitRenewalDate: string;
   vehicleRCNo: string;
+  pollutionDoc: string;
   pollutionCertificateNo: string;
   pollutionRenewalDate: string;
   isDeleted: boolean;

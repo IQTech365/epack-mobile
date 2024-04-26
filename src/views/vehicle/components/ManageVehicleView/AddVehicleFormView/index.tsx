@@ -134,9 +134,13 @@ const AddLorryView: React.FC<IProps> = ({onSuccess}) => {
   useEffect(() => {
     if(vehicleTypes !== null && vehicleTypes !== undefined) {
         const firstVehicleType = getFirstVehicleType(vehicleTypes);
+        
         setVehicleTypeId(firstVehicleType?._id);
-        setLorryType(firstVehicleType?.vehicleType)
+        setLorryType(firstVehicleType?._id)
     }
+    const firstManufactureDate = getYears();
+    setManufacturingYear(firstManufactureDate[0].value);    
+    // setManufacturingYear(firstManufactureDate.value);
   }, [vehicleTypes]);
 
   const loading =
@@ -170,6 +174,14 @@ const AddLorryView: React.FC<IProps> = ({onSuccess}) => {
         pollutionRenewalDate: state.pollution_certificate_renewal_date || "",
         addedBy: authId,
       };
+      console.log(payload,"VEHICLEEEEEE");
+      
+    //   const filteredPayload: IAddLorryRequest = {};
+    //   for (const [key, value] of Object.entries(payload)) {
+    //   if (value !== "" && value !== null && value !== undefined) {
+    //   filteredPayload[key as keyof IAddLorryRequest] = value;
+    // }
+// }
       dispatch(addLorryRequest(payload));
     }).catch(err => console.log(err));
     
@@ -221,6 +233,8 @@ const AddLorryView: React.FC<IProps> = ({onSuccess}) => {
             <DropdownComponent
               data={getVehicleTypeList(vehicleTypes)}
               onSelect={(item: TDropdownItem) => {
+                console.log(item,"getVehicleTypeList");
+                
                 setVehicleTypeId(item.value);
                 setLorryType(item.value);
               }}
