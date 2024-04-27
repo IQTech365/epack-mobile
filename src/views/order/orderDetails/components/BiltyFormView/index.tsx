@@ -40,6 +40,7 @@ import {
   resetGetSerialNoRequest,
 } from '../../../../../redux/slices/SerialNoSettingSlice';
 import { IBilty, IUpdateBiltyPayload } from '../../../../../interface/order/IGetBiltyListResponse';
+import useUtilityHook from '../../../../../hooks/useUtilityHook';
 
 interface IBiltyFormViewProps {
   orderId: string | undefined;
@@ -51,6 +52,7 @@ interface IBiltyFormViewProps {
 const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess, item, isEdit = false}) => {
   const {state} = useBiltyFormContextHook();
   const dispatch = useAppDispatch();
+  const {getTotalDocumentCount} = useUtilityHook();
   
   const {
     createBiltyRequesting,
@@ -282,6 +284,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess, item,
       showToast('New Bilty Created', ToastType.SUCCESS);
       dispatch(resetCreateBiltyRequest());
       dispatch(resetGetSerialNoRequest());
+      getTotalDocumentCount();
       onSuccess && onSuccess();
     } else if (!createBiltyRequesting && createBiltyError) {
       showToast('New Bilty Not Created. Try again!', ToastType.ERROR);

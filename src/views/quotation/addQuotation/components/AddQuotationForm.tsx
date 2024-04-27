@@ -39,6 +39,7 @@ import {IUpdateQuotationRequest} from '../../../../interface/quotation/quotation
 import {ISingleEnquiryData} from '../../../../interface/enquiry/ISingleEnquiryResponse';
 import {resetGetSerialNoRequest} from '../../../../redux/slices/SerialNoSettingSlice';
 import useInitialValueHook from '../../../../hooks/useInitialValueHook';
+import useUtilityHook from '../../../../hooks/useUtilityHook';
 
 interface Props {
   fromEnquiry?: boolean;
@@ -92,6 +93,7 @@ const AddQuotationForm: React.FC<Props> = ({
   } = useAppSelector(state => state.Common);
   const {prefix} = useInitialValueHook('658d3c6f585e3dde644da95b');
   const {enquiry} = useAppSelector(state => state.Enquiry);
+  const {getTotalDocumentCount} = useUtilityHook();
 
   const transitInsurance: ITransitInsurance = {
     isRequired: state.transit_insurance,
@@ -382,6 +384,7 @@ const AddQuotationForm: React.FC<Props> = ({
       dispatch(resetaddQuotationRequest());
       dispatch(resetGetSerialNoRequest());
       _getQuotationsRequest();
+      getTotalDocumentCount();
       if (onSuccess) {
         onSuccess();
       } else {

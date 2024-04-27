@@ -55,15 +55,14 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ orderId, item, navigation })
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showLimitModal, setShowLimitModal] = useState<boolean>(false);
   const templateId = useTemplateIdHook('658d3ce2585e3dde644da98c');
-  const { getAllDocCountWithSubscriptionStatus } = useUtilityHook();
+  const { totalDocuments, hasSubscription } = useUtilityHook();
 
   const handleCreateNewInvoice = () => {
-    const {totalDocs, hasSubscription} = getAllDocCountWithSubscriptionStatus();
-    if (totalDocs < 10 || hasSubscription) {      
+    if (totalDocuments < 10 || hasSubscription) {      
       setShowInvoiceList(false);
       setCreateNewInvoice(true);
       setShowLimitModal(false);
-    } else if (totalDocs >= 10 && !hasSubscription){
+    } else if (totalDocuments >= 10 && !hasSubscription){
       setShowLimitModal(true);
     }
   };

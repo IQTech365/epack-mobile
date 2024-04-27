@@ -28,13 +28,18 @@ import {startShare} from '../../../../../utils/utility';
 import TemplateViewer from '../../../../../common/TemplateViewer';
 import useTemplateIdHook from '../../../../../hooks/useTemplateIdHook';
 import ActionHeaderView from '../../../../../common/ActionHeaderView';
+import useUtilityHook from '../../../../../hooks/useUtilityHook';
+import LimitReachImage from '../../../../../images/icons/limit_reach.svg';
+import { NavigationProp } from '@react-navigation/native';
+import AlertModal from '../../../../../common/AlertModal';
 
 interface IMoneyReceiptViewProps {
   orderId: string;
+  navigation: NavigationProp<any, any>;
 }
 
 const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
-  // navigation,
+  navigation,
   orderId,
 }) => {
   const dispatch = useAppDispatch();
@@ -61,7 +66,9 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
   const [showModal, setShowModal] = useState<boolean>(false);
   const [shouldDownload, setShouldDownload] = useState<boolean>(false);
   const [moneyReceiptId, setMoneyReceiptId] = useState<string>('');
+  const [showLimitModal, setShowLimitModal] = useState<boolean>(false);
   const templateId = useTemplateIdHook('658d3c9c585e3dde644da970');
+  const { totalDocuments, hasSubscription } = useUtilityHook();
 
   const _getDocCount = ():number => {
     let count:number = 0;
@@ -72,9 +79,14 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
   }
 
   const handleCreateNewMoneyReceipt = () => {
-    setShowMoneyReceiptList(false);
-    setCreateNewMoneyReceipt(true);
     setIsEdit(false);
+    if (totalDocuments < 10 || hasSubscription) {      
+      setShowMoneyReceiptList(false);
+      setCreateNewMoneyReceipt(true);
+      setShowLimitModal(false);
+    } else if (totalDocuments >= 10 && !hasSubscription){
+      setShowLimitModal(true);
+    }
   };
 
   const handleShowMoneyReceipt = () => {
@@ -146,6 +158,15 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
     };
     dispatch(getMoneyReceiptHtmlRequest(payload));
   };
+
+  const hanldeAlertModalClose = () => {
+    setShowLimitModal(false);
+  }
+
+  const handlePlanUpgrade = () => {
+    setShowLimitModal(false);
+    navigation.navigate("Subscription");
+  }
 
   useEffect(() => {
     dispatch(getMoneyReceiptListRequest(orderId));
@@ -291,6 +312,14 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
               <TemplateViewer html={moneyReceiptTemplateHtml} />
             </View>
           </ModalHOC>
+          <AlertModal 
+            visible={showLimitModal}
+            icon={<LimitReachImage width={200} height={200} />}
+            onClose={hanldeAlertModalClose} 
+            onUpgrade={handlePlanUpgrade} 
+            title='Your document create limit has been reached. Please upgrade your plan.'
+            buttonText='UPGRADE'
+          />
         </View>
       );
     }

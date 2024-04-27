@@ -57,7 +57,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
   const [showPreviewShareModal, setShowPreviewShareModal] =
     useState<boolean>(false);
   const templateId = useTemplateIdHook('658d3cb5585e3dde644da97e');
-  const {getAllDocCountWithSubscriptionStatus} = useUtilityHook();
+  const {totalDocuments, hasSubscription} = useUtilityHook();
 
   const _getBiltyType = (bilty: IBilty) => {
     let biltyType: string = '';
@@ -106,12 +106,11 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
   };
 
   const handleCreateNewBilty = () => {
-    const {totalDocs, hasSubscription} = getAllDocCountWithSubscriptionStatus();
-    if (totalDocs < 10 || hasSubscription) {      
+    if (totalDocuments < 10 || hasSubscription) {      
       setShowBiltyList(false);
       setCreateNewBilty(true);
       setShowLimitModal(false);
-    } else if (totalDocs >= 10 && !hasSubscription){
+    } else if (totalDocuments >= 10 && !hasSubscription){
       setShowLimitModal(true);
     }
   };

@@ -31,6 +31,9 @@ import {startShare} from '../../../../../utils/utility';
 import {IHtmlTemplateRequest} from '../../../../../interface/order/templates/ITemplateResponse';
 import useTemplateIdHook from '../../../../../hooks/useTemplateIdHook';
 import ActionHeaderView from '../../../../../common/ActionHeaderView';
+import AlertModal from '../../../../../common/AlertModal';
+import LimitReachImage from '../../../../../images/icons/limit_reach.svg';
+import useUtilityHook from '../../../../../hooks/useUtilityHook';
 
 interface ICarConditionViewProps {
   orderId: string;
@@ -69,7 +72,9 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId,navigation}
   const [showPreview, setShowPreview] = useState<boolean>(false);
   const [showShare, setShowShare] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [showLimitModal, setShowLimitModal] = useState<boolean>(false);
   const templateId = useTemplateIdHook('658d3cab585e3dde644da977');
+  const {totalDocuments, hasSubscription} = useUtilityHook();
 
   const _getListData = () => {
     const {data} = carConditionList || {};
@@ -92,8 +97,13 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId,navigation}
   };
 
   const handleCreateNewCarCondition = () => {
-    setShowCarConditionList(false);
-    setCreateNewCarCondition(true);
+    if (totalDocuments < 10 || hasSubscription) {      
+      setShowCarConditionList(false);
+      setCreateNewCarCondition(true);
+      setShowLimitModal(false);
+    } else if (totalDocuments >= 10 && !hasSubscription){
+      setShowLimitModal(true);
+    }
   };
 
   const handleShowCarConditionList = () => {
@@ -158,6 +168,15 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId,navigation}
     }
   };
 
+  const hanldeAlertModalClose = () => {
+    setShowLimitModal(false);
+  };
+
+  const handlePlanUpgrade = () => {
+    setShowLimitModal(false);
+    navigation.navigate('Subscription');
+  };
+
   const showList = () => {
     if (showCarConditionList) {
       return (
@@ -206,6 +225,14 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId,navigation}
               <TemplateViewer html={carConditionTemplateHtml} />
             </View>
           </ModalHOC>
+          <AlertModal
+            visible={showLimitModal}
+            icon={<LimitReachImage width={200} height={200} />}
+            onClose={hanldeAlertModalClose}
+            onUpgrade={handlePlanUpgrade}
+            title="Your free document create limit has been reached. Please upgrade your plan."
+            buttonText="UPGRADE"
+          />
         </View>
       );
     }

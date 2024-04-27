@@ -66,7 +66,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showLimitModal, setShowLimitModal] = useState<boolean>(false);
   const templateId = useTemplateIdHook('658d3c6f585e3dde644da95b');
-  const {getAllDocCountWithSubscriptionStatus} = useUtilityHook();
+  const {totalDocuments, hasSubscription} = useUtilityHook();
 
   const _getClientName = (item: IGetQuotationData) => {
     let name: string = 'NA';
@@ -174,13 +174,12 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
   };
 
   const handleCreateNewQuotation = () => {
-    const {totalDocs, hasSubscription} = getAllDocCountWithSubscriptionStatus();
-    if (totalDocs < 10 || hasSubscription) {      
+    if (totalDocuments < 10 || hasSubscription) {      
       setShowQuotationList(false);
       setShowFormInEditMode(false);
       setShowLimitModal(false);
       setCreateNewQuotation(true);
-    } else if (totalDocs >= 10 && !hasSubscription){
+    } else if (totalDocuments >= 10 && !hasSubscription){
       setShowLimitModal(true);
     }
   };
