@@ -167,6 +167,7 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
       <Spacer height={12} />
       <FlatList
         contentContainerStyle={styles.listContent}
+        showsVerticalScrollIndicator={false}
         data={[...getTransformedData()].reverse()}
         refreshControl={
           <RefreshControl

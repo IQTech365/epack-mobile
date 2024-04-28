@@ -27,6 +27,8 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
   );
   
   const {data} = enquiries || {};
+  console.log('Enquiries-data-', JSON.stringify(data));
+  
 
   const getPhoneNumber = (item:any) => {
     let phoneNumber = '';

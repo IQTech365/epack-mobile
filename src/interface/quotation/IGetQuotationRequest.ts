@@ -3,4 +3,5 @@ export interface IGetQuotationRequest {
   branchId?: string;
   authId?: string;
   id?: string;
+  notstatus?: string[];
 }

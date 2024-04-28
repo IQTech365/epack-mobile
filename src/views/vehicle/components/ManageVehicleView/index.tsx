@@ -11,8 +11,8 @@ import {useAppDispatch, useAppSelector} from '../../../../redux/hooks';
 import styles from './style';
 import ListViewIcon from '../../../../images/icons/list_view_icon.svg';
 import ListViewIcon2 from '../../../../images/icons/list_view_icon2.svg';
-import CreateIcon from '../../../../images/icons/create_icon.svg';
-import CreateIcon2 from '../../../../images/icons/create_icon2.svg';
+import CreateIcon from '../../../../images/icons/edit_inactive_icon.svg';
+import CreateIcon2 from '../../../../images/icons/edit_icon.svg';
 // import Spinner from '../../../../../common/Spinner';
 import AddLorryView from './AddVehicleFormView';
 import Header from '../../../../common/Header';
@@ -133,14 +133,14 @@ const ManageVehicleView: React.FC<IAddLorryDetailViewProps> = ({navigation}) => 
             <ListViewIcon width={30} height={30} />
           )}
         </TouchableOpacity>
-        <Spacer width={10} />
+        <Spacer width={20} />
         <TouchableOpacity
           onPress={handleCreateNewAddLorryDetail}
           activeOpacity={0.4}>
           {createNewAddLorryDetail ? (
-            <CreateIcon2 width={30} height={30} />
+            <CreateIcon2 width={26} height={26} />
           ) : (
-            <CreateIcon width={30} height={30} />
+            <CreateIcon width={26} height={26} />
           )}
         </TouchableOpacity>
         <Spacer width={10} />

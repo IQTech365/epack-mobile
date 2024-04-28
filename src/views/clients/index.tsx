@@ -71,6 +71,7 @@ const ClientPageView: React.FC<IClientPageViewProps> = ({navigation}) => {
       <Label text={`Total Clients: ${_getCustomerList().length}`} style={styles.clientCount} />
       <FlatList
         contentContainerStyle={styles.listContent}
+        showsVerticalScrollIndicator={false}
         data={_getCustomerList()}
         refreshControl={
           <RefreshControl

@@ -298,7 +298,7 @@ const OTPPageView = (props: any) => {
           />
         </View>
         <Spacer />
-        <Text>{_displayOTP()}</Text>
+        {/* <Text>{_displayOTP()}</Text> */}
         <Spacer height={50} />
         <Button
           text="Verify OTP"

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View} from 'react-native';
+import {View, Modal} from 'react-native';
 import styles from './style';
 import Lottie from 'lottie-react-native';
 const loaderWhiteIcon = require('../../images/loader-white.json');
@@ -21,11 +21,14 @@ const Spinner: React.FC<ISpinnerProps> = ({backdrop = 'transparent', show = fals
     return loader;
   }
 
-  if(!show) return null;
+  // if(!show) return null;
   return (
-    <View style={[styles.container, backdropStyle]}>
-      <Lottie source={getLoaderIcon()} autoPlay loop style={{width: 50, height: 50}} />
-    </View>
+    <Modal animationType="fade" transparent={true} visible={show}>
+      <View style={[styles.container, backdropStyle]}>
+        <Lottie source={getLoaderIcon()} autoPlay loop style={{width: 50, height: 50}} />
+      </View>
+    </Modal>
+    
   );
 };
 

@@ -54,7 +54,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
   } = useAppSelector(state => state.Quotation);
   const {data: quotationData} = quotations || {};
   console.log('enquiryId--', enquiryId);
-  
+  console.log('quotationData--', JSON.stringify(quotationData));
 
   const dispatch = useAppDispatch();
   const [showQuotationList, setShowQuotationList] = useState<boolean>(false);
@@ -66,7 +66,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showLimitModal, setShowLimitModal] = useState<boolean>(false);
   const templateId = useTemplateIdHook('658d3c6f585e3dde644da95b');
-  const {totalDocuments, hasSubscription} = useUtilityHook();
+  const {totalDocuments, hasSubscription, getTotalDocumentCount} = useUtilityHook();
 
   const _getClientName = (item: IGetQuotationData) => {
     let name: string = 'NA';
@@ -342,11 +342,28 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
     return null;
   };
 
+  const _getQuotationsRequest = () => {
+    const enquiryQuotationFilters = ['COMPLETED', 'APPROVED'];
+    const orderQuotationFilters = ['COMPLETED'];
+
+    getCurrentCompanyId().then(id => {
+      const payload: IGetQuotationRequest = {
+        companyId: id as string,
+        notstatus: isOrder ? orderQuotationFilters : enquiryQuotationFilters,
+      };
+      dispatch(getQuotationsRequest(payload));
+    }).catch(err => console.log(err));
+  }
+  
+
   useEffect(() => {
     if (isOrder) {
       setShowQuotationList(true);
     }
+    getTotalDocumentCount();
+    _getQuotationsRequest();
   }, []);
+
 
   useEffect(() => {
     if (

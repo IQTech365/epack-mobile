@@ -1,10 +1,9 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, Linking, Image} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import {Shadow} from 'react-native-shadow-2';
 import styles from './style';
 import Spacer from '../../../../../../../common/Spacer';
 import {IVehicle} from '../../../../../../../interface/vehicle/IGetLorryResponse';
-import {COLOR_BLUE} from '../../../../../../../utils/colors';
 import {useAppSelector} from '../../../../../../../redux/hooks';
 import {getVehicleType} from '../../../../utils';
 
@@ -20,6 +19,19 @@ const VehicleListItem: React.FC<IAddLorryListItemProps> = ({
   onPress,
 }: IAddLorryListItemProps) => {
   const {vehicleTypes, vehicleModels} = useAppSelector(state => state.Common);
+
+  const _getVehicleModelName = (model_id: string) => {
+    const {data} = vehicleModels || {};
+    let vechileModelName: string = 'NA';
+    if(data && Array.isArray(data) && data.length > 0) {
+      const vehicleModel = data.find(vm => vm._id === model_id);
+      if(vehicleModel) {
+        vechileModelName = vehicleModel?.vehicleModel;
+      }
+    }
+    return vechileModelName;
+  }
+  
   return (
     <>
       <View style={styles.indexContainer}>
@@ -72,7 +84,7 @@ const VehicleListItem: React.FC<IAddLorryListItemProps> = ({
               <Text style={styles.labelText}>Vehicle Model</Text>
             </View>
             <View style={styles.rowItemContainer2}>
-              <Text style={styles.valueText}>{item.vehicleModel || 'NA'}</Text>
+              <Text style={styles.valueText}>{_getVehicleModelName(item.vehicleModel)}</Text>
             </View>
           </View>
           <View style={styles.rowContainer}>

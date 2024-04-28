@@ -26,12 +26,12 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     color: COLOR_WHITE,
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: 'WorkSans-Bold'
   },
   orderDateText: {
     color: COLOR_BLACK,
-    fontSize: 14,
+    fontSize: 12,
     marginLeft: 8,
     fontFamily: 'WorkSans-SemiBold'
   },
@@ -101,22 +101,22 @@ const styles = StyleSheet.create({
   },
   nameText: {
       color: COLOR_GRAY,
-      fontSize: 14,
+      fontSize: 12,
       fontFamily: 'WorkSans-SemiBold'
   },
   amountText: {
     color: COLOR_GRAY,
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: '500'
   },
   viewDetailsText: {
     color: COLOR_GRAY,
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: '600'
   },
   labelText: {
       color: COLOR_BLACK,
-      fontSize: 13,
+      fontSize: 12,
       fontFamily: 'WorkSans-Medium'
   },
   valueText: {

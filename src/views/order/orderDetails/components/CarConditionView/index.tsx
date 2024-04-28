@@ -74,7 +74,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId,navigation}
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showLimitModal, setShowLimitModal] = useState<boolean>(false);
   const templateId = useTemplateIdHook('658d3cab585e3dde644da977');
-  const {totalDocuments, hasSubscription} = useUtilityHook();
+  const {totalDocuments, hasSubscription, getTotalDocumentCount, loading: docCountLoading} = useUtilityHook();
 
   const _getListData = () => {
     const {data} = carConditionList || {};
@@ -131,6 +131,7 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId,navigation}
     dispatch(getVehicleColorRequest());
     dispatch(getVehicleAccessoriesRequest());
     dispatch(getVehicleModelsRequest());
+    getTotalDocumentCount();
   }, []);
 
   const showEmptyView = () => {
@@ -170,6 +171,10 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId,navigation}
 
   const hanldeAlertModalClose = () => {
     setShowLimitModal(false);
+    if (totalDocuments >= 10 && !hasSubscription){
+      setShowCarConditionList(true);
+      setCreateNewCarCondition(false);
+    }
   };
 
   const handlePlanUpgrade = () => {
@@ -225,19 +230,18 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId,navigation}
               <TemplateViewer html={carConditionTemplateHtml} />
             </View>
           </ModalHOC>
-          <AlertModal
-            visible={showLimitModal}
-            icon={<LimitReachImage width={200} height={200} />}
-            onClose={hanldeAlertModalClose}
-            onUpgrade={handlePlanUpgrade}
-            title="Your free document create limit has been reached. Please upgrade your plan."
-            buttonText="UPGRADE"
-          />
+          
         </View>
       );
     }
     return null;
   };
+
+  useEffect(() => {
+    if (totalDocuments >= 10 && !hasSubscription){
+      setShowLimitModal(true);
+    }
+  }, [totalDocuments, hasSubscription]);
 
   useEffect(() => {
     if (!getCarConditionHtmlRequesting && getCarConditionHtmlSuccess) {
@@ -271,7 +275,15 @@ const CarConditionView: React.FC<ICarConditionViewProps> = ({orderId,navigation}
       />
       {showForm()}
       {showList()}
-      <Spinner show={getCarConditionListRequesting || loading} />
+      <AlertModal
+        visible={showLimitModal}
+        icon={<LimitReachImage width={200} height={200} />}
+        onClose={hanldeAlertModalClose}
+        onUpgrade={handlePlanUpgrade}
+        title="Your free document create limit has been reached. Please upgrade your plan."
+        buttonText="UPGRADE"
+      />
+      <Spinner show={getCarConditionListRequesting || docCountLoading || loading} />
     </>
   );
 };

@@ -301,8 +301,6 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
     createMoneyReceiptFailure,
   ]);
 
-  console.log(editData,"editData");
-
   useEffect(()=>{
     if(isEdit && editData){
       const paymentTypeOption:TDropdownItem = paymentTypeOptions.find((d:TDropdownItem) => d.label === editData.paymentType) as TDropdownItem;
@@ -315,7 +313,6 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
         receiptAgainstDropCompRef.current?.setDefaultValue(receiptAgainstOption);
       }
       const billNoOption:string = transformQuotationData().find((d:string) => d === editData.quotationNumber) as string;
-      console.log('billNoOption----', JSON.stringify(transformQuotationData()));
       
       if (billNoOption) {
         quotationNoDropCompRef.current?.setValue(billNoOption);

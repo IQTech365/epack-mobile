@@ -50,9 +50,6 @@ const ConsignerDetails: React.FC<IProps> = ({item, isEdit}) => {
   const {order} = useAppSelector(state => state.Order);
   const {data: orderData} = order || {};
 
-  console.log(item,"fcddddd");
-  
-
   const getSingleOrder = () => {
     let order: ISingleEnquiryData;
     if (orderData && Array.isArray(orderData) && orderData.length > 0) {
@@ -161,8 +158,6 @@ const ConsignerDetails: React.FC<IProps> = ({item, isEdit}) => {
       setConsignerAddress(item?.loadingAddress?.address);
     }
   }, [isEdit, item]);
-  console.log(item,"fgh");
-  
 
   useEffect(() => {
     if (!isEdit) {
