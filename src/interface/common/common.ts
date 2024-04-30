@@ -466,3 +466,19 @@ export interface ITodayShiftingResponse {
   status: number;
   error: boolean;
 }
+
+export interface AllDocumentCount {
+  biltyCount: number;
+  carConditionCount: number;
+  moneyReceiptCount: number;
+  InvoiceCount: number;
+  quotationCount: number;
+  totalCount: number;
+}
+
+export interface IAllDocumentCountResponse {
+  data: AllDocumentCount;
+  status: number;
+  error: boolean;
+  message: string;
+}

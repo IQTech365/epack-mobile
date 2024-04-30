@@ -24,6 +24,8 @@ import { IEnquiry } from '../../../../../interface/quotation/IGetQuotationsRespo
 import { ToastType, showToast } from '../../../../../utils/utility';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
 import { EventRegister } from 'react-native-event-listeners';
+import { IGetQuotationRequest } from '../../../../../interface/quotation/IGetQuotationRequest';
+import { getQuotationsRequest } from '../../../../../redux/slices/QuotationSlice';
 
 interface IEnquiryInfoViewProps {
   item: IEnquiry|undefined;
@@ -101,6 +103,17 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId, navi
     }).catch(err => console.log(err));
   }
 
+  const _getQuotationsRequest = () => {
+    const enquiryQuotationFilters = ['COMPLETED', 'APPROVED'];
+    getCurrentCompanyId().then(id => {
+      const payload: IGetQuotationRequest = {
+        companyId: id as string,
+        notstatus: enquiryQuotationFilters,
+      };
+      dispatch(getQuotationsRequest(payload));
+    }).catch(err => console.log(err));
+  }
+
   useEffect(() => {
     if(!updateEnquiryStatusRequesting && updateEnquiryStatusSuccess) {
       showToast('Enquiry Status Changed.', ToastType.SUCCESS);
@@ -110,6 +123,8 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId, navi
         refreshOrders();
         EventRegister.emit('onUpdateEvent', true);
         navigation.goBack();
+      } else {
+        _getQuotationsRequest();
       }
     } else if(!updateEnquiryStatusRequesting && updateEnquiryStatusFailure) {
       showToast('Enquiry Status Not Changed. Try again!', ToastType.ERROR);

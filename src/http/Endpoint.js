@@ -209,4 +209,7 @@ export const GET_TODAY_SHIFTING =(company_id) => `/order/latest/${company_id}`
 
 //  Update bilty
 
-export const UPDATE_BILTY = (id) => `bilty/edit/${id}`
+export const UPDATE_BILTY = (id) => `/bilty/edit/${id}`
+
+// All documents count
+export const GET_ALL_DOCUMENTS_COUNT = (company_id) => `/order/count-documents/${company_id}`;

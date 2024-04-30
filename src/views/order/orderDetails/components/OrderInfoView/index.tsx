@@ -33,6 +33,8 @@ import { NavigationProp } from '@react-navigation/native';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
 import { EventRegister } from 'react-native-event-listeners';
 import { ToastType, showToast } from '../../../../../utils/utility';
+import { IGetQuotationRequest } from '../../../../../interface/quotation/IGetQuotationRequest';
+import { getQuotationsRequest } from '../../../../../redux/slices/QuotationSlice';
 interface IOrderInfoViewProps {
   orderId: string;
   item: ISingleEnquiryData | null;
@@ -73,6 +75,17 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item, navigation
     }).catch(err => console.log(err));
   }
 
+  const _getQuotationsRequest = () => {
+    const orderQuotationFilters = ['COMPLETED'];
+    getCurrentCompanyId().then(id => {
+      const payload: IGetQuotationRequest = {
+        companyId: id as string,
+        notstatus: orderQuotationFilters,
+      };
+      dispatch(getQuotationsRequest(payload));
+    }).catch(err => console.log(err));
+  }
+
   useEffect(() => {
     if (!updateEnquiryStatusRequesting && updateEnquiryStatusSuccess) {
       showToast(`Order Status Changed to ${orderStatus}`, ToastType.SUCCESS);
@@ -81,6 +94,8 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item, navigation
         refetchOrderList();
         EventRegister.emit('onUpdateEvent', true);
         navigation.goBack();
+      } else {
+        _getQuotationsRequest();
       }
     } else if (!updateEnquiryStatusRequesting && updateEnquiryStatusFailure) {
       showToast(`Order Status Not Changed. Try again!`, ToastType.ERROR);

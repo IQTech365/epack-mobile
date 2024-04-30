@@ -44,6 +44,7 @@ import useSerialNoHook from '../../../../../hooks/useSerialNo';
 import DropdownWithTextInput, { DropdownMethods } from '../../../../../common/DropdownWithTextInput';
 import { IQuotation } from '../../../../../interface/quotation/quotation';
 import { formatDate4 } from '../../../../../utils/formatter';
+import useUtilityHook from '../../../../../hooks/useUtilityHook';
 
 interface IMoneyReceiptFormViewProps {
   orderId: string | undefined;
@@ -78,6 +79,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
   const dispatch2 = useAppDispatch();
   const {initialValue, prefix} = useInitialValueHook('658d3c9c585e3dde644da970');
   const serialNo:number = useSerialNoHook();
+  const {getTotalDocumentCount} = useUtilityHook();
 
   const paymentTypeDropCompRef = useRef<IDropdownHandler>(null);
   const receiptAgainstDropCompRef = useRef<IDropdownHandler>(null);
@@ -88,8 +90,6 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
   const CnLrBiltyNoRef = useRef<InputMethods>(null);
   const noOfArticlesRef = useRef<InputMethods>(null);
   const dateOfArrivalRef  = useRef<IDateMethods>(null);
-
-
 
 
   const _getSerialNoRequest = () => {
@@ -272,6 +272,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
       showToast('Money Receipt Updated', ToastType.SUCCESS);
       dispatch2(resetEditMoneyReceiptRequest());
       dispatch2(getMoneyReceiptListRequest(orderId as string));
+      getTotalDocumentCount();
       onSuccess && onSuccess();
     } else if(!editMoneyReceiptListRequesting && editMoneyReceiptListFailure) {
       showToast('Money Receipt Not Updated. Try again!', ToastType.ERROR);
@@ -300,8 +301,6 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
     createMoneyReceiptFailure,
   ]);
 
-  console.log(editData,"editData");
-
   useEffect(()=>{
     if(isEdit && editData){
       const paymentTypeOption:TDropdownItem = paymentTypeOptions.find((d:TDropdownItem) => d.label === editData.paymentType) as TDropdownItem;
@@ -314,7 +313,6 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
         receiptAgainstDropCompRef.current?.setDefaultValue(receiptAgainstOption);
       }
       const billNoOption:string = transformQuotationData().find((d:string) => d === editData.quotationNumber) as string;
-      console.log('billNoOption----', JSON.stringify(transformQuotationData()));
       
       if (billNoOption) {
         quotationNoDropCompRef.current?.setValue(billNoOption);

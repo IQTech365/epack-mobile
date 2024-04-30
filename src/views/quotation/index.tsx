@@ -65,13 +65,13 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({ navigation }) =>
   const [downloadOption, setDownloadOption] = useState<string>('');
   const bottomSheetRef = useRef<BottomSheet>(null);
   const { data: quotationData } = quotations || {};
-
+  
   const [openPreview, setOpenPreview] = useState<boolean>(false);
   const [openShare, setOpenShare] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showLimitModal, setShowLimitModal] = useState<boolean>(false);
   const templateId = useTemplateIdHook('658d3c6f585e3dde644da95b');
-  const { getAllDocCountWithSubscriptionStatus } = useUtilityHook();
+  const {  totalDocuments, hasSubscription, getTotalDocumentCount, loading} = useUtilityHook();
 
   const getTotalQuotations = () => {
     let _count = 0;
@@ -240,11 +240,10 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({ navigation }) =>
   };
 
   const handleAddNew = () => {
-    const {totalDocs, hasSubscription} = getAllDocCountWithSubscriptionStatus();
-    if (totalDocs < 10 || hasSubscription) {      
+    if (totalDocuments < 10 || hasSubscription) {      
       setShowLimitModal(false);
       navigation.navigate(QuotationStackRoute.AddQuotation);
-    } else if (totalDocs >= 10 && !hasSubscription){
+    } else if (totalDocuments >= 10 && !hasSubscription){
       setShowLimitModal(true);
     }
   };
@@ -253,6 +252,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({ navigation }) =>
     getCurrentCompanyId().then(id => {
       const payload: IGetQuotationRequest = {
         companyId: id as string,
+        notstatus: ['APPROVED', 'COMPLETED', 'OUT FOR SHIFTING', 'MATERIAL RECEIVED AT WAREHOUSE', 'IN TRANSIT', 'REACHED AT DESTINATION CITY', 'CANCELLED ORDER']
       };
       dispatch(getQuotationsRequest(payload));
     }).catch(err => console.log(err));
@@ -264,6 +264,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({ navigation }) =>
 
   useEffect(() => {
     _getQuotationsRequest();
+    getTotalDocumentCount();
   }, []);
 
   useEffect(() => {
@@ -434,7 +435,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({ navigation }) =>
         title='Your document create limit has been reached. Please upgrade your plan.'
         buttonText='UPGRADE'
       />
-      <Spinner show={getQuotationTemplateHtmlRequesting} />
+      <Spinner show={getQuotationTemplateHtmlRequesting || loading} />
     </View>
   );
 };

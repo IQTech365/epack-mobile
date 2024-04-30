@@ -43,6 +43,7 @@ import useSerialNoHook from '../../../../../hooks/useSerialNo';
 import { IInvoice } from '../../../../../interface/order/IGetInvoiceListResponse';
 import { IUpdateInvoicePayload } from '../../../../../interface/order/IUpdateInvoiceResponse';
 import VehicleInfoView from './components/VehicleInfoView';
+import useUtilityHook from '../../../../../hooks/useUtilityHook';
 
 interface IInvoiceFormViewProps {
   orderId: string;
@@ -79,6 +80,7 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
   const {data: orderData} = order || {};
 
   const {initialValue, prefix} = useInitialValueHook('658d3ce2585e3dde644da98c');
+  const {getTotalDocumentCount} = useUtilityHook();
   const serialNo:number = useSerialNoHook();
   const invoiceDateRef = useRef(null);
   const dateOfDeliveryRef = useRef(null);
@@ -353,6 +355,7 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
       showToast('New Invoice Created', ToastType.SUCCESS);
       dispatch(resetCreateInvoiceRequest());
       dispatch(resetGetSerialNoRequest());
+      getTotalDocumentCount();
       onSuccess && onSuccess();
     } else if(!createInvoiceRequesting && createInvoiceFailure) {
       showToast('New Invoice Not Created. Try again!', ToastType.ERROR);

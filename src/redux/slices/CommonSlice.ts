@@ -21,6 +21,7 @@ import {
   ITodaySurveyResponse,
   ITodayShiftingResponse,
   IVehicleInsuranceCompanyResponse,
+  IAllDocumentCountResponse,
 } from '../../interface/common/common';
 
 interface ICommonState {
@@ -135,21 +136,28 @@ interface ICommonState {
   getTodayFollowupsListRequestFailure: boolean;
   getTodayFollowupsListRequestError: any;
 
- // Today Survey
- 
- survey: ITodaySurveyResponse | null;
- getTodaySurveyListRequesting: boolean;
- getTodaySurveyListRequestSuccess: boolean;
- getTodaySurveyListRequestFailure: boolean;
- getTodaySurveyListRequestError: any;
+  // Today Survey
 
-//  Today Shiftings
+  survey: ITodaySurveyResponse | null;
+  getTodaySurveyListRequesting: boolean;
+  getTodaySurveyListRequestSuccess: boolean;
+  getTodaySurveyListRequestFailure: boolean;
+  getTodaySurveyListRequestError: any;
 
-shifting: ITodayShiftingResponse | null;
-getTodayShiftingListRequesting: boolean;
-getTodayShiftingListRequestSuccess: boolean;
-getTodayShiftingListRequestFailure: boolean;
-getTodayShiftingListRequestError: any;
+  //  Today Shiftings
+
+  shifting: ITodayShiftingResponse | null;
+  getTodayShiftingListRequesting: boolean;
+  getTodayShiftingListRequestSuccess: boolean;
+  getTodayShiftingListRequestFailure: boolean;
+  getTodayShiftingListRequestError: any;
+
+  // All Documents count
+  allDocCount: IAllDocumentCountResponse | null;
+  getAllDocCountRequesting: boolean;
+  getAllDocCountSuccess: boolean;
+  getAllDocCountFailure: boolean;
+  getAllDocCountError: any;
 }
 
 const initialState: ICommonState = {
@@ -279,6 +287,13 @@ const initialState: ICommonState = {
   getTodayShiftingListRequestSuccess: false,
   getTodayShiftingListRequestFailure: false,
   getTodayShiftingListRequestError: null,
+
+  // All Documents count
+  allDocCount: null,
+  getAllDocCountRequesting: false,
+  getAllDocCountSuccess: false,
+  getAllDocCountFailure: false,
+  getAllDocCountError: null,
 };
 
 export const CommonSlice = createSlice({
@@ -625,50 +640,74 @@ export const CommonSlice = createSlice({
       state.getTodayFollowupsListRequestError = action.payload;
     },
 
-   // Today Surveys
+    // Today Surveys
 
-   getTodaySurveyListRequest: (state, action: PayloadAction<string>) => {
-    state.getTodaySurveyListRequesting = true;
-  },
+    getTodaySurveyListRequest: (state, action: PayloadAction<string>) => {
+      state.getTodaySurveyListRequesting = true;
+    },
 
-  getTodaySurveyListSuccess: (
-    state,
-    action: PayloadAction<ITodaySurveyResponse>,
-  ) => {
-    state.getTodaySurveyListRequesting = false;
-    state.getTodaySurveyListRequestSuccess = true;
-    state.survey = action.payload;
-  },
+    getTodaySurveyListSuccess: (
+      state,
+      action: PayloadAction<ITodaySurveyResponse>,
+    ) => {
+      state.getTodaySurveyListRequesting = false;
+      state.getTodaySurveyListRequestSuccess = true;
+      state.survey = action.payload;
+    },
 
-  getTodaySurveyListFailure: (state, action: PayloadAction<any>) => {
-    state.getTodaySurveyListRequesting = false;
-    state.getTodaySurveyListRequestSuccess = false;
-    state.getTodaySurveyListRequestFailure = true;
-    state.getTodaySurveyListRequestError = action.payload;
-  },
+    getTodaySurveyListFailure: (state, action: PayloadAction<any>) => {
+      state.getTodaySurveyListRequesting = false;
+      state.getTodaySurveyListRequestSuccess = false;
+      state.getTodaySurveyListRequestFailure = true;
+      state.getTodaySurveyListRequestError = action.payload;
+    },
 
-  // Today Shiftings
+    // Today Shiftings
 
-  getTodayShiftingListRequest: (state, action: PayloadAction<string>) => {
-    state.getTodayShiftingListRequesting = true;
-  },
+    getTodayShiftingListRequest: (state, action: PayloadAction<string>) => {
+      state.getTodayShiftingListRequesting = true;
+    },
 
-  getTodayShiftingListSuccess: (
-    state,
-    action: PayloadAction<ITodayShiftingResponse>,
-  ) => {
-    state.getTodayShiftingListRequesting = false;
-    state.getTodayShiftingListRequestSuccess = true;
-    state.shifting = action.payload;
-  },
+    getTodayShiftingListSuccess: (
+      state,
+      action: PayloadAction<ITodayShiftingResponse>,
+    ) => {
+      state.getTodayShiftingListRequesting = false;
+      state.getTodayShiftingListRequestSuccess = true;
+      state.shifting = action.payload;
+    },
 
-  getTodayShiftingListFailure: (state, action: PayloadAction<any>) => {
-    state.getTodayShiftingListRequesting = false;
-    state.getTodayShiftingListRequestSuccess = false;
-    state.getTodayShiftingListRequestFailure = true;
-    state.getTodayShiftingListRequestError = action.payload;
-  },
+    getTodayShiftingListFailure: (state, action: PayloadAction<any>) => {
+      state.getTodayShiftingListRequesting = false;
+      state.getTodayShiftingListRequestSuccess = false;
+      state.getTodayShiftingListRequestFailure = true;
+      state.getTodayShiftingListRequestError = action.payload;
+    },
+    // All Doc Count
+    getAllDocCountRequest: (state, action: PayloadAction<string>) => {
+      state.getAllDocCountRequesting = true;
+    },
+    getAllDocCountSuccess: (
+      state,
+      action: PayloadAction<IAllDocumentCountResponse>,
+    ) => {
+      state.getAllDocCountRequesting = false;
+      state.getAllDocCountSuccess = true;
+      state.allDocCount = action.payload;
+    },
 
+    getAllDocCountFailure: (state, action: PayloadAction<any>) => {
+      state.getAllDocCountRequesting = false;
+      state.getAllDocCountSuccess = false;
+      state.getAllDocCountFailure = true;
+      state.getAllDocCountError = action.payload;
+    },
+    resetGetAllDocCountRequest: (state) => {
+      state.getAllDocCountRequesting = false;
+      state.getAllDocCountSuccess = false;
+      state.getAllDocCountFailure = false;
+      state.getAllDocCountError = null;
+    },
   },
 });
 
@@ -753,16 +792,20 @@ export const {
   getTodayFollowupsListSuccess,
   getTodayFollowupsListFailure,
 
- // Today Survey
- getTodaySurveyListRequest,
- getTodaySurveyListSuccess,
- getTodaySurveyListFailure,
+  // Today Survey
+  getTodaySurveyListRequest,
+  getTodaySurveyListSuccess,
+  getTodaySurveyListFailure,
 
+  // Today Shifting
+  getTodayShiftingListRequest,
+  getTodayShiftingListSuccess,
+  getTodayShiftingListFailure,
 
-//  Today Shifting
-
-getTodayShiftingListRequest,
-getTodayShiftingListSuccess,
-getTodayShiftingListFailure
+  // All Doc Count
+  getAllDocCountRequest,
+  getAllDocCountSuccess,
+  getAllDocCountFailure,
+  resetGetAllDocCountRequest,
 
 } = CommonSlice.actions;

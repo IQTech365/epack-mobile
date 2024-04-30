@@ -17,6 +17,9 @@ import {
   IVehicleTypesResponse,
 } from '../interface/common/common';
 import {
+  getAllDocCountFailure,
+  getAllDocCountRequest,
+  getAllDocCountSuccess,
   getAppSettingsFailure,
   getAppSettingsRequest,
   getAppSettingsSuccess,
@@ -314,6 +317,19 @@ export function* getTodayShiftingSaga(action: PayloadAction<string>) {
   }
 }
 
+export function* getAllDocCountSaga(action: PayloadAction<string>) {
+  try {
+    //@ts-ignore
+    const response: any = yield call(
+      CommonService.GetAllDocCountService,
+      action.payload,
+    );
+    yield put(getAllDocCountSuccess(response));
+  } catch (error) {
+    yield put(getAllDocCountFailure(error));
+  }
+}
+
 export function* watcherCommonSaga() {
   yield takeLatest(getPackingTypesRequest.type, getPackingTypesSaga);
   yield takeLatest(getVehicleTypesRequest.type, getVehicleTypesSaga);
@@ -344,4 +360,5 @@ export function* watcherCommonSaga() {
   yield takeLatest(getTodayFollowupsListRequest.type, getTodayFollowupsSaga);
   yield takeLatest(getTodaySurveyListRequest.type, getTodaySurveySaga);
   yield takeLatest(getTodayShiftingListRequest.type, getTodayShiftingSaga);
+  yield takeLatest(getAllDocCountRequest.type, getAllDocCountSaga);
 }

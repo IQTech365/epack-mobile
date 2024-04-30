@@ -14,7 +14,6 @@ import BiltyListItem from './BiltyListItem';
 import {IBiltyItem} from './IBiltyItem';
 import {
   IBilty,
-  IBiltyFreight,
 } from '../../../../../interface/order/IGetBiltyListResponse';
 import {IHtmlTemplateRequest} from '../../../../../interface/order/templates/ITemplateResponse';
 import ModalHOC from '../../../../../common/ModalHOC';
@@ -57,7 +56,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
   const [showPreviewShareModal, setShowPreviewShareModal] =
     useState<boolean>(false);
   const templateId = useTemplateIdHook('658d3cb5585e3dde644da97e');
-  const {getAllDocCountWithSubscriptionStatus} = useUtilityHook();
+  const {totalDocuments, hasSubscription, getTotalDocumentCount, loading} = useUtilityHook();
 
   const _getBiltyType = (bilty: IBilty) => {
     let biltyType: string = '';
@@ -106,12 +105,11 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
   };
 
   const handleCreateNewBilty = () => {
-    const {totalDocs, hasSubscription} = getAllDocCountWithSubscriptionStatus();
-    if (totalDocs < 10 || hasSubscription) {      
+    if (totalDocuments < 10 || hasSubscription) {      
       setShowBiltyList(false);
       setCreateNewBilty(true);
       setShowLimitModal(false);
-    } else if (totalDocs >= 10 && !hasSubscription){
+    } else if (totalDocuments >= 10 && !hasSubscription){
       setShowLimitModal(true);
     }
   };
@@ -137,7 +135,14 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
   useEffect(() => {
     dispatch(getBiltyListRequest(orderId));
     dispatch(getVehicleInsuranceCompanyRequest());
+    getTotalDocumentCount();
   }, []);
+
+  useEffect(() => {
+    if (totalDocuments >= 10 && !hasSubscription){
+      setShowLimitModal(true);
+    }
+  }, [totalDocuments, hasSubscription]);
 
   const showEmptyView = () => {
     return (
@@ -187,6 +192,10 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
 
   const hanldeAlertModalClose = () => {
     setShowLimitModal(false);
+    if (totalDocuments >= 10 && !hasSubscription){
+      setShowBiltyList(true);
+      setCreateNewBilty(false);
+    }
   };
 
   const handlePlanUpgrade = () => {
@@ -250,15 +259,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
               <TemplateViewer html={biltyTemplateHtml} />
             </View>
           </ModalHOC>
-          <AlertModal
-            visible={showLimitModal}
-            icon={<LimitReachImage width={200} height={200} />}
-            onClose={hanldeAlertModalClose}
-            onUpgrade={handlePlanUpgrade}
-            title="Your free document create limit has been reached. Please upgrade your plan."
-            buttonText="UPGRADE"
-          />
-          <Spinner show={getBiltyHtmlRequesting} />
+          
         </View>
       );
     }
@@ -295,7 +296,15 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
       />
       {showForm()}
       {showList()}
-      <Spinner show={getBiltyListRequesting} />
+      <AlertModal
+        visible={showLimitModal}
+        icon={<LimitReachImage width={200} height={200} />}
+        onClose={hanldeAlertModalClose}
+        onUpgrade={handlePlanUpgrade}
+        title="Your free document create limit has been reached. Please upgrade your plan."
+        buttonText="UPGRADE"
+      />
+      <Spinner show={getBiltyListRequesting || getBiltyHtmlRequesting || loading} />
     </>
   );
 };

@@ -4,8 +4,8 @@ import {View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../../../common/Spacer';
 import Label from '../../../../../common/Label';
-import DropdownComponent from '../../../../../common/DropdownComponent';
-import Input from '../../../../../common/Input';
+import DropdownComponent, { IDropdownHandler } from '../../../../../common/DropdownComponent';
+import Input, { InputMethods } from '../../../../../common/Input';
 import {COLOR_BLACK, COLOR_BLUE, COLOR_GRAY} from '../../../../../utils/colors';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import styles from './style';
@@ -13,7 +13,7 @@ import Button from '../../../../../common/Button';
 import documentTypeOptions from '../../../../../data/documentTypeOptions.json';
 import isoTypeOptions from '../../../../../data/isoTypeOptions.json';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
-import DatePickerComponent from '../../../../../common/DatePickerComponent';
+import DatePickerComponent, { IDateMethods } from '../../../../../common/DatePickerComponent';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
 import { IAddDocumentRequest, IUpdateDocumentRequest } from '../../../../../interface/setting/packerProfile/document/IAddDocumentRequest';
 import { addDocumentRequest, getDocumentsRequest, resetAddDocumentRequest, resetUpdateDocumentRequest, updateDocumentRequest } from '../../../../../redux/slices/ProfileSettingSlice';
@@ -52,13 +52,13 @@ const DocumentFormView: React.FC<IDocumentFormViewProps> = ({onSuccess, isEdit, 
   } = useAppSelector(state => state.Setting);
   const {submodules} = useAppSelector(state => state.Common);
 
-  const documentTypeRef = useRef(null);
+  const documentTypeRef = useRef<IDropdownHandler>(null);
   const docNumberInputRef = useRef(null);
-  const isoTypeRef = useRef(null);
-  const isoNumberInputRef = useRef(null);
-  const ibaCodeInputRef = useRef(null);
-  const ibaValidTillDateRef = useRef(null);
-  const otherDocTitleInputRef = useRef(null);
+  const isoTypeRef = useRef<IDropdownHandler>(null);
+  const isoNumberInputRef = useRef<InputMethods>(null);
+  const ibaCodeInputRef = useRef<InputMethods>(null);
+  const ibaValidTillDateRef = useRef<IDateMethods>(null);
+  const otherDocTitleInputRef = useRef<InputMethods>(null);
 
   const authId = useAuthId();
   const handleDocumentType = (item: TDropdownItem) => {
@@ -180,14 +180,12 @@ const DocumentFormView: React.FC<IDocumentFormViewProps> = ({onSuccess, isEdit, 
 
       const documentTypeItem:TDropdownItem = documentTypeOptions.find((d:TDropdownItem) => d.label == documentType) as TDropdownItem;
       if(documentTypeItem !== undefined){
-        //@ts-ignore
         documentTypeRef && documentTypeRef?.current?.setDefaultValue(documentTypeItem);
       }
       if(documentType == 'ISO Certificate') {
         setISOType(documentTypeValue);
         const isoTypeItem:TDropdownItem = isoTypeOptions.find((d:TDropdownItem) => d.label == documentTypeValue) as TDropdownItem;
         if(isoTypeItem !== undefined){
-          //@ts-ignore
           isoTypeRef && isoTypeRef?.current?.setDefaultValue(isoTypeItem);
         }
       }
@@ -195,23 +193,20 @@ const DocumentFormView: React.FC<IDocumentFormViewProps> = ({onSuccess, isEdit, 
         setISOType(documentTypeTitle);
         const isoTypeItem:TDropdownItem = isoTypeOptions.find((d:TDropdownItem) => d.label == documentTypeTitle) as TDropdownItem;
         if(isoTypeItem !== undefined){
-          //@ts-ignore
           isoTypeRef && isoTypeRef?.current?.setDefaultValue(isoTypeItem);
         }
-        //@ts-ignore
         isoNumberInputRef && isoNumberInputRef?.current?.setValue(documentTypeValue);
       }
       if(documentType == 'IBA Approval') {
         setIBACode(documentTypeValue);
-        //@ts-ignore
         ibaCodeInputRef && ibaCodeInputRef?.current?.setValue(documentTypeValue);
-        //@ts-ignore
-        ibaValidTillDateRef && ibaValidTillDateRef?.current?.setDefaultValue(new Date(ibaValidTillDate));
+        if(ibaValidTillDate) {
+          ibaValidTillDateRef && ibaValidTillDateRef?.current?.setDefaultValue(new Date(ibaValidTillDate));
+        }
       }
 
       if(documentType == 'Other') {
         setDocumentTitle(documentTypeTitle);
-        //@ts-ignore
         otherDocTitleInputRef && otherDocTitleInputRef?.current?.setValue(documentTypeTitle);
       }
     }
@@ -250,7 +245,6 @@ const DocumentFormView: React.FC<IDocumentFormViewProps> = ({onSuccess, isEdit, 
             <DropdownComponent 
               data={isoTypeOptions} 
               onSelect={handleISOType}
-              //@ts-ignore
               ref={isoTypeRef}
             />
           </View>
@@ -266,7 +260,6 @@ const DocumentFormView: React.FC<IDocumentFormViewProps> = ({onSuccess, isEdit, 
                   selectionColor={COLOR_BLACK}
                   placeholder='Enter document ID'
                   autoCapitalize="characters"
-                  //@ts-ignore
                   ref={isoNumberInputRef}
                 />
               </View>
@@ -292,7 +285,6 @@ const DocumentFormView: React.FC<IDocumentFormViewProps> = ({onSuccess, isEdit, 
                 selectionColor={COLOR_BLACK}
                 placeholder='Enter document ID'
                 autoCapitalize="characters"
-                //@ts-ignore
                 ref={ibaCodeInputRef}
               />
             </View>
@@ -300,7 +292,6 @@ const DocumentFormView: React.FC<IDocumentFormViewProps> = ({onSuccess, isEdit, 
               <Label text="Valid Till" style={styles.label} />
               <DatePickerComponent 
                 onDateSelect={handleValidTillDate}
-                //@ts-ignore
                 ref={ibaValidTillDateRef}
               />
             </View>
@@ -319,7 +310,6 @@ const DocumentFormView: React.FC<IDocumentFormViewProps> = ({onSuccess, isEdit, 
           <DropdownComponent
             data={documentTypeOptions}
             onSelect={handleDocumentType}
-            //@ts-ignore
             ref={documentTypeRef}
           />
         </View>
@@ -335,7 +325,6 @@ const DocumentFormView: React.FC<IDocumentFormViewProps> = ({onSuccess, isEdit, 
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 placeholder='Enter Document Title'
-                //@ts-ignore
                 ref={otherDocTitleInputRef}
               />
             </View>
@@ -352,7 +341,6 @@ const DocumentFormView: React.FC<IDocumentFormViewProps> = ({onSuccess, isEdit, 
                 selectionColor={COLOR_BLACK}
                 placeholder='Enter Document Number'
                 autoCapitalize="characters"
-                //@ts-ignore
                 ref={docNumberInputRef}
               />
             </View>

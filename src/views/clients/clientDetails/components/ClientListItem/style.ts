@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   },
   nameText: {
       color: COLOR_GRAY,
-      fontSize: 16,
+      fontSize: 14,
       fontFamily: 'WorkSans-SemiBold',
   },
   amountText: {
@@ -102,12 +102,12 @@ const styles = StyleSheet.create({
   },
   labelText: {
       color: COLOR_BLACK,
-      fontSize: 14,
+      fontSize: 12,
       fontFamily: 'WorkSans-Medium',
   },
   valueText: {
     color: COLOR_BLACK,
-    fontSize: 14,
+    fontSize: 12,
     fontFamily: 'WorkSans-Regular',
   },
   viewDetailsContainer: {

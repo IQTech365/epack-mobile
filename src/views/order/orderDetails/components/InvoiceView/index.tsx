@@ -55,15 +55,14 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ orderId, item, navigation })
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showLimitModal, setShowLimitModal] = useState<boolean>(false);
   const templateId = useTemplateIdHook('658d3ce2585e3dde644da98c');
-  const { getAllDocCountWithSubscriptionStatus } = useUtilityHook();
+  const { totalDocuments, hasSubscription, getTotalDocumentCount, loading } = useUtilityHook();
 
   const handleCreateNewInvoice = () => {
-    const {totalDocs, hasSubscription} = getAllDocCountWithSubscriptionStatus();
-    if (totalDocs < 10 || hasSubscription) {      
+    if (totalDocuments < 10 || hasSubscription) {      
       setShowInvoiceList(false);
       setCreateNewInvoice(true);
       setShowLimitModal(false);
-    } else if (totalDocs >= 10 && !hasSubscription){
+    } else if (totalDocuments >= 10 && !hasSubscription){
       setShowLimitModal(true);
     }
   };
@@ -98,6 +97,10 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ orderId, item, navigation })
 
   const hanldeAlertModalClose = () => {
     setShowLimitModal(false);
+    if (totalDocuments >= 10 && !hasSubscription){
+      setShowInvoiceList(true);
+      setCreateNewInvoice(false);
+    }
   }
 
   const handlePlanUpgrade = () => {
@@ -137,7 +140,14 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ orderId, item, navigation })
     dispatch(getVehicleModelsRequest());
     dispatch(getVehicleTypesRequest());
     dispatch(getVehicleSizeRequest());
+    getTotalDocumentCount();
   }, []);
+
+  useEffect(() => {
+    if (totalDocuments >= 10 && !hasSubscription){
+      setShowLimitModal(true);
+    }
+  }, [totalDocuments, hasSubscription]);
 
   const handleOnRefresh = useCallback(() => {
     dispatch(getInvoiceListRequest(orderId));
@@ -205,14 +215,6 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ orderId, item, navigation })
               <TemplateViewer html={invoiceTemplateHtml} />
             </View>
           </ModalHOC>
-          <AlertModal 
-            visible={showLimitModal}
-            icon={<LimitReachImage width={200} height={200} />}
-            onClose={hanldeAlertModalClose} 
-            onUpgrade={handlePlanUpgrade} 
-            title='Your document create limit has been reached. Please upgrade your plan.'
-            buttonText='UPGRADE'
-          />
         </View>
       );
     }
@@ -247,7 +249,15 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ orderId, item, navigation })
       />
       {showForm()}
       {showList()}
-      <Spinner show={getInvoiceHtmlRequesting} />
+      <AlertModal 
+        visible={showLimitModal}
+        icon={<LimitReachImage width={200} height={200} />}
+        onClose={hanldeAlertModalClose} 
+        onUpgrade={handlePlanUpgrade} 
+        title='Your document create limit has been reached. Please upgrade your plan.'
+        buttonText='UPGRADE'
+      />
+      <Spinner show={getInvoiceHtmlRequesting || loading} />
     </>
   );
 };

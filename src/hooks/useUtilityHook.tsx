@@ -1,102 +1,77 @@
-import { useEffect } from 'react';
-import {IFloor, IInsurancePercentage, ISubmodule} from '../interface/common/common';
-import { IList, IPurchasedSubscription, ISubscription } from '../interface/subscription/subscription';
+import {useEffect, useState} from 'react';
+import {
+  IFloor,
+  IInsurancePercentage,
+  ISubmodule,
+} from '../interface/common/common';
+import {
+  IList,
+  IPurchasedSubscription,
+  ISubscription,
+} from '../interface/subscription/subscription';
 import {useAppSelector} from '../redux/hooks';
-import { TDropdownItem } from '../type/TDropdownItem';
-import { getQuotationHtmlRequest, getQuotationsRequest } from '../redux/slices/QuotationSlice';
-import { useDispatch } from 'react-redux';
-import { getBiltyListRequest, getCarConditionListRequest, getInvoiceListRequest, getMoneyReceiptListRequest } from '../redux/slices/OrderSlice';
-import { addSurveyItemRequest, getSurveyItemListRequest } from '../redux/slices/EnquirySlice';
-import { getCurrentCompanyId } from '../utils/storage';
-import { IGetQuotationRequest } from '../interface/quotation/IGetQuotationRequest';
+import {TDropdownItem} from '../type/TDropdownItem';
+import {useDispatch} from 'react-redux';
+import {getCurrentCompanyId} from '../utils/storage';
+import {
+  getAllDocCountRequest,
+  resetGetAllDocCountRequest,
+} from '../redux/slices/CommonSlice';
 
 const useUtilityHook = () => {
-  const dispatch = useDispatch()
-  const {insurancePercentages, floors, submodules} = useAppSelector(state => state.Common);
+  const dispatch = useDispatch();
+  const {
+    insurancePercentages,
+    floors,
+    submodules,
+    allDocCount,
+    getAllDocCountRequesting,
+    getAllDocCountSuccess,
+    getAllDocCountFailure,
+  } = useAppSelector(state => state.Common);
   const {purchasedSubscriptions} = useAppSelector(state => state.Subscription);
+  console.log('allDocCount----', JSON.stringify(allDocCount));
+  const [totalDocuments, setTotalDocuments] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(false);
 
+  useEffect(() => {
+    if (!getAllDocCountRequesting && getAllDocCountSuccess) {
+      setLoading(false);
+      const {data} = allDocCount || {};
+      console.log('allDocCount-2---', JSON.stringify(allDocCount));
+      if (data) {
+        setTotalDocuments(data?.totalCount);
+      }
+      dispatch(resetGetAllDocCountRequest());
+    } else if (!getAllDocCountRequesting && getAllDocCountFailure) {
+      setLoading(false);
+      dispatch(resetGetAllDocCountRequest());
+    }
+  }, [
+    getAllDocCountRequesting,
+    getAllDocCountSuccess,
+    getAllDocCountFailure,
+    allDocCount,
+  ]);
 
-  // useEffect(()=>{
-  //   _getQuotationsRequest();
-  //   dispatch(getMoneyReceiptListRequest())
-  //   dispatch(getCarConditionListRequest())
-  //   dispatch(getInvoiceListRequest())
-  // },[])
-
-
-  const _getQuotationsRequest = () => {
+  const getTotalDocumentCount = () => {
+    setLoading(true);
     getCurrentCompanyId()
       .then(id => {
-        const payload: IGetQuotationRequest = {
-          companyId: id as string,
-        };
-        dispatch(getQuotationsRequest(payload));
+        dispatch(getAllDocCountRequest(id as string));
       })
       .catch(err => console.log(err));
   };
-
-  // Quotation
-  const {quotations = []} = useAppSelector(state => state.Quotation);
-  const getTotalQuotations = () => {
-    const { data } = quotations || {};
-    let _count = 0;
-    if (data && Array.isArray(data)) {
-      _count = data.length;
-    }    
-    return _count;
-  };
-
-  // Bilty
-  const {biltyList, invoices, moneyReceiptList, carConditionList} = useAppSelector(state => state.Order);
-  const getTotalBilty = () => {
-    const {data} = biltyList || {};
-    let _count = 0;
-    if (data && Array.isArray(data)) {
-      _count = data.length;
-    }
-    return _count;
-  };
-
-  // Invoice
-  const getTotalInvoice = () => {
-    const { data } = invoices || {};
-    let _count = 0;
-    if (data && Array.isArray(data)) {
-      _count = data.length;
-    }
-    return _count;
-  };
-
-  // Money Receipt
-  const getMoneyReceiptDocCount = ():number => {
-    const {data} = moneyReceiptList || {};
-    let count:number = 0;
-    if(data && Array.isArray(data)) {
-      count = data.length;
-    }
-    return count;
-  }
-
-  // Vehicle Conditions
-  const getVehicleConditionsDocCount = ():number => {
-    const {data} = carConditionList || {};
-    let count:number = 0;
-    if(data && Array.isArray(data)) {
-      count = data.length;
-    }
-    return count;
-  }
-  
 
   const getInsurancePercentageList = (): TDropdownItem[] => {
     let list: TDropdownItem[] = [];
     const {data} = insurancePercentages || {};
     if (data && Array.isArray(data) && data.length > 0) {
-      list = data.map((d:IInsurancePercentage) => {
-        const item:TDropdownItem = {
+      list = data.map((d: IInsurancePercentage) => {
+        const item: TDropdownItem = {
           label: d.insurancePercentage,
-          value: d._id
-        }
+          value: d._id,
+        };
         return item;
       });
     }
@@ -107,11 +82,11 @@ const useUtilityHook = () => {
     let list: TDropdownItem[] = [];
     const {data} = floors || {};
     if (data && Array.isArray(data) && data.length > 0) {
-      list = data.map((d:IFloor) => {
-        const item:TDropdownItem = {
+      list = data.map((d: IFloor) => {
+        const item: TDropdownItem = {
           label: d.floor,
           value: d._id,
-        }
+        };
         return item;
       });
     }
@@ -127,40 +102,44 @@ const useUtilityHook = () => {
     return plan;
   };
 
-  const getDocumentLimitCount = (submoduleId:string) => {
-    let count:number = 0;
-    const purchasedPlan:IPurchasedSubscription = _getCurrentPlanInfo() as IPurchasedSubscription;
-    if(purchasedPlan) {
-      const subscription:ISubscription[] = purchasedPlan.subscription;
-      if(subscription && Array.isArray(subscription) && subscription.length > 0) {
-        const list:IList[] = purchasedPlan.subscription[0].list;
-        if(list && Array.isArray(list) && list.length > 0) {
-          const document:IList = list.find((d:IList) => d.subModuleId == submoduleId) as IList;
-          if(document) {
+  const getDocumentLimitCount = (submoduleId: string) => {
+    let count: number = 0;
+    const purchasedPlan: IPurchasedSubscription =
+      _getCurrentPlanInfo() as IPurchasedSubscription;
+    if (purchasedPlan) {
+      const subscription: ISubscription[] = purchasedPlan.subscription;
+      if (
+        subscription &&
+        Array.isArray(subscription) &&
+        subscription.length > 0
+      ) {
+        const list: IList[] = purchasedPlan.subscription[0].list;
+        if (list && Array.isArray(list) && list.length > 0) {
+          const document: IList = list.find(
+            (d: IList) => d.subModuleId == submoduleId,
+          ) as IList;
+          if (document) {
             count = parseInt(document.qty);
           }
         }
-
       }
     }
     return count === 0 ? 10 : count;
-  }
+  };
 
-  const getAllDocCountWithSubscriptionStatus = () => {
-    const quotationCount = getTotalQuotations();
-    const biltyCount = getTotalBilty();
-    const invoiceCount = getTotalInvoice();
-    const carConditionsCount = getVehicleConditionsDocCount();
-    const moneyReceiptCount = getMoneyReceiptDocCount();
-    const totalDocs = quotationCount + invoiceCount + biltyCount + carConditionsCount + moneyReceiptCount;
-    const hasSubscription = _getCurrentPlanInfo() !== null;
-    console.log('totalDocs----', totalDocs);
-    console.log('hasSubscription----', hasSubscription);
-    return {totalDocs, hasSubscription};
-  }
+  const hasSubscription = _getCurrentPlanInfo() !== null;
+  console.log('hasSubscription----', hasSubscription);
+  console.log('totalDocuments----', totalDocuments);
 
-
-  return {getInsurancePercentageList, getFloorsList, getDocumentLimitCount, getAllDocCountWithSubscriptionStatus};
+  return {
+    getInsurancePercentageList,
+    getFloorsList,
+    getDocumentLimitCount,
+    getTotalDocumentCount,
+    hasSubscription,
+    totalDocuments,
+    loading,
+  };
 };
 
 export default useUtilityHook;

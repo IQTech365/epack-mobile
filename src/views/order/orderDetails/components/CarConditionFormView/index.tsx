@@ -63,6 +63,7 @@ import {ToastType, showToast} from '../../../../../utils/utility';
 import {ICardConditionData} from '../../../../../interface/order/IGetCarConditionListResponse';
 import {IUpdateCarConditionPayload} from '../../../../../interface/order/IUpdateCarConditionResponse';
 import {getVehicleInsuranceCompanyRequest} from '../../../../../redux/slices/CommonSlice';
+import useUtilityHook from '../../../../../hooks/useUtilityHook';
 
 interface ICarConditionFormViewProps {
   orderId: string | undefined;
@@ -109,6 +110,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
     '658d3cab585e3dde644da977',
   );
   const serialNo: number = useSerialNoHook();
+  const {getTotalDocumentCount} = useUtilityHook();
 
   const carConditionNoInputRef = useRef<InputMethods>(null);
   const DateInputRef = useRef<IDateMethods>(null);
@@ -479,6 +481,7 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
       showToast('Car Conditiion Created.', ToastType.SUCCESS);
       dispatch2(resetCreateCarConditionRequest());
       dispatch2(resetGetSerialNoRequest());
+      getTotalDocumentCount();
       onSuccess && onSuccess();
     } else if (!createCarConditionRequesting && createCarConditionError) {
       showToast('Car Condition Not Created. Try again!', ToastType.ERROR);
