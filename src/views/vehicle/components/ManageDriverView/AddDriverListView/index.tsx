@@ -50,7 +50,7 @@ const AddDriverListItem: React.FC<IAddDriverListItemProps> = ({
           <Spacer height={2} />
           <View style={styles.rowContainer}>
             <View style={styles.rowItemContainer}>
-              <Text style={styles.labelText}>Dreiver Name</Text>
+              <Text style={styles.labelText}>Driver Name</Text>
             </View>
             <View style={styles.rowItemContainer2}>
               <Text style={styles.valueText}>{item.driverName}</Text>
