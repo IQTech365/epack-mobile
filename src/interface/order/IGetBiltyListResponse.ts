@@ -16,7 +16,25 @@ export interface IVehicle {
 export interface IDriver {
   name: string;
   mobile: string;
-  license: string;
+  licenceNo: string;
+  aadharNo: string;
+  aadharFront: string;
+  aadharBack: string;
+  driverLicence: string;
+  driverName: string;
+  driverPhoto: string;
+  currentAddress: IDriverCurrentAdd;
+  permanentAddress:IDriverParmanentAdd
+}
+
+export interface IDriverCurrentAdd {
+  city: string;
+  address: string;
+}
+
+export interface IDriverParmanentAdd {
+  city: string;
+  address: string;
 }
 
 export interface IEWayBill {

@@ -20,19 +20,25 @@ export interface IAddDriverItem {
 interface IAddDriverListItemProps {
   item: IAddDriverItem;
   index: number;
+  onPress: (index: number) => void;
+
 }
 
 const AddDriverListItem: React.FC<IAddDriverListItemProps> = ({
   item,
   index,
+  onPress
 }: IAddDriverListItemProps) => {
+  console.log(item,"iemdssss");
+  
   return (
     <>
       <View style={styles.indexContainer}>
         <Text style={styles.indexText}>{index + 1}</Text>
       </View>
-      <Shadow style={styles.cardWrapper} distance={1}>
-        <TouchableOpacity style={styles.container} activeOpacity={0.6}>
+      <Shadow style={styles.cardWrapper} distance={1} key={`${index}`}>
+        <TouchableOpacity style={styles.container} activeOpacity={0.6} 
+          onPress={() => onPress(index)}>
           <View style={styles.rowContainer}>
             <View style={styles.rowItemContainer}>
               <Text style={styles.labelText}>Entity Type</Text>

@@ -5,6 +5,7 @@ import ManageVehicleView from '../views/vehicle/components/ManageVehicleView';
 import ManageDriverView from '../views/vehicle/components/ManageDriverView';
 import { VehicleManagementStackParamList } from './params/VehicleManagementStackParamList';
 import AddVehicleDetailsView from '../views/vehicle/components/ManageVehicleView/AddVehicleDetailsView';
+import DriverDetailsView from '../views/vehicle/components/ManageDriverView/DriverDetailsView';
 
 const SettingStack = createNativeStackNavigator<VehicleManagementStackParamList>();
 
@@ -26,6 +27,10 @@ const VehicleMangementStacknavigator = () => {
       <SettingStack.Screen
         name="VehicleDetails"
         component={AddVehicleDetailsView}
+      />
+      <SettingStack.Screen
+        name="DriverDetails"
+        component={DriverDetailsView}
       />
     </SettingStack.Navigator>
   );

@@ -22,10 +22,15 @@ import {getDriverRequest} from '../../../../redux/slices/VehicleSlice';
 import {AddDriverFormContextProvider} from '../../../../provider/AddDriverFormContextProvider';
 import {COLOR_WHITE} from '../../../../utils/colors';
 import { getCurrentCompanyId } from '../../../../utils/storage';
+import { IDriver } from '../../../../interface/order/IGetBiltyListResponse';
+import { NavigationContainer, NavigationProp } from '@react-navigation/native';
 
-interface IAddDriverDetailViewProps {}
+interface IAddDriverDetailViewProps {
+  navigation: NavigationProp<any, any>;
 
-const ManageDriverView: React.FC<IAddDriverDetailViewProps> = ({}) => {
+}
+
+const ManageDriverView: React.FC<IAddDriverDetailViewProps> = ({navigation}) => {
   const dispatch = useAppDispatch();
 
   const {Drivers, getDriversRequesting} = useAppSelector(
@@ -52,6 +57,11 @@ const ManageDriverView: React.FC<IAddDriverDetailViewProps> = ({}) => {
     getCurrentCompanyId().then(id => {
       dispatch(getDriverRequest(id as string));
     }).catch(err => console.log(err));
+  }
+
+  const goToDriverDetails = (index: number) => {
+    const Driver:IDriver = DriversData[index];
+    navigation.navigate("DriverDetails", {item: Driver});
   }
 
   useEffect(() => {
@@ -100,7 +110,8 @@ const ManageDriverView: React.FC<IAddDriverDetailViewProps> = ({}) => {
           }
           renderItem={({item, index}) => (
             <View style={{padding: 10}}>
-              <AddDriverListItem item={item} index={index} />
+              <AddDriverListItem item={item} index={index}
+              onPress={goToDriverDetails} />
             </View>
           )}
           ListEmptyComponent={showEmptyView()}

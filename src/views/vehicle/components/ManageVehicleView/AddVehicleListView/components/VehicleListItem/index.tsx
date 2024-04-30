@@ -83,8 +83,6 @@ const VehicleListItem: React.FC<IAddLorryListItemProps> = ({
               <Text style={styles.valueText}>{item.vehicleRegistrationNo}</Text>
             </View>
           </View>
-        
-
         </TouchableOpacity>
       </Shadow>
     </>

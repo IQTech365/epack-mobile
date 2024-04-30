@@ -305,7 +305,7 @@ export const initialState: State = {
   gst_type: gstTypeOptions[0].label,
   gst_paid_by: gstPaidByOptions[0],
   // **** Insurace ****
-  transit_insurance: transitInsuranceOptions[1],
+  transit_insurance:'Not Required',
   transit_insurance_type: insurnaceTypeOptions[0].label,
   transit_charges: [],
   // **** Storage ****
