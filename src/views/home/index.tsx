@@ -188,6 +188,9 @@ const HomePageView:FC<IProps> = ({navigation}) => {
     EventRegister.addEventListener('onUpdateEvent', () => {
       _getDashboardData();
     });
+    EventRegister.addEventListener('onUpdateSubscription', () => {
+      _getPurchasedSubscription();
+    });
     checkIntroVideoWatchStatus();
   }, []);
 

@@ -174,8 +174,6 @@ const AddLorryView: React.FC<IProps> = ({onSuccess}) => {
         pollutionRenewalDate: state.pollution_certificate_renewal_date || "",
         addedBy: authId,
       };
-      console.log(payload,"VEHICLEEEEEE");
-      
     //   const filteredPayload: IAddLorryRequest = {};
     //   for (const [key, value] of Object.entries(payload)) {
     //   if (value !== "" && value !== null && value !== undefined) {
@@ -233,8 +231,6 @@ const AddLorryView: React.FC<IProps> = ({onSuccess}) => {
             <DropdownComponent
               data={getVehicleTypeList(vehicleTypes)}
               onSelect={(item: TDropdownItem) => {
-                console.log(item,"getVehicleTypeList");
-                
                 setVehicleTypeId(item.value);
                 setLorryType(item.value);
               }}

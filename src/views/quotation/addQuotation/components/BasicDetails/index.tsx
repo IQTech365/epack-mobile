@@ -60,7 +60,6 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item}) => {
     setCompanyAddress,
     setIsSerialNoAutomatic,
   } = useQuotationFormContextHook();
-  console.log('state.errors.quotation_no', state.errors.quotation_no);
 
   const shiftingTypeDropdownCompRef = useRef<IDropdownHandler>(null);
   const shiftingLuggageDropdownCompRef = useRef<IDropdownHandler>(null);
@@ -165,8 +164,6 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item}) => {
       }
     }
   }, [isEdit, item]);
-
-  console.log(switchState, 'sssss');
 
   return (
     <CollapsibleView title="BASIC DETAILS" collapsed={false}>

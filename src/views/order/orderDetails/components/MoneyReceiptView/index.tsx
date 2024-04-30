@@ -80,7 +80,6 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
 
   const handleCreateNewMoneyReceipt = () => {
     setIsEdit(false);
-    console.log('handleCreateNewMoneyReceipt-called');
     if (totalDocuments < 10 || hasSubscription) {      
       setShowMoneyReceiptList(false);
       setCreateNewMoneyReceipt(true);

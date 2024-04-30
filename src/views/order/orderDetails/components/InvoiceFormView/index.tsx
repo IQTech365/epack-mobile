@@ -300,10 +300,7 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
           id: invoiceData?._id as string,
           data: payload,
         }
-        console.log(payload,"oaykias of ubcouice");
-        
         dispatch(updateInvoiceRequest(updatePayload));
-        
       } else {
         dispatch(createInvoiceRequest(payload));
       }

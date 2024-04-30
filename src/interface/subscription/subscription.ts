@@ -180,6 +180,7 @@ export interface IAddPurchaseRequest {
   discountAmount: string;
   couponCode: string;
   status: string;
+  companyId?: string;
 }
 
 // Add Purchase Result Data
