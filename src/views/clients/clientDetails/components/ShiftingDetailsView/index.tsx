@@ -10,7 +10,7 @@ import {IGetOrdersRequest} from '../../../../../interface/order/IGetOrdersReques
 import {getOrdersRequest} from '../../../../../redux/slices/OrderSlice';
 import Spinner from '../../../../../common/Spinner';
 import {IGetOrdersData} from '../../../../../interface/order/IGetOrdersResponse';
-import {formatDate4} from '../../../../../utils/formatter';
+import {formatDate, formatDate4} from '../../../../../utils/formatter';
 import {getCurrentCompanyId} from '../../../../../utils/storage';
 
 interface IShiftingDetailsViewProps {
@@ -47,7 +47,7 @@ const ShiftingDetailsView: React.FC<IShiftingDetailsViewProps> = ({item}) => {
     return (
       <>
         <CollapsibleView
-          title={`SHIFTING DATE - ${formatDate4(new Date(item.shiftingDate))}`}
+          title={`SHIFTING DATE - ${formatDate(new Date(item.shiftingDate))}`}
           collapsed={false}>
           <View>
             <View style={styles.elementContainer}>
@@ -69,7 +69,8 @@ const ShiftingDetailsView: React.FC<IShiftingDetailsViewProps> = ({item}) => {
               />
               <EnquiryDetailListItem
                 label="Delivery Date"
-                value={item.deliveryDate}
+                value ={formatDate(new Date(item.deliveryDate))}
+                // value={item.deliveryDate}
               />
               <EnquiryDetailListItem
                 label="Delivered Date"

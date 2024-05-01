@@ -17,7 +17,7 @@ import {ISingleOrderRequest} from '../../../../../interface/order/ISingleOrderRe
 import Spinner from '../../../../../common/Spinner';
 import {ISingleEnquiryData} from '../../../../../interface/enquiry/ISingleEnquiryResponse';
 import {COLOR_BLACK, COLOR_GREEN} from '../../../../../utils/colors';
-import {formatDate4} from '../../../../../utils/formatter';
+import {formatDate, formatDate4} from '../../../../../utils/formatter';
 interface IDetailsViewProps {
   enquiryId: string;
 }
@@ -386,7 +386,7 @@ const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
               <OrderDetailListItem
                 label="Moving Date"
                 value={
-                  formatDate4(new Date(item?.shiftingDate)) || 'Not Available'
+                  formatDate(new Date(item?.shiftingDate)) || 'Not Available'
                 }
               />
               <OrderDetailListItem
