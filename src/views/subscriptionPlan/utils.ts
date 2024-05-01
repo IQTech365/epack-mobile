@@ -172,8 +172,8 @@ export interface IDurationConverter {
 }
 export const getDurationConverter = (duration:string):IDurationConverter => {
   let durationConverter:IDurationConverter = {months: 0, days: 0, years: 0};
-  if(duration == 'monthly') {
-    durationConverter = {months: 1, days: 0, years: 0};
+  if(duration == 'quarterly') {
+    durationConverter = {months: 3, days: 0, years: 0};
   } else if(duration == 'half-yearly') {
     durationConverter = {months: 6, days: 0, years: 0};
   } else if(duration == 'yearly') {

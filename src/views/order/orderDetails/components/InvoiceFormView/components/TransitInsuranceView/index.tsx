@@ -145,8 +145,6 @@ const TransitInsuranceView: React.FC<Props> = ({isEdit, invoiceData}) => {
       if(state.transit_insurance == transitInsuranceOptions[0]) {
         const _transitInsurance:IInvoiceTransitInsurance = invoiceData.transitInsurance;
         if(_.isObject(_transitInsurance)) {
-          setTransitInsurance(_transitInsurance.isRequired);
-          setTransitInsuranceType(_transitInsurance.transitType);
           const {transit_charges} = state;
           const prevDataArr:ITransitCharge[] = _transitInsurance.charges.map((e:IInvoiceTransitInsuranceCharge)=> {
             const transitChargeItem: ITransitCharge = {

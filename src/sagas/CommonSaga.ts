@@ -38,6 +38,9 @@ import {
   getFloorsFailure,
   getFloorsRequest,
   getFloorsSuccess,
+  getImportantLinksFailure,
+  getImportantLinksRequest,
+  getImportantLinksSuccess,
   getInsurancePercentagesFailure,
   getInsurancePercentagesRequest,
   getInsurancePercentagesSuccess,
@@ -330,6 +333,18 @@ export function* getAllDocCountSaga(action: PayloadAction<string>) {
   }
 }
 
+export function* getImportantLinksSaga(action: PayloadAction<string>) {
+  try {
+    //@ts-ignore
+    const response: any = yield call(
+      CommonService.GetImportantLinksService,
+    );
+    yield put(getImportantLinksSuccess(response));
+  } catch (error) {
+    yield put(getImportantLinksFailure(error));
+  }
+}
+
 export function* watcherCommonSaga() {
   yield takeLatest(getPackingTypesRequest.type, getPackingTypesSaga);
   yield takeLatest(getVehicleTypesRequest.type, getVehicleTypesSaga);
@@ -361,4 +376,6 @@ export function* watcherCommonSaga() {
   yield takeLatest(getTodaySurveyListRequest.type, getTodaySurveySaga);
   yield takeLatest(getTodayShiftingListRequest.type, getTodayShiftingSaga);
   yield takeLatest(getAllDocCountRequest.type, getAllDocCountSaga);
+  yield takeLatest(getImportantLinksRequest.type, getImportantLinksSaga);
+
 }

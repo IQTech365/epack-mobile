@@ -1,5 +1,5 @@
 import React, {FC, useEffect, useState} from 'react';
-import {View, Text, Dimensions} from 'react-native';
+import {View, Text, Dimensions, ScrollView} from 'react-native';
 import Header from '../../common/Header';
 import styles from './style';
 import Spacer from '../../common/Spacer';
@@ -14,8 +14,10 @@ import {
 import {
   IAddPurchaseRequest,
   IGetPurchasedSubscriptionParams,
+  IPlan,
   IPurchasedSubscription,
   IRazorPayCreateOrderPayload,
+  ISubscription,
   ISubscriptionPlan,
 } from '../../interface/subscription/subscription';
 import {
@@ -37,6 +39,9 @@ import {getCurrentCompanyId} from '../../utils/storage';
 import CurrentPlanCard from './CurrentPlanCard';
 import EmptyPlanCard from './EmptyPlanCard';
 import {NavigationProp} from '@react-navigation/native';
+import _ from 'underscore';
+import PlanVariants from './PlanVariants';
+import OtherSubscriptionPlan from './OtherSubscriptionPlan';
 
 const {width} = Dimensions.get('window');
 
@@ -70,6 +75,9 @@ const SubscriptionView: FC<IProps> = ({navigation}) => {
   const [subscriptionPlan, setSubscriptionPlan] = useState<ISubscriptionPlan>();
   const [planAmount, setPlanAmount] = useState<number>(0);
   const [planDuration, setPlanDuration] = useState<string>('');
+  //
+  const [planVariants, setPlanVariants] = useState<IPlan[]>([]);
+  const [otherPlans, setOtherPlans] = useState<ISubscriptionPlan[]>([]);
 
   const {data: subscriptionData} = subscriptionPlans || {};
   const {data: moduleData} = modules || {};
@@ -110,6 +118,45 @@ const SubscriptionView: FC<IProps> = ({navigation}) => {
     return plan;
   };
 
+  const _getCurrentSubscriptionType = () => {
+    let subscriptionType: string = '';
+    const plan: IPurchasedSubscription | null = _getCurrentPlanInfo();
+    if (_.isObject(plan)) {
+      const {subscription} = plan || {};
+      if (_?.isArray(subscription) && subscription.length > 0) {
+        const firstSubscription: ISubscription = subscription[0];
+        if (_.isObject(firstSubscription)) {
+          subscriptionType = firstSubscription.subscriptionType;
+        }
+      }
+    }
+    return subscriptionType.toUpperCase();
+  };
+
+  const _getPlanVariants = () => {
+    const currentPlan: IPurchasedSubscription | null = _getCurrentPlanInfo();
+    if (
+      !_.isNull(currentPlan) &&
+      !_.isEmpty(subscriptionData) &&
+      _.isArray(subscriptionData) &&
+      subscriptionData.length > 0
+    ) {
+      const _planSubscription: ISubscriptionPlan = subscriptionData.find(
+        (plan: ISubscriptionPlan) => plan._id === currentPlan.subscriptionId,
+      );
+      const _otherPlans: ISubscriptionPlan[] = subscriptionData.filter(
+        (plan: ISubscriptionPlan) => plan._id !== currentPlan.subscriptionId,
+      );
+      if (_.isObject(_planSubscription)) {
+        const _variants: IPlan[] = _planSubscription.plans.filter(
+          (p: IPlan) => p.duration !== currentPlan.subscriptionPlan,
+        );
+        setPlanVariants(_variants);
+      }
+      setOtherPlans(_otherPlans);
+    }
+  };
+
   useEffect(() => {
     _getPurchasedSubscription();
     dispatch(getSubscriptionPlansRequest());
@@ -126,6 +173,7 @@ const SubscriptionView: FC<IProps> = ({navigation}) => {
       getSubmodulesRequestSuccess
     ) {
       _prepareSubscriptionPlanList();
+      _getPlanVariants();
     }
   }, [
     getSubscriptionPlansRequestSuccess,
@@ -139,7 +187,44 @@ const SubscriptionView: FC<IProps> = ({navigation}) => {
       <Header canGoBack={true} label="Subscription" />
       <Spacer height={10} />
       {_getCurrentPlanInfo() ? (
-        <CurrentPlanCard data={_getCurrentPlanInfo()} />
+        <ScrollView>
+          <Spacer height={40} />
+          <View style={styles.dividerLineContainer}>
+            <View style={styles.line} />
+            <View style={styles.plansBoxContainer}>
+              <Text style={styles.plansText}>ACTIVE PLAN</Text>
+            </View>
+          </View>
+          <Spacer height={40} />
+          <CurrentPlanCard data={_getCurrentPlanInfo()} />
+          <Spacer height={40} />
+          <View style={styles.dividerLineContainer}>
+            <View style={styles.line} />
+            <View style={styles.plansBoxContainer}>
+              <Text style={styles.plansText}>
+                OTHER{' '}
+                <Text style={styles.subscriptionText}>
+                  {_getCurrentSubscriptionType()}
+                </Text>{' '}
+                PLANS
+              </Text>
+            </View>
+          </View>
+          <Spacer height={30} />
+          <PlanVariants
+            variants={planVariants}
+            currentPlan={_getCurrentPlanInfo() as IPurchasedSubscription}
+          />
+          <Spacer height={40} />
+          <View style={styles.dividerLineContainer}>
+            <View style={styles.line} />
+            <View style={styles.plansBoxContainer}>
+              <Text style={styles.plansText}>MORE SUBSCRIPTION PLANS</Text>
+            </View>
+          </View>
+          <Spacer height={40} />
+          <OtherSubscriptionPlan plans={otherPlans} />
+        </ScrollView>
       ) : (
         <EmptyPlanCard onPress={handleBuyNow} />
       )}

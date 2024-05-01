@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 import {Api} from '../http/Api';
-import { GET_ALL_DOCUMENTS_COUNT, GET_APP_SETTINGS, GET_BANKS, GET_BANK_LIST, GET_BANNERS, GET_DASHBOARD_DATA, GET_FLOOR_LIST, GET_INSURANCE_PERCENTAGE_LIST, GET_PACKING_TYPES, GET_PENDING_REGISTRATION, GET_SERIAL_NO_SUBMODULES, GET_TODAY_FOLLOWUPS, GET_TODAY_SHIFTING, GET_TODAY_SURVEY, GET_VEHICLE_ACCESSORIES, GET_VEHICLE_COLORS, GET_VEHICLE_COMPANIES, GET_VEHICLE_INSURANCE_COMPANY, GET_VEHICLE_MODELS, GET_VEHICLE_TYPES, IMAGE_UPLOAD, SEARCH_CUSTOMER, UPDATE_BILTY } from '../http/Endpoint';
-import { IAllDocumentCountResponse, IAppSettingResponse, IBannerListResponse, ICustomersRequest, ICustomersResponse, IDashboardDataResponse, IDashboardPaylod, IFloorResponse, IGetBankListResponse, IInsurancePercentageResponse, IPackingTypeResponse, IPendingRegistrationResponse, ISubmoduleResponse, ITodayFollowpsResponse, ITodayShiftingResponse, ITodaySurveyResponse, IVehicleAccessoryResponse, IVehicleColorResponse, IVehicleCompanyResponse, IVehicleInsuranceCompanyResponse, IVehicleModelResponse, IVehicleTypesResponse } from '../interface/common/common';
+import { GET_ALL_DOCUMENTS_COUNT, GET_APP_SETTINGS, GET_BANKS, GET_BANK_LIST, GET_BANNERS, GET_DASHBOARD_DATA, GET_FLOOR_LIST, GET_IMPORTANT_LINKS, GET_INSURANCE_PERCENTAGE_LIST, GET_PACKING_TYPES, GET_PENDING_REGISTRATION, GET_SERIAL_NO_SUBMODULES, GET_TODAY_FOLLOWUPS, GET_TODAY_SHIFTING, GET_TODAY_SURVEY, GET_VEHICLE_ACCESSORIES, GET_VEHICLE_COLORS, GET_VEHICLE_COMPANIES, GET_VEHICLE_INSURANCE_COMPANY, GET_VEHICLE_MODELS, GET_VEHICLE_TYPES, IMAGE_UPLOAD, SEARCH_CUSTOMER, UPDATE_BILTY } from '../http/Endpoint';
+import { IAllDocumentCountResponse, IAppSettingResponse, IBannerListResponse, ICustomersRequest, ICustomersResponse, IDashboardDataResponse, IDashboardPaylod, IFloorResponse, IGetBankListResponse, IImportantLinkResponse, IInsurancePercentageResponse, IPackingTypeResponse, IPendingRegistrationResponse, ISubmoduleResponse, ITodayFollowpsResponse, ITodayShiftingResponse, ITodaySurveyResponse, IVehicleAccessoryResponse, IVehicleColorResponse, IVehicleCompanyResponse, IVehicleInsuranceCompanyResponse, IVehicleModelResponse, IVehicleTypesResponse } from '../interface/common/common';
 import { IUpdateBiltyResponse } from '../interface/order/ICreateBiltyResponse';
 
 export const GetPackingTypesService = async (): Promise<IPackingTypeResponse> => {
@@ -130,4 +130,10 @@ export const GetTodayShiftings = async(payload:string): Promise<ITodayShiftingRe
 export const GetAllDocCountService = async (payload:string): Promise<IAllDocumentCountResponse> => {
     const api = Api.getInstance();
     return await api.get<IAllDocumentCountResponse>(GET_ALL_DOCUMENTS_COUNT(payload));
+}
+
+// Important Links
+export const GetImportantLinksService = async (): Promise<IImportantLinkResponse> => {
+    const api = Api.getInstance();
+    return await api.get<IImportantLinkResponse>(GET_IMPORTANT_LINKS);
 }

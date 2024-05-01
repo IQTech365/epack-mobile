@@ -330,7 +330,7 @@ const CheckoutPage: FC<Props> = ({route, navigation}) => {
       <Spacer height={10} />
       <View style={styles.priceBreakupContainer}>
         <Text style={styles.text2}>Total</Text>
-        <Text style={styles.text2}>{`₹ ${totalPrice}/-`}</Text>
+        <Text style={styles.text2}>{`₹ ${totalPrice.toFixed(2)}/-`}</Text>
       </View>
       <Spacer height={20} />
       <Button

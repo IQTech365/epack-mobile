@@ -47,6 +47,7 @@ import AddBranchView from '../views/profile/components/addBranchDetail';
 import { getCurrentCompanyId } from '../utils/storage';
 import TermsAndConditionsView from '../views/termsAndConditions';
 import Share from 'react-native-share';
+import ImportantLinksView from '../views/importantLinks';
 
 const Drawer = createDrawerNavigator();
 
@@ -205,6 +206,13 @@ export const DrawerNavigator = () => {
       <Drawer.Screen
         name="Help Center"
         component={HelpCenterView}
+        options={{
+          drawerIcon: () => <HelpIcon width={22} height={22} />,
+        }}
+      />
+      <Drawer.Screen
+        name="Important Links"
+        component={ImportantLinksView}
         options={{
           drawerIcon: () => <HelpIcon width={22} height={22} />,
         }}

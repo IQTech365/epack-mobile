@@ -16,6 +16,7 @@ import {
   getAppSettingsRequest,
   getDashboardDataRequest,
   getFloorsRequest,
+  getImportantLinksRequest,
   getInsurancePercentagesRequest,
   getSubmoduleRequest,
 } from '../../redux/slices/CommonSlice';
@@ -27,6 +28,7 @@ import { getPurchasedSubscriptionRequest } from '../../redux/slices/Subscription
 import { EventRegister } from 'react-native-event-listeners';
 import { ISaveDocumentTemplateIdPayload, ISavedDocumentTemplateId, ITemplate, ITemplateData } from '../../interface/setting/template/template';
 import IntroVideoModal from '../../common/IntroVideoModal';
+import UpcomingEventView from './components/UpcomingEventView';
 
 interface IProps {
   navigation: NavigationProp<any, any>;
@@ -203,6 +205,7 @@ const HomePageView:FC<IProps> = ({navigation}) => {
     _getPurchasedSubscription();
     dispatch(getSubmoduleRequest());
     dispatch(getTemplateListRequest());
+    dispatch(getImportantLinksRequest());
   }, []);
 
   useEffect(() => {
@@ -266,6 +269,8 @@ const HomePageView:FC<IProps> = ({navigation}) => {
           />
         </View>
         <BannerView />
+        <Spacer height={20} />
+        <UpcomingEventView />
         <Spacer height={20} />
         <View style={styles.featureContainer}>
           <FeatureView

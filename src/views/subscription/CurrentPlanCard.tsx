@@ -2,8 +2,16 @@ import React, {FC} from 'react';
 import {Text, View} from 'react-native';
 import styles from './style';
 import Spacer from '../../common/Spacer';
-import {IPurchasedSubscription, ISubscription} from '../../interface/subscription/subscription';
-import {formatDate5, getDaysDifference} from '../../utils/formatter';
+import {
+  IPurchasedSubscription,
+  ISubscription,
+} from '../../interface/subscription/subscription';
+import {
+  formatDate,
+  formatDate5,
+  formatDate6,
+  getDaysDifference,
+} from '../../utils/formatter';
 import LinearGradient from 'react-native-linear-gradient';
 import _ from 'underscore';
 interface IProps {
@@ -11,43 +19,57 @@ interface IProps {
 }
 
 const CurrentPlanCard: FC<IProps> = ({data}) => {
-
   const _showDaysLeftView = () => {
-    if(data?.subscriptionPlan == 'free') return null;
+    if (data?.subscriptionPlan == 'free') return null;
     return (
       <>
         <Spacer height={10} />
-        <Text style={styles.planDaysText}>{getDaysDifference(new Date(data?.expiryDate as string))}</Text>
+        <Text style={styles.daysLabel}>
+          {`Remaining: `}
+          <Text style={styles.planDaysText}>
+            {getDaysDifference(new Date(data?.expiryDate as string))} Days
+          </Text>
+        </Text>
         <Spacer height={10} />
       </>
     );
   };
 
   const _getCurrentPlanInfo = () => {
-    let planName:string = '';
-    const {subscription} = data || {}
+    let planName: string = '';
+    const {subscription} = data || {};
     if (_.isObject(data)) {
-        if(_?.isArray(subscription) && subscription.length > 0) {
-          const firstSubscription:ISubscription = subscription[0];
-          if(_.isObject(firstSubscription)) {
-            planName = `${data.subscriptionPlan}-${firstSubscription.subscriptionType}`
-          }
+      if (_?.isArray(subscription) && subscription.length > 0) {
+        const firstSubscription: ISubscription = subscription[0];
+        if (_.isObject(firstSubscription)) {
+          planName = `${data.subscriptionPlan}-${firstSubscription.subscriptionType}`;
         }
+      }
     }
     return planName;
   };
 
   const _showExpirationMessage = () => {
-    let expirationMessage:string = '';
-    if(data?.subscriptionPlan == 'free') {
-        expirationMessage = `Limited FEATURES and DOCUMENTS.\nTry Premium and get MORE benefits`
+    let expirationMessage: string = '';
+    if (data?.subscriptionPlan == 'free') {
+      return (
+        <Text
+          style={
+            styles.planExpireText
+          }>{`Limited FEATURES and DOCUMENTS.\nTry Premium and get MORE benefits`}</Text>
+      );
     } else {
-        expirationMessage = `Your Plan will expire on\n ${formatDate5(
-            new Date(data?.expiryDate as string),
-          )}`
+      return (
+        <Text style={styles.daysLabel}>
+          {`Eexpires On: `}
+          <Text style={styles.planExpireText}>
+            {formatDate6(new Date(data?.expiryDate as string))}
+          </Text>
+        </Text>
+      );
     }
-    return <Text style={styles.planExpireText}>{expirationMessage}</Text>;
-  }
+  };
+
   return (
     <>
       <LinearGradient
@@ -64,13 +86,6 @@ const CurrentPlanCard: FC<IProps> = ({data}) => {
           <Spacer height={10} />
         </View>
       </LinearGradient>
-      <Spacer height={40} />
-      <View style={styles.dividerLineContainer}>
-        <View style={styles.line} />
-        <View style={styles.plansBoxContainer}>
-          <Text style={styles.plansText}>MORE PLANS</Text>
-        </View>
-      </View>
     </>
   );
 };
