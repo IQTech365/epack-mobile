@@ -551,6 +551,7 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 value={companyGST}
+                autoCapitalize="characters"
               />
             </View>
           </>
@@ -596,6 +597,7 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
                 value={employeeMobileNumber}
+                inputType="numeric"
               />
             </View>
           </>
@@ -627,6 +629,7 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
                 placeholder="Enter Pincode"
                 selectionColor={COLOR_BLACK}
                 value={pin}
+                inputType="numeric"
                 //@ts-ignore
                 ref={pincodeInputRef}
               />
@@ -678,6 +681,7 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
               value={landline}
+              inputType="numeric"
             />
           </View>
           <View style={styles.itemContainer}>
@@ -688,6 +692,7 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
               value={mobile}
+              inputType="numeric"
               editable={item.billingBy == 'by Individual'}
             />
           </View>
@@ -704,6 +709,7 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
                   value={orderAmount}
+                  inputType="numeric"
                 />
               </View>
               <View style={styles.itemContainer}>
@@ -714,6 +720,7 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
                   inputStyle={styles.input}
                   selectionColor={COLOR_BLACK}
                   value={tokenAmount}
+                  inputType="numeric"
                 />
               </View>
             </View>
@@ -728,6 +735,7 @@ const ContactDetailForm: React.FC<IContactDetailFormProps> = ({
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
               value={alternateNumber}
+              inputType="numeric"
             />
           </View>
           <View style={styles.itemContainer}>
