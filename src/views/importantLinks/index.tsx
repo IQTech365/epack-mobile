@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {View, Text, TouchableOpacity, Linking, FlatList} from 'react-native';
+import {View, Text, TouchableOpacity, Linking, FlatList, RefreshControl} from 'react-native';
 import Header from '../../common/Header';
 import styles from './style';
 import Spacer from '../../common/Spacer';
@@ -9,18 +9,22 @@ import { IImportantLink } from '../../interface/common/common';
 import _ from 'underscore';
 
 const ImportantLinksView = (props:any) => {
-  const {importantLinks} = useAppSelector(state => state.Common);
+  const {importantLinks, getImportantLinksRequesting} = useAppSelector(state => state.Common);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(getImportantLinksRequest());
   }, []);
 
+  const handleRefresh = () => {
+    dispatch(getImportantLinksRequest());
+  }
+
   const _getLinkData = () => {
     let links:IImportantLink[] = [];
     if(_?.isObject(importantLinks)) {
       if(_?.isArray(importantLinks?.data)) {
-        links = importantLinks?.data;
+        links = importantLinks?.data.filter((l:IImportantLink) => l.link !== '');
       }
     }
     return links;
@@ -34,6 +38,12 @@ const ImportantLinksView = (props:any) => {
       <Spacer height={20} />
       <FlatList
         data={_getLinkData()}
+        refreshControl={
+          <RefreshControl
+            refreshing={getImportantLinksRequesting}
+            onRefresh={handleRefresh}
+          />
+        }
         renderItem={({item, index}) => {
           return (
             <TouchableOpacity

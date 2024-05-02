@@ -1,5 +1,5 @@
 import React, {useEffect, useReducer, useRef, useState} from 'react';
-import {View, FlatList, Text, TouchableOpacity} from 'react-native';
+import {View, FlatList, Text, TouchableOpacity, Alert} from 'react-native';
 import styles from './style';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../../../common/Spacer';
@@ -100,6 +100,10 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   const dispatch2 = useAppDispatch();
 
   const handleCreate = () => {
+    if(state.packing_no === '' || state.packing_no === null || state.packing_no === undefined) {
+      Alert.alert('Error', 'Please set serial NO# from Setting.');
+      return;
+    }
     getCurrentCompanyId().then(id => {
       const payload: ICreatePackingMaterialRequest = {
         companyId: id as string,
@@ -356,7 +360,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
         <Button
           text="Add item/Particular"
           onPress={addPackingItem}
-          disabled={false}
+          disabled={particularName === ''}
           style={styles.previewButtonStyle}
           textStyle={styles.textStyle}
         />

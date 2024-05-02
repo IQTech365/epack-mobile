@@ -33,6 +33,7 @@ import VehicleMgmtIcon from '../images/icons/vehicle_mgmt_black_icon.svg';
 import FranchiseMgmtIcon from '../images/icons/franchise_mgmt_black_icon.svg';
 import SendIcon from '../images/icons/send_icon.svg';
 import LogoutIcon from '../images/icons/logout.svg';
+import LinkIcon from '../images/icons/link_icon.svg';
 import SubscriptionView from '../views/subscription';
 import HelpCenterView from '../views/helpCenter';
 import SettingStackNavigator from './SettingStackNavigator';
@@ -214,7 +215,7 @@ export const DrawerNavigator = () => {
         name="Important Links"
         component={ImportantLinksView}
         options={{
-          drawerIcon: () => <HelpIcon width={22} height={22} />,
+          drawerIcon: () => <LinkIcon width={24} height={24} />,
         }}
       />
       <Drawer.Screen
