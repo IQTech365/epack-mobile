@@ -482,3 +482,20 @@ export interface IAllDocumentCountResponse {
   error: boolean;
   message: string;
 }
+
+export interface IImportantLink {
+  _id: string;
+  title: string;
+  link: string;
+  webinarUrl: string;
+  isActive: boolean;
+  isDeleted: boolean;
+  createdDate: string;
+  __v: number;
+}
+
+export interface IImportantLinkResponse {
+  data: IImportantLink;
+  status: number;
+  error: boolean;
+}

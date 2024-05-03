@@ -33,6 +33,7 @@ import VehicleMgmtIcon from '../images/icons/vehicle_mgmt_black_icon.svg';
 import FranchiseMgmtIcon from '../images/icons/franchise_mgmt_black_icon.svg';
 import SendIcon from '../images/icons/send_icon.svg';
 import LogoutIcon from '../images/icons/logout.svg';
+import LinkIcon from '../images/icons/link_icon.svg';
 import SubscriptionView from '../views/subscription';
 import HelpCenterView from '../views/helpCenter';
 import SettingStackNavigator from './SettingStackNavigator';
@@ -47,6 +48,7 @@ import AddBranchView from '../views/profile/components/addBranchDetail';
 import { getCurrentCompanyId } from '../utils/storage';
 import TermsAndConditionsView from '../views/termsAndConditions';
 import Share from 'react-native-share';
+import ImportantLinksView from '../views/importantLinks';
 
 const Drawer = createDrawerNavigator();
 
@@ -207,6 +209,13 @@ export const DrawerNavigator = () => {
         component={HelpCenterView}
         options={{
           drawerIcon: () => <HelpIcon width={22} height={22} />,
+        }}
+      />
+      <Drawer.Screen
+        name="Important Links"
+        component={ImportantLinksView}
+        options={{
+          drawerIcon: () => <LinkIcon width={24} height={24} />,
         }}
       />
       <Drawer.Screen

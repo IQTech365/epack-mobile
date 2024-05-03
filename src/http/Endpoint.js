@@ -213,3 +213,6 @@ export const UPDATE_BILTY = (id) => `/bilty/edit/${id}`
 
 // All documents count
 export const GET_ALL_DOCUMENTS_COUNT = (company_id) => `/order/count-documents/${company_id}`;
+
+// Important Links
+export const GET_IMPORTANT_LINKS = `/shifting-management/important/link/getAll`;

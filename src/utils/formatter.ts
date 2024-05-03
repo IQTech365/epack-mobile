@@ -21,11 +21,14 @@ export const formatDate5 = (date: Date): string => {
   return moment(date).format('MMMM D YYYY, h:mm a');
 };
 
+export const formatDate6 = (date: Date): string => {
+  return moment(date).format('MMMM D YYYY');
+};
+
 export const getDaysDifference = (expireDate:Date):string => {
   var startDate = moment(new Date());
   var endDate = moment(expireDate);
-  const daysLeft = 'Days Left - ' + endDate.diff(startDate, 'days');
-  return daysLeft;
+  return endDate.diff(startDate, 'days').toString();
 }
 
 export const getStates = (arr: any): TDropdownItem[] => {

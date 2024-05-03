@@ -32,6 +32,8 @@ import { RootStackParamList } from '../../navigation/params/RootStackParamList';
 import AlertModal from '../../common/AlertModal';
 import successIconJson from '../../images/success.json';
 import Lottie from 'lottie-react-native';
+import { getCurrentCompanyId } from '../../utils/storage';
+import { EventRegister } from 'react-native-event-listeners';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Checkout'>;
 
@@ -149,22 +151,25 @@ const CheckoutPage: FC<Props> = ({route, navigation}) => {
     const durationConvert: IDurationConverter = getDurationConverter(
       duration as string,
     );
-    const payload: IAddPurchaseRequest = {
-      purchaseOrderId: orderId,
-      authId: authId,
-      subscriptionId: plan?._id as string,
-      subscriptionPlan: duration as string, //plan.subscriptionType,
-      amountPaid: `${totalPrice}`,
-      discountAmount: '0',
-      couponCode: '',
-      expiryDate: getNextRenewableDate(
-        durationConvert.days,
-        durationConvert.months,
-        durationConvert.years,
-      ),
-      status: 'active',
-    };
-    dispatch(addPurchaseRequest(payload));
+    getCurrentCompanyId().then(id => {
+      const payload: IAddPurchaseRequest = {
+        purchaseOrderId: orderId,
+        authId: authId,
+        subscriptionId: plan?._id as string,
+        subscriptionPlan: duration as string, //plan.subscriptionType,
+        amountPaid: `${totalPrice}`,
+        discountAmount: '0',
+        couponCode: '',
+        expiryDate: getNextRenewableDate(
+          durationConvert.days,
+          durationConvert.months,
+          durationConvert.years,
+        ),
+        status: 'active',
+        companyId: id as string,
+      };
+      dispatch(addPurchaseRequest(payload));
+    }).catch(e => console.log(e));
   };
 
   const _getRazorpayOrderId = () => {
@@ -215,6 +220,7 @@ const CheckoutPage: FC<Props> = ({route, navigation}) => {
 
   const hanldeAlertModalClose = () => {
     setShowAlertModal(false);
+    EventRegister.emit('onUpdateSubscription', true);
     navigation.replace('Drawer');
   }
 
@@ -324,7 +330,7 @@ const CheckoutPage: FC<Props> = ({route, navigation}) => {
       <Spacer height={10} />
       <View style={styles.priceBreakupContainer}>
         <Text style={styles.text2}>Total</Text>
-        <Text style={styles.text2}>{`₹ ${totalPrice}/-`}</Text>
+        <Text style={styles.text2}>{`₹ ${totalPrice.toFixed(2)}/-`}</Text>
       </View>
       <Spacer height={20} />
       <Button

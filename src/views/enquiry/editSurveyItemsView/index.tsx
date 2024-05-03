@@ -50,8 +50,6 @@ const EditSurveyItemsView: FC<IProps> = ({route, navigation}) => {
 
   const _handleDelete = (index: number) => {
     const copy = [...surveyItems];
-    console.log(surveyItems, 'surveyItems');
-
     copy.splice(index, 1);
     setSurveyItems(copy);
     setShouldSave(true);

@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect} from 'react';
-import {View} from 'react-native';
+import {Alert, View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../../../common/Spacer';
 import styles from './style';
@@ -39,21 +39,29 @@ import {
   getSerialNoRequest,
   resetGetSerialNoRequest,
 } from '../../../../../redux/slices/SerialNoSettingSlice';
-import { IBilty, IUpdateBiltyPayload } from '../../../../../interface/order/IGetBiltyListResponse';
+import {
+  IBilty,
+  IUpdateBiltyPayload,
+} from '../../../../../interface/order/IGetBiltyListResponse';
 import useUtilityHook from '../../../../../hooks/useUtilityHook';
 
 interface IBiltyFormViewProps {
   orderId: string | undefined;
   onSuccess: () => void;
-  item?:IBilty;
-  isEdit?:boolean;
+  item?: IBilty;
+  isEdit?: boolean;
 }
 
-const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess, item, isEdit = false}) => {
+const BiltyFormView: React.FC<IBiltyFormViewProps> = ({
+  orderId,
+  onSuccess,
+  item,
+  isEdit = false,
+}) => {
   const {state} = useBiltyFormContextHook();
   const dispatch = useAppDispatch();
   const {getTotalDocumentCount} = useUtilityHook();
-  
+
   const {
     createBiltyRequesting,
     createBiltySuccess,
@@ -62,12 +70,13 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess, item,
     updateBiltyRequesting,
     updateBiltySuccess,
     updateBiltyFailure,
-    
   } = useAppSelector(state => state.Order);
 
   const authId = useAuthId();
 
-  const {initialValue, prefix} = useInitialValueHook('658d3cb5585e3dde644da97e');
+  const {initialValue, prefix} = useInitialValueHook(
+    '658d3cb5585e3dde644da97e',
+  );
 
   const _getSerialNoRequest = () => {
     getCurrentCompanyId()
@@ -87,6 +96,14 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess, item,
   };
 
   const handleCreateBilty = useCallback(() => {
+    if (
+      state.bilty_lr_cr_no === '' ||
+      state.bilty_lr_cr_no === null ||
+      state.bilty_lr_cr_no === undefined
+    ) {
+      Alert.alert('Error', 'Please set serial NO# from Setting.');
+      return;
+    }
     getCurrentCompanyId()
       .then(id => {
         const payload: ICreateBiltyRequest = {
@@ -170,7 +187,8 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess, item,
             inDate: state.in_date || new Date().toISOString(),
             outDate: state.out_date || new Date().toISOString(),
             transitDays: state.transit_days,
-            expectedDateOfDelivery: state.expected_date_of_delivery || new Date().toISOString(),
+            expectedDateOfDelivery:
+              state.expected_date_of_delivery || new Date().toISOString(),
           },
           driver: {
             name: state.driver_name,
@@ -251,7 +269,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess, item,
           },
           addedBy: authId,
         };
-        if(isEdit) {
+        if (isEdit) {
           delete payload.companyId;
           delete payload.enquiryId;
           delete payload.addedBy;
@@ -259,7 +277,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess, item,
           const updatePayload: IUpdateBiltyPayload = {
             id: item?._id as string,
             payload: payload,
-          }
+          };
           dispatch(updateBiltyRequest(updatePayload));
         } else {
           dispatch(createBiltyRequest(payload));
@@ -326,9 +344,9 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess, item,
         <DemurageDetails item={item} isEdit={isEdit} />
         <Spacer height={8} />
         <Button
-          text={isEdit ? "UPDATE" : "CREATE"}
+          text={isEdit ? 'UPDATE' : 'CREATE'}
           onPress={handleCreateBilty}
-          disabled={false}
+          disabled={updateBiltyRequesting || createBiltyRequesting}
           style={styles.previewButtonStyle}
           textStyle={styles.textStyle}
         />
@@ -337,7 +355,9 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({orderId, onSuccess, item,
           show={
             getVehicleSizeRequesting ||
             getunitTypeRequesting ||
-            packingTypesRequesting || updateBiltyRequesting
+            packingTypesRequesting ||
+            updateBiltyRequesting ||
+            createBiltyRequesting
           }
         />
       </View>

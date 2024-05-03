@@ -140,9 +140,6 @@ const ConsignerDetails: React.FC<IProps> = ({item, isEdit}) => {
 
   useEffect(() => {
     if (isEdit && item) {
-      console.log(item);
-      
-      //
       consignerNameInputRef.current?.setValue(item.consigner.name);
       setConsignerName(item.consigner.name);
       gstInputRef.current?.setValue(item.consigner.gstin);

@@ -22,6 +22,7 @@ import {
   ITodayShiftingResponse,
   IVehicleInsuranceCompanyResponse,
   IAllDocumentCountResponse,
+  IImportantLinkResponse,
 } from '../../interface/common/common';
 
 interface ICommonState {
@@ -158,6 +159,13 @@ interface ICommonState {
   getAllDocCountSuccess: boolean;
   getAllDocCountFailure: boolean;
   getAllDocCountError: any;
+
+  // Important Links
+  importantLinks: IImportantLinkResponse | null;
+  getImportantLinksRequesting: boolean;
+  getImportantLinksSuccess: boolean;
+  getImportantLinksFailure: boolean;
+  getImportantLinksError: any;
 }
 
 const initialState: ICommonState = {
@@ -294,6 +302,12 @@ const initialState: ICommonState = {
   getAllDocCountSuccess: false,
   getAllDocCountFailure: false,
   getAllDocCountError: null,
+  // Important Links
+  importantLinks: null,
+  getImportantLinksRequesting: false,
+  getImportantLinksSuccess: false,
+  getImportantLinksFailure: false,
+  getImportantLinksError: null,
 };
 
 export const CommonSlice = createSlice({
@@ -708,6 +722,24 @@ export const CommonSlice = createSlice({
       state.getAllDocCountFailure = false;
       state.getAllDocCountError = null;
     },
+    // Important Links
+    getImportantLinksRequest: (state) => {
+      state.getImportantLinksRequesting = true;
+    },
+    getImportantLinksSuccess: (
+      state,
+      action: PayloadAction<IImportantLinkResponse>,
+    ) => {
+      state.getImportantLinksRequesting = false;
+      state.getImportantLinksSuccess = true;
+      state.importantLinks = action.payload;
+    },
+    getImportantLinksFailure: (state, action: PayloadAction<any>) => {
+      state.getImportantLinksRequesting = false;
+      state.getImportantLinksSuccess = false;
+      state.getImportantLinksFailure = true;
+      state.getImportantLinksError = action.payload;
+    },
   },
 });
 
@@ -807,5 +839,10 @@ export const {
   getAllDocCountSuccess,
   getAllDocCountFailure,
   resetGetAllDocCountRequest,
+  
+  // Important Links
+  getImportantLinksRequest,
+  getImportantLinksSuccess,
+  getImportantLinksFailure,
 
 } = CommonSlice.actions;

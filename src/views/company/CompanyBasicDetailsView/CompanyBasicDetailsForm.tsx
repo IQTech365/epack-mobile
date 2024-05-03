@@ -114,17 +114,6 @@ const CompanyBasicDetailsForm: FC<IProps> = ({navigation}) => {
     return error;
   };
 
-  // const _getCompanyPAN = () => {
-  //   let pan: string = '';
-  //   if (
-  //     state.company_type == companyTypeOptions[0].label ||
-  //     state.company_type == companyTypeOptions[1].label
-  //   ) {
-  //     pan = state.govt_document;
-  //   }
-  //   return pan;
-  // };
-
   const _getCompanyPAN = () => {
     let pan = '';
     const panRegex = /[A-Z]{5}[0-9]{4}[A-Z]{1}/;

@@ -30,7 +30,6 @@ const useUtilityHook = () => {
     getAllDocCountFailure,
   } = useAppSelector(state => state.Common);
   const {purchasedSubscriptions} = useAppSelector(state => state.Subscription);
-  console.log('allDocCount----', JSON.stringify(allDocCount));
   const [totalDocuments, setTotalDocuments] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -38,7 +37,6 @@ const useUtilityHook = () => {
     if (!getAllDocCountRequesting && getAllDocCountSuccess) {
       setLoading(false);
       const {data} = allDocCount || {};
-      console.log('allDocCount-2---', JSON.stringify(allDocCount));
       if (data) {
         setTotalDocuments(data?.totalCount);
       }
@@ -128,8 +126,6 @@ const useUtilityHook = () => {
   };
 
   const hasSubscription = _getCurrentPlanInfo() !== null;
-  console.log('hasSubscription----', hasSubscription);
-  console.log('totalDocuments----', totalDocuments);
 
   return {
     getInsurancePercentageList,

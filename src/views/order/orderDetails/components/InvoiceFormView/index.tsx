@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import {Text, View} from 'react-native';
+import {Alert, Text, View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
 import DatePickerComponent from '../../../../../common/DatePickerComponent';
@@ -192,6 +192,10 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
   };
 
   const handleCreateInvoice = () => {
+    if(state.invoice_no === '' || state.invoice_no === null || state.invoice_no === undefined) {
+      Alert.alert('Error', 'Please set serial NO# from Setting.');
+      return;
+    }
     getCurrentCompanyId().then(id => {
       const billingInfo: IInvoiceBillingInfo = {
         companyName: state.company_name,
@@ -300,10 +304,7 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
           id: invoiceData?._id as string,
           data: payload,
         }
-        console.log(payload,"oaykias of ubcouice");
-        
         dispatch(updateInvoiceRequest(updatePayload));
-        
       } else {
         dispatch(createInvoiceRequest(payload));
       }
@@ -532,7 +533,7 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
         <Button
           text={isEdit ? "UPDATE" : "CREATE"}
           onPress={handleCreateInvoice}
-          disabled={false}
+          disabled={createInvoiceRequesting || updateInvoiceRequesting}
           style={styles.previewButtonStyle}
           textStyle={styles.textStyle2}
         />

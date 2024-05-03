@@ -5,7 +5,7 @@ import React, {
   useRef,
   useCallback,
 } from 'react';
-import {View} from 'react-native';
+import {Alert, View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
 import DatePickerComponent, {
@@ -316,6 +316,14 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
   }
 
   const handleCreateCarCondition = useCallback(() => {
+    if (
+      reducerState.carConditionNumber === '' ||
+      reducerState.carConditionNumber === null ||
+      reducerState.carConditionNumber === undefined
+    ) {
+      Alert.alert('Error', 'Please set serial NO# from Setting.');
+      return;
+    }
     getCurrentCompanyId()
       .then(id => {
         const payload: ICreateCarConditionRequest = {
@@ -815,12 +823,12 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
         <Button
           text={isEdit ? 'UPDATE' : 'CREATE'}
           onPress={handleCreateCarCondition}
-          disabled={false}
+          disabled={createCarConditionRequesting || updateCarConditionRequesting}
           style={styles.previewButtonStyle}
           textStyle={styles.textStyle}
         />
         <Spacer height={8} />
-        <Spinner show={createCarConditionRequesting} />
+        <Spinner show={createCarConditionRequesting || updateCarConditionRequesting} />
       </View>
     </AvoidSoftInputViewHOC>
   );

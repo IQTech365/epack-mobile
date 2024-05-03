@@ -55,8 +55,6 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
     getQuotationTemplateHtmlFailure,
   } = useAppSelector(state => state.Quotation);
   const {data: quotationData} = quotations || {};
-  console.log('enquiryId--', enquiryId);
-  console.log('quotationData--', JSON.stringify(quotationData));
 
   const dispatch = useAppDispatch();
   const [showQuotationList, setShowQuotationList] = useState<boolean>(false);
@@ -305,11 +303,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
   };
 
   const showList = () => {
-    console.log("444");
-    
     if (showQuotationList) {
-      console.log("33333");
-      
       return (
         <FlatList
           // contentContainerStyle={{alignItems: 'center', paddingVertical: 10, justifyContent: 'center'}}

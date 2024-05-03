@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Text, View} from 'react-native';
+import {Alert, Text, View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import DatePickerComponent from '../../../../../common/DatePickerComponent';
 import Input from '../../../../../common/Input';
@@ -103,6 +103,10 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
   };
 
   const handleAddItem = () => {
+    if(serialNo.toString() === '' || serialNo.toString() === null || serialNo.toString() === undefined || serialNo === 0) {
+      Alert.alert('Error', 'Please set serial NO# from Setting.');
+      return;
+    }
     const copy = [...surveyItems];
     const newItem: ISurveyListItem = {
       itemName: itemName,
@@ -314,7 +318,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
         <Button
           text="Add item/Particular"
           onPress={handleAddItem}
-          disabled={false}
+          disabled={itemName === ''}
           style={styles.previewButtonStyle}
           textStyle={styles.textStyle}
         />

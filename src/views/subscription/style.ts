@@ -1,10 +1,10 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import {COLOR_BLACK, COLOR_WHITE} from '../../utils/colors';
+import {COLOR_BLACK, COLOR_GRAY, COLOR_WHITE} from '../../utils/colors';
 const {width} = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    // alignItems: 'center',
     backgroundColor: COLOR_WHITE,
   },
   gradientContainer: {
@@ -16,9 +16,10 @@ const styles = StyleSheet.create({
   currentPlanContainer: {
     width: '100%',
     alignSelf: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     borderRadius: 8,
     paddingVertical: 5,
+    paddingHorizontal: 10,
   },
   planNameText: {
     color: COLOR_WHITE,
@@ -42,7 +43,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   line: {
-    width: '70%',
+    width: '90%',
     height: 1,
     backgroundColor: COLOR_BLACK,
     alignSelf: 'center'
@@ -60,6 +61,18 @@ const styles = StyleSheet.create({
     color: COLOR_WHITE,
     fontSize: 14,
     fontFamily: 'WorkSans-Regular',
+    textAlign: 'center'
+  },
+  planLabel: {
+    color: COLOR_BLACK,
+    fontSize: 16,
+    fontFamily: 'WorkSans-SemiBold',
+    textAlign: 'center'
+  },
+  subscriptionText: {
+    color: COLOR_WHITE,
+    fontSize: 14,
+    fontFamily: 'WorkSans-Bold',
     textAlign: 'center'
   },
   cardWrapper: {
@@ -117,6 +130,11 @@ const styles = StyleSheet.create({
     color: COLOR_BLACK,
     fontSize: 14,
     fontFamily: 'WorksSans-Regular'
+  },
+  daysLabel: {
+    fontSize: 16,
+    color: COLOR_WHITE,
+    fontFamily: 'WorkSans-SemiBold',
   }
 });
 

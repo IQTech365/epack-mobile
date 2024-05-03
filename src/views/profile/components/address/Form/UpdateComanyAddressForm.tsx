@@ -192,7 +192,6 @@ const UpdateComanyAddressForm: React.FC<IUpdateComanyAddressFormProps> = ({
       companySignature: company?.companySignature as string
       }
     };
-    console.log(payload,"payload");
 
     dispatch(editCompanyRequest(payload));
     // dispatch(updateAddressRequest({id: enquiryId, requestBody: payload}));

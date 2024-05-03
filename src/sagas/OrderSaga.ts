@@ -340,11 +340,8 @@ export function* createCarConditionSaga(
    
     try {
         const response: IUpdateCarConditionResponse = yield call(OrderService.UpdateCarConditionService, action.payload);
-        console.log("responseVehicle----------",JSON.stringify(response));
         yield put(updateCarConditionSuccess(response));
     } catch (error) {
-      console.log(error,"error--------");
-      
         yield put(updateCarConditionFailure(error));
     }
   }

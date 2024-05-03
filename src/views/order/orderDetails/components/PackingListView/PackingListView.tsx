@@ -108,7 +108,7 @@ const PackingListView: React.FC<Props> = ({orderId}) => {
       if(shouldShare) {
         startShare(
           packingListTemplate,
-          'Packing List',
+          'PackingList',
           dispatch(resetGetPackingListTemplateRequest()),
         );
       } else {
