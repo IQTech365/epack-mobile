@@ -57,7 +57,6 @@ const StorageChargeView: React.FC<Props> = ({isEdit, invoiceData}) => {
       if(state.storage == transitInsuranceOptions[0]) {
         const {storageCharges, strorageStatus} = invoiceData || {};
         
-        setStorage(strorageStatus);
         if(storageCharges !== null){
           const durationItem:TDropdownItem = storageDurationOptions.find((e:TDropdownItem) => e.label == storageCharges.storageChargesType) as TDropdownItem;
           if(durationItem !== undefined){

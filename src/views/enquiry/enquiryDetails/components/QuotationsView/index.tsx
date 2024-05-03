@@ -35,6 +35,7 @@ interface IQuotationViewProps {
   onItemClick: (tabIndex: number) => void;
   isOrder?: boolean;
   route?: any;
+  item?:IEnquiry;
 }
 
 const QuotationView: React.FC<IQuotationViewProps> = ({
@@ -43,6 +44,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
   onItemClick,
   isOrder = false,
   route,
+  item,
 }) => {
   const {
     quotations,
@@ -274,6 +276,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
           showHeader={false}
           fromEnquiry={true}
           enquiryId={enquiryId}
+          enquiryData={item}
           navigation={navigation}
           route={route}
         />

@@ -8,7 +8,7 @@ import Header from '../../../common/Header';
 import Spacer from '../../../common/Spacer';
 import {QuotationFormContextProvider} from '../../../provider/QuotationFormContextProvider';
 import AddQuotationForm from './components/AddQuotationForm';
-import { IGetQuotationData } from '../../../interface/quotation/IGetQuotationsResponse';
+import { IEnquiry, IGetQuotationData } from '../../../interface/quotation/IGetQuotationsResponse';
 import { getCurrentCompanyId } from '../../../utils/storage';
 import { useAppDispatch } from '../../../redux/hooks';
 import { getSerialNoRequest, resetGetSerialNoRequest } from '../../../redux/slices/SerialNoSettingSlice';
@@ -26,6 +26,7 @@ interface Props
   editRequestFromEnquiry?:boolean;
   itemFromEnquiry?:IGetQuotationData,
   onSuccess?:() => void;
+  enquiryData?:IEnquiry;
 }
 
 const AddQuotationView: React.FC<Props> = ({
@@ -37,6 +38,7 @@ const AddQuotationView: React.FC<Props> = ({
   onSuccess,
   navigation,
   route,
+  enquiryData,
 }) => {
   const isEdit: boolean | undefined = route?.params?.isEdit;
   const item:IGetQuotationData = route?.params?.item as IGetQuotationData;
@@ -83,7 +85,8 @@ const AddQuotationView: React.FC<Props> = ({
             enquiryId={enquiryId || item?.enquiryId}
             navigation={navigation}
             isEdit={isEdit || editRequestFromEnquiry}
-            item={item ? item : itemFromEnquiry}
+            item={item}
+            enquiryData={enquiryData}
             onSuccess={onSuccess}
             showHeader={showHeader}
           />

@@ -33,7 +33,7 @@ import Spinner from '../../../../common/Spinner';
 import {Validator} from '../../../../utils/validation';
 import {ToastType, showToast} from '../../../../utils/utility';
 import {getCurrentCompanyId} from '../../../../utils/storage';
-import {IGetQuotationData} from '../../../../interface/quotation/IGetQuotationsResponse';
+import {IEnquiry, IGetQuotationData} from '../../../../interface/quotation/IGetQuotationsResponse';
 import {ISingleQuotationData} from '../../../../interface/quotation/IGetSingleQuotationResponse';
 import {IUpdateQuotationRequest} from '../../../../interface/quotation/quotation';
 import {ISingleEnquiryData} from '../../../../interface/enquiry/ISingleEnquiryResponse';
@@ -49,6 +49,7 @@ interface Props {
   isEdit?: boolean;
   onSuccess?: () => void;
   showHeader?: boolean;
+  enquiryData?:IEnquiry;
 }
 
 const AddQuotationForm: React.FC<Props> = ({
@@ -59,6 +60,7 @@ const AddQuotationForm: React.FC<Props> = ({
   onSuccess,
   item,
   showHeader,
+  enquiryData,
 }) => {
   const {
     state,
@@ -417,11 +419,11 @@ const AddQuotationForm: React.FC<Props> = ({
     updateQuotationRequesting,
     updateQuotationSuccess,
     updateQuotationFailure,
-  ]);
+  ]);  
 
   return (
     <>
-      <BasicDetails fromEnquiry={fromEnquiry} isEdit={isEdit} item={item} />
+      <BasicDetails fromEnquiry={fromEnquiry} isEdit={isEdit} item={item} enquiryData={enquiryData} />
       <Spacer height={4} />
       <PickupAddressView
         fromEnquiry={fromEnquiry}

@@ -29,6 +29,9 @@ const EnquiryDetailsView: React.FC<Props> = ({route, navigation}) => {
     state => state.Enquiry,
   );
 
+  console.log(item,"fff");
+  
+
   const handleTabChange = (index: number) => {
     setActiveTabIndex(index);
   };
@@ -61,6 +64,7 @@ const EnquiryDetailsView: React.FC<Props> = ({route, navigation}) => {
             enquiryId={enquiryId as string}
             navigation={navigation}
             onItemClick={handleTabChange}
+            item={item}
           />
         );
       case 4:

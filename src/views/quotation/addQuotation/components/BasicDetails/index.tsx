@@ -31,9 +31,10 @@ interface Props {
   fromEnquiry?: boolean;
   isEdit?: boolean;
   item?: IGetQuotationData;
+  enquiryData?:IEnquiry;
 }
 
-const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item}) => {
+const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item, enquiryData}) => {
   const [switchState, setSwitchState] = useState<boolean>(true);
   const serialNo: number = useSerialNoHook();
 
@@ -61,6 +62,8 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item}) => {
     setIsSerialNoAutomatic,
   } = useQuotationFormContextHook();
   console.log('state.errors.quotation_no', state.errors.quotation_no);
+  
+  
 
   const shiftingTypeDropdownCompRef = useRef<IDropdownHandler>(null);
   const shiftingLuggageDropdownCompRef = useRef<IDropdownHandler>(null);
@@ -98,6 +101,19 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item}) => {
       }
     }
   }, [switchState]);
+
+  useEffect(() => {
+    if(fromEnquiry && enquiryData) {
+      setBillingBy(enquiryData.billingBy);
+          const billingByItem: TDropdownItem = billingByOptions.find(
+            (d: TDropdownItem) => d.label == enquiryData.billingBy,
+          ) as TDropdownItem;          
+          if (billingByItem) {
+            billingByDropdownCompRef &&
+              billingByDropdownCompRef?.current?.setDefaultValue(billingByItem);
+          }
+    }  
+  }, [fromEnquiry]);
 
   useEffect(() => {
     if (state.billing_by == billingByOptions[1].label) {
@@ -156,7 +172,7 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item}) => {
           setBillingBy(singleEnquiry.billingBy);
           const billingByItem: TDropdownItem = billingByOptions.find(
             (d: TDropdownItem) => d.label == singleEnquiry.billingBy,
-          ) as TDropdownItem;
+          ) as TDropdownItem;          
           if (billingByItem) {
             billingByDropdownCompRef &&
               billingByDropdownCompRef?.current?.setDefaultValue(billingByItem);
@@ -165,8 +181,6 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item}) => {
       }
     }
   }, [isEdit, item]);
-
-  console.log(switchState, 'sssss');
 
   return (
     <CollapsibleView title="BASIC DETAILS" collapsed={false}>
@@ -276,7 +290,7 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item}) => {
           />
         </View>
         <Spacer height={4} />
-        {state.billing_by == billingByOptions[0].label ? (
+        {enquiryData?.billingBy == billingByOptions[0].label ? (
           <BillingIndividualView
             fromEnquiry={fromEnquiry}
             isEdit={isEdit}

@@ -102,7 +102,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
           isAuto: true,
           isHeadOffice: true,
         }
-      }
+      }      
       dispatch2(getSerialNoRequest(payload));
     }).catch(err => console.log('err--', err));
   }
