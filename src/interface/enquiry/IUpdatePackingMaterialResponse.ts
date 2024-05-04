@@ -1,17 +1,18 @@
+import { IMaterial } from "./IPackingMaterialsResponse";
+
 export interface IUpdatePackingMaterialRequest {
-    id: string;
-    addedBy:string;
-    enquiryId: string;
-    packingMaterial: string;
-    vehicleLoadSize: string;
-    createdAt: string;
-    isActive: boolean;
-    isDeleted: boolean;
-    
+  enquiryId: string;
+  vehicleLoadSize: string;
+  packingMaterial: IMaterial[];
+}
+
+export interface IUpdatePackingMaterialPayload {
+  id: string;
+  data: IUpdatePackingMaterialRequest;
 }
 
 export interface IUpdatePackingMaterialResponse {
-    data: IUpdatePackingMaterialRequest;
-    error: boolean;
-    status: number;
+  data: any;
+  error: boolean;
+  status: number;
 }

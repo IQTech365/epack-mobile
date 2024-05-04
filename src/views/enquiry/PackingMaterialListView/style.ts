@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import {COLOR_BLACK, COLOR_GRAY, COLOR_WHITE} from '../../../utils/colors';
+import {COLOR_BLACK, COLOR_BLUE, COLOR_GRAY, COLOR_WHITE} from '../../../utils/colors';
 const {width, height} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -112,6 +112,20 @@ const styles = StyleSheet.create({
   },
   modalStyle: {
     height: height
+  },
+  buttonContainer: {
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderWidth: 1,
+    borderColor: COLOR_BLUE,
+    borderRadius: 8,
+    marginTop: 10,
+    alignItems: 'center'
+  },
+  buttonText: {
+    color: COLOR_BLACK,
+    fontSize: 16,
+    fontFamily: 'WorkSans-SemiBold'
   }
 });
 

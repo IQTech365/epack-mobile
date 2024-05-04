@@ -78,7 +78,7 @@ import { IAddPackingMaterialRequest } from '../interface/enquiry/IAddPackingMate
 import { IAddPackingMaterialResponse } from '../interface/enquiry/IAddPackingMaterialResponse';
 import { IGetPackingMaterialsRequest, IPackingMaterialsResponse } from '../interface/enquiry/IPackingMaterialsResponse';
 import { ISurveyListTemlatePayload, ISurveyListTemplateResponse, IUpdateSurveyItemRequest, IUpdateSurveyItemResponse } from '../interface/enquiry/enquiry';
-import { IUpdatePackingMaterialRequest, IUpdatePackingMaterialResponse } from '../interface/enquiry/IUpdatePackingMaterialResponse';
+import { IUpdatePackingMaterialPayload, IUpdatePackingMaterialRequest, IUpdatePackingMaterialResponse } from '../interface/enquiry/IUpdatePackingMaterialResponse';
 
 export function* addEnquirySaga(action: PayloadAction<IAddEnquiryRequest>) {
     try {
@@ -219,10 +219,10 @@ export function* getPackingMaterialsSaga(action: PayloadAction<IGetPackingMateri
     }
 }
 
-export function* updatePackingMaterialSaga(action: PayloadAction<{ id: string, requestBody: IUpdatePackingMaterialRequest }>) {
-    const { id, requestBody } = action.payload;
+export function* updatePackingMaterialSaga(action: PayloadAction<IUpdatePackingMaterialPayload>) {
+    const { id, data } = action.payload;
     try {
-        const response: IUpdatePackingMaterialResponse = yield call(EnquiryService.UpdatePackingMaterialService, id, requestBody);
+        const response: IUpdatePackingMaterialResponse = yield call(EnquiryService.UpdatePackingMaterialService, id, data);
         yield put(updatePackingMaterialListSuccess(response));
     } catch (error) {
         yield put(updatePackingMaterialListFailure(error));

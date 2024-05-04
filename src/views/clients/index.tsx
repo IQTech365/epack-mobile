@@ -10,8 +10,6 @@ import {ICustomer, ICustomerRequest} from '../../interface/customer/customer';
 import {getCustomersRequest} from '../../redux/slices/CustomerSlice';
 import Spinner from '../../common/Spinner';
 import ClientListItem from './clientDetails/components/ClientListItem';
-import { IGetOrdersRequest } from '../../interface/order/IGetOrdersRequest';
-import { getOrdersRequest } from '../../redux/slices/OrderSlice';
 import Label from '../../common/Label';
 import { getCurrentCompanyId } from '../../utils/storage';
 

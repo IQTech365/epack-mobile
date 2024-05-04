@@ -1,5 +1,5 @@
 import React, {useReducer, useEffect, useRef} from 'react';
-import {View} from 'react-native';
+import {Alert, View} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
 import DatePickerComponent, { IDateMethods } from '../../../../../common/DatePickerComponent';
@@ -205,6 +205,10 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
   };
 
   const handleCreate = () => {
+    if(reducerState.receiptNumber === '' || reducerState.receiptNumber === null || reducerState.receiptNumber === undefined) {
+      Alert.alert('Error', 'Please set serial NO# from Setting.');
+      return;
+    }
     getCurrentCompanyId().then(id => {
       const payload: ICreateMoneyReceiptRequest = {
         companyId: id as string,

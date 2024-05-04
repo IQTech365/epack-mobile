@@ -1,10 +1,17 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, View, Text, TouchableOpacity} from 'react-native';
+import {
+  FlatList,
+  View,
+  Text,
+  TouchableOpacity,
+  RefreshControl,
+} from 'react-native';
 import styles from './style';
 import {useAppDispatch, useAppSelector} from '../../../redux/hooks';
 import {
   getPackingMaterialsRequest,
-  resetGetPackingMaterialsRequest,
+  resetUpdatePackingMaterialListRequest,
+  updatePackingMaterialListRequest,
 } from '../../../redux/slices/EnquirySlice';
 import {
   IGetPackingMaterialsRequest,
@@ -12,53 +19,55 @@ import {
   IPackingMaterial,
 } from '../../../interface/enquiry/IPackingMaterialsResponse';
 import Spacer from '../../../common/Spacer';
-import {formatDate5} from '../../../utils/formatter';
 import Spinner from '../../../common/Spinner';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {EnquiryStackParamList} from '../../../navigation/params/EnquiryStackParamList';
-import Header from '../../../common/Header';
 import EditIcon from '../../../images/icons/edit2.svg';
 import DeleteIcon from '../../../images/icons/delete.svg';
-import ModalHOC from '../../../common/ModalHOC';
-import UpdatePackingMaterialView from '../enquiryDetails/components/PackingMaterialsView/UpdatePackingMaterial';
+import MaterialListUpdateModal from '../../../common/MaterialListUpdateModal';
+import _ from 'underscore';
+import {
+  IUpdatePackingMaterialPayload,
+  IUpdatePackingMaterialRequest,
+} from '../../../interface/enquiry/IUpdatePackingMaterialResponse';
+import MaterialListAddModal from '../../../common/MaterialListAddModal';
+import {IPackingItem} from '../enquiryDetails/components/PackingMaterialsView/utils';
 
-type IProps = NativeStackScreenProps<
-  EnquiryStackParamList,
-  'EditPackingMaterials'
->;
+interface IProps {
+  enquiryId: string;
+}
 
-const PackingMaterialListView: React.FC<IProps> = ({route, navigation}) => {
+const PackingMaterialListView: React.FC<IProps> = ({enquiryId}) => {
   const [packingMaterial, setPackingMaterial] = useState<IMaterial | null>(
     null,
   );
   const [openModal, setOpenModal] = useState<boolean>(false);
-  // const [packingsMaterial,setPackingsMaterial] = useState<IPackingMaterial[]>([]);
-  const [packingsMaterial, setPackingsMaterial] = useState<IMaterial[]>([]);
-  const [shouldSave, setShouldSave] = useState<boolean>(false);
+  const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [itemIndex, setItemIndex] = useState<number>(-1);
-  const [addNew, setAddNew] = useState<boolean>(false);
-  const enquiryId: string | undefined = route.params?.enquiryId;
   const dispatch = useAppDispatch();
   const {
     packingMaterials,
     getPackingMaterialsRequesting,
-    getPackingMaterialsSuccess,
-    getPackingMaterialsFailure,
+    updatePackingMaterialRequesting,
+    updatePackingMaterialSuccess,
+    updatePackingMaterialFailure,
   } = useAppSelector(state => state.Enquiry);
   const {data} = packingMaterials || {};
-
-  useEffect(() => {
-    const payload: IGetPackingMaterialsRequest = {
-      enquiryId: enquiryId,
-    };
-    dispatch(getPackingMaterialsRequest(payload));
-  }, []);
-
   const _handleDelete = (index: number) => {
-    const copy = [...packingsMaterial];
+    const copy = [..._getPackingMaterials()];
     copy.splice(index, 1);
-    setPackingsMaterial(copy);
-    setShouldSave(true);
+    const material: IPackingMaterial =
+      _getPackingMaterialList() as IPackingMaterial;
+    if (!_.isNull(material)) {
+      const data: IUpdatePackingMaterialRequest = {
+        enquiryId: enquiryId as string,
+        vehicleLoadSize: material.vehicleLoadSize,
+        packingMaterial: copy,
+      };
+      const payload: IUpdatePackingMaterialPayload = {
+        id: material._id,
+        data,
+      };
+      dispatch(updatePackingMaterialListRequest(payload));
+    }
   };
 
   const _handleUpdate = (index: number, item: IMaterial) => {
@@ -71,29 +80,63 @@ const PackingMaterialListView: React.FC<IProps> = ({route, navigation}) => {
     setOpenModal(false);
   };
 
+  const _handleAddModalClose = () => {
+    setOpenAddModal(false);
+  };
+
   const _onUpdate = (index: number, item: IMaterial) => {
-    const copy = [...packingsMaterial];
-    if (addNew) {
-      copy.push(item);
-    } else {
-      copy.splice(index, 1, item);
-    }
     setOpenModal(false);
-    setPackingsMaterial(copy);
-    setShouldSave(true);
+    const copy = [..._getPackingMaterials()];
+    copy.splice(index, 1, item);
+    const material: IPackingMaterial =
+      _getPackingMaterialList() as IPackingMaterial;
+    if (!_.isNull(material)) {
+      const data: IUpdatePackingMaterialRequest = {
+        enquiryId: enquiryId as string,
+        vehicleLoadSize: material.vehicleLoadSize,
+        packingMaterial: copy,
+      };
+      const payload: IUpdatePackingMaterialPayload = {
+        id: material._id,
+        data,
+      };
+      dispatch(updatePackingMaterialListRequest(payload));
+    }
+  };
+
+  const _onAdd = (items: IPackingItem[]) => {
+    setOpenAddModal(false);
+    const material: IPackingMaterial =
+      _getPackingMaterialList() as IPackingMaterial;
+    if (!_.isNull(material)) {
+      const data: IUpdatePackingMaterialRequest = {
+        enquiryId: enquiryId as string,
+        vehicleLoadSize: material.vehicleLoadSize,
+        packingMaterial: items,
+      };
+      const payload: IUpdatePackingMaterialPayload = {
+        id: material._id,
+        data,
+      };
+      dispatch(updatePackingMaterialListRequest(payload));
+    }
   };
 
   useEffect(() => {
     if (
-      !getPackingMaterialsRequesting &&
-      (getPackingMaterialsSuccess || getPackingMaterialsFailure)
+      !updatePackingMaterialRequesting &&
+      (updatePackingMaterialSuccess || updatePackingMaterialFailure)
     ) {
-      dispatch(resetGetPackingMaterialsRequest());
+      dispatch(resetUpdatePackingMaterialListRequest());
+      const payload: IGetPackingMaterialsRequest = {
+        enquiryId: enquiryId,
+      };
+      dispatch(getPackingMaterialsRequest(payload));
     }
   }, [
-    getPackingMaterialsRequesting,
-    getPackingMaterialsSuccess,
-    getPackingMaterialsFailure,
+    updatePackingMaterialRequesting,
+    updatePackingMaterialSuccess,
+    updatePackingMaterialFailure,
   ]);
 
   const _getPackingMaterials = () => {
@@ -105,12 +148,12 @@ const PackingMaterialListView: React.FC<IProps> = ({route, navigation}) => {
     return materials;
   };
 
-  const _getHeaderData = () => {
-    let content: IPackingMaterial | null = null;
+  const _getPackingMaterialList = () => {
+    let materialList: IPackingMaterial | null = null;
     if (data && Array.isArray(data) && data.length > 0) {
-      content = data[0];
+      materialList = data[0];
     }
-    return content;
+    return materialList;
   };
 
   const renderItem = (item: IMaterial, index: number) => {
@@ -146,9 +189,23 @@ const PackingMaterialListView: React.FC<IProps> = ({route, navigation}) => {
   const _renderEmptyView = () => {
     return (
       <View style={styles.emptyContainer}>
-        <Text style={styles.text}>No Packing Materials Prepared</Text>
+        <Text style={styles.text}>Packing Materials List is Empty.</Text>
+        <TouchableOpacity
+          style={styles.buttonContainer}
+          onPress={() => {
+            setOpenAddModal(true);
+          }}>
+          <Text style={styles.buttonText}>Add Materials</Text>
+        </TouchableOpacity>
       </View>
     );
+  };
+
+  const _handleRefresh = () => {
+    const payload: IGetPackingMaterialsRequest = {
+      enquiryId: enquiryId,
+    };
+    dispatch(getPackingMaterialsRequest(payload));
   };
 
   if (getPackingMaterialsRequesting) {
@@ -161,26 +218,44 @@ const PackingMaterialListView: React.FC<IProps> = ({route, navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Header canGoBack={true} label="PACKING MATERIALS" />
       <Spacer height={10} />
       <FlatList
         data={_getPackingMaterials()}
         renderItem={({item, index}) => renderItem(item, index)}
-        // ListHeaderComponent={renderHeaderComponent(_getHeaderData())}
-        ListEmptyComponent={_renderEmptyView()}
-      />
-      <ModalHOC
-        visible={openModal}
-        onClose={_handleModalClose}
-        modalStyle={styles.modalStyle}
-        title="PACKING MATERIAL">
-        <View>
-          <UpdatePackingMaterialView
-            item={packingMaterial as IMaterial}
-            onUpdate={_onUpdate}
+        refreshControl={
+          <RefreshControl
+            refreshing={getPackingMaterialsRequesting}
+            onRefresh={_handleRefresh}
           />
-        </View>
-      </ModalHOC>
+        }
+        ListEmptyComponent={_renderEmptyView()}
+        // ListFooterComponent={() => {
+        //   return (
+        //     <>
+        //     {_getPackingMaterials().length > 0 ? <TouchableOpacity
+        //       style={styles.buttonContainer}
+        //       onPress={() => {
+        //         setOpenAddModal(true);
+        //       }}>
+        //       <Text style={styles.buttonText}>Add MORE ITEMS</Text>
+        //     </TouchableOpacity> : null}
+        //     </>
+        //   );
+        // }}
+      />
+      <MaterialListUpdateModal
+        item={packingMaterial}
+        visible={openModal}
+        index={itemIndex}
+        onClose={_handleModalClose}
+        onUpdate={_onUpdate}
+      />
+      <MaterialListAddModal
+        visible={openAddModal}
+        onClose={_handleAddModalClose}
+        onAdd={_onAdd}
+      />
+      <Spinner show={updatePackingMaterialRequesting} />
     </View>
   );
 };

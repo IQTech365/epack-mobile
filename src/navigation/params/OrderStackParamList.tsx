@@ -11,5 +11,6 @@ export type OrderStackParamList = {
     EditInvoice: {item:IInvoice, enquiry: ISingleEnquiryData, orderID:string},
     EditBilty: {item:IBilty, orderID:string},
     EditCarCondition: {item:ICardConditionData, orderID:string},
+    EditPackingMaterials: {enquiryId: string} | undefined,
 
 }

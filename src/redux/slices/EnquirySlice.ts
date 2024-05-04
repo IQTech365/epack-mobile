@@ -23,7 +23,7 @@ import { IAddPackingMaterialResponse } from '../../interface/enquiry/IAddPacking
 import { IAddPackingMaterialRequest } from '../../interface/enquiry/IAddPackingMaterialRequest';
 import { IGetPackingMaterialsRequest, IPackingMaterialsResponse } from '../../interface/enquiry/IPackingMaterialsResponse';
 import { ISurveyListTemlatePayload, ISurveyListTemplateResponse, IUpdateSurveyItemRequest, IUpdateSurveyItemResponse } from '../../interface/enquiry/enquiry';
-import { IUpdatePackingMaterialRequest, IUpdatePackingMaterialResponse } from '../../interface/enquiry/IUpdatePackingMaterialResponse';
+import { IUpdatePackingMaterialPayload, IUpdatePackingMaterialRequest, IUpdatePackingMaterialResponse } from '../../interface/enquiry/IUpdatePackingMaterialResponse';
 
 interface IEnquiryState {
   // Get Enquiries
@@ -672,7 +672,7 @@ export const EnquirySlice = createSlice({
       },
 
       // Update Packing Material
-      updatePackingMaterialListRequest: (state, action: PayloadAction<IUpdatePackingMaterialRequest>) => {
+      updatePackingMaterialListRequest: (state, action: PayloadAction<IUpdatePackingMaterialPayload>) => {
         state.updatePackingMaterialRequesting = true;
       },
       updatePackingMaterialListSuccess: (state, action: PayloadAction<IUpdatePackingMaterialResponse>) => {

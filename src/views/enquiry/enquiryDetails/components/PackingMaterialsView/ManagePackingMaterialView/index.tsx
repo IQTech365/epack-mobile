@@ -7,7 +7,7 @@ import Label from '../../../../../../common/Label';
 import { useAppSelector } from '../../../../../../redux/hooks';
 import { EPackingMaterialType } from '../PackingMaterialTypeEnum';
 import { IPackingItem } from '../utils';
-import DropdownComponent from '../../../../../../common/DropdownComponent';
+import DropdownComponent, { IDropdownHandler } from '../../../../../../common/DropdownComponent';
 import { TDropdownItem } from '../../../../../../type/TDropdownItem';
 import { COLOR_BLACK } from '../../../../../../utils/colors';
 
@@ -23,7 +23,7 @@ const ManagePackingMaterialView: FC<IProps> = ({title, unitRequired = true, mate
   const [quantity, setQuantity] = useState<string>('0');
   const [unitOfMeasure, setUnitOfMeasure] = useState<string>('');
   const {unitType} = useAppSelector(state => state.Setting);
-  const dropdownCompRef = useRef(null);
+  const dropdownCompRef = useRef<IDropdownHandler>(null);
 
   const _getUnitTypeList = () => {
     let _data: TDropdownItem[] = [];
@@ -57,12 +57,14 @@ const ManagePackingMaterialView: FC<IProps> = ({title, unitRequired = true, mate
   }
 
   useEffect(() => {
-    const item:IPackingItem = {
+    if(parseInt(quantity) > 0) {
+      const item:IPackingItem = {
         name: title,
         quantity: quantity,
         type: unitOfMeasure,
     }
     onChange && onChange(item, index);
+    }
   }, [quantity, unitOfMeasure]);
 
   useEffect(() => {
@@ -109,7 +111,6 @@ const ManagePackingMaterialView: FC<IProps> = ({title, unitRequired = true, mate
             data={_getUnitTypeList()}
             onSelect={_handleUnitChange}
             disable={!unitRequired}
-            //@ts-ignore
             ref={dropdownCompRef}
           />
         </View>
