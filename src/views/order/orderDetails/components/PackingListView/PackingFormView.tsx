@@ -187,7 +187,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
           <Button
             text="Save"
             onPress={handleCreate}
-            disabled={false}
+            disabled={createPackingMaterialRequesting} 
             style={styles.previewButtonStyle}
             textStyle={styles.textStyle}
           />

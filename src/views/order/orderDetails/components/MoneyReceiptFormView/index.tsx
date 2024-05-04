@@ -490,7 +490,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
         <Button
           text={`${isEdit ? 'UPDATE' : 'CREATE'}`}
           onPress={handleCreate}
-          disabled={false}
+          disabled={createMoneyReceiptRequesting || editMoneyReceiptListRequesting}
           style={styles.previewButtonStyle}
           textStyle={styles.textStyle}
         />

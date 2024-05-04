@@ -328,7 +328,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
         <Button
           text="Save"
           onPress={handleSave}
-          disabled={surveyItems.length == 0}
+          disabled={addSurveyItemRequesting}
           style={styles.previewButtonStyle}
           textStyle={styles.textStyle}
         />
