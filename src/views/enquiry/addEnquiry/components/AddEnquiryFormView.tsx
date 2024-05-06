@@ -101,6 +101,7 @@ const AddEnquiryFormView: React.FC<IProps> = ({navigation}) => {
             : {},
         status: 'NEW',
       };
+      
       dispatch(addEnquiryRequest(payload));
     }).catch(err => console.log(err));
   };
@@ -108,7 +109,7 @@ const AddEnquiryFormView: React.FC<IProps> = ({navigation}) => {
   const _getEnquiriesRequest = () => {
     getCurrentCompanyId().then(id => {
       dispatch(getEnquiriesRequest(id as string));
-    }).catch(err => console.log(err));
+    }).catch(err => console.log(err,"error"));
   }
 
   useEffect(() => {

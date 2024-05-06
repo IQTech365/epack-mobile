@@ -1,5 +1,5 @@
-import { NavigationProp } from '@react-navigation/native';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import {NavigationProp} from '@react-navigation/native';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   View,
   RefreshControl,
@@ -10,7 +10,7 @@ import {
 import AddNew from '../../common/AddNew';
 import Header from '../../common/Header';
 import Spacer from '../../common/Spacer';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {
   getQuotationHtmlRequest,
   getQuotationsRequest,
@@ -28,17 +28,17 @@ import styles from './style';
 import BottomSheet from '@gorhom/bottom-sheet';
 import FormModal from '../settings/formModal';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import { COLOR_BLACK, COLOR_BLUE } from '../../utils/colors';
-import { IGetQuotationRequest } from '../../interface/quotation/IGetQuotationRequest';
+import {COLOR_BLACK, COLOR_BLUE} from '../../utils/colors';
+import {IGetQuotationRequest} from '../../interface/quotation/IGetQuotationRequest';
 import {
   IEnquiry,
   IGetQuotationData,
 } from '../../interface/quotation/IGetQuotationsResponse';
-import { IHtmlTemplateRequest } from '../../interface/order/templates/ITemplateResponse';
+import {IHtmlTemplateRequest} from '../../interface/order/templates/ITemplateResponse';
 import ModalHOC from '../../common/ModalHOC';
 import TemplateViewer from '../../common/TemplateViewer';
-import { startShare } from '../../utils/utility';
-import { getCurrentCompanyId } from '../../utils/storage';
+import {startShare} from '../../utils/utility';
+import {getCurrentCompanyId} from '../../utils/storage';
 import useTemplateIdHook from '../../hooks/useTemplateIdHook';
 import Spinner from '../../common/Spinner';
 import useUtilityHook from '../../hooks/useUtilityHook';
@@ -51,7 +51,7 @@ interface IQuotationPageViewProps {
 
 const downloadOptions = ['With Sign. & Stamp', 'Without Sign. & Stamp'];
 
-const QuotationPageView: React.FC<IQuotationPageViewProps> = ({ navigation }) => {
+const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
   const dispatch = useAppDispatch();
 
   const {
@@ -64,14 +64,15 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({ navigation }) =>
   } = useAppSelector(state => state.Quotation);
   const [downloadOption, setDownloadOption] = useState<string>('');
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const { data: quotationData } = quotations || {};
-  
+  const {data: quotationData} = quotations || {};
+
   const [openPreview, setOpenPreview] = useState<boolean>(false);
   const [openShare, setOpenShare] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showLimitModal, setShowLimitModal] = useState<boolean>(false);
   const templateId = useTemplateIdHook('658d3c6f585e3dde644da95b');
-  const {  totalDocuments, hasSubscription, getTotalDocumentCount, loading} = useUtilityHook();
+  const {totalDocuments, hasSubscription, getTotalDocumentCount, loading} =
+    useUtilityHook();
 
   const getTotalQuotations = () => {
     let _count = 0;
@@ -81,15 +82,14 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({ navigation }) =>
       quotationData.length > 0
     ) {
       _count = quotationData.length;
-    }    
+    }
     return _count;
   };
-  
 
   const _getClientName = (item: IGetQuotationData) => {
     let name: string = 'NA';
     //@ts-ignore
-    const { enquiries } = item;
+    const {enquiries} = item;
     if (enquiries && Array.isArray(enquiries) && enquiries.length > 0) {
       const enquiry: IEnquiry = enquiries[0];
       if (enquiry?.partyName) {
@@ -113,7 +113,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({ navigation }) =>
 
   const _getFromDestination = (item: IGetQuotationData) => {
     let destination: string = 'NA';
-    const { enquiries } = item;
+    const {enquiries} = item;
     if (enquiries && Array.isArray(enquiries) && enquiries.length > 0) {
       const enquiry: IEnquiry = enquiries[0];
       if (enquiry?.pickupAddress.city) {
@@ -125,7 +125,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({ navigation }) =>
 
   const _getToDestination = (item: IGetQuotationData) => {
     let destination: string = 'NA';
-    const { enquiries } = item;
+    const {enquiries} = item;
     if (enquiries && Array.isArray(enquiries) && enquiries.length > 0) {
       const enquiry: IEnquiry = enquiries[0];
       if (enquiry?.dropAddress.city) {
@@ -137,7 +137,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({ navigation }) =>
 
   const _getShiftingType = (item: IGetQuotationData) => {
     let shiftingType: string = 'NA';
-    const { enquiries } = item;
+    const {enquiries} = item;
     if (enquiries && Array.isArray(enquiries) && enquiries.length > 0) {
       const enquiry: IEnquiry = enquiries[0];
       if (enquiry?.shiftingType) {
@@ -150,7 +150,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({ navigation }) =>
   const _getMobile = (item: IGetQuotationData) => {
     let mobile: string = 'NA';
     //@ts-ignore
-    const { enquiries } = item;
+    const {enquiries} = item;
     if (enquiries && Array.isArray(enquiries) && enquiries.length > 0) {
       const enquiry: IEnquiry = enquiries[0];
       if (enquiry?.mobile) {
@@ -176,7 +176,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({ navigation }) =>
       quotationData.length > 0
     ) {
       _data = quotationData.map((quotation: IGetQuotationData) => {
-        const { quotationNumber, enquiries, quotationDate, quotationAmount } =
+        const {quotationNumber, enquiries, quotationDate, quotationAmount} =
           quotation;
         const item: IQuotationItem = {
           quotationNo: quotationNumber,
@@ -189,7 +189,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({ navigation }) =>
           quotationDate: quotationDate,
           phoneNumber: _getMobile(quotation),
           id: quotation._id,
-          createdOn: quotation.createdAt
+          createdOn: quotation.createdAt,
         };
         return item;
       });
@@ -210,7 +210,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({ navigation }) =>
       //@ts-ignore
       navigation.jumpTo(TabRoute.EnquiryStack, {
         screen: EnquiryStackRoute.EnquiryDetails,
-        params: { enquiryId: enquiry._id, item: enquiry },
+        params: {enquiryId: enquiry._id, item: enquiry},
       });
     }
     // const item: IGetEnquiriesData = quotationData[index]?.enquiries[0];
@@ -240,23 +240,33 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({ navigation }) =>
   };
 
   const handleAddNew = () => {
-    if (totalDocuments < 10 || hasSubscription) {      
+    if (totalDocuments < 10 || hasSubscription) {
       setShowLimitModal(false);
       navigation.navigate(QuotationStackRoute.AddQuotation);
-    } else if (totalDocuments >= 10 && !hasSubscription){
+    } else if (totalDocuments >= 10 && !hasSubscription) {
       setShowLimitModal(true);
     }
   };
 
   const _getQuotationsRequest = () => {
-    getCurrentCompanyId().then(id => {
-      const payload: IGetQuotationRequest = {
-        companyId: id as string,
-        notstatus: ['APPROVED', 'COMPLETED', 'OUT FOR SHIFTING', 'MATERIAL RECEIVED AT WAREHOUSE', 'IN TRANSIT', 'REACHED AT DESTINATION CITY', 'CANCELLED ORDER']
-      };
-      dispatch(getQuotationsRequest(payload));
-    }).catch(err => console.log(err));
-  }
+    getCurrentCompanyId()
+      .then(id => {
+        const payload: IGetQuotationRequest = {
+          companyId: id as string,
+          notstatus: [
+            'APPROVED',
+            'COMPLETED',
+            'OUT FOR SHIFTING',
+            'MATERIAL RECEIVED AT WAREHOUSE',
+            'IN TRANSIT',
+            'REACHED AT DESTINATION CITY',
+            'CANCELLED ORDER',
+          ],
+        };
+        dispatch(getQuotationsRequest(payload));
+      })
+      .catch(err => console.log(err));
+  };
 
   const handleOnRefresh = useCallback(() => {
     _getQuotationsRequest();
@@ -331,12 +341,12 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({ navigation }) =>
 
   const hanldeAlertModalClose = () => {
     setShowLimitModal(false);
-  }
+  };
 
   const handlePlanUpgrade = () => {
     setShowLimitModal(false);
-    navigation.navigate("Subscription");
-  }
+    navigation.navigate('Subscription');
+  };
 
   return (
     <View style={styles.container}>
@@ -362,7 +372,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({ navigation }) =>
             onRefresh={handleOnRefresh}
           />
         }
-        renderItem={({ item, index }) => (
+        renderItem={({item, index}) => (
           <QuotationListItem
             item={item}
             index={index}
@@ -377,7 +387,9 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({ navigation }) =>
             onEdit={() => handleEditClick(item)}
           />
         )}
-        ListEmptyComponent={() => <Text style={styles.text}>No Quotations available!</Text>}
+        ListEmptyComponent={() => (
+          <Text style={styles.text}>No Quotations available!</Text>
+        )}
       />
       <FormModal ref={bottomSheetRef} onClose={dismissModal}>
         <>
@@ -390,8 +402,8 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({ navigation }) =>
                   fillColor={COLOR_BLUE}
                   unfillColor="#FFFFFF"
                   text={option}
-                  iconStyle={{ borderColor: 'red', borderRadius: 0 }}
-                  innerIconStyle={{ borderWidth: 1, borderRadius: 0 }}
+                  iconStyle={{borderColor: 'red', borderRadius: 0}}
+                  innerIconStyle={{borderWidth: 1, borderRadius: 0}}
                   onPress={(isChecked: boolean) => {
                     setDownloadOption(option);
                   }}
@@ -401,8 +413,8 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({ navigation }) =>
                     fontSize: 14,
                     color: COLOR_BLACK,
                   }}
-                  style={{ paddingRight: 8, marginBottom: 20 }}
-                  textContainerStyle={{ marginLeft: 10, marginRight: 4 }}
+                  style={{paddingRight: 8, marginBottom: 20}}
+                  textContainerStyle={{marginLeft: 10, marginRight: 4}}
                   isChecked={option == downloadOption}
                   disableBuiltInState={true}
                 />
@@ -423,17 +435,17 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({ navigation }) =>
         modalStyle={styles.modalStyle}
         headerStyle={styles.headerStyle}
         title="Preview">
-        <View style={{ flex: 1 }}>
+        <View style={{flex: 1}}>
           <TemplateViewer html={quotationTemplateHtml} />
         </View>
       </ModalHOC>
-      <AlertModal 
+      <AlertModal
         visible={showLimitModal}
         icon={<LimitReachImage width={200} height={200} />}
-        onClose={hanldeAlertModalClose} 
-        onUpgrade={handlePlanUpgrade} 
-        title='Your document create limit has been reached. Please upgrade your plan.'
-        buttonText='UPGRADE'
+        onClose={hanldeAlertModalClose}
+        onUpgrade={handlePlanUpgrade}
+        title="Your document create limit has been reached. Please upgrade your plan."
+        buttonText="UPGRADE"
       />
       <Spinner show={getQuotationTemplateHtmlRequesting || loading} />
     </View>

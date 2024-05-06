@@ -335,6 +335,8 @@ const AddQuotationForm: React.FC<Props> = ({
               params: item?._id as string,
               payload: payload,
             };
+            console.log(updatePayload,"updatePayload123");
+            
             dispatch(updateQuotationRequest(updatePayload));
           } else {
             dispatch(addQuotationRequest(payload));
@@ -402,9 +404,9 @@ const AddQuotationForm: React.FC<Props> = ({
     if (!updateQuotationRequesting && updateQuotationSuccess) {
       showToast('Quotation Updated.', ToastType.SUCCESS);
       dispatch(resetUpdateQuotationRequest());
-      if (isEdit) {
-        resetAll();
-      }
+      // if (isEdit) {
+      //   resetAll();
+      // }
       _getQuotationsRequest();
       if (onSuccess) {
         onSuccess();

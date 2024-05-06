@@ -3,7 +3,7 @@ import {Text, View, TouchableOpacity} from 'react-native';
 import styles from './style';
 import {useQuotationFormContextHook} from '../../../../../provider/QuotationFormContextProvider';
 import Label from '../../../../../common/Label';
-import Input from '../../../../../common/Input';
+import Input, { InputMethods } from '../../../../../common/Input';
 import {COLOR_BLACK} from '../../../../../utils/colors';
 import Spacer from '../../../../../common/Spacer';
 import DropdownComponent from '../../../../../common/DropdownComponent';
@@ -28,6 +28,7 @@ import {
   IGetQuotationData,
 } from '../../../../../interface/quotation/IGetQuotationsResponse';
 import {IBillingInfo} from '../../../../../interface/enquiry/ISingleEnquiryResponse';
+import { DropdownMethods } from '../../../../../common/DropdownWithTextInput';
 
 interface Props {
   fromEnquiry?: boolean;
@@ -54,15 +55,15 @@ const BillingCompanyView: React.FC<Props> = ({
     setCompanyAddress,
   } = useQuotationFormContextHook();
 
-  const companyNameInputCompRef = useRef(null);
-  const approvalAuthorityDropdownCompRef = useRef(null);
-  const authorityPersonNameInputCompRef = useRef(null);
-  const authorityMobileNoInputCompRef = useRef(null);
-  const companyGstInputCompRef = useRef(null);
-  const employeeNameInputCompRef = useRef(null);
-  const employeeDesignationInputCompRef = useRef(null);
-  const employeeMobileNoInputCompRef = useRef(null);
-  const companyAddressInputCompRef = useRef(null);
+  const companyNameInputCompRef = useRef<InputMethods>(null);
+  const approvalAuthorityDropdownCompRef = useRef<DropdownMethods>(null);
+  const authorityPersonNameInputCompRef = useRef<InputMethods>(null);
+  const authorityMobileNoInputCompRef = useRef<InputMethods>(null);
+  const companyGstInputCompRef = useRef<InputMethods>(null);
+  const employeeNameInputCompRef = useRef<InputMethods>(null);
+  const employeeDesignationInputCompRef = useRef<InputMethods>(null);
+  const employeeMobileNoInputCompRef = useRef<InputMethods>(null);
+  const companyAddressInputCompRef = useRef<InputMethods>(null);
 
   const dispatch = useAppDispatch();
 
@@ -157,7 +158,7 @@ const BillingCompanyView: React.FC<Props> = ({
         if (approvalAuthorityOptionIndex !== -1) {
           //@ts-ignore
           approvalAuthorityDropdownCompRef &&
-            approvalAuthorityDropdownCompRef.current.setDefaultValue(
+            approvalAuthorityDropdownCompRef.current?.setDefaultValue(
               approvalAuthorityOptions[approvalAuthorityOptionIndex],
             );
         }
@@ -182,32 +183,34 @@ const BillingCompanyView: React.FC<Props> = ({
         if (singleEnquiry?.billingBy == 'by Company') {
           const billingInfo: ICustomerBillingInfo =
             singleEnquiry.billingDetails as ICustomerBillingInfo;
-          if (billingInfo) {
+            if (billingInfo) {
+            companyNameInputCompRef.current?.setValue(billingInfo?.companyName)
             setCompanyName(billingInfo.companyName);
-            setApprovalAuthority(billingInfo.approvalAuthority);
-            const approvalAuthorityItem: TDropdownItem =
-              approvalAuthorityOptions.find(
-                (d: TDropdownItem) => d.label == billingInfo.approvalAuthority,
-              ) as TDropdownItem;
-            if (approvalAuthorityItem) {
+            const approvalAuthorityItemEdit:TDropdownItem = approvalAuthorityOptions.find((d:TDropdownItem) => d.label == billingInfo.approvalAuthority) as TDropdownItem;
+            if(approvalAuthorityItemEdit) {
               //@ts-ignore
-              approvalAuthorityDropdownCompRef &&
-                approvalAuthorityDropdownCompRef?.current?.setDefaultValue(
-                  approvalAuthorityItem,
-                );
+              approvalAuthorityDropdownCompRef?.current?.setDefaultValue(approvalAuthorityItemEdit);
+              setApprovalAuthority(billingInfo.approvalAuthority);
             }
+            authorityPersonNameInputCompRef.current?.setValue(billingInfo.authorityPersonName)
             setAuthorityPersonName(billingInfo.authorityPersonName);
+            authorityMobileNoInputCompRef.current?.setValue(billingInfo.authorityPersonMobile)
             setAuthorityMobileNo(billingInfo.authorityPersonMobile);
+            companyGstInputCompRef.current?.setValue(billingInfo.companyGST)
             setCompanyGSt(billingInfo.companyGST);
+            employeeNameInputCompRef.current?.setValue(billingInfo.employeeName)
             setEmployeeName(billingInfo.employeeName);
+            employeeDesignationInputCompRef.current?.setValue(billingInfo.employeeDesignation)
             setEmployeeDesignation(billingInfo.employeeDesignation);
+            employeeMobileNoInputCompRef.current?.setValue(billingInfo.employeeMobile)
             setEmployeeMobileNo(billingInfo.employeeMobile);
+            companyAddressInputCompRef.current?.setValue(billingInfo.companyAddress)
             setCompanyAddress(billingInfo.companyAddress);
           }
         }
       }
     }
-  }, [isEdit]);
+  }, [isEdit,item]);
 
   return (
     <>

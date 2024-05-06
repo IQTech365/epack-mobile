@@ -28,8 +28,6 @@ const EnquiryDetailsView: React.FC<Props> = ({route, navigation}) => {
   const {updateEnquiryStatusRequesting} = useAppSelector(
     state => state.Enquiry,
   );
-
-  console.log(item,"fff");
   
 
   const handleTabChange = (index: number) => {

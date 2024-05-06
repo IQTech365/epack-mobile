@@ -101,6 +101,7 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item, enqui
       }
     }
   }, [switchState]);
+  
 
   useEffect(() => {
     if(fromEnquiry && enquiryData) {
@@ -111,6 +112,18 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item, enqui
           if (billingByItem) {
             billingByDropdownCompRef &&
               billingByDropdownCompRef?.current?.setDefaultValue(billingByItem);
+          }
+
+          setShiftingType(enquiryData.shiftingType);
+          const shiftingTypeItem: TDropdownItem = shiftingTypes.find(
+            (d: TDropdownItem) =>
+              d.label.toLowerCase() == enquiryData.shiftingType.toLowerCase(),
+          ) as TDropdownItem;
+          if (shiftingTypeItem) {
+            shiftingTypeDropdownCompRef &&
+              shiftingTypeDropdownCompRef?.current?.setDefaultValue(
+                shiftingTypeItem,
+              );
           }
     }  
   }, [fromEnquiry]);
@@ -131,6 +144,9 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item, enqui
     }
   }, [state.billing_by]);
 
+  console.log("itemitemitem");
+  
+
   useEffect(() => {
     if (isEdit && item) {
       const shiftingLuggageItem: TDropdownItem = shiftingLuggages.find(
@@ -143,18 +159,19 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item, enqui
           );
         setShiftingLuggage(item.shiftingLuggage);
       }
-      setQuotationNo(item.quotationNumber);
       quotationNoInputCompRef &&
         quotationNoInputCompRef?.current?.setValue(item.quotationNumber);
+        setQuotationNo(item.quotationNumber);
+
       dateOfQuotationCompRef &&
         dateOfQuotationCompRef?.current?.setDefaultValue(
           new Date(item.quotationDate),
         );
-      const _enquires: IEnquiry[] = item.enquiries;
+        setDateOfQuotation(item.quotationDate)
+      const _enquires: IEnquiry[] = item.enquiries;      
       if (_enquires && _enquires.length > 0) {
         const singleEnquiry: IEnquiry = _enquires[0];
-        if (singleEnquiry) {
-          setShiftingType(singleEnquiry.shiftingType);
+        if (singleEnquiry) {          
           const shiftingTypeItem: TDropdownItem = shiftingTypes.find(
             (d: TDropdownItem) =>
               d.label.toLowerCase() == singleEnquiry.shiftingType.toLowerCase(),
@@ -164,12 +181,13 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item, enqui
               shiftingTypeDropdownCompRef?.current?.setDefaultValue(
                 shiftingTypeItem,
               );
+              setShiftingType(singleEnquiry.shiftingType);
           }
           dateOfMovingCompRef &&
             dateOfMovingCompRef?.current?.setDefaultValue(
               new Date(singleEnquiry.shiftingDate),
             );
-          setBillingBy(singleEnquiry.billingBy);
+            setDateOfMoving(singleEnquiry.shiftingDate)
           const billingByItem: TDropdownItem = billingByOptions.find(
             (d: TDropdownItem) => d.label == singleEnquiry.billingBy,
           ) as TDropdownItem;          
@@ -177,6 +195,7 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item, enqui
             billingByDropdownCompRef &&
               billingByDropdownCompRef?.current?.setDefaultValue(billingByItem);
           }
+          setBillingBy(singleEnquiry.billingBy);
         }
       }
     }
@@ -244,9 +263,9 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item, enqui
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
               value={
-                state.quotation_no ? state.quotation_no : 'Enter  Quotation No'
+                state.quotation_no ? state.quotation_no : ''
               }
-              placeholder="Quotation#"
+              placeholder="Enter Quotation No"
               error={state.errors.quotation_no}
               editable={!switchState}
               inputType="numeric"
@@ -290,7 +309,7 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item, enqui
           />
         </View>
         <Spacer height={4} />
-        {enquiryData?.billingBy == billingByOptions[0].label ? (
+        {state.billing_by == billingByOptions[0].label ? (
           <BillingIndividualView
             fromEnquiry={fromEnquiry}
             isEdit={isEdit}

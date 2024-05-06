@@ -43,7 +43,7 @@ import { getSerialNoRequest, resetGetSerialNoRequest } from '../../../../../redu
 import useSerialNoHook from '../../../../../hooks/useSerialNo';
 import DropdownWithTextInput, { DropdownMethods } from '../../../../../common/DropdownWithTextInput';
 import { IQuotation } from '../../../../../interface/quotation/quotation';
-import { formatDate4 } from '../../../../../utils/formatter';
+import { formatDate, formatDate4 } from '../../../../../utils/formatter';
 import useUtilityHook from '../../../../../hooks/useUtilityHook';
 
 interface IMoneyReceiptFormViewProps {
@@ -369,7 +369,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
               <View style={styles.itemContainer}>
                 <Label text="Receipt Date" style={styles.label} />
                 <DatePickerComponent onDateSelect={(date: Date)=>{
-                  handleReceiptDate(new Date(formatDate4(date)))
+                  handleReceiptDate(new Date(formatDate(date)))
                 }} />
               </View>
             </View>
@@ -484,7 +484,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
               <View style={styles.itemContainer}>
                 <Label text="Date of Arrival" style={styles.label} />
                 <DatePickerComponent onDateSelect={(date: Date) =>{
-                  handleArivalDate(new Date(formatDate4((date))))
+                  handleArivalDate(new Date(formatDate((date))))
                 }} />
               </View>
             </View>

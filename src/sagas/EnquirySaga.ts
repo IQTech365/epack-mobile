@@ -83,6 +83,7 @@ import { IUpdatePackingMaterialPayload, IUpdatePackingMaterialRequest, IUpdatePa
 export function* addEnquirySaga(action: PayloadAction<IAddEnquiryRequest>) {
     try {
         const response: IAddEnquiryResponse = yield call(EnquiryService.AddEnquiryService, action.payload);
+        
         yield put(addEnquirySuccess(response));
     } catch (error) {
         yield put(addEnquiryFailure(error));

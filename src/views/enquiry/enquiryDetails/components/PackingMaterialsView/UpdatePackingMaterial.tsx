@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {StyleSheet, Text, TextInput, View, Dimensions} from 'react-native';
+import {StyleSheet, Text, TextInput, View, Dimensions, Button} from 'react-native';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import {COLOR_BLACK, COLOR_GRAY2} from '../../../../../utils/colors';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
