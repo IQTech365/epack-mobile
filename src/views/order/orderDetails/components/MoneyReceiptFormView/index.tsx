@@ -369,7 +369,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
               <View style={styles.itemContainer}>
                 <Label text="Receipt Date" style={styles.label} />
                 <DatePickerComponent onDateSelect={(date: Date)=>{
-                  handleReceiptDate(new Date(formatDate(date)))
+                  handleReceiptDate(date)
                 }} />
               </View>
             </View>

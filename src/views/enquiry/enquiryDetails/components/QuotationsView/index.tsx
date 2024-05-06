@@ -21,7 +21,6 @@ import ModalHOC from '../../../../../common/ModalHOC';
 import TemplateViewer from '../../../../../common/TemplateViewer';
 import useTemplateIdHook from '../../../../../hooks/useTemplateIdHook';
 import {IHtmlTemplateRequest} from '../../../../../interface/order/templates/ITemplateResponse';
-import {QuotationStackRoute} from '../../../../../utils/constants';
 import {startShare} from '../../../../../utils/utility';
 import Spinner from '../../../../../common/Spinner';
 import ActionHeaderView from '../../../../../common/ActionHeaderView';
@@ -65,6 +64,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
   const [openShare, setOpenShare] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showLimitModal, setShowLimitModal] = useState<boolean>(false);
+  const [addNewQuotation, setAddNewQuotation] = useState<boolean>(false);
   const templateId = useTemplateIdHook('658d3c6f585e3dde644da95b');
   const {totalDocuments, hasSubscription, getTotalDocumentCount} = useUtilityHook();
 
@@ -176,9 +176,10 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
   const handleCreateNewQuotation = () => {
     if (totalDocuments < 10 || hasSubscription) {      
       setShowQuotationList(false);
-      setShowFormInEditMode(false);
+      setShowFormInEditMode(true);
       setShowLimitModal(false);
-      setCreateNewQuotation(true);
+      setAddNewQuotation(true);
+      // setCreateNewQuotation(true);
     } else if (totalDocuments >= 10 && !hasSubscription){
       setShowLimitModal(true);
     }
@@ -188,6 +189,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
     setCreateNewQuotation(false);
     setShowFormInEditMode(false);
     setShowLimitModal(false);
+    setAddNewQuotation(false);
     setShowQuotationList(true);
   };
 
@@ -215,7 +217,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
     );
     setQuotationToEdit(item);
     setShowQuotationList(false);
-    setCreateNewQuotation(false);
+    setAddNewQuotation(false);
     setShowFormInEditMode(true);
   };
 
@@ -266,22 +268,22 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
     setShowLimitModal(false);
   };
 
-  const showForm = () => {
-    if (createNewQuotation) {
-      //@ts-ignore
-      return (
-        <AddQuotationView
-          showHeader={false}
-          fromEnquiry={true}
-          enquiryId={enquiryId}
-          enquiryData={item}
-          navigation={navigation}
-          route={route}
-        />
-      );
-    }
-    return null;
-  };
+  // const showForm = () => {
+  //   if (createNewQuotation) {
+  //     //@ts-ignore
+  //     return (
+  //       <AddQuotationView
+  //         showHeader={false}
+  //         fromEnquiry={true}
+  //         enquiryId={enquiryId}
+  //         enquiryData={item}
+  //         navigation={navigation}
+  //         route={route}
+  //       />
+  //     );
+  //   }
+  //   return null;
+  // };
 
   const showEditForm = () => {
     if (showFormInEditMode) {
@@ -291,11 +293,11 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
           showHeader={false}
           fromEnquiry={true}
           enquiryId={enquiryId}
-          editRequestFromEnquiry={true}
           itemFromEnquiry={quotationToEdit}
           onSuccess={_handleOnSuccess}
           navigation={navigation}
           route={route}
+          isNewQuotation={addNewQuotation}
         />
       );
     }
@@ -306,7 +308,6 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
     if (showQuotationList) {
       return (
         <FlatList
-          // contentContainerStyle={{alignItems: 'center', paddingVertical: 10, justifyContent: 'center'}}
           data={transformQuotationData()}
           refreshControl={
             <RefreshControl
@@ -401,7 +402,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
           onCreate={handleCreateNewQuotation}
         />
       ) : null}
-      {!isOrder ? showForm() : null}
+      {/* {!isOrder ? showForm() : null} */}
       {showList()}
       {!isOrder ? showEditForm() : null}
       <Spinner show={getQuotationTemplateHtmlRequesting} />

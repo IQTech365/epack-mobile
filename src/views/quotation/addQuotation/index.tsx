@@ -23,22 +23,22 @@ interface Props
   showHeader?: boolean;
   fromEnquiry?: boolean;
   enquiryId?: string;
-  editRequestFromEnquiry?:boolean;
   itemFromEnquiry?:IGetQuotationData,
   onSuccess?:() => void;
   enquiryData?:IEnquiry;
+  isNewQuotation?:boolean;
 }
 
 const AddQuotationView: React.FC<Props> = ({
   showHeader = true,
   fromEnquiry = false,
   enquiryId,
-  editRequestFromEnquiry = false,
   itemFromEnquiry,
   onSuccess,
   navigation,
   route,
   enquiryData,
+  isNewQuotation = false,
 }) => {
   const isEdit: boolean | undefined = route?.params?.isEdit;
   const item:IGetQuotationData = route?.params?.item as IGetQuotationData;
@@ -64,6 +64,8 @@ const AddQuotationView: React.FC<Props> = ({
   useEffect(() => {
     if(isEdit) {
       dispatch(getSingleQuotationRequest(item._id));
+    } else if(fromEnquiry && !isNewQuotation) {
+      dispatch(getSingleQuotationRequest(itemFromEnquiry?._id as string));
     } else {
       dispatch(resetGetSerialNoRequest());
       _getSerialNoRequest();
@@ -84,8 +86,8 @@ const AddQuotationView: React.FC<Props> = ({
             fromEnquiry={fromEnquiry}
             enquiryId={enquiryId || item?.enquiryId}
             navigation={navigation}
-            isEdit={isEdit || editRequestFromEnquiry}
-            item={item}
+            isEdit={isEdit || (fromEnquiry && !isNewQuotation)}
+            item={fromEnquiry ? itemFromEnquiry : item}
             enquiryData={enquiryData}
             onSuccess={onSuccess}
             showHeader={showHeader}

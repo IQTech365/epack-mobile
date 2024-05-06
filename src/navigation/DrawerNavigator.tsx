@@ -226,6 +226,13 @@ export const DrawerNavigator = () => {
         }}
       />
       <Drawer.Screen
+        name="Settings"
+        component={SettingStackNavigator}
+        options={{
+          drawerIcon: () => <SettingsIcon width={24} height={24} />,
+        }}
+      />
+      <Drawer.Screen
         name="Vehicle Management"
         component={VehicleMangementStacknavigator}
         // component={SubscriptionPlanView}
@@ -245,13 +252,6 @@ export const DrawerNavigator = () => {
         component={AddFranchiseView}
         options={{
           drawerIcon: () => <FranchiseMgmtIcon width={24} height={24} />,
-        }}
-      />
-      <Drawer.Screen
-        name="Settings"
-        component={SettingStackNavigator}
-        options={{
-          drawerIcon: () => <SettingsIcon width={24} height={24} />,
         }}
       />
     </Drawer.Navigator>
