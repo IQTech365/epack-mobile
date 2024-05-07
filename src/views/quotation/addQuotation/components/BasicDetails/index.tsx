@@ -60,9 +60,7 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item, enqui
     setEmployeeDesignation,
     setCompanyAddress,
     setIsSerialNoAutomatic,
-  } = useQuotationFormContextHook();
-  console.log('state.errors.quotation_no', state.errors.quotation_no);
-  
+  } = useQuotationFormContextHook();  
   
 
   const shiftingTypeDropdownCompRef = useRef<IDropdownHandler>(null);
@@ -113,7 +111,6 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item, enqui
             billingByDropdownCompRef &&
               billingByDropdownCompRef?.current?.setDefaultValue(billingByItem);
           }
-
           setShiftingType(enquiryData.shiftingType);
           const shiftingTypeItem: TDropdownItem = shiftingTypes.find(
             (d: TDropdownItem) =>
@@ -143,8 +140,6 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item, enqui
       setCompanyAddress('');
     }
   }, [state.billing_by]);
-
-  console.log("itemitemitem");
   
 
   useEffect(() => {

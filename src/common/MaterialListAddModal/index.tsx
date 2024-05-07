@@ -57,7 +57,6 @@ const MaterialListAddModal = ({
     } else if(itemIndex > -1) {
       copy.splice(itemIndex, 1, item);
     }
-    console.log('packingItems----', JSON.stringify(copy));
     setPackingItems(copy);
   }
 
