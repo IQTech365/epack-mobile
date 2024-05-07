@@ -7,13 +7,13 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {COLOR_BLACK, COLOR_BLUE} from '../../../../../utils/colors';
 import {useQuotationFormContextHook} from '../../../../../provider/QuotationFormContextProvider';
 import Label from '../../../../../common/Label';
-import DropdownComponent from '../../../../../common/DropdownComponent';
+import DropdownComponent, { IDropdownHandler } from '../../../../../common/DropdownComponent';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import Spacer from '../../../../../common/Spacer';
-import Input from '../../../../../common/Input';
+import Input, { InputMethods } from '../../../../../common/Input';
 import storageDurationOptions from '../../../../../data/storageDurationOptions.json';
-import DatePickerComponent from '../../../../../common/DatePickerComponent';
-import {formatDate4} from '../../../../../utils/formatter';
+import DatePickerComponent, { IDateMethods } from '../../../../../common/DatePickerComponent';
+import {formatDate, formatDate4} from '../../../../../utils/formatter';
 import {
   IQuotationFreight,
   ISingleQuotationData,
@@ -36,10 +36,10 @@ const StorageChargesView: React.FC<Props> = ({isEdit, item, quotationData}) => {
     setStorageToDate,
     setStorageAmount,
   } = useQuotationFormContextHook();
-  const storageDurationDropdownCompRef = useRef(null);
-  const fromDateDropdownCompRef = useRef(null);
-  const toDateDropdownCompRef = useRef(null);
-  const amountInputCompRef = useRef(null);
+  const storageDurationDropdownCompRef = useRef<IDropdownHandler>(null);
+  const fromDateDropdownCompRef = useRef<IDateMethods>(null);
+  const toDateDropdownCompRef = useRef<IDateMethods>(null);
+  const amountInputCompRef = useRef<InputMethods>(null);
 
   useEffect(() => {
     if (isEdit && quotationData) {
@@ -62,7 +62,7 @@ const StorageChargesView: React.FC<Props> = ({isEdit, item, quotationData}) => {
         const quotationfreight: IQuotationFreight =
           quotationData.quotationfreights;
         if (_.isObject(quotationfreight)) {
-          const storageCharge: IStorage = quotationfreight.storageCharges;
+          const storageCharge: IStorage = quotationfreight.storageCharges;          
           if (_.isObject(storageCharge)) {
             const storageDurationItem: TDropdownItem =
               storageDurationOptions.find(
@@ -87,15 +87,13 @@ const StorageChargesView: React.FC<Props> = ({isEdit, item, quotationData}) => {
                 fromDateDropdownCompRef?.current?.setDefaultValue(
                   new Date(storageCharge?.fromDate),
                 );
-              setStorageFromDate(
-                formatDate4(new Date(storageCharge?.fromDate)),
-              );
+              setStorageFromDate(storageCharge?.fromDate);              
               //@ts-ignore
               toDateDropdownCompRef &&
                 toDateDropdownCompRef?.current?.setDefaultValue(
                   new Date(storageCharge?.toDate),
                 );
-              setStorageToDate(formatDate4(new Date(storageCharge?.toDate)));
+              setStorageToDate(storageCharge?.toDate);
             }
           }
         }
@@ -106,7 +104,7 @@ const StorageChargesView: React.FC<Props> = ({isEdit, item, quotationData}) => {
         setStorageToDate('');
       }
     }
-  }, [state.storage]);
+  }, [state.storage,quotationData,isEdit]);
 
   return (
     <CollapsibleView title="STORAGE CHARGES" collapsed={true}>
@@ -153,7 +151,7 @@ const StorageChargesView: React.FC<Props> = ({isEdit, item, quotationData}) => {
                     <Label text="From Date" style={styles.labelText} />
                     <DatePickerComponent
                       onDateSelect={(date: Date) => {
-                        setStorageFromDate(formatDate4(date));
+                        setStorageFromDate(date.toISOString());
                       }}
                       //@ts-ignore
                       ref={fromDateDropdownCompRef}
@@ -163,7 +161,7 @@ const StorageChargesView: React.FC<Props> = ({isEdit, item, quotationData}) => {
                     <Label text="To Date" style={styles.labelText} />
                     <DatePickerComponent
                       onDateSelect={(date: Date) => {
-                        setStorageToDate(formatDate4(date));
+                        setStorageToDate(date.toISOString());
                       }}
                       //@ts-ignore
                       ref={toDateDropdownCompRef}

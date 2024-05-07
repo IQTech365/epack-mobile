@@ -335,9 +335,11 @@ const AddQuotationForm: React.FC<Props> = ({
               params: item?._id as string,
               payload: payload,
             };
-            
+              
             dispatch(updateQuotationRequest(updatePayload));
           } else {
+            console.log(payload,"data----");
+            
             dispatch(addQuotationRequest(payload));
           }
         } else {
