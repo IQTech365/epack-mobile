@@ -102,10 +102,10 @@ const PickupAddressView: React.FC<Props> = ({
         stateDropdownCompRef?.current?.setValue(pickupAddress?.state);
         setPickupCity(pickupAddress?.city);
         cityDropdownCompRef?.current?.setValue(pickupAddress?.city);
-        setPickupCurrentFloor(pickupAddress?.floor);
         const floorItem: TDropdownItem = floorOptions.find((d: TDropdownItem) => d.label == pickupAddress?.floor) as TDropdownItem;
         if (floorItem) {
           floorDropdownCompRef?.current?.setDefaultValue(floorItem);
+          setPickupCurrentFloor(pickupAddress?.floor)
         }
         setPickupLiftStatus(pickupAddress.isLiftAvailable);
         const liftItem: TDropdownItem = liftStatusOptions.find((d: TDropdownItem) => d.label == pickupAddress.isLiftAvailable) as TDropdownItem;
@@ -131,12 +131,13 @@ const PickupAddressView: React.FC<Props> = ({
           stateDropdownCompRef?.current?.setValue(pickupAddress?.state);
           setPickupCity(pickupAddress?.city);
           cityDropdownCompRef?.current?.setValue(pickupAddress?.city);
-          setPickupCurrentFloor(pickupAddress?.floor);
           const floorItem: TDropdownItem = floorOptions.find(
             (d: TDropdownItem) => d.label == pickupAddress?.floor,
           ) as TDropdownItem;
           if (floorItem) {
               floorDropdownCompRef?.current?.setDefaultValue(floorItem);
+                        setPickupCurrentFloor(pickupAddress?.floor);
+
           }
           setPickupLiftStatus(pickupAddress.isLiftAvailable);
           const liftItem: TDropdownItem = liftStatusOptions.find(

@@ -94,10 +94,10 @@ const DropAddressView: React.FC<Props> = ({fromEnquiry = false, isEdit, item}) =
         stateDropdownCompRef?.current?.setValue(dropAddress?.state);
         setDropCity(dropAddress?.city);
         cityDropdownCompRef?.current?.setValue(dropAddress?.city);
-        setDropCurrentFloor(dropAddress?.floor);
         const floorItem:TDropdownItem = floorOptions.find((d:TDropdownItem) => d.label == dropAddress?.floor) as TDropdownItem;
         if(floorItem) {
           floorDropdownCompRef?.current?.setDefaultValue(floorItem);
+          setDropCurrentFloor(dropAddress?.floor);
         }
         setDropLiftStatus(dropAddress.isLiftAvailable);
         const liftItem:TDropdownItem = liftStatusOptions.find((d:TDropdownItem) => d.label == dropAddress?.isLiftAvailable) as TDropdownItem;
@@ -122,10 +122,11 @@ const DropAddressView: React.FC<Props> = ({fromEnquiry = false, isEdit, item}) =
             stateDropdownCompRef?.current?.setValue(dropAddress?.state);
             setDropCity(dropAddress?.city);
             cityDropdownCompRef?.current?.setValue(dropAddress?.city);
-            setDropCurrentFloor(dropAddress?.floor);
             const floorItem:TDropdownItem = floorOptions.find((d:TDropdownItem) => d.label == dropAddress?.floor) as TDropdownItem;
               if(floorItem) {
                 floorDropdownCompRef?.current?.setDefaultValue(floorItem);
+                setDropCurrentFloor(dropAddress?.floor);
+
             }
             setDropLiftStatus(dropAddress.isLiftAvailable);
             const liftItem:TDropdownItem = liftStatusOptions.find((d:TDropdownItem) => d.label == dropAddress?.isLiftAvailable) as TDropdownItem;

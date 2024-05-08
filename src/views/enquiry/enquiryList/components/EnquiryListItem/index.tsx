@@ -5,8 +5,15 @@ import styles from './style';
 import PhoneBlueIcon from '../../../../../images/icons/phone-blue.svg';
 import WhatsappIcon from '../../../../../images/icons/whatsapp.svg';
 import MoreIcon from '../../../../../images/icons/dots-vertical.svg';
-
 import Spacer from '../../../../../common/Spacer';
+import enquiryStatusOptions from '../../../../../data/enquiryStatusOptions.json';
+import {
+  Menu,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+} from 'react-native-popup-menu';
+import { COLOR_BLACK } from '../../../../../utils/colors';
 
 export interface IEnquiryItem {
   clientName: string;
@@ -43,6 +50,16 @@ const EnquiryListItem: React.FC<IEnquiryListItemProps> = ({
     Linking.openURL(`whatsapp://send?phone=+91${item.phoneNumber}`);
   }
 
+  const handleStatus = () =>{
+    const data = enquiryStatusOptions.map((item,index)=>{
+      return(
+        {item}
+      )
+    })
+    console.log(data);
+
+  }
+
   return (
     <>
       <View style={styles.badgeWrapper}>
@@ -69,9 +86,33 @@ const EnquiryListItem: React.FC<IEnquiryListItemProps> = ({
                 <PhoneBlueIcon width={24} height={24} />
               </TouchableOpacity>
               <Spacer width={12} height={0} />
-              <TouchableOpacity activeOpacity={0.4}>
-                <MoreIcon width={24} height={24} />
+              <TouchableOpacity 
+              onPress={()=>handleStatus()}
+              activeOpacity={0.4}>
+                <Menu>
+                  <MenuTrigger>
+                  <MoreIcon width={24} height={24} />
+                    </MenuTrigger>
+                    <MenuOptions>
+                    {enquiryStatusOptions.map((option, index) => {
+                          const isLastIndex = index == enquiryStatusOptions.length -1;
+                          const lastItemStyle = isLastIndex ? {
+                            optionWrapper: {borderBottomWidth: 0, marginHorizontal: 5,},
+                            optionText: {
+                              paddingVertical: 8,
+                              color: COLOR_BLACK,
+                              fontFamily: 'WorkSans-Regular'
+                            }
+                          } : undefined;
+                          return <MenuOption customStyles={lastItemStyle} key={`${index}`}
+                          onSelect={() => {
+                            handleEnquiryStatusChange(option);
+                          }} text={option} />
+                        })}
+                    </MenuOptions>
+                </Menu>
               </TouchableOpacity>
+
             </View>
           </View>
           <View style={styles.rowContainer}>
