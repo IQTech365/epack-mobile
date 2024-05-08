@@ -57,7 +57,7 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId, navi
       status: value.toUpperCase(),
     }
     dispatch(updateEnquiryStatusRequest({id: enquiryId as string, requestBody: payload}));
-  }
+  }  
 
   const handlePhoneCall = () => {
     Linking.openURL(`tel:${_getMobile(item)}`);

@@ -136,8 +136,7 @@ const PickupAddressView: React.FC<Props> = ({
           ) as TDropdownItem;
           if (floorItem) {
               floorDropdownCompRef?.current?.setDefaultValue(floorItem);
-                        setPickupCurrentFloor(pickupAddress?.floor);
-
+              setPickupCurrentFloor(pickupAddress?.floor);
           }
           setPickupLiftStatus(pickupAddress.isLiftAvailable);
           const liftItem: TDropdownItem = liftStatusOptions.find(

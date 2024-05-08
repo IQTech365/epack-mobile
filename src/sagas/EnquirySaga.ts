@@ -165,7 +165,7 @@ export function* getSurveyItemListSaga(action: PayloadAction<IGetSurvyeItemListR
 export function* updateEnquiryStatusSaga(action: PayloadAction<{ id: string, requestBody: IUpdateEnquiryStatusRequest }>) {
     const { id, requestBody } = action.payload;
     try {
-        const response: IUpdateEnquiryStatusResponse = yield call(EnquiryService.UpdateEnquiryStatusService, id, requestBody);
+        const response: IUpdateEnquiryStatusResponse = yield call(EnquiryService.UpdateEnquiryStatusService, id, requestBody);        
         yield put(updateEnquiryStatusSuccess(response));
     } catch (error) {
         yield put(updateEnquiryStatusFailure(error));
