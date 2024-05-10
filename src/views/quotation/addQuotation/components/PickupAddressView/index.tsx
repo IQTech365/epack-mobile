@@ -102,7 +102,7 @@ const PickupAddressView: React.FC<Props> = ({
         stateDropdownCompRef?.current?.setValue(pickupAddress?.state);
         setPickupCity(pickupAddress?.city);
         cityDropdownCompRef?.current?.setValue(pickupAddress?.city);
-        const floorItem: TDropdownItem = floorOptions.find((d: TDropdownItem) => d.label == pickupAddress?.floor) as TDropdownItem;
+        const floorItem: TDropdownItem = floorOptions.find((d: TDropdownItem) => d.label == pickupAddress?.floor) as TDropdownItem;        
         if (floorItem) {
           floorDropdownCompRef?.current?.setDefaultValue(floorItem);
           setPickupCurrentFloor(pickupAddress?.floor)
@@ -115,6 +115,9 @@ const PickupAddressView: React.FC<Props> = ({
       }
     }
   }, [state.enquiryItem]);
+
+  console.log(item,"robinkhan");
+  
 
   useEffect(() => {
     if (isEdit && item) {

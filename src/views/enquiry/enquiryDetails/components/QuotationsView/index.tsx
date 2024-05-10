@@ -162,6 +162,7 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
             toDestination: _getToDestination(quotation),
             shiftingType: _getShiftingType(quotation),
             shiftingLuggage: quotation.shiftingLuggage,
+            lorryType: quotation.lorryType,
             quotationAmount: quotationAmount,
             quotationDate: quotationDate,
             phoneNumber: _getMobile(quotation),

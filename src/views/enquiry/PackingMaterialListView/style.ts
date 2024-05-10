@@ -18,6 +18,14 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     paddingVertical: 5,
   },
+
+  textContainer2: {
+    width: width * 0.95,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    alignSelf: 'center',
+    marginBottom:8
+  },
   itemContentContainer: {
     width: '85%',
     alignItems: 'center',
@@ -28,6 +36,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
+    paddingLeft: 10
+  },
+
+  vehicleItem:{
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     paddingLeft: 10
   },
   itemActionContainer: {

@@ -28,7 +28,7 @@ interface Props {
 }
 
 const FreightDetailsView: React.FC<Props> = ({isEdit, item, quotationData}) => {
-  const {state} = useQuotationFormContextHook();
+  const {state} = useQuotationFormContextHook();  
 
   return (
     <CollapsibleView title="FREIGHT DETAILS" collapsed={true}>
@@ -44,7 +44,7 @@ const FreightDetailsView: React.FC<Props> = ({isEdit, item, quotationData}) => {
           item={item}
           quotationData={quotationData}
         />
-        <VehicleLoadSizeView isEdit={isEdit} item={item} />
+        <VehicleLoadSizeView isEdit={isEdit} item={item} quotationData={quotationData} />
         <Spacer height={4} />
         <FreightTypeView
           options={options}

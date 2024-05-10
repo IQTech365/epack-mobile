@@ -184,7 +184,7 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
         )}
         ListEmptyComponent={() => <Text style={styles.text}>No Orders available!</Text>}
       />
-    </View>
+    </View>  
   );
 };
 

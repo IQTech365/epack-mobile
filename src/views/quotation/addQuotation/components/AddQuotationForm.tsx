@@ -334,8 +334,7 @@ const AddQuotationForm: React.FC<Props> = ({
             const updatePayload: IUpdateQuotationRequest = {
               params: item?._id as string,
               payload: payload,
-            };
-              
+            };              
             dispatch(updateQuotationRequest(updatePayload));
           } else {
             console.log(payload,"data----");
@@ -423,6 +422,9 @@ const AddQuotationForm: React.FC<Props> = ({
     updateQuotationSuccess,
     updateQuotationFailure,
   ]);  
+
+  console.log(enquiryData,"item12312300");
+  
 
   return (
     <>

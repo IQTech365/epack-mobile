@@ -4,22 +4,25 @@ import styles from './style';
 import {useAppSelector} from '../../../../../redux/hooks';
 import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import {IVehicleSize} from '../../../../../interface/vehicle/IGetVehicleSizeResponse';
-import DropdownComponent from '../../../../../common/DropdownComponent';
 import Label from '../../../../../common/Label';
 import {useQuotationFormContextHook} from '../../../../../provider/QuotationFormContextProvider';
 import Spacer from '../../../../../common/Spacer';
 import shiftingLuggages from '../../../../../data/shiftingLuggage.json';
-import { IQuotationFreight } from '../../../../../interface/quotation/IGetSingleQuotationResponse';
+import {ISingleQuotationData } from '../../../../../interface/quotation/IGetSingleQuotationResponse';
 import { IGetQuotationData } from '../../../../../interface/quotation/IGetQuotationsResponse';
+import DropdownComponent, { IDropdownHandler } from '../../../../../common/DropdownComponent';
 interface IProps {
   isEdit?:boolean;
   item?:IGetQuotationData;
+  quotationData?:ISingleQuotationData;
+
 }
 
-const VehicleLoadSizeView: React.FC<IProps> = ({isEdit, item}) => {
+const VehicleLoadSizeView: React.FC<IProps> = ({isEdit, item,quotationData}) => {
   const {vehicleSizeData} = useAppSelector(state => state.Vehicle);
   const {state, setLorryType} = useQuotationFormContextHook();
-  const lorryTypeDropdownRef = useRef(null);
+  const lorryTypeDropdownRef = useRef<IDropdownHandler>(null);
+
 
   const _getVehicleSizes = () => {
     let vehicleSizes: TDropdownItem[] = [];
@@ -28,31 +31,25 @@ const VehicleLoadSizeView: React.FC<IProps> = ({isEdit, item}) => {
       vehicleSizes = data.map((d: IVehicleSize) => {
         const item: TDropdownItem = {
           label: d.vehicleSize,
-          value: d._id,
-        };
+          value: d.vehicleSize,
+        };        
         return item;
       });
-    }
+    }    
     return vehicleSizes;
-  };
+  }; 
+  
 
   useEffect(() => {
-    if(state.editQuotation && state.item) {
-      
-      const {item} = state;
-      if(item) {
-        const quotationfreight:IQuotationFreight = item.quotationfreights;
-        if(quotationfreight && quotationfreight.lorryType) {
-          const lorryTypeItem:TDropdownItem = _getVehicleSizes().find((d:TDropdownItem) => d.label == quotationfreight?.lorryType) as TDropdownItem;
-          if(lorryTypeItem) {
+    if(isEdit && quotationData) {  
+      const lorryData = quotationData.quotationfreights;
+      const lorryTypeItem:TDropdownItem = _getVehicleSizes().find((d:TDropdownItem) => d.label == lorryData?.lorryType) as TDropdownItem;        
             //@ts-ignore
             lorryTypeDropdownRef && lorryTypeDropdownRef?.current?.setDefaultValue(lorryTypeItem);
-            setLorryType(lorryTypeItem.value);
+            setLorryType(lorryData?.lorryType);
           }
-        }
-      }
-    }
-  }, [state.editQuotation, state.item]);
+    
+  }, [isEdit, quotationData]);
 
   if (!state.freight_full_load || (state.shifting_luggage == shiftingLuggages[3].label)) return null;
 

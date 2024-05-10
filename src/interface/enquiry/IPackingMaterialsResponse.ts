@@ -7,6 +7,7 @@ export interface IMaterial {
     name:string;
     quantity: string;
     type:string;
+    vehicleLoadSize:string;
 }
 
 export interface IPackingMaterial {

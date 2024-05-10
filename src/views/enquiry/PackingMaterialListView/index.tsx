@@ -30,6 +30,7 @@ import {
 } from '../../../interface/enquiry/IUpdatePackingMaterialResponse';
 import MaterialListAddModal from '../../../common/MaterialListAddModal';
 import {IPackingItem} from '../enquiryDetails/components/PackingMaterialsView/utils';
+import MaterialListUpdateVehicleSizeModal from '../../../common/MaterialListUpdateVehicleSizeModal';
 
 interface IProps {
   enquiryId: string;
@@ -41,6 +42,7 @@ const PackingMaterialListView: React.FC<IProps> = ({enquiryId}) => {
   );
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
+  const [openVehicleSizeModal, setOpenVehicleSizeModal] = useState(false);
   const [itemIndex, setItemIndex] = useState<number>(-1);
   const dispatch = useAppDispatch();
   const {
@@ -78,6 +80,7 @@ const PackingMaterialListView: React.FC<IProps> = ({enquiryId}) => {
 
   const _handleModalClose = () => {
     setOpenModal(false);
+    setOpenVehicleSizeModal(false);
   };
 
   const _handleAddModalClose = () => {
@@ -86,6 +89,7 @@ const PackingMaterialListView: React.FC<IProps> = ({enquiryId}) => {
 
   const _onUpdate = (index: number, item: IMaterial) => {
     setOpenModal(false);
+    setOpenVehicleSizeModal(false);
     const copy = [..._getPackingMaterials()];
     copy.splice(index, 1, item);
     const material: IPackingMaterial =
@@ -145,7 +149,18 @@ const PackingMaterialListView: React.FC<IProps> = ({enquiryId}) => {
       const item: IPackingMaterial = data[0];
       materials = item.packingMaterial;
     }
+
     return materials;
+  };
+  const _getPackingMaterialsVehicleize = () => {
+    let vehicleLoadSizeData: string = '';
+    if (data && Array.isArray(data) && data.length > 0) {
+      const item: IPackingMaterial = data[0];
+      vehicleLoadSizeData = item.vehicleLoadSize;
+    }
+  console.log(vehicleLoadSizeData,"vehicleLoadSizeData");
+  
+    return vehicleLoadSizeData;
   };
 
   const _getPackingMaterialList = () => {
@@ -217,46 +232,70 @@ const PackingMaterialListView: React.FC<IProps> = ({enquiryId}) => {
   }
 
   return (
-    <View style={styles.container}>
-      <Spacer height={10} />
-      <FlatList
-        data={_getPackingMaterials()}
-        renderItem={({item, index}) => renderItem(item, index)}
-        refreshControl={
-          <RefreshControl
-            refreshing={getPackingMaterialsRequesting}
-            onRefresh={_handleRefresh}
-          />
-        }
-        ListEmptyComponent={_renderEmptyView()}
-        // ListFooterComponent={() => {
-        //   return (
-        //     <>
-        //     {_getPackingMaterials().length > 0 ? <TouchableOpacity
-        //       style={styles.buttonContainer}
-        //       onPress={() => {
-        //         setOpenAddModal(true);
-        //       }}>
-        //       <Text style={styles.buttonText}>Add MORE ITEMS</Text>
-        //     </TouchableOpacity> : null}
-        //     </>
-        //   );
-        // }}
-      />
-      <MaterialListUpdateModal
-        item={packingMaterial}
-        visible={openModal}
-        index={itemIndex}
-        onClose={_handleModalClose}
-        onUpdate={_onUpdate}
-      />
-      <MaterialListAddModal
-        visible={openAddModal}
-        onClose={_handleAddModalClose}
-        onAdd={_onAdd}
-      />
-      <Spinner show={updatePackingMaterialRequesting} />
-    </View>
+    <>
+      <View style={styles.itemContainer}>
+        <View style={styles.itemContentContainer}>
+          <View style={styles.item}>
+            <Text style={styles.label}>{`Vehicle Load Size: `}</Text>
+            <Text style={styles.text}>{`ggg`}</Text>
+          </View>
+        </View>
+        <View style={styles.itemActionContainer}>
+          <TouchableOpacity onPress={() => setOpenVehicleSizeModal(true)}>
+            <EditIcon width={24} height={24} />
+          </TouchableOpacity>
+          <Spacer height={10} />
+        </View>
+      </View>
+      <View style={styles.container}>
+        <Spacer height={10} />
+        <FlatList
+          data={_getPackingMaterials()}
+          renderItem={({item, index}) => renderItem(item, index)}
+          refreshControl={
+            <RefreshControl
+              refreshing={getPackingMaterialsRequesting}
+              onRefresh={_handleRefresh}
+            />
+          }
+          ListEmptyComponent={_renderEmptyView()}
+          // ListFooterComponent={() => {
+          //   return (
+          //     <>
+          //     {_getPackingMaterials().length > 0 ? <TouchableOpacity
+          //       style={styles.buttonContainer}
+          //       onPress={() => {
+          //         setOpenAddModal(true);
+          //       }}>
+          //       <Text style={styles.buttonText}>Add MORE ITEMS</Text>
+          //     </TouchableOpacity> : null}
+          //     </>
+          //   );
+          // }}
+        />
+        <MaterialListUpdateModal
+          item={packingMaterial}
+          visible={openModal}
+          index={itemIndex}
+          onClose={_handleModalClose}
+          onUpdate={_onUpdate}
+        />
+
+        <MaterialListUpdateVehicleSizeModal
+          item={packingMaterial}
+          visible={openVehicleSizeModal}
+          index={itemIndex}
+          onClose={_handleModalClose}
+          onUpdate={_onUpdate}
+        />
+        <MaterialListAddModal
+          visible={openAddModal}
+          onClose={_handleAddModalClose}
+          onAdd={_onAdd}
+        />
+        <Spinner show={updatePackingMaterialRequesting} />
+      </View>
+    </>
   );
 };
 

@@ -62,6 +62,7 @@ export interface IGetQuotationData {
   companyId: string;
   enquiryId: string;
   shiftingLuggage: string;
+  lorryType: string;
   vehicleType: string;
   manufacture: string;
   model: string;

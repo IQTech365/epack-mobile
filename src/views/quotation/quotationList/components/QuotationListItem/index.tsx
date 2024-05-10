@@ -15,6 +15,7 @@ export interface IQuotationItem {
   quotationNo: string;
   clientName: string;
   fromDestination: string;
+  lorryType: string;
   toDestination: string;
   shiftingType: string;
   shiftingLuggage: string;

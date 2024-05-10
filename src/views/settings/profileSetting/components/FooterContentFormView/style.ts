@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
   editorContentContainer: {
     width: width * 0.9,
     alignSelf: 'center',
-    height: 250,
+    height: 400,
     borderWidth: 1,
     borderColor: COLOR_GRAY2,
   },

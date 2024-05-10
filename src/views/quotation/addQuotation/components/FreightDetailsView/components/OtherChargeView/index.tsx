@@ -81,7 +81,7 @@ const OtherChargeView: React.FC<Props> = ({isEdit, item, quotationData}) => {
           ToastType.ERROR,
         );
       } else if (!_calculatePartLoadAmount()) {
-        return showToast('Please enter Full Load amount', ToastType.ERROR);
+        return showToast('Please enter Part Load amount', ToastType.ERROR);
       } else if (!_calculateFullLoadAmount()) {
         return showToast('Please enter Full Load amount', ToastType.ERROR);
       }

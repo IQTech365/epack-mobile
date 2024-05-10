@@ -122,16 +122,6 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item, enqui
                 shiftingTypeItem,
               );
           }
-          const shiftingLuggageItem: TDropdownItem = shiftingLuggages.find(
-            (d: TDropdownItem) => d.label == enquiryData.shiftingLuggage,
-          ) as TDropdownItem;
-          if (shiftingLuggageItem) {
-            shiftingLuggageDropdownCompRef &&
-              shiftingLuggageDropdownCompRef?.current?.setDefaultValue(
-                shiftingLuggageItem,
-              );
-            setShiftingLuggage(enquiryData.shiftingLuggage);
-          }
     }  
   }, [fromEnquiry]);
 

@@ -83,16 +83,19 @@ const StorageChargesView: React.FC<Props> = ({isEdit, item, quotationData}) => {
               storageDurationOptions[2].label
             ) {
               //@ts-ignore
-              fromDateDropdownCompRef &&
+              if(fromDateDropdownCompRef){
+                fromDateDropdownCompRef &&
                 fromDateDropdownCompRef?.current?.setDefaultValue(
                   new Date(storageCharge?.fromDate),
                 );
+              }
               setStorageFromDate(storageCharge?.fromDate);              
               //@ts-ignore
-              toDateDropdownCompRef &&
-                toDateDropdownCompRef?.current?.setDefaultValue(
-                  new Date(storageCharge?.toDate),
-                );
+                if(toDateDropdownCompRef){
+                  toDateDropdownCompRef?.current?.setDefaultValue(
+                    new Date(storageCharge?.toDate),
+                  );
+                }
               setStorageToDate(storageCharge?.toDate);
             }
           }
