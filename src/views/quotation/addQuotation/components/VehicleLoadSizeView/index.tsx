@@ -31,7 +31,7 @@ const VehicleLoadSizeView: React.FC<IProps> = ({isEdit, item,quotationData}) => 
       vehicleSizes = data.map((d: IVehicleSize) => {
         const item: TDropdownItem = {
           label: d.vehicleSize,
-          value: d.vehicleSize,
+          value: d._id,
         };        
         return item;
       });
@@ -43,7 +43,7 @@ const VehicleLoadSizeView: React.FC<IProps> = ({isEdit, item,quotationData}) => 
   useEffect(() => {
     if(isEdit && quotationData) {  
       const lorryData = quotationData.quotationfreights;
-      const lorryTypeItem:TDropdownItem = _getVehicleSizes().find((d:TDropdownItem) => d.label == lorryData?.lorryType) as TDropdownItem;        
+      const lorryTypeItem:TDropdownItem = _getVehicleSizes().find((d:TDropdownItem) => d.value == lorryData?.lorryType) as TDropdownItem;        
             //@ts-ignore
             lorryTypeDropdownRef && lorryTypeDropdownRef?.current?.setDefaultValue(lorryTypeItem);
             setLorryType(lorryData?.lorryType);

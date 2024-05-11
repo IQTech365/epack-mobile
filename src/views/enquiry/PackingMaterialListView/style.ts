@@ -38,7 +38,12 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     paddingLeft: 10
   },
-
+  item2: {
+    width: '100%',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    paddingLeft: 10
+  },
   vehicleItem:{
     flexDirection: 'row',
     alignItems: 'center',

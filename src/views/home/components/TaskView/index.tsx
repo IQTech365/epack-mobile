@@ -105,7 +105,12 @@ const TaskView: React.FC<Props> = ({taskName, count, navigation}) => {
       navigation.jumpTo(TabRoute.OrderStack, {
         screen: 'OrderRoot',
       });
-    } else if (taskName == TASK_NAME.TOTAL_CUSTOMERS) {
+    } else if (taskName == TASK_NAME.NEW_ENQUIRIES) {
+      //@ts-ignore
+      navigation.jumpTo(TabRoute.EnquiryStack, {
+        screen: 'EnquiryRoot',
+      });
+    }else if (taskName == TASK_NAME.TOTAL_CUSTOMERS) {
       //@ts-ignore
       navigation.jumpTo(TabRoute.ClientStack, {
         screen: 'ClientRoot',

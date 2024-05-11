@@ -31,6 +31,7 @@ import {
 import MaterialListAddModal from '../../../common/MaterialListAddModal';
 import {IPackingItem} from '../enquiryDetails/components/PackingMaterialsView/utils';
 import MaterialListUpdateVehicleSizeModal from '../../../common/MaterialListUpdateVehicleSizeModal';
+import { TDropdownItem } from '../../../type/TDropdownItem';
 
 interface IProps {
   enquiryId: string;
@@ -52,7 +53,22 @@ const PackingMaterialListView: React.FC<IProps> = ({enquiryId}) => {
     updatePackingMaterialSuccess,
     updatePackingMaterialFailure,
   } = useAppSelector(state => state.Enquiry);
+  const {vehicleSizeData} = useAppSelector(state => state.Vehicle);
+  const {data: VehicleSize} = vehicleSizeData || {};
+
   const {data} = packingMaterials || {};
+
+  const vehicleSizeArray = () => {
+    let _data: TDropdownItem[] = [];
+    if (VehicleSize && Array.isArray(VehicleSize) && VehicleSize.length > 0) {
+      _data = VehicleSize.map((item: any) => ({
+        value: item._id,
+        label: item.vehicleSize,
+      }));
+    }
+    return _data;
+  };
+
   const _handleDelete = (index: number) => {
     const copy = [..._getPackingMaterials()];
     copy.splice(index, 1);
@@ -92,8 +108,7 @@ const PackingMaterialListView: React.FC<IProps> = ({enquiryId}) => {
     setOpenVehicleSizeModal(false);
     const copy = [..._getPackingMaterials()];
     copy.splice(index, 1, item);
-    const material: IPackingMaterial =
-      _getPackingMaterialList() as IPackingMaterial;
+    const material: IPackingMaterial = _getPackingMaterialList() as IPackingMaterial;
     if (!_.isNull(material)) {
       const data: IUpdatePackingMaterialRequest = {
         enquiryId: enquiryId as string,
@@ -108,10 +123,28 @@ const PackingMaterialListView: React.FC<IProps> = ({enquiryId}) => {
     }
   };
 
+  const _onUpdateVehicleSize = (vehicleSize: string) => {
+    setOpenModal(false);
+    setOpenVehicleSizeModal(false);
+    const copy = [..._getPackingMaterials()];
+    const material: IPackingMaterial = _getPackingMaterialList() as IPackingMaterial;
+    if (!_.isNull(material) && !_.isNull(vehicleSize)) {
+      const data: IUpdatePackingMaterialRequest = {
+        enquiryId: enquiryId as string,
+        vehicleLoadSize: vehicleSize,
+        packingMaterial: copy,
+      };
+      const payload: IUpdatePackingMaterialPayload = {
+        id: material._id,
+        data,
+      };
+      dispatch(updatePackingMaterialListRequest(payload));
+    }
+  };
+
   const _onAdd = (items: IPackingItem[]) => {
     setOpenAddModal(false);
-    const material: IPackingMaterial =
-      _getPackingMaterialList() as IPackingMaterial;
+    const material: IPackingMaterial = _getPackingMaterialList() as IPackingMaterial;
     if (!_.isNull(material)) {
       const data: IUpdatePackingMaterialRequest = {
         enquiryId: enquiryId as string,
@@ -153,14 +186,18 @@ const PackingMaterialListView: React.FC<IProps> = ({enquiryId}) => {
     return materials;
   };
   const _getPackingMaterialsVehicleize = () => {
-    let vehicleLoadSizeData: string = '';
+    let vehicleLoadSize: TDropdownItem|undefined = undefined;
     if (data && Array.isArray(data) && data.length > 0) {
       const item: IPackingMaterial = data[0];
-      vehicleLoadSizeData = item.vehicleLoadSize;
+      const vechileSizes = vehicleSizeArray();
+      if(_.isArray(vechileSizes)) {
+        const vehicleItem:TDropdownItem = vechileSizes.find((e:TDropdownItem) => e.value === item.vehicleLoadSize) as TDropdownItem;
+        if(!_.isUndefined(vehicleItem)) {
+          vehicleLoadSize = vehicleItem
+        }
+      }
     }
-  console.log(vehicleLoadSizeData,"vehicleLoadSizeData");
-  
-    return vehicleLoadSizeData;
+    return vehicleLoadSize;
   };
 
   const _getPackingMaterialList = () => {
@@ -235,9 +272,9 @@ const PackingMaterialListView: React.FC<IProps> = ({enquiryId}) => {
     <>
       <View style={styles.itemContainer}>
         <View style={styles.itemContentContainer}>
-          <View style={styles.item}>
+          <View style={styles.item2}>
             <Text style={styles.label}>{`Vehicle Load Size: `}</Text>
-            <Text style={styles.text}>{`ggg`}</Text>
+            <Text style={styles.text}>{_getPackingMaterialsVehicleize()?.label}</Text>
           </View>
         </View>
         <View style={styles.itemActionContainer}>
@@ -282,11 +319,10 @@ const PackingMaterialListView: React.FC<IProps> = ({enquiryId}) => {
         />
 
         <MaterialListUpdateVehicleSizeModal
-          item={packingMaterial}
           visible={openVehicleSizeModal}
-          index={itemIndex}
+          currentVechileSizeId={_getPackingMaterialsVehicleize()?.value as string}
           onClose={_handleModalClose}
-          onUpdate={_onUpdate}
+          onUpdate={_onUpdateVehicleSize}
         />
         <MaterialListAddModal
           visible={openAddModal}

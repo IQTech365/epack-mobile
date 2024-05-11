@@ -83,7 +83,7 @@ const AddressView: React.FC<IAddressViewProps> = ({showEditIcon = true}) => {
           modalStyle={styles.modalWrapper}
           title="UPDATE COMPANY ADDRESS">
           <View style={styles.modalStyle}>
-            <UpdateComanyAddressForm />
+            <UpdateComanyAddressForm onComplete={handleModalClose} />
             <Toast />
             <Spacer height={8} />
           </View>

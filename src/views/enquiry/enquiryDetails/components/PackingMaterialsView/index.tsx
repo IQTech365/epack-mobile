@@ -43,7 +43,7 @@ const PackingMaterialsView: React.FC<IProps> = ({enquiryId}) => {
   const [materialTypes, setMaterialTypes] = useState<string[]>(materials);
   const [extraMaterialName, setExtraMaterialName] = useState<string>('');
   const [showList, setShowList] = useState<boolean>(false);
-
+  
   const {
     packingMaterials,
     addPackingMaterialsRequesting,
@@ -122,8 +122,19 @@ const PackingMaterialsView: React.FC<IProps> = ({enquiryId}) => {
 
   const _handlePackingMaterialChange = (item: IPackingItem, index: number) => {
     const copy = [...packingItems];
-    copy.splice(index, 1, item);
-    setPackingItems(copy);
+    if(copy.length > 0) {
+      const findItemIndex:number = copy.findIndex(pi => pi.name === item.name);
+      if(findItemIndex !== -1) {
+        copy.splice(findItemIndex, 1, item);
+        setPackingItems(copy);
+      } else {
+        copy.push(item);
+        setPackingItems(copy);
+      }
+    } else {
+      copy.push(item);
+      setPackingItems(copy);
+    }
   };
 
   const handleAddInput = (text: string) => {
@@ -131,9 +142,14 @@ const PackingMaterialsView: React.FC<IProps> = ({enquiryId}) => {
   };
 
   const addItem = () => {
-    const copy = [...materialTypes];
-    copy.push(extraMaterialName);
-    setMaterialTypes(copy);
+    const isMaterialNamePresent = materialTypes.some(m => m === extraMaterialName);
+    if(!isMaterialNamePresent) {
+      const copy = [...materialTypes];
+      copy.push(extraMaterialName);
+      setMaterialTypes(copy);
+    } else {
+      showToast("Material Name Already Present", ToastType.ERROR);
+    }
   };
 
   const onSubmit = () => {
@@ -146,24 +162,9 @@ const PackingMaterialsView: React.FC<IProps> = ({enquiryId}) => {
     dispatch(addPackingMaterialRequest(payload));
   };
 
-  const handleShowList = () => {
-    //@ts-ignore
-    navigation.navigate('EditPackingMaterials', {enquiryId: enquiryId});
-  };
-
   return (
     <AvoidSoftInputViewHOC>
       <View style={styles.container}>
-        {/* <Spacer height={4} />
-        <View style={styles.labelContainer}>
-          <Text style={styles.labelText}>Materials Count: ({getPackingMaterialCount()})</Text>
-          <TouchableOpacity
-            style={styles.showListButtonContainer}
-            onPress={handleShowList}>
-            <Text style={styles.buttonText}>View</Text>
-          </TouchableOpacity>
-        </View>
-        <Spacer height={4} /> */}
         {showList ? (
           <PackingMaterialListView enquiryId={enquiryId} />
         ) : (

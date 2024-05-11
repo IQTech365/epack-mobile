@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   View,
   Modal,
@@ -6,21 +6,17 @@ import {
   Dimensions,
   Text,
   Pressable,
-  TouchableOpacity,
-  TextInput,
 } from 'react-native';
 import CloseIcon from '../../images/icons/close_icon.svg';
-import PlusIcon from '../../images/icons/plus_icon.svg';
-import MinusIcon from '../../images/icons/minus_icon.svg';
 import {
   COLOR_BLACK,
   COLOR_BLUE,
+  COLOR_GRAY,
   COLOR_GRAY2,
   COLOR_GRAY4,
   COLOR_GRAY5,
   COLOR_WHITE,
 } from '../../utils/colors';
-import {IMaterial} from '../../interface/enquiry/IPackingMaterialsResponse';
 import Spacer from '../Spacer';
 import _ from 'underscore';
 import Label from '../Label';
@@ -30,25 +26,23 @@ import {TDropdownItem} from '../../type/TDropdownItem';
 
 interface IProps {
   visible: boolean;
-  item: IMaterial | null;
-  index: number;
+  currentVechileSizeId: string;
   onClose: () => void;
-  onUpdate?: (index: number, item: IMaterial) => void;
+  onUpdate?: (vehicleSize:string) => void;
 }
 
 const MaterialListUpdateVehicleSizeModal = ({
   visible,
-  item,
-  index,
+  currentVechileSizeId,
   onClose,
   onUpdate,
 }: IProps) => {
-  const [newQuantity, setNewQuantity] = useState<string | undefined>(
-    item?.quantity,
-  );
-  const [vehicleLoadSize, setVehicleLoadSize] = useState('');
+  const [vehicleLoadSizeId, setVehicleLoadSizeId] = useState('');
+  const [vehicleSize, setVehicleSize] = useState<string>('');
+
   const {vehicleSizeData} = useAppSelector(state => state.Vehicle);
   const {data: VehicleSize} = vehicleSizeData || {};
+
   const vehicleSizeArray = () => {
     let _data: any[] = [];
     if (VehicleSize && Array.isArray(VehicleSize) && VehicleSize.length > 0) {
@@ -61,28 +55,32 @@ const MaterialListUpdateVehicleSizeModal = ({
   };
 
   const _handleClose = useCallback(() => {
-    setNewQuantity(undefined);
+    // setVehicleLoadSizeId('');
+    // setVehicleSize('');
     onClose && onClose();
   }, []);
 
   const _handleUpdate = () => {
-    if (!_.isNull(item)) {
-      const updatedItem: IMaterial = {
-        ...item,
-        quantity: newQuantity as string,
-      };
-      onUpdate && onUpdate(index, updatedItem);
+    if (!_.isNull(vehicleLoadSizeId)) {
+      onUpdate && onUpdate(vehicleLoadSizeId);
     }
   };
 
-  const handleLorryType = (item: TDropdownItem) => {
-    setVehicleLoadSize(item.value);
-  };
+  useEffect(() => {
+    setVehicleLoadSizeId(currentVechileSizeId);
+  }, []);
 
   useEffect(() => {
-    setNewQuantity(item?.quantity);
-  }, [item]);
-  
+    if(vehicleLoadSizeId) {
+      const vechileSizes = vehicleSizeArray();
+      if(_.isArray(vechileSizes)) {
+        const vehicleItem:TDropdownItem = vechileSizes.find((e:TDropdownItem) => e.value === vehicleLoadSizeId) as TDropdownItem;
+        if(vehicleItem) {
+          setVehicleSize(vehicleItem.label);
+        }
+      }
+    }
+  }, [vehicleLoadSizeId]);
 
   return (
     <View style={styles.centeredView}>
@@ -103,9 +101,13 @@ const MaterialListUpdateVehicleSizeModal = ({
             </View>
             <View style={styles.textContainer2}>
               <Label text="Vehicle Load Size" style={styles.label} />
+              <Text style={styles.vehicleSizeText}>{vehicleSize}</Text>
+              <Spacer height={10} />
               <DropdownComponent
                 data={vehicleSizeArray()}
-                onSelect={handleLorryType}
+                onSelect={(itm: TDropdownItem) => {
+                  setVehicleLoadSizeId(itm.value);
+                }}
               />
             </View>
             <Spacer height={20} />
@@ -249,4 +251,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
   },
+  vehicleSizeText: {
+    color: COLOR_GRAY,
+    fontSize: 14,
+    fontFamily: 'WorksSans-Regular'
+  }
 });

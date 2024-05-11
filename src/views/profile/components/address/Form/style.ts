@@ -79,7 +79,13 @@ const styles = StyleSheet.create({
   addMoreText: {
     color: COLOR_BLACK,
     fontSize: 16,
-  }
+  },
+  compContainer: {
+    width: width * 0.40,
+  },
+  compContainer2: {
+    width: width * 0.80,
+  },
 });
 
 export default styles;

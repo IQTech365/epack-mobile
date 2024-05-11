@@ -1,9 +1,10 @@
+import { IPackingItem } from "../../views/enquiry/enquiryDetails/components/PackingMaterialsView/utils";
 import { IMaterial } from "./IPackingMaterialsResponse";
 
 export interface IUpdatePackingMaterialRequest {
   enquiryId: string;
   vehicleLoadSize: string;
-  packingMaterial: IMaterial[];
+  packingMaterial: IPackingItem[];
 }
 
 export interface IUpdatePackingMaterialPayload {

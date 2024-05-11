@@ -1,26 +1,22 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {View} from 'react-native';
-import Toast from 'react-native-toast-message';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import Button from '../../../../../common/Button';
-import Input from '../../../../../common/Input';
+import Input, { InputMethods } from '../../../../../common/Input';
 import Label from '../../../../../common/Label';
 import Spacer from '../../../../../common/Spacer';
 import Spinner from '../../../../../common/Spinner';
 import usePincodeHook from '../../../../../hooks/usePincodeHook';
-import { IPickupAddress } from '../../../../../interface/order/IUpdateAddressRequest';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
-import { resetUpdateAddressRequest, updateAddressRequest } from '../../../../../redux/slices/EnquirySlice';
-import { TDropdownItem } from '../../../../../type/TDropdownItem';
 import { COLOR_BLACK } from '../../../../../utils/colors';
-import { getCities, getStates } from '../../../../../utils/formatter';
+import { getCities2, getStates2 } from '../../../../../utils/formatter';
 import styles from './style';
-import DropdownComponent from '../../../../../common/DropdownComponent';
 import { ICompanyInfoData } from '../../../../../interface/companyRegistration/IGetCompaniesResponse';
 import { ICompanyEditRequest } from '../../../../../interface/companyRegistration/ICompanyEditRequest';
-import { editCompanyRequest } from '../../../../../redux/slices/CompanySlice';
+import { editCompanyRequest, reseteditCompanyRequest } from '../../../../../redux/slices/CompanySlice';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
 import { ToastType, showToast } from '../../../../../utils/utility';
+import DropdownWithTextInput, { DropdownMethods } from '../../../../../common/DropdownWithTextInput';
 
 export enum ADDRESS_TYPE {
   PICKUP,
@@ -28,18 +24,17 @@ export enum ADDRESS_TYPE {
 }
 
 interface IUpdateComanyAddressFormProps {
-  //enquiryId: string;
+  onComplete: () => void;
 }
 
 const UpdateComanyAddressForm: React.FC<IUpdateComanyAddressFormProps> = ({
-  
+  onComplete
 }) => {
   
   const dispatch = useAppDispatch();
-  const {updateAddressRequesting, updateAddressSuccess, updateAddressFailure} = useAppSelector(state => state.Enquiry);
   const [company, setCompany] = useState<ICompanyInfoData>();
-  const [states, setStates] = useState<TDropdownItem[]>([]);
-  const [cities, setCities] = useState<TDropdownItem[]>([]);
+  const [states, setStates] = useState<string[]>([]);
+  const [cities, setCities] = useState<string[]>([]);
   const [isInit, setIsInit] = useState<boolean>(true);
   const [pin, setPin] = useState<string>('');
   const [city, setCity] = useState<string>('');
@@ -47,18 +42,15 @@ const UpdateComanyAddressForm: React.FC<IUpdateComanyAddressFormProps> = ({
   const [address, setAddress] = useState<string>('');
   const [landmark, setLandmark] = useState<string>('');
   const [locality, setLocality] = useState<string>('');
-  const [liftStatus, setLiftStatus] = useState<string>('');
-  const [floorNumber, setFloorNumber] = useState<string>('');
   const { companies,
     editCompanyRequesting,
     editCompanySuccess,
     editCompanyFailure
   } = useAppSelector(state => state.Company);
 
-  const cityDropdownRef = useRef(null);
-  const stateDropwdownRef = useRef(null);
-  const floorDropdownRef = useRef(null);
-  const liftDropdownRef = useRef(null);
+  const cityDropdownRef = useRef<DropdownMethods>(null);
+  const stateDropwdownRef = useRef<DropdownMethods>(null);
+  const pinInputRef = useRef<InputMethods>(null);
 
   const {result, fetching, setPincode} = usePincodeHook(
     () => {},
@@ -101,44 +93,19 @@ const UpdateComanyAddressForm: React.FC<IUpdateComanyAddressFormProps> = ({
     setPin(text);
   };
 
-  const handleCity = (item: TDropdownItem) => {
-    setCity(item.label);
+  const handleCity = (item: string) => {
+    setCity(item);
   };
-  const handleState = (item: TDropdownItem) => {
-    setState(item.label);
-  };
-
-  const handleCurrentFloor = (item: TDropdownItem) => {
-    setFloorNumber(item.label);
-  };
-  const handleLiftStatus = (item: TDropdownItem) => {
-    setLiftStatus(item.label.toUpperCase());
+  const handleState = (item: string) => {
+    setState(item);
   };
 
   const initFormValues = () => {
-    // if(addressType == ADDRESS_TYPE.PICKUP){
-    //   setPin(item.pickupAddress.pincode);
-    //   setCity(item.pickupAddress.city);
-    //   setState(item.pickupAddress.state);
-    //   setAddress(item.pickupAddress.address as string);
-    //   setLandmark(item.pickupAddress.landmark as string);
-    //   //@ts-ignore
-    //   setLocality(item.pickupAddress?.locality as string);
-    //   setLiftStatus(item.pickupAddress.isLiftAvailable);
-    //   setFloorNumber(item.pickupAddress.floor);
-    //   setPincode(item.pickupAddress.pincode);
-    // } else if(addressType == ADDRESS_TYPE.DROP) {
-    //   setPin(item.dropAddress.pincode);
-    //   setCity(item.dropAddress.city);
-    //   setState(item.dropAddress.state);
-    //   setAddress(item.dropAddress.address as string);
-    //   setLandmark(item.dropAddress.landmark as string);
-    //   //@ts-ignore
-    //   setLocality(item.dropAddress?.locality as string);
-    //   setLiftStatus(item.dropAddress.isLiftAvailable);
-    //   setFloorNumber(item.dropAddress.floor);
-    //   setPincode(item.dropAddress.pincode);
-    // }
+    if(company) {
+      handlePincodeChange(company?.pincode)
+      stateDropwdownRef?.current?.setValue(company?.state as string);
+      cityDropdownRef?.current?.setValue(company?.city as string);
+    }
   }
 
   useEffect(() => {
@@ -148,20 +115,20 @@ const UpdateComanyAddressForm: React.FC<IUpdateComanyAddressFormProps> = ({
 
   useEffect(() => {
     if (result && result.Status != 'Error') {
-      setStates(getStates(result));
-      setCities(getCities(result));
+      setStates(getStates2(result));
+      setCities(getCities2(result));
     }
   }, [result]);
 
   useEffect(() => {
-    if (states && cities && cityDropdownRef && stateDropwdownRef) {
+    if (states && cities) {
       if (isInit) {
+        stateDropwdownRef?.current?.setValue(company?.state as string);
+        cityDropdownRef?.current?.setValue(company?.city as string);
         setIsInit(false);
       } else {
-        //@ts-ignore
-        stateDropwdownRef?.current?.setDefaultValue(states[0]);
-        //@ts-ignore
-        cityDropdownRef?.current?.setDefaultValue(cities[0]);
+        stateDropwdownRef?.current?.setValue(states[0]);
+        cityDropdownRef?.current?.setValue(cities[0]);
       }
     }
   }, [states, cities]);
@@ -170,21 +137,16 @@ const UpdateComanyAddressForm: React.FC<IUpdateComanyAddressFormProps> = ({
     const payload: ICompanyEditRequest = {
       companyId: company?._id as string,
       payload: {
-        _id: company?._id as string,
-      authId: company?.authId as string,
       companyName: company?.companyName as string,
       contactPerson: company?.contactPerson as string,
       email: company?.email as string,
       companyMobile: company?.companyMobile as string,
       companyAddress: address,
-      state: state,
-      city:city,
+      state: state ? state : company?.state ,
+      city:city ? city : company?.city,
       pincode: pin,
-      ibaApprovalCode: company?.govRegdDetails?.IBAcode as string,
-      ibaValidDate: "2023-10-25",
       companyWebsite: company?.companyWebsite as string,
-      CINNumber: company?.govRegdDetails?.incorporationNumber as string,
-      companyLogo: "",
+      companyLogo: company?.companyLogo,
       punchLine: company?.punchLine as string,
       companyProfile: "",
       district: "",
@@ -194,18 +156,19 @@ const UpdateComanyAddressForm: React.FC<IUpdateComanyAddressFormProps> = ({
     };
 
     dispatch(editCompanyRequest(payload));
-    // dispatch(updateAddressRequest({id: enquiryId, requestBody: payload}));
   };
 
   
 
   useEffect(() => {
-    if (!editCompanyRequesting &&editCompanySuccess) {
+    if (!editCompanyRequesting && editCompanySuccess) {
       showToast('Address Updated', ToastType.SUCCESS);
-      dispatch(resetUpdateAddressRequest());
+      dispatch(reseteditCompanyRequest());
+      onComplete && onComplete();
     } else if (!editCompanyRequesting && editCompanyFailure) {
       showToast('Address Not Updated. Try Again!', ToastType.ERROR);
-      dispatch(resetUpdateAddressRequest());
+      dispatch(reseteditCompanyRequest());
+      onComplete && onComplete();
     }
   }, [editCompanyRequesting, editCompanySuccess, editCompanyFailure]);
 
@@ -222,27 +185,28 @@ const UpdateComanyAddressForm: React.FC<IUpdateComanyAddressFormProps> = ({
               inputStyle={styles.input}
               selectionColor={COLOR_BLACK}
               value={company?.pincode}
+              ref={pinInputRef}
             />
           </View>
           <View style={styles.itemContainer}>
             <Label text="State" style={styles.label} />
-            <DropdownComponent
-              data={states}
+            <DropdownWithTextInput
+              options={states}
               onSelect={handleState}
-              //@ts-ignore
               ref={stateDropwdownRef}
+              containerStyle={styles.compContainer}
             />
           </View>
         </View>
         <Spacer height={4} />
         <View style={styles.elementContainer3}>
           <Label text="City" style={styles.label} />
-          <DropdownComponent
-            data={cities}
-            onSelect={handleCity}
-            //@ts-ignore
-            ref={cityDropdownRef}
-          />
+          <DropdownWithTextInput
+              options={cities}
+              onSelect={handleCity}
+              ref={cityDropdownRef}
+              containerStyle={styles.compContainer2}
+            />
         </View>
         <Spacer height={4} />
         <View style={styles.elementContainer3}>
