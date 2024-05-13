@@ -82,6 +82,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
   const {getTotalDocumentCount} = useUtilityHook();
 
   const paymentTypeDropCompRef = useRef<IDropdownHandler>(null);
+  const dateOfMoneyReceiptRef  = useRef<IDateMethods>(null);
   const receiptAgainstDropCompRef = useRef<IDropdownHandler>(null);
   const quotationNoDropCompRef = useRef<DropdownMethods>(null);
   const modeOfPaymentDropCompRef = useRef<IDropdownHandler>(null);
@@ -106,10 +107,10 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
       dispatch2(getSerialNoRequest(payload));
     }).catch(err => console.log('err--', err));
   }
-  const handleReceiptDate = (date: Date) => {
+  const handleReceiptDate = (text: string) => {
     dispatch({
       type: MONEYRECEIPT_FORM_ACTION.RECEIPT_DATE,
-      payload: date.toISOString(),
+      payload: text,
     });
   };
 
@@ -170,10 +171,10 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
       payload: text,
     });
   };
-  const handleArivalDate = (date: Date) => {
+  const handleArivalDate = (text: string) => {
     dispatch({
       type: MONEYRECEIPT_FORM_ACTION.DATE_OF_ARRIVAL,
-      payload: date.toISOString(),
+      payload: text,
     });
   };
 
@@ -217,7 +218,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
         isHeadOffice: true,
         receiptNumber: reducerState.receiptNumber,
         receiptDate: reducerState.receiptDate,
-        arivalDate: reducerState.arivalDate,
+        arivalDate: reducerState.arivalDate ? reducerState.arivalDate : '',
         receiptAgainst:
           reducerState.receiptAgainst || receiptAgainstOptions[0].label,
         billNumber: reducerState.billQuotationNo,
@@ -253,7 +254,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
             requestBody: editPayload,
           }),
         );
-      } else {
+      } else {        
         dispatch2(createMoneyReceiptRequest(payload));
       }
     }).catch(err => console.log(err));
@@ -306,7 +307,7 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
   ]);
 
   useEffect(()=>{
-    if(isEdit && editData){
+    if(isEdit && editData){      
       const paymentTypeOption:TDropdownItem = paymentTypeOptions.find((d:TDropdownItem) => d.label === editData.paymentType) as TDropdownItem;
       if (paymentTypeOption) {
         paymentTypeDropCompRef.current?.setDefaultValue(paymentTypeOption);
@@ -338,8 +339,13 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
       noOfArticlesRef.current?.setValue(editData.numbersOfArticles)
       handleNoOfArticles(editData.numbersOfArticles)
 
-      dateOfArrivalRef && dateOfArrivalRef?.current?.setDefaultValue(new Date(editData?.arivalDate));
-      handleArivalDate(new Date(editData?.arivalDate));
+      if(dateOfArrivalRef){
+        dateOfArrivalRef.current?.setDefaultValue(new Date(editData.arivalDate));
+        handleArivalDate(editData?.arivalDate);
+      }
+
+      dateOfMoneyReceiptRef && dateOfMoneyReceiptRef.current?.setDefaultValue(new Date(editData.receiptDate));
+      handleReceiptDate(editData.receiptDate);
     }
   },[isEdit,editData])
   
@@ -369,8 +375,10 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
               <View style={styles.itemContainer}>
                 <Label text="Receipt Date" style={styles.label} />
                 <DatePickerComponent onDateSelect={(date: Date)=>{
-                  handleReceiptDate(date)
-                }} />
+                  handleReceiptDate(formatDate4(date))
+                }}
+                ref={dateOfMoneyReceiptRef}
+                 />
               </View>
             </View>
             <Spacer height={4} />
@@ -484,8 +492,10 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
               <View style={styles.itemContainer}>
                 <Label text="Date of Arrival" style={styles.label} />
                 <DatePickerComponent onDateSelect={(date: Date) =>{
-                  handleArivalDate(new Date(formatDate((date))))
-                }} />
+                  handleArivalDate(formatDate4(date))
+                }}
+                ref={dateOfArrivalRef}
+                />
               </View>
             </View>
           </View>

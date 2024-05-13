@@ -27,7 +27,7 @@ import {
   CARCONDITION_FORM_ACTION,
   IAccessory,
 } from './carConditionReducer';
-import {formatDate3} from '../../../../../utils/formatter';
+import {formatDate3, formatDate4} from '../../../../../utils/formatter';
 import Button from '../../../../../common/Button';
 import {ICreateCarConditionRequest} from '../../../../../interface/order/ICreateCarConditionRequest';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
@@ -159,10 +159,10 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
     });
   };
 
-  const handleCarConditionDate = (date: Date) => {
+  const handleCarConditionDate = (text: string) => {
     dispatch({
       type: CARCONDITION_FORM_ACTION.DATE_OF_CARCONDITION,
-      payload: formatDate3(date),
+      payload: text,
     });
   };
   const handleCnBiltyLrNO = (text: string) => {
@@ -476,10 +476,14 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
 
   useEffect(() => {
     if(isEdit && item) {
+      
       const vehicleModelDropdownItem: TDropdownItem = getVehicleModelList(vehicleCompanyId, vehicleModels).find((e: TDropdownItem) => e.label == item?.model) as TDropdownItem;
       if (vehicleModelDropdownItem) {
         vehicleModelDropRef.current?.setDefaultValue(vehicleModelDropdownItem);
         handleModel(vehicleModelDropdownItem);
+      }
+      if(DateInputRef){
+        DateInputRef.current?.setDefaultValue(new Date(item.dateOfCarCondition))
       }
     }
   }, [vehicleCompanyId]);
@@ -538,9 +542,11 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Date" style={styles.label} />
-                <DatePickerComponent
-                  onDateSelect={handleCarConditionDate}
+                  <DatePickerComponent onDateSelect={(date: Date)=>{
+                    handleCarConditionDate(formatDate4(date))
+                  }}
                   ref={DateInputRef}
+
                 />
               </View>
             </View>

@@ -12,7 +12,6 @@ import DatePickerComponent, {
 import {COLOR_BLACK} from '../../../../../../../utils/colors';
 import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
 import {TDropdownItem} from '../../../../../../../type/TDropdownItem';
-import {formatDate4} from '../../../../../../../utils/formatter';
 import {useAppSelector} from '../../../../../../../redux/hooks';
 import {IVehicleSize} from '../../../../../../../interface/vehicle/IGetVehicleSizeResponse';
 import {IBilty} from '../../../../../../../interface/order/IGetBiltyListResponse';
@@ -92,26 +91,30 @@ const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
       setSealNo(item.vehicle.sealNumber);
       transitDaysInputRef.current?.setValue(item.vehicle.transitDays);
       setTransitDays(item.vehicle.transitDays);
-      if(item?.vehicle?.inDate) {
-       setInDate(item?.vehicle?.inDate);
-        inDateRef.current?.setDefaultValue(new Date(item?.vehicle?.inDate));
+      const biltyData = item.vehicle;
+      if (inDateRef) {
+        inDateRef.current?.setDefaultValue(new Date(biltyData.inDate));
+        setInDate(biltyData.inDate);
       }
-      if(item?.vehicle?.outDate) {
-        setOutDate(item?.vehicle?.outDate);
-        outDateRef.current?.setDefaultValue(new Date(item?.vehicle?.outDate));
+      if (outDateRef) {
+        outDateRef.current?.setDefaultValue(new Date(biltyData.outDate));
+        setOutDate(biltyData.outDate);
       }
-      if(item?.vehicle?.expectedDateOfDelivery) {
+      if (item?.vehicle?.expectedDateOfDelivery) {
+        expectedDateofDeliveryRef.current?.setDefaultValue(
+          new Date(item?.vehicle?.expectedDateOfDelivery),
+        );
         setExpectedDateOfDelivery(item.vehicle.expectedDateOfDelivery);
-        expectedDateofDeliveryRef.current?.setDefaultValue(new Date(item?.vehicle?.expectedDateOfDelivery))
       }
     }
   }, [isEdit, item]);
-  
 
   useEffect(() => {
     // get pickupaddress and dropaddress from order
-    fromCityInputRef && fromCityInputRef.current?.setValue(orderData[0]?.pickupAddress?.city);
-    toCityInputRef && toCityInputRef.current?.setValue(orderData[0]?.dropAddress?.city);
+    fromCityInputRef &&
+      fromCityInputRef.current?.setValue(orderData[0]?.pickupAddress?.city);
+    toCityInputRef &&
+      toCityInputRef.current?.setValue(orderData[0]?.dropAddress?.city);
   }, []);
 
   return (
@@ -228,7 +231,7 @@ const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
             <Label text="In Date" style={styles.label} />
             <DatePickerComponent
               onDateSelect={(date: Date) => {
-                setInDate(formatDate4(date));
+                setInDate(date.toISOString());
               }}
               ref={inDateRef}
             />
@@ -237,7 +240,7 @@ const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
             <Label text="Out Date" style={styles.label} />
             <DatePickerComponent
               onDateSelect={(date: Date) => {
-                setOutDate(formatDate4(date));
+                setOutDate(date.toISOString());
               }}
               ref={outDateRef}
             />
