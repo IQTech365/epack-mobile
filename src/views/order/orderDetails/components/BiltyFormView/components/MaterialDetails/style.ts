@@ -140,6 +140,10 @@ const styles = StyleSheet.create({
     width: 22,
     height: 22,
   },
+  fullWidhCompContainer: {
+    width: width * 0.88,
+    alignSelf: 'center',
+  },
   textStyle2: {
     fontFamily: 'JosefinSans-Regular',
     textDecorationLine: 'none',

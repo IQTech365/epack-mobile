@@ -10,6 +10,7 @@ import {
   initialState,
   ACTION,
   IMaterial,
+  IVehicleBilty,
 } from '../views/order/orderDetails/components/BiltyFormView/biltyReducer2';
 
 const useBiltyFormContext = () => {
@@ -455,6 +456,16 @@ const useBiltyFormContext = () => {
     [state.materials],
   );
 
+  const setMaterialsBilty = useCallback(
+    (vehicleBilty: IVehicleBilty[]) => {
+      dispatch({
+        type: ACTION.VEHICLE_BILTY,
+        payload: vehicleBilty,
+      });
+    },
+    [state.vehicleBilty],
+  );
+
   const setRiskType = useCallback(
     (text: string) => {
       dispatch({
@@ -801,6 +812,7 @@ const useBiltyFormContext = () => {
     // **** Material Details ****
     setTypeOfMoving,
     setMaterials,
+    setMaterialsBilty,
     setAddMaterial,
     setRiskType,
     setLiabilityOfTax,
@@ -898,6 +910,7 @@ const initBiltyFormContextState: UseBiltyFormContextType = {
   // **** Material Details ****
   setTypeOfMoving: (text: string) => {},
   setMaterials: (materials: IMaterial[]) => {},
+  setMaterialsBilty: (materials: IVehicleBilty[]) => {},
   setAddMaterial: (text: string) => {},
   setRiskType: (text: string) => {},
   setLiabilityOfTax: (text: string) => {},

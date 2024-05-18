@@ -58,8 +58,11 @@ export enum ACTION {
   // Material Details
   TYPE_OF_MOVING = 'TYPE_OF_MOVING',
   MATERIALS = 'MATERIALS',
+  VEHICLE_BILTY = 'VEHICLE_BILTY',
   ADD_MATERIAL = 'ADD_MATERIAL',
   LIABILITY_OF_TAX = 'LIABILITY_OF_TAX',
+  
+
   // Risk Type
   RISK_TYPE = 'RISK_TYPE',
   // Freight Details
@@ -116,6 +119,18 @@ export interface IMaterial {
   applicable_weight: string;
   units: string;
   value_of_goods: string;
+
+}
+
+export interface IVehicleBilty {
+  vehicle_type: string;
+  vehicle_company: string;
+  vehicle_model: string;
+  registration_no: string;
+  engine_no: string;
+  chassis_no: string;
+  value_of_goods: string;
+  
 }
 
 export interface IState {
@@ -180,6 +195,7 @@ export interface IState {
   // **** Material Details ****
   type_of_moving: string;
   materials: IMaterial[];
+  vehicleBilty: IVehicleBilty[];
   add_material: string;
   risk_type: string;
   liability_of_tax: string;
@@ -232,7 +248,7 @@ export interface IState {
 
 export interface IAction {
   type: ACTION;
-  payload: string | boolean | IMaterial[];
+  payload: string | boolean | IMaterial[] | IVehicleBilty[];
 }
 
 export const initialState: IState = {
@@ -296,6 +312,7 @@ export const initialState: IState = {
   // **** Material Details ****
   type_of_moving: 'Household',
   materials: [],
+  vehicleBilty:[],
   add_material: 'NO',
   risk_type: 'Owners Risk',
   liability_of_tax: 'Consigner',
@@ -461,12 +478,16 @@ export const biltyReducer: Reducer<IState, IAction> = (
       return {...state, type_of_moving: payload as string};
     case ACTION.MATERIALS:
       return {...state, materials: payload as IMaterial[]};
+      case ACTION.VEHICLE_BILTY:
+      return {...state, vehicleBilty: payload as IVehicleBilty[]};
     case ACTION.ADD_MATERIAL:
       return {...state, add_material: payload as string};
     case ACTION.RISK_TYPE:
       return {...state, risk_type: payload as string};
     case ACTION.LIABILITY_OF_TAX:
       return {...state, liability_of_tax: payload as string};
+
+      // **** materials Details Part of Vehicle
     // **** Freight Details ****
     case ACTION.FREIGHT_TYPE:
       return {...state, freight_type: payload as string};
