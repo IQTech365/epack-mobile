@@ -281,8 +281,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({
           };
           dispatch(updateBiltyRequest(updatePayload));
         } else {
-          console.log('bilty-payload--', JSON.stringify(payload));
-          // dispatch(createBiltyRequest(payload));
+          dispatch(createBiltyRequest(payload));
         }
       })
       .catch(err => console.log(err));
