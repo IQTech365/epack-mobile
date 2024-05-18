@@ -9,7 +9,7 @@ import {getTemplateListRequest} from '../../../redux/slices/TemplateSettingSlice
 import {ISubmodule} from '../../../interface/common/common';
 import {getSubmoduleRequest} from '../../../redux/slices/CommonSlice';
 import TemplatePageView from './components/TemplatePageView';
-import {COLOR_GRAY, COLOR_WHITE} from '../../../utils/colors';
+import {COLOR_WHITE} from '../../../utils/colors';
 
 interface IProps {}
 

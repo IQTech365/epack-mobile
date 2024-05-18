@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import {Text, View, TouchableOpacity, Image} from 'react-native';
 import styles from './style';
 import { ITemplate } from "../../../../../interface/setting/template/template";
