@@ -239,7 +239,7 @@ const EnquiryListItem: React.FC<IEnquiryListItemProps> = ({
         <View style={styles.orderDocuemntContainer}>
           {enquiryDocuments.map(od => <OrderDocument label={od} />)}
           <TouchableOpacity onPress={onPress}>
-            <AnimatedLottieView source={animatedRightArrowIcon} autoPlay loop style={{width: 50, height: 50}} />
+            <AnimatedLottieView source={animatedRightArrowIcon} autoPlay loop style={{width: 46, height: 46}} />
           </TouchableOpacity>
         </View>
       </Shadow>
