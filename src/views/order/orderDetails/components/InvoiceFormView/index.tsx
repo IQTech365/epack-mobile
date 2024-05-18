@@ -305,7 +305,7 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
           data: payload,
         }
         dispatch(updateInvoiceRequest(updatePayload));
-      } else {
+      } else {        
         dispatch(createInvoiceRequest(payload));
       }
     }).catch(err => console.log('err--', err));

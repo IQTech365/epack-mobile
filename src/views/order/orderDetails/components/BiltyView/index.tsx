@@ -184,7 +184,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
           quotationId: documentId,
           biltyCopyType: downloadOption,
           companyId: id as string,
-        };
+        };        
         dispatch(getBiltyHtmlRequest(payload));
       })
       .catch(err => console.log('err'));

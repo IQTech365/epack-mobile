@@ -46,7 +46,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ orderId, item, navigation })
     invoiceTemplateHtml,
     getInvoiceHtmlSuccess,
     getInvoiceHtmlFailure,
-  } = useAppSelector(state => state.Order);
+  } = useAppSelector(state => state.Order);  
 
   const [showInvoiceList, setShowInvoiceList] = useState<boolean>(false);
   const [createNewInvoice, setCreateNewInvoice] = useState<boolean>(true);
@@ -89,7 +89,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ orderId, item, navigation })
     const payload: IHtmlTemplateRequest = {
       templateId: templateId,
       quotationId: docId,
-    };
+    };    
     dispatch(getInvoiceHtmlRequest(payload));
   };
 

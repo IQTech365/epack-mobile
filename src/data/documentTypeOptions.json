@@ -1,27 +1,30 @@
 [
-    {
-      "label": "GST Number",
-      "value": "1"
-    },
-    {
-      "label": "ISO Certificate",
-      "value": "2"
-    },
-    {
-      "label": "Shop Act Number",
-      "value": "3"
-    },
-    {
-      "label": "MSME Regd. Number",
-      "value": "4"
-    },
-    {
-      "label": "IBA Approval",
-      "value": "5"
-    },
-    {
-      "label": "Other",
-      "value": "10"
-    }
-  ]
-  
+  {
+    "label": "GST Number",
+    "value": "1"
+  },
+  {
+    "label": "ISO Certificate",
+    "value": "2"
+  },
+  {
+    "label": "Shop Act Number",
+    "value": "3"
+  },
+  {
+    "label": "MSME Regd. Number",
+    "value": "4"
+  },
+  {
+    "label": "IBA Approval",
+    "value": "5"
+  },
+  {
+    "label": "Transport ID",
+    "value": "6"
+  },
+  {
+    "label": "Other",
+    "value": "7"
+  }
+]

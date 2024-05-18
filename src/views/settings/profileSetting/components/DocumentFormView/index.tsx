@@ -145,7 +145,7 @@ const DocumentFormView: React.FC<IDocumentFormViewProps> = ({onSuccess, isEdit, 
           payload: payload,
         }
         dispatch(updateDocumentRequest(data));
-      } else {
+      } else {        
         dispatch(addDocumentRequest(payload));
       }
     }).catch(err => console.log(err));
@@ -205,9 +205,12 @@ const DocumentFormView: React.FC<IDocumentFormViewProps> = ({onSuccess, isEdit, 
         }
       }
 
-      if(documentType == 'Other') {
+      if(documentType === 'Other') {        
+        if(otherDocTitleInputRef){
+           otherDocTitleInputRef?.current?.setValue(documentTypeTitle);
+        }
         setDocumentTitle(documentTypeTitle);
-        otherDocTitleInputRef && otherDocTitleInputRef?.current?.setValue(documentTypeTitle);
+
       }
     }
   }, [isEdit]);
@@ -324,6 +327,7 @@ const DocumentFormView: React.FC<IDocumentFormViewProps> = ({onSuccess, isEdit, 
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
+                value={documentTitle}
                 placeholder='Enter Document Title'
                 ref={otherDocTitleInputRef}
               />
