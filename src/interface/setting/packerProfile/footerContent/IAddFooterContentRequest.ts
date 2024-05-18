@@ -3,4 +3,5 @@ export interface IAddFooterContentRequest {
     moduleId: string[];
     contentType: string;
     content: string;
+    title: string;
 }

@@ -15,13 +15,15 @@ interface IProps {
 }
 
 const FooterContentListItem: FC<IProps> = ({item, index, onDelete, onEdit}) => {
+  
   const {width} = useWindowDimensions();
+  
 
   return (
     <View style={styles.listWrapper} key={`${index}`}>
       <View style={styles.listContentContainer}>
         <View style={styles.contentContainer}>
-          <Text style={styles.contentTypeText}>{item.contentType}</Text>
+          <Text style={styles.contentTypeText}>{item.contentType === 'Other' ? item.title :item.contentType }</Text>
         </View>
         <View style={styles.actionContainer}>
         <TouchableOpacity

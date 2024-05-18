@@ -12,7 +12,7 @@ import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../../../common/Spacer';
 import Label from '../../../../../common/Label';
 import DropdownComponent, { IDropdownHandler } from '../../../../../common/DropdownComponent';
-import Input from '../../../../../common/Input';
+import Input, { InputMethods } from '../../../../../common/Input';
 import {COLOR_BLACK, COLOR_BLUE} from '../../../../../utils/colors';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import styles from './style';
@@ -57,7 +57,7 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({isEdit, footerI
   } = useAppSelector(state => state.Setting);
   const richText = React.useRef<RichEditor>(null);
   const scrollRef = React.useRef<ScrollView>(null);
-
+  const contentTitleRef = React.useRef<InputMethods>(null);
   const contentTypeRef = useRef<IDropdownHandler>(null);
 
   const handleAccountType = (item: TDropdownItem) => {
@@ -87,6 +87,8 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({isEdit, footerI
         moduleId: modules,
         contentType: accountType,
         content: content,
+        title: title
+
       }
       if(isEdit) {
         const payload:IUpdateFooterContent = {
@@ -94,7 +96,7 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({isEdit, footerI
           contentType: accountType,
           content: content,
           isAdmin: false,
-          title: ""
+          title: title
         }
         const data:IUpdateFooterContentPayload = {
           id: footerInfo?._id as string,
@@ -126,13 +128,15 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({isEdit, footerI
 
   useEffect(() => {
     if(isEdit && footerInfo) {
-      const {contentType, moduleId} = footerInfo || {}
+      const {contentType, moduleId,title} = footerInfo || {}
       setModules(moduleId);
       setAccountType(contentType);
       const contentTypeItem:TDropdownItem = footerContentOptions.find((e:TDropdownItem) => e.label == contentType) as TDropdownItem;
       if(contentTypeItem !== undefined) {
         contentTypeRef && contentTypeRef?.current?.setDefaultValue(contentTypeItem);
       }
+      contentTitleRef && contentTitleRef.current?.setValue(title)
+      setTitle(title)
     }
   }, [isEdit]);
 
@@ -177,7 +181,9 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({isEdit, footerI
             onChangeText={handleTitleTextInputChange}
             containerStyle={styles.inputContainer}
             inputStyle={styles.input}
+            value={title}
             selectionColor={COLOR_BLACK}
+            ref={contentTitleRef}
           />
         </View> : null}
         <Spacer height={12} />
