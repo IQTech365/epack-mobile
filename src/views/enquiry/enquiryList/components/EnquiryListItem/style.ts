@@ -143,13 +143,11 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 8,
   },
   orderDocuemntContainer: {
+    width: width * 0.9,
     flexDirection: 'row', 
     alignItems: 'center',
-    justifyContent: 'flex-start',
     flexWrap: 'wrap', 
-    // paddingVertical: 8, 
     paddingHorizontal: 10,
-    // backgroundColor: 'red'
   },
 });
 
