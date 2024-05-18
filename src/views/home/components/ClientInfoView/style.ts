@@ -55,7 +55,8 @@ const styles = StyleSheet.create({
   labelText: {
     fontSize: 14,
     color: COLOR_BLACK,
-    fontFamily: 'WorkSans-SemiBold'
+    fontFamily: 'WorkSans-SemiBold',
+    marginRight: 8,
   },
   valueText: {
     fontSize: 14,
@@ -77,7 +78,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 6,
-    paddingVertical: 2,
+    paddingVertical: 6,
+    paddingHorizontal: 15,
+    // marginLeft: 8,
+    backgroundColor: COLOR_GREEN,
+  },
+  buyNowContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 20,
+    paddingVertical: 8,
     paddingHorizontal: 15,
     marginLeft: 8,
     backgroundColor: COLOR_GREEN,

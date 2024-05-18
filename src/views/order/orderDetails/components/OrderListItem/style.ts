@@ -1,5 +1,15 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import {COLOR_BLACK, COLOR_BLUE, COLOR_GRAY, COLOR_GRAY2, COLOR_GRAY3, COLOR_GRAY6, COLOR_ORANGE, COLOR_WHITE} from '../../../../../utils/colors';
+import {
+  COLOR_BLACK,
+  COLOR_BLUE,
+  COLOR_GRAY,
+  COLOR_GRAY2,
+  COLOR_GRAY3,
+  COLOR_GRAY5,
+  COLOR_GRAY6,
+  COLOR_ORANGE,
+  COLOR_WHITE,
+} from '../../../../../utils/colors';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -8,7 +18,7 @@ const styles = StyleSheet.create({
   },
   cardWrapper: {
     borderRadius: 8,
-    alignItems: 'center',
+    // alignItems: 'center',
     // marginVertical: 10,
   },
   badgeWrapper: {
@@ -27,13 +37,13 @@ const styles = StyleSheet.create({
   badgeText: {
     color: COLOR_WHITE,
     fontSize: 14,
-    fontFamily: 'WorkSans-Bold'
+    fontFamily: 'WorkSans-Bold',
   },
   orderDateText: {
     color: COLOR_BLACK,
     fontSize: 12,
     marginLeft: 8,
-    fontFamily: 'WorkSans-SemiBold'
+    fontFamily: 'WorkSans-SemiBold',
   },
   container: {
     width: width * 0.92,
@@ -64,18 +74,18 @@ const styles = StyleSheet.create({
     // borderRadius: 8,
   },
   iconContainer: {
-      width: 30,
-      height: 30,
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: COLOR_BLUE,
-      borderRadius: 15,
-      marginRight: 4,
+    width: 30,
+    height: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: COLOR_BLUE,
+    borderRadius: 15,
+    marginRight: 4,
   },
   rowContainer: {
-      width: '100%',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   rowItemContainer: {
     width: '45%',
@@ -100,29 +110,29 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
   },
   nameText: {
-      color: COLOR_GRAY,
-      fontSize: 12,
-      fontFamily: 'WorkSans-SemiBold'
+    color: COLOR_GRAY,
+    fontSize: 12,
+    fontFamily: 'WorkSans-SemiBold',
   },
   amountText: {
     color: COLOR_GRAY,
     fontSize: 12,
-    fontWeight: '500'
+    fontWeight: '500',
   },
   viewDetailsText: {
     color: COLOR_GRAY,
     fontSize: 12,
-    fontWeight: '600'
+    fontWeight: '600',
   },
   labelText: {
-      color: COLOR_BLACK,
-      fontSize: 12,
-      fontFamily: 'WorkSans-Medium'
+    color: COLOR_BLACK,
+    fontSize: 12,
+    fontFamily: 'WorkSans-Medium',
   },
   valueText: {
     color: COLOR_BLACK,
     fontSize: 13,
-    fontFamily: 'WorkSans-Regular'
+    fontFamily: 'WorkSans-Regular',
   },
   viewDetailsContainer: {
     width: '100%',
@@ -135,7 +145,34 @@ const styles = StyleSheet.create({
     borderTopColor: COLOR_BLUE,
     borderBottomLeftRadius: 8,
     borderBottomRightRadius: 8,
-},
+  },
+  orderDocuemntContainer: {
+    flexDirection: 'row', 
+    alignItems: 'center',
+    flexWrap: 'wrap', 
+    paddingVertical: 8, 
+    paddingHorizontal: 10,
+  },
+  showMoreContainer: {
+    alignItems: 'flex-end',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+  },
+  showMoreText: {
+    color: COLOR_BLACK,
+    fontFamily: 'WorkSans-Medium',
+    fontSize: 16,
+  },
+  labelContainer: {
+    alignItems: 'flex-start',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+  },
+  labelText2: {
+    color: COLOR_BLACK,
+    fontFamily: 'WorkSans-Regular',
+    fontSize: 18,
+  }
 });
 
 export default styles;

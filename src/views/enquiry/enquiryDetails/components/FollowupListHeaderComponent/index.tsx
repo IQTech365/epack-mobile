@@ -104,6 +104,7 @@ const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> =
         <DatePickerComponent
           onDateSelect={handleFollowupDate}
           style={styles.datePicker}
+          datePickerType="date"
           showTime={true} />
       </View><Spacer height={12} /><View style={styles.elementContainer}>
         <Input

@@ -423,9 +423,6 @@ const AddQuotationForm: React.FC<Props> = ({
     updateQuotationFailure,
   ]);  
 
-  console.log(enquiryData,"item12312300");
-  
-
   return (
     <>
       <BasicDetails fromEnquiry={fromEnquiry} isEdit={isEdit} item={item} enquiryData={enquiryData} />

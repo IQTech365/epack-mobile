@@ -15,7 +15,6 @@ import {TDropdownItem} from '../../../../../../../type/TDropdownItem';
 import {useAppSelector} from '../../../../../../../redux/hooks';
 import {IVehicleSize} from '../../../../../../../interface/vehicle/IGetVehicleSizeResponse';
 import {IBilty} from '../../../../../../../interface/order/IGetBiltyListResponse';
-import moment from 'moment';
 
 interface IProps {
   item?: IBilty;
@@ -85,8 +84,8 @@ const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
       setDriverName(item.driver.name);
       driverMobileInputRef.current?.setValue(item.driver.mobile);
       setDriverMobileNo(item.driver.mobile);
-      driverLicenceInputRef.current?.setValue(item.driver.license);
-      setDriverLicenseNo(item.driver.license);
+      driverLicenceInputRef.current?.setValue(item.driver.licenceNo);
+      setDriverLicenseNo(item.driver.licenceNo);
       sealNoInputRef.current?.setValue(item.vehicle.sealNumber);
       setSealNo(item.vehicle.sealNumber);
       transitDaysInputRef.current?.setValue(item.vehicle.transitDays);
@@ -234,6 +233,7 @@ const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
                 setInDate(date.toISOString());
               }}
               ref={inDateRef}
+              datePickerType="date"
             />
           </View>
           <View style={styles.itemContainer}>
@@ -243,6 +243,7 @@ const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
                 setOutDate(date.toISOString());
               }}
               ref={outDateRef}
+              datePickerType="date"
             />
           </View>
         </View>
@@ -266,6 +267,7 @@ const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
                 setExpectedDateOfDelivery(date.toISOString());
               }}
               ref={expectedDateofDeliveryRef}
+              datePickerType="date"
             />
           </View>
         </View>

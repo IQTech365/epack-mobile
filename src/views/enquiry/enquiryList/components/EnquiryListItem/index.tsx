@@ -5,6 +5,7 @@ import styles from './style';
 import PhoneBlueIcon from '../../../../../images/icons/phone-blue.svg';
 import WhatsappIcon from '../../../../../images/icons/whatsapp.svg';
 import MoreIcon from '../../../../../images/icons/dots-vertical.svg';
+import animatedRightArrowIcon from '../../../../../images/animated_right_arrow.json';
 import Spacer from '../../../../../common/Spacer';
 import enquiryStatusOptions from '../../../../../data/enquiryStatusOptions.json';
 import {
@@ -26,6 +27,10 @@ import { EventRegister } from 'react-native-event-listeners';
 import { NavigationProp } from '@react-navigation/native';
 import { IGetQuotationRequest } from '../../../../../interface/quotation/IGetQuotationRequest';
 import { getQuotationsRequest } from '../../../../../redux/slices/QuotationSlice';
+import OrderDocument from '../../../../order/orderDetails/components/OrderListItem/OrderDocument';
+import AnimatedLottieView from 'lottie-react-native';
+
+const enquiryDocuments:string[] = ["Quotation", "Survey List"];
 
 export interface IEnquiryItem {
   clientName: string;
@@ -42,21 +47,16 @@ export interface IEnquiryItem {
 interface IEnquiryListItemProps {
   item: IEnquiryItem;
   index: number;
-  enquiryId: string | undefined;
   onPress: () => void;
   onWhatsappPress?: () => void;
   onPhonePress?: () => void;
   onMorePress?: () => void;
-  navigation: NavigationProp<any, any>
-
 }
 
 const EnquiryListItem: React.FC<IEnquiryListItemProps> = ({
   item,
   index,
   onPress,
-  enquiryId,
-  navigation
 }) => {
 
   const dispatch = useDispatch();
@@ -236,6 +236,12 @@ const EnquiryListItem: React.FC<IEnquiryListItemProps> = ({
             </View>
           </View>
         </TouchableOpacity>
+        <View style={styles.orderDocuemntContainer}>
+          {enquiryDocuments.map(od => <OrderDocument label={od} />)}
+          <TouchableOpacity onPress={onPress}>
+            <AnimatedLottieView source={animatedRightArrowIcon} autoPlay loop style={{width: 50, height: 50}} />
+          </TouchableOpacity>
+        </View>
       </Shadow>
     </>
   );

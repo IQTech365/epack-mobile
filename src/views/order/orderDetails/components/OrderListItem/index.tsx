@@ -9,27 +9,24 @@ import orderStatusOptions from '../../../../../data/orderStatusOptions.json';
 
 import Spacer from '../../../../../common/Spacer';
 import {formatDate5} from '../../../../../utils/formatter';
-import {
-  Menu,
-  MenuOption,
-  MenuOptions,
-  MenuTrigger,
-} from 'react-native-popup-menu';
-import {COLOR_BLACK, COLOR_GRAY2} from '../../../../../utils/colors';
-import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
-import {IUpdateEnquiryStatusRequest} from '../../../../../interface/enquiry/IUpdateEnquiryStatusRequest';
-import {
-  resetUpdateEnquiryStatusRequest,
-  updateEnquiryStatusRequest,
-} from '../../../../../redux/slices/EnquirySlice';
-import {getCurrentCompanyId} from '../../../../../utils/storage';
-import {IGetOrdersRequest} from '../../../../../interface/order/IGetOrdersRequest';
-import {getOrdersRequest} from '../../../../../redux/slices/OrderSlice';
-import {IGetQuotationRequest} from '../../../../../interface/quotation/IGetQuotationRequest';
-import {getQuotationsRequest} from '../../../../../redux/slices/QuotationSlice';
-import {ToastType, showToast} from '../../../../../utils/utility';
-import {EventRegister} from 'react-native-event-listeners';
-import {NavigationProp} from '@react-navigation/native';
+import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
+import { COLOR_BLACK, COLOR_GRAY2 } from '../../../../../utils/colors';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
+import { IUpdateEnquiryStatusRequest } from '../../../../../interface/enquiry/IUpdateEnquiryStatusRequest';
+import { resetUpdateEnquiryStatusRequest, updateEnquiryStatusRequest } from '../../../../../redux/slices/EnquirySlice';
+import { getCurrentCompanyId } from '../../../../../utils/storage';
+import { IGetOrdersRequest } from '../../../../../interface/order/IGetOrdersRequest';
+import { getOrdersRequest } from '../../../../../redux/slices/OrderSlice';
+import { IGetQuotationRequest } from '../../../../../interface/quotation/IGetQuotationRequest';
+import { getQuotationsRequest } from '../../../../../redux/slices/QuotationSlice';
+import { ToastType, showToast } from '../../../../../utils/utility';
+import { EventRegister } from 'react-native-event-listeners';
+import { NavigationProp } from '@react-navigation/native';
+import OrderDocument from './OrderDocument';
+import animatedRightArrowIcon from '../../../../../images/animated_right_arrow.json';
+import Lottie from 'lottie-react-native';
+
+const orderDocuments:string[] = ["Bilty", "Invoice", ]
 
 export interface IOrderItem {
   orderId: string;
@@ -60,9 +57,7 @@ const OrderListItem: React.FC<IOrderListItemProps> = ({
   onPress,
 }) => {
   const dispatch = useAppDispatch();
-  const [orderStatus, setOrderStatus] = useState<string>(
-    item?.status as string,
-  );
+  const [orderStatus, setOrderStatus] = useState<string>(item?.status as string);
 
   const {
     updateEnquiryStatusRequesting,
@@ -271,10 +266,11 @@ const OrderListItem: React.FC<IOrderListItemProps> = ({
             </View>
           </View>
         </TouchableOpacity>
-        <View style={[styles.rowContainer, {borderBottomRightRadius: 5}]}>
-          <View style={{flexDirection: 'row', alignItems: 'flex-start'}}>
-            <Text style={styles.labelText}>Lalit</Text>
-          </View>
+        <View style={styles.orderDocuemntContainer}>
+          {orderDocuments.map(od => <OrderDocument label={od} />)}
+          <TouchableOpacity onPress={onPress}>
+            <Lottie source={animatedRightArrowIcon} autoPlay loop style={{width: 50, height: 50}} />
+          </TouchableOpacity>
         </View>
       </Shadow>
     </View>
