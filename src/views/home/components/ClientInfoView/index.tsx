@@ -95,7 +95,7 @@ const ClientInfoView:React.FC<IProps> = ({navigation}) => {
               style={styles.valueText}
               numberOfLines={1}>{` #${company?.sn}`}</Text>
           </Text>
-          {!_getCurrentPlanInfo() ? (
+          {_getCurrentPlanInfo() ? (
             <View style={styles.planContainer}>
               <Text style={styles.labelText}>Plan:</Text>
               <LinearGradient
