@@ -456,16 +456,6 @@ const useBiltyFormContext = () => {
     [state.materials],
   );
 
-  const setMaterialsBilty = useCallback(
-    (vehicleBilty: IVehicleBilty[]) => {
-      dispatch({
-        type: ACTION.VEHICLE_BILTY,
-        payload: vehicleBilty,
-      });
-    },
-    [state.vehicleBilty],
-  );
-
   const setRiskType = useCallback(
     (text: string) => {
       dispatch({
@@ -756,6 +746,16 @@ const useBiltyFormContext = () => {
     [state.remarksAtPOD],
   );
 
+  const setVehicleInfo = useCallback(
+    (vehicleInfo: IVehicleBilty[]) => {
+      dispatch({
+        type: ACTION.VEHICLE_INFO,
+        payload: vehicleInfo,
+      });
+    },
+    [state.vehicleInfo],
+  );
+
   return {
     state,
     // **** Basic Details ****
@@ -812,7 +812,6 @@ const useBiltyFormContext = () => {
     // **** Material Details ****
     setTypeOfMoving,
     setMaterials,
-    setMaterialsBilty,
     setAddMaterial,
     setRiskType,
     setLiabilityOfTax,
@@ -848,7 +847,8 @@ const useBiltyFormContext = () => {
     setChargeApplicableAfter,
     // **** Other Details ****,
     setRemark,
-    setRemarksAtPOD
+    setRemarksAtPOD,
+    setVehicleInfo
   };
 };
 
@@ -910,7 +910,6 @@ const initBiltyFormContextState: UseBiltyFormContextType = {
   // **** Material Details ****
   setTypeOfMoving: (text: string) => {},
   setMaterials: (materials: IMaterial[]) => {},
-  setMaterialsBilty: (materials: IVehicleBilty[]) => {},
   setAddMaterial: (text: string) => {},
   setRiskType: (text: string) => {},
   setLiabilityOfTax: (text: string) => {},
@@ -946,7 +945,8 @@ const initBiltyFormContextState: UseBiltyFormContextType = {
   setChargeApplicableAfter: (text: string) => {},
   // **** Other Details ****
   setRemark: (text: string) => {},
-  setRemarksAtPOD: (text: string) => {}
+  setRemarksAtPOD: (text: string) => {},
+  setVehicleInfo: (vehicleInfo:IVehicleBilty[]) => {},
 
 };
 

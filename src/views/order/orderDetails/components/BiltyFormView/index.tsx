@@ -215,6 +215,7 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({
               valueOfGoods: m.value_of_goods,
             };
           }),
+          vehicleInfo: state.vehicleInfo,
           riskType: state.risk_type,
           liabilityOfTax: state.liability_of_tax,
           insuranceStatus: state.insurance,
@@ -280,7 +281,8 @@ const BiltyFormView: React.FC<IBiltyFormViewProps> = ({
           };
           dispatch(updateBiltyRequest(updatePayload));
         } else {
-          dispatch(createBiltyRequest(payload));
+          console.log('bilty-payload--', JSON.stringify(payload));
+          // dispatch(createBiltyRequest(payload));
         }
       })
       .catch(err => console.log(err));

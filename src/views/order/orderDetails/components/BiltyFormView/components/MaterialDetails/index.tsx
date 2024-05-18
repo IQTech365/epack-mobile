@@ -22,9 +22,7 @@ import {useAppSelector} from '../../../../../../../redux/hooks';
 import {IUnitType} from '../../../../../../../interface/setting/unitType/IGetunitTypeResponse';
 import {IPackingType} from '../../../../../../../interface/common/common';
 import { IBilty } from '../../../../../../../interface/order/IGetBiltyListResponse';
-import DropdownWithTextInput from '../../../../../../../common/DropdownWithTextInput';
-import { getVehicleColorList, getVehicleCompanyList, getVehicleModelList, getVehicleTypeList } from '../../../CarConditionFormView/utils';
-import { useDispatch } from 'react-redux';
+import VehicleInfo from '../VehicleInfo';
 
 interface IProps {
   item?:IBilty;
@@ -64,8 +62,6 @@ const MaterialDetails: React.FC<IProps> = ({item, isEdit}) => {
     setRiskType,
     setLiabilityOfTax,
   } = useBiltyFormContextHook();
-  const [vehicleTypeId, setVehicleTypeId] = useState<string>('');
-  const [vehicleCompanyId, setVehicleCompanyId] = useState<string>('');
   const [materialName, setMaterialName] = useState<string>('');
   const [noOfArticles, setNoOfArticles] = useState<string>('');
   const [packingType, setPackingType] = useState<string>('');
@@ -77,19 +73,7 @@ const MaterialDetails: React.FC<IProps> = ({item, isEdit}) => {
   const [valueOfGoods, setValueOfGoods] = useState<string>('');
 
   const {unitType} = useAppSelector(state => state.Setting);
-  const dispatch = useDispatch();
   const {packingTypes} = useAppSelector(state => state.Common);
-  const {
-    vehicleTypes,
-    vehicleCompanies,
-    vehicleInsuranceCompany,
-    vehicleColors,
-    vehicleAccessories: accessories,
-    vehicleModels,
-  } = useAppSelector(state => state.Common);
-
-  console.log(vehicleColors,"vehicleColors123");
-  
 
   const _getUnitTypes = () => {
     let unitTypes: TDropdownItem[] = [];
@@ -122,21 +106,6 @@ const MaterialDetails: React.FC<IProps> = ({item, isEdit}) => {
     const clone = [...state.materials];
     const filter = clone.filter((_, i) => i !== index);
     setMaterials(filter);
-  };
-
-  const handleVehicleType = (item: TDropdownItem) => {
-    setVehicleTypeId(item.value);
-    
-  };
-
-  const handleManufacturer = (item: TDropdownItem) => {
-    setVehicleCompanyId(item.value);
-    
-  };
-  const handleModel = (item: TDropdownItem) => {
-    
-  };
-  const handleColor = (item: TDropdownItem) => {
   };
 
   const handleAddMaterial = () => {
@@ -440,187 +409,7 @@ const MaterialDetails: React.FC<IProps> = ({item, isEdit}) => {
               textStyle={styles.textStyle}
             />
           </>
-        ) : (
-          <>
-          
-          <Spacer height={4} />
-          <View style={styles.elementContainer}>
-            
-            <View style={styles.itemContainer}>
-              <Label text="Vehicle Type" style={styles.label} />
-              <DropdownComponent
-                  data={getVehicleTypeList(vehicleTypes)}
-                  onSelect={(item: TDropdownItem) => {
-                  setPackingType(item.label);
-                }}
-              />
-            </View>
-            <View style={styles.itemContainer}>
-              <Label text="Vehicle Manufacture" style={styles.label} />
-              <DropdownComponent
-                  data={getVehicleCompanyList(vehicleTypeId, vehicleCompanies)}
-                  onSelect={(item: TDropdownItem) => {
-                  // vehicleCompanyId(item.label);
-                }}
-              />
-            </View>
-            <View style={styles.itemContainer}>
-              <Label text="Vehicle Modal" style={styles.label} />
-              <DropdownComponent
-                  data={getVehicleModelList(vehicleCompanyId, vehicleModels)}
-                  onSelect={(item: TDropdownItem) => {
-                  // setPackingType(item.label);
-                }}
-              />
-            </View>
-            <View style={styles.itemContainer}>
-              <Label text="Vehicle Color" style={styles.label} />
-              <DropdownComponent
-                  data={getVehicleColorList(vehicleColors)}
-                  onSelect={(item: TDropdownItem) => {
-                  setPackingType(item.label);
-                }}
-              />
-            </View>
-            <View style={styles.itemContainer}>
-                <Label text="Registration No." style={styles.label} />
-                <Input
-                  onChangeText={setNoOfArticles}
-                  containerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
-                  selectionColor={COLOR_BLACK}
-                  ref={articlesInputref}
-                  inputType="numeric"
-                />
-              </View>
-            <View style={styles.itemContainer}>
-                <Label text="Engine No." style={styles.label} />
-                <Input
-                  onChangeText={setNoOfArticles}
-                  containerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
-                  selectionColor={COLOR_BLACK}
-                  ref={articlesInputref}
-                  inputType="numeric"
-                />
-              </View>
-            <View style={styles.itemContainer}>
-                <Label text="Chassis No." style={styles.label} />
-                <Input
-                  onChangeText={setNoOfArticles}
-                  containerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
-                  selectionColor={COLOR_BLACK}
-                  ref={articlesInputref}
-                  inputType="numeric"
-                />
-              </View>
-            <View style={styles.itemContainer}>
-                <Label text="Goods of Value" style={styles.label} />
-                <Input
-                  onChangeText={setNoOfArticles}
-                  containerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
-                  selectionColor={COLOR_BLACK}
-                  ref={articlesInputref}
-                  inputType="numeric"
-                />
-              </View>
-              <View style={styles.fullWidhCompContainer}>
-            <Label text=" Name" style={styles.label} />
-            <DropdownWithTextInput
-              data={_getPackingTypes()}
-                onSelect={(item: TDropdownItem) => {
-                  setPackingType(item.label);
-                }}
-            />
-          </View>
-
-          </View>
-          
-          {/* <Spacer height={4} />
-          <View style={styles.elementContainer}>
-            <View style={styles.itemContainer}>
-              <Label text="HSN Code" style={styles.label} />
-              <Input
-                onChangeText={setHsnCode}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-                inputType="numeric"
-                ref={hsnCodeInputref}
-              />
-            </View>
-            <View style={styles.itemContainer}>
-              <Label text="Bill/Invoice No." style={styles.label} />
-              <Input
-                onChangeText={setBillInvoiceNo}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-                autoCapitalize="characters"
-                ref={billInvoiceNoInputref}
-              />
-            </View>
-          </View>
-          <Spacer height={4} />
-          <View style={styles.elementContainer}>
-            <View style={styles.itemContainer}>
-              <Label text="Actual Weight" style={styles.label} />
-              <Input
-                onChangeText={setActualWeight}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-                inputType="numeric"
-                ref={actualWeightInputref}
-              />
-            </View>
-            <View style={styles.itemContainer}>
-              <Label text="Applicable Weight" style={styles.label} />
-              <Input
-                onChangeText={setApplicableWeight}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-                inputType="numeric"
-                ref={applicableWeightInputref}
-              />
-            </View>
-          </View>
-          <Spacer height={4} />
-          <View style={styles.elementContainer}>
-            <View style={styles.itemContainer}>
-              <Label text="Units" style={styles.label} />
-              <DropdownComponent
-                data={_getUnitTypes()}
-                onSelect={(item: TDropdownItem) => {
-                  setUnit(item.label);
-                }}
-              />
-            </View>
-            <View style={styles.itemContainer}>
-              <Label text="Value of Goods" style={styles.label} />
-              <Input
-                onChangeText={setValueOfGoods}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                selectionColor={COLOR_BLACK}
-                inputType="numeric"
-                ref={valueOfGoodsInputref}
-              />
-            </View>
-          </View> */}
-          <Spacer height={12} />
-          <Button
-            text="ADD"
-            onPress={handleAddMaterial}
-            disabled={false}
-            style={styles.previewButtonStyle}
-            textStyle={styles.textStyle}
-          />
-        </>
-        )}
+        ) : state.type_of_moving === typeOfMovingOptions[1] ? <VehicleInfo /> : null}
         {showMaterialList()}
         <Spacer height={4} />
         <View style={styles.labelContainer}>

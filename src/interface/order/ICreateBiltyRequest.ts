@@ -1,3 +1,5 @@
+import { IVehicleBilty } from "../../views/order/orderDetails/components/BiltyFormView/biltyReducer2";
+
 export interface IMaterial {
   name: string;
   noOfArticles: string;
@@ -93,6 +95,7 @@ export interface ICreateBiltyRequest {
   materialsType: string;
   addMaterialsStatus: string;
   materials: IMaterial[];
+  vehicleInfo?: IVehicleBilty[];
   riskType: string;
   liabilityOfTax: string;
   insuranceStatus: string;

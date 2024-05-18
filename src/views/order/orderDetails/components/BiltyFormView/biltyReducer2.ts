@@ -58,11 +58,9 @@ export enum ACTION {
   // Material Details
   TYPE_OF_MOVING = 'TYPE_OF_MOVING',
   MATERIALS = 'MATERIALS',
-  VEHICLE_BILTY = 'VEHICLE_BILTY',
+  VEHICLE_INFO = 'VEHICLE_INFO',
   ADD_MATERIAL = 'ADD_MATERIAL',
   LIABILITY_OF_TAX = 'LIABILITY_OF_TAX',
-  
-
   // Risk Type
   RISK_TYPE = 'RISK_TYPE',
   // Freight Details
@@ -126,10 +124,12 @@ export interface IVehicleBilty {
   vehicle_type: string;
   vehicle_company: string;
   vehicle_model: string;
+  vehicle_color: string;
   registration_no: string;
   engine_no: string;
   chassis_no: string;
-  value_of_goods: string;
+  vechile_status: string;
+  vehicle_value: string;
   
 }
 
@@ -195,7 +195,7 @@ export interface IState {
   // **** Material Details ****
   type_of_moving: string;
   materials: IMaterial[];
-  vehicleBilty: IVehicleBilty[];
+  vehicleInfo: IVehicleBilty[];
   add_material: string;
   risk_type: string;
   liability_of_tax: string;
@@ -312,7 +312,7 @@ export const initialState: IState = {
   // **** Material Details ****
   type_of_moving: 'Household',
   materials: [],
-  vehicleBilty:[],
+  vehicleInfo:[],
   add_material: 'NO',
   risk_type: 'Owners Risk',
   liability_of_tax: 'Consigner',
@@ -478,8 +478,8 @@ export const biltyReducer: Reducer<IState, IAction> = (
       return {...state, type_of_moving: payload as string};
     case ACTION.MATERIALS:
       return {...state, materials: payload as IMaterial[]};
-      case ACTION.VEHICLE_BILTY:
-      return {...state, vehicleBilty: payload as IVehicleBilty[]};
+      case ACTION.VEHICLE_INFO:
+      return {...state, vehicleInfo: payload as IVehicleBilty[]};
     case ACTION.ADD_MATERIAL:
       return {...state, add_material: payload as string};
     case ACTION.RISK_TYPE:
