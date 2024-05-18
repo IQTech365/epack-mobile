@@ -234,7 +234,7 @@ const HomePageView:FC<IProps> = ({navigation}) => {
       <Header canGoBack={true} showDrawerIcon={true} label="Home" />
       <ScrollView contentContainerStyle={{alignItems: 'center'}}>
         <Spacer height={10} />
-        <ClientInfoView />
+        <ClientInfoView navigation={navigation} />
         <Spacer height={20} />
         <View style={styles.taskContainer}>
           <TaskView

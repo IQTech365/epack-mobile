@@ -180,6 +180,7 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
             item={item}
             index={index}
             onPress={() => handleOrderDetailsClick(item, index)}
+            navigation={navigation}
           />
         )}
         ListEmptyComponent={() => <Text style={styles.text}>No Orders available!</Text>}

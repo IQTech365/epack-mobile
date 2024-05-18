@@ -1,15 +1,23 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Image} from 'react-native';
+import {View, Text, Image, TouchableOpacity} from 'react-native';
 import styles from './style';
 import {Shadow} from 'react-native-shadow-2';
 import {useAppSelector} from '../../../../redux/hooks';
 import {ICompanyInfoData} from '../../../../interface/companyRegistration/IGetCompaniesResponse';
 import {getCurrentCompanyId} from '../../../../utils/storage';
-import {IPurchasedSubscription, ISubscription} from '../../../../interface/subscription/subscription';
+import {
+  IPurchasedSubscription,
+  ISubscription,
+} from '../../../../interface/subscription/subscription';
 import LinearGradient from 'react-native-linear-gradient';
-import _ from "underscore";
+import _ from 'underscore';
+import { NavigationProp } from '@react-navigation/native';
 
-const ClientInfoView = () => {
+interface IProps {
+  navigation: NavigationProp<any, any>;
+}
+
+const ClientInfoView:React.FC<IProps> = ({navigation}) => {
   const {companies} = useAppSelector(state => state.Company);
   const [company, setCompany] = useState<ICompanyInfoData>();
   const {purchasedSubscriptions} = useAppSelector(state => state.Subscription);
@@ -51,17 +59,17 @@ const ClientInfoView = () => {
   };
 
   const _getCurrentPlanInfo = () => {
-    let planName:string = '';
+    let planName: string = '';
     const {data} = purchasedSubscriptions || {};
     let plan: IPurchasedSubscription | null = null;
     if (data && Array.isArray(data) && data.length > 0) {
       plan = data[0] as IPurchasedSubscription;
-      if(_.isObject(plan)) {
+      if (_.isObject(plan)) {
         const {subscription} = plan || {};
-        if(_?.isArray(subscription) && subscription.length > 0) {
-          const firstSubscription:ISubscription = subscription[0];
-          if(_.isObject(firstSubscription)) {
-            planName = `${plan.subscriptionPlan}-${firstSubscription.subscriptionType}`
+        if (_?.isArray(subscription) && subscription.length > 0) {
+          const firstSubscription: ISubscription = subscription[0];
+          if (_.isObject(firstSubscription)) {
+            planName = `${plan.subscriptionPlan}-${firstSubscription.subscriptionType}`;
           }
         }
       }
@@ -87,18 +95,47 @@ const ClientInfoView = () => {
               style={styles.valueText}
               numberOfLines={1}>{` #${company?.sn}`}</Text>
           </Text>
-          <View style={styles.planContainer}>
-            <Text style={styles.labelText}>Plan:</Text>
-            <LinearGradient
-              colors={['#051937', '#004d7a', '#008793', '#00bf72', '#a8eb12']}
-              style={styles.planNameContainer}
-              useAngle={true}
-              angle={45}>
-              <Text style={styles.planText}>
-                {_getCurrentPlanInfo() ? _getCurrentPlanInfo().toUpperCase(): 'FREE MEMBER'}
-              </Text>
-            </LinearGradient>
-          </View>
+          {_getCurrentPlanInfo() ? (
+            <View style={styles.planContainer}>
+              <Text style={styles.labelText}>Plan:</Text>
+              <LinearGradient
+                colors={['#051937', '#004d7a', '#008793', '#00bf72', '#a8eb12']}
+                style={styles.planNameContainer}
+                useAngle={true}
+                angle={45}>
+                <Text style={styles.planText}>
+                  {_getCurrentPlanInfo().toUpperCase()}
+                </Text>
+              </LinearGradient>
+            </View>
+          ) : (
+            <View style={styles.planContainer}>
+              <LinearGradient
+                colors={['#000000', '#4d4855']}
+                style={styles.planNameContainer}
+                useAngle={true}
+                angle={45}>
+                <Text style={styles.planText}>FREE MEMBER</Text>
+              </LinearGradient>
+              <TouchableOpacity onPress={() => {
+                navigation.navigate('Subscription');
+              }}>
+                <LinearGradient
+                  colors={[
+                    '#051937',
+                    '#004d7a',
+                    '#008793',
+                    '#00bf72',
+                    '#a8eb12',
+                  ]}
+                  style={styles.buyNowContainer}
+                  useAngle={true}
+                  angle={45}>
+                  <Text style={styles.planText}>BUY NOW</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </View>
     </Shadow>

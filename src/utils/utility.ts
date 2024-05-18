@@ -12,8 +12,8 @@ export const startShare = async (
 ) => {
   let options = {
     html: html,
-    height: isBilty ? 892 : 792,
-    width: isBilty ? 812 : 612,
+    height: isBilty ? 595 : 792,
+    width: isBilty ? 842 : 612,
     fileName: docName,
     directory: 'Documents',
   };

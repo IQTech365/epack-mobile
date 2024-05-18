@@ -1,12 +1,13 @@
 import React, {useEffect, useState, forwardRef} from 'react';
 import {View, TouchableOpacity, Text, ViewStyle} from 'react-native';
 import DatePicker from 'react-native-date-picker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {formatDate, formatDate3} from '../../utils/formatter';
 import CalendarIcon from '../../images/icons/calendar.svg';
 import styles from './style';
 
 export interface IDateMethods {
-  setDefaultValue: (date:Date) => void;
+  setDefaultValue: (date: Date) => void;
   refresh: () => void;
 }
 
@@ -19,6 +20,8 @@ interface IDatePickerProps {
   mode?: 'date' | 'time' | 'datetime';
   disabled?: boolean;
   minimumDate?: Date | null;
+  datePickerType?: 'date' | 'calender';
+  datePickerModalVisible?: boolean;
 }
 
 const DatePickerComponent = forwardRef<IDateMethods, IDatePickerProps>(
@@ -32,6 +35,7 @@ const DatePickerComponent = forwardRef<IDateMethods, IDatePickerProps>(
       mode = 'datetime',
       disabled = false,
       minimumDate = new Date(),
+      datePickerType = 'calender',
     },
     ref,
   ) => {
@@ -45,11 +49,13 @@ const DatePickerComponent = forwardRef<IDateMethods, IDatePickerProps>(
       },
       refresh: () => {
         setRefresh(!refresh);
-      }
+      },
     }));
 
     const errorBorderStyle = error ? styles.errorBorderColor : null;
-    const containerStyle = disabled ? styles.disabledContainer : styles.container;
+    const containerStyle = disabled
+      ? styles.disabledContainer
+      : styles.container;
 
     const getDateAndTime = () => {
       if (showTime) {
@@ -75,23 +81,38 @@ const DatePickerComponent = forwardRef<IDateMethods, IDatePickerProps>(
             <Text style={styles.dateText}>{getDateAndTime()}</Text>
             <CalendarIcon width={18} height={18} />
           </TouchableOpacity>
-          <DatePicker
-            modal
-            open={open}
-            date={date}
-            mode={mode}
-            androidVariant="nativeAndroid"
-            // textColor='#000000'
-            onConfirm={date => {
-              setOpen(false);
-              setDate(date);
-              onDateSelect && onDateSelect(date);
-            }}
-            // minimumDate={minimumDate}
-            onCancel={() => {
-              setOpen(false);
-            }}
-          />
+          {datePickerType === 'calender' ? (
+            <DateTimePickerModal
+              isVisible={open}
+              mode="date"
+              onConfirm={date => {
+                setOpen(false);
+                setDate(date);
+                onDateSelect && onDateSelect(date);
+              }}
+              onCancel={() => {
+                setOpen(false);
+              }}
+            />
+          ) : (
+            <DatePicker
+              modal
+              open={open}
+              date={date}
+              mode={mode}
+              androidVariant="nativeAndroid"
+              // textColor='#000000'
+              onConfirm={date => {
+                setOpen(false);
+                setDate(date);
+                onDateSelect && onDateSelect(date);
+              }}
+              // minimumDate={minimumDate}
+              onCancel={() => {
+                setOpen(false);
+              }}
+            />
+          )}
         </View>
         {error && (
           <View style={styles.errorContainer}>

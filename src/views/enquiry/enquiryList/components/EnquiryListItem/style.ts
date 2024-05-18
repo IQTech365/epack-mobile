@@ -142,6 +142,15 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 8,
     borderBottomRightRadius: 8,
   },
+  orderDocuemntContainer: {
+    flexDirection: 'row', 
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    flexWrap: 'wrap', 
+    // paddingVertical: 8, 
+    paddingHorizontal: 10,
+    // backgroundColor: 'red'
+  },
 });
 
 export default styles;

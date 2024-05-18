@@ -64,6 +64,7 @@ const EWayBillDetails: React.FC<IProps> = ({item, isEdit}) => {
                 setGeneratedOn(date.toISOString());
               }}
               ref={generatedOnCompRef}
+              datePickerType="date"
             />
           </View>
           <View style={styles.itemContainer}>
@@ -73,6 +74,7 @@ const EWayBillDetails: React.FC<IProps> = ({item, isEdit}) => {
                 setExpiryDate(date.toISOString());
               }}
               ref={expirayDateCompRef}
+              datePickerType="date"
             />
           </View>
         </View>

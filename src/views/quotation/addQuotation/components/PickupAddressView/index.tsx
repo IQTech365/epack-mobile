@@ -116,9 +116,6 @@ const PickupAddressView: React.FC<Props> = ({
     }
   }, [state.enquiryItem]);
 
-  console.log(item,"robinkhan");
-  
-
   useEffect(() => {
     if (isEdit && item) {
       const _enquires: IEnquiry[] = item.enquiries;
