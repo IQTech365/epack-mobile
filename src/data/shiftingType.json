@@ -6,5 +6,9 @@
   {
     "label": "Domestic",
     "value": "2"
+  },
+  {
+    "label": "International",
+    "value": "3"
   }
 ]

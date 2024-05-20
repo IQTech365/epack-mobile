@@ -33,14 +33,22 @@ import {
 } from '../../../CarConditionFormView/utils';
 import {IVehicleBilty} from '../../biltyReducer2';
 import { useBiltyFormContextHook } from '../../../../../../../provider/BiltyFormContextProvider';
+import { IBilty } from '../../../../../../../interface/order/IGetBiltyListResponse';
 
-interface Props {}
+interface Props {
+  isEdit?: boolean;
+  item?: IBilty;
+}
 
-const VehicleInfo: React.FC<Props> = ({}) => {
+const VehicleInfo: React.FC<Props> = ({isEdit,item}) => {
   const dispatch = useAppDispatch();
   const {
-    setVehicleInfo
+    setVehicleInfo,
+    setTypeOfMoving,
+    setRiskType,
+    setLiabilityOfTax,
   } = useBiltyFormContextHook();
+  const [vehicleCompanyId, setVehicleCompanyId] = useState<string>('');
   const [vehicleType, setVehicleType] = useState<TDropdownItem>();
   const [vehicleCompany, setVehicleCompany] = useState<TDropdownItem>();
   const [vehicleModel, setVehicleModel] = useState<TDropdownItem>();
@@ -66,6 +74,7 @@ const VehicleInfo: React.FC<Props> = ({}) => {
 
   const handleAddVehicleInfo = () => {
     const copy = [...vehicleInfoList];
+    
     if(vehicleType && vehicleCompany && vehicleModel && vehicleColor && registrationNo && engineNo && chasisNo && vehicleStatus && vehicleStatus) {
         const vehicle: IVehicleBilty = {
             vehicle_type: vehicleType?.label as string,
@@ -104,6 +113,20 @@ const VehicleInfo: React.FC<Props> = ({}) => {
 
   }
 
+  const initData = () => {
+    if(isEdit && item) {
+      setVehicleInfoList(item.vehicleInfo)
+      setVehicleInfo(item.vehicleInfo);
+      setTypeOfMoving(item.materialsType);
+      setRiskType(item.riskType);
+      setLiabilityOfTax(item.liabilityOfTax)
+    }
+  }
+
+  useEffect(()=> {
+    initData();
+  },[isEdit,item])
+
   useEffect(() => {
     dispatch(getVehicleInsuranceCompanyRequest());
     dispatch(getVehicleTypesRequest());
@@ -111,6 +134,7 @@ const VehicleInfo: React.FC<Props> = ({}) => {
     dispatch(getVehicleColorRequest());
     dispatch(getVehicleModelsRequest());
   }, []);
+
 
   return (
     <>

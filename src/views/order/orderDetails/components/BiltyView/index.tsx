@@ -44,6 +44,8 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
     getBiltyHtmlSuccess,
     getBiltyHtmlFailure,
   } = useAppSelector(state => state.Order);
+
+  
   const [showBiltyList, setShowBiltyList] = useState<boolean>(false);
   const [createNewBilty, setCreateNewBilty] = useState<boolean>(true);
   const [downloadOption, setDownloadOption] = useState<string>('');

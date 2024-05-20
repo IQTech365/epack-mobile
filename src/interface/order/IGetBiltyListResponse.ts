@@ -149,6 +149,7 @@ export interface IBilty {
   addMaterialsStatus: string;
   materialsType: string;
   materials: IMaterial[];
+  vehicleInfo: []
   riskType: string;
   liabilityOfTax: string;
   insuranceStatus: string;

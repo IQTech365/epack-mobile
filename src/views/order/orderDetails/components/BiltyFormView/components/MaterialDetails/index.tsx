@@ -409,7 +409,8 @@ const MaterialDetails: React.FC<IProps> = ({item, isEdit}) => {
               textStyle={styles.textStyle}
             />
           </>
-        ) : state.type_of_moving === typeOfMovingOptions[1] ? <VehicleInfo /> : null}
+        ) : state.type_of_moving === typeOfMovingOptions[1] ? <VehicleInfo isEdit={isEdit}
+        item={item} /> : null}
         {showMaterialList()}
         <Spacer height={4} />
         <View style={styles.labelContainer}>
