@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, TouchableOpacity, Linking} from 'react-native';
 import {Shadow} from 'react-native-shadow-2';
 import styles from './style';
@@ -14,23 +14,27 @@ import {
   MenuOption,
   MenuTrigger,
 } from 'react-native-popup-menu';
-import { COLOR_BLACK, COLOR_GRAY2 } from '../../../../../utils/colors';
-import { IUpdateEnquiryStatusRequest } from '../../../../../interface/enquiry/IUpdateEnquiryStatusRequest';
-import { getEnquiriesRequest, resetUpdateEnquiryStatusRequest, updateEnquiryStatusRequest } from '../../../../../redux/slices/EnquirySlice';
-import { useDispatch } from 'react-redux';
-import { useAppSelector } from '../../../../../redux/hooks';
-import { ToastType, showToast } from '../../../../../utils/utility';
-import { IGetOrdersRequest } from '../../../../../interface/order/IGetOrdersRequest';
-import { getCurrentCompanyId } from '../../../../../utils/storage';
-import { getOrdersRequest } from '../../../../../redux/slices/OrderSlice';
-import { EventRegister } from 'react-native-event-listeners';
-import { NavigationProp } from '@react-navigation/native';
-import { IGetQuotationRequest } from '../../../../../interface/quotation/IGetQuotationRequest';
-import { getQuotationsRequest } from '../../../../../redux/slices/QuotationSlice';
+import {COLOR_BLACK, COLOR_BLUE, COLOR_GRAY2} from '../../../../../utils/colors';
+import {IUpdateEnquiryStatusRequest} from '../../../../../interface/enquiry/IUpdateEnquiryStatusRequest';
+import {
+  getEnquiriesRequest,
+  resetUpdateEnquiryStatusRequest,
+  updateEnquiryStatusRequest,
+} from '../../../../../redux/slices/EnquirySlice';
+import {useDispatch} from 'react-redux';
+import {useAppSelector} from '../../../../../redux/hooks';
+import {ToastType, showToast} from '../../../../../utils/utility';
+import {IGetOrdersRequest} from '../../../../../interface/order/IGetOrdersRequest';
+import {getCurrentCompanyId} from '../../../../../utils/storage';
+import {getOrdersRequest} from '../../../../../redux/slices/OrderSlice';
+import {EventRegister} from 'react-native-event-listeners';
+import {NavigationProp} from '@react-navigation/native';
+import {IGetQuotationRequest} from '../../../../../interface/quotation/IGetQuotationRequest';
+import {getQuotationsRequest} from '../../../../../redux/slices/QuotationSlice';
 import OrderDocument from '../../../../order/orderDetails/components/OrderListItem/OrderDocument';
 import AnimatedLottieView from 'lottie-react-native';
 
-const enquiryDocuments:string[] = ["Quotation", "Survey List"];
+const enquiryDocuments: string[] = ['Quotation', 'Survey List'];
 
 export interface IEnquiryItem {
   clientName: string;
@@ -58,7 +62,6 @@ const EnquiryListItem: React.FC<IEnquiryListItemProps> = ({
   index,
   onPress,
 }) => {
-
   const dispatch = useDispatch();
   const {
     updateEnquiryStatusRequesting,
@@ -66,75 +69,95 @@ const EnquiryListItem: React.FC<IEnquiryListItemProps> = ({
     updateEnquiryStatusFailure,
   } = useAppSelector(state => state.Enquiry);
 
-  const [enquiryStatus, setEnquiryStatus] = useState<string>(item?.status as string);
+  const [colorFix,SetColorFix] = useState<string>()
+
+  const [enquiryStatus, setEnquiryStatus] = useState<string>(
+    item?.status as string,
+  );
 
   const handlePhoneCall = () => {
     Linking.openURL(`tel:${item.phoneNumber}`);
-  }
+  };
 
   const handleWhatsappCall = () => {
     Linking.openURL(`whatsapp://send?phone=+91${item.phoneNumber}`);
-  }
+  };
 
   const refreshOrders = () => {
-    getCurrentCompanyId().then(id => {
-      const payload: Partial<IGetOrdersRequest> = {
-        companyId: id as string,
-      };
-      
-      dispatch(getOrdersRequest(payload));
-    }).catch(err => console.log(err));
-  }
+    getCurrentCompanyId()
+      .then(id => {
+        const payload: Partial<IGetOrdersRequest> = {
+          companyId: id as string,
+        };
+
+        dispatch(getOrdersRequest(payload));
+      })
+      .catch(err => console.log(err));
+  };
 
   const _getEnquiriesRequest = () => {
-    getCurrentCompanyId().then(id => {
-      dispatch(getEnquiriesRequest(id as string));
-    }).catch(err => console.log(err));
-  }
+    getCurrentCompanyId()
+      .then(id => {
+        dispatch(getEnquiriesRequest(id as string));
+      })
+      .catch(err => console.log(err));
+  };
 
   const _getQuotationsRequest = () => {
     const enquiryQuotationFilters = ['COMPLETED', 'APPROVED'];
-    getCurrentCompanyId().then(id => {
-      const payload: IGetQuotationRequest = {
-        companyId: id as string,
-        notstatus: enquiryQuotationFilters,
-      };
-      dispatch(getQuotationsRequest(payload));
-    }).catch(err => console.log(err));
-  }
+    getCurrentCompanyId()
+      .then(id => {
+        const payload: IGetQuotationRequest = {
+          companyId: id as string,
+          notstatus: enquiryQuotationFilters,
+        };
+        dispatch(getQuotationsRequest(payload));
+      })
+      .catch(err => console.log(err));
+  };
 
-
-  const handleEnquiryStatusChange21 = (value: string) => {
-    setEnquiryStatus(value);
+  const handleEnquiryStatusChange21 = (option: any) => {
+    setEnquiryStatus(option.label);
     const payload: IUpdateEnquiryStatusRequest = {
-      status: value.toUpperCase(),
-    }
-    dispatch(updateEnquiryStatusRequest({id: item.enquiryId as string, requestBody: payload}));
-  }
-  
+      status: option.label.toUpperCase(),
+    };
+    dispatch(
+      updateEnquiryStatusRequest({
+        id: item.enquiryId as string,
+        requestBody: payload,
+      }),
+    );
+  };
 
-  useEffect(() => {        
-    if(!updateEnquiryStatusRequesting && updateEnquiryStatusSuccess) {      
+  useEffect(() => {
+    if (!updateEnquiryStatusRequesting && updateEnquiryStatusSuccess) {
       showToast('Enquiry Status Changed.', ToastType.SUCCESS);
       dispatch(resetUpdateEnquiryStatusRequest());
       _getEnquiriesRequest();
-      if(enquiryStatus == 'Approved') {
+      if (enquiryStatus == 'Approved') {
         refreshOrders();
         EventRegister.emit('onUpdateEvent', true);
       } else {
         _getQuotationsRequest();
       }
-    } else if(!updateEnquiryStatusRequesting && updateEnquiryStatusFailure) {      
+    } else if (!updateEnquiryStatusRequesting && updateEnquiryStatusFailure) {
       showToast('Enquiry Status Not Changed. Try again!', ToastType.ERROR);
       setEnquiryStatus(item?.status as string);
       dispatch(resetUpdateEnquiryStatusRequest());
     }
-  }, [updateEnquiryStatusRequesting, updateEnquiryStatusSuccess, updateEnquiryStatusFailure]);
+  }, [
+    updateEnquiryStatusRequesting,
+    updateEnquiryStatusSuccess,
+    updateEnquiryStatusFailure,
+  ]);
+
+  const colorCode = enquiryStatusOptions.find(o => o.label.toLowerCase() == item.status.toLowerCase());
+  
 
   return (
     <>
       <View style={styles.badgeWrapper}>
-        <View style={styles.bageContainer}>
+        <View style={[styles.bageContainer, {backgroundColor: colorCode?.color ? colorCode.color : COLOR_BLUE}]}>
           <Text style={styles.badgeText}>{index + 1}</Text>
         </View>
         <Text style={styles.enquiryDateText}>{item.enquiryDate}</Text>
@@ -149,7 +172,9 @@ const EnquiryListItem: React.FC<IEnquiryListItemProps> = ({
               <Text style={styles.nameText}>{item.clientName}</Text>
             </View>
             <View style={styles.contactOptionsContainer}>
-              <TouchableOpacity activeOpacity={0.6} onPress={handleWhatsappCall} >
+              <TouchableOpacity
+                activeOpacity={0.6}
+                onPress={handleWhatsappCall}>
                 <WhatsappIcon width={24} height={24} />
               </TouchableOpacity>
               <Spacer width={12} height={0} />
@@ -157,13 +182,12 @@ const EnquiryListItem: React.FC<IEnquiryListItemProps> = ({
                 <PhoneBlueIcon width={24} height={24} />
               </TouchableOpacity>
               <Spacer width={12} height={0} />
-              <TouchableOpacity 
-              activeOpacity={0.4}>
+              <TouchableOpacity activeOpacity={0.4}>
                 <Menu>
                   <MenuTrigger>
-                  <MoreIcon width={24} height={24} />
-                    </MenuTrigger>
-                    <MenuOptions 
+                    <MoreIcon width={24} height={24} />
+                  </MenuTrigger>
+                  <MenuOptions
                     customStyles={{
                       optionsContainer: {borderRadius: 5},
                       optionsWrapper: {
@@ -179,28 +203,52 @@ const EnquiryListItem: React.FC<IEnquiryListItemProps> = ({
                       optionText: {
                         paddingVertical: 8,
                         color: COLOR_BLACK,
-                        fontFamily: 'WorkSans-Regular'
-                      }
+                        fontFamily: 'WorkSans-Regular',
+                      },
                     }}>
                     {enquiryStatusOptions.map((option, index) => {
-                          const isLastIndex = index == enquiryStatusOptions.length -1;
-                          const lastItemStyle = isLastIndex ? {
-                            optionWrapper: {borderBottomWidth: 0, marginHorizontal: 5,},
+                      const isLastIndex =
+                        index == enquiryStatusOptions.length - 1;
+                      const lastItemStyle = isLastIndex
+                        ? {
+                            optionWrapper: {
+
+                              borderBottomWidth: 0,
+                              marginHorizontal: 5,
+                            },
                             optionText: {
                               paddingVertical: 8,
                               color: COLOR_BLACK,
-                              fontFamily: 'WorkSans-Regular'
-                            }
-                          } : undefined;
-                          return <MenuOption customStyles={lastItemStyle} key={`${index}`}
-                          onSelect={() => {
-                            handleEnquiryStatusChange21(option);
-                          }} text={option} />
-                        })}
-                    </MenuOptions>
+                              fontFamily: 'WorkSans-Regular',
+                            },
+                          }
+                        : undefined;
+                      return (
+                        <>
+                          <View style={{flexDirection: 'row'}}>
+                            <View
+                              style={{
+                                width: 8,
+                                height: 45,
+                                backgroundColor: `${option.color}`,
+                                marginRight: 8,
+                              }}
+                            />
+                            <MenuOption
+                              customStyles={lastItemStyle}
+                              key={`${index}`}
+                              onSelect={() => {
+                                handleEnquiryStatusChange21(option);
+                              }}
+                              text={option.label}
+                            />
+                          </View>
+                        </>
+                      );
+                    })}
+                  </MenuOptions>
                 </Menu>
               </TouchableOpacity>
-
             </View>
           </View>
           <View style={styles.rowContainer}>
@@ -228,18 +276,27 @@ const EnquiryListItem: React.FC<IEnquiryListItemProps> = ({
             </View>
           </View>
           <View style={[styles.rowContainer]}>
-            <View style={[styles.rowItemContainer, {borderBottomLeftRadius: 5,}]}>
+            <View
+              style={[styles.rowItemContainer, {borderBottomLeftRadius: 5}]}>
               <Text style={styles.labelText}>Shifting Luggage</Text>
             </View>
-            <View style={[styles.rowItemContainer2, {borderBottomRightRadius: 5,}]}>
+            <View
+              style={[styles.rowItemContainer2, {borderBottomRightRadius: 5}]}>
               <Text style={styles.valueText}>{item.shiftingLuggage}</Text>
             </View>
           </View>
         </TouchableOpacity>
         <View style={styles.orderDocuemntContainer}>
-          {enquiryDocuments.map(od => <OrderDocument label={od} />)}
+          {enquiryDocuments.map(od => (
+            <OrderDocument label={od} />
+          ))}
           <TouchableOpacity onPress={onPress}>
-            <AnimatedLottieView source={animatedRightArrowIcon} autoPlay loop style={{width: 46, height: 46}} />
+            <AnimatedLottieView
+              source={animatedRightArrowIcon}
+              autoPlay
+              loop
+              style={{width: 46, height: 46}}
+            />
           </TouchableOpacity>
         </View>
       </Shadow>
