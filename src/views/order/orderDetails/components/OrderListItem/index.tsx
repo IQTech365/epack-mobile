@@ -9,24 +9,36 @@ import orderStatusOptions from '../../../../../data/orderStatusOptions.json';
 
 import Spacer from '../../../../../common/Spacer';
 import {formatDate5} from '../../../../../utils/formatter';
-import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
-import { COLOR_BLACK, COLOR_GRAY2 } from '../../../../../utils/colors';
-import { useAppDispatch, useAppSelector } from '../../../../../redux/hooks';
-import { IUpdateEnquiryStatusRequest } from '../../../../../interface/enquiry/IUpdateEnquiryStatusRequest';
-import { resetUpdateEnquiryStatusRequest, updateEnquiryStatusRequest } from '../../../../../redux/slices/EnquirySlice';
-import { getCurrentCompanyId } from '../../../../../utils/storage';
-import { IGetOrdersRequest } from '../../../../../interface/order/IGetOrdersRequest';
-import { getOrdersRequest } from '../../../../../redux/slices/OrderSlice';
-import { IGetQuotationRequest } from '../../../../../interface/quotation/IGetQuotationRequest';
-import { getQuotationsRequest } from '../../../../../redux/slices/QuotationSlice';
-import { ToastType, showToast } from '../../../../../utils/utility';
-import { EventRegister } from 'react-native-event-listeners';
-import { NavigationProp } from '@react-navigation/native';
+import {
+  Menu,
+  MenuOption,
+  MenuOptions,
+  MenuTrigger,
+} from 'react-native-popup-menu';
+import {
+  COLOR_BLACK,
+  COLOR_BLUE,
+  COLOR_GRAY2,
+} from '../../../../../utils/colors';
+import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
+import {IUpdateEnquiryStatusRequest} from '../../../../../interface/enquiry/IUpdateEnquiryStatusRequest';
+import {
+  resetUpdateEnquiryStatusRequest,
+  updateEnquiryStatusRequest,
+} from '../../../../../redux/slices/EnquirySlice';
+import {getCurrentCompanyId} from '../../../../../utils/storage';
+import {IGetOrdersRequest} from '../../../../../interface/order/IGetOrdersRequest';
+import {getOrdersRequest} from '../../../../../redux/slices/OrderSlice';
+import {IGetQuotationRequest} from '../../../../../interface/quotation/IGetQuotationRequest';
+import {getQuotationsRequest} from '../../../../../redux/slices/QuotationSlice';
+import {ToastType, showToast} from '../../../../../utils/utility';
+import {EventRegister} from 'react-native-event-listeners';
+import {NavigationProp} from '@react-navigation/native';
 import OrderDocument from './OrderDocument';
 import animatedRightArrowIcon from '../../../../../images/animated_right_arrow.json';
 import Lottie from 'lottie-react-native';
 
-const orderDocuments:string[] = ["Bilty", "Invoice", ]
+const orderDocuments: string[] = ['Bilty', 'Invoice'];
 
 export interface IOrderItem {
   orderId: string;
@@ -57,7 +69,9 @@ const OrderListItem: React.FC<IOrderListItemProps> = ({
   onPress,
 }) => {
   const dispatch = useAppDispatch();
-  const [orderStatus, setOrderStatus] = useState<string>(item?.status as string);
+  const [orderStatus, setOrderStatus] = useState<string>(
+    item?.status as string,
+  );
 
   const {
     updateEnquiryStatusRequesting,
@@ -101,10 +115,10 @@ const OrderListItem: React.FC<IOrderListItemProps> = ({
       .catch(err => console.log(err));
   };
 
-  const handleOrderStatusChangeList = (value: string) => {
-    setOrderStatus(value);
+  const handleOrderStatusChangeList = (option: any) => {
+    setOrderStatus(option.label);
     const payload: IUpdateEnquiryStatusRequest = {
-      status: value.toUpperCase(),
+      status: option.label.toUpperCase(),
     };
     dispatch(
       updateEnquiryStatusRequest({
@@ -118,7 +132,7 @@ const OrderListItem: React.FC<IOrderListItemProps> = ({
     if (!updateEnquiryStatusRequesting && updateEnquiryStatusSuccess) {
       showToast(`Order Status Changed to ${orderStatus}`, ToastType.SUCCESS);
       dispatch(resetUpdateEnquiryStatusRequest());
-      _getQuotationsRequest();
+      refetchOrderList();
       if (orderStatus == 'Completed') {
         refetchOrderList();
         EventRegister.emit('onUpdateEvent', true);
@@ -136,10 +150,18 @@ const OrderListItem: React.FC<IOrderListItemProps> = ({
     updateEnquiryStatusFailure,
   ]);
 
+  const colorCode = orderStatusOptions?.find(
+    o => o?.label?.toLowerCase() == item?.status?.toLowerCase(),
+  );
+
   return (
     <View style={styles.wrapper}>
       <View style={styles.badgeWrapper}>
-        <View style={styles.bageContainer}>
+        <View
+          style={[
+            styles.bageContainer,
+            {backgroundColor: colorCode?.color ? colorCode.color : COLOR_BLUE},
+          ]}>
           <Text style={styles.badgeText}>{index + 1}</Text>
         </View>
         <Text style={styles.orderDateText}>
@@ -190,9 +212,9 @@ const OrderListItem: React.FC<IOrderListItemProps> = ({
                         fontFamily: 'WorkSans-Regular',
                       },
                     }}>
-                    {orderStatusOptions.map((option, index) => {
+                    {orderStatusOptions?.map((option, index) => {
                       const isLastIndex =
-                        index == orderStatusOptions.length - 1;
+                        index == orderStatusOptions?.length - 1;
                       const lastItemStyle = isLastIndex
                         ? {
                             optionWrapper: {
@@ -207,14 +229,27 @@ const OrderListItem: React.FC<IOrderListItemProps> = ({
                           }
                         : undefined;
                       return (
-                        <MenuOption
-                          key={`${index}`}
-                          customStyles={lastItemStyle}
-                          onSelect={() => {
-                            handleOrderStatusChangeList(option);
-                          }}
-                          text={option}
-                        />
+                        <>
+                          <View style={{flexDirection: 'row'}}>
+                            <View
+                              style={{
+                                width: 8,
+                                height: 62,
+                                backgroundColor: `${option.color}`,
+                                marginRight: 8,
+                              }}
+                            />
+                            <MenuOption
+                              customStyles={lastItemStyle}
+                              key={`${index}`}
+                              onSelect={() => {
+                                handleOrderStatusChangeList(option);
+                              }}
+                              text={option.label}
+                              >
+                            </MenuOption>
+                          </View>
+                        </>
                       );
                     })}
                   </MenuOptions>
@@ -267,9 +302,16 @@ const OrderListItem: React.FC<IOrderListItemProps> = ({
           </View>
         </TouchableOpacity>
         <View style={styles.orderDocuemntContainer}>
-          {orderDocuments.map(od => <OrderDocument label={od} />)}
+          {orderDocuments.map(od => (
+            <OrderDocument label={od} />
+          ))}
           <TouchableOpacity onPress={onPress}>
-            <Lottie source={animatedRightArrowIcon} autoPlay loop style={{width: 50, height: 50}} />
+            <Lottie
+              source={animatedRightArrowIcon}
+              autoPlay
+              loop
+              style={{width: 50, height: 50}}
+            />
           </TouchableOpacity>
         </View>
       </Shadow>

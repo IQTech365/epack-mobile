@@ -1,8 +1,26 @@
 [
-  "Out for Shifting",
-  "Material received at warehouse",
-  "In Transit",
-  "Reached at destination city",
-  "Completed",
-  "Cancelled Order"
+  {
+    "label":"Out for Shifting",
+    "color": "#FFEA00"
+  },
+  {
+    "label":"Material received at warehouse",
+    "color":"#A52A2A"
+  },
+  {
+    "label":"In Transit",
+    "color":"#FF8C00"
+  },
+  {
+    "label":"Reached at destination city",
+    "color":"#FFB6C1"
+  },
+  {
+    "label":"Completed",
+    "color":"#02943e"
+  },
+  {
+    "label":"Cancelled Order",
+    "color":"#ff4545"
+  }
 ]

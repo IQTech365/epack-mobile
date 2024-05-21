@@ -1,23 +1,23 @@
 [
   {
     "label": "In Followup",
-    "color": "green"
+    "color": "#00A1E5"
   },
   {
     "label": "Survey Done",
-    "color": "yellow"
+    "color": "#90EE90"
   },
   {
     "label": "Pending",
-    "color": "red"
+    "color": "#FF8C00"
   },
   {
     "label": "Approved",
-    "color": "black"
+    "color": "#02943e"
   },
   {
     "label": "Cancelled",
-    "color": "brown"
+    "color": "#ff4545"
   }
   
 ]
