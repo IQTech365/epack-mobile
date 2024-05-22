@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Dimensions, StyleSheet, Text, View} from 'react-native';
+import {Dimensions, StyleSheet, Text, View,TouchableOpacity} from 'react-native';
 import Spacer from '../../../../../../../common/Spacer';
 import Label from '../../../../../../../common/Label';
 import DropdownComponent, {
@@ -8,6 +8,7 @@ import DropdownComponent, {
 import Input, { InputMethods } from '../../../../../../../common/Input';
 import DropdownWithTextInput from '../../../../../../../common/DropdownWithTextInput';
 import Button from '../../../../../../../common/Button';
+import EditIcon from '../../../../../../../images/icons/edit_icon.svg';
 import {
   COLOR_BLACK,
   COLOR_BLUE,
@@ -34,6 +35,8 @@ import {
 import {IVehicleBilty} from '../../biltyReducer2';
 import { useBiltyFormContextHook } from '../../../../../../../provider/BiltyFormContextProvider';
 import { IBilty } from '../../../../../../../interface/order/IGetBiltyListResponse';
+import DeleteIcon from '../../../../../../../images/icons/delete.svg';
+
 
 interface Props {
   isEdit?: boolean;
@@ -47,6 +50,7 @@ const VehicleInfo: React.FC<Props> = ({isEdit,item}) => {
     setTypeOfMoving,
     setRiskType,
     setLiabilityOfTax,
+    state
   } = useBiltyFormContextHook();
   const [vehicleCompanyId, setVehicleCompanyId] = useState<string>('');
   const [vehicleType, setVehicleType] = useState<TDropdownItem>();
@@ -92,6 +96,13 @@ const VehicleInfo: React.FC<Props> = ({isEdit,item}) => {
           setVehicleInfo(copy);
           clearInputs();
     }
+  };
+
+  const handleDeleteVehicleItem = (index: number) => {
+    const clone = [...state.vehicleInfo];
+    const filter = clone.filter((_, i) => i !== index);
+    setVehicleInfoList(filter);
+    setVehicleInfo(filter);
   };
 
   const disable = vehicleType && vehicleCompany && vehicleModel && vehicleColor && registrationNo && engineNo && chasisNo && vehicleStatus && vehicleStatus;
@@ -194,8 +205,8 @@ const VehicleInfo: React.FC<Props> = ({isEdit,item}) => {
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
             ref={registrationNoRef}
-            inputType="numeric"
-          />
+            autoCapitalize="characters"
+            />
         </View>
         <View style={styles.itemContainer}>
           <Label text="Engine No." style={styles.label} />
@@ -205,8 +216,8 @@ const VehicleInfo: React.FC<Props> = ({isEdit,item}) => {
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
             ref={engineNoRef}
-            inputType="numeric"
-          />
+            autoCapitalize="characters"
+            />
         </View>
         <View style={styles.itemContainer}>
           <Label text="Chassis No." style={styles.label} />
@@ -216,8 +227,8 @@ const VehicleInfo: React.FC<Props> = ({isEdit,item}) => {
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
             ref={chassisNoRef}
-            inputType="numeric"
-          />
+            autoCapitalize="characters"
+            />
         </View>
         <View style={styles.itemContainer}>
           <Label text="Vehicle Value" style={styles.label} />
@@ -248,9 +259,29 @@ const VehicleInfo: React.FC<Props> = ({isEdit,item}) => {
         style={styles.previewButtonStyle}
         textStyle={styles.textStyle}
       />
-      {vehicleInfoList.map((vi: IVehicleBilty) => {
+      {vehicleInfoList.map((vi: IVehicleBilty,index) => {
         return (
           <View style={styles.listWrapper}>
+             <View
+                style={[
+                  styles.materialItem,
+                  {justifyContent: 'space-between'},
+                ]}>
+                <View style={{flexDirection: 'row'}}>
+                  <Text style={styles.materialLabelText}>SNO# - </Text>
+                  <Text style={styles.materialValueText}>{index + 1}</Text>
+                </View>
+                <TouchableOpacity
+                  activeOpacity={0.4}
+                  onPress={() => handleDeleteVehicleItem(index)}>
+                  <DeleteIcon width={25} height={25} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.4}
+                  onPress={() => handleDeleteVehicleItem(index)}>
+                  <EditIcon width={25} height={25} />
+                </TouchableOpacity>
+              </View>
               <Text style={styles.label2}>V. Type: <Text style={styles.text2}>{vi.vehicle_type}</Text></Text>
               <Text style={styles.label2}>Company: <Text style={styles.text2}>{vi.vehicle_company}</Text></Text>
               <Text style={styles.label2}>V. Model: <Text style={styles.text2}>{vi.vehicle_model}</Text></Text>
@@ -335,5 +366,19 @@ const styles = StyleSheet.create({
     color: COLOR_BLACK,
     fontSize: 16,
     fontFamily: 'WorkSans-Regular'
-  }
+  },
+
+  materialLabelText: {
+    color: COLOR_BLACK,
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  materialValueText: {
+    color: COLOR_BLACK,
+    fontSize: 14,
+    fontWeight: '400',
+  },
+  materialItem: {
+    flexDirection: 'row',
+  },
 });
