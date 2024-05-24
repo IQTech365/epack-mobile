@@ -51,10 +51,10 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId, navi
     return 'NA';
   };
 
-  const handleEnquiryStatusChange = (value: string) => {
-    setEnquiryStatus(value);
+  const handleEnquiryStatusChange = (option: any) => {
+    setEnquiryStatus(option.label);
     const payload: IUpdateEnquiryStatusRequest = {
-      status: value.toUpperCase(),
+      status: option.label.toUpperCase(),
     }
     dispatch(updateEnquiryStatusRequest({id: enquiryId as string, requestBody: payload}));
   }  
@@ -232,11 +232,30 @@ const EnquiryInfoView: React.FC<IEnquiryInfoViewProps> = ({item, enquiryId, navi
                               fontFamily: 'WorkSans-Regular'
                             }
                           } : undefined;
-                          return <MenuOption customStyles={lastItemStyle} key={`${index}`} onSelect={() => {
-                            handleEnquiryStatusChange(option);
-                          }} text={option} />
+                          return (
+                            <>
+                              <View style={{flexDirection: 'row'}}>
+                                <View
+                                  style={{
+                                    width: 8,
+                                    height: 45,
+                                    backgroundColor: `${option.color}`,
+                                    marginRight: 8,
+                                  }}
+                                />
+                                <MenuOption
+                                  customStyles={lastItemStyle}
+                                  key={`${index}`}
+                                  onSelect={() => {
+                                    handleEnquiryStatusChange(option);
+                                  }}
+                                  text={option.label}
+                                />
+                              </View>
+                            </>
+                          );
                         })}
-                    </MenuOptions>
+                      </MenuOptions>
                   </Menu>
                   {/* <Text style={styles.valueText}>{item?.status}</Text> */}
                 </View>

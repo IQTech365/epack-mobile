@@ -17,7 +17,11 @@ import {
   MenuOption,
   MenuTrigger,
 } from 'react-native-popup-menu';
-import {COLOR_BLACK, COLOR_GRAY2, COLOR_WHITE} from '../../../../../utils/colors';
+import {
+  COLOR_BLACK,
+  COLOR_GRAY2,
+  COLOR_WHITE,
+} from '../../../../../utils/colors';
 import orderStatusOptions from '../../../../../data/orderStatusOptions.json';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import {
@@ -25,37 +29,45 @@ import {
   updateEnquiryStatusRequest,
 } from '../../../../../redux/slices/EnquirySlice';
 import {formatDate} from '../../../../../utils/formatter';
-import { IUpdateEnquiryStatusRequest } from '../../../../../interface/enquiry/IUpdateEnquiryStatusRequest';
-import { ISingleEnquiryData } from '../../../../../interface/enquiry/ISingleEnquiryResponse';
-import { IGetOrdersRequest } from '../../../../../interface/order/IGetOrdersRequest';
-import { getOrdersRequest } from '../../../../../redux/slices/OrderSlice';
-import { NavigationProp } from '@react-navigation/native';
-import { getCurrentCompanyId } from '../../../../../utils/storage';
-import { EventRegister } from 'react-native-event-listeners';
-import { ToastType, showToast } from '../../../../../utils/utility';
-import { IGetQuotationRequest } from '../../../../../interface/quotation/IGetQuotationRequest';
-import { getQuotationsRequest } from '../../../../../redux/slices/QuotationSlice';
+import {IUpdateEnquiryStatusRequest} from '../../../../../interface/enquiry/IUpdateEnquiryStatusRequest';
+import {ISingleEnquiryData} from '../../../../../interface/enquiry/ISingleEnquiryResponse';
+import {IGetOrdersRequest} from '../../../../../interface/order/IGetOrdersRequest';
+import {getOrdersRequest} from '../../../../../redux/slices/OrderSlice';
+import {NavigationProp} from '@react-navigation/native';
+import {getCurrentCompanyId} from '../../../../../utils/storage';
+import {EventRegister} from 'react-native-event-listeners';
+import {ToastType, showToast} from '../../../../../utils/utility';
+import {IGetQuotationRequest} from '../../../../../interface/quotation/IGetQuotationRequest';
+import {getQuotationsRequest} from '../../../../../redux/slices/QuotationSlice';
 interface IOrderInfoViewProps {
   orderId: string;
   item: ISingleEnquiryData | null;
   navigation: NavigationProp<any, any>;
 }
 
-const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item, navigation}) => {
+const OrderInfoView: React.FC<IOrderInfoViewProps> = ({
+  orderId,
+  item,
+  navigation,
+}) => {
   const dispatch = useAppDispatch();
-  const [orderStatus, setOrderStatus] = useState<string>(item?.status as string);
+  const [orderStatus, setOrderStatus] = useState<string>(
+    item?.status as string,
+  );
   const {
     updateEnquiryStatusRequesting,
     updateEnquiryStatusSuccess,
     updateEnquiryStatusFailure,
   } = useAppSelector(state => state.Enquiry);
 
-  const handleOrderStatusChange = (value: string) => {
-    setOrderStatus(value);
+  const handleOrderStatusChangeList = (option: any) => {
+    setOrderStatus(option.label);
     const payload: IUpdateEnquiryStatusRequest = {
-      status: value.toUpperCase(),
+      status: option.label.toUpperCase(),
     };
-    dispatch(updateEnquiryStatusRequest({id: orderId as string, requestBody: payload}));
+    dispatch(
+      updateEnquiryStatusRequest({id: orderId as string, requestBody: payload}),
+    );
   };
 
   const handlePhoneCall = () => {
@@ -67,30 +79,34 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item, navigation
   };
 
   const refetchOrderList = () => {
-    getCurrentCompanyId().then(id => {
-      const payload: Partial<IGetOrdersRequest> = {
-        companyId: id as string,
-      }
-      dispatch(getOrdersRequest(payload));
-    }).catch(err => console.log(err));
-  }
+    getCurrentCompanyId()
+      .then(id => {
+        const payload: Partial<IGetOrdersRequest> = {
+          companyId: id as string,
+        };
+        dispatch(getOrdersRequest(payload));
+      })
+      .catch(err => console.log(err));
+  };
 
   const _getQuotationsRequest = () => {
     const orderQuotationFilters = ['COMPLETED'];
-    getCurrentCompanyId().then(id => {
-      const payload: IGetQuotationRequest = {
-        companyId: id as string,
-        notstatus: orderQuotationFilters,
-      };
-      dispatch(getQuotationsRequest(payload));
-    }).catch(err => console.log(err));
-  }
+    getCurrentCompanyId()
+      .then(id => {
+        const payload: IGetQuotationRequest = {
+          companyId: id as string,
+          notstatus: orderQuotationFilters,
+        };
+        dispatch(getQuotationsRequest(payload));
+      })
+      .catch(err => console.log(err));
+  };
 
   useEffect(() => {
     if (!updateEnquiryStatusRequesting && updateEnquiryStatusSuccess) {
       showToast(`Order Status Changed to ${orderStatus}`, ToastType.SUCCESS);
       dispatch(resetUpdateEnquiryStatusRequest());
-      if(orderStatus == 'Completed') {
+      if (orderStatus == 'Completed') {
         refetchOrderList();
         EventRegister.emit('onUpdateEvent', true);
         navigation.goBack();
@@ -117,14 +133,14 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item, navigation
 
   const getContactPersonName = () => {
     let name = '';
-    if(item?.billingBy == 'by Individual') {
+    if (item?.billingBy == 'by Individual') {
       name = item.partyName;
     } else {
       // @ts-ignore
       name = item?.billingDetails.companyName;
     }
     return name;
-  }
+  };
 
   const getContactPersonNumber = () => {
     let number = '';
@@ -132,10 +148,12 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item, navigation
       number = item.mobile;
     } else {
       // @ts-ignore
-      number = item?.billingDetails.authorityPersonMobile || item?.billingDetails.employeeMobile;
+      number =
+        item?.billingDetails.authorityPersonMobile ||
+        item?.billingDetails.employeeMobile;
     }
     return number;
-  }
+  };
 
   return (
     <View style={styles.backgroundContainer}>
@@ -146,9 +164,7 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item, navigation
           <View style={styles.leftContainer}>
             <View style={styles.infoContainer}>
               <View style={[styles.itemContainer]}>
-                <Text style={styles.nameText}>
-                  {getContactPersonName()}
-                </Text>
+                <Text style={styles.nameText}>{getContactPersonName()}</Text>
               </View>
               <View style={[styles.itemContainer]}>
                 <Text style={styles.normalText}>
@@ -227,7 +243,7 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item, navigation
                         optionText: {
                           paddingVertical: 8,
                           color: COLOR_BLACK,
-                          fontFamily: 'WorkSans-Regular'
+                          fontFamily: 'WorkSans-Regular',
                         },
                       }}>
                       {orderStatusOptions.map((option, index) => {
@@ -242,19 +258,30 @@ const OrderInfoView: React.FC<IOrderInfoViewProps> = ({orderId, item, navigation
                               optionText: {
                                 paddingVertical: 8,
                                 color: COLOR_BLACK,
-                                fontFamily: 'WorkSans-Regular'
+                                fontFamily: 'WorkSans-Regular',
                               },
                             }
                           : undefined;
                         return (
-                          <MenuOption
-                            key={`${index}`}
-                            customStyles={lastItemStyle}
-                            onSelect={() => {
-                              handleOrderStatusChange(option);
-                            }}
-                            text={option}
-                          />
+                          <>
+                            <View style={{flexDirection: 'row'}}>
+                              <View
+                                style={{
+                                  width: 8,
+                                  height: 62,
+                                  backgroundColor: `${option.color}`,
+                                  marginRight: 8,
+                                }}
+                              />
+                              <MenuOption
+                                customStyles={lastItemStyle}
+                                key={`${index}`}
+                                onSelect={() => {
+                                  handleOrderStatusChangeList(option);
+                                }}
+                                text={option.label}></MenuOption>
+                            </View>
+                          </>
                         );
                       })}
                     </MenuOptions>

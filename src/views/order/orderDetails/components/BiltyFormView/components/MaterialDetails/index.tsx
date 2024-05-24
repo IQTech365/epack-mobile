@@ -10,7 +10,7 @@ import {COLOR_BLACK, COLOR_BLUE} from '../../../../../../../utils/colors';
 import DropdownComponent from '../../../../../../../common/DropdownComponent';
 import Button from '../../../../../../../common/Button';
 import DeleteIcon from '../../../../../../../images/icons/delete.svg';
-import {IMaterial} from '../../biltyReducer2';
+import {IMaterial, IVehicleBilty} from '../../biltyReducer2';
 import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
 import {TDropdownItem} from '../../../../../../../type/TDropdownItem';
 import {
@@ -21,12 +21,14 @@ import {
 import {useAppSelector} from '../../../../../../../redux/hooks';
 import {IUnitType} from '../../../../../../../interface/setting/unitType/IGetunitTypeResponse';
 import {IPackingType} from '../../../../../../../interface/common/common';
-import { IBilty } from '../../../../../../../interface/order/IGetBiltyListResponse';
+import {IBilty} from '../../../../../../../interface/order/IGetBiltyListResponse';
 import VehicleInfo from '../VehicleInfo';
+import ModalHOC from '../../../../../../../common/ModalHOC';
+import EditIcon from '../../../../../../../images/icons/edit_icon.svg';
 
 interface IProps {
-  item?:IBilty;
-  isEdit?:boolean;
+  item?: IBilty;
+  isEdit?: boolean;
 }
 
 const MaterialDetails: React.FC<IProps> = ({item, isEdit}) => {
@@ -71,6 +73,8 @@ const MaterialDetails: React.FC<IProps> = ({item, isEdit}) => {
   const [applicableWeight, setApplicableWeight] = useState<string>('');
   const [unit, setUnit] = useState<string>('');
   const [valueOfGoods, setValueOfGoods] = useState<string>('');
+  const [openEditModel, setOpenEditModel] = useState<boolean>(false);
+  const [singleVehicleInfo, setSingleVehicleInfo] = useState<IVehicleBilty>();
 
   const {unitType} = useAppSelector(state => state.Setting);
   const {packingTypes} = useAppSelector(state => state.Common);
@@ -108,6 +112,19 @@ const MaterialDetails: React.FC<IProps> = ({item, isEdit}) => {
     setMaterials(filter);
   };
 
+  const handleEditVehicleItem = (vi: IVehicleBilty, index: number) => {
+    setSingleVehicleInfo(vi);
+    setOpenEditModel(true);
+  };
+
+  const _hanldeCloseShowPreviewModal = () => {
+    setOpenEditModel(false);
+  };
+
+  const handleOnComplete = () => {
+    setOpenEditModel(!openEditModel);
+  };
+
   const handleAddMaterial = () => {
     const clone = [...state.materials];
     const materil: IMaterial = {
@@ -127,11 +144,11 @@ const MaterialDetails: React.FC<IProps> = ({item, isEdit}) => {
   };
 
   const initData = () => {
-    if(isEdit && item) {
-      let transformData:IMaterial[] = [];
-      if(item.materials && item.materials.length > 0) {
+    if (isEdit && item) {
+      let transformData: IMaterial[] = [];
+      if (item.materials && item.materials.length > 0) {
         transformData = item.materials.map(e => {
-          const _item:IMaterial = {
+          const _item: IMaterial = {
             material_name: e.name,
             no_of_articles: e.noOfArticles,
             packing_type: e.packingType,
@@ -141,21 +158,20 @@ const MaterialDetails: React.FC<IProps> = ({item, isEdit}) => {
             applicable_weight: e.applicableWeight,
             units: e.unit,
             value_of_goods: e.valueOfGoods,
-          }
+          };
           return _item;
-        })
+        });
       }
       setMaterials(transformData);
       setTypeOfMoving(item.materialsType);
       setRiskType(item.riskType);
-      setLiabilityOfTax(item.liabilityOfTax)
+      setLiabilityOfTax(item.liabilityOfTax);
     }
-  }
-  
+  };
 
-  useEffect(()=> {
+  useEffect(() => {
     initData();
-  },[isEdit,item])
+  }, [isEdit, item]);
 
   const showMaterialList = () => {
     if (state.materials.length > 0) {
@@ -282,7 +298,10 @@ const MaterialDetails: React.FC<IProps> = ({item, isEdit}) => {
                 onPress={(isChecked: boolean) => {
                   setAddMaterial(state.add_material == 'YES' ? 'NO' : 'YES');
                 }}
-                isChecked={state.add_material == 'YES' || item?.addMaterialsStatus === 'YES'}
+                isChecked={
+                  state.add_material == 'YES' ||
+                  item?.addMaterialsStatus === 'YES'
+                }
                 disableBuiltInState={true}
               />
             </View>
@@ -291,8 +310,8 @@ const MaterialDetails: React.FC<IProps> = ({item, isEdit}) => {
         <Spacer height={10} />
         {(state.type_of_moving == typeOfMovingOptions[0] &&
           state.add_material == 'YES') ||
-          state.type_of_moving == typeOfMovingOptions[2] ||
-          state.type_of_moving == typeOfMovingOptions[3] ? (
+        state.type_of_moving == typeOfMovingOptions[2] ||
+        state.type_of_moving == typeOfMovingOptions[3] ? (
           <>
             <View style={styles.elementContainer2}>
               <Label text="Material Name" style={styles.label} />
@@ -409,8 +428,73 @@ const MaterialDetails: React.FC<IProps> = ({item, isEdit}) => {
               textStyle={styles.textStyle}
             />
           </>
-        ) : state.type_of_moving === typeOfMovingOptions[1] ? <VehicleInfo isEdit={isEdit}
-        item={item} /> : null}
+        ) : state.type_of_moving === typeOfMovingOptions[1] ? (
+          <>
+            <VehicleInfo isEdit={isEdit} item={item} />
+            {state.vehicleInfo.map((vi: IVehicleBilty, index) => {
+              return (
+                <View style={styles.listWrapper}>
+                  <View
+                    style={[
+                      styles.materialItem,
+                      {justifyContent: 'space-between'},
+                    ]}>
+                    <View style={{flexDirection: 'row'}}>
+                      <Text style={styles.materialLabelText}>SNO# - </Text>
+                      <Text style={styles.materialValueText}>{index + 1}</Text>
+                    </View>
+                    <View style={{flexDirection: 'row', gap: 24}}>
+                      {isEdit && (
+                        <TouchableOpacity
+                          activeOpacity={0.4}
+                          onPress={() => handleEditVehicleItem(vi, index)}>
+                          <EditIcon width={25} height={25} />
+                        </TouchableOpacity>
+                      )}
+
+                      <TouchableOpacity activeOpacity={0.4} onPress={() => {}}>
+                        <DeleteIcon width={25} height={25} />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                  <Text style={styles.label2}>
+                    V. Type: <Text style={styles.text2}>{vi.vehicle_type}</Text>
+                  </Text>
+                  <Text style={styles.label2}>
+                    Company:{' '}
+                    <Text style={styles.text2}>{vi.vehicle_company}</Text>
+                  </Text>
+                  <Text style={styles.label2}>
+                    V. Model:{' '}
+                    <Text style={styles.text2}>{vi.vehicle_model}</Text>
+                  </Text>
+                  <Text style={styles.label2}>
+                    V. Color:{' '}
+                    <Text style={styles.text2}>{vi.vehicle_color}</Text>
+                  </Text>
+                  <Text style={styles.label2}>
+                    Chasis No: <Text style={styles.text2}>{vi.chassis_no}</Text>
+                  </Text>
+                  <Text style={styles.label2}>
+                    Registration No:{' '}
+                    <Text style={styles.text2}>{vi.registration_no}</Text>
+                  </Text>
+                  <Text style={styles.label2}>
+                    Engine No: <Text style={styles.text2}>{vi.engine_no}</Text>
+                  </Text>
+                  <Text style={styles.label2}>
+                    V. Status:{' '}
+                    <Text style={styles.text2}>{vi.vechile_status}</Text>
+                  </Text>
+                  <Text style={styles.label2}>
+                    V. Value:{' '}
+                    <Text style={styles.text2}>{vi.vehicle_value}/-</Text>
+                  </Text>
+                </View>
+              );
+            })}
+          </>
+        ) : null}
         {showMaterialList()}
         <Spacer height={4} />
         <View style={styles.labelContainer}>
@@ -462,6 +546,21 @@ const MaterialDetails: React.FC<IProps> = ({item, isEdit}) => {
             />
           ))}
         </View>
+        <ModalHOC
+          visible={openEditModel}
+          onClose={_hanldeCloseShowPreviewModal}
+          // headerStyle={styles.headerStyle}
+          title="Edit Vehicle Info"
+          modalStyle={styles.modalStyle}>
+          <View style={styles.modalStyle}>
+            <VehicleInfo
+              item={item}
+              vehicleInfo={singleVehicleInfo as IVehicleBilty}
+              isSingleEdit={true}
+              onComplete={handleOnComplete}
+            />
+          </View>
+        </ModalHOC>
       </View>
     </CollapsibleView>
   );

@@ -5,7 +5,7 @@ import {
   COLOR_GRAY2,
   COLOR_WHITE,
 } from '../../../../../../../utils/colors';
-const {width} = Dimensions.get('window');
+const {width,height} = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -163,6 +163,42 @@ const styles = StyleSheet.create({
   style: {
     marginRight: 8,
     marginBottom: 15,
+  },
+
+  modalStyle: {
+    width: width,
+    height: height,
+  },
+
+  headerStyle: {
+    width: width,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+  },
+  listWrapper: {
+    width: width * 0.9,
+    alignSelf: 'center',
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: COLOR_GRAY2,
+    marginVertical: 10,
+    paddingHorizontal: 8,
+    paddingVertical: 8,
+  },
+  listItemContainer: {
+    width: width * 0.8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  label2: {
+    color: COLOR_BLACK,
+    fontSize: 16,
+    fontFamily: 'WorkSans-Medium',
+  },
+  text2: {
+    color: COLOR_BLACK,
+    fontSize: 16,
+    fontFamily: 'WorkSans-Regular',
   },
 });
 

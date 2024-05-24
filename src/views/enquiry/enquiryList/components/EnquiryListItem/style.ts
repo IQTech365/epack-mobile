@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row', 
     alignItems: 'center',
     flexWrap: 'wrap', 
-    paddingHorizontal: 10,
+    paddingHorizontal: 6,
   },
 });
 

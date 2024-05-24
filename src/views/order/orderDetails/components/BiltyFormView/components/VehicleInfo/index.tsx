@@ -1,14 +1,19 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Dimensions, StyleSheet, Text, View,TouchableOpacity} from 'react-native';
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+} from 'react-native';
 import Spacer from '../../../../../../../common/Spacer';
 import Label from '../../../../../../../common/Label';
 import DropdownComponent, {
   IDropdownHandler,
 } from '../../../../../../../common/DropdownComponent';
-import Input, { InputMethods } from '../../../../../../../common/Input';
+import Input, {InputMethods} from '../../../../../../../common/Input';
 import DropdownWithTextInput from '../../../../../../../common/DropdownWithTextInput';
 import Button from '../../../../../../../common/Button';
-import EditIcon from '../../../../../../../images/icons/edit_icon.svg';
 import {
   COLOR_BLACK,
   COLOR_BLUE,
@@ -33,26 +38,32 @@ import {
   getVehicleTypeList,
 } from '../../../CarConditionFormView/utils';
 import {IVehicleBilty} from '../../biltyReducer2';
-import { useBiltyFormContextHook } from '../../../../../../../provider/BiltyFormContextProvider';
-import { IBilty } from '../../../../../../../interface/order/IGetBiltyListResponse';
+import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
+import {IBilty} from '../../../../../../../interface/order/IGetBiltyListResponse';
 import DeleteIcon from '../../../../../../../images/icons/delete.svg';
-
+import ModalHOC from '../../../../../../../common/ModalHOC';
 
 interface Props {
   isEdit?: boolean;
   item?: IBilty;
+  vehicleInfo?: IVehicleBilty;
+  isSingleEdit?: boolean;
+  onComplete?: () => void;
 }
 
-const VehicleInfo: React.FC<Props> = ({isEdit,item}) => {
+const VehicleInfo: React.FC<Props> = ({isEdit, item, vehicleInfo,onComplete, isSingleEdit = false}) => {
+
+  
   const dispatch = useAppDispatch();
   const {
     setVehicleInfo,
     setTypeOfMoving,
     setRiskType,
     setLiabilityOfTax,
-    state
+    state,
   } = useBiltyFormContextHook();
   const [vehicleCompanyId, setVehicleCompanyId] = useState<string>('');
+  const [vehicleTypeId, setVehicleTypeId] = useState<string>('');
   const [vehicleType, setVehicleType] = useState<TDropdownItem>();
   const [vehicleCompany, setVehicleCompany] = useState<TDropdownItem>();
   const [vehicleModel, setVehicleModel] = useState<TDropdownItem>();
@@ -63,6 +74,7 @@ const VehicleInfo: React.FC<Props> = ({isEdit,item}) => {
   const [vehicleStatus, setVehicleStatus] = useState<string>('');
   const [vehicleValue, setVehicleValue] = useState<string>('');
   const [vehicleInfoList, setVehicleInfoList] = useState<IVehicleBilty[]>([]);
+  const [editIndex, setEditIndex] = useState<number>(-1);
 
   const vehicleTypeDropRef = useRef<IDropdownHandler>(null);
   const vehicleManufactureDropRef = useRef<IDropdownHandler>(null);
@@ -78,34 +90,79 @@ const VehicleInfo: React.FC<Props> = ({isEdit,item}) => {
 
   const handleAddVehicleInfo = () => {
     const copy = [...vehicleInfoList];
-    
-    if(vehicleType && vehicleCompany && vehicleModel && vehicleColor && registrationNo && engineNo && chasisNo && vehicleStatus && vehicleStatus) {
-        const vehicle: IVehicleBilty = {
-            vehicle_type: vehicleType?.label as string,
-            vehicle_company: vehicleCompany?.label as string,
-            vehicle_model: vehicleModel?.label as string,
-            vehicle_color: vehicleColor?.label as string,
-            registration_no: registrationNo,
-            engine_no: engineNo,
-            chassis_no: chasisNo,
-            vechile_status: vehicleStatus,
-            vehicle_value: vehicleValue,
-          };
-          copy.push(vehicle);
-          setVehicleInfoList(copy);
-          setVehicleInfo(copy);
-          clearInputs();
+
+    if (
+      vehicleType &&
+      vehicleCompany &&
+      vehicleModel &&
+      vehicleColor &&
+      registrationNo &&
+      engineNo &&
+      chasisNo &&
+      vehicleStatus &&
+      vehicleStatus
+    ) {
+      const vehicle: IVehicleBilty = {
+        vehicle_type: vehicleType?.label as string,
+        vehicle_company: vehicleCompany?.label as string,
+        vehicle_model: vehicleModel?.label as string,
+        vehicle_color: vehicleColor?.label as string,
+        registration_no: registrationNo,
+        engine_no: engineNo,
+        chassis_no: chasisNo,
+        vechile_status: vehicleStatus,
+        vehicle_value: vehicleValue,
+      };
+      copy.push(vehicle);
+      setVehicleInfoList(copy);
+      setVehicleInfo(copy);
+      clearInputs();
     }
   };
 
-  const handleDeleteVehicleItem = (index: number) => {
-    const clone = [...state.vehicleInfo];
-    const filter = clone.filter((_, i) => i !== index);
-    setVehicleInfoList(filter);
-    setVehicleInfo(filter);
+  const handleUpdateVehicleInfo = () => {
+    if (
+      vehicleType ||
+      vehicleCompany ||
+      vehicleModel ||
+      vehicleColor ||
+      registrationNo ||
+      engineNo ||
+      chasisNo ||
+      vehicleStatus ||
+      vehicleStatus
+    ) {
+      const editedVehicle: IVehicleBilty = {
+        vehicle_type: vehicleType?.label as string,
+        vehicle_company: vehicleCompany?.label as string,
+        vehicle_model: vehicleModel?.label as string,
+        vehicle_color: vehicleColor?.label as string,
+        registration_no: registrationNo,
+        engine_no: engineNo,
+        chassis_no: chasisNo,
+        vechile_status: vehicleStatus,
+        vehicle_value: vehicleValue,
+      };
+
+      const copy = [...vehicleInfoList];
+      copy[editIndex] = editedVehicle;
+      setVehicleInfoList(copy);
+      setVehicleInfo(copy);
+      clearInputs();
+      onComplete && onComplete();
+    }
   };
 
-  const disable = vehicleType && vehicleCompany && vehicleModel && vehicleColor && registrationNo && engineNo && chasisNo && vehicleStatus && vehicleStatus;
+  const disable =
+    vehicleType &&
+    vehicleCompany &&
+    vehicleModel &&
+    vehicleColor &&
+    registrationNo &&
+    engineNo &&
+    chasisNo &&
+    vehicleStatus &&
+    vehicleStatus;
 
   const clearInputs = () => {
     setVehicleType(undefined);
@@ -121,22 +178,23 @@ const VehicleInfo: React.FC<Props> = ({isEdit,item}) => {
     setVehicleValue('');
     vehicleValueNoRef.current?.setValue('');
     setVehicleStatus('');
-
-  }
+  };
 
   const initData = () => {
-    if(isEdit && item) {
-      setVehicleInfoList(item.vehicleInfo)
+    if (isEdit && item) {
+      setVehicleInfoList(item.vehicleInfo);
       setVehicleInfo(item.vehicleInfo);
       setTypeOfMoving(item.materialsType);
       setRiskType(item.riskType);
-      setLiabilityOfTax(item.liabilityOfTax)
+      setLiabilityOfTax(item.liabilityOfTax);
     }
-  }
+  };
 
-  useEffect(()=> {
+  useEffect(() => {
     initData();
-  },[isEdit,item])
+  }, [isEdit, item]);
+
+
 
   useEffect(() => {
     dispatch(getVehicleInsuranceCompanyRequest());
@@ -146,6 +204,39 @@ const VehicleInfo: React.FC<Props> = ({isEdit,item}) => {
     dispatch(getVehicleModelsRequest());
   }, []);
 
+  useEffect(()=>{
+    if(isSingleEdit && vehicleInfo) {
+      const vechileTypeList = getVehicleTypeList(vehicleTypes);
+      const vehicleTypeItem:TDropdownItem = vechileTypeList.find(item => item.label === vehicleInfo.vehicle_type) as TDropdownItem;
+      if(vehicleTypeItem) {
+        vehicleTypeDropRef.current?.setDefaultValue(vehicleTypeItem);
+        setVehicleType(vehicleTypeItem);
+      }
+      const vehicleColorDropdownItem: TDropdownItem = getVehicleColorList(vehicleColors).find((e: TDropdownItem) => e.label == vehicleInfo?.vehicle_color) as TDropdownItem;
+      if (vehicleColorDropdownItem) {
+        vehicleColorDropRef.current?.setDefaultValue(vehicleColorDropdownItem);
+        setVehicleColor(vehicleColorDropdownItem);
+      }
+
+      const vehicleCompanyDropdownItem: TDropdownItem = getVehicleCompanyList(vehicleTypeId,vehicleCompanies).find((e: TDropdownItem) => e.label == vehicleInfo?.vehicle_company) as TDropdownItem;
+      if (vehicleCompanyDropdownItem) {
+        vehicleManufactureDropRef.current?.setDefaultValue(vehicleCompanyDropdownItem);
+        setVehicleCompany(vehicleCompanyDropdownItem);
+      }
+
+      registrationNoRef.current?.setValue(vehicleInfo.registration_no);
+      setRegistrationNo(vehicleInfo.registration_no);
+
+      engineNoRef.current?.setValue(vehicleInfo.engine_no);
+      setEngineNo(vehicleInfo.engine_no);
+
+      chassisNoRef.current?.setValue(vehicleInfo.chassis_no);
+      setChasisNo(vehicleInfo.chassis_no);
+
+      vehicleValueNoRef.current?.setValue(vehicleInfo.vehicle_value);
+      setVehicleValue(vehicleInfo.vehicle_value)
+
+  }}, [isSingleEdit, vehicleInfo]);
 
   return (
     <>
@@ -206,7 +297,7 @@ const VehicleInfo: React.FC<Props> = ({isEdit,item}) => {
             selectionColor={COLOR_BLACK}
             ref={registrationNoRef}
             autoCapitalize="characters"
-            />
+          />
         </View>
         <View style={styles.itemContainer}>
           <Label text="Engine No." style={styles.label} />
@@ -217,7 +308,7 @@ const VehicleInfo: React.FC<Props> = ({isEdit,item}) => {
             selectionColor={COLOR_BLACK}
             ref={engineNoRef}
             autoCapitalize="characters"
-            />
+          />
         </View>
         <View style={styles.itemContainer}>
           <Label text="Chassis No." style={styles.label} />
@@ -228,7 +319,7 @@ const VehicleInfo: React.FC<Props> = ({isEdit,item}) => {
             selectionColor={COLOR_BLACK}
             ref={chassisNoRef}
             autoCapitalize="characters"
-            />
+          />
         </View>
         <View style={styles.itemContainer}>
           <Label text="Vehicle Value" style={styles.label} />
@@ -253,47 +344,12 @@ const VehicleInfo: React.FC<Props> = ({isEdit,item}) => {
       </View>
       <Spacer height={12} />
       <Button
-        text="ADD"
-        onPress={handleAddVehicleInfo}
+        text={isSingleEdit ? 'UPDATE' : 'ADD'}
+        onPress={(isEdit || isSingleEdit) ? handleUpdateVehicleInfo : handleAddVehicleInfo }
         disabled={!disable}
         style={styles.previewButtonStyle}
         textStyle={styles.textStyle}
       />
-      {vehicleInfoList.map((vi: IVehicleBilty,index) => {
-        return (
-          <View style={styles.listWrapper}>
-             <View
-                style={[
-                  styles.materialItem,
-                  {justifyContent: 'space-between'},
-                ]}>
-                <View style={{flexDirection: 'row'}}>
-                  <Text style={styles.materialLabelText}>SNO# - </Text>
-                  <Text style={styles.materialValueText}>{index + 1}</Text>
-                </View>
-                <TouchableOpacity
-                  activeOpacity={0.4}
-                  onPress={() => handleDeleteVehicleItem(index)}>
-                  <DeleteIcon width={25} height={25} />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  activeOpacity={0.4}
-                  onPress={() => handleDeleteVehicleItem(index)}>
-                  <EditIcon width={25} height={25} />
-                </TouchableOpacity>
-              </View>
-              <Text style={styles.label2}>V. Type: <Text style={styles.text2}>{vi.vehicle_type}</Text></Text>
-              <Text style={styles.label2}>Company: <Text style={styles.text2}>{vi.vehicle_company}</Text></Text>
-              <Text style={styles.label2}>V. Model: <Text style={styles.text2}>{vi.vehicle_model}</Text></Text>
-              <Text style={styles.label2}>V. Color: <Text style={styles.text2}>{vi.vehicle_color}</Text></Text>
-              <Text style={styles.label2}>Chasis No: <Text style={styles.text2}>{vi.chassis_no}</Text></Text>
-              <Text style={styles.label2}>Registration No: <Text style={styles.text2}>{vi.registration_no}</Text></Text>
-              <Text style={styles.label2}>Engine No: <Text style={styles.text2}>{vi.engine_no}</Text></Text>
-              <Text style={styles.label2}>V. Status: <Text style={styles.text2}>{vi.vechile_status}</Text></Text>
-              <Text style={styles.label2}>V. Value: <Text style={styles.text2}>{vi.vehicle_value}/-</Text></Text>
-          </View>
-        );
-      })}
     </>
   );
 };
@@ -342,43 +398,16 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR_BLUE,
     borderRadius: 5,
   },
-  listWrapper: {
-    width: width * 0.9,
-    alignSelf: 'center',
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: COLOR_GRAY2,
-    marginVertical: 10,
-    paddingHorizontal: 8,
-    paddingVertical: 8,
-  },
-  listItemContainer: {
-    width: width * 0.8,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  label2: {
-    color: COLOR_BLACK,
-    fontSize: 16,
-    fontFamily: 'WorkSans-Medium'
-  },
-  text2: {
-    color: COLOR_BLACK,
-    fontSize: 16,
-    fontFamily: 'WorkSans-Regular'
+  
+
+  modalStyle: {
+    width: width,
+    height: 600,
   },
 
-  materialLabelText: {
-    color: COLOR_BLACK,
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  materialValueText: {
-    color: COLOR_BLACK,
-    fontSize: 14,
-    fontWeight: '400',
-  },
-  materialItem: {
-    flexDirection: 'row',
+  headerStyle: {
+    width: width,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
   },
 });

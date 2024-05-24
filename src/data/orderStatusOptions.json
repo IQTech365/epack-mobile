@@ -1,11 +1,11 @@
 [
   {
     "label":"Out for Shifting",
-    "color": "#FFEA00"
+    "color": "#FFC300"
   },
   {
     "label":"Material received at warehouse",
-    "color":"#A52A2A"
+    "color":"#C4A484"
   },
   {
     "label":"In Transit",
@@ -13,7 +13,7 @@
   },
   {
     "label":"Reached at destination city",
-    "color":"#FFB6C1"
+    "color":"#FF00FF"
   },
   {
     "label":"Completed",
