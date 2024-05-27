@@ -9,6 +9,8 @@ interface IAddNewProps {
   text?: string;
 }
 
+
+
 const AddNew: React.FC<IAddNewProps> = ({count, countLabel, onPress, text}) => {
   return (
     <View style={styles.container}>

@@ -48,10 +48,10 @@ interface Props {
   item?: IBilty;
   vehicleInfo?: IVehicleBilty;
   isSingleEdit?: boolean;
-  onComplete?: () => void;
+  setOpenEditModel: (value: boolean) => void;
 }
 
-const VehicleInfo: React.FC<Props> = ({isEdit, item, vehicleInfo,onComplete, isSingleEdit = false}) => {
+const VehicleInfo: React.FC<Props> = ({isEdit, item, vehicleInfo,setOpenEditModel, isSingleEdit = false}) => {
 
   
   const dispatch = useAppDispatch();
@@ -76,6 +76,8 @@ const VehicleInfo: React.FC<Props> = ({isEdit, item, vehicleInfo,onComplete, isS
   const [vehicleInfoList, setVehicleInfoList] = useState<IVehicleBilty[]>([]);
   const [editIndex, setEditIndex] = useState<number>(-1);
 
+  
+
   const vehicleTypeDropRef = useRef<IDropdownHandler>(null);
   const vehicleManufactureDropRef = useRef<IDropdownHandler>(null);
   const vehicleModelDropRef = useRef<IDropdownHandler>(null);
@@ -88,37 +90,37 @@ const VehicleInfo: React.FC<Props> = ({isEdit, item, vehicleInfo,onComplete, isS
   const {vehicleTypes, vehicleCompanies, vehicleColors, vehicleModels} =
     useAppSelector(state => state.Common);
 
-  const handleAddVehicleInfo = () => {
-    const copy = [...vehicleInfoList];
-
-    if (
-      vehicleType &&
-      vehicleCompany &&
-      vehicleModel &&
-      vehicleColor &&
-      registrationNo &&
-      engineNo &&
-      chasisNo &&
-      vehicleStatus &&
-      vehicleStatus
-    ) {
-      const vehicle: IVehicleBilty = {
-        vehicle_type: vehicleType?.label as string,
-        vehicle_company: vehicleCompany?.label as string,
-        vehicle_model: vehicleModel?.label as string,
-        vehicle_color: vehicleColor?.label as string,
-        registration_no: registrationNo,
-        engine_no: engineNo,
-        chassis_no: chasisNo,
-        vechile_status: vehicleStatus,
-        vehicle_value: vehicleValue,
-      };
-      copy.push(vehicle);
-      setVehicleInfoList(copy);
-      setVehicleInfo(copy);
-      clearInputs();
-    }
-  };
+    const handleAddVehicleInfo = () => {
+      if (
+        vehicleType &&
+        vehicleCompany &&
+        vehicleModel &&
+        vehicleColor &&
+        registrationNo &&
+        engineNo &&
+        chasisNo &&
+        vehicleStatus &&
+        vehicleValue
+      ) {
+        const vehicle: IVehicleBilty = {
+          vehicle_type: vehicleType?.label as string,
+          vehicle_company: vehicleCompany?.label as string,
+          vehicle_model: vehicleModel?.label as string,
+          vehicle_color: vehicleColor?.label as string,
+          registration_no: registrationNo,
+          engine_no: engineNo,
+          chassis_no: chasisNo,
+          vechile_status: vehicleStatus,
+          vehicle_value: vehicleValue,
+        };
+        const updatedVehicleInfoList = [...vehicleInfoList, vehicle];
+        console.log(updatedVehicleInfoList,"updatedVehicleInfoList");
+        
+        setVehicleInfoList(updatedVehicleInfoList);
+        setVehicleInfo(updatedVehicleInfoList);
+        clearInputs();
+      }
+    };
 
   const handleUpdateVehicleInfo = () => {
     if (
@@ -130,9 +132,9 @@ const VehicleInfo: React.FC<Props> = ({isEdit, item, vehicleInfo,onComplete, isS
       engineNo ||
       chasisNo ||
       vehicleStatus ||
-      vehicleStatus
+      vehicleValue
     ) {
-      const editedVehicle: IVehicleBilty = {
+      const updatedVehicle: IVehicleBilty = {
         vehicle_type: vehicleType?.label as string,
         vehicle_company: vehicleCompany?.label as string,
         vehicle_model: vehicleModel?.label as string,
@@ -144,24 +146,31 @@ const VehicleInfo: React.FC<Props> = ({isEdit, item, vehicleInfo,onComplete, isS
         vehicle_value: vehicleValue,
       };
 
-      const copy = [...vehicleInfoList];
-      copy[editIndex] = editedVehicle;
-      setVehicleInfoList(copy);
-      setVehicleInfo(copy);
+      console.log(updatedVehicle,"updatedVehicle123");
+      
+
+      const updatedVehicleInfoList = vehicleInfoList.map((v, index) =>
+        index === editIndex ? updatedVehicle : v
+      );
+
+      console.log(vehicleInfoList,"updatedVehicleInfoList");
+      
+      setVehicleInfoList(updatedVehicleInfoList);
+      setVehicleInfo(updatedVehicleInfoList);
       clearInputs();
-      onComplete && onComplete();
+      setOpenEditModel(false);
     }
   };
 
   const disable =
-    vehicleType &&
-    vehicleCompany &&
-    vehicleModel &&
-    vehicleColor &&
-    registrationNo &&
-    engineNo &&
-    chasisNo &&
-    vehicleStatus &&
+    vehicleType ||
+    vehicleCompany ||
+    vehicleModel ||
+    vehicleColor ||
+    registrationNo ||
+    engineNo ||
+    chasisNo ||
+    vehicleStatus ||
     vehicleStatus;
 
   const clearInputs = () => {
@@ -223,13 +232,10 @@ const VehicleInfo: React.FC<Props> = ({isEdit, item, vehicleInfo,onComplete, isS
         vehicleManufactureDropRef.current?.setDefaultValue(vehicleCompanyDropdownItem);
         setVehicleCompany(vehicleCompanyDropdownItem);
       }
-
       registrationNoRef.current?.setValue(vehicleInfo.registration_no);
       setRegistrationNo(vehicleInfo.registration_no);
-
       engineNoRef.current?.setValue(vehicleInfo.engine_no);
       setEngineNo(vehicleInfo.engine_no);
-
       chassisNoRef.current?.setValue(vehicleInfo.chassis_no);
       setChasisNo(vehicleInfo.chassis_no);
 
@@ -345,7 +351,7 @@ const VehicleInfo: React.FC<Props> = ({isEdit, item, vehicleInfo,onComplete, isS
       <Spacer height={12} />
       <Button
         text={isSingleEdit ? 'UPDATE' : 'ADD'}
-        onPress={(isEdit || isSingleEdit) ? handleUpdateVehicleInfo : handleAddVehicleInfo }
+        onPress={isSingleEdit ? handleUpdateVehicleInfo : handleAddVehicleInfo }
         disabled={!disable}
         style={styles.previewButtonStyle}
         textStyle={styles.textStyle}

@@ -15,6 +15,8 @@ import EnquiryListItem, {
 } from './enquiryList/components/EnquiryListItem';
 import styles from './style';
 import { getCurrentCompanyId } from '../../utils/storage';
+import SendIcon from '../../images/icons/send_icon.svg'
+
 
 interface IEnquiryPageViewProps {
   navigation: NavigationProp<any, any>;
@@ -120,6 +122,7 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
         countLabel="Total Enquiries"
         count={transformedData.length.toString()}
         onPress={handleAddNew}
+        text={'Enquiry'}
       />
       <Spacer height={12} />
       {getEnquiriesRequesting ? (
@@ -148,7 +151,36 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
               />
             </View>
           )}
-          ListEmptyComponent={() => <Text style={styles.text}>No Enquiries available!</Text>}
+          ListEmptyComponent={() => 
+            <View>
+            <Text style={styles.title}>You can create the following documents:</Text>
+            <View style={styles.itemContainer}>
+              <SendIcon width={20} height={24}  />
+              <Text style={styles.item}>Customer Details</Text>
+            </View>
+            <View style={styles.itemContainer}>
+              <SendIcon width={20} height={24}  />
+              <Text style={styles.item}>Quotation Create/Share</Text>
+            </View>
+            <View style={styles.itemContainer}>
+              <SendIcon width={20} height={24}  />
+              <Text style={styles.item}>Set Followup Date and Time</Text>
+            </View>
+            <View style={styles.itemContainer}>
+              <SendIcon width={20} height={24} />
+              <Text style={styles.item}>Set Survey Date and Time</Text>
+            </View>
+            <View style={styles.itemContainer}>
+              <SendIcon width={20} height={24} />
+              <Text style={styles.item}>Survey List Create/Share</Text>
+            </View>
+            <View style={styles.itemContainer}>
+              <SendIcon width={20} height={24} />
+              <Text style={styles.item}>Create Packing Materials List</Text>
+            </View>
+          </View>
+           
+          }
         />
       )}
     </View>

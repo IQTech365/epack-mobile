@@ -63,6 +63,7 @@ const MaterialDetails: React.FC<IProps> = ({item, isEdit}) => {
     setTypeOfMoving,
     setRiskType,
     setLiabilityOfTax,
+    setVehicleInfo
   } = useBiltyFormContextHook();
   const [materialName, setMaterialName] = useState<string>('');
   const [noOfArticles, setNoOfArticles] = useState<string>('');
@@ -75,9 +76,12 @@ const MaterialDetails: React.FC<IProps> = ({item, isEdit}) => {
   const [valueOfGoods, setValueOfGoods] = useState<string>('');
   const [openEditModel, setOpenEditModel] = useState<boolean>(false);
   const [singleVehicleInfo, setSingleVehicleInfo] = useState<IVehicleBilty>();
+  // const [vehicleInfo, setVehicleInfo]
 
   const {unitType} = useAppSelector(state => state.Setting);
   const {packingTypes} = useAppSelector(state => state.Common);
+
+  
 
   const _getUnitTypes = () => {
     let unitTypes: TDropdownItem[] = [];
@@ -110,6 +114,13 @@ const MaterialDetails: React.FC<IProps> = ({item, isEdit}) => {
     const clone = [...state.materials];
     const filter = clone.filter((_, i) => i !== index);
     setMaterials(filter);
+  };
+
+
+  const handleDeleteVehicleInfo = (index: number) => {
+    const clone = [...state.vehicleInfo];
+    const filter = clone.filter((_, i) => i !== index);
+    setVehicleInfo(filter);
   };
 
   const handleEditVehicleItem = (vi: IVehicleBilty, index: number) => {
@@ -452,7 +463,7 @@ const MaterialDetails: React.FC<IProps> = ({item, isEdit}) => {
                         </TouchableOpacity>
                       )}
 
-                      <TouchableOpacity activeOpacity={0.4} onPress={() => {}}>
+                      <TouchableOpacity activeOpacity={0.4} onPress={() => handleDeleteVehicleInfo(index)}>
                         <DeleteIcon width={25} height={25} />
                       </TouchableOpacity>
                     </View>
@@ -557,7 +568,7 @@ const MaterialDetails: React.FC<IProps> = ({item, isEdit}) => {
               item={item}
               vehicleInfo={singleVehicleInfo as IVehicleBilty}
               isSingleEdit={true}
-              onComplete={handleOnComplete}
+              setOpenEditModel={setOpenEditModel}
             />
           </View>
         </ModalHOC>

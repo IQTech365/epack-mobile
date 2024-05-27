@@ -44,6 +44,8 @@ import Spinner from '../../common/Spinner';
 import useUtilityHook from '../../hooks/useUtilityHook';
 import AlertModal from '../../common/AlertModal';
 import LimitReachImage from '../../images/icons/limit_reach.svg';
+// import SendIcon from '../images/icons/send_icon.svg';
+import SendIcon from '../../images/icons/send_icon.svg'
 
 interface IQuotationPageViewProps {
   navigation: NavigationProp<any, any>;
@@ -348,6 +350,10 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
     navigation.navigate('Subscription');
   };
 
+  const handleSerialNoSetting = () => {
+    navigation.navigate('Setting');
+  };
+
   return (
     <View style={styles.container}>
       <Header
@@ -360,6 +366,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
         countLabel="Total Quotations"
         count={getTotalQuotations().toString()}
         onPress={handleAddNew}
+        text={'Quotation'}
       />
       <Spacer height={12} />
       <FlatList
@@ -388,7 +395,20 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
           />
         )}
         ListEmptyComponent={() => (
-          <Text style={styles.text}>No Quotations available!</Text>
+          <View>
+            <Text style={styles.title}>आप अपनी Favorite Template चुनकर यहां से Quotation बना सकते हैं:</Text>
+            <TouchableOpacity onPress={handleSerialNoSetting}>
+            <View style={styles.itemContainer}>
+              <SendIcon width={20} height={24}  />
+              <Text style={styles.item}>Set Serial No.</Text>
+            </View>
+            <View style={styles.itemContainer}>
+              <SendIcon width={20} height={24}  />
+              <Text style={styles.item}>Set Quotation Design</Text>
+            </View>
+          </TouchableOpacity>
+          </View>
+
         )}
       />
       <FormModal ref={bottomSheetRef} onClose={dismissModal}>

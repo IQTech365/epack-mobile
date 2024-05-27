@@ -15,8 +15,10 @@ import OrderListItem, {
 } from './orderDetails/components/OrderListItem';
 import styles from './style';
 import {ISingleEnquiryData} from '../../interface/enquiry/ISingleEnquiryResponse';
-import { getCurrentCompanyId } from '../../utils/storage';
-import { BillingDetails } from '../../interface/order/IAddOrderRequest';
+import {getCurrentCompanyId} from '../../utils/storage';
+import {BillingDetails} from '../../interface/order/IAddOrderRequest';
+// import SendIcon from '../images/icons/send_icon.svg';
+import SendIcon from '../../images/icons/send_icon.svg'
 
 interface IOrderPageViewProps {
   navigation: NavigationProp<any, any>;
@@ -34,7 +36,9 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
       clientName = item.partyName;
     } else if (item.billingBy == 'by Company') {
       //@ts-ignore
-      clientName = item.billingDetails?.companyName || item.billingDetails?.authorityPersonName;
+      clientName =
+        item.billingDetails?.companyName ||
+        item.billingDetails?.authorityPersonName;
     }
     return clientName;
   };
@@ -44,11 +48,11 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
     if (item.billingBy == 'by Individual') {
       phoneNumber = item.mobile;
     } else if (item.billingBy == 'by Company') {
-      const billingInfo:BillingDetails = item.billingDetails as BillingDetails;
-      if(billingInfo && Object.keys(billingInfo).length > 0) {
-        if(billingInfo?.authorityPersonMobile) {
+      const billingInfo: BillingDetails = item.billingDetails as BillingDetails;
+      if (billingInfo && Object.keys(billingInfo).length > 0) {
+        if (billingInfo?.authorityPersonMobile) {
           phoneNumber = billingInfo?.authorityPersonMobile;
-        } else if(billingInfo?.employeeMobile) {
+        } else if (billingInfo?.employeeMobile) {
           phoneNumber = billingInfo?.employeeMobile;
         }
       }
@@ -59,29 +63,29 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
   const getAddress = (type: string, item: IGetOrdersData) => {
     let address = '';
     if (type == 'pick') {
-      if(item?.pickupAddress?.address) {
+      if (item?.pickupAddress?.address) {
         address += `${item.pickupAddress.address}, `;
       }
-      if(item?.pickupAddress?.city) {
+      if (item?.pickupAddress?.city) {
         address += `${item.pickupAddress.city}, `;
       }
-      if(item?.pickupAddress?.state) {
+      if (item?.pickupAddress?.state) {
         address += `${item.pickupAddress.state}, `;
       }
-      if(item?.pickupAddress?.pincode) {
+      if (item?.pickupAddress?.pincode) {
         address += `${item.pickupAddress.pincode}`;
       }
     } else if (type == 'drop') {
-      if(item?.dropAddress?.address) {
+      if (item?.dropAddress?.address) {
         address += `${item.dropAddress.address}, `;
       }
-      if(item?.dropAddress?.city) {
+      if (item?.dropAddress?.city) {
         address += `${item.dropAddress.city}, `;
       }
-      if(item?.dropAddress?.state) {
+      if (item?.dropAddress?.state) {
         address += `${item.dropAddress.state}, `;
       }
-      if(item?.dropAddress?.pincode) {
+      if (item?.dropAddress?.pincode) {
         address += `${item.dropAddress.pincode}`;
       }
     }
@@ -107,16 +111,15 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
         return item;
       });
     }
-    return dataSet
-      .filter(
-        e =>
-          e.status.toLowerCase() == 'approved' ||
-          e.status.toLowerCase() == 'out for shifting' ||
-          e.status.toLowerCase() == 'material received at warehouse' ||
-          e.status.toLowerCase() == 'in transit' ||
-          e.status.toLowerCase() == 'reached at destination city' ||
-          e.status.toLowerCase() == 'cancelled order',
-      );
+    return dataSet.filter(
+      e =>
+        e.status.toLowerCase() == 'approved' ||
+        e.status.toLowerCase() == 'out for shifting' ||
+        e.status.toLowerCase() == 'material received at warehouse' ||
+        e.status.toLowerCase() == 'in transit' ||
+        e.status.toLowerCase() == 'reached at destination city' ||
+        e.status.toLowerCase() == 'cancelled order',
+    );
   };
 
   const handleAddNew = () => {
@@ -139,13 +142,15 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
   };
 
   const _fetchOrders = () => {
-    getCurrentCompanyId().then(id => {
-      const payload: Partial<IGetOrdersRequest> = {
-        companyId: id as string,
-      };
-      dispatch(getOrdersRequest(payload));
-    }).catch(err => console.log(err));
-  }
+    getCurrentCompanyId()
+      .then(id => {
+        const payload: Partial<IGetOrdersRequest> = {
+          companyId: id as string,
+        };
+        dispatch(getOrdersRequest(payload));
+      })
+      .catch(err => console.log(err));
+  };
 
   const handleOnRefresh = useCallback(() => {
     _fetchOrders();
@@ -163,6 +168,7 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
         countLabel="Total Orders"
         count={`${getTransformedData().length}`}
         onPress={handleAddNew}
+        text={'ORDER'}
       />
       <Spacer height={12} />
       <FlatList
@@ -183,9 +189,49 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
             navigation={navigation}
           />
         )}
-        ListEmptyComponent={() => <Text style={styles.text}>No Orders available!</Text>}
+        
+        ListEmptyComponent={() => (
+        //  <View>
+        //   <Text style={styles.title}>You can reate follwoing documents</Text>
+        //   <Text style={styles.item}>Money Receipt</Text>
+        //   <Text style={styles.item}>Car Condition</Text>
+        //   <Text style={styles.item}>Bilty</Text>
+        //   <Text style={styles.item}>Invoice</Text>
+        //  </View>
+        <View>
+            <Text style={styles.title}>You can create the following documents:</Text>
+            <View style={styles.itemContainer}>
+              <SendIcon width={20} height={24}  />
+              <Text style={styles.item}>Customer Details</Text>
+            </View>
+            <View style={styles.itemContainer}>
+              <SendIcon width={20} height={24}  />
+              <Text style={styles.item}>Invoice/Bill</Text>
+            </View>
+            <View style={styles.itemContainer}>
+              <SendIcon width={20} height={24}  />
+              <Text style={styles.item}>Bilty</Text>
+            </View>
+            <View style={styles.itemContainer}>
+              <SendIcon width={20} height={24} />
+              <Text style={styles.item}>Money Receipt</Text>
+            </View>
+            <View style={styles.itemContainer}>
+              <SendIcon width={20} height={24} />
+              <Text style={styles.item}>Car Condition</Text>
+            </View>
+            <View style={styles.itemContainer}>
+              <SendIcon width={20} height={24} />
+              <Text style={styles.item}>Packing List</Text>
+            </View>
+            <View style={styles.itemContainer}>
+              <SendIcon width={20} height={24} />
+              <Text style={styles.item}>Packing Material</Text>
+            </View>
+          </View>
+        )}
       />
-    </View>  
+    </View>
   );
 };
 
