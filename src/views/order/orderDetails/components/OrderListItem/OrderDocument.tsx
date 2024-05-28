@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     label: {
         color: COLOR_BLACK,
         fontFamily: 'WorkSans-SemiBold',
-        fontSize: 14,
+        fontSize: 12,
     }
 
 });

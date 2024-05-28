@@ -49,7 +49,7 @@ const ActionHeaderView: FC<IProps> = ({onShow, onCreate, count = 0}) => {
           <ListIcon2 width={32} height={32} />
         ) : (
           <ListIcon width={32} height={32} />
-        )}
+        )} 
       </TouchableOpacity>
       <Spacer width={20} />
       <TouchableOpacity onPress={_handleOnCreate} activeOpacity={0.4}>
