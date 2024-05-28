@@ -73,12 +73,20 @@ const styles = StyleSheet.create({
         color: COLOR_GRAY,
         fontSize: 20,
         fontFamily: 'WorkSans-SemiBold',
+        marginHorizontal: 4
+    },
+    itemText: {
+        textAlign: 'left',
+        color: '#22bb33',
+        fontSize: 20,
+        fontFamily: 'WorkSans-SemiBold',
+        // marginHorizontal: 4,
     },
 
-    // containerss:{
-
-    //     alignItems:'flex-start'
-    // }
+    mainContainer:{
+        marginLeft: 18,
+        // border:
+    }
 });
 
 export default styles;

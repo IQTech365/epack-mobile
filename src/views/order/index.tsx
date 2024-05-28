@@ -1,6 +1,6 @@
 import {NavigationProp} from '@react-navigation/native';
 import React, {useCallback, useEffect} from 'react';
-import {View, Text, FlatList, RefreshControl} from 'react-native';
+import {View, Text, FlatList, RefreshControl,TouchableOpacity} from 'react-native';
 import AddNew from '../../common/AddNew';
 import Header from '../../common/Header';
 import Spacer from '../../common/Spacer';
@@ -37,8 +37,8 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
     } else if (item.billingBy == 'by Company') {
       //@ts-ignore
       clientName =
-        item.billingDetails?.companyName ||
-        item.billingDetails?.authorityPersonName;
+        item?.billingDetails?.companyName ||
+        item?.billingDetails?.authorityPersonName;
     }
     return clientName;
   };
@@ -156,6 +156,10 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
     _fetchOrders();
   }, []);
 
+  const handleOrderDetailNavigation = () => {
+    navigation.navigate('AddOrder');
+  };
+
   useEffect(() => {
     _fetchOrders();
   }, []);
@@ -198,36 +202,53 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
         //   <Text style={styles.item}>Bilty</Text>
         //   <Text style={styles.item}>Invoice</Text>
         //  </View>
-        <View>
-            <Text style={styles.title}>You can create the following documents:</Text>
+        <View style={styles.mainContainer}>
+            <Text style={styles.title}>Do the Following Task here:</Text>
+            <Spacer height={10}/>
+            <TouchableOpacity onPress={handleOrderDetailNavigation}>
             <View style={styles.itemContainer}>
               <SendIcon width={20} height={24}  />
               <Text style={styles.item}>Customer Details</Text>
             </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={handleOrderDetailNavigation}>
             <View style={styles.itemContainer}>
               <SendIcon width={20} height={24}  />
               <Text style={styles.item}>Invoice/Bill</Text>
             </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleOrderDetailNavigation}>
             <View style={styles.itemContainer}>
               <SendIcon width={20} height={24}  />
               <Text style={styles.item}>Bilty</Text>
             </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleOrderDetailNavigation}>
             <View style={styles.itemContainer}>
               <SendIcon width={20} height={24} />
               <Text style={styles.item}>Money Receipt</Text>
             </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleOrderDetailNavigation}>
             <View style={styles.itemContainer}>
               <SendIcon width={20} height={24} />
               <Text style={styles.item}>Car Condition</Text>
             </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleOrderDetailNavigation}>
             <View style={styles.itemContainer}>
               <SendIcon width={20} height={24} />
               <Text style={styles.item}>Packing List</Text>
             </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleOrderDetailNavigation}>
             <View style={styles.itemContainer}>
               <SendIcon width={20} height={24} />
               <Text style={styles.item}>Packing Material</Text>
             </View>
+            </TouchableOpacity>
+
           </View>
         )}
       />

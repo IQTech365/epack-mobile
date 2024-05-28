@@ -18,8 +18,6 @@ import {
   COLOR_BLACK,
   COLOR_BLUE,
   COLOR_GRAY,
-  COLOR_GRAY2,
-  COLOR_GRAY3,
   COLOR_WHITE,
 } from '../../../../../../../utils/colors';
 import {TDropdownItem} from '../../../../../../../type/TDropdownItem';
@@ -40,20 +38,21 @@ import {
 import {IVehicleBilty} from '../../biltyReducer2';
 import {useBiltyFormContextHook} from '../../../../../../../provider/BiltyFormContextProvider';
 import {IBilty} from '../../../../../../../interface/order/IGetBiltyListResponse';
-import DeleteIcon from '../../../../../../../images/icons/delete.svg';
-import ModalHOC from '../../../../../../../common/ModalHOC';
+import {ToastType, showToast} from '../../../../../../../utils/utility';
 
 interface Props {
   isEdit?: boolean;
   item?: IBilty;
   vehicleInfo?: IVehicleBilty;
   isSingleEdit?: boolean;
-  setOpenEditModel: (value: boolean) => void;
 }
 
-const VehicleInfo: React.FC<Props> = ({isEdit, item, vehicleInfo,setOpenEditModel, isSingleEdit = false}) => {
-
-  
+const VehicleInfo: React.FC<Props> = ({
+  isEdit,
+  item,
+  vehicleInfo,
+  isSingleEdit = false,
+}) => {
   const dispatch = useAppDispatch();
   const {
     setVehicleInfo,
@@ -62,7 +61,6 @@ const VehicleInfo: React.FC<Props> = ({isEdit, item, vehicleInfo,setOpenEditMode
     setLiabilityOfTax,
     state,
   } = useBiltyFormContextHook();
-  const [vehicleCompanyId, setVehicleCompanyId] = useState<string>('');
   const [vehicleTypeId, setVehicleTypeId] = useState<string>('');
   const [vehicleType, setVehicleType] = useState<TDropdownItem>();
   const [vehicleCompany, setVehicleCompany] = useState<TDropdownItem>();
@@ -74,9 +72,6 @@ const VehicleInfo: React.FC<Props> = ({isEdit, item, vehicleInfo,setOpenEditMode
   const [vehicleStatus, setVehicleStatus] = useState<string>('');
   const [vehicleValue, setVehicleValue] = useState<string>('');
   const [vehicleInfoList, setVehicleInfoList] = useState<IVehicleBilty[]>([]);
-  const [editIndex, setEditIndex] = useState<number>(-1);
-
-  
 
   const vehicleTypeDropRef = useRef<IDropdownHandler>(null);
   const vehicleManufactureDropRef = useRef<IDropdownHandler>(null);
@@ -90,51 +85,21 @@ const VehicleInfo: React.FC<Props> = ({isEdit, item, vehicleInfo,setOpenEditMode
   const {vehicleTypes, vehicleCompanies, vehicleColors, vehicleModels} =
     useAppSelector(state => state.Common);
 
-    const handleAddVehicleInfo = () => {
-      if (
-        vehicleType &&
-        vehicleCompany &&
-        vehicleModel &&
-        vehicleColor &&
-        registrationNo &&
-        engineNo &&
-        chasisNo &&
-        vehicleStatus &&
-        vehicleValue
-      ) {
-        const vehicle: IVehicleBilty = {
-          vehicle_type: vehicleType?.label as string,
-          vehicle_company: vehicleCompany?.label as string,
-          vehicle_model: vehicleModel?.label as string,
-          vehicle_color: vehicleColor?.label as string,
-          registration_no: registrationNo,
-          engine_no: engineNo,
-          chassis_no: chasisNo,
-          vechile_status: vehicleStatus,
-          vehicle_value: vehicleValue,
-        };
-        const updatedVehicleInfoList = [...vehicleInfoList, vehicle];
-        console.log(updatedVehicleInfoList,"updatedVehicleInfoList");
-        
-        setVehicleInfoList(updatedVehicleInfoList);
-        setVehicleInfo(updatedVehicleInfoList);
-        clearInputs();
-      }
-    };
+  const showMissingFieldToast = () => {
+    if (!vehicleType) {
+      showToast('Vehicle Type is required', ToastType.ERROR);
+    }
+    if (!vehicleCompany && !vehicleModel) {
+      showToast(
+        'Please fill Vehicle Company/Model is required',
+        ToastType.ERROR,
+      );
+    }
+  };
 
-  const handleUpdateVehicleInfo = () => {
-    if (
-      vehicleType ||
-      vehicleCompany ||
-      vehicleModel ||
-      vehicleColor ||
-      registrationNo ||
-      engineNo ||
-      chasisNo ||
-      vehicleStatus ||
-      vehicleValue
-    ) {
-      const updatedVehicle: IVehicleBilty = {
+  const handleAddVehicleInfo = () => {
+    if (vehicleType && vehicleCompany && vehicleModel) {
+      const vehicle: IVehicleBilty = {
         vehicle_type: vehicleType?.label as string,
         vehicle_company: vehicleCompany?.label as string,
         vehicle_model: vehicleModel?.label as string,
@@ -145,21 +110,12 @@ const VehicleInfo: React.FC<Props> = ({isEdit, item, vehicleInfo,setOpenEditMode
         vechile_status: vehicleStatus,
         vehicle_value: vehicleValue,
       };
+      const updatedVehicleInfoList = [...state.vehicleInfo, vehicle];
 
-      console.log(updatedVehicle,"updatedVehicle123");
-      
-
-      const updatedVehicleInfoList = vehicleInfoList.map((v, index) =>
-        index === editIndex ? updatedVehicle : v
-      );
-
-      console.log(vehicleInfoList,"updatedVehicleInfoList");
-      
-      setVehicleInfoList(updatedVehicleInfoList);
+      // setVehicleInfoList(updatedVehicleInfoList);
       setVehicleInfo(updatedVehicleInfoList);
       clearInputs();
-      setOpenEditModel(false);
-    }
+    } else showMissingFieldToast();
   };
 
   const disable =
@@ -203,8 +159,6 @@ const VehicleInfo: React.FC<Props> = ({isEdit, item, vehicleInfo,setOpenEditMode
     initData();
   }, [isEdit, item]);
 
-
-
   useEffect(() => {
     dispatch(getVehicleInsuranceCompanyRequest());
     dispatch(getVehicleTypesRequest());
@@ -213,23 +167,36 @@ const VehicleInfo: React.FC<Props> = ({isEdit, item, vehicleInfo,setOpenEditMode
     dispatch(getVehicleModelsRequest());
   }, []);
 
-  useEffect(()=>{
-    if(isSingleEdit && vehicleInfo) {
+  useEffect(() => {
+    if (isSingleEdit && vehicleInfo) {
       const vechileTypeList = getVehicleTypeList(vehicleTypes);
-      const vehicleTypeItem:TDropdownItem = vechileTypeList.find(item => item.label === vehicleInfo.vehicle_type) as TDropdownItem;
-      if(vehicleTypeItem) {
+      const vehicleTypeItem: TDropdownItem = vechileTypeList.find(
+        item => item.label === vehicleInfo.vehicle_type,
+      ) as TDropdownItem;
+      if (vehicleTypeItem) {
         vehicleTypeDropRef.current?.setDefaultValue(vehicleTypeItem);
         setVehicleType(vehicleTypeItem);
       }
-      const vehicleColorDropdownItem: TDropdownItem = getVehicleColorList(vehicleColors).find((e: TDropdownItem) => e.label == vehicleInfo?.vehicle_color) as TDropdownItem;
+      const vehicleColorDropdownItem: TDropdownItem = getVehicleColorList(
+        vehicleColors,
+      ).find(
+        (e: TDropdownItem) => e.label == vehicleInfo?.vehicle_color,
+      ) as TDropdownItem;
       if (vehicleColorDropdownItem) {
         vehicleColorDropRef.current?.setDefaultValue(vehicleColorDropdownItem);
         setVehicleColor(vehicleColorDropdownItem);
       }
 
-      const vehicleCompanyDropdownItem: TDropdownItem = getVehicleCompanyList(vehicleTypeId,vehicleCompanies).find((e: TDropdownItem) => e.label == vehicleInfo?.vehicle_company) as TDropdownItem;
+      const vehicleCompanyDropdownItem: TDropdownItem = getVehicleCompanyList(
+        vehicleTypeId,
+        vehicleCompanies,
+      ).find(
+        (e: TDropdownItem) => e.label == vehicleInfo?.vehicle_company,
+      ) as TDropdownItem;
       if (vehicleCompanyDropdownItem) {
-        vehicleManufactureDropRef.current?.setDefaultValue(vehicleCompanyDropdownItem);
+        vehicleManufactureDropRef.current?.setDefaultValue(
+          vehicleCompanyDropdownItem,
+        );
         setVehicleCompany(vehicleCompanyDropdownItem);
       }
       registrationNoRef.current?.setValue(vehicleInfo.registration_no);
@@ -240,9 +207,9 @@ const VehicleInfo: React.FC<Props> = ({isEdit, item, vehicleInfo,setOpenEditMode
       setChasisNo(vehicleInfo.chassis_no);
 
       vehicleValueNoRef.current?.setValue(vehicleInfo.vehicle_value);
-      setVehicleValue(vehicleInfo.vehicle_value)
-
-  }}, [isSingleEdit, vehicleInfo]);
+      setVehicleValue(vehicleInfo.vehicle_value);
+    }
+  }, [isSingleEdit, vehicleInfo]);
 
   return (
     <>
@@ -302,6 +269,7 @@ const VehicleInfo: React.FC<Props> = ({isEdit, item, vehicleInfo,setOpenEditMode
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
             ref={registrationNoRef}
+            placeholder="HR 55 hY 2259"
             autoCapitalize="characters"
           />
         </View>
@@ -350,8 +318,8 @@ const VehicleInfo: React.FC<Props> = ({isEdit, item, vehicleInfo,setOpenEditMode
       </View>
       <Spacer height={12} />
       <Button
-        text={isSingleEdit ? 'UPDATE' : 'ADD'}
-        onPress={isSingleEdit ? handleUpdateVehicleInfo : handleAddVehicleInfo }
+        text={'ADD'}
+        onPress={handleAddVehicleInfo}
         disabled={!disable}
         style={styles.previewButtonStyle}
         textStyle={styles.textStyle}
@@ -404,7 +372,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR_BLUE,
     borderRadius: 5,
   },
-  
 
   modalStyle: {
     width: width,

@@ -120,6 +120,8 @@ const MaterialDetails: React.FC<IProps> = ({item, isEdit}) => {
   const handleDeleteVehicleInfo = (index: number) => {
     const clone = [...state.vehicleInfo];
     const filter = clone.filter((_, i) => i !== index);
+    console.log(filter,"filter");
+    
     setVehicleInfo(filter);
   };
 
@@ -455,13 +457,13 @@ const MaterialDetails: React.FC<IProps> = ({item, isEdit}) => {
                       <Text style={styles.materialValueText}>{index + 1}</Text>
                     </View>
                     <View style={{flexDirection: 'row', gap: 24}}>
-                      {isEdit && (
+                      {/* {isEdit && (
                         <TouchableOpacity
                           activeOpacity={0.4}
                           onPress={() => handleEditVehicleItem(vi, index)}>
                           <EditIcon width={25} height={25} />
                         </TouchableOpacity>
-                      )}
+                      )} */}
 
                       <TouchableOpacity activeOpacity={0.4} onPress={() => handleDeleteVehicleInfo(index)}>
                         <DeleteIcon width={25} height={25} />
@@ -568,7 +570,6 @@ const MaterialDetails: React.FC<IProps> = ({item, isEdit}) => {
               item={item}
               vehicleInfo={singleVehicleInfo as IVehicleBilty}
               isSingleEdit={true}
-              setOpenEditModel={setOpenEditModel}
             />
           </View>
         </ModalHOC>

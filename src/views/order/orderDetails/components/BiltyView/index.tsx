@@ -96,7 +96,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
           to_location: bilty?.unloadingAddress?.city,
           transit_days: bilty.vehicle.transitDays,
           risk_type: bilty.riskType,
-          tax_liability: 'NA', //TODO: Not available in the api response
+          tax_liability: bilty.liabilityOfTax, //TODO: Not available in the api response
           billing_type: _getBiltyType(bilty),
           expected_date_of_delivery: bilty.vehicle.expectedDateOfDelivery,
         };

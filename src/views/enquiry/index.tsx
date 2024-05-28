@@ -1,6 +1,6 @@
 import {NavigationProp} from '@react-navigation/native';
 import React, {useCallback, useEffect} from 'react';
-import {View, Text, FlatList, RefreshControl} from 'react-native';
+import {View, Text, FlatList, RefreshControl, TouchableOpacity} from 'react-native';
 import AddNew from '../../common/AddNew';
 import Header from '../../common/Header';
 import Spacer from '../../common/Spacer';
@@ -106,6 +106,10 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
     _getEnquiriesRequest();
   }, []);
 
+  const handleEnquiryDetailNavigation = () => {
+    navigation.navigate('AddEnquiry');
+  };
+
   useEffect(() => {
     _getEnquiriesRequest();
   }, []);
@@ -122,7 +126,7 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
         countLabel="Total Enquiries"
         count={transformedData.length.toString()}
         onPress={handleAddNew}
-        text={'Enquiry'}
+        text={'ENQUIRY'}
       />
       <Spacer height={12} />
       {getEnquiriesRequesting ? (
@@ -152,32 +156,46 @@ const EnquiryPageView: React.FC<IEnquiryPageViewProps> = ({navigation}) => {
             </View>
           )}
           ListEmptyComponent={() => 
-            <View>
-            <Text style={styles.title}>You can create the following documents:</Text>
+            <View style={styles.mainContainer}>
+            <Text style={styles.title}>Do the Following Task:</Text>
+            <TouchableOpacity onPress={handleEnquiryDetailNavigation}>
+              <Spacer height={10}/>
             <View style={styles.itemContainer}>
               <SendIcon width={20} height={24}  />
               <Text style={styles.item}>Customer Details</Text>
             </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleEnquiryDetailNavigation}>
             <View style={styles.itemContainer}>
               <SendIcon width={20} height={24}  />
               <Text style={styles.item}>Quotation Create/Share</Text>
             </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleEnquiryDetailNavigation}>
             <View style={styles.itemContainer}>
               <SendIcon width={20} height={24}  />
               <Text style={styles.item}>Set Followup Date and Time</Text>
             </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleEnquiryDetailNavigation}>
             <View style={styles.itemContainer}>
               <SendIcon width={20} height={24} />
               <Text style={styles.item}>Set Survey Date and Time</Text>
             </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleEnquiryDetailNavigation}>
             <View style={styles.itemContainer}>
               <SendIcon width={20} height={24} />
               <Text style={styles.item}>Survey List Create/Share</Text>
             </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleEnquiryDetailNavigation}>
             <View style={styles.itemContainer}>
               <SendIcon width={20} height={24} />
               <Text style={styles.item}>Create Packing Materials List</Text>
             </View>
+            </TouchableOpacity>
+
           </View>
            
           }

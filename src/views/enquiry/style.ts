@@ -27,6 +27,10 @@ const styles = StyleSheet.create({
         marginVertical: 5
     },
 
+    mainContainer:{
+        marginLeft: 18
+    },
+
     // itemContainer:{
         itemContainer: {
             flexDirection: 'row',

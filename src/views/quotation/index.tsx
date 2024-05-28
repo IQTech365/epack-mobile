@@ -45,7 +45,7 @@ import useUtilityHook from '../../hooks/useUtilityHook';
 import AlertModal from '../../common/AlertModal';
 import LimitReachImage from '../../images/icons/limit_reach.svg';
 // import SendIcon from '../images/icons/send_icon.svg';
-import SendIcon from '../../images/icons/send_icon.svg'
+import SendIcon from '../../images/icons/send_icon.svg';
 
 interface IQuotationPageViewProps {
   navigation: NavigationProp<any, any>;
@@ -351,7 +351,11 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
   };
 
   const handleSerialNoSetting = () => {
-    navigation.navigate('Setting');
+    navigation.navigate('Settings');
+  };
+
+  const handleTemplateDesignSetting = () => {
+    navigation.navigate('Settings');
   };
 
   return (
@@ -366,7 +370,7 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
         countLabel="Total Quotations"
         count={getTotalQuotations().toString()}
         onPress={handleAddNew}
-        text={'Quotation'}
+        text={'QUOTATION'}
       />
       <Spacer height={12} />
       <FlatList
@@ -395,20 +399,31 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
           />
         )}
         ListEmptyComponent={() => (
-          <View>
-            <Text style={styles.title}>आप अपनी Favorite Template चुनकर यहां से Quotation बना सकते हैं:</Text>
+          <View style={styles.mainContainer}>
+            <Text style={styles.title}>
+              आप अपनी Favorite Template(Design) चुनकर यहां से Quotation बना सकते हैं:
+            </Text>
+            <Spacer height={20}/>
             <TouchableOpacity onPress={handleSerialNoSetting}>
-            <View style={styles.itemContainer}>
-              <SendIcon width={20} height={24}  />
-              <Text style={styles.item}>Set Serial No.</Text>
+              <View style={styles.itemContainer}>
+                <SendIcon width={20} height={24} />
+                <Text style={styles.item}>Set Serial No.</Text>
+              </View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleTemplateDesignSetting}>
+              <View style={styles.itemContainer}>
+                <SendIcon width={20} height={24} />
+                <Text style={styles.item}>Set Quotation Design</Text>
+              </View>
+            </TouchableOpacity>
+            <View>
+              <Text style={styles.title}>अब बनाए Part Load & Full Load Quotation एक साथ!</Text>
             </View>
+            <Spacer height={10}/>
             <View style={styles.itemContainer}>
-              <SendIcon width={20} height={24}  />
-              <Text style={styles.item}>Set Quotation Design</Text>
-            </View>
-          </TouchableOpacity>
+                <Text style={styles.itemText}>Now Full access in your hand</Text>
+              </View>
           </View>
-
         )}
       />
       <FormModal ref={bottomSheetRef} onClose={dismissModal}>

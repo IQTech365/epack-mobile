@@ -38,7 +38,7 @@ const BiltyListItem: React.FC<Props> = ({
     } else {
       setLabel('MORE...');
     }
-  }, [show]);
+  }, [show]);  
   return (
     <View style={styles.mainWrapper}>
       <Shadow distance={4}>
