@@ -134,7 +134,7 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({isEdit, paymen
           payload: payload,
         }        
         dispatch(updatePaymentMethodRequest(data));
-      } else {
+      } else {        
         dispatch(addPaymentMethodRequest(payload));
       }
     }).catch(err => console.log(err));

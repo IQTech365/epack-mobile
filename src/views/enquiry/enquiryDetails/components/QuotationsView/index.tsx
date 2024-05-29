@@ -223,13 +223,13 @@ const QuotationView: React.FC<IQuotationViewProps> = ({
     setShowFormInEditMode(true);
   };
 
-  const _handleShowPreview = (docId: string) => {
+  const _handleShowPreview = (docId: string) => {    
     setOpenPreview(true);
     setOpenShare(false);
     const payload: IHtmlTemplateRequest = {
       templateId: templateId,
       quotationId: docId,
-    };
+    };    
     dispatch(getQuotationHtmlRequest(payload));
   };
 

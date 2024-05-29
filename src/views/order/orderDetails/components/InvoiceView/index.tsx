@@ -89,7 +89,7 @@ const InvoiceView: React.FC<IInvoiceViewProps> = ({ orderId, item, navigation })
     const payload: IHtmlTemplateRequest = {
       templateId: templateId,
       quotationId: docId,
-    };    
+    };        
     dispatch(getInvoiceHtmlRequest(payload));
   };
 

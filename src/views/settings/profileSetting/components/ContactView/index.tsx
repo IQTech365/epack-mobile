@@ -52,6 +52,7 @@ const AddContactView = () => {
     return _data;
   };
 
+
   const handleCreateNewContact = () => {
     setShowContactList(false);
     setShowAddContact(true);
