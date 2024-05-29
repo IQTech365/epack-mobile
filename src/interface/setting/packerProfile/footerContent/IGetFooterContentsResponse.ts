@@ -6,6 +6,7 @@ export interface IGetFooterContentData extends IAddFooterContentRequest {
     isActive:boolean;
     isDeleted:boolean;
     createdAt: string;
+    modules: string[];
     __v:number;
 }
 

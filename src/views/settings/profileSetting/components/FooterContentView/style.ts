@@ -37,6 +37,21 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontFamily: 'WorkSans-Regular'
       },
+      content: {
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    label: {
+        fontSize: 16,
+        color: COLOR_BLACK,
+        fontFamily: 'WorkSans-SemiBold',
+    },
+    value: {
+      fontSize: 14,
+      color: COLOR_GRAY,
+      fontFamily: 'WorkSans-Regular',
+  },
       // list item
       listWrapper: {
         width: width * 0.9,
