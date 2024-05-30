@@ -94,7 +94,7 @@ const FooterContentUpdateView: React.FC<IContentUpdateProps> = ({isEdit, footerI
         const payload:IUpdateFooterContent = {
           moduleId: modules,
           contentType: accountType,
-          content: content,
+          content: content ? content : footerInfo?.content as string,
           isAdmin: false,
           title: title
         }
