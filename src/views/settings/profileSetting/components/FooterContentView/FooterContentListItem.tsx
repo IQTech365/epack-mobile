@@ -86,7 +86,7 @@ const FooterContentListItem: FC<IProps> = ({item, index, onDelete, onEdit}) => {
       </View>
       <View>
         <Text style={styles.label}>
-        modules: <Text style={styles.value}>
+        Modules: <Text style={styles.value}>
         {_transformSubmoduleIdToName(item.moduleId).join(', ')}
         </Text>
         </Text>
