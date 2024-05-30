@@ -56,6 +56,18 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontFamily: 'WorkSans-Medium',
     },
+
+    text: {
+        fontSize: 15,
+        color: COLOR_GRAY,
+        fontFamily: 'WorkSans-Regular',
+    },
+
+    content: {
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
     value: {
         color: COLOR_GRAY,
         fontSize: 16,

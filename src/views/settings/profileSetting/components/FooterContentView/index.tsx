@@ -127,7 +127,7 @@ const AddFooterContentView = () => {
   return (
     <View style={{flex: 1, alignItems: 'center'}}>
       <ActionHeaderView
-        count={0}
+        count={_getContents().length}
         onCreate={handleCreateNewContent}
         onShow={handleShowContent}
       />

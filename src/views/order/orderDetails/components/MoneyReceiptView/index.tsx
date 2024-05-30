@@ -53,7 +53,6 @@ const MoneyReceiptView: React.FC<IMoneyReceiptViewProps> = ({
   } = useAppSelector(state => state.Order);
   const bottomSheetRef = useRef<BottomSheet>(null);
   const {data: MoneyReceiptData = []} = moneyReceiptList || {};
-  console.log('MoneyReceiptData----', JSON.stringify(MoneyReceiptData));
   
   const downloadOptions = ['With Sign. & Stamp', 'Without Sign. & Stamp'];
   const [showMoneyReceiptList, setShowMoneyReceiptList] =

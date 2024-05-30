@@ -5,7 +5,7 @@ import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../../../common/Spacer';
 import Label from '../../../../../common/Label';
 import DropdownComponent from '../../../../../common/DropdownComponent';
-import Input from '../../../../../common/Input';
+import Input, { InputMethods } from '../../../../../common/Input';
 import {COLOR_BLACK, COLOR_BLUE} from '../../../../../utils/colors';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import styles from './style';
@@ -56,6 +56,7 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({isEdit, paymen
   const {submodules, banks} = useAppSelector(state => state.Common);
   const accountOptionDropdownRef = useRef(null);
   const accountTypeRef = useRef(null);
+  const upiIdRef = useRef<InputMethods>(null);
 
   const handleAccountType = (item: TDropdownItem) => {
     setAccountType(item.label);
@@ -185,6 +186,8 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({isEdit, paymen
         //@ts-ignore
         accountTypeRef && accountTypeRef?.current?.setDefaultValue(accountTypeItem);
       }
+      upiIdRef.current?.setValue(paymentInfo.upiId)
+      setUPIId(paymentInfo.upiId)
     }
   }, [isEdit]);
 
@@ -326,6 +329,8 @@ const AccountDetailUpdateView: React.FC<IAccountDetailsProps> = ({isEdit, paymen
             inputStyle={styles.input}
             selectionColor={COLOR_BLACK}
             autoCapitalize="characters"
+            value={upiId}
+            ref={upiIdRef}
           />
         </View>
       </>

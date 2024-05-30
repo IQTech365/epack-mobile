@@ -6,7 +6,7 @@ import {Shadow} from 'react-native-shadow-2';
 import DeleteIcon from '../../../../../../images/icons/delete.svg';
 import EditIcon from '../../../../../../images/icons/edit_icon.svg';
 import { useAppSelector } from '../../../../../../redux/hooks';
-import { IBank } from '../../../../../../interface/common/common';
+import { IBank, ISubmodule } from '../../../../../../interface/common/common';
 import Spacer from '../../../../../../common/Spacer';
 
 interface IProps {
@@ -18,6 +18,8 @@ interface IProps {
 
 const PaymentMethodListItem: FC<IProps> = ({item, index, onDelete, onEdit}) => {
     const {banks} = useAppSelector(state => state.Common);
+    const {submodules} = useAppSelector(state => state.Common);
+
     const _getBankList = ():IBank[] => {
         let list:IBank[] = [];
         const {data} = banks || {};
@@ -26,6 +28,39 @@ const PaymentMethodListItem: FC<IProps> = ({item, index, onDelete, onEdit}) => {
         }
         return list;
     }
+
+    const _getSubmodules = (): ISubmodule[] => {
+      let items: ISubmodule[] = [];
+      const {data} = submodules || {};
+      if (data && Array.isArray(data) && data.length > 0) {
+        items = data;
+      }
+      return items.filter((d: ISubmodule) => d.availableOnDocument);
+    };
+
+
+    const _getSubmoduleName = (submoduleId: string): string => {
+      let name: string = '';
+      const list: ISubmodule[] = _getSubmodules();
+      if (list && list.length > 0) {
+        const submodule: ISubmodule = list.find(
+          (d: ISubmodule) => d._id == submoduleId,
+        ) as ISubmodule;
+        if (submodule) {
+          name = submodule.subModuleName;
+        }
+      }
+      return name;
+    };
+
+
+    const _transformSubmoduleIdToName = (modules: string[]): string[] => {
+      let list: string[] = [];
+      if (modules && modules.length > 0) {
+        list = modules.map((d: string) => _getSubmoduleName(d));
+      }
+      return list;
+    };
 
     const _getBankName = (bankId:string):string => {
         let name: string = '';
@@ -119,6 +154,14 @@ const PaymentMethodListItem: FC<IProps> = ({item, index, onDelete, onEdit}) => {
             </View>
             <View style={[styles.valueContainer, styles.bbrr]}>
               <Text style={styles.value}>{_getAccountID()}</Text>
+            </View>
+          </View>
+          <View style={[styles.rowContainer, styles.bblr, styles.bbrr]}>
+            <View style={styles.labelContainer}>
+              <Text style={styles.label}>Modules:</Text>
+            </View>
+            <View style={[styles.valueContainer, styles.bbrr]}>
+              <Text style={styles.value}>                {_transformSubmoduleIdToName(item.moduleId).join(',')}</Text>
             </View>
           </View>
         </View>
