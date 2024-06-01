@@ -58,7 +58,7 @@ const UpcomingEventView = () => {
           <GMeetIcon />
         </View>
         <View style={styles.clientDetailContainer}>
-          <Text style={styles.nameText}>Upcoming Event</Text>
+          <Text style={styles.nameText}>Important Notice</Text>
           <Text style={styles.valueText} numberOfLines={1}>
             {_getEventTitle()}
           </Text>
