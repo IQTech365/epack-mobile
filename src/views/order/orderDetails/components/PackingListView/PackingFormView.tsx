@@ -29,6 +29,11 @@ import { DOCUMENT_TYPE, IGetSerialNoRequest } from '../../../../../interface/set
 import useInitialValueHook from '../../../../../hooks/useInitialValueHook';
 import { getSerialNoRequest, resetGetSerialNoRequest } from '../../../../../redux/slices/SerialNoSettingSlice';
 import useSerialNoHook from '../../../../../hooks/useSerialNo';
+import CollapsibleView from '../../../../../common/CollapsibleView';
+import SelectCheckBoxText from '../../../../../common/SelectCheckBoxText';
+import SurveyList from '../../../../../data/surveyList.json'
+
+
 
 interface Props {
   orderId: string;
@@ -36,6 +41,7 @@ interface Props {
 }
 
 const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
+  const { electronicAppliancesItems, furnitureItems, otherLargeItems, vehiclesItems } = SurveyList;
   const [state, dispatch] = useReducer(packingReducer, initialState);
   const [particularName, setParticularName] = useState<string>('');
   const [quantity, setQuantity] = useState<string>('');
@@ -240,13 +246,13 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   }, [createPackingMaterialRequesting, createPackingMaterialSuccess, createPackingMaterialFailure]);
 
   return (
-    <AvoidSoftInputViewHOC>
-      <View style={styles.container}>
-        <Spacer height={4} />
+    <>
+    <CollapsibleView title ="Basic Details" collapsed={false}>
+    {/* <Spacer height={4} />
         <Label text="Item / Particular Name" style={styles.labelHeading} />
-        <Spacer height={4} />
-        <View>
-          <View style={styles.elementContainer}>
+        <Spacer height={4} /> */}
+         <View>
+         <View style={styles.elementContainer}>
             <View style={styles.itemContainer}>
               <Label text="Packing List No." style={styles.label} />
               <Input
@@ -275,7 +281,36 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
               />
             </View>
           </View>
-          <Spacer height={4} />
+         </View>
+    </CollapsibleView>
+    <Spacer height={8} />
+    <CollapsibleView title="Electronic Appliances" collapsed={true}>
+        <View>
+          <SelectCheckBoxText items={electronicAppliancesItems} />
+        </View>
+      </CollapsibleView>
+      <Spacer height={8} />
+    <CollapsibleView title ="Furniture" collapsed={true}>
+    <View>
+    <SelectCheckBoxText items={furnitureItems} />
+    </View>
+    </CollapsibleView>
+    <Spacer height={8} />
+    <CollapsibleView title ="Other Large items" collapsed={true}>
+    <View>
+    <SelectCheckBoxText items={otherLargeItems} />
+    </View>
+    </CollapsibleView>
+    <Spacer height={8} />
+    <CollapsibleView title ="Vehicles" collapsed={true}>
+    <View>
+    <SelectCheckBoxText items={vehiclesItems} />
+    </View>
+    </CollapsibleView>
+    <Spacer height={8} />
+   <CollapsibleView title ="Add Other Items" collapsed={true}>
+      <>
+      <View>
           <View style={styles.elementContainer2}>
             <Label text="Item/Particulars Name" style={styles.label} />
             <Input
@@ -366,9 +401,18 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
         />
         <Spacer height={20} />
         {renderPackingListItem()}
-        <Spinner show={createPackingMaterialRequesting} />
-      </View>
-    </AvoidSoftInputViewHOC>
+      </>
+    </CollapsibleView>
+    <Spacer height={12} />
+        <Button
+          text="Save"
+          onPress={handleCreate}
+          disabled={createPackingMaterialRequesting}
+          style={styles.previewButtonStyle}
+          textStyle={styles.textStyle}
+        />
+         <Spinner show={createPackingMaterialRequesting} />
+    </>
   );
 };
 
