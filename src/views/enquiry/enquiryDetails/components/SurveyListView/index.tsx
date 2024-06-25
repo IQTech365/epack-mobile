@@ -7,8 +7,6 @@ import Label from '../../../../../common/Label';
 import Spacer from '../../../../../common/Spacer';
 import {COLOR_BLACK} from '../../../../../utils/colors';
 import styles from './style';
-
-import {formatDate2, formatDate4} from '../../../../../utils/formatter';
 import Button from '../../../../../common/Button';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import Spinner from '../../../../../common/Spinner';
@@ -32,12 +30,17 @@ import {
 } from '../../../../../interface/setting/serialNo/serialNo';
 import {getSerialNoRequest, resetGetSerialNoRequest} from '../../../../../redux/slices/SerialNoSettingSlice';
 import {ToastType, showToast} from '../../../../../utils/utility';
+import CollapsibleView from '../../../../../common/CollapsibleView';
+import SelectCheckBoxText from '../../../../../common/SelectCheckBoxText';
+import SurveyList from '../../../../../data/surveyList.json'
 
 interface ISurveyListViewProps {
   enquiryId: string;
 }
 
 const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
+  const { electronicAppliancesItems, furnitureItems, otherLargeItems, vehiclesItems } = SurveyList;
+
   const {addSurveyItemRequesting, addSurveyItemSuccess, addSurveyItemFailure} =
     useAppSelector(state => state.Enquiry);
   const [surveyNo, setSurveyNo] = useState('');
@@ -233,8 +236,9 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
   };
 
   return (
-    <AvoidSoftInputViewHOC>
-      <View style={styles.container}>
+    <>
+    <CollapsibleView title ="Basic Details" collapsed={false}>
+      {/* <View style={styles.container}> */}
         <View>
           <View style={styles.elementContainer}>
             <View style={styles.itemContainer}>
@@ -254,7 +258,38 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
               <DatePickerComponent onDateSelect={handleReceiptDate} />
             </View>
           </View>
-          <Spacer height={4} />
+        </View>
+      {/* </View> */}
+    </CollapsibleView>
+    <Spacer height={8} />
+    <CollapsibleView title="Electronic Appliances" collapsed={true}>
+        <View>
+          <SelectCheckBoxText items={electronicAppliancesItems} />
+        </View>
+      </CollapsibleView>
+      <Spacer height={8} />
+    <CollapsibleView title ="Furniture" collapsed={true}>
+    <View>
+    <SelectCheckBoxText items={furnitureItems} />
+    </View>
+    </CollapsibleView>
+    <Spacer height={8} />
+    <CollapsibleView title ="Other Large items" collapsed={true}>
+    <View>
+    <SelectCheckBoxText items={otherLargeItems} />
+    </View>
+    </CollapsibleView>
+    <Spacer height={8} />
+    <CollapsibleView title ="Vehicles" collapsed={true}>
+    <View>
+    <SelectCheckBoxText items={vehiclesItems} />
+    </View>
+    </CollapsibleView>
+    <Spacer height={8} />
+    <CollapsibleView title ="Add Other Items" collapsed={true}>
+      <>
+      <View>
+      <Spacer height={4} />
           <View style={styles.elementContainer2}>
             <Label text="Item/Particulars Name" style={styles.label} />
             <Input
@@ -313,8 +348,8 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
               ref={remarksCompRef}
             />
           </View>
-        </View>
-        <Spacer height={12} />
+      </View>
+      <Spacer height={12} />
         <Button
           text="Add item/Particular"
           onPress={handleAddItem}
@@ -324,7 +359,9 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
         />
         <Spacer height={12} />
         {showSurveyItemList()}
-        <Spacer height={12} />
+      </>
+    </CollapsibleView>
+    <Spacer height={12} />
         <Button
           text="Save"
           onPress={handleSave}
@@ -334,8 +371,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
         />
         <Spacer height={8} />
         <Spinner show={addSurveyItemRequesting} />
-      </View>
-    </AvoidSoftInputViewHOC>
+    </>
   );
 };
 export default SurveyListView;
