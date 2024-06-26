@@ -22,6 +22,7 @@ import {resetGetSerialNoRequest} from '../../../redux/slices/SerialNoSettingSlic
 import SurveyView from '../../enquiry/enquiryDetails/components/FollowupView'
 import QuotationView from '../../enquiry/enquiryDetails/components/QuotationsView';
 import PackingMaterialsView from '../../enquiry/enquiryDetails/components/PackingMaterialsView';
+import NocFormView from './components/NocFormView';
 
 const tabData = [tabOptions];
 
@@ -55,6 +56,8 @@ const OrderDetailsView: React.FC<Props> = ({route, navigation}) => {
         return <CarConditionView orderId={orderId as string} navigation={navigation} />;
       case 3:
         return <BiltyView orderId={orderId as string} navigation={navigation} />;
+      case 4:
+        return <NocFormView orderId={orderId as string} navigation={navigation}/>
       case 4:
         return <InvoiceView orderId={orderId as string} item={item} navigation={navigation} />;
       case 5:
