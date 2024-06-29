@@ -32,6 +32,7 @@ import useSerialNoHook from '../../../../../hooks/useSerialNo';
 import CollapsibleView from '../../../../../common/CollapsibleView';
 import SelectCheckBoxText from '../../../../../common/SelectCheckBoxText';
 import SurveyList from '../../../../../data/surveyList.json'
+import { getSurveyCategoryRequest, getSurveyMaterialRequest } from '../../../../../redux/slices/CommonSlice';
 
 
 
@@ -50,12 +51,15 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   const [valueOfGoods, setValueOfGoods] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [items, setItems] = useState<IPackingItem[]>([]);
+  const [transformedData, setTransformedData] = useState<TPackingMateiralItem[]>([]);
+
   const {
     createPackingMaterialRequesting,
     createPackingMaterialSuccess,
     createPackingMaterialFailure,
   } = useAppSelector(state => state.Order);
   const {packingTypes} = useAppSelector(state => state.Common);
+  const {surveyMaterial,surveyCategory, getSurveyMaterialRequesting} = useAppSelector(state => state.Common);
   const {initialValue, prefix} = useInitialValueHook('658d3cc6585e3dde644da985');
   const serialNo:number = useSerialNoHook();
 
@@ -64,6 +68,45 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   const productCodeInputRef = useRef(null);
   const amountInputRef = useRef(null);
   const descriptionInputRef = useRef(null);
+
+
+  type TPackingMateiralItem = {
+    _id: string;
+    surveyCategoryId: string;
+    surveyMaterialItem: string;
+    surveyCategoryName: string;
+  }
+
+  const transformSurveyData = () => {
+    let _data: TPackingMateiralItem[] = [];
+    const { data: surveyMaterials } = surveyMaterial || {};
+    const { data: surveyCategories } = surveyCategory || {}; 
+  
+    if (surveyMaterials && Array.isArray(surveyMaterials) && surveyMaterials.length > 0) {
+      const groupedData = surveyMaterials.reduce((acc, curr) => {
+        const { surveyCategoryId, surveyMaterialItem } = curr;
+        const category = surveyCategories?.find((cat: TPackingMateiralItem) => cat._id === surveyCategoryId);
+  
+        if (category) {
+          const surveyCategoryName = category.surveyCategoryName;
+  
+          if (!acc[surveyCategoryName]) {
+            acc[surveyCategoryName] = {
+              surveyCategoryName,
+              surveyMaterialItem: [],
+            };
+          }
+  
+          acc[surveyCategoryName].surveyMaterialItem.push(surveyMaterialItem);
+        }
+  
+        return acc;
+      }, {});
+  
+      _data = Object.values(groupedData);
+    }
+      setTransformedData(_data);
+  };
 
   const _getPackingTypes = () => {
     let packTypes: TDropdownItem[] = [];
@@ -221,6 +264,8 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
 
   useEffect(() => {
     dispatch2(resetGetSerialNoRequest());
+    dispatch2(getSurveyMaterialRequest())
+    dispatch2(getSurveyCategoryRequest())
     _getSerialNoRequest();
   }, []);
 
@@ -244,6 +289,10 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
       dispatch2(resetCreatePackingMaterialsRequest())
     }
   }, [createPackingMaterialRequesting, createPackingMaterialSuccess, createPackingMaterialFailure]);
+
+  useEffect(() => {
+    transformSurveyData();
+  }, [surveyMaterial]);
 
   return (
     <>
@@ -284,29 +333,18 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
          </View>
     </CollapsibleView>
     <Spacer height={8} />
-    <CollapsibleView title="Electronic Appliances" collapsed={true}>
-        <View>
-          <SelectCheckBoxText items={electronicAppliancesItems} />
+    <View>
+      {transformedData.map((item, index) => (
+        <View key={index}>
+          <Spacer height={8} />
+          <CollapsibleView title={item.surveyCategoryName} collapsed={true}>
+            <View>
+            <SelectCheckBoxText items={Array.isArray(item.surveyMaterialItem) ? item.surveyMaterialItem : [item.surveyMaterialItem]} />
+            </View>
+          </CollapsibleView>
         </View>
-      </CollapsibleView>
-      <Spacer height={8} />
-    <CollapsibleView title ="Furniture" collapsed={true}>
-    <View>
-    <SelectCheckBoxText items={furnitureItems} />
+      ))}
     </View>
-    </CollapsibleView>
-    <Spacer height={8} />
-    <CollapsibleView title ="Other Large items" collapsed={true}>
-    <View>
-    <SelectCheckBoxText items={otherLargeItems} />
-    </View>
-    </CollapsibleView>
-    <Spacer height={8} />
-    <CollapsibleView title ="Vehicles" collapsed={true}>
-    <View>
-    <SelectCheckBoxText items={vehiclesItems} />
-    </View>
-    </CollapsibleView>
     <Spacer height={8} />
    <CollapsibleView title ="Add Other Items" collapsed={true}>
       <>
