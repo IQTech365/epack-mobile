@@ -23,6 +23,8 @@ import {
   IVehicleInsuranceCompanyResponse,
   IAllDocumentCountResponse,
   IImportantLinkResponse,
+  ISurveyMaterialResponse,
+  ISurveyCategoryResponse
 } from '../../interface/common/common';
 
 interface ICommonState {
@@ -166,6 +168,21 @@ interface ICommonState {
   getImportantLinksSuccess: boolean;
   getImportantLinksFailure: boolean;
   getImportantLinksError: any;
+
+
+   // Survey Material
+   surveyMaterial: ISurveyMaterialResponse | null;
+   getSurveyMaterialRequesting: boolean;
+   getSurveyMaterialSuccess: boolean;
+   getSurveyMaterialFailure: boolean;
+   getSurveyMaterialError: any;
+
+     // Survey Category
+     surveyCategory: ISurveyCategoryResponse | null;
+     getSurveyCategoryRequesting: boolean;
+     getSurveyCategorySuccess: boolean;
+     getSurveyCategoryFailure: boolean;
+     getSurveyCategoryError: any;
 }
 
 const initialState: ICommonState = {
@@ -308,6 +325,21 @@ const initialState: ICommonState = {
   getImportantLinksSuccess: false,
   getImportantLinksFailure: false,
   getImportantLinksError: null,
+
+   // Survey Material 
+   surveyMaterial: null,
+   getSurveyMaterialRequesting: false,
+   getSurveyMaterialSuccess: false,
+   getSurveyMaterialFailure: false,
+   getSurveyMaterialError: null,
+
+
+      // Survey Category 
+      surveyCategory: null,
+      getSurveyCategoryRequesting: false,
+      getSurveyCategorySuccess: false,
+      getSurveyCategoryFailure: false,
+      getSurveyCategoryError: null,
 };
 
 export const CommonSlice = createSlice({
@@ -740,6 +772,47 @@ export const CommonSlice = createSlice({
       state.getImportantLinksFailure = true;
       state.getImportantLinksError = action.payload;
     },
+
+    // Survey Material
+
+     getSurveyMaterialRequest: (state) => {
+      state.getSurveyMaterialRequesting = true;
+    },
+    getSurveyMaterialSuccess: (
+      state,
+      action: PayloadAction<ISurveyMaterialResponse>,
+    ) => {
+      state.getSurveyMaterialRequesting = false;
+      state.getSurveyMaterialSuccess = true;
+      state.surveyMaterial = action.payload;
+    },
+    getSurveyMaterialFailure: (state, action: PayloadAction<any>) => {
+      state.getSurveyMaterialRequesting = false;
+      state.getSurveyMaterialSuccess = false;
+      state.getSurveyMaterialFailure = true;
+      state.getSurveyMaterialError = action.payload;
+    },
+
+
+    // Survey Category
+
+    getSurveyCategoryRequest: (state) => {
+      state.getSurveyCategoryRequesting = true;
+    },
+    getSurveyCategorySuccess: (
+      state,
+      action: PayloadAction<ISurveyCategoryResponse>,
+    ) => {
+      state.getSurveyCategoryRequesting = false;
+      state.getSurveyCategorySuccess = true;
+      state.surveyCategory = action.payload;
+    },
+    getSurveyCategoryFailure: (state, action: PayloadAction<any>) => {
+      state.getSurveyCategoryRequesting = false;
+      state.getSurveyCategorySuccess = false;
+      state.getSurveyCategoryFailure = true;
+      state.getSurveyCategoryError = action.payload;
+    },
   },
 });
 
@@ -844,5 +917,17 @@ export const {
   getImportantLinksRequest,
   getImportantLinksSuccess,
   getImportantLinksFailure,
+
+  // Survey Material
+
+  getSurveyMaterialRequest,
+  getSurveyMaterialSuccess,
+  getSurveyMaterialFailure,
+
+  // survey category
+
+  getSurveyCategoryRequest,
+  getSurveyCategorySuccess,
+  getSurveyCategoryFailure
 
 } = CommonSlice.actions;

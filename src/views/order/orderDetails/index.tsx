@@ -58,11 +58,11 @@ const OrderDetailsView: React.FC<Props> = ({route, navigation}) => {
         return <BiltyView orderId={orderId as string} navigation={navigation} />;
       case 4:
         return <NocFormView orderId={orderId as string} navigation={navigation}/>
-      case 4:
-        return <InvoiceView orderId={orderId as string} item={item} navigation={navigation} />;
       case 5:
-        return <PackingListView orderId={orderId as string} />;
+        return <InvoiceView orderId={orderId as string} item={item} navigation={navigation} />;
       case 6:
+        return <PackingListView orderId={orderId as string} />;
+      case 7:
         return (
           <SurveyView
             taskName="SURVEY"
@@ -71,7 +71,7 @@ const OrderDetailsView: React.FC<Props> = ({route, navigation}) => {
             isOrder={true}
           />
         );
-      case 7:
+      case 8:
         return (
           <QuotationView
             enquiryId={orderId as string}
@@ -82,7 +82,7 @@ const OrderDetailsView: React.FC<Props> = ({route, navigation}) => {
           />
         );
         
-      case 8:
+      case 9:
           return <PackingMaterialsView enquiryId={orderId as string} />;
       default:
         return null;

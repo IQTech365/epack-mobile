@@ -1,64 +1,89 @@
 import { NavigationProp } from '@react-navigation/native';
-import React, { useState } from 'react';
-import { Text, TextInput, View, ScrollView, Button } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { View } from 'react-native';
 import styles from './style';
 import Input from '../../../../../common/Input';
 import Label from '../../../../../common/Label';
 import DropdownComponent from '../../../../../common/DropdownComponent';
-import paymentTypeOptions from '../../../../../data/paymentTypeOptions.json';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
 import Spacer from '../../../../../common/Spacer';
-import { COLOR_BLACK } from '../../../../../utils/colors';
-import DatePickerComponent from '../../../../../common/DatePickerComponent';
+import DatePickerComponent, { IDateMethods } from '../../../../../common/DatePickerComponent';
 import shiftingLuggages from '../../../../../data/shiftingLuggage.json';
 import DropdownWithTextInput from '../../../../../common/DropdownWithTextInput';
 import { useAppSelector } from '../../../../../redux/hooks';
-import { IQuotation } from '../../../../../interface/quotation/quotation';
+import Button from '../../../../../common/Button'; 
+import { IBilty } from '../../../../../interface/order/IGetBiltyListResponse';
+import { formatDate4 } from '../../../../../utils/formatter';
 
 interface INocFormViewProps {
   navigation: NavigationProp<any, any>;
   orderId: string | undefined;
-
+  // onSuccess: () => void;
 }
 
-const NocFormView: React.FC<INocFormViewProps> = ({ navigation }) => {
+const NocFormView: React.FC<INocFormViewProps> = ({ navigation,  orderId,
+}) => {
   const [nocType, setNocType] = useState<string>('Household Goods');
   const [lrNumber, setLrNumber] = useState<string>('');
-  const [name, setName] = useState<string>('');
-  const [phone, setPhone] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [moveFromCity, setMoveFromCity] = useState<string>('');
-  const [moveToCity, setMoveToCity] = useState<string>('');
-  const {quotationList} = useAppSelector(state => state.Quotation);
+  const [lrDate, setLrDate] = useState<Date | null>(null);
+  const [selectedLrNumber,setSelectedLRNumber] = useState<string>('')
+  const { biltyList } = useAppSelector(state => state.Order);
 
+  const dateofLr = useRef<IDateMethods>(null)
 
-  const transformQuotationData = () => {
+  const transformBiltyData = () => {
     let _data: string[] = [];
-    const {data} = quotationList || {};
+    const { data } = biltyList || {};
     if (
       data &&
       Array.isArray(data) &&
       data.length > 0
     ) {
       _data = data
-        .filter((e: IQuotation) => e.enquiryId == 'orderId')
-        .map((quotation: IQuotation) => quotation?.quotationNumber);
+        .filter((e: IBilty) => e.enquiryId === orderId)
+        .map((bilty: IBilty) => bilty?.biltyNumber);
     }
     return _data;
   };
 
+  const handleLrNumberSelect = (selectedLrNumber: string) => {
+    // const selectedBilty = biltyList.find(
+    //   (bilty: IBilty) => bilty.biltyNumber === selectedLrNumber
+    // );
+    // if (selectedBilty) {
+    //   setLrNumber(selectedBilty.biltyNumber);
+    //   setLrDate(new Date(selectedBilty.biltyDate));
+    // }
+  };
   const handleNocType = () => {
     // setNocType(selectedType);
   };
 
-  const handleofNumber =()=>{
+  const handleLrNumber = (selectedValue: string) => {
+    setSelectedLRNumber(selectedValue)
 
   }
 
-  const handleReceiptNoInputTextChange =()=>{
+  const handleNocFormView = () => {
 
   }
+
+  useEffect(() => {
+    if(selectedLrNumber && biltyList) {
+      const {data} = biltyList || {};
+      if(data && Array.isArray(data) && data.length > 0) {
+        const selectedBilty = data.find(
+          (bilty: IBilty) => bilty.biltyNumber === selectedLrNumber
+        );
+        if (selectedBilty) {
+          setLrNumber(selectedBilty.biltyNumber);
+          setLrDate(new Date(selectedBilty.biltyDate));
+          dateofLr.current?.setDefaultValue(new Date(selectedBilty.biltyDate));
+        }
+      }
+    }
+  }, [selectedLrNumber]);
 
   return (
     <AvoidSoftInputViewHOC>
@@ -68,57 +93,59 @@ const NocFormView: React.FC<INocFormViewProps> = ({ navigation }) => {
           <View>
             <Spacer height={4} />
             <View style={styles.elementContainer}>
-            <View style={styles.itemContainer}>
-              <Label text="NOC Type" style={styles.label} />
-              <DropdownComponent
-                data={shiftingLuggages}
-                onSelect={handleNocType}
-                // defaultValue={isEdit ? editData.paymentType : ''}
-                // ref={paymentTypeDropCompRef}
-              />
-            </View>
-            <View style={styles.itemContainer}>
+              <View style={styles.itemContainer}>
+                <Label text="NOC Type" style={styles.label} />
+                <DropdownComponent
+                  data={shiftingLuggages}
+                  onSelect={handleNocType}
+                  // defaultValue={isEdit ? editData.paymentType : ''}
+                  // ref={paymentTypeDropCompRef}
+                />
+              </View>
+              <View style={styles.itemContainer}>
                 <Label text="Date" style={styles.label} />
-                <DatePickerComponent onDateSelect={(date: Date)=>{
-                //   handleReceiptDate(formatDate4(date))
+                <DatePickerComponent onDateSelect={(date: Date) => {
+                  //   handleReceiptDate(formatDate4(date))
                 }}
                 // ref={dateOfMoneyReceiptRef}
-                 />
+                />
               </View>
-                </View>
+            </View>
 
-            
             <Spacer height={4} />
             <View style={styles.elementContainer}>
               <View style={styles.itemContainer}>
                 <Label text="LR Number" style={styles.label} />
                 <DropdownWithTextInput
-                  options={transformQuotationData()}
-                  onSelect={handleofNumber}
+                  options={transformBiltyData()}
+                  onSelect={handleLrNumber}
+                  // onSelect={handleLrNumber}
                   containerStyle={styles.itemContainer}
                 //   ref={quotationNoDropCompRef}
                 />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="LR Date" style={styles.label} />
-                <DatePickerComponent onDateSelect={(date: Date) =>{
-                //   handleArivalDate(formatDate4(date))
+                <DatePickerComponent onDateSelect={(date: Date) => {
+                    handleLrNumberSelect(formatDate4(date))
                 }}
-                // ref={dateOfArrivalRef}
+                disabled={selectedLrNumber.length>0}
+                // defaultValue={lrDate}
+                ref={dateofLr}
                 />
               </View>
             </View>
           </View>
         </CollapsibleView>
-        
+
         <Spacer height={12} />
-        {/* <Button
-        //   text={'CREATE'}
-        //   onPress={handleCreate}
-        //   disabled={createMoneyReceiptRequesting || editMoneyReceiptListRequesting}
+        <Button
+          text="Save"
+          onPress={handleNocFormView}
+          // disabled={createPackingMaterialRequesting}
           style={styles.previewButtonStyle}
           textStyle={styles.textStyle}
-        /> */}
+        />
         <Spacer height={8} />
         {/* <Spinner
           show={createMoneyReceiptRequesting || editMoneyReceiptListRequesting}

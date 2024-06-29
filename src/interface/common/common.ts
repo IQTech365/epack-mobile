@@ -499,3 +499,38 @@ export interface IImportantLinkResponse {
   status: number;
   error: boolean;
 }
+
+
+export interface ISurveyCategory {
+  _id: string;
+  surveyCategoryName: string;
+  isActive: boolean;
+  isDeleted: boolean;
+  createdDate: string;
+  __v: number;
+}
+
+export interface ISurveyCategoryResponse {
+  data: ISurveyCategory;
+  status: number;
+  error: boolean;
+}
+
+
+
+export interface ISurveyMaterial {
+  _id: string;
+  surveyCategoryId: string;
+  surveyMaterialItem: string;
+  link: string;
+  isActive: boolean;
+  isDeleted: boolean;
+  createdDate: string;
+  __v: number;
+}
+
+export interface ISurveyMaterialResponse {
+  data: ISurveyMaterial;
+  status: number;
+  error: boolean;
+}
