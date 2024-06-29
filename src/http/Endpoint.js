@@ -216,3 +216,7 @@ export const GET_ALL_DOCUMENTS_COUNT = (company_id) => `/order/count-documents/$
 
 // Important Links
 export const GET_IMPORTANT_LINKS = `/shifting-management/important/link/getAll`;
+// 
+export const GET_SURVEY_MATERIAL = `/shifting-management/survey-material/getAll`;
+// 
+export const GET_SURVEY_CATEGORY = `/shifting-management/survey-category/getAll`;

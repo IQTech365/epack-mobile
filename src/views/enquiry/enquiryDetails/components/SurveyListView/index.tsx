@@ -33,9 +33,11 @@ import {ToastType, showToast} from '../../../../../utils/utility';
 import CollapsibleView from '../../../../../common/CollapsibleView';
 import SelectCheckBoxText from '../../../../../common/SelectCheckBoxText';
 import SurveyList from '../../../../../data/surveyList.json'
+import { getSurveyCategoryRequest, getSurveyMaterialRequest } from '../../../../../redux/slices/CommonSlice';
 
 interface ISurveyListViewProps {
   enquiryId: string;
+  items: string[];
 }
 
 const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
@@ -51,6 +53,11 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
   const [remarks, setRemarks] = useState<string>('');
   const [surveyItems, setSurveyItems] = useState<ISurveyListItem[]>([]);
   const authId = useAuthId();
+  const [transformedData, setTransformedData] = useState<TSurveyMateiralItem[]>([]);
+
+
+  const {surveyMaterial,surveyCategory, getSurveyMaterialRequesting} = useAppSelector(state => state.Common);
+
 
   const itemNameCompRef = useRef(null);
   const quantityCompRef = useRef(null);
@@ -77,6 +84,46 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
       })
       .catch(err => console.log('err--', err));
   };
+
+  type TSurveyMateiralItem = {
+    _id: string;
+    surveyCategoryId: string;
+    surveyMaterialItem: string;
+    surveyCategoryName: string;
+  }
+
+
+  const transformSurveyData = () => {
+    let _data: TSurveyMateiralItem[] = [];
+    const { data: surveyMaterials } = surveyMaterial || {};
+    const { data: surveyCategories } = surveyCategory || {}; 
+  
+    if (surveyMaterials && Array.isArray(surveyMaterials) && surveyMaterials.length > 0) {
+      const groupedData = surveyMaterials.reduce((acc, curr) => {
+        const { surveyCategoryId, surveyMaterialItem } = curr;
+        const category = surveyCategories?.find((cat: TSurveyMateiralItem) => cat._id === surveyCategoryId);
+  
+        if (category) {
+          const surveyCategoryName = category.surveyCategoryName;
+  
+          if (!acc[surveyCategoryName]) {
+            acc[surveyCategoryName] = {
+              surveyCategoryName,
+              surveyMaterialItem: [],
+            };
+          }
+  
+          acc[surveyCategoryName].surveyMaterialItem.push(surveyMaterialItem);
+        }
+  
+        return acc;
+      }, {});
+  
+      _data = Object.values(groupedData);
+    }
+      setTransformedData(_data);
+  };
+  
 
   const dispatch = useAppDispatch();
 
@@ -169,6 +216,8 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
 
   useEffect(() => {
     dispatch(resetGetSerialNoRequest());
+    dispatch(getSurveyMaterialRequest())
+    dispatch(getSurveyCategoryRequest())
     _getSerialNoRequest();
   }, []);
 
@@ -235,6 +284,10 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
     return null;
   };
 
+  useEffect(() => {
+    transformSurveyData();
+  }, [surveyMaterial]);
+
   return (
     <>
     <CollapsibleView title ="Basic Details" collapsed={false}>
@@ -262,29 +315,18 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
       {/* </View> */}
     </CollapsibleView>
     <Spacer height={8} />
-    <CollapsibleView title="Electronic Appliances" collapsed={true}>
-        <View>
-          <SelectCheckBoxText items={electronicAppliancesItems} />
+    <View>
+      {transformedData.map((item, index) => (
+        <View key={index}>
+          <Spacer height={8} />
+          <CollapsibleView title={item.surveyCategoryName} collapsed={true}>
+            <View>
+            <SelectCheckBoxText items={Array.isArray(item.surveyMaterialItem) ? item.surveyMaterialItem : [item.surveyMaterialItem]} />
+            </View>
+          </CollapsibleView>
         </View>
-      </CollapsibleView>
-      <Spacer height={8} />
-    <CollapsibleView title ="Furniture" collapsed={true}>
-    <View>
-    <SelectCheckBoxText items={furnitureItems} />
+      ))}
     </View>
-    </CollapsibleView>
-    <Spacer height={8} />
-    <CollapsibleView title ="Other Large items" collapsed={true}>
-    <View>
-    <SelectCheckBoxText items={otherLargeItems} />
-    </View>
-    </CollapsibleView>
-    <Spacer height={8} />
-    <CollapsibleView title ="Vehicles" collapsed={true}>
-    <View>
-    <SelectCheckBoxText items={vehiclesItems} />
-    </View>
-    </CollapsibleView>
     <Spacer height={8} />
     <CollapsibleView title ="Add Other Items" collapsed={true}>
       <>

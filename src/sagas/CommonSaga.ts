@@ -53,6 +53,12 @@ import {
   getSubmoduleFailure,
   getSubmoduleRequest,
   getSubmoduleSuccess,
+  getSurveyCategoryFailure,
+  getSurveyCategoryRequest,
+  getSurveyCategorySuccess,
+  getSurveyMaterialFailure,
+  getSurveyMaterialRequest,
+  getSurveyMaterialSuccess,
   getTodayFollowupsListFailure,
   getTodayFollowupsListRequest,
   getTodayFollowupsListSuccess,
@@ -344,6 +350,28 @@ export function* getImportantLinksSaga(action: PayloadAction<string>) {
     yield put(getImportantLinksFailure(error));
   }
 }
+export function* getSurveyMaterialSaga(action: PayloadAction<string>) {
+  try {
+    //@ts-ignore
+    const response: any = yield call(
+      CommonService.GetSurveyMaterialService,
+    );
+    yield put(getSurveyMaterialSuccess(response));
+  } catch (error) {
+    yield put(getSurveyMaterialFailure(error));
+  }
+}
+export function* getSurveyCategorySaga(action: PayloadAction<string>) {
+  try {
+    //@ts-ignore
+    const response: any = yield call(
+      CommonService.GetSurveyCategoryService,
+    );
+    yield put(getSurveyCategorySuccess(response));
+  } catch (error) {
+    yield put(getSurveyCategoryFailure(error));
+  }
+}
 
 export function* watcherCommonSaga() {
   yield takeLatest(getPackingTypesRequest.type, getPackingTypesSaga);
@@ -377,5 +405,9 @@ export function* watcherCommonSaga() {
   yield takeLatest(getTodayShiftingListRequest.type, getTodayShiftingSaga);
   yield takeLatest(getAllDocCountRequest.type, getAllDocCountSaga);
   yield takeLatest(getImportantLinksRequest.type, getImportantLinksSaga);
+  yield takeLatest(getSurveyMaterialRequest.type, getSurveyMaterialSaga);
+  yield takeLatest(getSurveyCategoryRequest.type, getSurveyCategorySaga);
+
+
 
 }
