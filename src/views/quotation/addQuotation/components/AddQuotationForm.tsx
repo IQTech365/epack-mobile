@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import BasicDetails from './BasicDetails';
 import {useQuotationFormContextHook} from '../../../../provider/QuotationFormContextProvider';
 import PickupAddressView from './PickupAddressView';
@@ -40,6 +40,7 @@ import {ISingleEnquiryData} from '../../../../interface/enquiry/ISingleEnquiryRe
 import {resetGetSerialNoRequest} from '../../../../redux/slices/SerialNoSettingSlice';
 import useInitialValueHook from '../../../../hooks/useInitialValueHook';
 import useUtilityHook from '../../../../hooks/useUtilityHook';
+import SurveyItemQuotation from './SurveyItemQuotation';
 
 interface Props {
   fromEnquiry?: boolean;
@@ -96,6 +97,9 @@ const AddQuotationForm: React.FC<Props> = ({
   const {prefix} = useInitialValueHook('658d3c6f585e3dde644da95b');
   const {enquiry} = useAppSelector(state => state.Enquiry);
   const {getTotalDocumentCount} = useUtilityHook();
+
+
+ 
 
   const transitInsurance: ITransitInsurance = {
     isRequired: state.transit_insurance,
@@ -423,6 +427,9 @@ const AddQuotationForm: React.FC<Props> = ({
     updateQuotationFailure,
   ]);  
 
+
+
+
   return (
     <>
       <BasicDetails fromEnquiry={fromEnquiry} isEdit={isEdit} item={item} enquiryData={enquiryData} />
@@ -458,6 +465,14 @@ const AddQuotationForm: React.FC<Props> = ({
         item={item}
         quotationData={_getQuotationItem()}
       />
+
+     <Spacer height={4} />
+      <SurveyItemQuotation
+        isEdit={isEdit}
+        item={item}
+        // quotationData={_getQuotationItem()}
+      />
+  
       <Spacer height={12} />
       <Button
         text={isEdit ? 'UPDATE' : 'CREATE'}

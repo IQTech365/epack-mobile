@@ -119,6 +119,9 @@ export enum ACTION {
   OTHER_DETAIL_3 = 'OTHER_DETAIL_3',
   OTHER_DETAIL_4 = 'OTHER_DETAIL_4',
   //
+  SURVEYITEM = 'SURVEYITEM',
+  // 
+
   RESET_ALL_PART_LOAD = 'RESET_ALL_PART_LOAD',
   RESET_ALL_FULL_LOAD = 'RESET_ALL_FULL_LOAD',
   //
@@ -262,6 +265,9 @@ export interface IState {
   other_detail_2: string;
   other_detail_3: string;
   other_detail_4: string;
+
+  // **** SurveyItemQuotation ****
+  surveyItem: string;
   // **** ERRORS ****
   errors: {
     party_name: string;
@@ -393,6 +399,9 @@ export const initialState: IState = {
   other_detail_2: '',
   other_detail_3: Utils.options[1],
   other_detail_4: '',
+
+  // **** SurveyItem ****
+  surveyItem: options2[1],
   // **** Errors ****
   errors: {
     party_name: '',
@@ -599,6 +608,11 @@ export const quotationReducer: Reducer<IState, IAction> = (
       return {...state, other_detail_3: payload as string};
     case ACTION.OTHER_DETAIL_4:
       return {...state, other_detail_4: payload as string};
+      //  **** SurveyQuotation ***
+      case ACTION.SURVEYITEM:
+      return {...state,surveyItem: payload as string};
+
+
     // **** RESET ACTIONS ****
     case ACTION.RESET_ALL_PART_LOAD:
       return {
