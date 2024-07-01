@@ -790,6 +790,18 @@ const useQuotationFormContext = () => {
     [state.other_detail_4],
   );
 
+  // 
+
+  const setSurveyItem = useCallback(
+    (text: string) => {
+      dispatch({
+        type: ACTION.SURVEYITEM,
+        payload: text,
+      });
+    },
+    [state.surveyItem],
+  );
+
   // **** Reset Dispatch ****
   const resetAllPartLoad = useCallback(() => {
     dispatch({
@@ -1075,6 +1087,10 @@ const useQuotationFormContext = () => {
     setOtherDetail2,
     setOtherDetail3,
     setOtherDetail4,
+
+    // 
+    setSurveyItem,
+
     // *** Reset ****
     resetAllPartLoad,
     resetAllFullLoad,
@@ -1204,6 +1220,9 @@ const initQuotationFormContextState: UseQuotationFormContextType = {
   setOtherDetail2: (text: string) => {},
   setOtherDetail3: (text: string) => {},
   setOtherDetail4: (text: string) => {},
+  // 
+  setSurveyItem: (text: string) => {},
+
   // **** Reset ****
   resetAllPartLoad: () => {},
   resetAllFullLoad: () => {},
