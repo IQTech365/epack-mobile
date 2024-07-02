@@ -33,11 +33,15 @@ import CollapsibleView from '../../../../../common/CollapsibleView';
 import SelectCheckBoxText from '../../../../../common/SelectCheckBoxText';
 import SurveyList from '../../../../../data/surveyList.json'
 import { getSurveyCategoryRequest, getSurveyMaterialRequest } from '../../../../../redux/slices/CommonSlice';
+import SelectCheckBoxTextPackingList from '../../../../../common/SelectCheckBoxPackingList';
 
 
 
 interface Props {
   orderId: string;
+  items: string[];
+  item: string;
+  quantity: number;
   onSuccess: () => void;
 }
 
@@ -147,6 +151,23 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
 
   const authId = useAuthId();
   const dispatch2 = useAppDispatch();
+
+  const handleItemSelect = (item: string, qty: number) => {
+    // setCheckboxSurveyItems((prevItems) => {
+    //   const updatedItems = [...prevItems];
+    //   const index = updatedItems.findIndex((i) => i.itemName === item);
+    //   if (index >= 0) {
+    //     updatedItems[index].quantity = qty;
+    //   } else {
+    //     updatedItems.push({ itemName: item, quantity: qty });
+    //   }
+    //   return updatedItems;
+    // });
+  };
+
+  const handleItemDeselect = (item: string) => {
+    // setCheckboxSurveyItems((prevItems) => prevItems.filter((i) => i.itemName !== item));
+  };
 
   const handleCreate = () => {
     if(state.packing_no === '' || state.packing_no === null || state.packing_no === undefined) {
@@ -339,8 +360,12 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
           <Spacer height={8} />
           <CollapsibleView title={item.surveyCategoryName} collapsed={true}>
             <View>
-            <SelectCheckBoxText items={Array.isArray(item.surveyMaterialItem) ? item.surveyMaterialItem : [item.surveyMaterialItem]} />
-            </View>
+            <SelectCheckBoxTextPackingList
+                items={Array.isArray(item.surveyMaterialItem) ? item.surveyMaterialItem : [item.surveyMaterialItem]}
+                onItemSelect={handleItemSelect}
+                onItemDeselect={handleItemDeselect}
+              />            
+              </View>
           </CollapsibleView>
         </View>
       ))}
