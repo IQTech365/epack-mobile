@@ -87,3 +87,36 @@ export interface IDeletePackingListItemResponse {
   error: boolean;
   status: number;
 }
+
+
+export interface ICreateNocRequest {
+  enquiryId : string;  
+  companyId : string;
+  nocType : string;
+  nocDate: string;
+  biltyDate: string;
+  biltyNo: string;
+  addedBy: string;
+}
+export interface ICreateNocResponse {
+  data: any;
+  error: boolean;
+  status: number;
+}
+
+
+export interface INocDocRequest {
+  enquiryId : string;  
+  nocType : string;
+  nocDate: string;
+  biltyDate: string;
+  biltyNo: string;
+}
+
+export interface IGetNocDocResponse {
+  data: INocDoc[];
+  error: boolean;
+  status: number;
+
+}
+

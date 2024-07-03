@@ -11,10 +11,13 @@ import Spacer from '../../../../../common/Spacer';
 import DatePickerComponent, { IDateMethods } from '../../../../../common/DatePickerComponent';
 import shiftingLuggages from '../../../../../data/shiftingLuggage.json';
 import DropdownWithTextInput from '../../../../../common/DropdownWithTextInput';
-import { useAppSelector } from '../../../../../redux/hooks';
+import { useAppSelector, useAppDispatch } from '../../../../../redux/hooks';
 import Button from '../../../../../common/Button'; 
 import { IBilty } from '../../../../../interface/order/IGetBiltyListResponse';
 import { formatDate4 } from '../../../../../utils/formatter';
+import { getCurrentCompanyId } from '../../../../../utils/storage';
+import { ICreateNocRequest } from '../../../../../interface/order/IPackingMaterialResponse';
+import { createNocDocRequest } from '../../../../../redux/slices/OrderSlice';
 
 interface INocFormViewProps {
   navigation: NavigationProp<any, any>;
@@ -22,24 +25,21 @@ interface INocFormViewProps {
   // onSuccess: () => void;
 }
 
-const NocFormView: React.FC<INocFormViewProps> = ({ navigation,  orderId,
-}) => {
-  const [nocType, setNocType] = useState<string>('Household Goods');
+const NocFormView: React.FC<INocFormViewProps> = ({ navigation, orderId }) => {
+  const [packingType, setPackingType] = useState<string>('');
   const [lrNumber, setLrNumber] = useState<string>('');
   const [lrDate, setLrDate] = useState<Date | null>(null);
-  const [selectedLrNumber,setSelectedLRNumber] = useState<string>('')
+  const [selectedLrNumber, setSelectedLRNumber] = useState<string>('');
+  const [date, setDate] = useState<string>(new Date().toISOString());
   const { biltyList } = useAppSelector(state => state.Order);
-
-  const dateofLr = useRef<IDateMethods>(null)
+  const dispatch = useAppDispatch();
+  
+  const dateofLr = useRef<IDateMethods>(null);
 
   const transformBiltyData = () => {
     let _data: string[] = [];
     const { data } = biltyList || {};
-    if (
-      data &&
-      Array.isArray(data) &&
-      data.length > 0
-    ) {
+    if (data && Array.isArray(data) && data.length > 0) {
       _data = data
         .filter((e: IBilty) => e.enquiryId === orderId)
         .map((bilty: IBilty) => bilty?.biltyNumber);
@@ -48,42 +48,54 @@ const NocFormView: React.FC<INocFormViewProps> = ({ navigation,  orderId,
   };
 
   const handleLrNumberSelect = (selectedLrNumber: string) => {
-    // const selectedBilty = biltyList.find(
-    //   (bilty: IBilty) => bilty.biltyNumber === selectedLrNumber
-    // );
-    // if (selectedBilty) {
-    //   setLrNumber(selectedBilty.biltyNumber);
-    //   setLrDate(new Date(selectedBilty.biltyDate));
-    // }
-  };
-  const handleNocType = () => {
-    // setNocType(selectedType);
-  };
-
-  const handleLrNumber = (selectedValue: string) => {
-    setSelectedLRNumber(selectedValue)
-
-  }
-
-  const handleNocFormView = () => {
-
-  }
-
-  useEffect(() => {
-    if(selectedLrNumber && biltyList) {
-      const {data} = biltyList || {};
-      if(data && Array.isArray(data) && data.length > 0) {
-        const selectedBilty = data.find(
-          (bilty: IBilty) => bilty.biltyNumber === selectedLrNumber
-        );
-        if (selectedBilty) {
-          setLrNumber(selectedBilty.biltyNumber);
-          setLrDate(new Date(selectedBilty.biltyDate));
-          dateofLr.current?.setDefaultValue(new Date(selectedBilty.biltyDate));
-        }
+    setSelectedLRNumber(selectedLrNumber);
+    const { data } = biltyList || {};
+    if (data && Array.isArray(data) && data.length > 0) {
+      const selectedBilty = data.find(
+        (bilty: IBilty) => bilty.biltyNumber === selectedLrNumber
+      );
+      if (selectedBilty) {
+        setLrNumber(selectedBilty.biltyNumber);
+        setLrDate(new Date(selectedBilty.biltyDate));
+        setDate(new Date(selectedBilty.biltyDate).toISOString());
+        dateofLr.current?.setDefaultValue(new Date(selectedBilty.biltyDate));
       }
     }
-  }, [selectedLrNumber]);
+  };
+
+
+  const handleNocDate = (date: Date) => {
+    // setDate(formatDate2(date));
+    setDate(date.toISOString());
+  };
+
+  const handleLRDate = (date: Date) => {
+    setDate(date.toISOString());
+  };
+
+  const handleNocFormView = () => {
+    getCurrentCompanyId()
+      .then((id) => {
+        const payload: ICreateNocRequest = {
+          enquiryId: orderId || '',   
+          companyId: id, 
+          nocType: packingType,
+          nocDate: date,
+          biltyDate: lrDate ? lrDate.toISOString() : '',
+          biltyNo: selectedLrNumber,
+          addedBy: id
+        };
+        console.log("Data", payload);
+        dispatch(createNocDocRequest(payload));
+      })
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    if (selectedLrNumber && biltyList) {
+      handleLrNumberSelect(selectedLrNumber);
+    }
+  }, [selectedLrNumber, biltyList]);
 
   return (
     <AvoidSoftInputViewHOC>
@@ -97,18 +109,14 @@ const NocFormView: React.FC<INocFormViewProps> = ({ navigation,  orderId,
                 <Label text="NOC Type" style={styles.label} />
                 <DropdownComponent
                   data={shiftingLuggages}
-                  onSelect={handleNocType}
-                  // defaultValue={isEdit ? editData.paymentType : ''}
-                  // ref={paymentTypeDropCompRef}
+                  onSelect={(item: any) => {
+                    setPackingType(item.label);
+                  }}
                 />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Date" style={styles.label} />
-                <DatePickerComponent onDateSelect={(date: Date) => {
-                  //   handleReceiptDate(formatDate4(date))
-                }}
-                // ref={dateOfMoneyReceiptRef}
-                />
+                <DatePickerComponent onDateSelect={handleNocDate} />
               </View>
             </View>
 
@@ -118,20 +126,16 @@ const NocFormView: React.FC<INocFormViewProps> = ({ navigation,  orderId,
                 <Label text="LR Number" style={styles.label} />
                 <DropdownWithTextInput
                   options={transformBiltyData()}
-                  onSelect={handleLrNumber}
-                  // onSelect={handleLrNumber}
+                  onSelect={handleLrNumberSelect}
                   containerStyle={styles.itemContainer}
-                //   ref={quotationNoDropCompRef}
                 />
               </View>
               <View style={styles.itemContainer}>
                 <Label text="LR Date" style={styles.label} />
-                <DatePickerComponent onDateSelect={(date: Date) => {
-                    handleLrNumberSelect(formatDate4(date))
-                }}
-                disabled={selectedLrNumber.length>0}
-                // defaultValue={lrDate}
-                ref={dateofLr}
+                <DatePickerComponent
+                  onDateSelect={(date: Date) => handleLRDate(date)}
+                  disabled={!!selectedLrNumber}
+                  ref={dateofLr}
                 />
               </View>
             </View>
@@ -142,17 +146,13 @@ const NocFormView: React.FC<INocFormViewProps> = ({ navigation,  orderId,
         <Button
           text="Save"
           onPress={handleNocFormView}
-          // disabled={createPackingMaterialRequesting}
           style={styles.previewButtonStyle}
           textStyle={styles.textStyle}
         />
         <Spacer height={8} />
-        {/* <Spinner
-          show={createMoneyReceiptRequesting || editMoneyReceiptListRequesting}
-        /> */}
       </View>
     </AvoidSoftInputViewHOC>
   );
-}
+};
 
 export default NocFormView;

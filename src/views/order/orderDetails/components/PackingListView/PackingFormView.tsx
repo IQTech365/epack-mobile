@@ -33,18 +33,22 @@ import CollapsibleView from '../../../../../common/CollapsibleView';
 import SelectCheckBoxText from '../../../../../common/SelectCheckBoxText';
 import SurveyList from '../../../../../data/surveyList.json'
 import { getSurveyCategoryRequest, getSurveyMaterialRequest } from '../../../../../redux/slices/CommonSlice';
+import SelectCheckBoxTextPackingList from '../../../../../common/SelectCheckBoxPackingList';
 
 
 
 interface Props {
   orderId: string;
+  items: string[];
+  item: string;
+  quantity: number;
   onSuccess: () => void;
 }
 
 const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   const { electronicAppliancesItems, furnitureItems, otherLargeItems, vehiclesItems } = SurveyList;
   const [state, dispatch] = useReducer(packingReducer, initialState);
-  const [particularName, setParticularName] = useState<string>('');
+  const [itemName, setItemName] = useState<string>('');
   const [quantity, setQuantity] = useState<string>('');
   const [packingType, setPackingType] = useState<string>('');
   const [productCode, setProductCode] = useState<string>('');
@@ -52,6 +56,8 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   const [description, setDescription] = useState<string>('');
   const [items, setItems] = useState<IPackingItem[]>([]);
   const [transformedData, setTransformedData] = useState<TPackingMateiralItem[]>([]);
+  const [packingOtherItemList, setPackingOtherItemList] = useState<IPackingItem[]>([]);
+  const [checkboxPackingItems, setCheckboxPackingItems] = useState<IPackingItem[]>([]);
 
   const {
     createPackingMaterialRequesting,
@@ -59,6 +65,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
     createPackingMaterialFailure,
   } = useAppSelector(state => state.Order);
   const {packingTypes} = useAppSelector(state => state.Common);
+  // const [itemName, setItem] = useState<string>('');
   const {surveyMaterial,surveyCategory, getSurveyMaterialRequesting} = useAppSelector(state => state.Common);
   const {initialValue, prefix} = useInitialValueHook('658d3cc6585e3dde644da985');
   const serialNo:number = useSerialNoHook();
@@ -68,6 +75,8 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   const productCodeInputRef = useRef(null);
   const amountInputRef = useRef(null);
   const descriptionInputRef = useRef(null);
+
+  console.log("packingType",packingType)
 
 
   type TPackingMateiralItem = {
@@ -124,7 +133,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   };
 
   const _resetInputs = () => {
-    setParticularName('');
+    setItemName('');
     //@ts-ignore
     itemNameInputRef && itemNameInputRef?.current?.reset();
 
@@ -148,6 +157,19 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   const authId = useAuthId();
   const dispatch2 = useAppDispatch();
 
+  const handleItemSelect = (item, qty, packingType, valueOfGoods) => {
+    setCheckboxPackingItems(prevItems => [
+      ...prevItems.filter(i => i.itemName !== item),
+      { itemName: item, quantity: qty, packingType, valueOfGoods }
+    ]);
+  };
+
+  const handleItemDeselect = (item) => {
+    setCheckboxPackingItems(prevItems => prevItems.filter(i => i.itemName !== item));
+  };
+
+  console.log("checkboxPackingItems",checkboxPackingItems)
+
   const handleCreate = () => {
     if(state.packing_no === '' || state.packing_no === null || state.packing_no === undefined) {
       Alert.alert('Error', 'Please set serial NO# from Setting.');
@@ -159,29 +181,33 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
         enquiryId: orderId,
         packingListNo: state.packing_no,
         packingDate: state.packing_date,
-        packingItems: items,
+        packingItems: [...checkboxPackingItems, ...packingOtherItemList],
         addedBy: authId,
         isAuto:true,
         isHeadOffice: true,
       };
+
+      console.log("payloadPacking",payload)
       dispatch2(createPackingMaterialsRequest(payload));
     }).catch(err => console.log('error in getting company id'));
   };
 
   const addPackingItem = () => {
-    const clone = [...items];
+    // const clone = [...items];
     const item: IPackingItem = {
-      itemName: particularName,
-      quantity: quantity,
-      packingType: packingType,
-      productCode: productCode,
-      valueOfGoods: valueOfGoods,
-      description: description,
+      particularName,
+      quantity,
+      packingType,
+      productCode,
+      valueOfGoods,
+      description,
     };
-    clone.push(item);
-    setItems(clone);
+  // clone.push(item);
+  setPackingOtherItemList([...packingOtherItemList,item]);
     _resetInputs();
   };
+
+  console.log("packingOtherItemList",packingOtherItemList)
 
   const deletePackingItem = (index:number) => {
     const clone = [...items];
@@ -190,10 +216,10 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   }
 
   const renderPackingListItem = () => {
-    if (items.length > 0) {
+    if (packingOtherItemList.length > 0) {
       return (
         <>
-          {items.map((item: IPackingItem, index: number) => {
+          {packingOtherItemList.map((item: IPackingItem, index: number) => {
             return (
               <Shadow distance={1}>
                 <View style={styles.listItemContainer} key={`${index}`}>
@@ -201,7 +227,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
                     <View style={styles.leftItemContainer}>
                       <View style={styles.itemContainer2}>
                         <Text style={styles.labelText}>Item Name: </Text>
-                        <Text style={styles.valueText}>{item.itemName}</Text>
+                        <Text style={styles.valueText}>{item.particularName}</Text>
                       </View>
                       <View style={styles.itemContainer2}>
                         <Text style={styles.labelText}>Quantity: </Text>
@@ -232,15 +258,6 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
               </Shadow>
             );
           })}
-          <Spacer height={12} />
-          <Button
-            text="Save"
-            onPress={handleCreate}
-            disabled={createPackingMaterialRequesting} 
-            style={styles.previewButtonStyle}
-            textStyle={styles.textStyle}
-          />
-          <Spacer height={12} />
         </>
       );
     }
@@ -339,8 +356,14 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
           <Spacer height={8} />
           <CollapsibleView title={item.surveyCategoryName} collapsed={true}>
             <View>
-            <SelectCheckBoxText items={Array.isArray(item.surveyMaterialItem) ? item.surveyMaterialItem : [item.surveyMaterialItem]} />
-            </View>
+            <SelectCheckBoxTextPackingList
+                items={Array.isArray(item.surveyMaterialItem) ? item.surveyMaterialItem : [item.surveyMaterialItem]}
+                selectedItems={checkboxPackingItems}
+                onItemSelect={handleItemSelect}
+                onItemDeselect={handleItemDeselect}
+                
+              />            
+              </View>
           </CollapsibleView>
         </View>
       ))}
@@ -352,9 +375,10 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
           <View style={styles.elementContainer2}>
             <Label text="Item/Particulars Name" style={styles.label} />
             <Input
-              onChangeText={setParticularName}
+              onChangeText={setItemName}
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
+              value={itemName}
               selectionColor={COLOR_BLACK}
               placeholder="Enter item name"
               //@ts-ignore
@@ -369,6 +393,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
                 onChangeText={setQuantity}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
+
                 selectionColor={COLOR_BLACK}
                 placeholder="Enter quantity"
                 inputType="numeric"
@@ -433,7 +458,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
         <Button
           text="Add item/Particular"
           onPress={addPackingItem}
-          disabled={particularName === ''}
+          disabled={itemName === ''}
           style={styles.previewButtonStyle}
           textStyle={styles.textStyle}
         />
