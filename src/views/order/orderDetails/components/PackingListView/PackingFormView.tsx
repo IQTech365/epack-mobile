@@ -59,6 +59,9 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   const [packingOtherItemList, setPackingOtherItemList] = useState<IPackingItem[]>([]);
   const [checkboxPackingItems, setCheckboxPackingItems] = useState<IPackingItem[]>([]);
 
+
+  console.log('checkboxPackingItems',checkboxPackingItems)
+
   const {
     createPackingMaterialRequesting,
     createPackingMaterialSuccess,
@@ -195,7 +198,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   const addPackingItem = () => {
     // const clone = [...items];
     const item: IPackingItem = {
-      particularName,
+      itemName,
       quantity,
       packingType,
       productCode,
@@ -227,7 +230,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
                     <View style={styles.leftItemContainer}>
                       <View style={styles.itemContainer2}>
                         <Text style={styles.labelText}>Item Name: </Text>
-                        <Text style={styles.valueText}>{item.particularName}</Text>
+                        <Text style={styles.valueText}>{item.itemName}</Text>
                       </View>
                       <View style={styles.itemContainer2}>
                         <Text style={styles.labelText}>Quantity: </Text>

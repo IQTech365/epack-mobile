@@ -1,6 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Alert, Text, View} from 'react-native';
-import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import DatePickerComponent from '../../../../../common/DatePickerComponent';
 import Input from '../../../../../common/Input';
 import Label from '../../../../../common/Label';
@@ -43,7 +42,6 @@ interface ISurveyListViewProps {
 }
 
 const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
-  const { electronicAppliancesItems, furnitureItems, otherLargeItems, vehiclesItems } = SurveyList;
 
   const {addSurveyItemRequesting, addSurveyItemSuccess, addSurveyItemFailure} =
     useAppSelector(state => state.Enquiry);
@@ -63,7 +61,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
   const [transformedData, setTransformedData] = useState<TSurveyMateiralItem[]>([]);
 
 
-  const {surveyMaterial,surveyCategory, getSurveyMaterialRequesting} = useAppSelector(state => state.Common);
+  const {surveyMaterial,surveyCategory} = useAppSelector(state => state.Common);
 
 
   const itemNameCompRef = useRef(null);
@@ -227,7 +225,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
           isAuto: true,
           isHeadOffice: true,
         };
-        console.log("payload",payload)
+        console.log("payloadSurveyData",payload)
         dispatch(addSurveyItemRequest(payload));
       })
       .catch((err) => console.log(err));

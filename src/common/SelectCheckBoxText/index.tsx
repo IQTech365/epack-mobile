@@ -13,6 +13,7 @@ interface SelectCheckBoxTextProps {
 
 const SelectCheckBoxText: React.FC<SelectCheckBoxTextProps> = ({ items, onItemSelect, onItemDeselect }) => {
   const [selectedItems, setSelectedItems] = useState<{[key: string]: number }>({});
+  const [quantitySelect,setQuantitySelect] = useState<string>("")
 
   const handleCheckboxPress = (item: string) => {
     setSelectedItems((prevSelectedItems) => {
@@ -28,11 +29,14 @@ const SelectCheckBoxText: React.FC<SelectCheckBoxTextProps> = ({ items, onItemSe
   };
 
   const handleQtyChange = (item: string, qty: string) => {
+    console.log("qtyyyyyyyyyyyy",qty)
     const quantity = parseInt(qty) || 0;
     setSelectedItems((prevSelectedItems) => {
       if (prevSelectedItems[item]) {
         onItemSelect(item, quantity);
       }
+      setQuantitySelect(quantity)
+
       return {
         ...prevSelectedItems,
         [item]: quantity,
@@ -56,7 +60,7 @@ const SelectCheckBoxText: React.FC<SelectCheckBoxTextProps> = ({ items, onItemSe
           <TextInput
             style={styles.qtyInput}
             placeholder="1"
-            value={selectedItems[item] !== undefined ? selectedItems[item].toString() : ''}
+            value={quantitySelect}
             onChangeText={(text) => handleQtyChange(item, text)}
             keyboardType="numeric"
           />
