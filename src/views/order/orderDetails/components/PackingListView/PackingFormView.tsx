@@ -58,9 +58,9 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   const [transformedData, setTransformedData] = useState<TPackingMateiralItem[]>([]);
   const [packingOtherItemList, setPackingOtherItemList] = useState<IPackingItem[]>([]);
   const [checkboxPackingItems, setCheckboxPackingItems] = useState<IPackingItem[]>([]);
+  
 
 
-  console.log('checkboxPackingItems',checkboxPackingItems)
 
   const {
     createPackingMaterialRequesting,
@@ -101,6 +101,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   
         if (category) {
           const surveyCategoryName = category.surveyCategoryName;
+
   
           if (!acc[surveyCategoryName]) {
             acc[surveyCategoryName] = {
@@ -160,11 +161,14 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   const authId = useAuthId();
   const dispatch2 = useAppDispatch();
 
-  const handleItemSelect = (item, qty, packingType, valueOfGoods) => {
-    setCheckboxPackingItems(prevItems => [
-      ...prevItems.filter(i => i.itemName !== item),
-      { itemName: item, quantity: qty, packingType, valueOfGoods }
-    ]);
+ const handleItemSelect = (item, qty, packingType, valueOfGoods) => {
+    const newItem = {
+      itemName: item,
+      quantity: qty,
+      packingType: packingType,
+      valueOfGoods: valueOfGoods
+    };
+    setCheckboxPackingItems(prevItems => [...prevItems, newItem]);
   };
 
   const handleItemDeselect = (item) => {
@@ -174,7 +178,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   console.log("checkboxPackingItems",checkboxPackingItems)
 
   const handleCreate = () => {
-    if(state.packing_no === '' || state.packing_no === null || state.packing_no === undefined) {
+    if (state.packing_no === '' || state.packing_no === null || state.packing_no === undefined) {
       Alert.alert('Error', 'Please set serial NO# from Setting.');
       return;
     }
@@ -186,12 +190,12 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
         packingDate: state.packing_date,
         packingItems: [...checkboxPackingItems, ...packingOtherItemList],
         addedBy: authId,
-        isAuto:true,
+        isAuto: true,
         isHeadOffice: true,
       };
 
-      console.log("payloadPacking",payload)
-      dispatch2(createPackingMaterialsRequest(payload));
+      console.log("payloadPacking", payload);
+      // dispatch2(createPackingMaterialsRequest(payload));
     }).catch(err => console.log('error in getting company id'));
   };
 
@@ -359,14 +363,12 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
           <Spacer height={8} />
           <CollapsibleView title={item.surveyCategoryName} collapsed={true}>
             <View>
-            <SelectCheckBoxTextPackingList
+              <SelectCheckBoxTextPackingList
                 items={Array.isArray(item.surveyMaterialItem) ? item.surveyMaterialItem : [item.surveyMaterialItem]}
-                selectedItems={checkboxPackingItems}
                 onItemSelect={handleItemSelect}
                 onItemDeselect={handleItemDeselect}
-                
-              />            
-              </View>
+              />
+            </View>
           </CollapsibleView>
         </View>
       ))}

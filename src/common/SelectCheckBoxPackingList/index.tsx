@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dimensions, StyleSheet, Text, TextInput, View } from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { COLOR_BLACK, COLOR_BLUE, COLOR_GRAY, COLOR_GRAY2, COLOR_WHITE } from '../../utils/colors';
@@ -23,8 +23,7 @@ const SelectCheckBoxTextPackingList: React.FC<SelectCheckBoxTextProps> = ({ item
   const { packingTypes } = useAppSelector(state => state.Common);
   const [packingType, setPackingType] = useState<string>('');
   const [valueOfGoods, setValueOfGoods] = useState<string>('');
-
-console.log("packingType",valueOfGoods)
+  const [itemsData, setItemsData] = useState<string>('');
 
   const handleCheckboxPress = (item: string) => {
     const existingItem = selectedItems.find(i => i.itemName === item);
@@ -34,12 +33,12 @@ console.log("packingType",valueOfGoods)
     } else {
       const newItem = {
         itemName: item,
-        quantity: 1, // Default quantity
+        quantity: 1,
         packingType: '',
         valueOfGoods: ''
       };
       setSelectedItems(prevItems => [...prevItems, newItem]);
-      onItemSelect(item, newItem.quantity, newItem.packingType, newItem.valueOfGoods);
+      setItemsData(item);
     }
   };
 
@@ -66,6 +65,20 @@ console.log("packingType",valueOfGoods)
     return packTypes;
   };
 
+  useEffect(() => {
+    if (itemsData) {
+      const newItem = {
+        itemName: itemsData,
+        quantity: 1,
+        packingType: packingType,
+        valueOfGoods: valueOfGoods
+      };
+      setSelectedItems(prevItems => prevItems.map(i => i.itemName === itemsData ? newItem : i));
+      onItemSelect(itemsData, newItem.quantity, newItem.packingType, newItem.valueOfGoods);
+    }
+  }, [packingType, valueOfGoods, itemsData]);
+  
+
   return (
     <View style={styles.container}>
       {items.map((item, index) => {
@@ -88,30 +101,30 @@ console.log("packingType",valueOfGoods)
                 keyboardType="numeric"
               />
             </View>
-            <View style={styles.inputBox}>
-              <View style={styles.itemContainer}>
-                <Label text="Packing Type" style={styles.label} />
-                <DropdownComponent
-                  data={_getPackingTypes()}
-                  value={packingType}
-                  onSelect={(item: TDropdownItem) => {                  
-                    setPackingType(item.label);
-                  }}
-                />
+            {selectedItem && (
+              <View style={styles.inputBox}>
+                <View style={styles.itemContainer}>
+                  <Label text="Packing Type" style={styles.label} />
+                  <DropdownComponent
+                    data={_getPackingTypes()}
+                    value={selectedItem ? selectedItem.packingType.toString() : ''}
+                    onSelect={(item: TDropdownItem) => setPackingType(item.label)}
+                  />
+                </View>
+                <View style={styles.itemContainer}>
+                  <Label text="Value Of goods" style={styles.label} />
+                  <Input
+                    onChangeText={setValueOfGoods}
+                    containerStyle={styles.inputContainer}
+                    inputStyle={styles.input}
+                    selectionColor={COLOR_BLACK}
+                    value={selectedItem ? selectedItem.valueOfGoods.toString() : ''}
+                    placeholder="Enter amount"
+                    inputType="numeric"
+                  />
+                </View>
               </View>
-              <View style={styles.itemContainer}>
-                <Label text="Value Of goods" style={styles.label} />
-                <Input
-                  onChangeText={setValueOfGoods}
-                  containerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
-                  selectionColor={COLOR_BLACK}
-                  value={valueOfGoods}
-                  placeholder="Enter amount"
-                  inputType="numeric"
-                />
-              </View>
-            </View>
+            )}
           </View>
         );
       })}

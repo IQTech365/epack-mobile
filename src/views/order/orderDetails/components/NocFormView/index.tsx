@@ -18,6 +18,7 @@ import { formatDate4 } from '../../../../../utils/formatter';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
 import { ICreateNocRequest } from '../../../../../interface/order/IPackingMaterialResponse';
 import { createNocDocRequest } from '../../../../../redux/slices/OrderSlice';
+import NocListItemView from '../NocListView';
 
 interface INocFormViewProps {
   navigation: NavigationProp<any, any>;
@@ -151,6 +152,7 @@ const NocFormView: React.FC<INocFormViewProps> = ({ navigation, orderId }) => {
         />
         <Spacer height={8} />
       </View>
+      <NocListItemView orderId={orderId}/>
     </AvoidSoftInputViewHOC>
   );
 };
