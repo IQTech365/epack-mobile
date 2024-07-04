@@ -220,3 +220,10 @@ export const GET_IMPORTANT_LINKS = `/shifting-management/important/link/getAll`;
 export const GET_SURVEY_MATERIAL = `/shifting-management/survey-material/getAll`;
 // 
 export const GET_SURVEY_CATEGORY = `/shifting-management/survey-category/getAll`;
+
+//
+
+export const ADD_NOC = `/noc/add`;
+// 
+export const GET_NOC = `/noc/list`
+

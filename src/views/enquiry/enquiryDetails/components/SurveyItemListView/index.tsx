@@ -30,6 +30,8 @@ const SurveyItemListView: React.FC<ISurveyItemListViewProps> = ({
 }) => {
   const navigation = useNavigation();
 
+  console.log("item",item)
+
   return (
     <View style={styles.surveyDateAndNumberContainer} key={`${index}`}>
       <View style={styles.contentContainer}>

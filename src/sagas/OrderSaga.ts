@@ -17,6 +17,9 @@ import {
   createMoneyReceiptFailure,
   createMoneyReceiptRequest,
   createMoneyReceiptSuccess,
+  createNocDocFailure,
+  createNocDocRequest,
+  createNocDocSuccess,
   createPackingMaterialsFailure,
   createPackingMaterialsRequest,
   createPackingMaterialsSuccess,
@@ -53,6 +56,9 @@ import {
   getMoneyReceiptListFailure,
   getMoneyReceiptListRequest,
   getMoneyReceiptListSuccess,
+  getNocDocFailure,
+  getNocDocRequest,
+  getNocDocSuccess,
   getOrderFailure,
   getOrderRequest,
   getOrderSuccess,
@@ -93,7 +99,7 @@ import { IGetOrdersRequest } from '../interface/order/IGetOrdersRequest';
 import { ISingleOrderRequest } from '../interface/order/ISingleOrderRequest';
 import { ISingleEnquiryResponse } from '../interface/enquiry/ISingleEnquiryResponse';
 import { IHtmlTemplateRequest, IHtmlTemplateResponse } from '../interface/order/templates/ITemplateResponse';
-import { ICreatePackingMaterialRequest, ICreatePackingMaterialResponse, IDeletePackingListItemResponse, IGetPackingListRequest, IPackingListResponse, IUpdatePackingListRequest, IUpdatePackingListResponse } from '../interface/order/IPackingMaterialResponse';
+import { ICreateNocRequest, ICreatePackingMaterialRequest, ICreatePackingMaterialResponse, IDeletePackingListItemResponse, IGetPackingListRequest, IPackingListResponse, IUpdatePackingListRequest, IUpdatePackingListResponse } from '../interface/order/IPackingMaterialResponse';
 import { ICreateInvoiceRequest } from '../interface/order/ICreateInvoiceRequest';
 import { ICreateInvoiceResponse } from '../interface/order/ICreateInvoiceResponse';
 import { IGetInvoiceListResponse } from '../interface/order/IGetInvoiceListResponse';
@@ -346,6 +352,29 @@ export function* createCarConditionSaga(
     }
   }
 
+  export function* createNocDocSaga(
+    action: PayloadAction<ICreateNocRequest>,
+  ) {
+    try {
+      const response: ICreateNocResponse = yield call(
+        OrderService.CreateNocService,
+        action.payload,
+      );
+      yield put(createNocDocSuccess(response));
+    } catch (error) {
+      yield put(createNocDocFailure(error));
+    }
+  }
+
+  export function* getNocDocListSaga(action: PayloadAction<string>) {
+    try {
+        const response: IGetNocDocListResponse = yield call(OrderService.GetNocService, action.payload);
+        yield put(getNocDocSuccess(response));
+    } catch (error) {
+        yield put(getNocDocFailure(error));
+    }
+  }
+
 export function* watcherOrderSaga() {
   yield takeLatest(addOrderRequest.type, addOrderSaga);
   yield takeLatest(getOrdersRequest.type, getOrderListSaga);
@@ -372,5 +401,9 @@ export function* watcherOrderSaga() {
   yield takeLatest(getPackingListTemplateRequest.type, getPackingListTemplateSaga);
   yield takeLatest(updatePackingListRequest.type, updatePackingListSaga);
   yield takeLatest(updateCarConditionRequest.type, updateCarConditionSaga);
+  yield takeLatest(createNocDocRequest.type, createNocDocSaga);
+  yield takeLatest(getNocDocRequest.type, getNocDocListSaga);
+
+
 
 }

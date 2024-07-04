@@ -7,28 +7,41 @@ const { width } = Dimensions.get('window');
 
 interface SelectCheckBoxTextProps {
   items: string[];
+  onItemSelect: (item: string, qty: number) => void;
+  onItemDeselect: (item: string) => void;
 }
 
-const SelectCheckBoxText: React.FC<SelectCheckBoxTextProps> = ({ items }) => {
-  const [selectedItems, setSelectedItems] = useState<{ [key: string]: number }>({});
+const SelectCheckBoxText: React.FC<SelectCheckBoxTextProps> = ({ items, onItemSelect, onItemDeselect }) => {
+  const [selectedItems, setSelectedItems] = useState<{[key: string]: number }>({});
+  const [quantitySelect,setQuantitySelect] = useState<string>("")
 
   const handleCheckboxPress = (item: string) => {
     setSelectedItems((prevSelectedItems) => {
       if (prevSelectedItems[item]) {
-        const { [item]: _, ...remainingItems } = prevSelectedItems; 
+        const { [item]: _, ...remainingItems } = prevSelectedItems;
+        onItemDeselect(item);
         return remainingItems;
       } else {
-        return { ...prevSelectedItems, [item]: 1 }; 
+        onItemSelect(item, 1);
+        return { ...prevSelectedItems, [item]: 1 };
       }
     });
   };
 
   const handleQtyChange = (item: string, qty: string) => {
+    console.log("qtyyyyyyyyyyyy",qty)
     const quantity = parseInt(qty) || 0;
-    setSelectedItems((prevSelectedItems) => ({
-      ...prevSelectedItems,
-      [item]: quantity,
-    }));
+    setSelectedItems((prevSelectedItems) => {
+      if (prevSelectedItems[item]) {
+        onItemSelect(item, quantity);
+      }
+      setQuantitySelect(quantity)
+
+      return {
+        ...prevSelectedItems,
+        [item]: quantity,
+      };
+    });
   };
 
   return (
@@ -47,7 +60,7 @@ const SelectCheckBoxText: React.FC<SelectCheckBoxTextProps> = ({ items }) => {
           <TextInput
             style={styles.qtyInput}
             placeholder="1"
-            value={selectedItems[item] !== undefined ? selectedItems[item].toString() : ''}
+            value={quantitySelect}
             onChangeText={(text) => handleQtyChange(item, text)}
             keyboardType="numeric"
           />
