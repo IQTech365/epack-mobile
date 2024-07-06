@@ -99,13 +99,16 @@ import { IGetOrdersRequest } from '../interface/order/IGetOrdersRequest';
 import { ISingleOrderRequest } from '../interface/order/ISingleOrderRequest';
 import { ISingleEnquiryResponse } from '../interface/enquiry/ISingleEnquiryResponse';
 import { IHtmlTemplateRequest, IHtmlTemplateResponse } from '../interface/order/templates/ITemplateResponse';
-import { ICreateNocRequest, ICreatePackingMaterialRequest, ICreatePackingMaterialResponse, IDeletePackingListItemResponse, IGetPackingListRequest, IPackingListResponse, IUpdatePackingListRequest, IUpdatePackingListResponse } from '../interface/order/IPackingMaterialResponse';
+import {  ICreatePackingMaterialRequest, ICreatePackingMaterialResponse, IDeletePackingListItemResponse, IGetPackingListRequest, IPackingListResponse, IUpdatePackingListRequest, IUpdatePackingListResponse } from '../interface/order/IPackingMaterialResponse';
 import { ICreateInvoiceRequest } from '../interface/order/ICreateInvoiceRequest';
 import { ICreateInvoiceResponse } from '../interface/order/ICreateInvoiceResponse';
 import { IGetInvoiceListResponse } from '../interface/order/IGetInvoiceListResponse';
 import { IPackingListTemplatePayload, IPackingListTemplateResponse } from '../interface/order/IPackingListTemplate';
 import { IUpdateInvoicePayload, IUpdateInvoiceResponse } from '../interface/order/IUpdateInvoiceResponse';
 import { IUpdateCarConditionPayload, IUpdateCarConditionResponse } from '../interface/order/IUpdateCarConditionResponse';
+import { IGetNocListResponse, INocPayload } from '../interface/order/IGetNocListResponse';
+import { ICreateNocFormRequest } from '../interface/order/ICreateNocFormRequest';
+import { ICreateNocFormResponse } from '../interface/order/ICreateNocFormResponse';
 
 export function* addOrderSaga(action: PayloadAction<IAddOrderRequest>) {
   try {
@@ -353,10 +356,10 @@ export function* createCarConditionSaga(
   }
 
   export function* createNocDocSaga(
-    action: PayloadAction<ICreateNocRequest>,
+    action: PayloadAction<ICreateNocFormRequest>,
   ) {
     try {
-      const response: ICreateNocResponse = yield call(
+      const response: ICreateNocFormResponse = yield call(
         OrderService.CreateNocService,
         action.payload,
       );
@@ -366,9 +369,10 @@ export function* createCarConditionSaga(
     }
   }
 
-  export function* getNocDocListSaga(action: PayloadAction<string>) {
+  export function* getNocDocListSaga(action: PayloadAction<INocPayload>) {
     try {
-        const response: IGetNocDocListResponse = yield call(OrderService.GetNocService, action.payload);
+        const response: IGetNocListResponse = yield call(OrderService.GetNocService, action.payload);
+        console.log("response",response)
         yield put(getNocDocSuccess(response));
     } catch (error) {
         yield put(getNocDocFailure(error));

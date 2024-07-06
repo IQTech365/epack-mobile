@@ -116,7 +116,7 @@ export const QuotationSlice = createSlice({
       state.addQuotationRequesting = false;
       state.addQuotationSuccess = false;
       state.addQuotationFailure = false;
-      state.addQuotationInfo = null;
+      // state.addQuotationInfo = null;
       state.addQuotationError = null;
     },
     // Get Quotations

@@ -6,78 +6,83 @@ import Label from '../Label';
 import DropdownComponent from '../DropdownComponent';
 import { TDropdownItem } from '../../type/TDropdownItem';
 import { useAppSelector } from '../../redux/hooks';
-import { IPackingType } from '../../interface/common/common';
 import Input from '../Input';
 
 const { width } = Dimensions.get('window');
 
 interface SelectCheckBoxTextProps {
   items: string[];
-  onItemSelect: (item: string, qty: number, packingType: string, valueOfGoods: string) => void;
+  onItemSelect: (itemCollection: { itemName: string; quantity: number; packingType: string; valueOfGoods: string }[]) => void;
   onItemDeselect: (item: string) => void;
 }
 
 const SelectCheckBoxTextPackingList: React.FC<SelectCheckBoxTextProps> = ({ items, onItemSelect, onItemDeselect }) => {
   const [selectedItems, setSelectedItems] = useState<{ itemName: string; quantity: number; packingType: string; valueOfGoods: string }[]>([]);
-  
   const { packingTypes } = useAppSelector(state => state.Common);
-  const [packingType, setPackingType] = useState<string>('');
-  const [valueOfGoods, setValueOfGoods] = useState<string>('');
-  const [itemsData, setItemsData] = useState<string>('');
+  const [currentItemIndex, setCurrentItemIndex] = useState<number>(-1);
+  const [itemCollection, setItemCollection] = useState<any[]>([]);
+  const [packingTypeInitial,setPackingTypeInitial] = useState<string>('')
 
-  const handleCheckboxPress = (item: string) => {
-    const existingItem = selectedItems.find(i => i.itemName === item);
-    if (existingItem) {
+  // console.log("packingTypes",packingTypes[0].packingType)
+
+  const handleCheckboxPress = (item: string, index: number) => {
+    setCurrentItemIndex(index);
+    const isSelected = selectedItems.some(i => i.itemName === item);
+    if (isSelected) {
+      const newSelectedItems = selectedItems.filter(i => i.itemName !== item);
+      setSelectedItems(newSelectedItems);
       onItemDeselect(item);
-      setSelectedItems(prevItems => prevItems.filter(i => i.itemName !== item));
     } else {
-      const newItem = {
-        itemName: item,
-        quantity: 1,
-        packingType: '',
-        valueOfGoods: ''
-      };
-      setSelectedItems(prevItems => [...prevItems, newItem]);
-      setItemsData(item);
+      const newItem = { itemName: item, quantity: 1, packingType: 'Bag', valueOfGoods: '' };
+      setSelectedItems([...selectedItems, newItem]);
+      setItemCollection([...itemCollection, newItem]);
     }
   };
 
-  const handleQtyChange = (item: string, qty: string) => {
-    const quantity = parseInt(qty) || 0;
-    setSelectedItems(prevItems =>
-      prevItems.map(i => i.itemName === item ? { ...i, quantity } : i)
+  console.log("itemCollection",itemCollection)
+
+  const handleQtyChange = (qty: string, index: number) => {
+    const updatedCollection = itemCollection.map((item, idx) => 
+      idx === index ? { ...item, quantity: parseInt(qty) || 0 } : item
     );
-    const selectedItem = selectedItems.find(i => i.itemName === item);
-    if (selectedItem) {
-      onItemSelect(item, quantity, selectedItem.packingType, selectedItem.valueOfGoods);
-    }
+    setItemCollection(updatedCollection);
+    onItemSelect(updatedCollection);
+  };
+
+  const handlePackingTypeChange = (packingType: string, index: number) => {
+    const updatedCollection = itemCollection.map((item, idx) => 
+      idx === index ? { ...item, packingType } : item
+    );
+    setItemCollection(updatedCollection);
+    onItemSelect(updatedCollection);
+  };
+
+  const handleValueofGoods = (valueOfGoods: string, index: number) => {
+    const updatedCollection = itemCollection.map((item, idx) => 
+      idx === index ? { ...item, valueOfGoods } : item
+    );
+    setItemCollection(updatedCollection);
+    onItemSelect(updatedCollection);
   };
 
   const _getPackingTypes = () => {
     let packTypes: TDropdownItem[] = [];
     const { data } = packingTypes || {};
     if (data && Array.isArray(data) && data.length > 0) {
-      packTypes = data.map((d: IPackingType) => ({
+      packTypes = data.map(d => ({
         label: d.packingType,
         value: d.packingType,
       }));
     }
+    // setPackingTypeInitial(packTypes)
     return packTypes;
+    
   };
 
-  useEffect(() => {
-    if (itemsData) {
-      const newItem = {
-        itemName: itemsData,
-        quantity: 1,
-        packingType: packingType,
-        valueOfGoods: valueOfGoods
-      };
-      setSelectedItems(prevItems => prevItems.map(i => i.itemName === itemsData ? newItem : i));
-      onItemSelect(itemsData, newItem.quantity, newItem.packingType, newItem.valueOfGoods);
-    }
-  }, [packingType, valueOfGoods, itemsData]);
-  
+
+  useEffect(()=>{
+    _getPackingTypes()
+  },[])
 
   return (
     <View style={styles.container}>
@@ -90,40 +95,43 @@ const SelectCheckBoxTextPackingList: React.FC<SelectCheckBoxTextProps> = ({ item
                 fillColor={COLOR_BLUE}
                 unfillColor="#FFFFFF"
                 isChecked={!!selectedItem}
-                onPress={() => handleCheckboxPress(item)}
+                onPress={() => handleCheckboxPress(item, index)}
               />
               <Text style={styles.itemText}>{item}</Text>
               <TextInput
                 style={styles.qtyInput}
                 placeholder="1"
-                value={selectedItem ? selectedItem.quantity.toString() : ''}
-                onChangeText={(text) => handleQtyChange(item, text)}
+                // value={selectedItem ? selectedItem.quantity.toString() : ''}
+                onChangeText={(text) => handleQtyChange(text, index)}
                 keyboardType="numeric"
               />
             </View>
-            {selectedItem && (
-              <View style={styles.inputBox}>
-                <View style={styles.itemContainer}>
-                  <Label text="Packing Type" style={styles.label} />
-                  <DropdownComponent
-                    data={_getPackingTypes()}
-                    value={selectedItem ? selectedItem.packingType.toString() : ''}
-                    onSelect={(item: TDropdownItem) => setPackingType(item.label)}
-                  />
+            {currentItemIndex === index && (
+              <>
+                <View style={styles.inputBox}>
+                  <View style={styles.itemContainer}>
+                    <Label text="Packing Type" style={styles.label} />
+                    <DropdownComponent
+                      data={_getPackingTypes()}
+                      // defaultValue="Bag"
+                      // value={selectedItem ? selectedItem.packingType : ''}
+                      onSelect={(dropdownItem) => handlePackingTypeChange(dropdownItem.label, index)}
+                    />
+                  </View>
+                  <View style={styles.itemContainer}>
+                    <Label text="Value Of Goods" style={styles.label} />
+                    <Input
+                      onChangeText={(text) => handleValueofGoods(text, index)}
+                      containerStyle={styles.inputContainer}
+                      inputStyle={styles.input}
+                      selectionColor="#000000"
+                      value={selectedItem ? selectedItem.valueOfGoods : ''}
+                      placeholder="Enter amount"
+                      inputType="numeric"
+                    />
+                  </View>
                 </View>
-                <View style={styles.itemContainer}>
-                  <Label text="Value Of goods" style={styles.label} />
-                  <Input
-                    onChangeText={setValueOfGoods}
-                    containerStyle={styles.inputContainer}
-                    inputStyle={styles.input}
-                    selectionColor={COLOR_BLACK}
-                    value={selectedItem ? selectedItem.valueOfGoods.toString() : ''}
-                    placeholder="Enter amount"
-                    inputType="numeric"
-                  />
-                </View>
-              </View>
+              </>
             )}
           </View>
         );

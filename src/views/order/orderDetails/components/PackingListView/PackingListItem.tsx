@@ -94,6 +94,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLOR_GRAY4,
     borderRadius: 5,
+    marginBottom: 6,
+
   },
   row: {
     width: width * 0.9,

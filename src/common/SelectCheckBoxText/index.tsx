@@ -29,7 +29,6 @@ const SelectCheckBoxText: React.FC<SelectCheckBoxTextProps> = ({ items, onItemSe
   };
 
   const handleQtyChange = (item: string, qty: string) => {
-    console.log("qtyyyyyyyyyyyy",qty)
     const quantity = parseInt(qty) || 0;
     setSelectedItems((prevSelectedItems) => {
       if (prevSelectedItems[item]) {

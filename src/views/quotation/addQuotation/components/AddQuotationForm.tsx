@@ -41,6 +41,9 @@ import {resetGetSerialNoRequest} from '../../../../redux/slices/SerialNoSettingS
 import useInitialValueHook from '../../../../hooks/useInitialValueHook';
 import useUtilityHook from '../../../../hooks/useUtilityHook';
 import SurveyItemQuotation from './SurveyItemQuotation';
+import { IAddSurveyItemRequest, ISurveyListItem } from '../../../../interface/enquiry/IAddSurveyItemRequest';
+import { addSurveyItemRequest } from '../../../../redux/slices/EnquirySlice';
+import useSerialNoHook from '../../../../hooks/useSerialNo';
 
 interface Props {
   fromEnquiry?: boolean;
@@ -74,6 +77,7 @@ const AddQuotationForm: React.FC<Props> = ({
     setEmployeeMobileNoError,
     setQuotationNoError,
     setEnquiryItem,
+    addQuotationInfo,
     resetAll,
   } = useQuotationFormContextHook();
   const authId = useAuthId();
@@ -97,7 +101,12 @@ const AddQuotationForm: React.FC<Props> = ({
   const {prefix} = useInitialValueHook('658d3c6f585e3dde644da95b');
   const {enquiry} = useAppSelector(state => state.Enquiry);
   const {getTotalDocumentCount} = useUtilityHook();
+  const [surveyNo, setSurveyNo] = useState('');
+  const serialNo: number = useSerialNoHook();
+  const [surveyOtherItemList, setSurveyOtherItemList] = useState<ISurveyListItem[]>([]);
+  const [checkboxSurveyItems, setCheckboxSurveyItems] = useState<ISurveyListItem[]>([]);
 
+  console.log('addQuotationInfo----', addQuotationInfo);
 
  
 
@@ -223,6 +232,26 @@ const AddQuotationForm: React.FC<Props> = ({
     return _quotation;
   };
 
+  const handleSave = () => {
+    getCurrentCompanyId()
+      .then((id) => {
+        const payload: IAddSurveyItemRequest = {
+          companyId: id as string,
+          enquiryId: enquiryId as string,
+          quotationId: addQuotationInfo?.data?._id,
+          surveyListNo: serialNo.toString(),
+          surveyDate: '',
+          surveyItems: [...checkboxSurveyItems, ...surveyOtherItemList], // Combine both lists here
+          addedBy: authId,
+          isAuto: true,
+          isHeadOffice: true,
+        };
+        console.log("payloadSAvaaa",payload)
+        // dispatch(addSurveyItemRequest(payload));
+      })
+      .catch((err) => console.log(err));
+  };
+
   const hanldeSubmit = () => {
     getCurrentCompanyId()
       .then(id => {
@@ -328,6 +357,9 @@ const AddQuotationForm: React.FC<Props> = ({
           otherDetail2: state.other_detail_2,
           easy_access_for_loading_unloading: state.other_detail_3,
           any_restrcition_for_loading_unloading: state.other_detail_4,
+          // surveyItemStatus:"",
+          // surveyItemQuotation:"",
+
           addedBy: authId,
         };
         resetError();
@@ -342,9 +374,14 @@ const AddQuotationForm: React.FC<Props> = ({
             dispatch(updateQuotationRequest(updatePayload));
           } else {
             console.log(payload,"data----");
-            
-            dispatch(addQuotationRequest(payload));
+            // dispatch(addQuotationRequest(payload));
+            // if(payload._id === "65e6af9d8cd5f37f6d692b86"){
+            //  handleSave()
+            // }
           }
+          // else if(surveyPayload> 0 || ){
+
+          // }
         } else {
           showToast(
             'Form is not filled properly. Please check!',
@@ -354,6 +391,8 @@ const AddQuotationForm: React.FC<Props> = ({
       })
       .catch(err => console.log(err));
   };
+
+  
 
   const _getQuotationsRequest = () => {
     getCurrentCompanyId()
@@ -388,6 +427,7 @@ const AddQuotationForm: React.FC<Props> = ({
   useEffect(() => {
     if (!addQuotationRequesting && addQuotationSuccess) {
       showToast('New Quotation Created.', ToastType.SUCCESS);
+      handleSave();
       // onSuccess && onSuccess();
       dispatch(resetaddQuotationRequest());
       dispatch(resetGetSerialNoRequest());
@@ -395,6 +435,8 @@ const AddQuotationForm: React.FC<Props> = ({
       getTotalDocumentCount();
       if (onSuccess) {
         onSuccess();
+        handleSave();
+
       } else {
         navigation?.goBack();
       }
@@ -405,12 +447,15 @@ const AddQuotationForm: React.FC<Props> = ({
   }, [addQuotationRequesting, addQuotationSuccess, addQuotationFailure]);
 
   useEffect(() => {
+    if (serialNo) {
+      setSurveyNo(serialNo.toString());
+    }
+  }, [serialNo]);
+
+  useEffect(() => {
     if (!updateQuotationRequesting && updateQuotationSuccess) {
       showToast('Quotation Updated.', ToastType.SUCCESS);
       dispatch(resetUpdateQuotationRequest());
-      // if (isEdit) {
-      //   resetAll();
-      // }
       _getQuotationsRequest();
       if (onSuccess) {
         onSuccess();

@@ -21,11 +21,14 @@ import {
   IHtmlTemplateRequest,
   IHtmlTemplateResponse,
 } from '../../interface/order/templates/ITemplateResponse';
-import { ICreateNocResponse, ICreatePackingMaterialRequest, ICreatePackingMaterialResponse, IDeletePackingListItemResponse, IGetNocDocResponse, IGetPackingListRequest, INocDocRequest, IPackingListResponse, IUpdatePackingListPayload, IUpdatePackingListRequest, IUpdatePackingListResponse } from '../../interface/order/IPackingMaterialResponse';
+import {  ICreatePackingMaterialRequest, ICreatePackingMaterialResponse, IDeletePackingListItemResponse, IGetPackingListRequest, IPackingListResponse, IUpdatePackingListPayload, IUpdatePackingListRequest, IUpdatePackingListResponse } from '../../interface/order/IPackingMaterialResponse';
 import { IGetInvoiceListResponse } from '../../interface/order/IGetInvoiceListResponse';
 import { IPackingListTemplateResponse, IPackingListTemplatePayload } from '../../interface/order/IPackingListTemplate';
 import { IUpdateInvoicePayload, IUpdateInvoiceResponse } from '../../interface/order/IUpdateInvoiceResponse';
 import { IUpdateCarConditionPayload, IUpdateCarConditionResponse } from '../../interface/order/IUpdateCarConditionResponse';
+import { ICreateNocFormResponse } from '../../interface/order/ICreateNocFormResponse';
+import { IGetNocListRequest, IGetNocListResponse, INocPayload } from '../../interface/order/IGetNocListResponse';
+import { ICreateNocFormRequest } from '../../interface/order/ICreateNocFormRequest';
 
 interface IOrderState {
   // Add Order
@@ -190,7 +193,7 @@ interface IOrderState {
 
   // NOC add 
 
-  createNocDocInfo: ICreateNocResponse | null;
+  createNocDocInfo: ICreateNocFormResponse | null;
   createNocDocRequesting: boolean;
   createNocDocSuccess: boolean;
   createNocDocFailure: boolean;
@@ -198,7 +201,7 @@ interface IOrderState {
 
   // NOC get
 
-  getNocDoc: IGetNocDocResponse | null;
+  getNocDoc: IGetNocListResponse | null;
   getNocDocRequesting: boolean;
   getNocDocSuccess:boolean;
   getNocDocFailure:boolean;
@@ -1018,13 +1021,13 @@ export const OrderSlice = createSlice({
 
     createNocDocRequest: (
       state,
-      action: PayloadAction<INocDocRequest>,
+      action: PayloadAction<ICreateNocFormRequest>,
     ) => {
       state.createNocDocRequesting = true;
     },
     createNocDocSuccess: (
       state,
-      action: PayloadAction<ICreateNocResponse>,
+      action: PayloadAction<ICreateNocFormResponse>,
     ) => {
       state.createNocDocRequesting = false;
       state.createNocDocSuccess = true;
@@ -1044,10 +1047,10 @@ export const OrderSlice = createSlice({
     },
 
 
-    getNocDocRequest: (state, action:PayloadAction<INocDocRequest>) => {
+    getNocDocRequest: (state, action:PayloadAction<INocPayload>) => {
       state.getNocDocRequesting = true;
     },
-    getNocDocSuccess: (state, action:PayloadAction<IGetNocDocResponse>) => {
+    getNocDocSuccess: (state, action:PayloadAction<IGetNocListResponse>) => {
       state.getNocDocRequesting = false;
       state.getNocDocSuccess = true;
       state.getNocDoc = action.payload;

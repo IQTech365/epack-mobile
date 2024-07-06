@@ -92,6 +92,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
 
   type TSurveyMateiralItem = {
     _id: string;
+    quantity: number,
     surveyCategoryId: string;
     surveyMaterialItem: string;
     surveyCategoryName: string;
@@ -104,7 +105,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
       const updatedItems = [...prevItems];
       const index = updatedItems.findIndex((i) => i.itemName === item);
       if (index >= 0) {
-        updatedItems[index].quantity = qty;
+        updatedItems[index].quantity = qty.toString();
       } else {
         updatedItems.push({ itemName: item, quantity: qty });
       }
@@ -225,7 +226,6 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
           isAuto: true,
           isHeadOffice: true,
         };
-        console.log("payloadSurveyData",payload)
         dispatch(addSurveyItemRequest(payload));
       })
       .catch((err) => console.log(err));

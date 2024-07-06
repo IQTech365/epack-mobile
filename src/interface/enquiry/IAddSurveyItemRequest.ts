@@ -14,4 +14,5 @@ export interface IAddSurveyItemRequest {
   addedBy: string;
   isAuto: boolean;
   isHeadOffice:boolean;
+  quotationId:string;
 }

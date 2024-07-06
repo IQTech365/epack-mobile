@@ -1,7 +1,6 @@
 import React, {useEffect, useReducer, useRef, useState} from 'react';
-import {View, FlatList, Text, TouchableOpacity, Alert} from 'react-native';
+import {View, Text, TouchableOpacity, Alert} from 'react-native';
 import styles from './style';
-import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../../../common/Spacer';
 import Label from '../../../../../common/Label';
 import Input from '../../../../../common/Input';
@@ -30,7 +29,6 @@ import useInitialValueHook from '../../../../../hooks/useInitialValueHook';
 import { getSerialNoRequest, resetGetSerialNoRequest } from '../../../../../redux/slices/SerialNoSettingSlice';
 import useSerialNoHook from '../../../../../hooks/useSerialNo';
 import CollapsibleView from '../../../../../common/CollapsibleView';
-import SelectCheckBoxText from '../../../../../common/SelectCheckBoxText';
 import SurveyList from '../../../../../data/surveyList.json'
 import { getSurveyCategoryRequest, getSurveyMaterialRequest } from '../../../../../redux/slices/CommonSlice';
 import SelectCheckBoxTextPackingList from '../../../../../common/SelectCheckBoxPackingList';
@@ -46,7 +44,6 @@ interface Props {
 }
 
 const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
-  const { electronicAppliancesItems, furnitureItems, otherLargeItems, vehiclesItems } = SurveyList;
   const [state, dispatch] = useReducer(packingReducer, initialState);
   const [itemName, setItemName] = useState<string>('');
   const [quantity, setQuantity] = useState<string>('');
@@ -58,18 +55,13 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   const [transformedData, setTransformedData] = useState<TPackingMateiralItem[]>([]);
   const [packingOtherItemList, setPackingOtherItemList] = useState<IPackingItem[]>([]);
   const [checkboxPackingItems, setCheckboxPackingItems] = useState<IPackingItem[]>([]);
-  
-
-
-
   const {
     createPackingMaterialRequesting,
     createPackingMaterialSuccess,
     createPackingMaterialFailure,
   } = useAppSelector(state => state.Order);
   const {packingTypes} = useAppSelector(state => state.Common);
-  // const [itemName, setItem] = useState<string>('');
-  const {surveyMaterial,surveyCategory, getSurveyMaterialRequesting} = useAppSelector(state => state.Common);
+  const {surveyMaterial,surveyCategory} = useAppSelector(state => state.Common);
   const {initialValue, prefix} = useInitialValueHook('658d3cc6585e3dde644da985');
   const serialNo:number = useSerialNoHook();
 
@@ -79,8 +71,6 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   const amountInputRef = useRef(null);
   const descriptionInputRef = useRef(null);
 
-  console.log("packingType",packingType)
-
 
   type TPackingMateiralItem = {
     _id: string;
@@ -88,7 +78,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
     surveyMaterialItem: string;
     surveyCategoryName: string;
   }
-
+  
   const transformSurveyData = () => {
     let _data: TPackingMateiralItem[] = [];
     const { data: surveyMaterials } = surveyMaterial || {};
@@ -161,22 +151,41 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   const authId = useAuthId();
   const dispatch2 = useAppDispatch();
 
- const handleItemSelect = (item, qty, packingType, valueOfGoods) => {
-    const newItem = {
-      itemName: item,
-      quantity: qty,
-      packingType: packingType,
-      valueOfGoods: valueOfGoods
-    };
-    setCheckboxPackingItems(prevItems => [...prevItems, newItem]);
+  const handleItemSelect = (itemCollection: IPackingItem[]) => {
+    setCheckboxPackingItems((prevItems) => {
+      const updatedItems = [...prevItems];
+  
+      itemCollection.forEach(newItem => {
+        const existingItemIndex = updatedItems.findIndex(item => item.itemName === newItem.itemName);
+  
+        if (existingItemIndex > -1) {
+          updatedItems[existingItemIndex] = { ...updatedItems[existingItemIndex], ...newItem };
+        } else {
+          updatedItems.push({ ...newItem, productCode: "NA", description: "NA" });
+        }
+      });
+  
+      console.log("Updated Items on Select:", updatedItems);
+      return updatedItems;
+    });
+  
+    console.log("Selected items:", itemCollection);
   };
+  
+  
 
-  const handleItemDeselect = (item) => {
-    setCheckboxPackingItems(prevItems => prevItems.filter(i => i.itemName !== item));
+  const handleItemDeselect = (itemName: string) => {
+    setCheckboxPackingItems((prevItems) => {
+      const updatedItems = prevItems.filter((packingItem) => packingItem.itemName !== itemName);
+      console.log("Updated Items on Deselect:", updatedItems);
+      return updatedItems;
+    });
+  
+    console.log(`Deselected item: ${itemName}`);
   };
-
-  console.log("checkboxPackingItems",checkboxPackingItems)
-
+  
+  
+  
   const handleCreate = () => {
     if (state.packing_no === '' || state.packing_no === null || state.packing_no === undefined) {
       Alert.alert('Error', 'Please set serial NO# from Setting.');
@@ -188,17 +197,16 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
         enquiryId: orderId,
         packingListNo: state.packing_no,
         packingDate: state.packing_date,
-        packingItems: [...checkboxPackingItems, ...packingOtherItemList],
+        packingItems: [...checkboxPackingItems,...packingOtherItemList],
         addedBy: authId,
         isAuto: true,
         isHeadOffice: true,
       };
 
       console.log("payloadPacking", payload);
-      // dispatch2(createPackingMaterialsRequest(payload));
+      dispatch2(createPackingMaterialsRequest(payload));
     }).catch(err => console.log('error in getting company id'));
   };
-
   const addPackingItem = () => {
     // const clone = [...items];
     const item: IPackingItem = {
@@ -213,8 +221,6 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   setPackingOtherItemList([...packingOtherItemList,item]);
     _resetInputs();
   };
-
-  console.log("packingOtherItemList",packingOtherItemList)
 
   const deletePackingItem = (index:number) => {
     const clone = [...items];
@@ -356,7 +362,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
           </View>
          </View>
     </CollapsibleView>
-    <Spacer height={8} />
+    {/* <Spacer height={4} /> */}
     <View>
       {transformedData.map((item, index) => (
         <View key={index}>

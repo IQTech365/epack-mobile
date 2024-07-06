@@ -19,7 +19,8 @@ import { getSurveyCategoryRequest, getSurveyMaterialRequest } from '../../../../
 import { useDispatch } from 'react-redux';
 import Label from '../../../../../common/Label';
 import Input from '../../../../../common/Input';
-import { ISurveyListItem } from '../../../../../interface/enquiry/IAddSurveyItemRequest';
+import { IAddSurveyItemRequest, ISurveyListItem } from '../../../../../interface/enquiry/IAddSurveyItemRequest';
+import { getCurrentCompanyId } from '../../../../../utils/storage';
 interface Props {
   isEdit?: boolean;
   item?: IGetQuotationData;
@@ -38,6 +39,13 @@ const SurveyItemQuotation: React.FC<Props> = ({
   const [quantity, setQuantity] = useState<string>('');
   const [valueOfGoods, setValueOfGoods] = useState<string>('');
   const [remarks, setRemarks] = useState<string>('');
+  const [checkboxSurveyItems, setCheckboxSurveyItems] = useState<ISurveyListItem[]>([]);
+  const [surveyOtherItemList, setSurveyOtherItemList] = useState<ISurveyListItem[]>([]);
+  // const [surveyOtherItemList, setSurveyOtherItemList] = useState<ISurveyListItem[]>([]);
+
+  console.log("surveyOtherItemList",surveyOtherItemList)
+
+
 
   const dispatch = useDispatch()
   const itemNameCompRef = useRef(null);
@@ -53,6 +61,23 @@ const SurveyItemQuotation: React.FC<Props> = ({
     state => state.Common,
   );
 
+
+ const handleItemSelect = (item: string, qty: number) => {
+    setCheckboxSurveyItems((prevItems) => {
+      const updatedItems = [...prevItems];
+      const index = updatedItems.findIndex((i) => i.itemName === item);
+      if (index >= 0) {
+        updatedItems[index].quantity = qty.toString();
+      } else {
+        updatedItems.push({ itemName: item, quantity: qty });
+      }
+      return updatedItems;
+    });
+  };
+
+  const handleItemDeselect = (item: string) => {
+    setCheckboxSurveyItems((prevItems) => prevItems.filter((i) => i.itemName !== item));
+  };
   
 
   const handleParticularNameInputTextChange = (text: string) => {
@@ -114,6 +139,19 @@ const SurveyItemQuotation: React.FC<Props> = ({
     setTransformedData(_data);
   };
 
+//   const handleAddItem = () =>{
+//     const newQuotationSurveyData : ISurveyListItem = {
+//       itemName,
+//       quantity,
+//       valueOfGoods,
+//       remarks
+//     };
+//     setSurveyOtherItemList([...surveyOtherItemList, newQuotationSurveyData]);
+// // resetForm();
+//   }
+
+ 
+
   const showSurveyItemList = () => {
     if (surveyItems.length > 0) {
       return surveyItems.map((d: ISurveyListItem, index: number) => {
@@ -159,19 +197,23 @@ const SurveyItemQuotation: React.FC<Props> = ({
   };
 
 
+
+  
+
+
   const handleAddItem = () => {
-    
-    const copy = [...surveyItems];
     const newItem: ISurveyListItem = {
-      itemName: itemName,
-      quantity: quantity,
-      valueOfGoods: valueOfGoods,
-      remarks: remarks,
+      itemName,
+      quantity,
+       valueOfGoods,
+       remarks,
     };
-    copy.push(newItem);
-    setSurveyItems(copy);
+    setSurveyOtherItemList([...surveyOtherItemList, newItem]);
     resetForm();
   };
+
+  // console.log("handleAddItem",handleAddItem)
+
   const resetForm = () => {
     setItem('');
     //@ts-ignore
@@ -199,7 +241,7 @@ const SurveyItemQuotation: React.FC<Props> = ({
 
 
   return (
-    <CollapsibleView title="SURVEY ITEMd" collapsed={true}>
+    <CollapsibleView title="SURVEY ITEM" collapsed={true}>
       <View>
         <View style={styles.optionContainer}>
           {options2.map((option: string, index: number) => (
@@ -324,9 +366,6 @@ const SurveyItemQuotation: React.FC<Props> = ({
           </>
           
         )}
-
-
-        
       </View>
     </CollapsibleView>
   );

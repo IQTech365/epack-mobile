@@ -4,6 +4,7 @@ export enum ACTION {
   PACKING_NO = 'PACKING_NO',
   PACKING_DATE = 'PACKING_DATE',
   PACKING_ITEMS = 'PACKING_ITEMS',
+  NEW_PACKING_ITEMS = 'NEW_PACKING_ITEMS',
 }
 
 export interface IPackingItem {
@@ -19,12 +20,14 @@ export interface IState {
   packing_no: string;
   packing_date: string;
   packing_items: IPackingItem[];
+  new_packing_items: any[];
 }
 
 export const initialState: IState = {
   packing_no: '',
   packing_date: formatDate4(new Date()),
   packing_items: [],
+  new_packing_items: [],
 };
 
 interface IAction {
@@ -41,6 +44,8 @@ export const packingReducer = (state: IState, action: IAction) => {
       return {...state, packing_date: payload as string};
     case ACTION.PACKING_ITEMS:
       return {...state, packing_items: payload as IPackingItem[]};
+      case ACTION.NEW_PACKING_ITEMS:
+      return {...state, new_packing_items: payload as any[]};
     default:
       return state;
   }

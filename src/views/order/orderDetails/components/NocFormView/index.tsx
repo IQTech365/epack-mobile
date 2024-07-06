@@ -17,12 +17,16 @@ import { IBilty } from '../../../../../interface/order/IGetBiltyListResponse';
 import { formatDate4 } from '../../../../../utils/formatter';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
 import { ICreateNocRequest } from '../../../../../interface/order/IPackingMaterialResponse';
-import { createNocDocRequest } from '../../../../../redux/slices/OrderSlice';
+import { createNocDocRequest, getBiltyListRequest, getNocDocRequest, resetNocDocRequest } from '../../../../../redux/slices/OrderSlice';
 import NocListItemView from '../NocListView';
+import { IGetSurvyeItemListRequestPayload } from '../../../../../interface/enquiry/IGetSurveyItemListResponse';
+import { showToast, ToastType } from '../../../../../utils/utility';
+import Spinner from '../../../../../common/Spinner';
+import { INocPayload } from '../../../../../interface/order/IGetNocListResponse';
 
 interface INocFormViewProps {
   navigation: NavigationProp<any, any>;
-  orderId: string | undefined;
+  orderId?: string;
   // onSuccess: () => void;
 }
 
@@ -32,8 +36,13 @@ const NocFormView: React.FC<INocFormViewProps> = ({ navigation, orderId }) => {
   const [lrDate, setLrDate] = useState<Date | null>(null);
   const [selectedLrNumber, setSelectedLRNumber] = useState<string>('');
   const [date, setDate] = useState<string>(new Date().toISOString());
-  const { biltyList } = useAppSelector(state => state.Order);
+  const { biltyList,getNocDocRequesting,getNocDocFailure,getNocDocSuccess,createNocDocRequesting,createNocDocSuccess,createNocDocFailure } = useAppSelector(state => state.Order);
   const dispatch = useAppDispatch();
+
+  const DateInputRef = useRef<IDateMethods>(null)
+
+
+
   
   const dateofLr = useRef<IDateMethods>(null);
 
@@ -56,16 +65,31 @@ const NocFormView: React.FC<INocFormViewProps> = ({ navigation, orderId }) => {
         (bilty: IBilty) => bilty.biltyNumber === selectedLrNumber
       );
       if (selectedBilty) {
+        console.log("selectedBilty",selectedBilty)
         setLrNumber(selectedBilty.biltyNumber);
         setLrDate(new Date(selectedBilty.biltyDate));
-        setDate(new Date(selectedBilty.biltyDate).toISOString());
+        // setDate(new Date(selectedBilty.biltyDate).toISOString());
         dateofLr.current?.setDefaultValue(new Date(selectedBilty.biltyDate));
       }
     }
   };
 
 
+  // const _getNocFormListRequest = () => {
+  //   getCurrentCompanyId()
+  //     .then(id => {
+  //       const payload: IGetSurvyeItemListRequestPayload = {
+  //         enquiryId: enquiryId,
+  //         // id: id as string,
+  //       };
+  //       dispatch(getNocDocRequest(payload));
+  //     })
+  //     .catch(err => console.log(err));
+  // };
+
+
   const handleNocDate = (date: Date) => {
+    console.log(date.toString(),"datedate")
     // setDate(formatDate2(date));
     setDate(date.toISOString());
   };
@@ -79,17 +103,30 @@ const NocFormView: React.FC<INocFormViewProps> = ({ navigation, orderId }) => {
       .then((id) => {
         const payload: ICreateNocRequest = {
           enquiryId: orderId || '',   
-          companyId: id, 
+          companyId: id as string, 
           nocType: packingType,
           nocDate: date,
           biltyDate: lrDate ? lrDate.toISOString() : '',
           biltyNo: selectedLrNumber,
-          addedBy: id
+          addedBy: id as string
         };
-        console.log("Data", payload);
+        console.log("payload",payload)
         dispatch(createNocDocRequest(payload));
       })
       .catch((err) => console.log(err));
+  };
+
+
+  const _getNocFormListRequest = () => {
+    getCurrentCompanyId()
+      .then(id => {
+        const payload: INocPayload = {
+          companyId: id as string,
+          // id: id as string,
+        };
+        dispatch(getNocDocRequest(payload));
+      })
+      .catch(err => console.log(err));
   };
 
   useEffect(() => {
@@ -98,7 +135,34 @@ const NocFormView: React.FC<INocFormViewProps> = ({ navigation, orderId }) => {
     }
   }, [selectedLrNumber, biltyList]);
 
+
+  useEffect(() => {
+    // dispatch(getNocDocRequest())
+    if (!createNocDocRequesting && createNocDocSuccess) {
+      showToast('Noc Doc Created.', ToastType.SUCCESS);
+      dispatch(resetNocDocRequest());
+      // dispatch(resetGetSerialNoRequest());
+      // setSurveyItems([]);
+      _getNocFormListRequest()
+      // _getNocFormListRequest();
+    } else if (!createNocDocRequesting && createNocDocFailure) {
+      showToast('Noc Doc not Created.', ToastType.ERROR);
+      dispatch(resetNocDocRequest());
+    }
+  }, [createNocDocRequesting, createNocDocSuccess, createNocDocFailure]);
+
+  useEffect(()=>{
+    setDate(new Date().toISOString());
+    _getNocFormListRequest()
+    transformBiltyData()
+    // setDate(new Date())
+    dispatch(getBiltyListRequest(orderId))
+    DateInputRef.current?.setDefaultValue(new Date())
+
+  },[])
+
   return (
+   <>
     <AvoidSoftInputViewHOC>
       <View style={styles.container}>
         <Spacer height={4} />
@@ -117,7 +181,9 @@ const NocFormView: React.FC<INocFormViewProps> = ({ navigation, orderId }) => {
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Date" style={styles.label} />
-                <DatePickerComponent onDateSelect={handleNocDate} />
+                <DatePickerComponent onDateSelect={handleNocDate}
+                 defaultValue={new Date(date)}
+        />
               </View>
             </View>
 
@@ -151,9 +217,11 @@ const NocFormView: React.FC<INocFormViewProps> = ({ navigation, orderId }) => {
           textStyle={styles.textStyle}
         />
         <Spacer height={8} />
+        <Spinner show={getNocDocRequesting} />
       </View>
       <NocListItemView orderId={orderId}/>
     </AvoidSoftInputViewHOC>
+   </>
   );
 };
 
