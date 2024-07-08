@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dimensions, StyleSheet, Text, TextInput, View } from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { COLOR_BLACK, COLOR_BLUE, COLOR_GRAY, COLOR_WHITE } from '../../utils/colors';
@@ -9,9 +9,11 @@ interface SelectCheckBoxTextProps {
   items: string[];
   onItemSelect: (item: string, qty: number) => void;
   onItemDeselect: (item: string) => void;
+  reset: boolean;
+
 }
 
-const SelectCheckBoxText: React.FC<SelectCheckBoxTextProps> = ({ items, onItemSelect, onItemDeselect }) => {
+const SelectCheckBoxText: React.FC<SelectCheckBoxTextProps> = ({ items, onItemSelect, onItemDeselect,reset }) => {
   const [selectedItems, setSelectedItems] = useState<{[key: string]: number }>({});
   const [quantitySelect,setQuantitySelect] = useState<string>("")
 
@@ -43,6 +45,15 @@ const SelectCheckBoxText: React.FC<SelectCheckBoxTextProps> = ({ items, onItemSe
     });
   };
 
+
+  useEffect(() => {
+    if (reset) {
+      setSelectedItems({});
+      setQuantitySelect("");
+    }
+  }, [reset]);
+
+  console.log("selectedItems",selectedItems)
   return (
     <View style={styles.container}>
       {items.map((item, index) => (

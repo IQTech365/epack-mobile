@@ -25,13 +25,23 @@ interface Props {
   isEdit?: boolean;
   item?: IGetQuotationData;
   quotationData?: ISingleQuotationData;
-  // handleItemSelect: 
+  onItemSelect: (text: string) => void;
+  onItemDeselect: (text: string) => void;
+  surveyOtherItemList: ISurveyListItem[]; // New prop
+  handleOtherItemsList: (item: ISurveyListItem) => void;
+
+
 }
 
 const SurveyItemQuotation: React.FC<Props> = ({
   isEdit,
   item,
+  onItemSelect,
+  onItemDeselect,
   quotationData,
+  surveyOtherItemList,
+  handleOtherItemsList
+
 }) => {
   const {state, setSurveyItem} = useQuotationFormContextHook();
   const [surveyItems, setSurveyItems] = useState<ISurveyListItem[]>([]);
@@ -39,11 +49,10 @@ const SurveyItemQuotation: React.FC<Props> = ({
   const [quantity, setQuantity] = useState<string>('');
   const [valueOfGoods, setValueOfGoods] = useState<string>('');
   const [remarks, setRemarks] = useState<string>('');
-  const [checkboxSurveyItems, setCheckboxSurveyItems] = useState<ISurveyListItem[]>([]);
-  const [surveyOtherItemList, setSurveyOtherItemList] = useState<ISurveyListItem[]>([]);
-  // const [surveyOtherItemList, setSurveyOtherItemList] = useState<ISurveyListItem[]>([]);
+  const [surveyOtherItemListState, setSurveyOtherItemList] = useState<ISurveyListItem[]>(surveyOtherItemList);
+  // const [checkboxSurveyItems, setCheckboxSurveyItems] = useState<ISurveyListItem[]>([]);
 
-  console.log("surveyOtherItemList",surveyOtherItemList)
+
 
 
 
@@ -62,22 +71,22 @@ const SurveyItemQuotation: React.FC<Props> = ({
   );
 
 
- const handleItemSelect = (item: string, qty: number) => {
-    setCheckboxSurveyItems((prevItems) => {
-      const updatedItems = [...prevItems];
-      const index = updatedItems.findIndex((i) => i.itemName === item);
-      if (index >= 0) {
-        updatedItems[index].quantity = qty.toString();
-      } else {
-        updatedItems.push({ itemName: item, quantity: qty });
-      }
-      return updatedItems;
-    });
-  };
+//  const handleItemSelect = (item: string, qty: number) => {
+//     setCheckboxSurveyItems((prevItems) => {
+//       const updatedItems = [...prevItems];
+//       const index = updatedItems.findIndex((i) => i.itemName === item);
+//       if (index >= 0) {
+//         updatedItems[index].quantity = qty.toString();
+//       } else {
+//         updatedItems.push({ itemName: item, quantity: qty });
+//       }
+//       return updatedItems;
+//     });
+//   };
 
-  const handleItemDeselect = (item: string) => {
-    setCheckboxSurveyItems((prevItems) => prevItems.filter((i) => i.itemName !== item));
-  };
+//   const handleItemDeselect = (item: string) => {
+//     setCheckboxSurveyItems((prevItems) => prevItems.filter((i) => i.itemName !== item));
+//   };
   
 
   const handleParticularNameInputTextChange = (text: string) => {
@@ -152,55 +161,50 @@ const SurveyItemQuotation: React.FC<Props> = ({
 
  
 
-  const showSurveyItemList = () => {
-    if (surveyItems.length > 0) {
-      return surveyItems.map((d: ISurveyListItem, index: number) => {
-        return (
-          <View style={styles.itemWrapper} key={`${index}`}>
-            <View style={styles.elementContainer}>
-              <View style={styles.labelContainer}>
-                <Text style={styles.labelText}>Item Name:</Text>
-              </View>
-              <View style={styles.valueContainer}>
-                <Text style={styles.valueText}>{d.itemName}</Text>
-              </View>
-            </View>
-            {d.quantity ? <View style={styles.elementContainer}>
-              <View style={styles.labelContainer}>
-                <Text style={styles.labelText}>Quantity:</Text>
-              </View>
-              <View style={styles.valueContainer}>
-                <Text style={styles.valueText}>{d.quantity}</Text>
-              </View>
-            </View>: null}
-            {d.valueOfGoods ? <View style={styles.elementContainer}>
-              <View style={styles.labelContainer}>
-                <Text style={styles.labelText}>Goods Value:</Text>
-              </View>
-              <View style={styles.valueContainer}>
-                <Text style={styles.valueText}>{d.valueOfGoods}</Text>
-              </View>
-            </View> : null}
-            {d.remarks ? <View style={styles.elementContainer}>
-              <View style={styles.labelContainer}>
-                <Text style={styles.labelText}>Remarks:</Text>
-              </View>
-              <View style={styles.valueContainer}>
-                <Text style={styles.valueText}>{d.remarks}</Text>
-              </View>
-            </View> : null}
-          </View>
-        );
-      });
-    }
-    return null;
-  };
-
-
-
+  // const showSurveyItemList = () => {
+  //   if (surveyItems.length > 0) {
+  //     return surveyItems.map((d: ISurveyListItem, index: number) => {
+  //       return (
+  //         <View style={styles.itemWrapper} key={`${index}`}>
+  //           <View style={styles.elementContainer}>
+  //             <View style={styles.labelContainer}>
+  //               <Text style={styles.labelText}>Item Name:</Text>
+  //             </View>
+  //             <View style={styles.valueContainer}>
+  //               <Text style={styles.valueText}>{d.itemName}</Text>
+  //             </View>
+  //           </View>
+  //           {d.quantity ? <View style={styles.elementContainer}>
+  //             <View style={styles.labelContainer}>
+  //               <Text style={styles.labelText}>Quantity:</Text>
+  //             </View>
+  //             <View style={styles.valueContainer}>
+  //               <Text style={styles.valueText}>{d.quantity}</Text>
+  //             </View>
+  //           </View>: null}
+  //           {d.valueOfGoods ? <View style={styles.elementContainer}>
+  //             <View style={styles.labelContainer}>
+  //               <Text style={styles.labelText}>Goods Value:</Text>
+  //             </View>
+  //             <View style={styles.valueContainer}>
+  //               <Text style={styles.valueText}>{d.valueOfGoods}</Text>
+  //             </View>
+  //           </View> : null}
+  //           {d.remarks ? <View style={styles.elementContainer}>
+  //             <View style={styles.labelContainer}>
+  //               <Text style={styles.labelText}>Remarks:</Text>
+  //             </View>
+  //             <View style={styles.valueContainer}>
+  //               <Text style={styles.valueText}>{d.remarks}</Text>
+  //             </View>
+  //           </View> : null}
+  //         </View>
+  //       );
+  //     });
+  //   }
+  //   return null;
+  // };
   
-
-
   const handleAddItem = () => {
     const newItem: ISurveyListItem = {
       itemName,
@@ -208,7 +212,8 @@ const SurveyItemQuotation: React.FC<Props> = ({
        valueOfGoods,
        remarks,
     };
-    setSurveyOtherItemList([...surveyOtherItemList, newItem]);
+    handleOtherItemsList(newItem);
+    // setSurveyOtherItemList([...surveyOtherItemListState, newItem]);
     resetForm();
   };
 
@@ -238,6 +243,57 @@ const SurveyItemQuotation: React.FC<Props> = ({
     dispatch(getSurveyMaterialRequest())
     dispatch(getSurveyCategoryRequest())
   }, []);
+
+
+  const showSurveyItemList = () => {
+    if (surveyOtherItemList.length > 0) {
+      return surveyOtherItemList.map((d: ISurveyListItem, index: number) => {
+        return (
+          <View style={styles.itemWrapper} key={`${index}`}>
+            <View style={styles.elementContainer}>
+              <View style={styles.labelContainer}>
+                <Text style={styles.labelText}>Item Name:</Text>
+              </View>
+              <View style={styles.valueContainer}>
+                <Text style={styles.valueText}>{d.itemName}</Text>
+              </View>
+            </View>
+            {d.quantity ? (
+              <View style={styles.elementContainer}>
+                <View style={styles.labelContainer}>
+                  <Text style={styles.labelText}>Quantity:</Text>
+                </View>
+                <View style={styles.valueContainer}>
+                  <Text style={styles.valueText}>{d.quantity}</Text>
+                </View>
+              </View>
+            ) : null}
+            {d.valueOfGoods ? (
+              <View style={styles.elementContainer}>
+                <View style={styles.labelContainer}>
+                  <Text style={styles.labelText}>Goods Value:</Text>
+                </View>
+                <View style={styles.valueContainer}>
+                  <Text style={styles.valueText}>{d.valueOfGoods}</Text>
+                </View>
+              </View>
+            ) : null}
+            {d.remarks ? (
+              <View style={styles.elementContainer}>
+                <View style={styles.labelContainer}>
+                  <Text style={styles.labelText}>Remarks:</Text>
+                </View>
+                <View style={styles.valueContainer}>
+                  <Text style={styles.valueText}>{d.remarks}</Text>
+                </View>
+              </View>
+            ) : null}
+          </View>
+        );
+      });
+    }
+    return null;
+  };
 
 
   return (
@@ -277,8 +333,8 @@ const SurveyItemQuotation: React.FC<Props> = ({
                       <View>
                         <SelectCheckBoxText
                           items={Array.isArray(item.surveyMaterialItem) ? item.surveyMaterialItem : [item.surveyMaterialItem]}
-                          onItemSelect={handleItemSelect}
-                         onItemDeselect={handleItemDeselect}
+                          onItemSelect={onItemSelect}
+                         onItemDeselect={onItemDeselect}
                         />
                       </View>
                     </CollapsibleView>

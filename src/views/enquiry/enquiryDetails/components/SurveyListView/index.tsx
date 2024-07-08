@@ -54,6 +54,8 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
   const [surveyItems, setSurveyItems] = useState<ISurveyListItem[]>([]);
   const [surveyOtherItemList, setSurveyOtherItemList] = useState<ISurveyListItem[]>([]);
   const [checkboxSurveyItems, setCheckboxSurveyItems] = useState<ISurveyListItem[]>([]);
+  const [resetSelection, setResetSelection] = useState(false);
+
 
 
 
@@ -98,6 +100,11 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
     surveyCategoryName: string;
   }
 
+  const handleReset = () =>{
+    setResetSelection(true);
+
+  }
+
 
 
   const handleItemSelect = (item: string, qty: number) => {
@@ -112,6 +119,8 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
       return updatedItems;
     });
   };
+
+  console.log("checkboxSurveyItems",checkboxSurveyItems)
 
   const handleItemDeselect = (item: string) => {
     setCheckboxSurveyItems((prevItems) => prevItems.filter((i) => i.itemName !== item));
@@ -251,6 +260,12 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
   }, []);
 
   useEffect(() => {
+    if (resetSelection) {
+      setResetSelection(false); // Reset the flag after the component has been reset
+    }
+  }, [resetSelection]);
+
+  useEffect(() => {
     if (serialNo) {
       setSurveyNo(serialNo.toString());
     }
@@ -259,6 +274,9 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
   useEffect(() => {
     if (!addSurveyItemRequesting && addSurveyItemSuccess) {
       showToast('Survey Item List Created.', ToastType.SUCCESS);
+      handleReset()
+      setCheckboxSurveyItems([])
+      setSurveyOtherItemList([]);
       dispatch(resetAddSurveyItemRequest());
       dispatch(resetGetSerialNoRequest());
       setSurveyItems([]);
@@ -318,6 +336,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
     }
     return null;
   };
+
   
 
   useEffect(() => {
@@ -361,6 +380,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
                 items={Array.isArray(item.surveyMaterialItem) ? item.surveyMaterialItem : [item.surveyMaterialItem]}
                 onItemSelect={handleItemSelect}
                 onItemDeselect={handleItemDeselect}
+                reset={resetSelection}
               />
             </View>
           </CollapsibleView>

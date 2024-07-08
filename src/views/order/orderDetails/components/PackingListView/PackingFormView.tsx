@@ -4,7 +4,7 @@ import styles from './style';
 import Spacer from '../../../../../common/Spacer';
 import Label from '../../../../../common/Label';
 import Input from '../../../../../common/Input';
-import {COLOR_BLACK} from '../../../../../utils/colors';
+import {COLOR_BLACK, COLOR_BLUE} from '../../../../../utils/colors';
 import DatePickerComponent from '../../../../../common/DatePickerComponent';
 import {
   ICreatePackingMaterialRequest,
@@ -32,6 +32,9 @@ import CollapsibleView from '../../../../../common/CollapsibleView';
 import SurveyList from '../../../../../data/surveyList.json'
 import { getSurveyCategoryRequest, getSurveyMaterialRequest } from '../../../../../redux/slices/CommonSlice';
 import SelectCheckBoxTextPackingList from '../../../../../common/SelectCheckBoxPackingList';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import { IGetSurvyeItemListRequestPayload } from '../../../../../interface/enquiry/IGetSurveyItemListResponse';
+import { getSurveyItemListRequest } from '../../../../../redux/slices/EnquirySlice';
 
 
 
@@ -40,10 +43,11 @@ interface Props {
   items: string[];
   item: string;
   quantity: number;
+  enquiryId: string;
   onSuccess: () => void;
 }
 
-const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
+const ListHeaderView: React.FC<Props> = ({orderId, onSuccess, enquiryId}) => {
   const [state, dispatch] = useReducer(packingReducer, initialState);
   const [itemName, setItemName] = useState<string>('');
   const [quantity, setQuantity] = useState<string>('');
@@ -55,6 +59,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   const [transformedData, setTransformedData] = useState<TPackingMateiralItem[]>([]);
   const [packingOtherItemList, setPackingOtherItemList] = useState<IPackingItem[]>([]);
   const [checkboxPackingItems, setCheckboxPackingItems] = useState<IPackingItem[]>([]);
+  const [showSurveyDropdown, setShowSurveyDropdown] = useState<boolean>(false); // New state to control dropdown visibility
   const {
     createPackingMaterialRequesting,
     createPackingMaterialSuccess,
@@ -64,12 +69,17 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   const {surveyMaterial,surveyCategory} = useAppSelector(state => state.Common);
   const {initialValue, prefix} = useInitialValueHook('658d3cc6585e3dde644da985');
   const serialNo:number = useSerialNoHook();
+  
+  const {surveyList} = useAppSelector((state)=> state.Enquiry)
 
   const itemNameInputRef = useRef(null);
   const quntityInputRef = useRef(null);
   const productCodeInputRef = useRef(null);
   const amountInputRef = useRef(null);
   const descriptionInputRef = useRef(null);
+
+
+  console.log("surveyList",surveyList)
 
 
   type TPackingMateiralItem = {
@@ -164,12 +174,10 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
           updatedItems.push({ ...newItem, productCode: "NA", description: "NA" });
         }
       });
-  
-      console.log("Updated Items on Select:", updatedItems);
-      return updatedItems;
+
+        return updatedItems;
     });
   
-    console.log("Selected items:", itemCollection);
   };
   
   
@@ -277,6 +285,27 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
     return null;
   };
 
+  const _getPackingTypess = () =>{
+    return [1,2,3,4,5]
+  }
+
+  // const _getSurveyItemListRequest = () => {
+  //   getCurrentCompanyId()
+  //     .then(id => {
+  //       const payload: IGetSurvyeItemListRequestPayload = {
+  //         enquiryId: enquiryId,
+  //         // id: id as string,
+  //       };
+  //       dispatch(getSurveyItemListRequest(payload));
+  //     })
+  //     .catch(err => console.log(err));
+  // };
+  // _getSurveyItemListRequest()
+
+  // const FilteredSurveyListData = () =>{
+  //   // const surveyList
+  // }
+
   const _getSerialNoRequest = () => {
     getCurrentCompanyId().then(id => {
       const payload: IGetSerialNoRequest = {
@@ -324,8 +353,35 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
     transformSurveyData();
   }, [surveyMaterial]);
 
+  const handleCheckboxPress = () =>{
+    setShowSurveyDropdown(!showSurveyDropdown)
+  }
+
   return (
     <>
+        <View style={styles.checkboxContainer}>
+        <BouncyCheckbox
+                fillColor={COLOR_BLUE}
+                text='Convert Into Survey List to Packing List'
+                unfillColor="#FFFFFF"
+                // isChecked={!!selectedItem}
+                onPress={() => handleCheckboxPress()}
+              />
+            </View>
+      {showSurveyDropdown && (
+          // <View style={styles.elementContainer}>
+
+        <View style={styles.itemContainerSurvey}>
+          {/* <View style={styles.dropdownContent}> */}
+            <Label text="Survey No." style={styles.label} />
+            <DropdownComponent
+              data={_getPackingTypess()}
+              onSelect={(item) => setPackingType(item.label)}
+            />
+          </View>
+        //  </View>
+
+      )}
     <CollapsibleView title ="Basic Details" collapsed={false}>
     {/* <Spacer height={4} />
         <Label text="Item / Particular Name" style={styles.labelHeading} />

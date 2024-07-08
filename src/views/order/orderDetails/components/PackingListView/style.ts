@@ -42,6 +42,22 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     alignSelf: 'center',
   },
+
+  itemContainerSurvey: {
+    width: width * 0.44,
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    alignSelf: 'center',
+    marginBottom: 2
+  },
+
+  checkboxContainer: {
+    width: width * 0.9,
+    flexDirection: 'row',
+    alignSelf: 'center',
+    alignItems: 'center',
+    marginBottom: 2
+  },
   label: {
     color: COLOR_BLACK,
     fontSize: 14,
@@ -126,6 +142,31 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
   },
+  checkBoxElement:{
+    // borderWidth: 2,
+    width: width * 0.9,
+    alignSelf: 'center',
+    // alignItem: 'inline'
+    // paddingVertical: 4
+
+  },
+
+
+  inputContain: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  dropdownContent:{
+    // width: width * 0.9,
+    width: '100%',
+    alignSelf: 'center',
+    margin: 13
+    // alignItems: 'center',
+    // flexDirection: 'row',
+    // justifyContent: 'space-between',
+  }
 });
 
 export default styles;

@@ -41,9 +41,10 @@ import {resetGetSerialNoRequest} from '../../../../redux/slices/SerialNoSettingS
 import useInitialValueHook from '../../../../hooks/useInitialValueHook';
 import useUtilityHook from '../../../../hooks/useUtilityHook';
 import SurveyItemQuotation from './SurveyItemQuotation';
-import { IAddSurveyItemRequest, ISurveyListItem } from '../../../../interface/enquiry/IAddSurveyItemRequest';
+import { IAddSurveyItemPayload, IAddSurveyItemRequest, ISurveyListItem } from '../../../../interface/enquiry/IAddSurveyItemRequest';
 import { addSurveyItemRequest } from '../../../../redux/slices/EnquirySlice';
 import useSerialNoHook from '../../../../hooks/useSerialNo';
+import { Text, View } from 'react-native';
 
 interface Props {
   fromEnquiry?: boolean;
@@ -77,11 +78,12 @@ const AddQuotationForm: React.FC<Props> = ({
     setEmployeeMobileNoError,
     setQuotationNoError,
     setEnquiryItem,
-    addQuotationInfo,
     resetAll,
   } = useQuotationFormContextHook();
   const authId = useAuthId();
   const dispatch = useAppDispatch();
+
+  console.log("itemDatawithQuotation",item)
   const {
     addQuotationRequesting,
     addQuotationSuccess,
@@ -91,6 +93,7 @@ const AddQuotationForm: React.FC<Props> = ({
     updateQuotationRequesting,
     updateQuotationSuccess,
     updateQuotationFailure,
+    addQuotationInfo,
   } = useAppSelector(state => state.Quotation);
 
   const {
@@ -103,6 +106,9 @@ const AddQuotationForm: React.FC<Props> = ({
   const {getTotalDocumentCount} = useUtilityHook();
   const [surveyNo, setSurveyNo] = useState('');
   const serialNo: number = useSerialNoHook();
+  const [itemName, setItem] = useState<string>('');
+  const [quantity, setQuantity] = useState<string>('');
+  const [remarks, setRemarks] = useState<string>('');
   const [surveyOtherItemList, setSurveyOtherItemList] = useState<ISurveyListItem[]>([]);
   const [checkboxSurveyItems, setCheckboxSurveyItems] = useState<ISurveyListItem[]>([]);
 
@@ -232,24 +238,21 @@ const AddQuotationForm: React.FC<Props> = ({
     return _quotation;
   };
 
-  const handleSave = () => {
-    getCurrentCompanyId()
-      .then((id) => {
-        const payload: IAddSurveyItemRequest = {
-          companyId: id as string,
-          enquiryId: enquiryId as string,
-          quotationId: addQuotationInfo?.data?._id,
-          surveyListNo: serialNo.toString(),
-          surveyDate: '',
-          surveyItems: [...checkboxSurveyItems, ...surveyOtherItemList], // Combine both lists here
-          addedBy: authId,
-          isAuto: true,
-          isHeadOffice: true,
-        };
-        console.log("payloadSAvaaa",payload)
-        // dispatch(addSurveyItemRequest(payload));
-      })
-      .catch((err) => console.log(err));
+  const handleItemSelect = (item: string, qty: number) => {
+    setCheckboxSurveyItems((prevItems) => {
+      const updatedItems = [...prevItems];
+      const index = updatedItems.findIndex((i) => i.itemName === item);
+      if (index >= 0) {
+        updatedItems[index].quantity = qty.toString();
+      } else {
+        updatedItems.push({ itemName: item, quantity: qty });
+      }
+      return updatedItems;
+    });
+  };
+
+  const handleItemDeselect = (item: string) => {
+    setCheckboxSurveyItems((prevItems) => prevItems.filter((i) => i.itemName !== item));
   };
 
   const hanldeSubmit = () => {
@@ -374,7 +377,7 @@ const AddQuotationForm: React.FC<Props> = ({
             dispatch(updateQuotationRequest(updatePayload));
           } else {
             console.log(payload,"data----");
-            // dispatch(addQuotationRequest(payload));
+            dispatch(addQuotationRequest(payload));
             // if(payload._id === "65e6af9d8cd5f37f6d692b86"){
             //  handleSave()
             // }
@@ -390,6 +393,26 @@ const AddQuotationForm: React.FC<Props> = ({
         }
       })
       .catch(err => console.log(err));
+  };
+
+
+  const handleSave = () => {
+    getCurrentCompanyId()
+      .then((id) => {
+        const payload: IAddSurveyItemPayload = {
+          companyId: id as string,
+          enquiryId: enquiryId as string,
+          quotationId: addQuotationInfo.data._id ,
+          surveyListNo: surveyNo.toString(),
+          surveyDate: state.date_of_quotation,
+          surveyItems: [...checkboxSurveyItems, ...surveyOtherItemList],
+          addedBy: authId,
+          isAuto: true,
+          isHeadOffice: true,
+        };
+        dispatch(addSurveyItemRequest(payload));
+      })
+      .catch((err) => console.log(err));
   };
 
   
@@ -414,6 +437,12 @@ const AddQuotationForm: React.FC<Props> = ({
     //@ts-ignore
     return _enquiry;
   };
+
+  const _handleOhterItemsList = (item: ISurveyListItem) => {
+    const copy = [...surveyOtherItemList];
+    copy.push(item);
+    setSurveyOtherItemList(copy);
+  }
 
   useEffect(() => {
     // if(isEdit) {
@@ -473,7 +502,7 @@ const AddQuotationForm: React.FC<Props> = ({
   ]);  
 
 
-
+ 
 
   return (
     <>
@@ -512,11 +541,14 @@ const AddQuotationForm: React.FC<Props> = ({
       />
 
      <Spacer height={4} />
-      <SurveyItemQuotation
-        isEdit={isEdit}
-        item={item}
-        // quotationData={_getQuotationItem()}
+     <SurveyItemQuotation
+      item={item}
+      onItemSelect={handleItemSelect}
+      onItemDeselect={handleItemDeselect}
+      surveyOtherItemList={surveyOtherItemList} // Pass the state as prop
+      handleOtherItemsList={_handleOhterItemsList}
       />
+     
   
       <Spacer height={12} />
       <Button
