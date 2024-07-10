@@ -2,6 +2,7 @@ import {StyleSheet, Dimensions} from 'react-native';
 import {
   COLOR_BLACK,
   COLOR_BLUE,
+  COLOR_GRAY,
   COLOR_GRAY2,
   COLOR_WHITE,
 } from '../../../../../utils/colors';
@@ -44,24 +45,41 @@ const styles = StyleSheet.create({
   },
 
   itemContainerSurvey: {
-    width: width * 0.44,
+    width: width * 0.95,
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     alignSelf: 'center',
-    marginBottom: 2
+    marginBottom: 5
   },
 
   checkboxContainer: {
-    width: width * 0.9,
+    width: width * 0.95,
     flexDirection: 'row',
     alignSelf: 'center',
     alignItems: 'center',
-    marginBottom: 2
+    flexWrap: 'wrap',
+    marginBottom: 3,
   },
   label: {
     color: COLOR_BLACK,
     fontSize: 14,
     fontFamily: 'WorkSans-Medium'
+  },
+
+  iconStyle: {
+    borderRadius: 0,
+    width: 18,
+    height: 18,
+    borderWidth: 2
+  },
+
+  textContainerStyle: {
+    paddingLeft: 0,
+    marginLeft: 6,
+  },
+  style: {
+    marginRight: 15,
+    marginBottom: 15,
   },
   labelHeading: {
     color: COLOR_BLACK,
@@ -84,6 +102,13 @@ const styles = StyleSheet.create({
   previewButtonStyle: {
     backgroundColor: COLOR_BLUE,
     borderRadius: 5,
+  },
+
+  textStyleCheck: {
+    fontFamily: 'JosefinSans-Regular',
+    textDecorationLine: 'none',
+    fontSize: 14,
+    color: COLOR_GRAY
   },
   // items
   listItemContainer: {

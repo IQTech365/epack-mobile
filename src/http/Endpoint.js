@@ -22,6 +22,7 @@ export const ADD_SURVEY = `/survey/add`;
 export const GET_SURVEY_COMMENTS = (enquiry_id) => `/survey/${enquiry_id}`;
 export const ADD_SURVEY_ITEM = `/survey/add-survey-item`;
 export const EDIT_SURVEY_ITEM = (survey_id) => `/survey/update-survey-item/${survey_id}`;
+export const GET_SURVEY_ITEM_BY_ID = (_id) => '/survey/get-survey-item'
 export const GET_SURVEY_ITEM =  `/survey/get-survey-item`;
 export const ADD_FOLLOWUP = `/followup/add`;
 export const GET_FOLLOWUP_COMMENTS = (enquiry_id) => `/followup/${enquiry_id}`;

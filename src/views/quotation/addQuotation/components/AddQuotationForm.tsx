@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import BasicDetails from './BasicDetails';
 import {useQuotationFormContextHook} from '../../../../provider/QuotationFormContextProvider';
 import PickupAddressView from './PickupAddressView';
@@ -37,7 +37,7 @@ import {IEnquiry, IGetQuotationData} from '../../../../interface/quotation/IGetQ
 import {ISingleQuotationData} from '../../../../interface/quotation/IGetSingleQuotationResponse';
 import {IUpdateQuotationRequest} from '../../../../interface/quotation/quotation';
 import {ISingleEnquiryData} from '../../../../interface/enquiry/ISingleEnquiryResponse';
-import {resetGetSerialNoRequest} from '../../../../redux/slices/SerialNoSettingSlice';
+import {getSerialNoRequest, resetGetSerialNoRequest} from '../../../../redux/slices/SerialNoSettingSlice';
 import useInitialValueHook from '../../../../hooks/useInitialValueHook';
 import useUtilityHook from '../../../../hooks/useUtilityHook';
 import SurveyItemQuotation from './SurveyItemQuotation';
@@ -45,6 +45,7 @@ import { IAddSurveyItemPayload, IAddSurveyItemRequest, ISurveyListItem } from '.
 import { addSurveyItemRequest } from '../../../../redux/slices/EnquirySlice';
 import useSerialNoHook from '../../../../hooks/useSerialNo';
 import { Text, View } from 'react-native';
+import { DOCUMENT_TYPE, IGetSerialNoRequest } from '../../../../interface/setting/serialNo/serialNo';
 
 interface Props {
   fromEnquiry?: boolean;
@@ -83,7 +84,9 @@ const AddQuotationForm: React.FC<Props> = ({
   const authId = useAuthId();
   const dispatch = useAppDispatch();
 
-  console.log("itemDatawithQuotation",item)
+  // console.log("useSerialNoHook",useSerialNoHook)
+
+  // console.log("itemDatawithQuotation",item)
   const {
     addQuotationRequesting,
     addQuotationSuccess,
@@ -111,10 +114,13 @@ const AddQuotationForm: React.FC<Props> = ({
   const [remarks, setRemarks] = useState<string>('');
   const [surveyOtherItemList, setSurveyOtherItemList] = useState<ISurveyListItem[]>([]);
   const [checkboxSurveyItems, setCheckboxSurveyItems] = useState<ISurveyListItem[]>([]);
+  const [shouldSaveSurveyNo, setShouldSaveSurveyNo] = useState<boolean>(false);
+  const shouldSaveSurveyNoRef = useRef<Boolean>(false);
 
-  console.log('addQuotationInfo----', addQuotationInfo);
-
- 
+  
+  
+  
+  const {initialValue} = useInitialValueHook('658d3d2f585e3dde644da9b2'); 
 
   const transitInsurance: ITransitInsurance = {
     isRequired: state.transit_insurance,
@@ -213,19 +219,8 @@ const AddQuotationForm: React.FC<Props> = ({
         );
         valid = false;
       }
-      // if (Validator.isEmpty(employee_name)) {
-      //   setEmployeeNameError('Employee name required');
-      //   valid = false;
-      // }
     }
-    // if (Validator.isEmpty(pickup_pincode)) {
-    //   setPickupPincodeError('Pincode required');
-    //   valid = false;
-    // }
-    // if (Validator.isEmpty(drop_pincode)) {
-    //   setDropPincodeError('Pincode required');
-    //   valid = false;
-    // }
+
     return valid;
   };
 
@@ -253,6 +248,24 @@ const AddQuotationForm: React.FC<Props> = ({
 
   const handleItemDeselect = (item: string) => {
     setCheckboxSurveyItems((prevItems) => prevItems.filter((i) => i.itemName !== item));
+  };
+
+  const _getSerialNoRequest = () => {
+    getCurrentCompanyId()
+      .then(id => {
+        const payload: IGetSerialNoRequest = {
+          document: DOCUMENT_TYPE.SURVEY_ITEM,
+          payload: {
+            activeCount: initialValue,
+            companyId: id as string,
+            isAuto: true,
+            isHeadOffice: true,
+          },
+        };
+        console.log("payloadSerial",payload)
+        dispatch(getSerialNoRequest(payload));
+      })
+      .catch(err => console.log('err--', err));
   };
 
   const hanldeSubmit = () => {
@@ -360,9 +373,6 @@ const AddQuotationForm: React.FC<Props> = ({
           otherDetail2: state.other_detail_2,
           easy_access_for_loading_unloading: state.other_detail_3,
           any_restrcition_for_loading_unloading: state.other_detail_4,
-          // surveyItemStatus:"",
-          // surveyItemQuotation:"",
-
           addedBy: authId,
         };
         resetError();
@@ -378,13 +388,7 @@ const AddQuotationForm: React.FC<Props> = ({
           } else {
             console.log(payload,"data----");
             dispatch(addQuotationRequest(payload));
-            // if(payload._id === "65e6af9d8cd5f37f6d692b86"){
-            //  handleSave()
-            // }
           }
-          // else if(surveyPayload> 0 || ){
-
-          // }
         } else {
           showToast(
             'Form is not filled properly. Please check!',
@@ -394,16 +398,14 @@ const AddQuotationForm: React.FC<Props> = ({
       })
       .catch(err => console.log(err));
   };
-
-
   const handleSave = () => {
     getCurrentCompanyId()
       .then((id) => {
         const payload: IAddSurveyItemPayload = {
           companyId: id as string,
           enquiryId: enquiryId as string,
-          quotationId: addQuotationInfo.data._id ,
-          surveyListNo: surveyNo.toString(),
+          quotationId: addQuotationInfo.data.quotationId,
+          surveyListNo: serialNo ? serialNo.toString() : state.quotation_no,
           surveyDate: state.date_of_quotation,
           surveyItems: [...checkboxSurveyItems, ...surveyOtherItemList],
           addedBy: authId,
@@ -414,9 +416,6 @@ const AddQuotationForm: React.FC<Props> = ({
       })
       .catch((err) => console.log(err));
   };
-
-  
-
   const _getQuotationsRequest = () => {
     getCurrentCompanyId()
       .then(id => {
@@ -427,7 +426,6 @@ const AddQuotationForm: React.FC<Props> = ({
       })
       .catch(err => console.log(err));
   };
-
   const _getSingleEnquiry = () => {
     let _enquiry: ISingleEnquiryData;
     const {data} = enquiry || {};
@@ -437,12 +435,14 @@ const AddQuotationForm: React.FC<Props> = ({
     //@ts-ignore
     return _enquiry;
   };
-
   const _handleOhterItemsList = (item: ISurveyListItem) => {
     const copy = [...surveyOtherItemList];
     copy.push(item);
     setSurveyOtherItemList(copy);
   }
+
+
+
 
   useEffect(() => {
     // if(isEdit) {
@@ -452,32 +452,35 @@ const AddQuotationForm: React.FC<Props> = ({
       setEnquiryItem(_getSingleEnquiry());
     }
   }, []);
+  // _getSerialNoRequest()
+  console.log("serialNo",serialNo)
 
   useEffect(() => {
-    if (!addQuotationRequesting && addQuotationSuccess) {
-      showToast('New Quotation Created.', ToastType.SUCCESS);
-      handleSave();
-      // onSuccess && onSuccess();
-      dispatch(resetaddQuotationRequest());
-      dispatch(resetGetSerialNoRequest());
-      _getQuotationsRequest();
-      getTotalDocumentCount();
-      if (onSuccess) {
-        onSuccess();
-        handleSave();
-
-      } else {
-        navigation?.goBack();
+    if (!addQuotationRequesting) {
+      if (addQuotationSuccess) {
+        showToast('New Quotation Created.', ToastType.SUCCESS);
+        setShouldSaveSurveyNo(true);
+        _getSerialNoRequest();
+        dispatch(resetaddQuotationRequest());
+        dispatch(resetGetSerialNoRequest());
+        _getQuotationsRequest();
+        getTotalDocumentCount();
+        if (onSuccess) {
+          onSuccess();
+        } else {
+          navigation?.goBack();
+        }
+      } else if (addQuotationFailure) {
+        showToast('Quotation Not Created. Try again!', ToastType.ERROR);
+        dispatch(resetaddQuotationRequest());
       }
-    } else if (!addQuotationRequesting && addQuotationFailure) {
-      showToast('Quotation Not Created. Try again!', ToastType.ERROR);
-      dispatch(resetaddQuotationRequest());
     }
   }, [addQuotationRequesting, addQuotationSuccess, addQuotationFailure]);
 
   useEffect(() => {
-    if (serialNo) {
-      setSurveyNo(serialNo.toString());
+    if (serialNo && shouldSaveSurveyNoRef.current) {
+      handleSave();
+      shouldSaveSurveyNoRef.current = false;
     }
   }, [serialNo]);
 
@@ -500,9 +503,6 @@ const AddQuotationForm: React.FC<Props> = ({
     updateQuotationSuccess,
     updateQuotationFailure,
   ]);  
-
-
- 
 
   return (
     <>

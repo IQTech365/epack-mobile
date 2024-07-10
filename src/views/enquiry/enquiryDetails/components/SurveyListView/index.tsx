@@ -104,7 +104,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
     setResetSelection(true);
 
   }
-
+  
 
 
   const handleItemSelect = (item: string, qty: number) => {
@@ -120,13 +120,10 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
     });
   };
 
-  console.log("checkboxSurveyItems",checkboxSurveyItems)
-
   const handleItemDeselect = (item: string) => {
     setCheckboxSurveyItems((prevItems) => prevItems.filter((i) => i.itemName !== item));
   };
   
-
 
   const transformSurveyData = () => {
     let _data: TSurveyMateiralItem[] = [];
@@ -150,7 +147,6 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
   
           acc[surveyCategoryName].surveyMaterialItem.push(surveyMaterialItem);
         }
-  
         return acc;
       }, {});
   
@@ -158,7 +154,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
     }
       setTransformedData(_data);
   };
-  
+
 
   const dispatch = useAppDispatch();
 
@@ -247,6 +243,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
           enquiryId: enquiryId,
           // id: id as string,
         };
+        console.log("payload1212",payload)
         dispatch(getSurveyItemListRequest(payload));
       })
       .catch(err => console.log(err));
