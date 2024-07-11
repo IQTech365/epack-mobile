@@ -1,29 +1,69 @@
-import React, { useEffect, useState } from 'react';
-import { Dimensions, StyleSheet, Text, TextInput, View } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Dimensions, StyleSheet, Text, TextInput, View} from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import { COLOR_BLACK, COLOR_BLUE, COLOR_GRAY, COLOR_GRAY2, COLOR_WHITE } from '../../utils/colors';
+import {
+  COLOR_BLACK,
+  COLOR_BLUE,
+  COLOR_GRAY,
+  COLOR_GRAY2,
+  COLOR_WHITE,
+} from '../../utils/colors';
 import Label from '../Label';
 import DropdownComponent from '../DropdownComponent';
-import { TDropdownItem } from '../../type/TDropdownItem';
-import { useAppSelector } from '../../redux/hooks';
+import {TDropdownItem} from '../../type/TDropdownItem';
+import {useAppSelector} from '../../redux/hooks';
 import Input from '../Input';
 
-const { width } = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 interface SelectCheckBoxTextProps {
   items: string[];
-  onItemSelect: (itemCollection: { itemName: string; quantity: number; packingType: string; valueOfGoods: string }[]) => void;
+  onItemSelect: (
+    itemCollection: {
+      itemName: string;
+      quantity: number;
+      packingType: string;
+      valueOfGoods: string;
+    }[],
+  ) => void;
   onItemDeselect: (item: string) => void;
+  initialValues: {
+    itemName: string;
+    quantity: number;
+    packingType: string;
+    valueOfGoods: string;
+  }[];
 }
 
-const SelectCheckBoxTextPackingList: React.FC<SelectCheckBoxTextProps> = ({ items, onItemSelect, onItemDeselect }) => {
-  const [selectedItems, setSelectedItems] = useState<{ itemName: string; quantity: number; packingType: string; valueOfGoods: string }[]>([]);
-  const { packingTypes } = useAppSelector(state => state.Common);
+const SelectCheckBoxTextPackingList: React.FC<SelectCheckBoxTextProps> = ({
+  items,
+  onItemSelect,
+  onItemDeselect,
+  initialValues,
+}) => {
+  const [selectedItems, setSelectedItems] = useState<
+    {
+      itemName: string;
+      quantity: number;
+      packingType: string;
+      valueOfGoods: string;
+    }[]
+  >([]);
+  const {packingTypes} = useAppSelector(state => state.Common);
   const [currentItemIndex, setCurrentItemIndex] = useState<number>(-1);
   const [itemCollection, setItemCollection] = useState<any[]>([]);
-  const [packingTypeInitial,setPackingTypeInitial] = useState<string>('')
+  const [packingTypeInitial, setPackingTypeInitial] = useState<string>('');
 
-  // console.log("packingTypes",packingTypes[0].packingType)
+
+  useEffect(() => {
+    setSelectedItems(initialValues);
+    setItemCollection(initialValues);
+  }, [initialValues]);
+
+  console.log("initialValues",initialValues)
+
+  
+
 
   const handleCheckboxPress = (item: string, index: number) => {
     setCurrentItemIndex(index);
@@ -33,33 +73,37 @@ const SelectCheckBoxTextPackingList: React.FC<SelectCheckBoxTextProps> = ({ item
       setSelectedItems(newSelectedItems);
       onItemDeselect(item);
     } else {
-      const newItem = { itemName: item, quantity: 1, packingType: 'Bag', valueOfGoods: '' };
+      const newItem = {
+        itemName: item,
+        quantity: 1,
+        packingType: 'Bag',
+        valueOfGoods: '',
+      };
       setSelectedItems([...selectedItems, newItem]);
       setItemCollection([...itemCollection, newItem]);
     }
   };
 
-  console.log("itemCollection",itemCollection)
 
   const handleQtyChange = (qty: string, index: number) => {
-    const updatedCollection = itemCollection.map((item, idx) => 
-      idx === index ? { ...item, quantity: parseInt(qty) || 0 } : item
+    const updatedCollection = itemCollection.map((item, idx) =>
+      idx === index ? {...item, quantity: parseInt(qty) || 0} : item,
     );
     setItemCollection(updatedCollection);
     onItemSelect(updatedCollection);
   };
 
   const handlePackingTypeChange = (packingType: string, index: number) => {
-    const updatedCollection = itemCollection.map((item, idx) => 
-      idx === index ? { ...item, packingType } : item
+    const updatedCollection = itemCollection.map((item, idx) =>
+      idx === index ? {...item, packingType} : item,
     );
     setItemCollection(updatedCollection);
     onItemSelect(updatedCollection);
   };
 
   const handleValueofGoods = (valueOfGoods: string, index: number) => {
-    const updatedCollection = itemCollection.map((item, idx) => 
-      idx === index ? { ...item, valueOfGoods } : item
+    const updatedCollection = itemCollection.map((item, idx) =>
+      idx === index ? {...item, valueOfGoods} : item,
     );
     setItemCollection(updatedCollection);
     onItemSelect(updatedCollection);
@@ -67,22 +111,19 @@ const SelectCheckBoxTextPackingList: React.FC<SelectCheckBoxTextProps> = ({ item
 
   const _getPackingTypes = () => {
     let packTypes: TDropdownItem[] = [];
-    const { data } = packingTypes || {};
+    const {data} = packingTypes || {};
     if (data && Array.isArray(data) && data.length > 0) {
       packTypes = data.map(d => ({
         label: d.packingType,
         value: d.packingType,
       }));
     }
-    // setPackingTypeInitial(packTypes)
     return packTypes;
-    
   };
 
-
-  useEffect(()=>{
-    _getPackingTypes()
-  },[])
+  useEffect(() => {
+    _getPackingTypes();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -94,16 +135,18 @@ const SelectCheckBoxTextPackingList: React.FC<SelectCheckBoxTextProps> = ({ item
               <BouncyCheckbox
                 fillColor={COLOR_BLUE}
                 unfillColor="#FFFFFF"
-                isChecked={!!selectedItem}
+                isChecked={selectedItem?.itemName}
                 onPress={() => handleCheckboxPress(item, index)}
+                disableBuiltInState={true}
               />
               <Text style={styles.itemText}>{item}</Text>
               <TextInput
                 style={styles.qtyInput}
                 placeholder="1"
                 // value={selectedItem ? selectedItem.quantity.toString() : ''}
-                onChangeText={(text) => handleQtyChange(text, index)}
+                onChangeText={text => handleQtyChange(text, index)}
                 keyboardType="numeric"
+                value={selectedItem ? selectedItem.quantity.toString() : ''}
               />
             </View>
             {currentItemIndex === index && (
@@ -115,13 +158,15 @@ const SelectCheckBoxTextPackingList: React.FC<SelectCheckBoxTextProps> = ({ item
                       data={_getPackingTypes()}
                       // defaultValue="Bag"
                       // value={selectedItem ? selectedItem.packingType : ''}
-                      onSelect={(dropdownItem) => handlePackingTypeChange(dropdownItem.label, index)}
+                      onSelect={dropdownItem =>
+                        handlePackingTypeChange(dropdownItem.label, index)
+                      }
                     />
                   </View>
                   <View style={styles.itemContainer}>
                     <Label text="Value Of Goods" style={styles.label} />
                     <Input
-                      onChangeText={(text) => handleValueofGoods(text, index)}
+                      onChangeText={text => handleValueofGoods(text, index)}
                       containerStyle={styles.inputContainer}
                       inputStyle={styles.input}
                       selectionColor="#000000"

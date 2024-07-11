@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     alignItems: 'center',
     flexWrap: 'wrap',
-    marginBottom: 3,
+    marginBottom: 6,
   },
   label: {
     color: COLOR_BLACK,
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     borderRadius: 0,
     width: 18,
     height: 18,
-    borderWidth: 2
+    borderWidth: 1
   },
 
   textContainerStyle: {

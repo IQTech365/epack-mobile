@@ -29,6 +29,10 @@ interface INocFormViewProps {
   orderId?: string;
   // onSuccess: () => void;
 }
+interface INocFormPayload {
+  companyId: string;
+  enquiryId: string;
+  }
 
 const NocFormView: React.FC<INocFormViewProps> = ({ navigation, orderId }) => {
   const [packingType, setPackingType] = useState<string>('');
@@ -38,12 +42,7 @@ const NocFormView: React.FC<INocFormViewProps> = ({ navigation, orderId }) => {
   const [date, setDate] = useState<string>(new Date().toISOString());
   const { biltyList,getNocDocRequesting,getNocDocFailure,getNocDocSuccess,createNocDocRequesting,createNocDocSuccess,createNocDocFailure } = useAppSelector(state => state.Order);
   const dispatch = useAppDispatch();
-
   const DateInputRef = useRef<IDateMethods>(null)
-
-
-
-  
   const dateofLr = useRef<IDateMethods>(null);
 
   const transformBiltyData = () => {
@@ -65,32 +64,28 @@ const NocFormView: React.FC<INocFormViewProps> = ({ navigation, orderId }) => {
         (bilty: IBilty) => bilty.biltyNumber === selectedLrNumber
       );
       if (selectedBilty) {
-        console.log("selectedBilty",selectedBilty)
         setLrNumber(selectedBilty.biltyNumber);
         setLrDate(new Date(selectedBilty.biltyDate));
-        // setDate(new Date(selectedBilty.biltyDate).toISOString());
         dateofLr.current?.setDefaultValue(new Date(selectedBilty.biltyDate));
       }
     }
   };
 
-
-  // const _getNocFormListRequest = () => {
-  //   getCurrentCompanyId()
-  //     .then(id => {
-  //       const payload: IGetSurvyeItemListRequestPayload = {
-  //         enquiryId: enquiryId,
-  //         // id: id as string,
-  //       };
-  //       dispatch(getNocDocRequest(payload));
-  //     })
-  //     .catch(err => console.log(err));
-  // };
-
+  const _getSurveyItemListRequest = () => {
+    getCurrentCompanyId()
+      .then(id => {
+        const payload: INocFormPayload = {
+          companyId: id as string,
+          enquiryId: orderId
+          // id: id as string,
+        };
+        console.log("payload1212",payload)
+        dispatch(getNocDocRequest(payload));
+      })
+      .catch(err => console.log(err));
+  };
 
   const handleNocDate = (date: Date) => {
-    console.log(date.toString(),"datedate")
-    // setDate(formatDate2(date));
     setDate(date.toISOString());
   };
 
@@ -106,7 +101,7 @@ const NocFormView: React.FC<INocFormViewProps> = ({ navigation, orderId }) => {
           companyId: id as string, 
           nocType: packingType,
           nocDate: date,
-          biltyDate: lrDate ? lrDate.toISOString() : '',
+          biltyDate: lrDate ? lrDate.toISOString() : date,
           biltyNo: selectedLrNumber,
           addedBy: id as string
         };
@@ -117,17 +112,7 @@ const NocFormView: React.FC<INocFormViewProps> = ({ navigation, orderId }) => {
   };
 
 
-  const _getNocFormListRequest = () => {
-    getCurrentCompanyId()
-      .then(id => {
-        const payload: INocPayload = {
-          companyId: id as string,
-          // id: id as string,
-        };
-        dispatch(getNocDocRequest(payload));
-      })
-      .catch(err => console.log(err));
-  };
+  
 
   useEffect(() => {
     if (selectedLrNumber && biltyList) {
@@ -137,14 +122,11 @@ const NocFormView: React.FC<INocFormViewProps> = ({ navigation, orderId }) => {
 
 
   useEffect(() => {
-    // dispatch(getNocDocRequest())
     if (!createNocDocRequesting && createNocDocSuccess) {
       showToast('Noc Doc Created.', ToastType.SUCCESS);
       dispatch(resetNocDocRequest());
-      // dispatch(resetGetSerialNoRequest());
-      // setSurveyItems([]);
-      _getNocFormListRequest()
-      // _getNocFormListRequest();
+      _getSurveyItemListRequest()
+      
     } else if (!createNocDocRequesting && createNocDocFailure) {
       showToast('Noc Doc not Created.', ToastType.ERROR);
       dispatch(resetNocDocRequest());
@@ -153,12 +135,10 @@ const NocFormView: React.FC<INocFormViewProps> = ({ navigation, orderId }) => {
 
   useEffect(()=>{
     setDate(new Date().toISOString());
-    _getNocFormListRequest()
     transformBiltyData()
-    // setDate(new Date())
     dispatch(getBiltyListRequest(orderId))
     DateInputRef.current?.setDefaultValue(new Date())
-
+    setPackingType("Household")
   },[])
 
   return (

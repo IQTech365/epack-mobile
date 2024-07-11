@@ -25,6 +25,8 @@ const FreightGSTView: React.FC<Props> = ({isEdit, invoiceData}) => {
   const gstPercentRef = useRef(null);
   const gstTypeRef = useRef(null);
 
+  console.log("stateDataaaaaa",state)
+
     const _initFormValues = () => {
       if(isEdit && invoiceData) {
         const {gstStatus, gstPaidBy} = invoiceData || {};
@@ -121,7 +123,9 @@ const FreightGSTView: React.FC<Props> = ({isEdit, invoiceData}) => {
         </>
       ) : null}
       <Spacer height={15} />
-      <View style={styles.container}>
+      {state.gst_on_invoice === "With GST" ? (
+        <>
+        <View style={styles.container}>
         <Text style={styles.labelText}>GST paid by</Text>
       </View>
       <Spacer height={10} />
@@ -146,6 +150,8 @@ const FreightGSTView: React.FC<Props> = ({isEdit, invoiceData}) => {
           />
         ))}
       </View>
+        </>
+      ): ''}
     </View>
   );
 };

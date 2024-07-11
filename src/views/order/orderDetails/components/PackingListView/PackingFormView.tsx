@@ -45,9 +45,12 @@ import {
 } from '../../../../../redux/slices/CommonSlice';
 import SelectCheckBoxTextPackingList from '../../../../../common/SelectCheckBoxPackingList';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import {IGetSurvyeItemListByIdRequestPayload, IGetSurvyeItemListRequestPayload} from '../../../../../interface/enquiry/IGetSurveyItemListResponse';
+import {
+  IGetSurvyeItemListByIdRequestPayload,
+  IGetSurvyeItemListRequestPayload,
+} from '../../../../../interface/enquiry/IGetSurveyItemListResponse';
 import {getSurveyItemListRequest} from '../../../../../redux/slices/EnquirySlice';
-import { ISurveyListItem } from '../../../../../interface/enquiry/IAddSurveyItemRequest';
+import {ISurveyListItem} from '../../../../../interface/enquiry/IAddSurveyItemRequest';
 
 interface Props {
   orderId: string;
@@ -66,12 +69,16 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   const [productCode, setProductCode] = useState<string>('');
   const [valueOfGoods, setValueOfGoods] = useState<string>('');
   const [description, setDescription] = useState<string>('');
-  const [surveyListNumber,setSurveyListNumber] = useState<string>('')
+  const [surveyListNumber, setSurveyListNumber] = useState<string>('');
   const [items, setItems] = useState<IPackingItem[]>([]);
   const [transformedData, setTransformedData] = useState<
     TPackingMateiralItem[]
   >([]);
   const [packingOtherItemList, setPackingOtherItemList] = useState<
+    IPackingItem[]
+  >([]);
+
+  const [packingOtherItem, setPackingOtherItem] = useState<
     IPackingItem[]
   >([]);
   const [checkboxPackingItems, setCheckboxPackingItems] = useState<
@@ -94,11 +101,6 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
 
   const [isChecked, setIsChecked] = useState(false);
 
-  // const handleCheckboxPress = () => {
-  //   setIsChecked(!isChecked);
-  // };
-
-
   const {surveyItemList} = useAppSelector(state => state.Enquiry);
 
   const itemNameInputRef = useRef(null);
@@ -106,8 +108,6 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   const productCodeInputRef = useRef(null);
   const amountInputRef = useRef(null);
   const descriptionInputRef = useRef(null);
-
-  // console.log('surveyItemList', surveyItemList);
 
   type TPackingMateiralItem = {
     _id: string;
@@ -153,7 +153,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
     setTransformedData(_data);
   };
 
-  console.log("surveyListNumber",surveyListNumber)
+  console.log('surveyListNumber', surveyListNumber);
 
   const _getPackingTypes = () => {
     let packTypes: TDropdownItem[] = [];
@@ -340,23 +340,18 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
       .catch(err => console.log(err));
   };
 
-
   const getSurveyListNoData = () => {
     const surveyData = surveyItemList.data.map((item: any) => {
-      return { label: item.surveyListNo, value: item._id };
+      return {label: item.surveyListNo, value: item._id};
     });
     return surveyData;
   };
-
-
 
   useEffect(() => {
     if (surveyListNumber) {
       _getSurveyItemListRequest();
     }
   }, [surveyListNumber]);
-
-    
 
   const _getSerialNoRequest = () => {
     getCurrentCompanyId()
@@ -424,58 +419,53 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
       // enquiryId: orderId,
       id: selectedValue,
     };
-    console.log("payload",payload)
     dispatch2(getSurveyItemListRequest(payload));
   };
-  // handleSurveyDropdownSelect()
 
- 
-  // useEffect(() => {
-  //   if (surveyItemList) {
-  //     const transformedSurveyItemList = surveyItemList.map(item => ({
-  //       itemName: item.itemName,
-  //       productCode: item.productCode,
-  //       quantity: item.quantity,
-  //       valueOfGoods: item.valueOfGoods,
-  //       description: item.description,
-  //     }));
-  //     setCheckboxPackingItems(transformedSurveyItemList);
-  //   }
-  // }, [surveyItemList]);
-
- 
+  useEffect(() => {
+    if (surveyItemList && surveyItemList.data) {
+      const transformedSurveyItemList = surveyItemList.data.flatMap(item =>
+        item.surveyItems.map(surveyItem => ({
+          itemName: surveyItem.itemName,
+          productCode: surveyItem.productCode,
+          quantity: surveyItem.quantity,
+          valueOfGoods: surveyItem.valueOfGoods,
+          description: surveyItem.description,
+        })),
+      );
+      setCheckboxPackingItems(transformedSurveyItemList);
+      setPackingOtherItemList(transformedSurveyItemList)
+    }
+  }, [surveyItemList]);
 
   return (
     <>
-      {surveyItemList.data.length > 0 && (
+      {surveyItemList && surveyItemList.data.length > 0 && (
         <View style={styles.checkboxContainer}>
-        <BouncyCheckbox
-          fillColor={COLOR_BLUE}
-          size={35}
-          text="Convert Into Survey List to Packing List"
-          unfillColor="#FFFFFF"
-          iconStyle={styles.iconStyle}
-          innerIconStyle={styles.iconStyle}
-          textStyle={styles.textStyleCheck}
-
-          // isChecked={!!selectedItem}
-          onPress={() => handleCheckboxPress()}
-        />
-      </View>
+          <BouncyCheckbox
+            fillColor={COLOR_BLUE}
+            size={35}
+            text="Convert Survey List to Packing List"
+            unfillColor="#FFFFFF"
+            iconStyle={styles.iconStyle}
+            innerIconStyle={styles.iconStyle}
+            textStyle={styles.textStyleCheck}
+            onPress={() => handleCheckboxPress()}
+          />
+        </View>
       )}
+
       {showSurveyDropdown && (
         <View style={styles.itemContainerSurvey}>
-          <Label text="Survey No." style={styles.label} />
+          <Label text="Select Survey No" style={styles.label} />
           <DropdownComponent
-      data={getSurveyListNoData()}
-      onSelect={(item)=>handleSurveyDropdownSelect(item.value)}
-    />
+            data={getSurveyListNoData()}
+            onSelect={item => handleSurveyDropdownSelect(item.value)}
+          />
         </View>
       )}
       <CollapsibleView title="Basic Details" collapsed={false}>
-        {/* <Spacer height={4} />
-        <Label text="Item / Particular Name" style={styles.labelHeading} />
-        <Spacer height={4} /> */}
+      
         <View>
           <View style={styles.elementContainer}>
             <View style={styles.itemContainer}>
@@ -522,6 +512,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
                   }
                   onItemSelect={handleItemSelect}
                   onItemDeselect={handleItemDeselect}
+                  initialValues={checkboxPackingItems}
                 />
               </View>
             </CollapsibleView>
@@ -591,6 +582,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
                   onChangeText={setValueOfGoods}
                   containerStyle={styles.inputContainer}
                   inputStyle={styles.input}
+                  value={valueOfGoods}
                   selectionColor={COLOR_BLACK}
                   placeholder="Enter amount"
                   inputType="numeric"

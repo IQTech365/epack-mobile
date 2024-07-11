@@ -17,6 +17,13 @@ const SelectCheckBoxText: React.FC<SelectCheckBoxTextProps> = ({ items, onItemSe
   const [selectedItems, setSelectedItems] = useState<{[key: string]: number }>({});
   const [quantitySelect,setQuantitySelect] = useState<string>("")
 
+  useEffect(() => {
+    if (reset) {
+      setSelectedItems({});
+      setQuantitySelect("");
+    }
+  }, [reset]);
+
   const handleCheckboxPress = (item: string) => {
     setSelectedItems((prevSelectedItems) => {
       if (prevSelectedItems[item]) {
@@ -46,12 +53,7 @@ const SelectCheckBoxText: React.FC<SelectCheckBoxTextProps> = ({ items, onItemSe
   };
 
 
-  useEffect(() => {
-    if (reset) {
-      setSelectedItems({});
-      setQuantitySelect("");
-    }
-  }, [reset]);
+
 
   console.log("selectedItems",selectedItems)
   return (
@@ -64,6 +66,7 @@ const SelectCheckBoxText: React.FC<SelectCheckBoxTextProps> = ({ items, onItemSe
               unfillColor="#FFFFFF"
               isChecked={!!selectedItems[item]}
               onPress={() => handleCheckboxPress(item)}
+              disableBuiltInState={true}
             />
             <Text style={styles.itemText}>{item}</Text>
           </View>

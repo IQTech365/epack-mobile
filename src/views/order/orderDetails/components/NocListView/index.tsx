@@ -13,6 +13,8 @@ import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../../../../redux/hooks';
 import { getNocDocRequest } from '../../../../../redux/slices/OrderSlice';
 import { IGetNocListResponse } from '../../../../../interface/order/IGetNocListResponse';
+import { COLOR_BLACK } from '../../../../../utils/colors';
+import { getCurrentCompanyId } from '../../../../../utils/storage';
 
 interface INocItemListViewProps {
   item: IGetNocListResponse[];
@@ -24,6 +26,8 @@ interface INocItemListViewProps {
   isOrder?: boolean;
 }
 
+
+
 const NocListItemView: React.FC<INocItemListViewProps> = ({
   item,
   index,
@@ -31,72 +35,73 @@ const NocListItemView: React.FC<INocItemListViewProps> = ({
   onShowPreview,
   onShare,
   isOrder,
+  orderId
 }) => {
   const { getNocDoc } = useAppSelector(state => state.Order);
-  const { data } = getNocDoc;
+  const { data } = getNocDoc || {};
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(getNocDocRequest(enquiryId));
-  }, [dispatch, enquiryId]);
 
   return (
     <>
-      {data.map((nocItem, idx) => (
-        <View style={styles.NocDateAndNumberContainer} key={idx}>
-          <View style={styles.contentContainer}>
-            <Text style={styles.contentLabelText2}>NOC DATE: </Text>
-            <Spacer width={4} />
-            <Text style={styles.contentLabelText}>
-              {formatDate5(new Date(nocItem.nocDate))}
-            </Text>
+      {data && data.length > 0 ? (
+        data.map((nocItem: any, idx: number) => (
+          <View style={styles.NocDateAndNumberContainer} key={idx}>
+            <View style={styles.contentContainer}>
+              <Text style={styles.contentLabelText2}>NOC DATE: </Text>
+              <Spacer width={4} />
+              <Text style={styles.contentLabelText}>
+                {formatDate5(new Date(nocItem.nocDate))}
+              </Text>
+            </View>
+            <View style={styles.contentContainer}>
+              <Text style={styles.contentLabelText2}>{`NOC TYPE#: `}</Text>
+              <Spacer width={4} />
+              <Text style={styles.contentLabelText}>{nocItem.nocType}</Text>
+            </View>
+            <View style={styles.contentContainer}>
+              <Text style={styles.contentLabelText2}>{`LR no#: `}</Text>
+              <Spacer width={4} />
+              <Text style={styles.contentLabelText}>{nocItem.biltyNo}</Text>
+            </View>
+            <View style={styles.contentContainer}>
+              <Text style={styles.contentLabelText2}>{`LR Date#: `}</Text>
+              <Spacer width={4} />
+              <Text style={styles.contentLabelText}>
+                {formatDate5(new Date(nocItem.biltyDate))}
+              </Text>
+            </View>
+            <View style={styles.actionContainer}>
+              <TouchableOpacity
+                style={styles.action}
+                onPress={() => onShare(nocItem._id)}
+                activeOpacity={0.6}>
+                <ShareIcon width={24} height={24} />
+                <Text style={styles.actionText}>Share</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.action}
+                onPress={() => onShowPreview(nocItem._id)}
+                activeOpacity={0.6}>
+                <PreviewIcon width={24} height={24} />
+                <Text style={styles.actionText}>Preview</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.action}
+                disabled={isOrder}
+                activeOpacity={0.6}>
+                {isOrder ? (
+                  <EditDisabledIcon width={24} height={24} />
+                ) : (
+                  <EditIcon width={24} height={24} />
+                )}
+                <Text style={isOrder ? styles.actionTextDisabled : styles.actionText}>Edit</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-          <View style={styles.contentContainer}>
-            <Text style={styles.contentLabelText2}>{`NOC TYPE#: `}</Text>
-            <Spacer width={4} />
-            <Text style={styles.contentLabelText}>{nocItem.nocType}</Text>
-          </View>
-          <View style={styles.contentContainer}>
-            <Text style={styles.contentLabelText2}>{`LR no#: `}</Text>
-            <Spacer width={4} />
-            <Text style={styles.contentLabelText}>{nocItem.biltyNo}</Text>
-          </View>
-          <View style={styles.contentContainer}>
-            <Text style={styles.contentLabelText2}>{`LR Date#: `}</Text>
-            <Spacer width={4} />
-            <Text style={styles.contentLabelText}>
-              {formatDate5(new Date(nocItem.biltyDate))}
-            </Text>
-          </View>
-          <View style={styles.actionContainer}>
-            <TouchableOpacity
-              style={styles.action}
-              onPress={() => onShare(nocItem._id)}
-              activeOpacity={0.6}>
-              <ShareIcon width={24} height={24} />
-              <Text style={styles.actionText}>Share</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.action}
-              onPress={() => onShowPreview(nocItem._id)}
-              activeOpacity={0.6}>
-              <PreviewIcon width={24} height={24} />
-              <Text style={styles.actionText}>Preview</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.action}
-              disabled={isOrder}
-              activeOpacity={0.6}>
-              {isOrder ? (
-                <EditDisabledIcon width={24} height={24} />
-              ) : (
-                <EditIcon width={24} height={24} />
-              )}
-              <Text style={isOrder ? styles.actionTextDisabled : styles.actionText}>Edit</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      ))}
+        ))
+      ) : <Text style={{textAlign:"center",  color: COLOR_BLACK,
+        fontSize: 14,
+        fontFamily: 'WorkSans-Regular'}}>NOC Data is not Available</Text> }
     </>
   );
 };
