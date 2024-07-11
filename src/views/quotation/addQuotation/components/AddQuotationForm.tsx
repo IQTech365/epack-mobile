@@ -453,11 +453,10 @@ const AddQuotationForm: React.FC<Props> = ({
     }
   }, []);
   // _getSerialNoRequest()
-  console.log("serialNo",serialNo)
 
   useEffect(() => {
-    if (!addQuotationRequesting) {
-      if (addQuotationSuccess) {
+    if (!addQuotationRequesting && addQuotationSuccess) {
+      // if (addQuotationSuccess) {
         showToast('New Quotation Created.', ToastType.SUCCESS);
         setShouldSaveSurveyNo(true);
         dispatch(resetaddQuotationRequest());
@@ -477,12 +476,10 @@ const AddQuotationForm: React.FC<Props> = ({
         showToast('Quotation Not Created. Try again!', ToastType.ERROR);
         dispatch(resetaddQuotationRequest());
       }
-    }
   }, [addQuotationRequesting, addQuotationSuccess, addQuotationFailure]);
 
   useEffect(() => {
     if (serialNo && shouldSaveSurveyNo && isSurveyItemsRequired) {
-      console.log('new-srno---', serialNo);
       handleSave();
     }
   }, [serialNo, shouldSaveSurveyNo, isSurveyItemsRequired]);

@@ -44,13 +44,13 @@ const SurveyItemListView: React.FC<ISurveyItemListViewProps> = ({
       <View style={styles.contentContainer}>
         <Text style={styles.contentLabelText2}>{`SURVEY NO#: `}</Text>
         <Spacer width={4} />
-        <Text style={styles.contentLabelText}>{item.quotationId ? "" : item.surveyListNo}</Text>
+        <Text style={styles.contentLabelText}>{item.surveyListNo}</Text>
       </View>
-      <View style={styles.contentContainer}>
+      {/* <View style={styles.contentContainer}>
         <Text style={styles.contentLabelText2}>{`Quotation NO#: `}</Text>
         <Spacer width={4} />
         <Text style={styles.contentLabelText}>{item.quotationId ? item.surveyListNo : ""}</Text>
-      </View> 
+      </View>  */}
       <View style={styles.contentContainer}>
         <Text style={styles.contentLabelText2}>{`TOTAL ITEMS: `}</Text>
         <Spacer width={4} />
