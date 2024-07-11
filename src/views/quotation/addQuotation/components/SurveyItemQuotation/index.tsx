@@ -25,12 +25,11 @@ interface Props {
   isEdit?: boolean;
   item?: IGetQuotationData;
   quotationData?: ISingleQuotationData;
-  onItemSelect: (text: string) => void;
+  onItemSelect: (text: string, qty: number) => void;
   onItemDeselect: (text: string) => void;
   surveyOtherItemList: ISurveyListItem[]; // New prop
   handleOtherItemsList: (item: ISurveyListItem) => void;
-
-
+  onSurveyItemRequired: (value: boolean) => void;
 }
 
 const SurveyItemQuotation: React.FC<Props> = ({
@@ -40,7 +39,8 @@ const SurveyItemQuotation: React.FC<Props> = ({
   onItemDeselect,
   quotationData,
   surveyOtherItemList,
-  handleOtherItemsList
+  handleOtherItemsList,
+  onSurveyItemRequired
 
 }) => {
   const {state, setSurveyItem} = useQuotationFormContextHook();
@@ -313,7 +313,8 @@ const SurveyItemQuotation: React.FC<Props> = ({
               style={styles.style}
               textContainerStyle={styles.textContainerStyle}
               onPress={(isChecked: boolean) => {
-                setSurveyItem(option);
+                  onSurveyItemRequired(option === 'Required');
+                  setSurveyItem(option);
               }}
               isChecked={state.surveyItem == option}
               disableBuiltInState={true}

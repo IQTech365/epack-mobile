@@ -104,7 +104,6 @@ const AddQuotationForm: React.FC<Props> = ({
     vehicleCompaniesRequesting,
     vehicleModelsRequesting,
   } = useAppSelector(state => state.Common);
-  const {prefix} = useInitialValueHook('658d3c6f585e3dde644da95b');
   const {enquiry} = useAppSelector(state => state.Enquiry);
   const {getTotalDocumentCount} = useUtilityHook();
   const [surveyNo, setSurveyNo] = useState('');
@@ -116,11 +115,11 @@ const AddQuotationForm: React.FC<Props> = ({
   const [checkboxSurveyItems, setCheckboxSurveyItems] = useState<ISurveyListItem[]>([]);
   const [shouldSaveSurveyNo, setShouldSaveSurveyNo] = useState<boolean>(false);
   const shouldSaveSurveyNoRef = useRef<Boolean>(false);
+  const [isSurveyItemsRequired, setIsSurveyItemsRequired] = useState<boolean>(false);
 
+  const {initialValue} = useInitialValueHook('658d3d2f585e3dde644da9b2');
+  console.log('initialValue----', initialValue);
   
-  
-  
-  const {initialValue} = useInitialValueHook('658d3d2f585e3dde644da9b2'); 
 
   const transitInsurance: ITransitInsurance = {
     isRequired: state.transit_insurance,
@@ -441,8 +440,9 @@ const AddQuotationForm: React.FC<Props> = ({
     setSurveyOtherItemList(copy);
   }
 
-
-
+  const _handleSuveyItemRequired = (value: boolean) => {
+    setIsSurveyItemsRequired(value);
+  }
 
   useEffect(() => {
     // if(isEdit) {
@@ -460,15 +460,18 @@ const AddQuotationForm: React.FC<Props> = ({
       if (addQuotationSuccess) {
         showToast('New Quotation Created.', ToastType.SUCCESS);
         setShouldSaveSurveyNo(true);
-        _getSerialNoRequest();
         dispatch(resetaddQuotationRequest());
         dispatch(resetGetSerialNoRequest());
-        _getQuotationsRequest();
-        getTotalDocumentCount();
-        if (onSuccess) {
-          onSuccess();
+        if(isSurveyItemsRequired) {
+          _getSerialNoRequest();
         } else {
-          navigation?.goBack();
+          _getQuotationsRequest();
+          getTotalDocumentCount();
+          if (onSuccess) {
+            onSuccess();
+          } else {
+            navigation?.goBack();
+          }
         }
       } else if (addQuotationFailure) {
         showToast('Quotation Not Created. Try again!', ToastType.ERROR);
@@ -478,11 +481,11 @@ const AddQuotationForm: React.FC<Props> = ({
   }, [addQuotationRequesting, addQuotationSuccess, addQuotationFailure]);
 
   useEffect(() => {
-    if (serialNo && shouldSaveSurveyNoRef.current) {
+    if (serialNo && shouldSaveSurveyNo && isSurveyItemsRequired) {
+      console.log('new-srno---', serialNo);
       handleSave();
-      shouldSaveSurveyNoRef.current = false;
     }
-  }, [serialNo]);
+  }, [serialNo, shouldSaveSurveyNo, isSurveyItemsRequired]);
 
   useEffect(() => {
     if (!updateQuotationRequesting && updateQuotationSuccess) {
@@ -547,9 +550,8 @@ const AddQuotationForm: React.FC<Props> = ({
       onItemDeselect={handleItemDeselect}
       surveyOtherItemList={surveyOtherItemList} // Pass the state as prop
       handleOtherItemsList={_handleOhterItemsList}
+      onSurveyItemRequired={_handleSuveyItemRequired}
       />
-     
-  
       <Spacer height={12} />
       <Button
         text={isEdit ? 'UPDATE' : 'CREATE'}
