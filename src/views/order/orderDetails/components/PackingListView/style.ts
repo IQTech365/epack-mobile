@@ -102,6 +102,7 @@ const styles = StyleSheet.create({
   previewButtonStyle: {
     backgroundColor: COLOR_BLUE,
     borderRadius: 5,
+    marginBottom: 5
   },
 
   textStyleCheck: {
@@ -112,19 +113,23 @@ const styles = StyleSheet.create({
   },
   // items
   listItemContainer: {
-    width: width * 0.9,
+    width: width * 0.95,
     alignSelf: 'center',
     justifyContent: 'center',
     borderRadius: 5,
     padding: 5,
+    // borderWidth: 2,
+    paddingHorizontal: 25
+
   },
   rowItemContainer: {
-    width: '100%',
+    width: '80%',
     flexDirection: 'row',
     alignItems: 'center',
+
   },
   leftItemContainer: {
-    width: '80%',
+    width: '100%',
     alignItems: 'center',
   },
   itemContainer2: {

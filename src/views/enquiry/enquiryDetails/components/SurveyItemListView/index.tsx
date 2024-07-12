@@ -38,7 +38,7 @@ const SurveyItemListView: React.FC<ISurveyItemListViewProps> = ({
         <Text style={styles.contentLabelText2}>SURVEY DATE: </Text>
         <Spacer width={4} />
         <Text style={styles.contentLabelText}>
-          {formatDate5(new Date(item.surveyDate))}
+          {formatDate5(new Date(item.createdDate))}
         </Text>
       </View>
       <View style={styles.contentContainer}>

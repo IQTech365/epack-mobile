@@ -78,13 +78,12 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
     IPackingItem[]
   >([]);
 
-  const [packingOtherItem, setPackingOtherItem] = useState<
-    IPackingItem[]
-  >([]);
   const [checkboxPackingItems, setCheckboxPackingItems] = useState<
     IPackingItem[]
   >([]);
+  const [filterOtherItem, setFilterOtherItem] = useState<boolean>(false);
   const [showSurveyDropdown, setShowSurveyDropdown] = useState<boolean>(false); // New state to control dropdown visibility
+  const [surveyDataFetch,setSurveyDataFetch] = useState<boolean>(false)
   const {
     createPackingMaterialRequesting,
     createPackingMaterialSuccess,
@@ -99,7 +98,6 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   );
   const serialNo: number = useSerialNoHook();
 
-  const [isChecked, setIsChecked] = useState(false);
 
   const {surveyItemList} = useAppSelector(state => state.Enquiry);
 
@@ -152,8 +150,6 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
     }
     setTransformedData(_data);
   };
-
-  console.log('surveyListNumber', surveyListNumber);
 
   const _getPackingTypes = () => {
     let packTypes: TDropdownItem[] = [];
@@ -223,11 +219,8 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
       const updatedItems = prevItems.filter(
         packingItem => packingItem.itemName !== itemName,
       );
-      console.log('Updated Items on Deselect:', updatedItems);
       return updatedItems;
     });
-
-    console.log(`Deselected item: ${itemName}`);
   };
 
   const handleCreate = () => {
@@ -335,16 +328,30 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
           enquiryId: orderId,
           // id: id as string,
         };
+
         dispatch2(getSurveyItemListRequest(payload));
       })
       .catch(err => console.log(err));
   };
 
   const getSurveyListNoData = () => {
+    
     const surveyData = surveyItemList.data.map((item: any) => {
       return {label: item.surveyListNo, value: item._id};
     });
+    console.log("surveyData",surveyItemList)
     return surveyData;
+  };
+
+  const handleSurveyDropdownSelect = (selectedValue: string) => {
+    const payload: IGetSurvyeItemListByIdRequestPayload = {
+      id: selectedValue,
+    };
+    dispatch2(getSurveyItemListRequest(payload));
+  };
+
+  const handleCheckboxPress = () => {
+    setShowSurveyDropdown(!showSurveyDropdown);
   };
 
   useEffect(() => {
@@ -368,10 +375,6 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
         dispatch2(getSerialNoRequest(payload));
       })
       .catch(err => console.log('err--', err));
-  };
-
-  const handleCheckboxPress = () => {
-    setShowSurveyDropdown(!showSurveyDropdown);
   };
 
   useEffect(() => {
@@ -414,27 +417,38 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
     transformSurveyData();
   }, [surveyMaterial]);
 
-  const handleSurveyDropdownSelect = (selectedValue: string) => {
-    const payload: IGetSurvyeItemListByIdRequestPayload = {
-      // enquiryId: orderId,
-      id: selectedValue,
-    };
-    dispatch2(getSurveyItemListRequest(payload));
-  };
-
   useEffect(() => {
     if (surveyItemList && surveyItemList.data) {
-      const transformedSurveyItemList = surveyItemList.data.flatMap(item =>
-        item.surveyItems.map(surveyItem => ({
-          itemName: surveyItem.itemName,
-          productCode: surveyItem.productCode,
-          quantity: surveyItem.quantity,
-          valueOfGoods: surveyItem.valueOfGoods,
-          description: surveyItem.description,
-        })),
+      const transformedSurveyItemList = surveyItemList.data.flatMap(
+        (item: {surveyItems: any[]}) =>
+          item.surveyItems.map(
+            (surveyItem: {
+              itemName: any;
+              productCode: any;
+              quantity: any;
+              valueOfGoods: any;
+              description: any;
+            }) => ({
+              itemName: surveyItem.itemName,
+              productCode: surveyItem.productCode,
+              quantity: surveyItem.quantity,
+              valueOfGoods: surveyItem.valueOfGoods,
+              description: surveyItem.description,
+            }),
+          ),
       );
       setCheckboxPackingItems(transformedSurveyItemList);
-      setPackingOtherItemList(transformedSurveyItemList)
+      // if(checkboxPackingItems.length > 0){
+      const filtredOtherItemData = transformedData.flatMap(
+        item => item.surveyMaterialItem,
+      );
+      const otherItems = transformedSurveyItemList.filter(
+        (surveyItem: {itemName: string}) =>
+          !filtredOtherItemData.includes(surveyItem.itemName),
+      );
+        setPackingOtherItemList(otherItems);
+         setFilterOtherItem(true);
+      // }
     }
   }, [surveyItemList]);
 
@@ -460,12 +474,14 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
           <Label text="Select Survey No" style={styles.label} />
           <DropdownComponent
             data={getSurveyListNoData()}
-            onSelect={item => handleSurveyDropdownSelect(item.value)}
+            onSelect={(item: TDropdownItem) => {
+              handleSurveyDropdownSelect(item.value);
+            }}
+            // onSelect={item => handleSurveyDropdownSelect(item.value)}
           />
         </View>
       )}
       <CollapsibleView title="Basic Details" collapsed={false}>
-      
         <View>
           <View style={styles.elementContainer}>
             <View style={styles.itemContainer}>

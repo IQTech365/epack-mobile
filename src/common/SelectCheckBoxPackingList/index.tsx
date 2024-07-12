@@ -60,7 +60,7 @@ const SelectCheckBoxTextPackingList: React.FC<SelectCheckBoxTextProps> = ({
     setItemCollection(initialValues);
   }, [initialValues]);
 
-  console.log("initialValues",initialValues)
+  // console.log("initialValues",initialValues)
 
   
 

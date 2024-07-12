@@ -52,10 +52,6 @@ const SelectCheckBoxText: React.FC<SelectCheckBoxTextProps> = ({ items, onItemSe
     });
   };
 
-
-
-
-  console.log("selectedItems",selectedItems)
   return (
     <View style={styles.container}>
       {items.map((item, index) => (

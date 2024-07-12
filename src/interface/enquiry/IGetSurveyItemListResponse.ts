@@ -6,6 +6,7 @@ export interface IGetSurveyItemListData extends IAddSurveyItemRequest {
     isDeleted: boolean;
     quotationId: boolean;
     createdAt: string;
+    createdDate: string;
 }
 
 export interface IGetSurvyeItemListRequestPayload {

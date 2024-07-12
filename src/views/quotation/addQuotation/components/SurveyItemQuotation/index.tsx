@@ -44,17 +44,10 @@ const SurveyItemQuotation: React.FC<Props> = ({
 
 }) => {
   const {state, setSurveyItem} = useQuotationFormContextHook();
-  const [surveyItems, setSurveyItems] = useState<ISurveyListItem[]>([]);
   const [itemName, setItem] = useState<string>('');
   const [quantity, setQuantity] = useState<string>('');
   const [valueOfGoods, setValueOfGoods] = useState<string>('');
   const [remarks, setRemarks] = useState<string>('');
-  const [surveyOtherItemListState, setSurveyOtherItemList] = useState<ISurveyListItem[]>(surveyOtherItemList);
-  // const [checkboxSurveyItems, setCheckboxSurveyItems] = useState<ISurveyListItem[]>([]);
-
-
-
-
 
   const dispatch = useDispatch()
   const itemNameCompRef = useRef(null);
@@ -69,25 +62,6 @@ const SurveyItemQuotation: React.FC<Props> = ({
   const {surveyCategory, surveyMaterial} = useAppSelector(
     state => state.Common,
   );
-
-
-//  const handleItemSelect = (item: string, qty: number) => {
-//     setCheckboxSurveyItems((prevItems) => {
-//       const updatedItems = [...prevItems];
-//       const index = updatedItems.findIndex((i) => i.itemName === item);
-//       if (index >= 0) {
-//         updatedItems[index].quantity = qty.toString();
-//       } else {
-//         updatedItems.push({ itemName: item, quantity: qty });
-//       }
-//       return updatedItems;
-//     });
-//   };
-
-//   const handleItemDeselect = (item: string) => {
-//     setCheckboxSurveyItems((prevItems) => prevItems.filter((i) => i.itemName !== item));
-//   };
-  
 
   const handleParticularNameInputTextChange = (text: string) => {
     setItem(text);
@@ -147,64 +121,6 @@ const SurveyItemQuotation: React.FC<Props> = ({
     }
     setTransformedData(_data);
   };
-
-//   const handleAddItem = () =>{
-//     const newQuotationSurveyData : ISurveyListItem = {
-//       itemName,
-//       quantity,
-//       valueOfGoods,
-//       remarks
-//     };
-//     setSurveyOtherItemList([...surveyOtherItemList, newQuotationSurveyData]);
-// // resetForm();
-//   }
-
- 
-
-  // const showSurveyItemList = () => {
-  //   if (surveyItems.length > 0) {
-  //     return surveyItems.map((d: ISurveyListItem, index: number) => {
-  //       return (
-  //         <View style={styles.itemWrapper} key={`${index}`}>
-  //           <View style={styles.elementContainer}>
-  //             <View style={styles.labelContainer}>
-  //               <Text style={styles.labelText}>Item Name:</Text>
-  //             </View>
-  //             <View style={styles.valueContainer}>
-  //               <Text style={styles.valueText}>{d.itemName}</Text>
-  //             </View>
-  //           </View>
-  //           {d.quantity ? <View style={styles.elementContainer}>
-  //             <View style={styles.labelContainer}>
-  //               <Text style={styles.labelText}>Quantity:</Text>
-  //             </View>
-  //             <View style={styles.valueContainer}>
-  //               <Text style={styles.valueText}>{d.quantity}</Text>
-  //             </View>
-  //           </View>: null}
-  //           {d.valueOfGoods ? <View style={styles.elementContainer}>
-  //             <View style={styles.labelContainer}>
-  //               <Text style={styles.labelText}>Goods Value:</Text>
-  //             </View>
-  //             <View style={styles.valueContainer}>
-  //               <Text style={styles.valueText}>{d.valueOfGoods}</Text>
-  //             </View>
-  //           </View> : null}
-  //           {d.remarks ? <View style={styles.elementContainer}>
-  //             <View style={styles.labelContainer}>
-  //               <Text style={styles.labelText}>Remarks:</Text>
-  //             </View>
-  //             <View style={styles.valueContainer}>
-  //               <Text style={styles.valueText}>{d.remarks}</Text>
-  //             </View>
-  //           </View> : null}
-  //         </View>
-  //       );
-  //     });
-  //   }
-  //   return null;
-  // };
-  
   const handleAddItem = () => {
     const newItem: ISurveyListItem = {
       itemName,
@@ -213,11 +129,8 @@ const SurveyItemQuotation: React.FC<Props> = ({
        remarks,
     };
     handleOtherItemsList(newItem);
-    // setSurveyOtherItemList([...surveyOtherItemListState, newItem]);
     resetForm();
   };
-
-  // console.log("handleAddItem",handleAddItem)
 
   const resetForm = () => {
     setItem('');
@@ -340,7 +253,7 @@ const SurveyItemQuotation: React.FC<Props> = ({
                       </View>
                     </CollapsibleView>
                   </View>
-                ))}
+                ))} 
               </View>
             )}
           </View>
