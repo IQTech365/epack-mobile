@@ -126,6 +126,7 @@ export const GET_BILTY_TEMPLATE_HTML = `/template/bilty-template`;
 export const GET_CAR_CONDITION_TEMPLATE_HTML = `/template/car-condition-template`;
 export const GET_INVOICE_TEMPLATE_HTML = `/template/invoice-template`;
 export const GET_SURVEY_LIST_ITEM_TEMPLATE_HTML = `/template/survey-list-template`;
+export const GET_NOC_HTML = `/template/noc-template`;
 
 // Vehicle types
 export const GET_VEHICLE_TYPES = `/vehicle-management/vehicle-type/getAll`;

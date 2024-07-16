@@ -20,6 +20,7 @@ import {
   GET_MONEY_RECEIPT_LIST,
   GET_MONEY_RECEIPT_TEMPLATE_HTML,
   GET_NOC,
+  GET_NOC_HTML,
   GET_ORDER_DETAILS,
   GET_ORDER_LIST,
   GET_PACKING_LIST,
@@ -87,7 +88,7 @@ import {
   IUpdateCarConditionPayload,
   IUpdateCarConditionResponse,
 } from '../interface/order/IUpdateCarConditionResponse';
-import { IGetNocList, IGetNocListRequest, IGetNocListResponse, INocPayload } from '../interface/order/IGetNocListResponse';
+import { IGetNocList, IGetNocListRequest, IGetNocListResponse, INocFormTemplatePayload, INocPayload, INocTemplatePayload, INocTemplateResponse } from '../interface/order/IGetNocListResponse';
 import { ICreateNocFormRequest } from '../interface/order/ICreateNocFormRequest';
 import { ICreateNocFormResponse } from '../interface/order/ICreateNocFormResponse';
 
@@ -362,7 +363,6 @@ export const UpdateCarConditionService = async (
 
 // 
 
-
 export const CreateNocService = async (
   payload: ICreateNocFormRequest,
 ): Promise<ICreateNocFormResponse> => {
@@ -373,11 +373,19 @@ export const CreateNocService = async (
   >(payload, ADD_NOC);
 };
 
-
-
 export const GetNocService = async (
   payload: INocPayload,
 ): Promise<IGetNocListResponse> => {
   const api = Api.getInstance();
   return await api.post<INocPayload,AxiosResponse<IGetNocListResponse>>(payload, GET_NOC);
+};
+
+export const GetNocDocTemplateService = async (
+  payload: INocTemplatePayload,
+): Promise<INocTemplateResponse> => {
+  const api = Api.getInstance();
+  return await api.post<
+  INocTemplatePayload,
+    AxiosResponse<INocTemplateResponse>
+  >(payload, GET_NOC_HTML);
 };

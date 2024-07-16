@@ -7,7 +7,6 @@ const useSerialNoHook = () => {
     if(data) {
         sNo = data;
     }
-    console.log('serial-no--', sNo);
     return sNo;
 }
 

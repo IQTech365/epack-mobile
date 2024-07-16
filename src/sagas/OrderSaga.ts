@@ -59,6 +59,9 @@ import {
   getNocDocFailure,
   getNocDocRequest,
   getNocDocSuccess,
+  getNocFormTemplateFailure,
+  getNocFormTemplateRequest,
+  getNocFormTemplateSuccess,
   getOrderFailure,
   getOrderRequest,
   getOrderSuccess,
@@ -106,7 +109,7 @@ import { IGetInvoiceListResponse } from '../interface/order/IGetInvoiceListRespo
 import { IPackingListTemplatePayload, IPackingListTemplateResponse } from '../interface/order/IPackingListTemplate';
 import { IUpdateInvoicePayload, IUpdateInvoiceResponse } from '../interface/order/IUpdateInvoiceResponse';
 import { IUpdateCarConditionPayload, IUpdateCarConditionResponse } from '../interface/order/IUpdateCarConditionResponse';
-import { IGetNocListResponse, INocPayload } from '../interface/order/IGetNocListResponse';
+import { IGetNocListResponse, INocFormTemplatePayload, INocPayload, INocTemplateResponse } from '../interface/order/IGetNocListResponse';
 import { ICreateNocFormRequest } from '../interface/order/ICreateNocFormRequest';
 import { ICreateNocFormResponse } from '../interface/order/ICreateNocFormResponse';
 
@@ -379,6 +382,18 @@ export function* createCarConditionSaga(
     }
   }
 
+  //  Noc Template
+
+  export function* getNocFormTemplateSaga(action: PayloadAction<INocFormTemplatePayload>) {
+    try {
+        const response: INocTemplateResponse = yield call(OrderService.GetNocDocTemplateService, action.payload);
+        console.log("IHtmlTemplateResponse",INocTemplateResponse)
+        yield put(getNocFormTemplateSuccess(response));
+    } catch (error) {
+        yield put(getNocFormTemplateFailure(error));
+    }
+  }
+
 export function* watcherOrderSaga() {
   yield takeLatest(addOrderRequest.type, addOrderSaga);
   yield takeLatest(getOrdersRequest.type, getOrderListSaga);
@@ -407,6 +422,7 @@ export function* watcherOrderSaga() {
   yield takeLatest(updateCarConditionRequest.type, updateCarConditionSaga);
   yield takeLatest(createNocDocRequest.type, createNocDocSaga);
   yield takeLatest(getNocDocRequest.type, getNocDocListSaga);
+  yield takeLatest(getNocFormTemplateRequest.type, getNocFormTemplateSaga)
 
 
 

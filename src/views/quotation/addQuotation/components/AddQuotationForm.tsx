@@ -402,7 +402,7 @@ const AddQuotationForm: React.FC<Props> = ({
       .then((id) => {
         const payload: IAddSurveyItemPayload = {
           companyId: id as string,
-          enquiryId: enquiryId as string,
+          enquiryId: enquiryId ? enquiryId as string : addQuotationInfo.data.enquiryId,
           quotationId: addQuotationInfo.data.quotationId,
           surveyListNo: serialNo ? serialNo.toString() : state.quotation_no,
           surveyDate: state.date_of_quotation,
@@ -462,13 +462,17 @@ const AddQuotationForm: React.FC<Props> = ({
         dispatch(resetaddQuotationRequest());
         dispatch(resetGetSerialNoRequest());
         if(isSurveyItemsRequired) {
+          console.log("robin4")
           _getSerialNoRequest();
         } else {
+          console.log("robin1")
           _getQuotationsRequest();
           getTotalDocumentCount();
           if (onSuccess) {
+            console.log("robin2")
             onSuccess();
           } else {
+            console.log("robin3")
             navigation?.goBack();
           }
         }
