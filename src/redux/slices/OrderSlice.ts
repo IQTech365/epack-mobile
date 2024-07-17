@@ -209,11 +209,11 @@ interface IOrderState {
 
   // Noc template
   
-  NocFormTemplate: INocFormTemplatePayload | null;
-  NocFormTemplateRequesting: boolean;
-  NocFormTemplateSuccess:boolean;
-  NocFormTemplateFailure:boolean;
-  NocFormTemplateError:any;
+  getNocFormTemplate: INocFormTemplatePayload | null;
+  getNocFormTemplateRequesting: boolean;
+  getNocFormTemplateSuccess:boolean;
+  getNocFormTemplateFailure:boolean;
+  getNocFormTemplateError:any;
 }
 
 
@@ -394,11 +394,11 @@ const initialState: IOrderState = {
   getNocDocError: null,
 
   //  Noc Template
-  NocFormTemplate: null,
-  NocFormTemplateRequesting: false,
-  NocFormTemplateSuccess:false,
-  NocFormTemplateFailure:false,
-  NocFormTemplateError:null,
+  getNocFormTemplate: null,
+  getNocFormTemplateRequesting: false,
+  getNocFormTemplateSuccess:false,
+  getNocFormTemplateFailure:false,
+  getNocFormTemplateError:null,
 
 };
 
@@ -1087,25 +1087,25 @@ export const OrderSlice = createSlice({
     // Noc Template
 
     getNocFormTemplateRequest: (state, action:PayloadAction<INocFormTemplatePayload>) => {
-      state.NocFormTemplateRequesting = true;
+      state.getNocFormTemplateRequesting = true;
     },
     getNocFormTemplateSuccess: (state, action:PayloadAction<INocTemplateResponse>) => {
-      state.NocFormTemplateRequesting = false;
-      state.NocFormTemplateSuccess = true;
-      state.NocFormTemplate = action.payload;
+      state.getNocFormTemplateRequesting = false;
+      state.getNocFormTemplateSuccess = true;
+      state.getNocFormTemplate = action.payload;
     },
     getNocFormTemplateFailure: (state, action:PayloadAction<any>) => {
-      state.NocFormTemplateRequesting = false;
-      state.NocFormTemplateSuccess = false;
-      state.NocFormTemplateFailure = true;
-      state.NocFormTemplateError = action.payload;
+      state.getNocFormTemplateRequesting = false;
+      state.getNocFormTemplateSuccess = false;
+      state.getNocFormTemplateFailure = true;
+      state.getNocFormTemplateError = action.payload;
     },
     resetNocFormTemplateRequest: (state) => {
-      state.NocFormTemplateRequesting = false;
-      state.NocFormTemplateSuccess = false;
-      state.NocFormTemplateFailure = false;
-      state.NocFormTemplate = null;
-      state.NocFormTemplateError = null;
+      state.getNocFormTemplateRequesting = false;
+      state.getNocFormTemplateSuccess = false;
+      state.getNocFormTemplateFailure = false;
+      state.getNocFormTemplate = null;
+      state.getNocFormTemplateError = null;
     },
 
 

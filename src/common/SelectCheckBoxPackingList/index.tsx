@@ -33,6 +33,7 @@ interface SelectCheckBoxTextProps {
     packingType: string;
     valueOfGoods: string;
   }[];
+  initialPackingList: boolean
 }
 
 const SelectCheckBoxTextPackingList: React.FC<SelectCheckBoxTextProps> = ({
@@ -40,6 +41,7 @@ const SelectCheckBoxTextPackingList: React.FC<SelectCheckBoxTextProps> = ({
   onItemSelect,
   onItemDeselect,
   initialValues,
+  initialPackingList
 }) => {
   const [selectedItems, setSelectedItems] = useState<
     {
@@ -56,14 +58,11 @@ const SelectCheckBoxTextPackingList: React.FC<SelectCheckBoxTextProps> = ({
 
 
   useEffect(() => {
-    setSelectedItems(initialValues);
-    setItemCollection(initialValues);
+    if(initialPackingList){
+      setSelectedItems(initialValues);
+      setItemCollection(initialValues);
+    }
   }, [initialValues]);
-
-  // console.log("initialValues",initialValues)
-
-  
-
 
   const handleCheckboxPress = (item: string, index: number) => {
     setCurrentItemIndex(index);
@@ -83,7 +82,6 @@ const SelectCheckBoxTextPackingList: React.FC<SelectCheckBoxTextProps> = ({
       setItemCollection([...itemCollection, newItem]);
     }
   };
-
 
   const handleQtyChange = (qty: string, index: number) => {
     const updatedCollection = itemCollection.map((item, idx) =>

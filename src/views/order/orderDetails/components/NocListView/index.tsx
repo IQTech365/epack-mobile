@@ -2,18 +2,12 @@ import React, {useEffect} from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import Spacer from '../../../../../common/Spacer';
 import styles from './style';
-import {formatDate5, formatPrice} from '../../../../../utils/formatter';
-import {IGetSurveyItemListData} from '../../../../../interface/enquiry/IGetSurveyItemListResponse';
+import {formatDate5} from '../../../../../utils/formatter';
 import ShareIcon from '../../../../../images/icons/share_icon.svg';
 import EditIcon from '../../../../../images/icons/edit2.svg';
 import PreviewIcon from '../../../../../images/icons/preview_icon.svg';
-import {useNavigation} from '@react-navigation/native';
 import EditDisabledIcon from '../../../../../../src/images/icons/edit_disabled.svg';
-import {useDispatch} from 'react-redux';
-import {useAppSelector} from '../../../../../redux/hooks';
-import {
-  IGetNocList,
-} from '../../../../../interface/order/IGetNocListResponse';
+import {IGetNocList} from '../../../../../interface/order/IGetNocListResponse';
 
 interface INocItemListViewProps {
   item: IGetNocList;
@@ -32,9 +26,8 @@ const NocListItemView: React.FC<INocItemListViewProps> = ({
   onShowPreview,
   onShare,
   isOrder,
-  orderId,
 }) => {
-
+  
   return (
     <>
       <View style={styles.NocDateAndNumberContainer}>

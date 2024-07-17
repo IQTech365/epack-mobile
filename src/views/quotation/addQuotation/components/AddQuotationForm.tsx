@@ -42,7 +42,7 @@ import useInitialValueHook from '../../../../hooks/useInitialValueHook';
 import useUtilityHook from '../../../../hooks/useUtilityHook';
 import SurveyItemQuotation from './SurveyItemQuotation';
 import { IAddSurveyItemPayload, IAddSurveyItemRequest, ISurveyListItem } from '../../../../interface/enquiry/IAddSurveyItemRequest';
-import { addSurveyItemRequest } from '../../../../redux/slices/EnquirySlice';
+import { addSurveyItemRequest, resetAddSurveyItemRequest } from '../../../../redux/slices/EnquirySlice';
 import useSerialNoHook from '../../../../hooks/useSerialNo';
 import { Text, View } from 'react-native';
 import { DOCUMENT_TYPE, IGetSerialNoRequest } from '../../../../interface/setting/serialNo/serialNo';
@@ -84,9 +84,6 @@ const AddQuotationForm: React.FC<Props> = ({
   const authId = useAuthId();
   const dispatch = useAppDispatch();
 
-  // console.log("useSerialNoHook",useSerialNoHook)
-
-  // console.log("itemDatawithQuotation",item)
   const {
     addQuotationRequesting,
     addQuotationSuccess,
@@ -104,7 +101,11 @@ const AddQuotationForm: React.FC<Props> = ({
     vehicleCompaniesRequesting,
     vehicleModelsRequesting,
   } = useAppSelector(state => state.Common);
-  const {enquiry} = useAppSelector(state => state.Enquiry);
+  // state.addSurveyItemRequesting = false;
+  // state.addSurveyItemSuccess = false;
+  // state.addSurveyItemFailure = true;
+  const {enquiry, addSurveyItemRequesting, addSurveyItemSuccess, addSurveyItemFailure} = useAppSelector(state => state.Enquiry);
+
   const {getTotalDocumentCount} = useUtilityHook();
   const [surveyNo, setSurveyNo] = useState('');
   const serialNo: number = useSerialNoHook();
@@ -117,9 +118,7 @@ const AddQuotationForm: React.FC<Props> = ({
   const shouldSaveSurveyNoRef = useRef<Boolean>(false);
   const [isSurveyItemsRequired, setIsSurveyItemsRequired] = useState<boolean>(false);
 
-  const {initialValue} = useInitialValueHook('658d3d2f585e3dde644da9b2');
-  console.log('initialValue----', initialValue);
-  
+  const {initialValue} = useInitialValueHook('658d3d2f585e3dde644da9b2');  
 
   const transitInsurance: ITransitInsurance = {
     isRequired: state.transit_insurance,
@@ -261,7 +260,6 @@ const AddQuotationForm: React.FC<Props> = ({
             isHeadOffice: true,
           },
         };
-        console.log("payloadSerial",payload)
         dispatch(getSerialNoRequest(payload));
       })
       .catch(err => console.log('err--', err));
@@ -385,7 +383,6 @@ const AddQuotationForm: React.FC<Props> = ({
             };              
             dispatch(updateQuotationRequest(updatePayload));
           } else {
-            console.log(payload,"data----");
             dispatch(addQuotationRequest(payload));
           }
         } else {
@@ -445,34 +442,25 @@ const AddQuotationForm: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    // if(isEdit) {
-    //   resetAll();
-    // }
     if (fromEnquiry) {
       setEnquiryItem(_getSingleEnquiry());
     }
   }, []);
-  // _getSerialNoRequest()
 
   useEffect(() => {
     if (!addQuotationRequesting && addQuotationSuccess) {
-      // if (addQuotationSuccess) {
         showToast('New Quotation Created.', ToastType.SUCCESS);
         setShouldSaveSurveyNo(true);
         dispatch(resetaddQuotationRequest());
         dispatch(resetGetSerialNoRequest());
         if(isSurveyItemsRequired) {
-          console.log("robin4")
           _getSerialNoRequest();
         } else {
-          console.log("robin1")
           _getQuotationsRequest();
           getTotalDocumentCount();
           if (onSuccess) {
-            console.log("robin2")
             onSuccess();
           } else {
-            console.log("robin3")
             navigation?.goBack();
           }
         }
@@ -487,6 +475,19 @@ const AddQuotationForm: React.FC<Props> = ({
       handleSave();
     }
   }, [serialNo, shouldSaveSurveyNo, isSurveyItemsRequired]);
+
+  useEffect(() => {
+    if(!addSurveyItemRequesting && addSurveyItemSuccess) {
+      dispatch(resetAddSurveyItemRequest());
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        navigation?.goBack();
+      }
+    } else if(!addSurveyItemRequesting && addSurveyItemFailure){
+      dispatch(resetAddSurveyItemRequest());
+    }
+  }, [addSurveyItemRequesting, addSurveyItemSuccess, addSurveyItemFailure]);
 
   useEffect(() => {
     if (!updateQuotationRequesting && updateQuotationSuccess) {
@@ -546,10 +547,11 @@ const AddQuotationForm: React.FC<Props> = ({
 
      <Spacer height={4} />
      <SurveyItemQuotation
+      isEdit={isEdit}
       item={item}
       onItemSelect={handleItemSelect}
       onItemDeselect={handleItemDeselect}
-      surveyOtherItemList={surveyOtherItemList} // Pass the state as prop
+      surveyOtherItemList={surveyOtherItemList} 
       handleOtherItemsList={_handleOhterItemsList}
       onSurveyItemRequired={_handleSuveyItemRequired}
       />

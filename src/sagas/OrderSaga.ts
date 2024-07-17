@@ -387,7 +387,6 @@ export function* createCarConditionSaga(
   export function* getNocFormTemplateSaga(action: PayloadAction<INocFormTemplatePayload>) {
     try {
         const response: INocTemplateResponse = yield call(OrderService.GetNocDocTemplateService, action.payload);
-        console.log("IHtmlTemplateResponse",INocTemplateResponse)
         yield put(getNocFormTemplateSuccess(response));
     } catch (error) {
         yield put(getNocFormTemplateFailure(error));

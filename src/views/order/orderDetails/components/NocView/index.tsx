@@ -37,7 +37,7 @@ const NocView: React.FC<Props> = ({orderId}) => {
   const [showTemplate, setShowTemplate] = useState<boolean>(false);
   const [shouldShare, setShouldShare] = useState<boolean>(false);
   const templateId = useTemplateIdHook('667e3d2e8a4f37cd5090a7ff');
-  const {getNocDoc, NocFormTemplateRequesting,  getNocFormTemplateFailure,NocFormTemplate,
+  const {getNocDoc, getNocFormTemplateRequesting,  getNocFormTemplateFailure,getNocFormTemplate,
     getNocFormTemplateSuccess,getNocDocRequesting
   } = useAppSelector(
     state => state.Order,
@@ -70,11 +70,9 @@ const NocView: React.FC<Props> = ({orderId}) => {
             nocId: nocId,
             templateId: templateId,
             orderId: orderId,
-            html: ''
           };
           dispatch(getNocFormTemplateRequest(payload));
           setShowTemplate(true)
-          console.log("payloadTemplateqqq", payload)
         })
         .catch(err => console.log('error getting company id from storage'));
     } else {
@@ -103,32 +101,27 @@ const NocView: React.FC<Props> = ({orderId}) => {
   };
 
   const _hanldeCloseShowPreviewModal = () => {
-    dispatch(resetGetPackingListTemplateRequest());
+    dispatch(resetNocFormTemplateRequest());
     setShowTemplate(false);
     setShouldShare(false);
   };
 
-  // useEffect(() => {
-  //   _getPackingMaterialsRequest();
-  // }, []);
-
-
     useEffect(() => {
-      if(!NocFormTemplateRequesting) {
+      if(!getNocFormTemplateRequesting && getNocFormTemplateSuccess) {
         if(shouldShare) {
           startShare(
-            NocFormTemplate,
+            getNocFormTemplate,
             'Noc Doc',
             dispatch(resetNocFormTemplateRequest()),
           );
         } else {
           setShowTemplate(true);
         }
-      } else if(!NocFormTemplateRequesting && getNocFormTemplateFailure) {
+      } else if(!getNocFormTemplateRequesting && getNocFormTemplateFailure) {
         setShowTemplate(false);
         dispatch(resetNocFormTemplateRequest());
       }
-    }, [NocFormTemplateRequesting, getNocFormTemplateSuccess, getNocFormTemplateFailure]);
+    }, [getNocFormTemplateRequesting, getNocFormTemplateSuccess, getNocFormTemplateFailure]);
 
   return (
     <View>
@@ -146,7 +139,7 @@ const NocView: React.FC<Props> = ({orderId}) => {
         ListEmptyComponent={showEmptyView()}
       />
       <Spinner
-        show={getNocDocRequesting || NocFormTemplateRequesting}
+        show={getNocDocRequesting || getNocFormTemplateRequesting}
       />
       <ModalHOC
         visible={showTemplate}
@@ -155,7 +148,7 @@ const NocView: React.FC<Props> = ({orderId}) => {
         headerStyle={styles.headerStyle}
         title="Preview">
         <View style={{flex: 1}}>
-          <TemplateViewer html={NocFormTemplate} />
+          <TemplateViewer html={getNocFormTemplate} />
         </View>
       </ModalHOC>
     </View>

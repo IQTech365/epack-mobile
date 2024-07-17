@@ -83,7 +83,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   >([]);
   const [filterOtherItem, setFilterOtherItem] = useState<boolean>(false);
   const [showSurveyDropdown, setShowSurveyDropdown] = useState<boolean>(false); // New state to control dropdown visibility
-  const [surveyDataFetch,setSurveyDataFetch] = useState<boolean>(false)
+  const [surveyDataFetch, setSurveyDataFetch] = useState<boolean>(false);
   const {
     createPackingMaterialRequesting,
     createPackingMaterialSuccess,
@@ -98,8 +98,8 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   );
   const serialNo: number = useSerialNoHook();
 
-
   const {surveyItemList} = useAppSelector(state => state.Enquiry);
+  const [initialPackingList, setInitialPackingLIst] = useState<boolean>(false);
 
   const itemNameInputRef = useRef(null);
   const quntityInputRef = useRef(null);
@@ -244,8 +244,6 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
           isAuto: true,
           isHeadOffice: true,
         };
-
-        console.log('payloadPacking', payload);
         dispatch2(createPackingMaterialsRequest(payload));
       })
       .catch(err => console.log('error in getting company id'));
@@ -335,11 +333,10 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   };
 
   const getSurveyListNoData = () => {
-    
     const surveyData = surveyItemList.data.map((item: any) => {
       return {label: item.surveyListNo, value: item._id};
     });
-    console.log("surveyData",surveyItemList)
+    console.log('surveyData', surveyItemList);
     return surveyData;
   };
 
@@ -348,6 +345,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
       id: selectedValue,
     };
     dispatch2(getSurveyItemListRequest(payload));
+    setInitialPackingLIst(true);
   };
 
   const handleCheckboxPress = () => {
@@ -420,8 +418,8 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   useEffect(() => {
     if (surveyItemList && surveyItemList.data) {
       const transformedSurveyItemList = surveyItemList.data.flatMap(
-        (item: {surveyItems: any[]}) =>
-          item.surveyItems.map(
+        (item: {surveyItems: any[]}) => {
+          return item.surveyItems.map(
             (surveyItem: {
               itemName: any;
               productCode: any;
@@ -435,22 +433,25 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
               valueOfGoods: surveyItem.valueOfGoods,
               description: surveyItem.description,
             }),
-          ),
+          );
+        },
       );
-      setCheckboxPackingItems(transformedSurveyItemList);
-      // if(checkboxPackingItems.length > 0){
-      const filtredOtherItemData = transformedData.flatMap(
+      console.log('transformedSurveyItemList', transformedSurveyItemList);
+      const filteredOtherItemData = transformedData.flatMap(
         item => item.surveyMaterialItem,
       );
+
       const otherItems = transformedSurveyItemList.filter(
         (surveyItem: {itemName: string}) =>
-          !filtredOtherItemData.includes(surveyItem.itemName),
+          !filteredOtherItemData.includes(surveyItem.itemName),
       );
-        setPackingOtherItemList(otherItems);
-         setFilterOtherItem(true);
-      // }
+      setPackingOtherItemList(otherItems);
+      const filteredCheckBoxData = transformedSurveyItemList.filter(
+        (surveyItem: any) => !otherItems.includes(surveyItem),
+      );
+      setCheckboxPackingItems(filteredCheckBoxData);
     }
-  }, [surveyItemList]);
+  }, [surveyItemList, transformedData]);
 
   return (
     <>
@@ -529,6 +530,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
                   onItemSelect={handleItemSelect}
                   onItemDeselect={handleItemDeselect}
                   initialValues={checkboxPackingItems}
+                  initialPackingList={initialPackingList}
                 />
               </View>
             </CollapsibleView>

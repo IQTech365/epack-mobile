@@ -95,7 +95,6 @@ const NocFormView: React.FC<INocFormViewProps> = ({navigation, orderId}) => {
           enquiryId: orderId as string,
           // id: id as string,
         };
-        console.log('payload1212', payload);
         dispatch(getNocDocRequest(payload));
       })
       .catch(err => console.log(err));
@@ -148,7 +147,7 @@ const NocFormView: React.FC<INocFormViewProps> = ({navigation, orderId}) => {
     transformBiltyData();
     dispatch(getBiltyListRequest(orderId as string));
     DateInputRef.current?.setDefaultValue(new Date());
-    // setPackingType('Household');
+    setPackingType('Household');
   }, []);
 
   return (
@@ -210,7 +209,7 @@ const NocFormView: React.FC<INocFormViewProps> = ({navigation, orderId}) => {
           <Spacer height={8} />
           <Spinner show={getNocDocRequesting} />
         </View>
-        <NocView orderId={orderId as string} />
+        <NocView orderId={orderId as string} items={[]} />
 
         {/* <NocListItemView orderId={orderId} onShowPreview={_showSurveyListItemTemplate} /> */}
       </>
