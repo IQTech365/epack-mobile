@@ -78,8 +78,6 @@ const CompanyBasicDetailsForm: FC<IProps> = ({navigation}) => {
   const {pendingRegistrationInfo} = useAppSelector(state => state.Common);
   const {
     updateSubscriptionRequesting,
-    updateSubscriptionSuccess,
-    updateSubscriptionFailure,
     addPurchaseInfo,
   } = useAppSelector(state => state.Subscription);
   const {result, fetching, setPincode} = usePincodeHook(

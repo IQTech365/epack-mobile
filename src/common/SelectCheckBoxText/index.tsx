@@ -10,6 +10,7 @@ interface SelectCheckBoxTextProps {
   onItemSelect: (item: string, qty: number) => void;
   onItemDeselect: (item: string) => void;
   reset: boolean;
+  surveyItemList: []
 
 }
 

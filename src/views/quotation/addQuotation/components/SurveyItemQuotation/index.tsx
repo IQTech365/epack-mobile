@@ -18,7 +18,7 @@ import { resetGetSerialNoRequest } from '../../../../../redux/slices/SerialNoSet
 import { getSurveyCategoryRequest, getSurveyMaterialRequest } from '../../../../../redux/slices/CommonSlice';
 import { useDispatch } from 'react-redux';
 import Label from '../../../../../common/Label';
-import Input from '../../../../../common/Input';
+import Input, { InputMethods } from '../../../../../common/Input';
 import { IAddSurveyItemRequest, ISurveyListItem } from '../../../../../interface/enquiry/IAddSurveyItemRequest';
 import { getCurrentCompanyId } from '../../../../../utils/storage';
 interface Props {
@@ -30,6 +30,7 @@ interface Props {
   surveyOtherItemList: ISurveyListItem[]; // New prop
   handleOtherItemsList: (item: ISurveyListItem) => void;
   onSurveyItemRequired: (value: boolean) => void;
+  surveyItemList: []
 }
 
 const SurveyItemQuotation: React.FC<Props> = ({
@@ -40,7 +41,8 @@ const SurveyItemQuotation: React.FC<Props> = ({
   quotationData,
   surveyOtherItemList,
   handleOtherItemsList,
-  onSurveyItemRequired
+  onSurveyItemRequired,
+  surveyItemList
 
 }) => {
   const {state, setSurveyItem} = useQuotationFormContextHook();
@@ -48,12 +50,22 @@ const SurveyItemQuotation: React.FC<Props> = ({
   const [quantity, setQuantity] = useState<string>('');
   const [valueOfGoods, setValueOfGoods] = useState<string>('');
   const [remarks, setRemarks] = useState<string>('');
+  // const [surveyData,setSurveyData] = useState<string>('')
+
 
   const dispatch = useDispatch()
-  const itemNameCompRef = useRef(null);
-  const quantityCompRef = useRef(null);
-  const valueOfGoodsCompRef = useRef(null);
-  const remarksCompRef = useRef(null);
+  const itemNameCompRef = useRef<InputMethods>(null);
+  const quantityCompRef = useRef<InputMethods>(null);
+  const valueOfGoodsCompRef = useRef<InputMethods>(null);
+  const remarksCompRef = useRef<InputMethods>(null);
+  
+
+  // const { surveyItems } = surveyItemList.data[0];
+
+  // const dataOfFind = surveyItems.map(item => item);
+  
+
+  
 
   const [transformedData, setTransformedData] = useState<
     TPackingMateiralItem[]
@@ -131,7 +143,6 @@ const SurveyItemQuotation: React.FC<Props> = ({
     handleOtherItemsList(newItem);
     resetForm();
   };
-
   const resetForm = () => {
     setItem('');
     //@ts-ignore
@@ -156,7 +167,6 @@ const SurveyItemQuotation: React.FC<Props> = ({
     dispatch(getSurveyMaterialRequest())
     dispatch(getSurveyCategoryRequest())
   }, []);
-
 
   const showSurveyItemList = () => {
     if (surveyOtherItemList.length > 0) {
@@ -208,6 +218,39 @@ const SurveyItemQuotation: React.FC<Props> = ({
     return null;
   };
 
+  useEffect(() => {
+    if(isEdit){
+      if (surveyItemList.data && surveyItemList.data.length > 0) {
+        setSurveyItem('Required');
+      }
+      else {
+        setSurveyItem('Not Required')
+      }
+    }
+  }, [surveyItemList]);
+
+  // useEffect(()=>{
+  //   const {data} = surveyItemList
+  //   const surveyItemListData = data.surveyItems;
+  //   if(surveyItemListData){
+  //     setSurveyItem(surveyItemListData.)
+  //   }
+  // },[])
+
+
+  // if (isEdit && quotationData) {
+  //   const quotationfreight: IQuotationFreight =
+  //     quotationData.quotationfreights;
+  //   if (_.isObject(quotationfreight)) {
+  //     const storageCharge: IStorage = quotationfreight.storageCharges;
+  //     if (_.isObject(storageCharge)) {
+  //       setStorage(storageCharge?.isRequired);
+  //     } else if (_.isNull(storageCharge)) {
+  //       setStorage(options2[1]);
+  //     }
+  //   }
+  // }
+
 
   return (
     <CollapsibleView title="SURVEY ITEM" collapsed={true}>
@@ -249,6 +292,8 @@ const SurveyItemQuotation: React.FC<Props> = ({
                           items={Array.isArray(item.surveyMaterialItem) ? item.surveyMaterialItem : [item.surveyMaterialItem]}
                           onItemSelect={onItemSelect}
                          onItemDeselect={onItemDeselect}
+                         surveyItemList={surveyItemList}
+                         
                         />
                       </View>
                     </CollapsibleView>

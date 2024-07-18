@@ -88,6 +88,8 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
     createPackingMaterialRequesting,
     createPackingMaterialSuccess,
     createPackingMaterialFailure,
+    packingListTemplateRequesting,
+    packingListTemplateSuccess
   } = useAppSelector(state => state.Order);
   const {packingTypes} = useAppSelector(state => state.Common);
   const {surveyMaterial, surveyCategory} = useAppSelector(
@@ -332,6 +334,11 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
       .catch(err => console.log(err));
   };
 
+  // const dataOfSurvey = surveyItemList.data.map((item)=> item.surveyItems)
+  // console.log("dataOfSurvey",dataOfSurvey)
+
+  // console.log("surveyItemList1111",surveyItemList.data.)
+
   const getSurveyListNoData = () => {
     const surveyData = surveyItemList.data.map((item: any) => {
       return {label: item.surveyListNo, value: item._id};
@@ -392,6 +399,11 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
     }
   }, [serialNo]);
 
+  // useEffect(()=>{
+  //   if(!packingListTemplateRequesting && packingListTemplateSuccess){
+  //   }
+  // },[])
+
   useEffect(() => {
     if (!createPackingMaterialRequesting && createPackingMaterialSuccess) {
       showToast('Packing Item List Created', ToastType.SUCCESS);
@@ -415,28 +427,30 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
     transformSurveyData();
   }, [surveyMaterial]);
 
+  // console.log("surveyItemList",surveyItemList.data.surveyItems[0])
+
   useEffect(() => {
     if (surveyItemList && surveyItemList.data) {
       const transformedSurveyItemList = surveyItemList.data.flatMap(
         (item: {surveyItems: any[]}) => {
+          console.log("transformedSurveyItemList",transformedSurveyItemList)
           return item.surveyItems.map(
             (surveyItem: {
               itemName: any;
               productCode: any;
               quantity: any;
               valueOfGoods: any;
-              description: any;
+              remarks: any;
             }) => ({
               itemName: surveyItem.itemName,
               productCode: surveyItem.productCode,
               quantity: surveyItem.quantity,
               valueOfGoods: surveyItem.valueOfGoods,
-              description: surveyItem.description,
+              remarks: surveyItem.remarks,
             }),
           );
         },
       );
-      console.log('transformedSurveyItemList', transformedSurveyItemList);
       const filteredOtherItemData = transformedData.flatMap(
         item => item.surveyMaterialItem,
       );
@@ -445,7 +459,10 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
         (surveyItem: {itemName: string}) =>
           !filteredOtherItemData.includes(surveyItem.itemName),
       );
-      setPackingOtherItemList(otherItems);
+      if(initialPackingList){
+        setPackingOtherItemList(otherItems);
+      }
+      // setInitialPackingLIst(false)
       const filteredCheckBoxData = transformedSurveyItemList.filter(
         (surveyItem: any) => !otherItems.includes(surveyItem),
       );

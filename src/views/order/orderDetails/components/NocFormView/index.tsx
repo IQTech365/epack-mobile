@@ -4,7 +4,7 @@ import {View} from 'react-native';
 import styles from './style';
 import Input from '../../../../../common/Input';
 import Label from '../../../../../common/Label';
-import DropdownComponent from '../../../../../common/DropdownComponent';
+import DropdownComponent, { IDropdownHandler } from '../../../../../common/DropdownComponent';
 import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import CollapsibleView from '../../../../../common/CollapsibleView';
 import Spacer from '../../../../../common/Spacer';
@@ -43,11 +43,14 @@ interface INocFormPayload {
 }
 
 const NocFormView: React.FC<INocFormViewProps> = ({navigation, orderId}) => {
-  const [packingType, setPackingType] = useState<string>('');
+  const [nocTypes, setNocTypes] = useState<string>('');
   const [lrNumber, setLrNumber] = useState<string>('');
   const [lrDate, setLrDate] = useState<Date | null>(null);
   const [selectedLrNumber, setSelectedLRNumber] = useState<string>('');
   const [date, setDate] = useState<string>(new Date().toISOString());
+  const [isLRDateDisabled, setIsLRDateDisabled] = useState<boolean>(false);
+  const [selectedNocType,setSelectedNocType] = useState<string>("")
+
   const {
     biltyList,
     getNocDocRequesting,
@@ -60,6 +63,9 @@ const NocFormView: React.FC<INocFormViewProps> = ({navigation, orderId}) => {
   const dispatch = useAppDispatch();
   const DateInputRef = useRef<IDateMethods>(null);
   const dateofLr = useRef<IDateMethods>(null);
+  const nocType = useRef<IDropdownHandler>(null);
+
+  console.log("selectedNocType",selectedNocType)
 
   const transformBiltyData = () => {
     let _data: string[] = [];
@@ -80,9 +86,12 @@ const NocFormView: React.FC<INocFormViewProps> = ({navigation, orderId}) => {
         (bilty: IBilty) => bilty.biltyNumber === selectedLrNumber,
       );
       if (selectedBilty) {
+        console.log("selectedBilty",selectedBilty)
+        setSelectedNocType(selectedBilty.materialsType)
         setLrNumber(selectedBilty.biltyNumber);
         setLrDate(new Date(selectedBilty.biltyDate));
         dateofLr.current?.setDefaultValue(new Date(selectedBilty.biltyDate));
+        setIsLRDateDisabled(true);
       }
     }
   };
@@ -128,6 +137,7 @@ const NocFormView: React.FC<INocFormViewProps> = ({navigation, orderId}) => {
   useEffect(() => {
     if (selectedLrNumber && biltyList) {
       handleLrNumberSelect(selectedLrNumber);
+      console.log("selectedLrNumber",selectedLrNumber)
     }
   }, [selectedLrNumber, biltyList]);
 
@@ -147,8 +157,25 @@ const NocFormView: React.FC<INocFormViewProps> = ({navigation, orderId}) => {
     transformBiltyData();
     dispatch(getBiltyListRequest(orderId as string));
     DateInputRef.current?.setDefaultValue(new Date());
-    setPackingType('Household');
   }, []);
+
+
+  useEffect(()=>{
+    if(selectedNocType){
+      console.log("selectedNocType",selectedNocType)
+      nocType.current?.setDefaultValue(selectedNocType)
+      setNocTypes(selectedNocType)
+    }
+  },[])
+
+  useEffect(() => {
+    if (lrNumber) {
+      setIsLRDateDisabled(true);
+      setNocTypes(selectedNocType)
+    } else {
+      setIsLRDateDisabled(false);
+    }
+  }, [lrNumber]);
 
   return (
     <AvoidSoftInputViewHOC>
@@ -163,9 +190,11 @@ const NocFormView: React.FC<INocFormViewProps> = ({navigation, orderId}) => {
                   <Label text="NOC Type" style={styles.label} />
                   <DropdownComponent
                     data={shiftingLuggages}
+                    // defaultValue={packingType}
                     onSelect={(item: any) => {
-                      setPackingType(item.label);
+                      setNocTypes(item.label);
                     }}
+                    ref={nocType}
                   />
                 </View>
                 <View style={styles.itemContainer}>
@@ -191,7 +220,7 @@ const NocFormView: React.FC<INocFormViewProps> = ({navigation, orderId}) => {
                   <Label text="LR Date" style={styles.label} />
                   <DatePickerComponent
                     onDateSelect={(date: Date) => handleLRDate(date)}
-                    disabled={!!selectedLrNumber}
+                    disabled={isLRDateDisabled}
                     ref={dateofLr}
                   />
                 </View>
