@@ -38,7 +38,6 @@ const SurveyItemQuotation: React.FC<Props> = ({
   item,
   onItemSelect,
   onItemDeselect,
-  quotationData,
   surveyOtherItemList,
   handleOtherItemsList,
   onSurveyItemRequired,
@@ -60,7 +59,8 @@ const SurveyItemQuotation: React.FC<Props> = ({
   const remarksCompRef = useRef<InputMethods>(null);
   
 
-  // const { surveyItems } = surveyItemList.data[0];
+  // const { data } = surveyItemList
+  console.log("surveyItemList44444",surveyItemList)
 
   // const dataOfFind = surveyItems.map(item => item);
   
@@ -219,15 +219,16 @@ const SurveyItemQuotation: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    if(isEdit){
-      if (surveyItemList.data && surveyItemList.data.length > 0) {
+    if(isEdit && surveyItemList){
+      if ( surveyItemList && surveyItemList.data && surveyItemList.data.length > 0) {
         setSurveyItem('Required');
       }
       else {
         setSurveyItem('Not Required')
       }
     }
-  }, [surveyItemList]);
+  }, [isEdit,surveyItemList]);
+
 
   // useEffect(()=>{
   //   const {data} = surveyItemList
@@ -293,6 +294,7 @@ const SurveyItemQuotation: React.FC<Props> = ({
                           onItemSelect={onItemSelect}
                          onItemDeselect={onItemDeselect}
                          surveyItemList={surveyItemList}
+                         isEdit={isEdit}
                          
                         />
                       </View>

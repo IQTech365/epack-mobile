@@ -56,6 +56,7 @@ import {
   addSurveyItemRequest,
   getSurveyItemListRequest,
   resetAddSurveyItemRequest,
+  updateSurveryItemListRequest,
 } from '../../../../redux/slices/EnquirySlice';
 import useSerialNoHook from '../../../../hooks/useSerialNo';
 import {Text, View} from 'react-native';
@@ -64,6 +65,7 @@ import {
   IGetSerialNoRequest,
 } from '../../../../interface/setting/serialNo/serialNo';
 import { IGetSurvyeItemListByQuotationIdRequestPayload } from '../../../../interface/enquiry/IGetSurveyItemListResponse';
+import { IUpdateSurveyItemRequest } from '../../../../interface/enquiry/enquiry';
 
 interface Props {
   fromEnquiry?: boolean;
@@ -299,6 +301,18 @@ const AddQuotationForm: React.FC<Props> = ({
       .catch(err => console.log('err--', err));
   };
 
+  const _handleSaveChanges = () => {
+    const payload: IUpdateSurveyItemRequest = {
+      surveyId: surveyItemList.data[0]._id,
+      payload: {
+        // surveyListNo: serialNo ? serialNo.toString() : state.quotation_no,
+        surveyItems: [...checkboxSurveyItems, ...surveyOtherItemList],
+      },
+    };
+    console.log("payload123123",payload)
+    // dispatch(updateSurveryItemListRequest(payload));
+  };
+
   const hanldeSubmit = () => {
     getCurrentCompanyId()
       .then(id => {
@@ -416,6 +430,7 @@ const AddQuotationForm: React.FC<Props> = ({
               payload: payload,
             };
             dispatch(updateQuotationRequest(updatePayload));
+            _handleSaveChanges()
           } else {
             dispatch(addQuotationRequest(payload));
           }
@@ -482,22 +497,27 @@ const AddQuotationForm: React.FC<Props> = ({
       .then(id => {
         const payload: IGetSurvyeItemListByQuotationIdRequestPayload = {
           companyId: id as string,
-          quotationId: addQuotationInfo.data.quotationId,
+          quotationId: item._id,
           // id: addQuotationInfo.data._id
         };
         console.log("payload1212",payload)
         dispatch(getSurveyItemListRequest(payload));
+
       })
       .catch(err => console.log(err));
   };
-
 
   useEffect(() => {
     if (fromEnquiry) {
       setEnquiryItem(_getSingleEnquiry());
     }
-    _getSurveyItemListRequest()
   }, []);
+
+  useEffect(()=>{
+if(isEdit){
+  _getSurveyItemListRequest();
+}
+  },[isEdit])
 
   useEffect(() => {
     if (!addQuotationRequesting && addQuotationSuccess) {

@@ -54,7 +54,7 @@ const SelectCheckBoxTextPackingList: React.FC<SelectCheckBoxTextProps> = ({
   const {packingTypes} = useAppSelector(state => state.Common);
   const [currentItemIndex, setCurrentItemIndex] = useState<number>(-1);
   const [itemCollection, setItemCollection] = useState<any[]>([]);
-  const [packingTypeInitial, setPackingTypeInitial] = useState<string>('');
+
 
 
   useEffect(() => {
@@ -144,7 +144,7 @@ const SelectCheckBoxTextPackingList: React.FC<SelectCheckBoxTextProps> = ({
                 // value={selectedItem ? selectedItem.quantity.toString() : ''}
                 onChangeText={text => handleQtyChange(text, index)}
                 keyboardType="numeric"
-                value={selectedItem ? selectedItem.quantity.toString() : ''}
+                // value={selectedItem ? selectedItem.quantity.toString() : ''}
               />
             </View>
             {currentItemIndex === index && (

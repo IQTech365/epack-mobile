@@ -228,4 +228,6 @@ export const GET_SURVEY_CATEGORY = `/shifting-management/survey-category/getAll`
 export const ADD_NOC = `/noc/add`;
 // 
 export const GET_NOC = `/noc/list`
+// 
+export const UPDATE_NOC = `/noc/edit`
 

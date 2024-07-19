@@ -88,8 +88,6 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
     createPackingMaterialRequesting,
     createPackingMaterialSuccess,
     createPackingMaterialFailure,
-    packingListTemplateRequesting,
-    packingListTemplateSuccess
   } = useAppSelector(state => state.Order);
   const {packingTypes} = useAppSelector(state => state.Common);
   const {surveyMaterial, surveyCategory} = useAppSelector(
@@ -167,6 +165,8 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
     }
     return packTypes;
   };
+
+  console.log("robinkhan",checkboxPackingItems,packingOtherItemList)
 
   const _resetInputs = () => {
     setItemName('');
@@ -459,6 +459,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
         (surveyItem: {itemName: string}) =>
           !filteredOtherItemData.includes(surveyItem.itemName),
       );
+      console.log("otherItems",otherItems)
       if(initialPackingList){
         setPackingOtherItemList(otherItems);
       }
@@ -467,6 +468,12 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
         (surveyItem: any) => !otherItems.includes(surveyItem),
       );
       setCheckboxPackingItems(filteredCheckBoxData);
+      console.log("filteredCheckBoxData",filteredCheckBoxData)
+    }
+    else {
+      setCheckboxPackingItems([]);
+      setPackingOtherItemList([])
+
     }
   }, [surveyItemList, transformedData]);
 

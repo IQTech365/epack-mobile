@@ -43,3 +43,28 @@ export interface IGetNocListResponse {
 export interface INocFormTemplatePayload {
   html: any;
 }
+
+
+export interface IUpdateNocFormPayloadRequest {
+  id(id: any): string;
+  data<T, U>(data: any, arg1: string): IUpdateNocFormResponse | PromiseLike<IUpdateNocFormResponse>;
+  _id: string;
+  companyId: string;
+  enquiryId: string;
+  nocType: string;
+  nocDate: string;
+  biltyNo: string;
+  biltyDate: string;
+  addedBy: string;
+  isActive: boolean;
+  isDeleted: boolean;
+  createdDate: string;
+  updatedDate: string;
+}
+
+
+export interface IUpdateNocFormResponse {
+  data: IUpdateNocFormPayloadRequest[];
+  status: number;
+  error: boolean;
+}

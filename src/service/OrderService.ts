@@ -28,6 +28,7 @@ import {
   UPDATE_BILTY,
   UPDATE_CAR_CONDITION,
   UPDATE_INVOICE,
+  UPDATE_NOC,
   UPDATE_PACKING_LIST,
 } from '../http/Endpoint';
 import {IOtpVerifyRequest} from '../interface/otp/IOtpVerifyRequest';
@@ -88,7 +89,7 @@ import {
   IUpdateCarConditionPayload,
   IUpdateCarConditionResponse,
 } from '../interface/order/IUpdateCarConditionResponse';
-import { IGetNocList, IGetNocListRequest, IGetNocListResponse, INocFormTemplatePayload, INocPayload, INocTemplatePayload, INocTemplateResponse } from '../interface/order/IGetNocListResponse';
+import { IGetNocList, IGetNocListRequest, IGetNocListResponse, INocFormTemplatePayload, INocPayload, INocTemplatePayload, INocTemplateResponse, IUpdateNocFormPayloadRequest, IUpdateNocFormResponse } from '../interface/order/IGetNocListResponse';
 import { ICreateNocFormRequest } from '../interface/order/ICreateNocFormRequest';
 import { ICreateNocFormResponse } from '../interface/order/ICreateNocFormResponse';
 
@@ -388,4 +389,14 @@ export const GetNocDocTemplateService = async (
   INocTemplatePayload,
     AxiosResponse<INocTemplateResponse>
   >(payload, GET_NOC_HTML);
+};
+
+export const UpdateNocFormService = async (
+  payload: IUpdateNocFormPayloadRequest,
+): Promise<IUpdateNocFormResponse> => {
+  const api = Api.getInstance();
+  return await api.update<
+  IUpdateNocFormPayloadRequest,
+    AxiosResponse<IUpdateNocFormResponse>
+  >(payload.data, UPDATE_NOC(payload.id));
 };

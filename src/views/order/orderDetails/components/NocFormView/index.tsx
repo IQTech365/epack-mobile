@@ -86,8 +86,6 @@ const NocFormView: React.FC<INocFormViewProps> = ({navigation, orderId}) => {
         (bilty: IBilty) => bilty.biltyNumber === selectedLrNumber,
       );
       if (selectedBilty) {
-        console.log("selectedBilty",selectedBilty)
-        setSelectedNocType(selectedBilty.materialsType)
         setLrNumber(selectedBilty.biltyNumber);
         setLrDate(new Date(selectedBilty.biltyDate));
         dateofLr.current?.setDefaultValue(new Date(selectedBilty.biltyDate));
@@ -123,7 +121,7 @@ const NocFormView: React.FC<INocFormViewProps> = ({navigation, orderId}) => {
         const payload: ICreateNocFormRequest = {
           enquiryId: orderId || '',
           companyId: id as string,
-          nocType: packingType,
+          nocType: nocTypes,
           nocDate: date,
           biltyDate: lrDate ? lrDate.toISOString() : date,
           biltyNo: selectedLrNumber,
@@ -159,19 +157,9 @@ const NocFormView: React.FC<INocFormViewProps> = ({navigation, orderId}) => {
     DateInputRef.current?.setDefaultValue(new Date());
   }, []);
 
-
-  useEffect(()=>{
-    if(selectedNocType){
-      console.log("selectedNocType",selectedNocType)
-      nocType.current?.setDefaultValue(selectedNocType)
-      setNocTypes(selectedNocType)
-    }
-  },[])
-
   useEffect(() => {
     if (lrNumber) {
       setIsLRDateDisabled(true);
-      setNocTypes(selectedNocType)
     } else {
       setIsLRDateDisabled(false);
     }

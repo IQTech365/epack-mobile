@@ -16,8 +16,7 @@ export interface IGetSurvyeItemListRequestPayload {
 }
 export interface IGetSurvyeItemListByQuotationIdRequestPayload {
     companyId: string;
-    quotationId: string;
-    id: string
+    quotationId: any;
     // id : string
     // id: string;
 }
