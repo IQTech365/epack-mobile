@@ -26,8 +26,7 @@ const NocListItemView: React.FC<INocItemListViewProps> = ({
   onShowPreview,
   onShare,
   isOrder,
-}) => {
-  
+}) => {  
   return (
     <>
       <View style={styles.NocDateAndNumberContainer}>
@@ -76,13 +75,13 @@ const NocListItemView: React.FC<INocItemListViewProps> = ({
             style={styles.action}
             disabled={isOrder}
             activeOpacity={0.6}>
-            {isOrder ? (
+            {/* {isOrder ? ( */}
               <EditDisabledIcon width={24} height={24} />
-            ) : (
-              <EditIcon width={24} height={24} />
-            )}
+            {/* // ) : (
+            //   <EditIcon width={24} height={24} />
+            // )} */}
             <Text
-              style={isOrder ? styles.actionTextDisabled : styles.actionText}>
+              style={styles.actionTextDisabled}>
               Edit
             </Text>
           </TouchableOpacity>

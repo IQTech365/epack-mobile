@@ -9,7 +9,7 @@ export abstract class HttpClient {
   protected readonly instance: AxiosInstance;
 
   public constructor(baseUrl: string) {
-    this.instance = axios.create({baseURL: baseUrl});
+    this.instance = axios.create({baseURL: baseUrl, timeout: 6000});
     this._initializeRequestInterceptor();
     this._initializeResponseInterceptor();
   }

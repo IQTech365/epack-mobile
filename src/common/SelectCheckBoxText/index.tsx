@@ -5,9 +5,14 @@ import { COLOR_BLACK, COLOR_BLUE, COLOR_GRAY, COLOR_WHITE } from '../../utils/co
 
 const { width } = Dimensions.get('window');
 
+export type TItem = {
+  isChecked: boolean;
+  name: string;
+  qty: number;
+}
 interface SelectCheckBoxTextProps {
-  items: string[];
-  onItemSelect: (item: string, qty: number) => void;
+  items: TItem[];
+  onItemSelect: (items: TItem[]) => void;
   onItemDeselect: (item: string) => void;
   reset: boolean;
   surveyItemList: []
@@ -15,62 +20,65 @@ interface SelectCheckBoxTextProps {
 }
 
 const SelectCheckBoxText: React.FC<SelectCheckBoxTextProps> = ({ items, onItemSelect, onItemDeselect,reset }) => {
-  const [selectedItems, setSelectedItems] = useState<{[key: string]: number }>({});
-  const [quantitySelect,setQuantitySelect] = useState<string>("")
+  const [surveyItems, setSurveyItems] = useState<TItem[]>(items);
 
   useEffect(() => {
     if (reset) {
-      setSelectedItems({});
-      setQuantitySelect("");
+      // setSelectedItems({});
+      // setQuantitySelect("");
     }
   }, [reset]);
 
-  const handleCheckboxPress = (item: string) => {
-    setSelectedItems((prevSelectedItems) => {
-      if (prevSelectedItems[item]) {
-        const { [item]: _, ...remainingItems } = prevSelectedItems;
-        onItemDeselect(item);
-        return remainingItems;
-      } else {
-        onItemSelect(item, 1);
-        return { ...prevSelectedItems, [item]: 1 };
+  const handleCheckboxPress = (item: TItem, isChecked: boolean) => {
+    const copy = [...surveyItems];
+    const itemIndex:number = copy.findIndex(it => it.name === item.name);
+    console.log("itemIndex",itemIndex)
+    if(itemIndex !== -1) {
+      const tempItem:TItem = {
+        ...item,
+        isChecked: isChecked,
+        qty: 1,
       }
-    });
+      copy.splice(itemIndex, 1, tempItem);
+      setSurveyItems(copy);
+    }
+    onItemSelect(surveyItems);
   };
 
-  const handleQtyChange = (item: string, qty: string) => {
-    const quantity = parseInt(qty) || 0;
-    setSelectedItems((prevSelectedItems) => {
-      if (prevSelectedItems[item]) {
-        onItemSelect(item, quantity);
+  const handleQtyChange = (item: TItem, qty: string) => {
+    const copy = [...surveyItems];
+    const itemIndex:number = copy.findIndex(it => it.name === item.name);
+    if(itemIndex !== -1) {
+      const tempItem:TItem = {
+        ...item,
+        qty: parseInt(qty),
       }
-      setQuantitySelect(quantity)
-
-      return {
-        ...prevSelectedItems,
-        [item]: quantity,
-      };
-    });
+      copy.splice(itemIndex, 1, tempItem);
+      setSurveyItems(copy);
+    }
+    onItemSelect(surveyItems);
   };
 
   return (
     <View style={styles.container}>
-      {items.map((item, index) => (
+      {surveyItems.map((item, index) => (
         <View style={styles.checkBoxField} key={index}>
           <View style={styles.inputContain}>
             <BouncyCheckbox
               fillColor={COLOR_BLUE}
               unfillColor="#FFFFFF"
-              isChecked={!!selectedItems[item]}
-              onPress={() => handleCheckboxPress(item)}
+              isChecked={item.isChecked}
+              onPress={() => {
+                handleCheckboxPress(item, !item.isChecked)
+              }}
               disableBuiltInState={true}
             />
-            <Text style={styles.itemText}>{item}</Text>
+            <Text style={styles.itemText}>{item.name}</Text>
           </View>
           <TextInput
             style={styles.qtyInput}
             placeholder="1"
-            value={quantitySelect}
+            value={item.qty.toString()}
             onChangeText={(text) => handleQtyChange(item, text)}
             keyboardType="numeric"
           />

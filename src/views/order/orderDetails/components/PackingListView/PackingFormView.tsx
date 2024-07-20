@@ -166,7 +166,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
     return packTypes;
   };
 
-  console.log("robinkhan",checkboxPackingItems,packingOtherItemList)
+  console.log("robinkhan",checkboxPackingItems)
 
   const _resetInputs = () => {
     setItemName('');
@@ -427,13 +427,12 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
     transformSurveyData();
   }, [surveyMaterial]);
 
-  // console.log("surveyItemList",surveyItemList.data.surveyItems[0])
+
 
   useEffect(() => {
-    if (surveyItemList && surveyItemList.data) {
+    if (initialPackingList && surveyItemList) {
       const transformedSurveyItemList = surveyItemList.data.flatMap(
         (item: {surveyItems: any[]}) => {
-          console.log("transformedSurveyItemList",transformedSurveyItemList)
           return item.surveyItems.map(
             (surveyItem: {
               itemName: any;
@@ -455,27 +454,31 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
         item => item.surveyMaterialItem,
       );
 
+      console.log("filteredOtherItemData",filteredOtherItemData)
       const otherItems = transformedSurveyItemList.filter(
         (surveyItem: {itemName: string}) =>
           !filteredOtherItemData.includes(surveyItem.itemName),
       );
-      console.log("otherItems",otherItems)
       if(initialPackingList){
         setPackingOtherItemList(otherItems);
       }
+
       // setInitialPackingLIst(false)
       const filteredCheckBoxData = transformedSurveyItemList.filter(
         (surveyItem: any) => !otherItems.includes(surveyItem),
       );
-      setCheckboxPackingItems(filteredCheckBoxData);
       console.log("filteredCheckBoxData",filteredCheckBoxData)
+      setCheckboxPackingItems(filteredCheckBoxData);
     }
     else {
       setCheckboxPackingItems([]);
       setPackingOtherItemList([])
-
     }
-  }, [surveyItemList, transformedData]);
+  }, [surveyItemList, transformedData,initialPackingList]);
+
+
+
+
 
   return (
     <>

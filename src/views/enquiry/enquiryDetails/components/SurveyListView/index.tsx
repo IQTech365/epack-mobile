@@ -30,7 +30,7 @@ import {
 import {getSerialNoRequest, resetGetSerialNoRequest} from '../../../../../redux/slices/SerialNoSettingSlice';
 import {ToastType, showToast} from '../../../../../utils/utility';
 import CollapsibleView from '../../../../../common/CollapsibleView';
-import SelectCheckBoxText from '../../../../../common/SelectCheckBoxText';
+import SelectCheckBoxText, { TItem } from '../../../../../common/SelectCheckBoxText';
 import SurveyList from '../../../../../data/surveyList.json'
 import { getSurveyCategoryRequest, getSurveyMaterialRequest } from '../../../../../redux/slices/CommonSlice';
 
@@ -107,19 +107,52 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
   
 
 
-  const handleItemSelect = (item: string, qty: number) => {
-    setCheckboxSurveyItems((prevItems) => {
-      const updatedItems = [...prevItems];
-      const index = updatedItems.findIndex((i) => i.itemName === item);
-      if (index >= 0) {
-        updatedItems[index].quantity = qty.toString();
-      } else {
-        updatedItems.push({ itemName: item, quantity: qty });
-      }
-      return updatedItems;
-    });
-  };
+  const handleItemSelect = (items:TItem[]) => {
+    // console.log("itemsitems",items)
+    const activeItemsOnly = items.filter(it => it.isChecked);
+    // console.log("activeItemsOnly",activeItemsOnly)
+    const copy = [...checkboxSurveyItems];
+    if(copy.length === 0) {
+      const transform:ISurveyListItem[] = activeItemsOnly.map(it => {
+        const surveyItem = {
+          itemName: it.name,
+          quantity: it.qty.toString(),
+          valueOfGoods: "",
+          remarks: "",
+        }
+        return surveyItem;
+      });
+      console.log("transform",transform)
+      setCheckboxSurveyItems(transform);
+    } else {
+      const newDataArr:ISurveyListItem[] = [];
+      copy.forEach(it => {
+        const hasItem = activeItemsOnly.find(si => si.name === it.itemName);
+        if(hasItem !== undefined) {
+          const tempItem:ISurveyListItem = {
+            ...it,
+            quantity: hasItem.qty.toString(),
+          }
 
+          newDataArr.push(tempItem);
+        } else {
+          activeItemsOnly.forEach(itt => {
+            if(!hasItem && itt.name !== it.itemName ) {
+              const tempItem:ISurveyListItem = {
+                itemName: itt.name,
+                quantity: itt.qty.toString(),
+                valueOfGoods: "",
+                remarks: ""
+              }
+              newDataArr.push(tempItem);
+            }
+          });
+        }
+      })
+      console.log("newDataArr",newDataArr)
+      setCheckboxSurveyItems(newDataArr)
+    }
+  };
   const handleItemDeselect = (item: string) => {
     setCheckboxSurveyItems((prevItems) => prevItems.filter((i) => i.itemName !== item));
   };
@@ -145,13 +178,18 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
             };
           }
   
-          acc[surveyCategoryName].surveyMaterialItem.push(surveyMaterialItem);
+          acc[surveyCategoryName].surveyMaterialItem.push({isChecked: false, name: surveyMaterialItem, qty: 1});
         }
         return acc;
       }, {});
-  
+
+      console.log('grouped-data--', groupedData);
+      
       _data = Object.values(groupedData);
     }
+      // const dataWithCheckStatus = _data.map(it => {
+      //   return {item: it, isChecked: false};
+      // })
       setTransformedData(_data);
   };
 
@@ -374,7 +412,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
           <CollapsibleView title={item.surveyCategoryName} collapsed={true}>
             <View>
               <SelectCheckBoxText
-                items={Array.isArray(item.surveyMaterialItem) ? item.surveyMaterialItem : [item.surveyMaterialItem]}
+                items={item.surveyMaterialItem}
                 onItemSelect={handleItemSelect}
                 onItemDeselect={handleItemDeselect}
                 reset={resetSelection}
