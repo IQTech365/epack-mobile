@@ -32,7 +32,6 @@ const SelectCheckBoxText: React.FC<SelectCheckBoxTextProps> = ({ items, onItemSe
   const handleCheckboxPress = (item: TItem, isChecked: boolean) => {
     const copy = [...surveyItems];
     const itemIndex:number = copy.findIndex(it => it.name === item.name);
-    console.log("itemIndex",itemIndex)
     if(itemIndex !== -1) {
       const tempItem:TItem = {
         ...item,

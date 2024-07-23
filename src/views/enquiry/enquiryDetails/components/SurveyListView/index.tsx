@@ -107,52 +107,23 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
   
 
 
-  const handleItemSelect = (items:TItem[]) => {
-    // console.log("itemsitems",items)
+  const handleItemSelect = (items: TItem[]) => {
     const activeItemsOnly = items.filter(it => it.isChecked);
-    // console.log("activeItemsOnly",activeItemsOnly)
-    const copy = [...checkboxSurveyItems];
-    if(copy.length === 0) {
-      const transform:ISurveyListItem[] = activeItemsOnly.map(it => {
-        const surveyItem = {
-          itemName: it.name,
-          quantity: it.qty.toString(),
-          valueOfGoods: "",
-          remarks: "",
-        }
-        return surveyItem;
-      });
-      console.log("transform",transform)
-      setCheckboxSurveyItems(transform);
-    } else {
-      const newDataArr:ISurveyListItem[] = [];
-      copy.forEach(it => {
-        const hasItem = activeItemsOnly.find(si => si.name === it.itemName);
-        if(hasItem !== undefined) {
-          const tempItem:ISurveyListItem = {
-            ...it,
-            quantity: hasItem.qty.toString(),
-          }
-
-          newDataArr.push(tempItem);
-        } else {
-          activeItemsOnly.forEach(itt => {
-            if(!hasItem && itt.name !== it.itemName ) {
-              const tempItem:ISurveyListItem = {
-                itemName: itt.name,
-                quantity: itt.qty.toString(),
-                valueOfGoods: "",
-                remarks: ""
-              }
-              newDataArr.push(tempItem);
-            }
-          });
-        }
-      })
-      console.log("newDataArr",newDataArr)
-      setCheckboxSurveyItems(newDataArr)
-    }
+  
+    const transform: ISurveyListItem[] = activeItemsOnly.map(it => {
+      const existingItem = checkboxSurveyItems.find(item => item.itemName === it.name);
+      return {
+        itemName: it.name,
+        quantity: it.qty.toString(),
+        valueOfGoods: existingItem ? existingItem.valueOfGoods : "",
+        remarks: existingItem ? existingItem.remarks : "",
+      };
+    });
+  
+    // Set the new state with only the transformed active items
+    setCheckboxSurveyItems(transform);
   };
+    
   const handleItemDeselect = (item: string) => {
     setCheckboxSurveyItems((prevItems) => prevItems.filter((i) => i.itemName !== item));
   };
