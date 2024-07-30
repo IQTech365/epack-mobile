@@ -333,6 +333,7 @@ export const GetSavedTemplateIdListService = async (
   payload: string,
 ): Promise<ISavedDocumentTemplateIdResponse> => {
   const api = Api.getInstance();
+
   return await api.get<ISavedDocumentTemplateIdResponse>(
     GET_SAVED_DOCUMENT_TEMPLATE_ID_LIST(payload),
   );

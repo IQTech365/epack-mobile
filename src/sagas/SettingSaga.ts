@@ -264,6 +264,7 @@ export function* saveDocumentTemplateIdSaga(action: PayloadAction<ISaveDocumentT
 export function* getSavedDocumentTemplateIdListSaga(action: PayloadAction<string>) {
     try {
         const response: ISavedDocumentTemplateIdResponse = yield call(SettingService.GetSavedTemplateIdListService, action.payload);
+        console.log("response***",response)
         yield put(getSavedDocumentTemplateIdListSuccess(response));
     } catch (error) {
         yield put(getSavedDocumentTemplateIdListFailure(JSON.stringify(error)));

@@ -1,5 +1,5 @@
 import { StyleSheet, Dimensions } from "react-native";
-import { COLOR_BLACK, COLOR_GRAY, COLOR_GRAY2 } from "../../../../../utils/colors";
+import { COLOR_BLACK, COLOR_GRAY, COLOR_GRAY2, COLOR_WHITE } from "../../../../../utils/colors";
 const {width} = Dimensions.get('window');
 const styles = StyleSheet.create({
     container: {
@@ -12,6 +12,24 @@ const styles = StyleSheet.create({
         color: COLOR_BLACK,
         fontFamily: 'WorkSans-SemiBold',
         fontSize: 16,
+    },
+    imageStyle: {
+        width: 100,
+        height: 50,
+        resizeMode: 'contain',
+      },
+
+      textContainer: {
+        width: '100%',
+        alignItems: 'center',
+        backgroundColor: COLOR_WHITE,
+    },
+    tumbnail: {
+        width: width * 0.88,
+        height: 300,
+        borderRadius:8,
+        borderWidth: 3
+        // resizeMode: "contain"
     },
     sectionHeaderContainer: {
         width: width,

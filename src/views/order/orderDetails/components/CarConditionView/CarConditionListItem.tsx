@@ -39,6 +39,8 @@ const CarConditionListItem: React.FC<Props> = ({
       setLabel('MORE...');
     }
   }, [show]);
+
+  console.log("itemData",item)
   return (
     <View style={styles.mainWrapper}>
       <Shadow distance={4}>

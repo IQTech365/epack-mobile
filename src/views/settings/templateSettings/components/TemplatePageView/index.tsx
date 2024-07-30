@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {SectionList, Text, View} from 'react-native';
+import {FlatList, Image, SectionList, Text, TouchableOpacity, View} from 'react-native';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
 import styles from './styles';
 import {
@@ -68,6 +68,7 @@ const TemplatePageView = ({route}) => {
   const _prepareTemplateListWithCategory = () => {
     const sectionData: ISectionData[] = [];
     const templateCategories = _getUniqueTemplateCategories();
+    console.log("templateCategories",templateCategories)
     if (templateCategories && templateCategories.length > 0) {
       templateCategories.forEach((templateCategory: string) => {
         const data: ITemplate[] = _getTemplatesByModuleId().filter(
@@ -121,8 +122,35 @@ const TemplatePageView = ({route}) => {
     }
   }, [saveDocTemplateIdRequesting, saveDocTemplateIdSuccess, saveDocTemplateIdFailure]);
 
+
+  const customData = savedDocumentTemplateIds?.data?.filter(item => item.template.templateVersion === "Custom") || [];
+  console.log("customDatacustomData",customData)
+  // const customSection: ISectionData = {
+  //   title: 'Custom',
+  //   data: customData.map(item => item.template)
+  // };
+
+  // const sections = [customSection, ..._prepareTemplateListWithCategory()];
+  // console.log("sectionssections",sections)
+
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white'}}>
+      <View>
+      <FlatList
+          style={{ paddingHorizontal: 8 }}
+          data={customData}
+          horizontal
+          showsHorizontalScrollIndicator={true}
+          renderItem={({ item, index }) => (
+            <TouchableOpacity key={`${index}`}>
+              <View style={styles.sectionHeaderContainer}>
+            <Text style={styles.taskTitle}>{item.template.templateVersion}</Text>
+          </View>
+              <Image source={{ uri: item.template.templateThumbnail }} style={styles.tumbnail} resizeMode="contain" />
+            </TouchableOpacity>
+          )}
+        />
+      </View>
       <SectionList
         sections={_prepareTemplateListWithCategory()}
         renderItem={({item, index}) => (

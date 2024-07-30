@@ -153,9 +153,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
         }
         return acc;
       }, {});
-
-      console.log('grouped-data--', groupedData);
-      
+            
       _data = Object.values(groupedData);
     }
       // const dataWithCheckStatus = _data.map(it => {

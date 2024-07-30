@@ -39,7 +39,7 @@ const DatePickerComponent = forwardRef<IDateMethods, IDatePickerProps>(
     },
     ref,
   ) => {
-    const [date, setDate] = useState<Date>(new Date());
+    const [date, setDate] = useState<Date | null>(new Date());
     const [open, setOpen] = useState<boolean>(false);
     const [refresh, setRefresh] = useState<boolean>(false);
 
@@ -52,17 +52,29 @@ const DatePickerComponent = forwardRef<IDateMethods, IDatePickerProps>(
       },
     }));
 
-    const errorBorderStyle = error ? styles.errorBorderColor : null;
-    const containerStyle = disabled
-      ? styles.disabledContainer
-      : styles.container;
-
     const getDateAndTime = () => {
+      if (!date) return '';
       if (showTime) {
         return formatDate3(date);
       }
       return formatDate(date);
     };
+
+    const errorBorderStyle = error ? styles.errorBorderColor : null;
+    const containerStyle = disabled
+      ? styles.disabledContainer
+      : styles.container;
+
+    // const getDateAndTime = () => {
+    //   if (showTime) {
+    //     return formatDate3(date);
+    //   }
+    //   return formatDate(date);
+    // };
+
+    // const handelClear = () =>{
+    //   setDate(null)
+    // }
 
     useEffect(() => {
       if (defaultValue) {
@@ -92,6 +104,8 @@ const DatePickerComponent = forwardRef<IDateMethods, IDatePickerProps>(
               }}
               onCancel={() => {
                 setOpen(false);
+                setDate(null);
+                onDateSelect && onDateSelect(null);
               }}
             />
           ) : (

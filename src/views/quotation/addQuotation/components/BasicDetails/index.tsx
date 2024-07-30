@@ -103,6 +103,7 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item, enqui
 
   useEffect(() => {
     if(fromEnquiry && enquiryData) {
+      console.log("enquiryDataenquiryData",enquiryData)
       setBillingBy(enquiryData.billingBy);
           const billingByItem: TDropdownItem = billingByOptions.find(
             (d: TDropdownItem) => d.label == enquiryData.billingBy,
@@ -122,6 +123,12 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item, enqui
                 shiftingTypeItem,
               );
           }
+
+          dateOfMovingCompRef &&
+          dateOfMovingCompRef?.current?.setDefaultValue(
+            new Date(enquiryData.shiftingDate == "null" ? "" : enquiryData.shiftingDate),
+          );
+          setDateOfMoving(enquiryData.shiftingDate == "null" ? "" : enquiryData.shiftingDate)
     }  
   }, [fromEnquiry]);
 

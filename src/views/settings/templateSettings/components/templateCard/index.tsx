@@ -20,6 +20,8 @@ const TemplateCard:FC<IProps> = ({item, index, category, activeTemplateId, onCha
         onChangeTemplateId(item.templateVersion, item.moduleId, item._id);
     }
 
+    console.log("itemDatatatat",item)
+
     const tumbnailUri = item.templateThumbnail ? {uri: item.templateThumbnail} : noPreviewThumbnailImage;
 
     return (

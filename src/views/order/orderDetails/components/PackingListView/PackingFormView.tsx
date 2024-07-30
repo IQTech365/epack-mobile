@@ -166,8 +166,6 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
     return packTypes;
   };
 
-  console.log("robinkhan",checkboxPackingItems)
-
   const _resetInputs = () => {
     setItemName('');
     //@ts-ignore
@@ -475,9 +473,6 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
       setPackingOtherItemList([])
     }
   }, [surveyItemList, transformedData,initialPackingList]);
-
-
-
 
 
   return (
