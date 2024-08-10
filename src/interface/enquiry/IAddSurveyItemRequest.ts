@@ -2,6 +2,7 @@ export interface ISurveyListItem {
   itemName: string;
   quantity: string;
   valueOfGoods: string;
+  cftValue?:string;
   remarks: string;
 }
 

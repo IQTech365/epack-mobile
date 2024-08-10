@@ -15,20 +15,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   elementContainer: {
-    width: width * 0.9,
+    width: width * 0.85,
     alignSelf: 'center',
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   elementContainer2: {
-    width: width * 0.9,
+    width: width * 0.85,
     alignSelf: 'center',
     alignItems: 'flex-start',
     justifyContent: 'center',
   },
   itemContainer: {
-    width: width * 0.44,
+    width: width * 0.40,
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     alignSelf: 'center',
@@ -56,11 +56,12 @@ const styles = StyleSheet.create({
     fontFamily: 'WorkSans-Regular'
   },
   previewButtonStyle: {
+    width: width * 0.85,
     backgroundColor: COLOR_BLUE,
     borderRadius: 5,
   },
   itemWrapper: {
-    width: width * 0.9,
+    width: width * 0.85,
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -68,6 +69,7 @@ const styles = StyleSheet.create({
     borderColor: COLOR_BLACK,
     borderRadius: 5,
     marginBottom: 5,
+    padding: 8,
   },
   labelContainer: {
     width: '45%',
@@ -87,6 +89,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'WorkSans-Regular',
     color: COLOR_BLACK,
+  },
+  surveyItemGroupContainer: {
+    width: width * 0.9,
   }
 });
 

@@ -30,6 +30,20 @@ const SurveyItemListView: React.FC<ISurveyItemListViewProps> = ({
 }) => {
   const navigation = useNavigation();
 
+  const getTotalCFT = () => {
+    let cftCount:number = 0;
+    if(item.surveyItems && item.surveyItems.length > 0) {
+      cftCount = item.surveyItems.reduce((acc, curr) => {
+        if(curr.cftValue) {
+          return acc + parseInt(curr?.cftValue as string);
+        } else {
+          return acc;
+        }
+      }, 0)
+    }
+    return cftCount;
+  }
+
   return (
     <View style={styles.surveyDateAndNumberContainer} key={`${index}`}>
       <View style={styles.contentContainer}>
@@ -44,11 +58,11 @@ const SurveyItemListView: React.FC<ISurveyItemListViewProps> = ({
         <Spacer width={4} />
         <Text style={styles.contentLabelText}>{item.surveyListNo}</Text>
       </View>
-      {/* <View style={styles.contentContainer}>
-        <Text style={styles.contentLabelText2}>{`Quotation NO#: `}</Text>
+      <View style={styles.contentContainer}>
+        <Text style={styles.contentLabelText2}>{`Total CFT: `}</Text>
         <Spacer width={4} />
-        <Text style={styles.contentLabelText}>{item.quotationId ? item.surveyListNo : ""}</Text>
-      </View>  */}
+        <Text style={styles.contentLabelText}>{getTotalCFT()}</Text>
+      </View> 
       <View style={styles.contentContainer}>
         <Text style={styles.contentLabelText2}>{`TOTAL ITEMS: `}</Text>
         <Spacer width={4} />

@@ -125,9 +125,6 @@ const AddQuotationForm: React.FC<Props> = ({
     vehicleCompaniesRequesting,
     vehicleModelsRequesting,
   } = useAppSelector(state => state.Common);
-  // state.addSurveyItemRequesting = false;
-  // state.addSurveyItemSuccess = false;
-  // state.addSurveyItemFailure = true;
   const {
     enquiry,
     addSurveyItemRequesting,
@@ -138,19 +135,10 @@ const AddQuotationForm: React.FC<Props> = ({
   const {getTotalDocumentCount} = useUtilityHook();
   const [surveyNo, setSurveyNo] = useState('');
   const serialNo: number = useSerialNoHook();
-  const [itemName, setItem] = useState<string>('');
-  const [quantity, setQuantity] = useState<string>('');
-  const [remarks, setRemarks] = useState<string>('');
-  const [surveyOtherItemList, setSurveyOtherItemList] = useState<
-    ISurveyListItem[]
-  >([]);
-  const [checkboxSurveyItems, setCheckboxSurveyItems] = useState<
-    ISurveyListItem[]
-  >([]);
+  const [surveyOtherItemList, setSurveyOtherItemList] = useState<ISurveyListItem[]>([]);
+  const [groupSruveyItems, setGroupSurveyItems] = useState<ISurveyListItem[]>([]);
   const [shouldSaveSurveyNo, setShouldSaveSurveyNo] = useState<boolean>(false);
-  const shouldSaveSurveyNoRef = useRef<Boolean>(false);
-  const [isSurveyItemsRequired, setIsSurveyItemsRequired] =
-    useState<boolean>(false);
+  const [isSurveyItemsRequired, setIsSurveyItemsRequired] = useState<boolean>(false);
 
   const {initialValue} = useInitialValueHook('658d3d2f585e3dde644da9b2');
 
@@ -265,24 +253,6 @@ const AddQuotationForm: React.FC<Props> = ({
     return _quotation;
   };
 
-  const handleItemSelect = (item: string, qty: number) => {
-    setCheckboxSurveyItems(prevItems => {
-      const updatedItems = [...prevItems];
-      const index = updatedItems.findIndex(i => i.itemName === item);
-      if (index >= 0) {
-        updatedItems[index].quantity = qty.toString();
-      } else {
-        updatedItems.push({itemName: item, quantity: qty});
-      }
-      return updatedItems;
-    });
-  };
-
-  const handleItemDeselect = (item: string) => {
-    setCheckboxSurveyItems(prevItems =>
-      prevItems.filter(i => i.itemName !== item),
-    );
-  };
 
   const _getSerialNoRequest = () => {
     getCurrentCompanyId()
@@ -304,14 +274,47 @@ const AddQuotationForm: React.FC<Props> = ({
   const _handleSaveChanges = () => {
     const payload: IUpdateSurveyItemRequest = {
       surveyId: surveyItemList.data[0]._id,
+      //@ts-ignore
       payload: {
         // surveyListNo: serialNo ? serialNo.toString() : state.quotation_no,
-        surveyItems: [...checkboxSurveyItems, ...surveyOtherItemList],
+        surveyItems: [...groupSruveyItems, ...surveyOtherItemList],
       },
     };
     console.log("payload123123",payload)
     // dispatch(updateSurveryItemListRequest(payload));
   };
+
+  const collectSelectedGroupItems = (itemName: string, qty: string, cft: string) => {
+    const copy = [...groupSruveyItems];
+    const isItemExist = copy.find(it => it.itemName === itemName);
+    if(isItemExist && qty === '0' && cft === '0') {
+      const filteredItems = copy.filter(it => it.itemName !== itemName);
+      setGroupSurveyItems(filteredItems);
+    } else if (isItemExist && qty !== '0'){
+      const itemIndex = copy.findIndex(it => it.itemName === itemName);
+      if(itemIndex !== -1) {
+        const updatedItem:ISurveyListItem = {
+          itemName: itemName,
+          quantity: qty,
+          cftValue: cft,
+          valueOfGoods: '',
+          remarks: '',
+        }
+        copy[itemIndex] = updatedItem;
+        setGroupSurveyItems(copy);
+      }
+    } else {
+      const newItem:ISurveyListItem = {
+        itemName: itemName,
+        quantity: qty,
+        cftValue: cft,
+        valueOfGoods: '',
+        remarks: '',
+      }
+      copy.push(newItem);
+      setGroupSurveyItems(copy);
+    }
+  }
 
   const hanldeSubmit = () => {
     getCurrentCompanyId()
@@ -449,17 +452,16 @@ const AddQuotationForm: React.FC<Props> = ({
       .then(id => {
         const payload: IAddSurveyItemPayload = {
           companyId: id as string,
-          enquiryId: enquiryId
-            ? (enquiryId as string)
-            : addQuotationInfo.data.enquiryId,
+          enquiryId: enquiryId ? (enquiryId as string) : addQuotationInfo.data.enquiryId,
           quotationId: addQuotationInfo.data.quotationId,
           surveyListNo: serialNo ? serialNo.toString() : state.quotation_no,
           surveyDate: state.date_of_quotation,
-          surveyItems: [...checkboxSurveyItems, ...surveyOtherItemList],
+          surveyItems: [...groupSruveyItems, ...surveyOtherItemList],
           addedBy: authId,
           isAuto: true,
           isHeadOffice: true,
         };
+        console.log('handleSave-payload----', JSON.stringify(payload));
         dispatch(addSurveyItemRequest(payload));
       })
       .catch(err => console.log(err));
@@ -498,10 +500,11 @@ const AddQuotationForm: React.FC<Props> = ({
       .then(id => {
         const payload: IGetSurvyeItemListByQuotationIdRequestPayload = {
           companyId: id as string,
-          quotationId: item._id,
+          quotationId: item?._id,
           // id: addQuotationInfo.data._id
         };
         console.log("payload1212",payload)
+        //@ts-ignore
         dispatch(getSurveyItemListRequest(payload));
 
       })
@@ -629,11 +632,10 @@ if(isEdit){
         isEdit={isEdit}
         item={item}
         surveyItemList={surveyItemList}
-        onItemSelect={handleItemSelect}
-        onItemDeselect={handleItemDeselect}
         surveyOtherItemList={surveyOtherItemList}
         handleOtherItemsList={_handleOhterItemsList}
         onSurveyItemRequired={_handleSuveyItemRequired}
+        onSelectGroupItems={collectSelectedGroupItems}
       />
       <Spacer height={12} />
       <Button

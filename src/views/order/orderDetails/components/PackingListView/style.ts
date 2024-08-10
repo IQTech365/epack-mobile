@@ -196,6 +196,9 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
     // flexDirection: 'row',
     // justifyContent: 'space-between',
+  },
+  surveyItemGroupContainer: {
+    width: width * 0.9,
   }
 });
 

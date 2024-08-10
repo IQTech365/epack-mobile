@@ -51,6 +51,8 @@ import {
 } from '../../../../../interface/enquiry/IGetSurveyItemListResponse';
 import {getSurveyItemListRequest} from '../../../../../redux/slices/EnquirySlice';
 import {ISurveyListItem} from '../../../../../interface/enquiry/IAddSurveyItemRequest';
+import { prepareSurveyItemFormList, TSurveyItemListGroup } from '../../../../enquiry/enquiryDetails/utility';
+import PackingListGroupItem from './PackingListGroupItem';
 
 interface Props {
   orderId: string;
@@ -68,19 +70,14 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   const [packingType, setPackingType] = useState<string>('');
   const [productCode, setProductCode] = useState<string>('');
   const [valueOfGoods, setValueOfGoods] = useState<string>('');
+  const [cftValue, setCftValue] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [surveyListNumber, setSurveyListNumber] = useState<string>('');
   const [items, setItems] = useState<IPackingItem[]>([]);
-  const [transformedData, setTransformedData] = useState<
-    TPackingMateiralItem[]
-  >([]);
-  const [packingOtherItemList, setPackingOtherItemList] = useState<
-    IPackingItem[]
-  >([]);
-
-  const [checkboxPackingItems, setCheckboxPackingItems] = useState<
-    IPackingItem[]
-  >([]);
+  const [transformedData, setTransformedData] = useState<TPackingMateiralItem[]>([]);
+  const [packingOtherItemList, setPackingOtherItemList] = useState<IPackingItem[]>([]);
+  const [checkboxPackingItems, setCheckboxPackingItems] = useState<IPackingItem[]>([]);
+  const [packingGroupItems, setPackingGroupItems] = useState<IPackingItem[]>([]);
   const [filterOtherItem, setFilterOtherItem] = useState<boolean>(false);
   const [showSurveyDropdown, setShowSurveyDropdown] = useState<boolean>(false); // New state to control dropdown visibility
   const [surveyDataFetch, setSurveyDataFetch] = useState<boolean>(false);
@@ -90,12 +87,8 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
     createPackingMaterialFailure,
   } = useAppSelector(state => state.Order);
   const {packingTypes} = useAppSelector(state => state.Common);
-  const {surveyMaterial, surveyCategory} = useAppSelector(
-    state => state.Common,
-  );
-  const {initialValue, prefix} = useInitialValueHook(
-    '658d3cc6585e3dde644da985',
-  );
+  const {surveyMaterial, surveyCategory} = useAppSelector(state => state.Common);
+  const {initialValue, prefix} = useInitialValueHook('658d3cc6585e3dde644da985');
   const serialNo: number = useSerialNoHook();
 
   const {surveyItemList} = useAppSelector(state => state.Enquiry);
@@ -106,6 +99,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   const productCodeInputRef = useRef(null);
   const amountInputRef = useRef(null);
   const descriptionInputRef = useRef(null);
+  const cftInputRef = useRef(null);
 
   type TPackingMateiralItem = {
     _id: string;
@@ -114,41 +108,10 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
     surveyCategoryName: string;
   };
 
-  const transformSurveyData = () => {
-    let _data: TPackingMateiralItem[] = [];
+  const transformSurveyData = ():TSurveyItemListGroup[] => {
     const {data: surveyMaterials} = surveyMaterial || {};
     const {data: surveyCategories} = surveyCategory || {};
-
-    if (
-      surveyMaterials &&
-      Array.isArray(surveyMaterials) &&
-      surveyMaterials.length > 0
-    ) {
-      const groupedData = surveyMaterials.reduce((acc, curr) => {
-        const {surveyCategoryId, surveyMaterialItem} = curr;
-        const category = surveyCategories?.find(
-          (cat: TPackingMateiralItem) => cat._id === surveyCategoryId,
-        );
-
-        if (category) {
-          const surveyCategoryName = category.surveyCategoryName;
-
-          if (!acc[surveyCategoryName]) {
-            acc[surveyCategoryName] = {
-              surveyCategoryName,
-              surveyMaterialItem: [],
-            };
-          }
-
-          acc[surveyCategoryName].surveyMaterialItem.push(surveyMaterialItem);
-        }
-
-        return acc;
-      }, {});
-
-      _data = Object.values(groupedData);
-    }
-    setTransformedData(_data);
+    return prepareSurveyItemFormList(surveyCategories, surveyMaterials);
   };
 
   const _getPackingTypes = () => {
@@ -186,6 +149,10 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
     setDescription('');
     //@ts-ignore
     descriptionInputRef && descriptionInputRef?.current?.reset();
+
+    setCftValue('');
+    //@ts-ignore
+    cftInputRef && cftInputRef?.current?.reset();
   };
 
   const authId = useAuthId();
@@ -239,7 +206,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
           enquiryId: orderId,
           packingListNo: state.packing_no,
           packingDate: state.packing_date,
-          packingItems: [...checkboxPackingItems, ...packingOtherItemList],
+          packingItems: [...packingGroupItems, ...packingOtherItemList],
           addedBy: authId,
           isAuto: true,
           isHeadOffice: true,
@@ -257,6 +224,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
       productCode,
       valueOfGoods,
       description,
+      cftValue,
     };
     // clone.push(item);
     setPackingOtherItemList([...packingOtherItemList, item]);
@@ -332,16 +300,11 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
       .catch(err => console.log(err));
   };
 
-  // const dataOfSurvey = surveyItemList.data.map((item)=> item.surveyItems)
-  // console.log("dataOfSurvey",dataOfSurvey)
-
-  // console.log("surveyItemList1111",surveyItemList.data.)
-
   const getSurveyListNoData = () => {
     const surveyData = surveyItemList.data.map((item: any) => {
       return {label: item.surveyListNo, value: item._id};
     });
-    console.log('surveyData', surveyItemList);
+    console.log('surveyData', JSON.stringify(surveyItemList));
     return surveyData;
   };
 
@@ -349,6 +312,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
     const payload: IGetSurvyeItemListByIdRequestPayload = {
       id: selectedValue,
     };
+    //@ts-ignore
     dispatch2(getSurveyItemListRequest(payload));
     setInitialPackingLIst(true);
   };
@@ -401,6 +365,42 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
   //   if(!packingListTemplateRequesting && packingListTemplateSuccess){
   //   }
   // },[])
+
+  const collectPackingGroupItems = (isRequired: boolean, itemName: string, packingType: string, amount: string, cft: string, qty: string) => {
+    const copy = [...packingGroupItems];
+    const isItemExist = copy.find(it => it.itemName === itemName);
+    if(isItemExist && !isRequired) {
+      const filteredItems = copy.filter(it => it.itemName !== itemName);
+      setPackingGroupItems(filteredItems);
+    } else if (isItemExist && isRequired){
+      const itemIndex = copy.findIndex(it => it.itemName === itemName);
+      if(itemIndex !== -1) {
+        const updatedItem:IPackingItem = {
+          itemName: itemName,
+          quantity: qty,
+          cftValue: cft,
+          packingType: packingType,
+          productCode: 'NA',
+          valueOfGoods: amount,
+          description: 'NA',
+        }
+        copy[itemIndex] = updatedItem;
+        setPackingGroupItems(copy);
+      }
+    } else {
+      const newItem:IPackingItem = {
+        itemName: itemName,
+          quantity: qty,
+          cftValue: cft,
+          packingType: packingType,
+          productCode: 'NA',
+          valueOfGoods: amount,
+          description: 'NA',
+      }
+      copy.push(newItem);
+      setPackingGroupItems(copy);
+    }
+  }
 
   useEffect(() => {
     if (!createPackingMaterialRequesting && createPackingMaterialSuccess) {
@@ -538,7 +538,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
         </View>
       </CollapsibleView>
       <View>
-        {transformedData.map((item, index) => (
+        {/* {transformedData.map((item, index) => (
           <View key={index}>
             <Spacer height={8} />
             <CollapsibleView title={item.surveyCategoryName} collapsed={true}>
@@ -557,7 +557,24 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
               </View>
             </CollapsibleView>
           </View>
-        ))}
+        ))} */}
+        {transformSurveyData().map((it, index) => {
+          return (
+            <>
+              <Spacer height={8} />
+              <CollapsibleView
+                title={it.groupName}
+                collapsed={true}
+              >
+                <View>
+                  {it.items.map((cit, index) => (
+                    <PackingListGroupItem data={cit} key={index.toString()} onSelect={collectPackingGroupItems} />
+                  ))}
+                </View>
+              </CollapsibleView>
+            </>
+          );
+        })}
       </View>
       <Spacer height={8} />
       <CollapsibleView title="Add Other Items" collapsed={true}>
@@ -630,6 +647,19 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
                   ref={amountInputRef}
                 />
               </View>
+            </View>
+            <Spacer height={4} />
+            <View style={styles.elementContainer2}>
+              <Label text="CFT" style={styles.label} />
+              <Input
+                onChangeText={setDescription}
+                containerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                selectionColor={COLOR_BLACK}
+                placeholder="Enter CFT value"
+                //@ts-ignore
+                ref={cftInputRef}
+              />
             </View>
             <Spacer height={4} />
             <View style={styles.elementContainer2}>

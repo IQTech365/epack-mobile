@@ -12,35 +12,32 @@ import {ISingleQuotationData} from '../../../../../interface/quotation/IGetSingl
 import {IGetQuotationData} from '../../../../../interface/quotation/IGetQuotationsResponse';
 import _ from 'underscore';
 import {useAppSelector} from '../../../../../redux/hooks';
-import SelectCheckBoxText from '../../../../../common/SelectCheckBoxText';
 import Spacer from '../../../../../common/Spacer';
-import { resetGetSerialNoRequest } from '../../../../../redux/slices/SerialNoSettingSlice';
 import { getSurveyCategoryRequest, getSurveyMaterialRequest } from '../../../../../redux/slices/CommonSlice';
 import { useDispatch } from 'react-redux';
 import Label from '../../../../../common/Label';
 import Input, { InputMethods } from '../../../../../common/Input';
-import { IAddSurveyItemRequest, ISurveyListItem } from '../../../../../interface/enquiry/IAddSurveyItemRequest';
-import { getCurrentCompanyId } from '../../../../../utils/storage';
+import { ISurveyListItem } from '../../../../../interface/enquiry/IAddSurveyItemRequest';
+import { prepareSurveyItemFormList, TSurveyItemListGroup } from '../../../../enquiry/enquiryDetails/utility';
+import SurveyGroupItem from '../../../../enquiry/enquiryDetails/components/SurveyListView/SurveyGroupItem';
 interface Props {
   isEdit?: boolean;
   item?: IGetQuotationData;
   quotationData?: ISingleQuotationData;
-  onItemSelect: (text: string, qty: number) => void;
-  onItemDeselect: (text: string) => void;
   surveyOtherItemList: ISurveyListItem[]; // New prop
   handleOtherItemsList: (item: ISurveyListItem) => void;
   onSurveyItemRequired: (value: boolean) => void;
+  onSelectGroupItems: (itemName: string, qty: string, cft: string) => void;
   surveyItemList: []
 }
 
 const SurveyItemQuotation: React.FC<Props> = ({
   isEdit,
   item,
-  onItemSelect,
-  onItemDeselect,
   surveyOtherItemList,
   handleOtherItemsList,
   onSurveyItemRequired,
+  onSelectGroupItems,
   surveyItemList
 
 }) => {
@@ -48,28 +45,18 @@ const SurveyItemQuotation: React.FC<Props> = ({
   const [itemName, setItem] = useState<string>('');
   const [quantity, setQuantity] = useState<string>('');
   const [valueOfGoods, setValueOfGoods] = useState<string>('');
+  const [cftValue, setCftValue] = useState<string>('0');
   const [remarks, setRemarks] = useState<string>('');
-  // const [surveyData,setSurveyData] = useState<string>('')
-
 
   const dispatch = useDispatch()
   const itemNameCompRef = useRef<InputMethods>(null);
   const quantityCompRef = useRef<InputMethods>(null);
   const valueOfGoodsCompRef = useRef<InputMethods>(null);
   const remarksCompRef = useRef<InputMethods>(null);
-  
+  const cftCompRef = useState(null);
 
   // const { data } = surveyItemList
   console.log("surveyItemList44444",surveyItemList)
-
-  // const dataOfFind = surveyItems.map(item => item);
-  
-
-  
-
-  const [transformedData, setTransformedData] = useState<
-    TPackingMateiralItem[]
-  >([]);
 
   const {surveyCategory, surveyMaterial} = useAppSelector(
     state => state.Common,
@@ -90,55 +77,18 @@ const SurveyItemQuotation: React.FC<Props> = ({
     setRemarks(text);
   };
 
-  type TPackingMateiralItem = {
-    _id: string;
-    surveyCategoryId: string;
-    surveyMaterialItem: string;
-    surveyCategoryName: string;
-  };
-
-  const transformSurveyData = () => {
-    let _data: TPackingMateiralItem[] = [];
+  const transformSurveyData = (): TSurveyItemListGroup[] => {
     const {data: surveyMaterials} = surveyMaterial || {};
     const {data: surveyCategories} = surveyCategory || {};
-
-    if (
-      surveyMaterials &&
-      Array.isArray(surveyMaterials) &&
-      surveyMaterials.length > 0
-    ) {
-      const groupedData = surveyMaterials.reduce((acc, curr) => {
-        const {surveyCategoryId, surveyMaterialItem} = curr;
-        const category = surveyCategories?.find(
-          (cat: TPackingMateiralItem) => cat._id === surveyCategoryId,
-        );
-
-        if (category) {
-          const surveyCategoryName = category.surveyCategoryName;
-
-          if (!acc[surveyCategoryName]) {
-            acc[surveyCategoryName] = {
-              surveyCategoryName,
-              surveyMaterialItem: [],
-            };
-          }
-
-          acc[surveyCategoryName].surveyMaterialItem.push(surveyMaterialItem);
-        }
-
-        return acc;
-      }, {});
-
-      _data = Object.values(groupedData);
-    }
-    setTransformedData(_data);
+    return prepareSurveyItemFormList(surveyCategories, surveyMaterials);
   };
   const handleAddItem = () => {
     const newItem: ISurveyListItem = {
       itemName,
       quantity,
-       valueOfGoods,
-       remarks,
+      valueOfGoods,
+      remarks,
+      cftValue,
     };
     handleOtherItemsList(newItem);
     resetForm();
@@ -156,6 +106,9 @@ const SurveyItemQuotation: React.FC<Props> = ({
     setRemarks('');
     //@ts-ignore
     remarksCompRef && remarksCompRef?.current?.reset();
+    setCftValue('');
+    //@ts-ignore
+    cftCompRef && cftCompRef?.current?.reset();
   }
 
 
@@ -220,6 +173,7 @@ const SurveyItemQuotation: React.FC<Props> = ({
 
   useEffect(() => {
     if(isEdit && surveyItemList){
+      //@ts-ignore
       if ( surveyItemList && surveyItemList.data && surveyItemList.data.length > 0) {
         setSurveyItem('Required');
       }
@@ -252,7 +206,6 @@ const SurveyItemQuotation: React.FC<Props> = ({
   //   }
   // }
 
-
   return (
     <CollapsibleView title="SURVEY ITEM" collapsed={true}>
       <View>
@@ -281,31 +234,26 @@ const SurveyItemQuotation: React.FC<Props> = ({
         {state.surveyItem === options2[0] && (
           <>
           <View>
-            {transformedData.length > 0 && (
-              <View>
-                {transformedData.map((item, index) => (
-                    
-                    <View key={index}>
-                      <Spacer height={4} />
-                    <CollapsibleView title={item.surveyCategoryName} collapsed={true}>
-                      <View>
-                        <SelectCheckBoxText
-                          items={Array.isArray(item.surveyMaterialItem) ? item.surveyMaterialItem : [item.surveyMaterialItem]}
-                          onItemSelect={onItemSelect}
-                         onItemDeselect={onItemDeselect}
-                         surveyItemList={surveyItemList}
-                         isEdit={isEdit}
-                         
-                        />
-                      </View>
-                    </CollapsibleView>
-                  </View>
-                ))} 
-              </View>
-            )}
-          </View>
-          <Spacer height={8} />
-    <CollapsibleView title ="Add Other Items" collapsed={true}>
+        {transformSurveyData().map((it, index) => {
+          return (
+            <>
+              <Spacer height={8} />
+              <CollapsibleView
+                title={it.groupName}
+                collapsed={true}
+                constainerStyle={styles.surveyItemGroupContainer}>
+                <View>
+                  {it.items.map((cit, index) => (
+                    <SurveyGroupItem data={cit} key={index.toString()} onSelect={onSelectGroupItems} />
+                  ))}
+                </View>
+              </CollapsibleView>
+            </>
+          );
+        })}
+      </View>
+      <Spacer height={8} />
+    <CollapsibleView title ="Add Other Items" collapsed={true} constainerStyle={styles.surveyItemGroupContainer}>
       <>
       <View>
       <Spacer height={4} />

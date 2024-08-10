@@ -33,7 +33,7 @@ interface SelectCheckBoxTextProps {
     packingType: string;
     valueOfGoods: string;
   }[];
-  initialPackingList: boolean
+  initialPackingList: boolean;
 }
 
 const SelectCheckBoxTextPackingList: React.FC<SelectCheckBoxTextProps> = ({
@@ -41,7 +41,7 @@ const SelectCheckBoxTextPackingList: React.FC<SelectCheckBoxTextProps> = ({
   onItemSelect,
   onItemDeselect,
   initialValues,
-  initialPackingList
+  initialPackingList,
 }) => {
   const [selectedItems, setSelectedItems] = useState<
     {
@@ -54,12 +54,10 @@ const SelectCheckBoxTextPackingList: React.FC<SelectCheckBoxTextProps> = ({
   const {packingTypes} = useAppSelector(state => state.Common);
   const [currentItemIndex, setCurrentItemIndex] = useState<number>(-1);
   const [itemCollection, setItemCollection] = useState<any[]>([]);
-  const [manualQuantity,setManualQuantity] = useState<string>("")
-
-
+  const [manualQuantity, setManualQuantity] = useState<string>('');
 
   useEffect(() => {
-    if(initialPackingList){
+    if (initialPackingList) {
       setSelectedItems(initialValues);
       setItemCollection(initialValues);
     }
@@ -88,9 +86,9 @@ const SelectCheckBoxTextPackingList: React.FC<SelectCheckBoxTextProps> = ({
     const updatedCollection = itemCollection.map((item, idx) =>
       idx === index ? {...item, quantity: parseInt(qty) || 1} : item,
     );
-    console.log("updatedCollection",updatedCollection)
+    console.log('updatedCollection', updatedCollection);
     setItemCollection(updatedCollection);
-    setManualQuantity(qty)
+    setManualQuantity(qty);
     onItemSelect(updatedCollection);
   };
 
@@ -126,7 +124,7 @@ const SelectCheckBoxTextPackingList: React.FC<SelectCheckBoxTextProps> = ({
     _getPackingTypes();
   }, []);
 
-  console.log("manualQuantity",manualQuantity)
+  console.log('manualQuantity', manualQuantity);
 
   return (
     <View style={styles.container}>
@@ -138,6 +136,7 @@ const SelectCheckBoxTextPackingList: React.FC<SelectCheckBoxTextProps> = ({
               <BouncyCheckbox
                 fillColor={COLOR_BLUE}
                 unfillColor="#FFFFFF"
+                //@ts-ignore
                 isChecked={selectedItem?.itemName}
                 onPress={() => handleCheckboxPress(item, index)}
                 disableBuiltInState={true}
@@ -164,6 +163,32 @@ const SelectCheckBoxTextPackingList: React.FC<SelectCheckBoxTextProps> = ({
                       onSelect={dropdownItem =>
                         handlePackingTypeChange(dropdownItem.label, index)
                       }
+                    />
+                  </View>
+                  <View style={styles.itemContainer}>
+                    <Label text="Value Of Goods" style={styles.label} />
+                    <Input
+                      onChangeText={text => handleValueofGoods(text, index)}
+                      containerStyle={styles.inputContainer}
+                      inputStyle={styles.input}
+                      selectionColor="#000000"
+                      value={selectedItem ? selectedItem.valueOfGoods : ''}
+                      placeholder="Enter amount"
+                      inputType="numeric"
+                    />
+                  </View>
+                </View>
+                <View style={styles.inputBox}>
+                  <View style={styles.itemContainer}>
+                    <Label text="Value Of Goods" style={styles.label} />
+                    <Input
+                      onChangeText={text => handleValueofGoods(text, index)}
+                      containerStyle={styles.inputContainer}
+                      inputStyle={styles.input}
+                      selectionColor="#000000"
+                      value={selectedItem ? selectedItem.valueOfGoods : ''}
+                      placeholder="Enter amount"
+                      inputType="numeric"
                     />
                   </View>
                   <View style={styles.itemContainer}>
