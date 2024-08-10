@@ -38,7 +38,6 @@ const PackingListView: React.FC<Props> = ({orderId}) => {
     if (data && Array.isArray(data) && data.length > 0) {
       items = data;
     }
-    console.log('packing-items--', JSON.stringify(items));
     return items;
   };
 

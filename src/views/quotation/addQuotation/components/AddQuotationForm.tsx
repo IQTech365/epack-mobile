@@ -118,8 +118,6 @@ const AddQuotationForm: React.FC<Props> = ({
 
   const {surveyItemList} = useAppSelector(state=> state.Enquiry)
 
-  console.log("surveyItemList123",surveyItemList)
-
   const {
     vehicleTypesRequesting,
     vehicleCompaniesRequesting,
@@ -280,7 +278,6 @@ const AddQuotationForm: React.FC<Props> = ({
         surveyItems: [...groupSruveyItems, ...surveyOtherItemList],
       },
     };
-    console.log("payload123123",payload)
     // dispatch(updateSurveryItemListRequest(payload));
   };
 
@@ -461,7 +458,6 @@ const AddQuotationForm: React.FC<Props> = ({
           isAuto: true,
           isHeadOffice: true,
         };
-        console.log('handleSave-payload----', JSON.stringify(payload));
         dispatch(addSurveyItemRequest(payload));
       })
       .catch(err => console.log(err));

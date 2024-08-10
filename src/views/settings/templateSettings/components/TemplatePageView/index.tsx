@@ -68,7 +68,6 @@ const TemplatePageView = ({route}) => {
   const _prepareTemplateListWithCategory = () => {
     const sectionData: ISectionData[] = [];
     const templateCategories = _getUniqueTemplateCategories();
-    console.log("templateCategories",templateCategories)
     if (templateCategories && templateCategories.length > 0) {
       templateCategories.forEach((templateCategory: string) => {
         const data: ITemplate[] = _getTemplatesByModuleId().filter(
@@ -123,6 +122,7 @@ const TemplatePageView = ({route}) => {
   }, [saveDocTemplateIdRequesting, saveDocTemplateIdSuccess, saveDocTemplateIdFailure]);
 
 
+  //@ts-ignore
   const customData = savedDocumentTemplateIds?.data?.filter(item => item.template.templateVersion === "Custom") || [];
   console.log("customDatacustomData",customData)
   // const customSection: ISectionData = {

@@ -71,6 +71,7 @@ const NocView: React.FC<Props> = ({orderId}) => {
             templateId: templateId,
             orderId: orderId,
           };
+          //@ts-ignore
           dispatch(getNocFormTemplateRequest(payload));
           setShowTemplate(true)
         })
@@ -91,7 +92,7 @@ const NocView: React.FC<Props> = ({orderId}) => {
             templateId: templateId,
             orderId: orderId,
           };
-          console.log("payloadpayload",payload)
+          //@ts-ignore
           dispatch(getNocFormTemplateRequest(payload));
         })
         .catch(err => console.log('error getting company id from storage'));

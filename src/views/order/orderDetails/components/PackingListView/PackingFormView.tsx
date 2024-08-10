@@ -304,7 +304,6 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
     const surveyData = surveyItemList.data.map((item: any) => {
       return {label: item.surveyListNo, value: item._id};
     });
-    console.log('surveyData', JSON.stringify(surveyItemList));
     return surveyData;
   };
 
@@ -451,8 +450,6 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
       const filteredOtherItemData = transformedData.flatMap(
         item => item.surveyMaterialItem,
       );
-
-      console.log("filteredOtherItemData",filteredOtherItemData)
       const otherItems = transformedSurveyItemList.filter(
         (surveyItem: {itemName: string}) =>
           !filteredOtherItemData.includes(surveyItem.itemName),
@@ -465,7 +462,6 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
       const filteredCheckBoxData = transformedSurveyItemList.filter(
         (surveyItem: any) => !otherItems.includes(surveyItem),
       );
-      console.log("filteredCheckBoxData",filteredCheckBoxData)
       setCheckboxPackingItems(filteredCheckBoxData);
     }
     else {

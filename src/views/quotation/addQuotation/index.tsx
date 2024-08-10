@@ -57,7 +57,6 @@ const AddQuotationView: React.FC<Props> = ({
           isHeadOffice: true,
         }
       }
-      console.log("payloadddddddd",payload)
       dispatch(getSerialNoRequest(payload));
     }).catch(err => console.log('err--', err));
   }

@@ -86,7 +86,6 @@ const SelectCheckBoxTextPackingList: React.FC<SelectCheckBoxTextProps> = ({
     const updatedCollection = itemCollection.map((item, idx) =>
       idx === index ? {...item, quantity: parseInt(qty) || 1} : item,
     );
-    console.log('updatedCollection', updatedCollection);
     setItemCollection(updatedCollection);
     setManualQuantity(qty);
     onItemSelect(updatedCollection);
@@ -123,8 +122,6 @@ const SelectCheckBoxTextPackingList: React.FC<SelectCheckBoxTextProps> = ({
   useEffect(() => {
     _getPackingTypes();
   }, []);
-
-  console.log('manualQuantity', manualQuantity);
 
   return (
     <View style={styles.container}>

@@ -55,9 +55,6 @@ const SurveyItemQuotation: React.FC<Props> = ({
   const remarksCompRef = useRef<InputMethods>(null);
   const cftCompRef = useState(null);
 
-  // const { data } = surveyItemList
-  console.log("surveyItemList44444",surveyItemList)
-
   const {surveyCategory, surveyMaterial} = useAppSelector(
     state => state.Common,
   );
