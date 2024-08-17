@@ -108,7 +108,6 @@ const FollowupView: React.FC<IFollowupViewProps> = ({
     ) {
       listData = surveyItemData;
     }
-    console.log('listData-----', JSON.stringify(listData));
     return [...listData].reverse();
   };
 

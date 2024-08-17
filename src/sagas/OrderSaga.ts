@@ -377,7 +377,6 @@ export function* createCarConditionSaga(
   export function* getNocDocListSaga(action: PayloadAction<INocPayload>) {
     try {
         const response: IGetNocListResponse = yield call(OrderService.GetNocService, action.payload);
-        console.log("response",response)
         yield put(getNocDocSuccess(response));
     } catch (error) {
         yield put(getNocDocFailure(error));
@@ -388,6 +387,7 @@ export function* createCarConditionSaga(
 
   export function* getNocFormTemplateSaga(action: PayloadAction<INocFormTemplatePayload>) {
     try {
+      //@ts-ignore
         const response: INocTemplateResponse = yield call(OrderService.GetNocDocTemplateService, action.payload);
         yield put(getNocFormTemplateSuccess(response));
     } catch (error) {
@@ -400,7 +400,6 @@ export function* createCarConditionSaga(
    
     try {
         const response: IUpdateNocFormResponse = yield call(OrderService.UpdateNocFormService, action.payload);
-        console.log("response1111",response)
         yield put(updateNocFormSuccess(response));
     } catch (error) {
         yield put(updateCarConditionFailure(error));

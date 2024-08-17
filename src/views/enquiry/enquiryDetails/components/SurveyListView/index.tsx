@@ -56,7 +56,6 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
   const [valueOfGoods, setValueOfGoods] = useState<string>('');
   const [cftValue, setCftValue] = useState<string>('0');
   const [remarks, setRemarks] = useState<string>('');
-  const [surveyItems, setSurveyItems] = useState<ISurveyListItem[]>([]);
   const [surveyOtherItemList, setSurveyOtherItemList] = useState<ISurveyListItem[]>([]);
   const [groupSruveyItems, setGroupSurveyItems] = useState<ISurveyListItem[]>([]);
   const [resetSelection, setResetSelection] = useState(false);
@@ -144,6 +143,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
       quantity,
       valueOfGoods,
       remarks,
+      groupID: "0", //README: groupID is `0` for other items only. As we don't have group id for other items.
     };
     setSurveyOtherItemList([...surveyOtherItemList, newItem]);
     resetForm();
@@ -191,7 +191,6 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
           enquiryId: enquiryId,
           // id: id as string,
         };
-        console.log('payload1212', payload);
         dispatch(getSurveyItemListRequest(payload));
       })
       .catch(err => console.log(err));
@@ -223,7 +222,6 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
       setSurveyOtherItemList([]);
       dispatch(resetAddSurveyItemRequest());
       dispatch(resetGetSerialNoRequest());
-      setSurveyItems([]);
       _getSurveyItemListRequest();
     } else if (!addSurveyItemRequesting && addSurveyItemFailure) {
       showToast('Survey Item List not Created.', ToastType.ERROR);
@@ -291,7 +289,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
     return null;
   };
 
-  const collectSelectedGroupItems = (itemName: string, qty: string, cft: string) => {
+  const collectSelectedGroupItems = (itemName: string, qty: string, cft: string, groupID: string) => {
     const copy = [...groupSruveyItems];
     const isItemExist = copy.find(it => it.itemName === itemName);
     if(isItemExist && qty === '0' && cft === '0') {
@@ -306,6 +304,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
           cftValue: cft,
           valueOfGoods: '',
           remarks: '',
+          groupID: groupID,
         }
         copy[itemIndex] = updatedItem;
         setGroupSurveyItems(copy);
@@ -317,6 +316,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
         cftValue: cft,
         valueOfGoods: '',
         remarks: '',
+        groupID: groupID
       }
       copy.push(newItem);
       setGroupSurveyItems(copy);
@@ -370,7 +370,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
                 constainerStyle={styles.surveyItemGroupContainer}>
                 <View>
                   {it.items.map((cit, index) => (
-                    <SurveyGroupItem data={cit} key={index.toString()} onSelect={collectSelectedGroupItems} />
+                    <SurveyGroupItem data={cit} key={index.toString()} groupID={it.groupId} onSelect={collectSelectedGroupItems} />
                   ))}
                 </View>
               </CollapsibleView>

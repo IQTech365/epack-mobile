@@ -44,7 +44,6 @@ import Spinner from '../../common/Spinner';
 import useUtilityHook from '../../hooks/useUtilityHook';
 import AlertModal from '../../common/AlertModal';
 import LimitReachImage from '../../images/icons/limit_reach.svg';
-// import SendIcon from '../images/icons/send_icon.svg';
 import SendIcon from '../../images/icons/send_icon.svg';
 
 interface IQuotationPageViewProps {
@@ -192,14 +191,11 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
           phoneNumber: _getMobile(quotation),
           id: quotation._id,
           createdOn: quotation.createdAt,
+          lorryType: '',
         };
         return item;
       });
-      // return _data;
     }
-    // return [..._data].sort((a: IQuotationItem, b: IQuotationItem) =>
-    //   sortItemByDate(a.quotationDate, b.quotationDate),
-    // );
     return [..._data].reverse();
   };
 
@@ -215,11 +211,6 @@ const QuotationPageView: React.FC<IQuotationPageViewProps> = ({navigation}) => {
         params: {enquiryId: enquiry._id, item: enquiry},
       });
     }
-    // const item: IGetEnquiriesData = quotationData[index]?.enquiries[0];
-    // navigation.navigate(TabRoute.EnquiryStack, {
-    //   screen: EnquiryStackRoute.EnquiryDetails,
-    //   params: {enquiryId: item._id, item: item},
-    // });
   };
 
   const handleEditClick = (quotation: IQuotationItem) => {

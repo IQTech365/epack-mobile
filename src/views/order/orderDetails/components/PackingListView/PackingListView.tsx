@@ -31,7 +31,6 @@ const PackingListView: React.FC<Props> = ({orderId}) => {
     packingListTemplateFailure,
     packingListTemplate,
   } = useAppSelector(state => state.Order);
-  console.log('PackingList--', JSON.stringify(packingMaterials?.data));
 
   const _getPackingMaterils = () => {
     let items: IPackingListData[] = [];

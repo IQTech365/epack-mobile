@@ -66,7 +66,6 @@ const TemplateSettingPageView: React.FC<IProps> = ({}) => {
   };
 
   useEffect(() => {
-    console.log('inside useeffect');
     dispatch(getSubmoduleRequest());
     dispatch(getTemplateListRequest());
   }, []);

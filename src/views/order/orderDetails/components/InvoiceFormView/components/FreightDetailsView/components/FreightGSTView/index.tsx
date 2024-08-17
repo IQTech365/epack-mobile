@@ -25,8 +25,6 @@ const FreightGSTView: React.FC<Props> = ({isEdit, invoiceData}) => {
   const gstPercentRef = useRef(null);
   const gstTypeRef = useRef(null);
 
-  console.log("stateDataaaaaa",state)
-
     const _initFormValues = () => {
       if(isEdit && invoiceData) {
         const {gstStatus, gstPaidBy} = invoiceData || {};

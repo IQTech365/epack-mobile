@@ -120,8 +120,6 @@ const MaterialDetails: React.FC<IProps> = ({item, isEdit}) => {
   const handleDeleteVehicleInfo = (index: number) => {
     const clone = [...state.vehicleInfo];
     const filter = clone.filter((_, i) => i !== index);
-    console.log(filter,"filter");
-    
     setVehicleInfo(filter);
   };
 

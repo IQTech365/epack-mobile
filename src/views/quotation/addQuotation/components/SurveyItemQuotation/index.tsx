@@ -64,6 +64,7 @@ const SurveyItemQuotation: React.FC<Props> = ({
   const valueOfGoodsCompRef = useRef<InputMethods>(null);
   const remarksCompRef = useRef<InputMethods>(null);
   const cftCompRef = useState(null);
+console.log('surveyItemList?.data?.[0]?.surveyItems-----', surveyItemList?.data?.[0]?.surveyItems)
 
   const {surveyCategory, surveyMaterial} = useAppSelector(
     state => state.Common,
@@ -120,6 +121,8 @@ const SurveyItemQuotation: React.FC<Props> = ({
     cftCompRef && cftCompRef?.current?.reset();
   };
 
+
+
   const _getSelectedGroupItems = (groupID: string) => {
     let selectedGroupItms: ISurveyListItem[] = [];
     if (
@@ -135,22 +138,6 @@ const SurveyItemQuotation: React.FC<Props> = ({
       );
     }
     return selectedGroupItms;
-  };
-
-  const _getOtherSurveyItems = () => {
-    let otherGroupItems: ISurveyListItem[] = [];
-    if (
-      surveyItemList &&
-      surveyItemList?.data &&
-      surveyItemList?.data.length > 0 &&
-      surveyItemList?.data?.[0]?.surveyItems &&
-      surveyItemList?.data?.[0]?.surveyItems?.length > 0
-    ) {
-      otherGroupItems = surveyItemList?.data?.[0].surveyItems?.filter(
-        (it: ISurveyListItem) => it.groupID === "0",
-      );
-    }
-    return otherGroupItems;
   };
 
   useEffect(() => {
@@ -226,14 +213,6 @@ const SurveyItemQuotation: React.FC<Props> = ({
       }
     }
   }, [isEdit, surveyItemList]);
-
-  // useEffect(()=>{
-  //   const {data} = surveyItemList
-  //   const surveyItemListData = data.surveyItems;
-  //   if(surveyItemListData){
-  //     setSurveyItem(surveyItemListData.)
-  //   }
-  // },[])
 
   return (
     <CollapsibleView title="SURVEY ITEM" collapsed={true}>
@@ -342,6 +321,22 @@ const SurveyItemQuotation: React.FC<Props> = ({
                         ref={valueOfGoodsCompRef}
                       />
                     </View>
+                  </View>
+                  <Spacer height={4} />
+                  <View style={styles.elementContainer2}>
+                    <Label text="CFT" style={styles.label} />
+                    <Input
+                      onChangeText={(text) => {
+                        setCftValue(text);
+                      }}
+                      containerStyle={styles.inputContainer}
+                      inputStyle={styles.input}
+                      value={cftValue}
+                      selectionColor={COLOR_BLACK}
+                      placeholder="Enter CFT Value"
+                      //@ts-ignore
+                      ref={cftCompRef}
+                    />
                   </View>
                   <Spacer height={4} />
                   <View style={styles.elementContainer2}>

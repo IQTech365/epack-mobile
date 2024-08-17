@@ -118,7 +118,6 @@ const AddQuotationForm: React.FC<Props> = ({
   } = useAppSelector(state => state.Quotation);
 
   const {surveyItemList} = useAppSelector(state=> state.Enquiry)
-
   const {
     vehicleTypesRequesting,
     vehicleCompaniesRequesting,
@@ -465,7 +464,6 @@ const AddQuotationForm: React.FC<Props> = ({
             dispatch(updateQuotationRequest(updatePayload));
             _handleSaveChanges()
           } else {
-            console.log("payloadQuotation",payload)
             dispatch(addQuotationRequest(payload));
           }
         } else {
@@ -529,10 +527,8 @@ const AddQuotationForm: React.FC<Props> = ({
       .then(id => {
         const payload: IGetSurvyeItemListByQuotationIdRequestPayload = {
           companyId: id as string,
-          quotationId: item?._id,
-          // id: addQuotationInfo.data._id
+          quotationId: quotation?._id,
         };
-        console.log("payload1212",payload)
         //@ts-ignore
         dispatch(getSurveyItemListRequest(payload));
 

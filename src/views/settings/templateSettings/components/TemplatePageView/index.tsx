@@ -31,8 +31,6 @@ const TemplatePageView = ({route}) => {
   } = useAppSelector(state => state.Template);
   const [activeCategory, setActiveCategory] = useState<string>('');
   const [activeTemplateId, setActiveTemplateId] = useState<string>('');
-  console.log('templates----', JSON.stringify(templates));
-  
 
   const _getTemplatesByModuleId = () => {
     let list: ITemplate[] = [];
@@ -82,7 +80,6 @@ const TemplatePageView = ({route}) => {
         sectionData.push(item);
       });
     }
-    console.log('sectionData----', JSON.stringify(sectionData));
     return sectionData;
   };
 
@@ -127,14 +124,12 @@ const TemplatePageView = ({route}) => {
 
   //@ts-ignore
   const customData = savedDocumentTemplateIds?.data?.filter(item => item.template.templateVersion === "Custom") || [];
-  // console.log("customDatacustomData",customData)
   // const customSection: ISectionData = {
   //   title: 'Custom',
   //   data: customData.map(item => item.template)
   // };
 
   // const sections = [customSection, ..._prepareTemplateListWithCategory()];
-  // console.log("sectionssections",sections)
 
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white'}}>
