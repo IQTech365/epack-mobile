@@ -4,6 +4,7 @@ export interface ISurveyListItem {
   valueOfGoods: string;
   cftValue?:string;
   remarks: string;
+  groupID?: string;
 }
 
 export interface IAddSurveyItemRequest {

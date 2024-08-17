@@ -13,12 +13,18 @@ import {IGetQuotationData} from '../../../../../interface/quotation/IGetQuotatio
 import _ from 'underscore';
 import {useAppSelector} from '../../../../../redux/hooks';
 import Spacer from '../../../../../common/Spacer';
-import { getSurveyCategoryRequest, getSurveyMaterialRequest } from '../../../../../redux/slices/CommonSlice';
-import { useDispatch } from 'react-redux';
+import {
+  getSurveyCategoryRequest,
+  getSurveyMaterialRequest,
+} from '../../../../../redux/slices/CommonSlice';
+import {useDispatch} from 'react-redux';
 import Label from '../../../../../common/Label';
-import Input, { InputMethods } from '../../../../../common/Input';
-import { ISurveyListItem } from '../../../../../interface/enquiry/IAddSurveyItemRequest';
-import { prepareSurveyItemFormList, TSurveyItemListGroup } from '../../../../enquiry/enquiryDetails/utility';
+import Input, {InputMethods} from '../../../../../common/Input';
+import {ISurveyListItem} from '../../../../../interface/enquiry/IAddSurveyItemRequest';
+import {
+  prepareSurveyItemFormList,
+  TSurveyItemListGroup,
+} from '../../../../enquiry/enquiryDetails/utility';
 import SurveyGroupItem from '../../../../enquiry/enquiryDetails/components/SurveyListView/SurveyGroupItem';
 interface Props {
   isEdit?: boolean;
@@ -27,8 +33,13 @@ interface Props {
   surveyOtherItemList: ISurveyListItem[]; // New prop
   handleOtherItemsList: (item: ISurveyListItem) => void;
   onSurveyItemRequired: (value: boolean) => void;
-  onSelectGroupItems: (itemName: string, qty: string, cft: string) => void;
-  surveyItemList: []
+  onSelectGroupItems: (
+    itemName: string,
+    qty: string,
+    cft: string,
+    groupId: string,
+  ) => void;
+  surveyItemList: any;
 }
 
 const SurveyItemQuotation: React.FC<Props> = ({
@@ -38,8 +49,7 @@ const SurveyItemQuotation: React.FC<Props> = ({
   handleOtherItemsList,
   onSurveyItemRequired,
   onSelectGroupItems,
-  surveyItemList
-
+  surveyItemList,
 }) => {
   const {state, setSurveyItem} = useQuotationFormContextHook();
   const [itemName, setItem] = useState<string>('');
@@ -48,7 +58,7 @@ const SurveyItemQuotation: React.FC<Props> = ({
   const [cftValue, setCftValue] = useState<string>('0');
   const [remarks, setRemarks] = useState<string>('');
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const itemNameCompRef = useRef<InputMethods>(null);
   const quantityCompRef = useRef<InputMethods>(null);
   const valueOfGoodsCompRef = useRef<InputMethods>(null);
@@ -79,6 +89,7 @@ const SurveyItemQuotation: React.FC<Props> = ({
     const {data: surveyCategories} = surveyCategory || {};
     return prepareSurveyItemFormList(surveyCategories, surveyMaterials);
   };
+
   const handleAddItem = () => {
     const newItem: ISurveyListItem = {
       itemName,
@@ -86,6 +97,7 @@ const SurveyItemQuotation: React.FC<Props> = ({
       valueOfGoods,
       remarks,
       cftValue,
+      groupID: '0',
     };
     handleOtherItemsList(newItem);
     resetForm();
@@ -106,21 +118,53 @@ const SurveyItemQuotation: React.FC<Props> = ({
     setCftValue('');
     //@ts-ignore
     cftCompRef && cftCompRef?.current?.reset();
-  }
+  };
 
+  const _getSelectedGroupItems = (groupID: string) => {
+    let selectedGroupItms: ISurveyListItem[] = [];
+    if (
+      isEdit &&
+      surveyItemList &&
+      surveyItemList?.data &&
+      surveyItemList?.data.length > 0 &&
+      surveyItemList?.data?.[0]?.surveyItems &&
+      surveyItemList?.data?.[0]?.surveyItems?.length > 0
+    ) {
+      selectedGroupItms = surveyItemList?.data?.[0].surveyItems?.filter(
+        (it: ISurveyListItem) => it.groupID === groupID,
+      );
+    }
+    return selectedGroupItms;
+  };
+
+  const _getOtherSurveyItems = () => {
+    let otherGroupItems: ISurveyListItem[] = [];
+    if (
+      surveyItemList &&
+      surveyItemList?.data &&
+      surveyItemList?.data.length > 0 &&
+      surveyItemList?.data?.[0]?.surveyItems &&
+      surveyItemList?.data?.[0]?.surveyItems?.length > 0
+    ) {
+      otherGroupItems = surveyItemList?.data?.[0].surveyItems?.filter(
+        (it: ISurveyListItem) => it.groupID === "0",
+      );
+    }
+    return otherGroupItems;
+  };
 
   useEffect(() => {
     transformSurveyData();
   }, [surveyMaterial]);
 
   useEffect(() => {
-    dispatch(getSurveyMaterialRequest())
-    dispatch(getSurveyCategoryRequest())
+    dispatch(getSurveyMaterialRequest());
+    dispatch(getSurveyCategoryRequest());
   }, []);
 
   const showSurveyItemList = () => {
-    if (surveyOtherItemList.length > 0) {
-      return surveyOtherItemList.map((d: ISurveyListItem, index: number) => {
+    if (surveyOtherItemList?.length > 0) {
+      return surveyOtherItemList?.map((d: ISurveyListItem, index: number) => {
         return (
           <View style={styles.itemWrapper} key={`${index}`}>
             <View style={styles.elementContainer}>
@@ -169,17 +213,19 @@ const SurveyItemQuotation: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    if(isEdit && surveyItemList){
+    if (isEdit && surveyItemList) {
       //@ts-ignore
-      if ( surveyItemList && surveyItemList.data && surveyItemList.data.length > 0) {
+      if (
+        surveyItemList &&
+        surveyItemList.data &&
+        surveyItemList.data.length > 0
+      ) {
         setSurveyItem('Required');
-      }
-      else {
-        setSurveyItem('Not Required')
+      } else {
+        setSurveyItem('Not Required');
       }
     }
-  }, [isEdit,surveyItemList]);
-
+  }, [isEdit, surveyItemList]);
 
   // useEffect(()=>{
   //   const {data} = surveyItemList
@@ -188,20 +234,6 @@ const SurveyItemQuotation: React.FC<Props> = ({
   //     setSurveyItem(surveyItemListData.)
   //   }
   // },[])
-
-
-  // if (isEdit && quotationData) {
-  //   const quotationfreight: IQuotationFreight =
-  //     quotationData.quotationfreights;
-  //   if (_.isObject(quotationfreight)) {
-  //     const storageCharge: IStorage = quotationfreight.storageCharges;
-  //     if (_.isObject(storageCharge)) {
-  //       setStorage(storageCharge?.isRequired);
-  //     } else if (_.isNull(storageCharge)) {
-  //       setStorage(options2[1]);
-  //     }
-  //   }
-  // }
 
   return (
     <CollapsibleView title="SURVEY ITEM" collapsed={true}>
@@ -220,8 +252,8 @@ const SurveyItemQuotation: React.FC<Props> = ({
               style={styles.style}
               textContainerStyle={styles.textContainerStyle}
               onPress={(isChecked: boolean) => {
-                  onSurveyItemRequired(option === 'Required');
-                  setSurveyItem(option);
+                onSurveyItemRequired(option === 'Required');
+                setSurveyItem(option);
               }}
               isChecked={state.surveyItem == option}
               disableBuiltInState={true}
@@ -230,103 +262,115 @@ const SurveyItemQuotation: React.FC<Props> = ({
         </View>
         {state.surveyItem === options2[0] && (
           <>
-          <View>
-        {transformSurveyData().map((it, index) => {
-          return (
-            <>
-              <Spacer height={8} />
-              <CollapsibleView
-                title={it.groupName}
-                collapsed={true}
-                constainerStyle={styles.surveyItemGroupContainer}>
+            <View>
+              {transformSurveyData().map((it, index) => {
+                const selectedGroupItems = _getSelectedGroupItems(it.groupId);
+                return (
+                  <View key={index.toString()}>
+                    <Spacer height={8} />
+                    <CollapsibleView
+                      title={it.groupName}
+                      collapsed={selectedGroupItems?.length === 0}
+                      constainerStyle={styles.surveyItemGroupContainer}>
+                      <View>
+                        {it.items.map((cit, index) => {
+                          const selectedSurveyItem: ISurveyListItem|undefined = selectedGroupItems?.find(si => si.itemName === cit.surveyMaterialItem);
+                          return (
+                            <SurveyGroupItem
+                              data={cit}
+                              key={index.toString()}
+                              selectedItem={selectedSurveyItem}
+                              groupID={it.groupId}
+                              onSelect={onSelectGroupItems}
+                            />
+                          );
+                        })}
+                      </View>
+                    </CollapsibleView>
+                  </View>
+                );
+              })}
+            </View>
+            <Spacer height={8} />
+            <CollapsibleView
+              title="Add Other Items"
+              collapsed={surveyOtherItemList?.length === 0}
+              constainerStyle={styles.surveyItemGroupContainer}>
+              <>
                 <View>
-                  {it.items.map((cit, index) => (
-                    <SurveyGroupItem data={cit} key={index.toString()} onSelect={onSelectGroupItems} />
-                  ))}
+                  <Spacer height={4} />
+                  <View style={styles.elementContainer2}>
+                    <Label text="Item/Particulars Name" style={styles.label} />
+                    <Input
+                      onChangeText={handleParticularNameInputTextChange}
+                      containerStyle={styles.inputContainer}
+                      inputStyle={styles.input}
+                      value={itemName}
+                      selectionColor={COLOR_BLACK}
+                      placeholder="Enter particular/item name"
+                      //@ts-ignore
+                      ref={itemNameCompRef}
+                    />
+                  </View>
+                  <Spacer height={4} />
+                  <View style={styles.elementContainer}>
+                    <View style={styles.itemContainer}>
+                      <Label text="Quantity" style={styles.label} />
+                      <Input
+                        onChangeText={handleQuantityInputTextChange}
+                        containerStyle={styles.inputContainer}
+                        inputStyle={styles.input}
+                        value={quantity}
+                        selectionColor={COLOR_BLACK}
+                        inputType="numeric"
+                        placeholder="Enter quantity"
+                        //@ts-ignore
+                        ref={quantityCompRef}
+                      />
+                    </View>
+                    <View style={styles.itemContainer}>
+                      <Label text="Value Of Goods" style={styles.label} />
+                      <Input
+                        onChangeText={handleGoodsInputTextChange}
+                        containerStyle={styles.inputContainer}
+                        inputStyle={styles.input}
+                        value={valueOfGoods}
+                        inputType="numeric"
+                        selectionColor={COLOR_BLACK}
+                        placeholder="Enter goods value"
+                        //@ts-ignore
+                        ref={valueOfGoodsCompRef}
+                      />
+                    </View>
+                  </View>
+                  <Spacer height={4} />
+                  <View style={styles.elementContainer2}>
+                    <Label text="Remark" style={styles.label} />
+                    <Input
+                      onChangeText={handleDescriptionInputTextChange}
+                      containerStyle={styles.inputContainer}
+                      inputStyle={styles.input}
+                      value={remarks}
+                      selectionColor={COLOR_BLACK}
+                      placeholder="Enter remarks"
+                      //@ts-ignore
+                      ref={remarksCompRef}
+                    />
+                  </View>
                 </View>
-              </CollapsibleView>
-            </>
-          );
-        })}
-      </View>
-      <Spacer height={8} />
-    <CollapsibleView title ="Add Other Items" collapsed={true} constainerStyle={styles.surveyItemGroupContainer}>
-      <>
-      <View>
-      <Spacer height={4} />
-          <View style={styles.elementContainer2}>
-            <Label text="Item/Particulars Name" style={styles.label} />
-            <Input
-              onChangeText={handleParticularNameInputTextChange}
-              containerStyle={styles.inputContainer}
-              inputStyle={styles.input}
-              value={itemName}
-              selectionColor={COLOR_BLACK}
-              placeholder='Enter particular/item name'
-              //@ts-ignore
-              ref={itemNameCompRef}
-            />
-          </View>
-          <Spacer height={4} />
-          <View style={styles.elementContainer}>
-            <View style={styles.itemContainer}>
-              <Label text="Quantity" style={styles.label} />
-              <Input
-                onChangeText={handleQuantityInputTextChange}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                value={quantity}
-                selectionColor={COLOR_BLACK}
-                inputType="numeric"
-                placeholder='Enter quantity'
-                //@ts-ignore
-                ref={quantityCompRef}
-              />
-            </View>
-            <View style={styles.itemContainer}>
-              <Label text="Value Of Goods" style={styles.label} />
-              <Input
-                onChangeText={handleGoodsInputTextChange}
-                containerStyle={styles.inputContainer}
-                inputStyle={styles.input}
-                value={valueOfGoods}
-                inputType="numeric"
-                selectionColor={COLOR_BLACK}
-                placeholder="Enter goods value"
-                //@ts-ignore
-                ref={valueOfGoodsCompRef}
-              />
-            </View>
-          </View>
-          <Spacer height={4} />
-          <View style={styles.elementContainer2}>
-            <Label text="Remark" style={styles.label} />
-            <Input
-              onChangeText={handleDescriptionInputTextChange}
-              containerStyle={styles.inputContainer}
-              inputStyle={styles.input}
-              value={remarks}
-              selectionColor={COLOR_BLACK}
-              placeholder='Enter remarks'
-              //@ts-ignore
-              ref={remarksCompRef}
-            />
-          </View>
-      </View>
-      <Spacer height={12} />
-        <Button
-          text="Add item/Particular"
-          onPress={handleAddItem}
-          disabled={itemName === ''}
-          style={styles.previewButtonStyle}
-          textStyle={styles.textStyle2}
-        />
-        <Spacer height={12} />
-        {showSurveyItemList()}
-      </>
-    </CollapsibleView>
+                <Spacer height={12} />
+                <Button
+                  text="Add item/Particular"
+                  onPress={handleAddItem}
+                  disabled={itemName === ''}
+                  style={styles.previewButtonStyle}
+                  textStyle={styles.textStyle2}
+                />
+                <Spacer height={12} />
+                {showSurveyItemList()}
+              </>
+            </CollapsibleView>
           </>
-          
         )}
       </View>
     </CollapsibleView>

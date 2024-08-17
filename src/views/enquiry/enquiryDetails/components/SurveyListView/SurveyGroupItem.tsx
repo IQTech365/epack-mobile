@@ -5,20 +5,26 @@ import {COLOR_BLACK, COLOR_BLUE, COLOR_GRAY} from '../../../../../utils/colors';
 import {TSurveyMaterialCategory} from '../../utility';
 import Input from '../../../../../common/Input';
 import Label from '../../../../../common/Label';
+import { ISurveyListItem } from '../../../../../interface/enquiry/IAddSurveyItemRequest';
 
 export type TSurveyGroupItemProps = {
   data: TSurveyMaterialCategory;
-  onSelect: (itemName: string, qty: string, cft: string) => void;
+  onSelect: (itemName: string, qty: string, cft: string, groupID: string) => void;
+  groupID: string;
+  selectedItem?:ISurveyListItem|undefined;
 };
 
-const SurveyGroupItem: React.FC<TSurveyGroupItemProps> = ({data, onSelect}) => {
-  const [isRequired, setIsRequired] = useState<boolean>(false);
-  const [quantity, setQuantity] = useState<string>('1');
-  const [cftValue, setCftValue] = useState<string>('0');
+const SurveyGroupItem: React.FC<TSurveyGroupItemProps> = ({data, onSelect, groupID, selectedItem}) => {
+  const isItemSelected = selectedItem?.itemName === data.surveyMaterialItem;
+  const [isRequired, setIsRequired] = useState<boolean>(isItemSelected);
+  const [quantity, setQuantity] = useState<string>(selectedItem ? selectedItem.quantity : '1');
+  const [cftValue, setCftValue] = useState<string>(selectedItem ? selectedItem.cftValue as string : '0');
 
   const toggle = () => {
     setIsRequired(!isRequired);
   };
+
+  
 
 
   return (
@@ -39,7 +45,7 @@ const SurveyGroupItem: React.FC<TSurveyGroupItemProps> = ({data, onSelect}) => {
         isChecked={isRequired}
         disableBuiltInState={true}
       />
-      {isRequired ? (
+      {(isRequired) ? (
         <View style={styles.inputBoxContainer}>
           <View style={styles.inputWrapper}>
             <Label text="CFT" style={styles.label} />
@@ -47,9 +53,9 @@ const SurveyGroupItem: React.FC<TSurveyGroupItemProps> = ({data, onSelect}) => {
               onChangeText={text => {
                 if(isRequired) {
                     setCftValue(text);
-                    onSelect(data.surveyMaterialItem, quantity, text);
+                    onSelect(data.surveyMaterialItem, quantity, text, groupID);
                 } else {
-                    onSelect(data.surveyMaterialItem, '0', '0');
+                    onSelect(data.surveyMaterialItem, '0', '0', groupID);
                 }
               }}
               containerStyle={styles.inputContainer}
@@ -65,9 +71,9 @@ const SurveyGroupItem: React.FC<TSurveyGroupItemProps> = ({data, onSelect}) => {
               onChangeText={text => {
                 if(isRequired) {
                     setQuantity(text);
-                    onSelect(data.surveyMaterialItem, text, cftValue);
+                    onSelect(data.surveyMaterialItem, text, cftValue, groupID);
                 } else {
-                    onSelect(data.surveyMaterialItem, '0', '0');
+                    onSelect(data.surveyMaterialItem, '0', '0', groupID);
                 }
               }}
               containerStyle={styles.inputContainer}

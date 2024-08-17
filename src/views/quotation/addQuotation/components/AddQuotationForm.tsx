@@ -104,6 +104,7 @@ const AddQuotationForm: React.FC<Props> = ({
   const authId = useAuthId();
   const dispatch = useAppDispatch();
 
+
   const {
     addQuotationRequesting,
     addQuotationSuccess,
@@ -242,6 +243,38 @@ const AddQuotationForm: React.FC<Props> = ({
     return valid;
   };
 
+  const _setGroupItems = () => {
+    let groupItems: ISurveyListItem[] = [];
+    if (
+      surveyItemList &&
+      surveyItemList?.data &&
+      surveyItemList?.data.length > 0 &&
+      surveyItemList?.data?.[0]?.surveyItems &&
+      surveyItemList?.data?.[0]?.surveyItems?.length > 0
+    ) {
+      groupItems = surveyItemList?.data?.[0].surveyItems?.filter(
+        (it: ISurveyListItem) => it.groupID !== "0",
+      );
+      setGroupSurveyItems(groupItems);
+    }
+  };
+
+  const _setOtherSurveyItems = () => {
+    let otherGroupItems: ISurveyListItem[] = [];
+    if (
+      surveyItemList &&
+      surveyItemList?.data &&
+      surveyItemList?.data.length > 0 &&
+      surveyItemList?.data?.[0]?.surveyItems &&
+      surveyItemList?.data?.[0]?.surveyItems?.length > 0
+    ) {
+      otherGroupItems = surveyItemList?.data?.[0].surveyItems?.filter(
+        (it: ISurveyListItem) => it.groupID === "0",
+      );
+      setSurveyOtherItemList(otherGroupItems);
+    }
+  };
+
   const _getQuotationItem = () => {
     let _quotation: ISingleQuotationData | undefined = undefined;
     const {data} = quotation || {};
@@ -250,7 +283,6 @@ const AddQuotationForm: React.FC<Props> = ({
     }
     return _quotation;
   };
-
 
   const _getSerialNoRequest = () => {
     getCurrentCompanyId()
@@ -274,14 +306,13 @@ const AddQuotationForm: React.FC<Props> = ({
       surveyId: surveyItemList.data[0]._id,
       //@ts-ignore
       payload: {
-        // surveyListNo: serialNo ? serialNo.toString() : state.quotation_no,
         surveyItems: [...groupSruveyItems, ...surveyOtherItemList],
       },
     };
-    // dispatch(updateSurveryItemListRequest(payload));
+    dispatch(updateSurveryItemListRequest(payload));
   };
 
-  const collectSelectedGroupItems = (itemName: string, qty: string, cft: string) => {
+  const collectSelectedGroupItems = (itemName: string, qty: string, cft: string, groupId: string) => {
     const copy = [...groupSruveyItems];
     const isItemExist = copy.find(it => it.itemName === itemName);
     if(isItemExist && qty === '0' && cft === '0') {
@@ -296,6 +327,7 @@ const AddQuotationForm: React.FC<Props> = ({
           cftValue: cft,
           valueOfGoods: '',
           remarks: '',
+          groupID: groupId,
         }
         copy[itemIndex] = updatedItem;
         setGroupSurveyItems(copy);
@@ -307,6 +339,7 @@ const AddQuotationForm: React.FC<Props> = ({
         cftValue: cft,
         valueOfGoods: '',
         remarks: '',
+        groupID: groupId,
       }
       copy.push(newItem);
       setGroupSurveyItems(copy);
@@ -514,10 +547,17 @@ const AddQuotationForm: React.FC<Props> = ({
   }, []);
 
   useEffect(()=>{
-if(isEdit){
-  _getSurveyItemListRequest();
-}
+  if(isEdit){
+    _getSurveyItemListRequest();
+  }
   },[isEdit])
+
+  useEffect(() => {
+    if(isEdit && surveyItemList) {
+      _setGroupItems();
+      _setOtherSurveyItems();
+    }
+  }, [isEdit, surveyItemList]);
 
   useEffect(() => {
     if (!addQuotationRequesting && addQuotationSuccess) {

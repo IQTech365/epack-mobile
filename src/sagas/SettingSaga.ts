@@ -246,6 +246,7 @@ export function* getUnitTypeSaga(action: PayloadAction) {
 export function* getTemplateListSaga(action: PayloadAction) {
     try {
         const response: ITemplateListResponse = yield call(SettingService.GetTemplateListService);
+        console.log('getTemplateListSaga-response--', JSON.stringify(response));
         yield put(getTemplateListSuccess(response));
     } catch (error) {
         yield put(getTemplateListFailure(JSON.stringify(error)));
