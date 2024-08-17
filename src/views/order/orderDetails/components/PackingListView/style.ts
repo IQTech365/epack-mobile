@@ -2,6 +2,7 @@ import {StyleSheet, Dimensions} from 'react-native';
 import {
   COLOR_BLACK,
   COLOR_BLUE,
+  COLOR_GRAY,
   COLOR_GRAY2,
   COLOR_WHITE,
 } from '../../../../../utils/colors';
@@ -42,10 +43,43 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     alignSelf: 'center',
   },
+
+  itemContainerSurvey: {
+    width: width * 0.95,
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    alignSelf: 'center',
+    marginBottom: 5
+  },
+
+  checkboxContainer: {
+    width: width * 0.95,
+    flexDirection: 'row',
+    alignSelf: 'center',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    marginBottom: 6,
+  },
   label: {
     color: COLOR_BLACK,
     fontSize: 14,
     fontFamily: 'WorkSans-Medium'
+  },
+
+  iconStyle: {
+    borderRadius: 0,
+    width: 18,
+    height: 18,
+    borderWidth: 1
+  },
+
+  textContainerStyle: {
+    paddingLeft: 0,
+    marginLeft: 6,
+  },
+  style: {
+    marginRight: 15,
+    marginBottom: 15,
   },
   labelHeading: {
     color: COLOR_BLACK,
@@ -68,22 +102,34 @@ const styles = StyleSheet.create({
   previewButtonStyle: {
     backgroundColor: COLOR_BLUE,
     borderRadius: 5,
+    marginBottom: 5
+  },
+
+  textStyleCheck: {
+    fontFamily: 'JosefinSans-Regular',
+    textDecorationLine: 'none',
+    fontSize: 14,
+    color: COLOR_GRAY
   },
   // items
   listItemContainer: {
-    width: width * 0.9,
+    width: width * 0.95,
     alignSelf: 'center',
     justifyContent: 'center',
     borderRadius: 5,
     padding: 5,
+    // borderWidth: 2,
+    paddingHorizontal: 25
+
   },
   rowItemContainer: {
-    width: '100%',
+    width: '80%',
     flexDirection: 'row',
     alignItems: 'center',
+
   },
   leftItemContainer: {
-    width: '80%',
+    width: '100%',
     alignItems: 'center',
   },
   itemContainer2: {
@@ -126,6 +172,34 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
   },
+  checkBoxElement:{
+    // borderWidth: 2,
+    width: width * 0.9,
+    alignSelf: 'center',
+    // alignItem: 'inline'
+    // paddingVertical: 4
+
+  },
+
+
+  inputContain: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  dropdownContent:{
+    // width: width * 0.9,
+    width: '100%',
+    alignSelf: 'center',
+    margin: 13
+    // alignItems: 'center',
+    // flexDirection: 'row',
+    // justifyContent: 'space-between',
+  },
+  surveyItemGroupContainer: {
+    width: width * 0.9,
+  }
 });
 
 export default styles;

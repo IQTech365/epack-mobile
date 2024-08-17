@@ -21,11 +21,14 @@ import {
   IHtmlTemplateRequest,
   IHtmlTemplateResponse,
 } from '../../interface/order/templates/ITemplateResponse';
-import { ICreateNocResponse, ICreatePackingMaterialRequest, ICreatePackingMaterialResponse, IDeletePackingListItemResponse, IGetNocDocResponse, IGetPackingListRequest, INocDocRequest, IPackingListResponse, IUpdatePackingListPayload, IUpdatePackingListRequest, IUpdatePackingListResponse } from '../../interface/order/IPackingMaterialResponse';
+import {  ICreatePackingMaterialRequest, ICreatePackingMaterialResponse, IDeletePackingListItemResponse, IGetPackingListRequest, IPackingListResponse, IUpdatePackingListPayload, IUpdatePackingListRequest, IUpdatePackingListResponse } from '../../interface/order/IPackingMaterialResponse';
 import { IGetInvoiceListResponse } from '../../interface/order/IGetInvoiceListResponse';
 import { IPackingListTemplateResponse, IPackingListTemplatePayload } from '../../interface/order/IPackingListTemplate';
 import { IUpdateInvoicePayload, IUpdateInvoiceResponse } from '../../interface/order/IUpdateInvoiceResponse';
 import { IUpdateCarConditionPayload, IUpdateCarConditionResponse } from '../../interface/order/IUpdateCarConditionResponse';
+import { ICreateNocFormResponse } from '../../interface/order/ICreateNocFormResponse';
+import { IGetNocListRequest, IGetNocListResponse, INocFormTemplatePayload, INocPayload, INocTemplateResponse, IUpdateNocFormPayloadRequest, IUpdateNocFormResponse } from '../../interface/order/IGetNocListResponse';
+import { ICreateNocFormRequest } from '../../interface/order/ICreateNocFormRequest';
 
 interface IOrderState {
   // Add Order
@@ -190,7 +193,7 @@ interface IOrderState {
 
   // NOC add 
 
-  createNocDocInfo: ICreateNocResponse | null;
+  createNocDocInfo: ICreateNocFormResponse | null;
   createNocDocRequesting: boolean;
   createNocDocSuccess: boolean;
   createNocDocFailure: boolean;
@@ -198,13 +201,29 @@ interface IOrderState {
 
   // NOC get
 
-  getNocDoc: IGetNocDocResponse | null;
+  getNocDoc: IGetNocListResponse | null;
   getNocDocRequesting: boolean;
   getNocDocSuccess:boolean;
   getNocDocFailure:boolean;
   getNocDocError: any;
 
+  // Noc template
+  
+  getNocFormTemplate: INocFormTemplatePayload | null;
+  getNocFormTemplateRequesting: boolean;
+  getNocFormTemplateSuccess:boolean;
+  getNocFormTemplateFailure:boolean;
+  getNocFormTemplateError:any;
+
+  // update Noc Form 
+  updateNocFormUpdateInfo: IUpdateNocFormResponse | null;
+  updateNocFormUpdateRequesting: boolean;
+  updateNocFormSuccess:boolean;
+  updateNocFormFailure:boolean;
+  updateNocFormError:any;
 }
+
+
 
 const initialState: IOrderState = {
   // Add Order
@@ -381,6 +400,20 @@ const initialState: IOrderState = {
   getNocDocFailure:false,
   getNocDocError: null,
 
+  //  Noc Template
+  getNocFormTemplate: null,
+  getNocFormTemplateRequesting: false,
+  getNocFormTemplateSuccess:false,
+  getNocFormTemplateFailure:false,
+  getNocFormTemplateError:null,
+
+  // update Noc Form
+
+  updateNocFormUpdateInfo: null,
+  updateNocFormUpdateRequesting:false,
+  updateNocFormSuccess:false,
+  updateNocFormFailure:false,
+  updateNocFormError:null,
 
 };
 
@@ -1018,13 +1051,13 @@ export const OrderSlice = createSlice({
 
     createNocDocRequest: (
       state,
-      action: PayloadAction<INocDocRequest>,
+      action: PayloadAction<ICreateNocFormRequest>,
     ) => {
       state.createNocDocRequesting = true;
     },
     createNocDocSuccess: (
       state,
-      action: PayloadAction<ICreateNocResponse>,
+      action: PayloadAction<ICreateNocFormResponse>,
     ) => {
       state.createNocDocRequesting = false;
       state.createNocDocSuccess = true;
@@ -1044,10 +1077,10 @@ export const OrderSlice = createSlice({
     },
 
 
-    getNocDocRequest: (state, action:PayloadAction<INocDocRequest>) => {
+    getNocDocRequest: (state, action:PayloadAction<INocPayload>) => {
       state.getNocDocRequesting = true;
     },
-    getNocDocSuccess: (state, action:PayloadAction<IGetNocDocResponse>) => {
+    getNocDocSuccess: (state, action:PayloadAction<IGetNocListResponse>) => {
       state.getNocDocRequesting = false;
       state.getNocDocSuccess = true;
       state.getNocDoc = action.payload;
@@ -1066,7 +1099,54 @@ export const OrderSlice = createSlice({
       state.getNocDocError = null;
     },
 
+    // Noc Template
 
+    getNocFormTemplateRequest: (state, action:PayloadAction<INocFormTemplatePayload>) => {
+      state.getNocFormTemplateRequesting = true;
+    },
+    getNocFormTemplateSuccess: (state, action:PayloadAction<INocTemplateResponse>) => {
+      state.getNocFormTemplateRequesting = false;
+      state.getNocFormTemplateSuccess = true;
+      state.getNocFormTemplate = action.payload;
+    },
+    getNocFormTemplateFailure: (state, action:PayloadAction<any>) => {
+      state.getNocFormTemplateRequesting = false;
+      state.getNocFormTemplateSuccess = false;
+      state.getNocFormTemplateFailure = true;
+      state.getNocFormTemplateError = action.payload;
+    },
+    resetNocFormTemplateRequest: (state) => {
+      state.getNocFormTemplateRequesting = false;
+      state.getNocFormTemplateSuccess = false;
+      state.getNocFormTemplateFailure = false;
+      state.getNocFormTemplate = null;
+      state.getNocFormTemplateError = null;
+    },
+
+    //  update Noc Form
+
+
+    updateNocFormRequest: (state, action:PayloadAction<IUpdateNocFormPayloadRequest>) => {
+      state.updateNocFormUpdateRequesting = true;
+    },
+    updateNocFormSuccess:(state, action:PayloadAction<IUpdatePackingListResponse>) => {
+      state.updateNocFormUpdateRequesting = false;
+      state.updateNocFormSuccess = true;
+      state.updateNocFormFailure = false;
+      state.updateNocFormUpdateInfo = action.payload;
+    },
+    updateNocFormFailure:(state, action:PayloadAction<any>) => {
+      state.updateNocFormUpdateRequesting = false;
+      state.updateNocFormSuccess = false;
+      state.updateNocFormFailure = true;
+      state.updateNocFormError = action.payload;
+    },
+    resetUpdateNocFormRequest:(state) => {
+      state.updateNocFormUpdateRequesting = false;
+      state.updateNocFormSuccess = false;
+      state.updateNocFormFailure = false;
+      state.updateNocFormError = null;
+    },
   },
 });
 
@@ -1206,5 +1286,19 @@ export const {
   getNocDocRequest,
   getNocDocSuccess,
   getNocDocFailure,
-  resetGetNocDocRequest
+  resetGetNocDocRequest,
+
+  //  Noc Tenplate
+
+  getNocFormTemplateRequest,
+  getNocFormTemplateFailure,
+  getNocFormTemplateSuccess,
+  resetNocFormTemplateRequest,
+
+  // Noc Update
+
+  updateNocFormRequest,
+  updateNocFormSuccess,
+  updateNocFormFailure,
+  resetUpdateNocFormRequest
 } = OrderSlice.actions;

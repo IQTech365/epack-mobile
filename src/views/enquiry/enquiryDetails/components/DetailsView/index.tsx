@@ -285,6 +285,8 @@ const DetailsView: React.FC<IDetailsViewProps> = ({enquiryId}) => {
     return _address;
   }
 
+  console.log("singleEnquiry",singleEnquiry)
+
   const _getDateOfMoving = () => {
     let movingDate:string = 'NA';
     if(singleEnquiry && singleEnquiry?.shiftingDate) {

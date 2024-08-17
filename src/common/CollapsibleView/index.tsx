@@ -1,5 +1,5 @@
 import React, { ReactElement, useCallback } from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, ViewStyle} from 'react-native';
 import Collapsible from 'react-native-collapsible';
 import style from './style';
 import DownArrowIcon from '../../images/icons/down-arrow.svg';
@@ -14,9 +14,10 @@ interface IContactDetailsVProps {
   collapsed: boolean;
   isEdit?: boolean;
   onEditPress?: () => void;
+  constainerStyle?: ViewStyle;
 }
 
-const CollapsibleView: React.FC<IContactDetailsVProps> = ({children, title, collapsed = false, isEdit = false, onEditPress}) => {
+const CollapsibleView: React.FC<IContactDetailsVProps> = ({children, title, collapsed = false, isEdit = false, onEditPress, constainerStyle}) => {
   const [isCollapsed, setIsCollapsed] = React.useState(collapsed);
 
   const toggleCollapse = useCallback(() => {
@@ -26,9 +27,9 @@ const CollapsibleView: React.FC<IContactDetailsVProps> = ({children, title, coll
   const bottomPaddingStyle = isCollapsed ? {paddingBottom: 0} : {paddingBottom: 15};
   const headerStyle = isCollapsed ? {borderBottomStartRadius: 5, borderBottomEndRadius: 5,} : {borderBottomStartRadius: 0, borderBottomEndRadius: 0,};
   return (
-    <View style={[style.container, bottomPaddingStyle]}>
+    <View style={[style.container, constainerStyle, bottomPaddingStyle]}>
       <TouchableOpacity onPress={toggleCollapse}>
-        <View style={[style.header, headerStyle]}>
+        <View style={[style.header, constainerStyle, headerStyle]}>
           <View style={style.labelActionContainer}>
             <Text style={style.headerText}>{title}</Text>
             <Spacer width={10} />

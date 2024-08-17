@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import BasicDetails from './BasicDetails';
 import {useQuotationFormContextHook} from '../../../../provider/QuotationFormContextProvider';
 import PickupAddressView from './PickupAddressView';
@@ -33,14 +33,39 @@ import Spinner from '../../../../common/Spinner';
 import {Validator} from '../../../../utils/validation';
 import {ToastType, showToast} from '../../../../utils/utility';
 import {getCurrentCompanyId} from '../../../../utils/storage';
-import {IEnquiry, IGetQuotationData} from '../../../../interface/quotation/IGetQuotationsResponse';
+import {
+  IEnquiry,
+  IGetQuotationData,
+} from '../../../../interface/quotation/IGetQuotationsResponse';
 import {ISingleQuotationData} from '../../../../interface/quotation/IGetSingleQuotationResponse';
 import {IUpdateQuotationRequest} from '../../../../interface/quotation/quotation';
 import {ISingleEnquiryData} from '../../../../interface/enquiry/ISingleEnquiryResponse';
-import {resetGetSerialNoRequest} from '../../../../redux/slices/SerialNoSettingSlice';
+import {
+  getSerialNoRequest,
+  resetGetSerialNoRequest,
+} from '../../../../redux/slices/SerialNoSettingSlice';
 import useInitialValueHook from '../../../../hooks/useInitialValueHook';
 import useUtilityHook from '../../../../hooks/useUtilityHook';
 import SurveyItemQuotation from './SurveyItemQuotation';
+import {
+  IAddSurveyItemPayload,
+  IAddSurveyItemRequest,
+  ISurveyListItem,
+} from '../../../../interface/enquiry/IAddSurveyItemRequest';
+import {
+  addSurveyItemRequest,
+  getSurveyItemListRequest,
+  resetAddSurveyItemRequest,
+  updateSurveryItemListRequest,
+} from '../../../../redux/slices/EnquirySlice';
+import useSerialNoHook from '../../../../hooks/useSerialNo';
+import {Text, View} from 'react-native';
+import {
+  DOCUMENT_TYPE,
+  IGetSerialNoRequest,
+} from '../../../../interface/setting/serialNo/serialNo';
+import { IGetSurvyeItemListByQuotationIdRequestPayload } from '../../../../interface/enquiry/IGetSurveyItemListResponse';
+import { IUpdateSurveyItemRequest } from '../../../../interface/enquiry/enquiry';
 
 interface Props {
   fromEnquiry?: boolean;
@@ -50,7 +75,7 @@ interface Props {
   isEdit?: boolean;
   onSuccess?: () => void;
   showHeader?: boolean;
-  enquiryData?:IEnquiry;
+  enquiryData?: IEnquiry;
 }
 
 const AddQuotationForm: React.FC<Props> = ({
@@ -78,6 +103,7 @@ const AddQuotationForm: React.FC<Props> = ({
   } = useQuotationFormContextHook();
   const authId = useAuthId();
   const dispatch = useAppDispatch();
+
   const {
     addQuotationRequesting,
     addQuotationSuccess,
@@ -87,19 +113,32 @@ const AddQuotationForm: React.FC<Props> = ({
     updateQuotationRequesting,
     updateQuotationSuccess,
     updateQuotationFailure,
+    addQuotationInfo,
   } = useAppSelector(state => state.Quotation);
+
+  const {surveyItemList} = useAppSelector(state=> state.Enquiry)
 
   const {
     vehicleTypesRequesting,
     vehicleCompaniesRequesting,
     vehicleModelsRequesting,
   } = useAppSelector(state => state.Common);
-  const {prefix} = useInitialValueHook('658d3c6f585e3dde644da95b');
-  const {enquiry} = useAppSelector(state => state.Enquiry);
+  const {
+    enquiry,
+    addSurveyItemRequesting,
+    addSurveyItemSuccess,
+    addSurveyItemFailure,
+  } = useAppSelector(state => state.Enquiry);
+
   const {getTotalDocumentCount} = useUtilityHook();
+  const [surveyNo, setSurveyNo] = useState('');
+  const serialNo: number = useSerialNoHook();
+  const [surveyOtherItemList, setSurveyOtherItemList] = useState<ISurveyListItem[]>([]);
+  const [groupSruveyItems, setGroupSurveyItems] = useState<ISurveyListItem[]>([]);
+  const [shouldSaveSurveyNo, setShouldSaveSurveyNo] = useState<boolean>(false);
+  const [isSurveyItemsRequired, setIsSurveyItemsRequired] = useState<boolean>(false);
 
-
- 
+  const {initialValue} = useInitialValueHook('658d3d2f585e3dde644da9b2');
 
   const transitInsurance: ITransitInsurance = {
     isRequired: state.transit_insurance,
@@ -161,8 +200,8 @@ const AddQuotationForm: React.FC<Props> = ({
       billing_by,
       quotation_no,
     } = state;
-    if(Validator.isEmpty(quotation_no)) {
-      setQuotationNoError("Quotation# required");
+    if (Validator.isEmpty(quotation_no)) {
+      setQuotationNoError('Quotation# required');
       valid = false;
     }
     if (billing_by == billingByOptions[0].label) {
@@ -198,19 +237,8 @@ const AddQuotationForm: React.FC<Props> = ({
         );
         valid = false;
       }
-      // if (Validator.isEmpty(employee_name)) {
-      //   setEmployeeNameError('Employee name required');
-      //   valid = false;
-      // }
     }
-    // if (Validator.isEmpty(pickup_pincode)) {
-    //   setPickupPincodeError('Pincode required');
-    //   valid = false;
-    // }
-    // if (Validator.isEmpty(drop_pincode)) {
-    //   setDropPincodeError('Pincode required');
-    //   valid = false;
-    // }
+
     return valid;
   };
 
@@ -222,6 +250,68 @@ const AddQuotationForm: React.FC<Props> = ({
     }
     return _quotation;
   };
+
+
+  const _getSerialNoRequest = () => {
+    getCurrentCompanyId()
+      .then(id => {
+        const payload: IGetSerialNoRequest = {
+          document: DOCUMENT_TYPE.SURVEY_ITEM,
+          payload: {
+            activeCount: initialValue,
+            companyId: id as string,
+            isAuto: true,
+            isHeadOffice: true,
+          },
+        };
+        dispatch(getSerialNoRequest(payload));
+      })
+      .catch(err => console.log('err--', err));
+  };
+
+  const _handleSaveChanges = () => {
+    const payload: IUpdateSurveyItemRequest = {
+      surveyId: surveyItemList.data[0]._id,
+      //@ts-ignore
+      payload: {
+        // surveyListNo: serialNo ? serialNo.toString() : state.quotation_no,
+        surveyItems: [...groupSruveyItems, ...surveyOtherItemList],
+      },
+    };
+    // dispatch(updateSurveryItemListRequest(payload));
+  };
+
+  const collectSelectedGroupItems = (itemName: string, qty: string, cft: string) => {
+    const copy = [...groupSruveyItems];
+    const isItemExist = copy.find(it => it.itemName === itemName);
+    if(isItemExist && qty === '0' && cft === '0') {
+      const filteredItems = copy.filter(it => it.itemName !== itemName);
+      setGroupSurveyItems(filteredItems);
+    } else if (isItemExist && qty !== '0'){
+      const itemIndex = copy.findIndex(it => it.itemName === itemName);
+      if(itemIndex !== -1) {
+        const updatedItem:ISurveyListItem = {
+          itemName: itemName,
+          quantity: qty,
+          cftValue: cft,
+          valueOfGoods: '',
+          remarks: '',
+        }
+        copy[itemIndex] = updatedItem;
+        setGroupSurveyItems(copy);
+      }
+    } else {
+      const newItem:ISurveyListItem = {
+        itemName: itemName,
+        quantity: qty,
+        cftValue: cft,
+        valueOfGoods: '',
+        remarks: '',
+      }
+      copy.push(newItem);
+      setGroupSurveyItems(copy);
+    }
+  }
 
   const hanldeSubmit = () => {
     getCurrentCompanyId()
@@ -338,11 +428,11 @@ const AddQuotationForm: React.FC<Props> = ({
             const updatePayload: IUpdateQuotationRequest = {
               params: item?._id as string,
               payload: payload,
-            };              
+            };
             dispatch(updateQuotationRequest(updatePayload));
+            _handleSaveChanges()
           } else {
-            console.log(payload,"data----");
-            
+            console.log("payloadQuotation",payload)
             dispatch(addQuotationRequest(payload));
           }
         } else {
@@ -354,7 +444,24 @@ const AddQuotationForm: React.FC<Props> = ({
       })
       .catch(err => console.log(err));
   };
-
+  const handleSave = () => {
+    getCurrentCompanyId()
+      .then(id => {
+        const payload: IAddSurveyItemPayload = {
+          companyId: id as string,
+          enquiryId: enquiryId ? (enquiryId as string) : addQuotationInfo.data.enquiryId,
+          quotationId: addQuotationInfo.data.quotationId,
+          surveyListNo: serialNo ? serialNo.toString() : state.quotation_no,
+          surveyDate: state.date_of_quotation,
+          surveyItems: [...groupSruveyItems, ...surveyOtherItemList],
+          addedBy: authId,
+          isAuto: true,
+          isHeadOffice: true,
+        };
+        dispatch(addSurveyItemRequest(payload));
+      })
+      .catch(err => console.log(err));
+  };
   const _getQuotationsRequest = () => {
     getCurrentCompanyId()
       .then(id => {
@@ -365,7 +472,6 @@ const AddQuotationForm: React.FC<Props> = ({
       })
       .catch(err => console.log(err));
   };
-
   const _getSingleEnquiry = () => {
     let _enquiry: ISingleEnquiryData;
     const {data} = enquiry || {};
@@ -375,42 +481,91 @@ const AddQuotationForm: React.FC<Props> = ({
     //@ts-ignore
     return _enquiry;
   };
+  const _handleOhterItemsList = (item: ISurveyListItem) => {
+    const copy = [...surveyOtherItemList];
+    copy.push(item);
+    setSurveyOtherItemList(copy);
+  };
+
+  const _handleSuveyItemRequired = (value: boolean) => {
+    setIsSurveyItemsRequired(value);
+  };
+
+  const _getSurveyItemListRequest = () => {
+    getCurrentCompanyId()
+      .then(id => {
+        const payload: IGetSurvyeItemListByQuotationIdRequestPayload = {
+          companyId: id as string,
+          quotationId: item?._id,
+          // id: addQuotationInfo.data._id
+        };
+        console.log("payload1212",payload)
+        //@ts-ignore
+        dispatch(getSurveyItemListRequest(payload));
+
+      })
+      .catch(err => console.log(err));
+  };
 
   useEffect(() => {
-    // if(isEdit) {
-    //   resetAll();
-    // }
     if (fromEnquiry) {
       setEnquiryItem(_getSingleEnquiry());
     }
   }, []);
 
+  useEffect(()=>{
+if(isEdit){
+  _getSurveyItemListRequest();
+}
+  },[isEdit])
+
   useEffect(() => {
     if (!addQuotationRequesting && addQuotationSuccess) {
       showToast('New Quotation Created.', ToastType.SUCCESS);
-      // onSuccess && onSuccess();
+      setShouldSaveSurveyNo(true);
       dispatch(resetaddQuotationRequest());
       dispatch(resetGetSerialNoRequest());
       _getQuotationsRequest();
-      getTotalDocumentCount();
-      if (onSuccess) {
-        onSuccess();
+      if (isSurveyItemsRequired) {
+        _getSerialNoRequest();
       } else {
-        navigation?.goBack();
+        _getQuotationsRequest();
+        getTotalDocumentCount();
+        if (onSuccess) {
+          onSuccess();
+        } else {
+          navigation?.goBack();
+        }
       }
-    } else if (!addQuotationRequesting && addQuotationFailure) {
+    } else if (addQuotationFailure) {
       showToast('Quotation Not Created. Try again!', ToastType.ERROR);
       dispatch(resetaddQuotationRequest());
     }
   }, [addQuotationRequesting, addQuotationSuccess, addQuotationFailure]);
 
   useEffect(() => {
+    if (serialNo && shouldSaveSurveyNo && isSurveyItemsRequired) {
+      handleSave();
+    }
+  }, [serialNo, shouldSaveSurveyNo, isSurveyItemsRequired]);
+
+  useEffect(() => {
+    if (!addSurveyItemRequesting && addSurveyItemSuccess) {
+      dispatch(resetAddSurveyItemRequest());
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        navigation?.goBack();
+      }
+    } else if (!addSurveyItemRequesting && addSurveyItemFailure) {
+      dispatch(resetAddSurveyItemRequest());
+    }
+  }, [addSurveyItemRequesting, addSurveyItemSuccess, addSurveyItemFailure]);
+
+  useEffect(() => {
     if (!updateQuotationRequesting && updateQuotationSuccess) {
       showToast('Quotation Updated.', ToastType.SUCCESS);
       dispatch(resetUpdateQuotationRequest());
-      // if (isEdit) {
-      //   resetAll();
-      // }
       _getQuotationsRequest();
       if (onSuccess) {
         onSuccess();
@@ -425,14 +580,16 @@ const AddQuotationForm: React.FC<Props> = ({
     updateQuotationRequesting,
     updateQuotationSuccess,
     updateQuotationFailure,
-  ]);  
-
-
-
+  ]);
 
   return (
     <>
-      <BasicDetails fromEnquiry={fromEnquiry} isEdit={isEdit} item={item} enquiryData={enquiryData} />
+      <BasicDetails
+        fromEnquiry={fromEnquiry}
+        isEdit={isEdit}
+        item={item}
+        enquiryData={enquiryData}
+      />
       <Spacer height={4} />
       <PickupAddressView
         fromEnquiry={fromEnquiry}
@@ -466,13 +623,16 @@ const AddQuotationForm: React.FC<Props> = ({
         quotationData={_getQuotationItem()}
       />
 
-     <Spacer height={4} />
+      <Spacer height={4} />
       <SurveyItemQuotation
         isEdit={isEdit}
         item={item}
-        // quotationData={_getQuotationItem()}
+        surveyItemList={surveyItemList}
+        surveyOtherItemList={surveyOtherItemList}
+        handleOtherItemsList={_handleOhterItemsList}
+        onSurveyItemRequired={_handleSuveyItemRequired}
+        onSelectGroupItems={collectSelectedGroupItems}
       />
-  
       <Spacer height={12} />
       <Button
         text={isEdit ? 'UPDATE' : 'CREATE'}

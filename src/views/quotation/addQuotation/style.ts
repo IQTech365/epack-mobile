@@ -159,7 +159,42 @@ const styles = StyleSheet.create({
     loadTypeErrorText: {
         color: COLOR_ERROR,
         fontSize: 14,
-    }
+    },
+
+    elementContainer: {
+        width: width * 0.9,
+        alignSelf: 'center',
+        alignItems: 'center',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+      },
+
+      itemWrapper: {
+        width: width * 0.9,
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        borderWidth: 0.5,
+        borderColor: COLOR_BLACK,
+        borderRadius: 5,
+        marginBottom: 5,
+      },
+
+      valueContainer: {
+        width: '55%',
+        alignItems: 'flex-start',
+      },
+      labelText: {
+        fontSize: 14,
+        fontFamily: 'WorkSans-Medium',
+        color: COLOR_BLACK,
+      },
+      valueText: {
+        fontSize: 14,
+        fontFamily: 'WorkSans-Regular',
+        color: COLOR_BLACK,
+      }
+
 });
 
 export default styles;

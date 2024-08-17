@@ -1,70 +1,127 @@
-import React, { useState } from 'react';
-import { Dimensions, StyleSheet, Text, TextInput, View } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Dimensions, StyleSheet, Text, TextInput, View} from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import { COLOR_BLACK, COLOR_BLUE, COLOR_GRAY, COLOR_GRAY2, COLOR_WHITE } from '../../utils/colors';
+import {
+  COLOR_BLACK,
+  COLOR_BLUE,
+  COLOR_GRAY,
+  COLOR_GRAY2,
+  COLOR_WHITE,
+} from '../../utils/colors';
 import Label from '../Label';
 import DropdownComponent from '../DropdownComponent';
-import { TDropdownItem } from '../../type/TDropdownItem';
-import { useAppSelector } from '../../redux/hooks';
-import { IPackingType } from '../../interface/common/common';
+import {TDropdownItem} from '../../type/TDropdownItem';
+import {useAppSelector} from '../../redux/hooks';
 import Input from '../Input';
 
-const { width } = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 interface SelectCheckBoxTextProps {
   items: string[];
-  onItemSelect: (item: string, qty: number, packingType: string, valueOfGoods: string) => void;
+  onItemSelect: (
+    itemCollection: {
+      itemName: string;
+      quantity: number;
+      packingType: string;
+      valueOfGoods: string;
+    }[],
+  ) => void;
   onItemDeselect: (item: string) => void;
+  initialValues: {
+    itemName: string;
+    quantity: number;
+    packingType: string;
+    valueOfGoods: string;
+  }[];
+  initialPackingList: boolean;
 }
 
-const SelectCheckBoxTextPackingList: React.FC<SelectCheckBoxTextProps> = ({ items, onItemSelect, onItemDeselect }) => {
-  const [selectedItems, setSelectedItems] = useState<{ itemName: string; quantity: number; packingType: string; valueOfGoods: string }[]>([]);
-  
-  const { packingTypes } = useAppSelector(state => state.Common);
-  const [packingType, setPackingType] = useState<string>('');
-  const [valueOfGoods, setValueOfGoods] = useState<string>('');
+const SelectCheckBoxTextPackingList: React.FC<SelectCheckBoxTextProps> = ({
+  items,
+  onItemSelect,
+  onItemDeselect,
+  initialValues,
+  initialPackingList,
+}) => {
+  const [selectedItems, setSelectedItems] = useState<
+    {
+      itemName: string;
+      quantity: number;
+      packingType: string;
+      valueOfGoods: string;
+    }[]
+  >([]);
+  const {packingTypes} = useAppSelector(state => state.Common);
+  const [currentItemIndex, setCurrentItemIndex] = useState<number>(-1);
+  const [itemCollection, setItemCollection] = useState<any[]>([]);
+  const [manualQuantity, setManualQuantity] = useState<string>('');
 
-console.log("packingType",valueOfGoods)
+  useEffect(() => {
+    if (initialPackingList) {
+      setSelectedItems(initialValues);
+      setItemCollection(initialValues);
+    }
+  }, [initialValues]);
 
-  const handleCheckboxPress = (item: string) => {
-    const existingItem = selectedItems.find(i => i.itemName === item);
-    if (existingItem) {
+  const handleCheckboxPress = (item: string, index: number) => {
+    setCurrentItemIndex(index);
+    const isSelected = selectedItems.some(i => i.itemName === item);
+    if (isSelected) {
+      const newSelectedItems = selectedItems.filter(i => i.itemName !== item);
+      setSelectedItems(newSelectedItems);
       onItemDeselect(item);
-      setSelectedItems(prevItems => prevItems.filter(i => i.itemName !== item));
     } else {
       const newItem = {
         itemName: item,
-        quantity: 1, // Default quantity
-        packingType: '',
-        valueOfGoods: ''
+        quantity: 1,
+        packingType: 'Bag',
+        valueOfGoods: '',
       };
-      setSelectedItems(prevItems => [...prevItems, newItem]);
-      onItemSelect(item, newItem.quantity, newItem.packingType, newItem.valueOfGoods);
+      setSelectedItems([...selectedItems, newItem]);
+      setItemCollection([...itemCollection, newItem]);
     }
   };
 
-  const handleQtyChange = (item: string, qty: string) => {
-    const quantity = parseInt(qty) || 0;
-    setSelectedItems(prevItems =>
-      prevItems.map(i => i.itemName === item ? { ...i, quantity } : i)
+  const handleQtyChange = (qty: string, index: number) => {
+    const updatedCollection = itemCollection.map((item, idx) =>
+      idx === index ? {...item, quantity: parseInt(qty) || 1} : item,
     );
-    const selectedItem = selectedItems.find(i => i.itemName === item);
-    if (selectedItem) {
-      onItemSelect(item, quantity, selectedItem.packingType, selectedItem.valueOfGoods);
-    }
+    setItemCollection(updatedCollection);
+    setManualQuantity(qty);
+    onItemSelect(updatedCollection);
+  };
+
+  const handlePackingTypeChange = (packingType: string, index: number) => {
+    const updatedCollection = itemCollection.map((item, idx) =>
+      idx === index ? {...item, packingType} : item,
+    );
+    setItemCollection(updatedCollection);
+    onItemSelect(updatedCollection);
+  };
+
+  const handleValueofGoods = (valueOfGoods: string, index: number) => {
+    const updatedCollection = itemCollection.map((item, idx) =>
+      idx === index ? {...item, valueOfGoods} : item,
+    );
+    setItemCollection(updatedCollection);
+    onItemSelect(updatedCollection);
   };
 
   const _getPackingTypes = () => {
     let packTypes: TDropdownItem[] = [];
-    const { data } = packingTypes || {};
+    const {data} = packingTypes || {};
     if (data && Array.isArray(data) && data.length > 0) {
-      packTypes = data.map((d: IPackingType) => ({
+      packTypes = data.map(d => ({
         label: d.packingType,
         value: d.packingType,
       }));
     }
     return packTypes;
   };
+
+  useEffect(() => {
+    _getPackingTypes();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -76,42 +133,76 @@ console.log("packingType",valueOfGoods)
               <BouncyCheckbox
                 fillColor={COLOR_BLUE}
                 unfillColor="#FFFFFF"
-                isChecked={!!selectedItem}
-                onPress={() => handleCheckboxPress(item)}
+                //@ts-ignore
+                isChecked={selectedItem?.itemName}
+                onPress={() => handleCheckboxPress(item, index)}
+                disableBuiltInState={true}
               />
               <Text style={styles.itemText}>{item}</Text>
               <TextInput
                 style={styles.qtyInput}
                 placeholder="1"
-                value={selectedItem ? selectedItem.quantity.toString() : ''}
-                onChangeText={(text) => handleQtyChange(item, text)}
+                // value={selectedItem ? selectedItem.quantity.toString() : ''}
+                onChangeText={text => handleQtyChange(text, index)}
                 keyboardType="numeric"
+                // value={selectedItem ? selectedItem.quantity.toString()}
               />
             </View>
-            <View style={styles.inputBox}>
-              <View style={styles.itemContainer}>
-                <Label text="Packing Type" style={styles.label} />
-                <DropdownComponent
-                  data={_getPackingTypes()}
-                  value={packingType}
-                  onSelect={(item: TDropdownItem) => {                  
-                    setPackingType(item.label);
-                  }}
-                />
-              </View>
-              <View style={styles.itemContainer}>
-                <Label text="Value Of goods" style={styles.label} />
-                <Input
-                  onChangeText={setValueOfGoods}
-                  containerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
-                  selectionColor={COLOR_BLACK}
-                  value={valueOfGoods}
-                  placeholder="Enter amount"
-                  inputType="numeric"
-                />
-              </View>
-            </View>
+            {currentItemIndex === index && (
+              <>
+                <View style={styles.inputBox}>
+                  <View style={styles.itemContainer}>
+                    <Label text="Packing Type" style={styles.label} />
+                    <DropdownComponent
+                      data={_getPackingTypes()}
+                      // defaultValue="Bag"
+                      // value={selectedItem ? selectedItem.packingType : ''}
+                      onSelect={dropdownItem =>
+                        handlePackingTypeChange(dropdownItem.label, index)
+                      }
+                    />
+                  </View>
+                  <View style={styles.itemContainer}>
+                    <Label text="Value Of Goods" style={styles.label} />
+                    <Input
+                      onChangeText={text => handleValueofGoods(text, index)}
+                      containerStyle={styles.inputContainer}
+                      inputStyle={styles.input}
+                      selectionColor="#000000"
+                      value={selectedItem ? selectedItem.valueOfGoods : ''}
+                      placeholder="Enter amount"
+                      inputType="numeric"
+                    />
+                  </View>
+                </View>
+                <View style={styles.inputBox}>
+                  <View style={styles.itemContainer}>
+                    <Label text="Value Of Goods" style={styles.label} />
+                    <Input
+                      onChangeText={text => handleValueofGoods(text, index)}
+                      containerStyle={styles.inputContainer}
+                      inputStyle={styles.input}
+                      selectionColor="#000000"
+                      value={selectedItem ? selectedItem.valueOfGoods : ''}
+                      placeholder="Enter amount"
+                      inputType="numeric"
+                    />
+                  </View>
+                  <View style={styles.itemContainer}>
+                    <Label text="Value Of Goods" style={styles.label} />
+                    <Input
+                      onChangeText={text => handleValueofGoods(text, index)}
+                      containerStyle={styles.inputContainer}
+                      inputStyle={styles.input}
+                      selectionColor="#000000"
+                      value={selectedItem ? selectedItem.valueOfGoods : ''}
+                      placeholder="Enter amount"
+                      inputType="numeric"
+                    />
+                  </View>
+                </View>
+              </>
+            )}
           </View>
         );
       })}

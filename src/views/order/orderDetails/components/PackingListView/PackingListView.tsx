@@ -87,7 +87,8 @@ const PackingListView: React.FC<Props> = ({orderId}) => {
           orderId: orderId,
         }
         dispatch(getPackingListTemplateRequest(payload));
-      }).catch(err => console.log('error getting company id from storage'));
+      })
+      .catch(err => console.log('error getting company id from storage'));
     } else {
       showToast("Template Not Selected!", ToastType.ERROR);
     }

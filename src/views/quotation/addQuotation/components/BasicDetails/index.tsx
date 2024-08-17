@@ -122,6 +122,12 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item, enqui
                 shiftingTypeItem,
               );
           }
+
+          dateOfMovingCompRef &&
+          dateOfMovingCompRef?.current?.setDefaultValue(
+            new Date(enquiryData.shiftingDate == "null" ? "" : enquiryData.shiftingDate),
+          );
+          setDateOfMoving(enquiryData.shiftingDate == "null" ? "" : enquiryData.shiftingDate)
     }  
   }, [fromEnquiry]);
 

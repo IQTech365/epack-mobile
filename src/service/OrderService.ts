@@ -20,6 +20,7 @@ import {
   GET_MONEY_RECEIPT_LIST,
   GET_MONEY_RECEIPT_TEMPLATE_HTML,
   GET_NOC,
+  GET_NOC_HTML,
   GET_ORDER_DETAILS,
   GET_ORDER_LIST,
   GET_PACKING_LIST,
@@ -27,6 +28,7 @@ import {
   UPDATE_BILTY,
   UPDATE_CAR_CONDITION,
   UPDATE_INVOICE,
+  UPDATE_NOC,
   UPDATE_PACKING_LIST,
 } from '../http/Endpoint';
 import {IOtpVerifyRequest} from '../interface/otp/IOtpVerifyRequest';
@@ -64,19 +66,16 @@ import {
   IHtmlTemplateResponse,
 } from '../interface/order/templates/ITemplateResponse';
 import {
-  ICreateNocRequest,
-  ICreateNocResponse,
   ICreatePackingMaterialRequest,
   ICreatePackingMaterialResponse,
   IDeletePackingListItemResponse,
-  IGetNocDocResponse,
   IGetPackingListRequest,
-  INocDocRequest,
   IPackingListResponse,
   IUpdatePackingListPayload,
   IUpdatePackingListRequest,
   IUpdatePackingListResponse,
 } from '../interface/order/IPackingMaterialResponse';
+
 import {IGetInvoiceListResponse} from '../interface/order/IGetInvoiceListResponse';
 import {
   IPackingListTemplatePayload,
@@ -90,6 +89,9 @@ import {
   IUpdateCarConditionPayload,
   IUpdateCarConditionResponse,
 } from '../interface/order/IUpdateCarConditionResponse';
+import { IGetNocList, IGetNocListRequest, IGetNocListResponse, INocFormTemplatePayload, INocPayload, INocTemplatePayload, INocTemplateResponse, IUpdateNocFormPayloadRequest, IUpdateNocFormResponse } from '../interface/order/IGetNocListResponse';
+import { ICreateNocFormRequest } from '../interface/order/ICreateNocFormRequest';
+import { ICreateNocFormResponse } from '../interface/order/ICreateNocFormResponse';
 
 export const GetOrderDetailsService = async (
   payload: string,
@@ -362,25 +364,39 @@ export const UpdateCarConditionService = async (
 
 // 
 
-
 export const CreateNocService = async (
-  payload: ICreateNocRequest,
-): Promise<ICreateNocResponse> => {
+  payload: ICreateNocFormRequest,
+): Promise<ICreateNocFormResponse> => {
   const api = Api.getInstance();
   return await api.post<
-  ICreateNocRequest,
-    AxiosResponse<ICreateNocResponse>
+  ICreateNocFormRequest,
+    AxiosResponse<ICreateNocFormResponse>
   >(payload, ADD_NOC);
 };
 
-
-
 export const GetNocService = async (
-  payload: INocDocRequest,
-): Promise<IGetNocDocResponse> => {
+  payload: INocPayload,
+): Promise<IGetNocListResponse> => {
+  const api = Api.getInstance();
+  return await api.post<INocPayload,AxiosResponse<IGetNocListResponse>>(payload, GET_NOC);
+};
+
+export const GetNocDocTemplateService = async (
+  payload: INocTemplatePayload,
+): Promise<INocTemplateResponse> => {
   const api = Api.getInstance();
   return await api.post<
-  INocDocRequest,
-    AxiosResponse<IGetNocDocResponse>
-  >(payload, GET_NOC);
+  INocTemplatePayload,
+    AxiosResponse<INocTemplateResponse>
+  >(payload, GET_NOC_HTML);
+};
+
+export const UpdateNocFormService = async (
+  payload: IUpdateNocFormPayloadRequest,
+): Promise<IUpdateNocFormResponse> => {
+  const api = Api.getInstance();
+  return await api.update<
+  IUpdateNocFormPayloadRequest,
+    AxiosResponse<IUpdateNocFormResponse>
+  >(payload.data, UPDATE_NOC(payload.id));
 };

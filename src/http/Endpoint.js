@@ -22,6 +22,7 @@ export const ADD_SURVEY = `/survey/add`;
 export const GET_SURVEY_COMMENTS = (enquiry_id) => `/survey/${enquiry_id}`;
 export const ADD_SURVEY_ITEM = `/survey/add-survey-item`;
 export const EDIT_SURVEY_ITEM = (survey_id) => `/survey/update-survey-item/${survey_id}`;
+export const GET_SURVEY_ITEM_BY_ID = (_id) => '/survey/get-survey-item'
 export const GET_SURVEY_ITEM =  `/survey/get-survey-item`;
 export const ADD_FOLLOWUP = `/followup/add`;
 export const GET_FOLLOWUP_COMMENTS = (enquiry_id) => `/followup/${enquiry_id}`;
@@ -125,6 +126,7 @@ export const GET_BILTY_TEMPLATE_HTML = `/template/bilty-template`;
 export const GET_CAR_CONDITION_TEMPLATE_HTML = `/template/car-condition-template`;
 export const GET_INVOICE_TEMPLATE_HTML = `/template/invoice-template`;
 export const GET_SURVEY_LIST_ITEM_TEMPLATE_HTML = `/template/survey-list-template`;
+export const GET_NOC_HTML = `/template/noc-template`;
 
 // Vehicle types
 export const GET_VEHICLE_TYPES = `/vehicle-management/vehicle-type/getAll`;
@@ -226,4 +228,6 @@ export const GET_SURVEY_CATEGORY = `/shifting-management/survey-category/getAll`
 export const ADD_NOC = `/noc/add`;
 // 
 export const GET_NOC = `/noc/list`
+// 
+export const UPDATE_NOC = `/noc/edit`
 

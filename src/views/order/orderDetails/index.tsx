@@ -59,7 +59,7 @@ const OrderDetailsView: React.FC<Props> = ({route, navigation}) => {
       case 4:
         return <NocFormView orderId={orderId as string} navigation={navigation}/>
       case 5:
-        return <InvoiceView orderId={orderId as string} item={item} navigation={navigation} />;
+        return <InvoiceView orderId={orderId as string}  navigation={navigation} />;
       case 6:
         return <PackingListView orderId={orderId as string} />;
       case 7:

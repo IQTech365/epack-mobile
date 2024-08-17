@@ -80,6 +80,8 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
     setShowPreviewShareModal(false);
   };
 
+  console.log("biltyList",biltyList)
+
   const _getBiltyData = () => {
     const {data} = biltyList || {};
     let items: IBiltyItem[] = [];
@@ -91,7 +93,7 @@ const BiltyView: React.FC<IBiltyViewProps> = ({orderId, navigation}) => {
           bilty_date: bilty.biltyDate,
           bilty_no: bilty.biltyNumber,
           billing_by: 'NA',
-          moving_type: 'NA', // TODO: Not available in the api response
+          moving_type: bilty.materialsType, // TODO: Not available in the api response
           from_location: bilty?.loadingAddress?.city,
           to_location: bilty?.unloadingAddress?.city,
           transit_days: bilty.vehicle.transitDays,

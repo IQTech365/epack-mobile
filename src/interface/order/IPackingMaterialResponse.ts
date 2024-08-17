@@ -5,6 +5,7 @@ export interface IPackingItem {
   packingType: string;
   productCode: string;
   valueOfGoods: string;
+  cftValue?: string;
   description: string;
 }
 export interface ICreatePackingMaterialRequest {
@@ -52,24 +53,7 @@ export interface IPackingListData {
   enquiryId: string;
   packingListNo: string;
   packingDate: string;
-  packingItems: [
-    {
-      itemName: string;
-      quantity: string;
-      packingType: string;
-      productCode: string;
-      valueOfGoods: string;
-      description: string;
-    },
-    {
-      itemName: string;
-      quantity: string;
-      packingType: string;
-      productCode: string;
-      valueOfGoods: string;
-      description: string;
-    },
-  ];
+  packingItems: IPackingItem[];
   addedBy: string;
   isActive: boolean;
   isDeleted: boolean;
@@ -86,37 +70,5 @@ export interface IDeletePackingListItemResponse {
   data: any;
   error: boolean;
   status: number;
-}
-
-
-export interface ICreateNocRequest {
-  enquiryId : string;  
-  companyId : string;
-  nocType : string;
-  nocDate: string;
-  biltyDate: string;
-  biltyNo: string;
-  addedBy: string;
-}
-export interface ICreateNocResponse {
-  data: any;
-  error: boolean;
-  status: number;
-}
-
-
-export interface INocDocRequest {
-  enquiryId : string;  
-  nocType : string;
-  nocDate: string;
-  biltyDate: string;
-  biltyNo: string;
-}
-
-export interface IGetNocDocResponse {
-  data: INocDoc[];
-  error: boolean;
-  status: number;
-
 }
 

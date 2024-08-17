@@ -38,7 +38,8 @@ const BiltyListItem: React.FC<Props> = ({
     } else {
       setLabel('MORE...');
     }
-  }, [show]);  
+  }, [show]);
+  console.log("itemData",item)  
   return (
     <View style={styles.mainWrapper}>
       <Shadow distance={4}>
@@ -65,11 +66,11 @@ const BiltyListItem: React.FC<Props> = ({
           <View style={[styles.rowContainer, styles.padding]}>
             <View style={styles.halfContainer}>
               <Text style={styles.label}>Billing By:</Text>
-              <Text style={styles.value}>Company</Text>
+              <Text style={styles.value}>{item.billing_by}</Text>
             </View>
             <View style={styles.halfContainer}>
               <Text style={styles.label}>Moving Type:</Text>
-              <Text style={styles.value}>Household</Text>
+              <Text style={styles.value}>{item.moving_type}</Text>
             </View>
           </View>
           <Spacer height={3} />

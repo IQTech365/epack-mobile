@@ -59,6 +59,9 @@ import {
   getNocDocFailure,
   getNocDocRequest,
   getNocDocSuccess,
+  getNocFormTemplateFailure,
+  getNocFormTemplateRequest,
+  getNocFormTemplateSuccess,
   getOrderFailure,
   getOrderRequest,
   getOrderSuccess,
@@ -80,6 +83,8 @@ import {
   updateInvoiceFailure,
   updateInvoiceRequest,
   updateInvoiceSuccess,
+  updateNocFormRequest,
+  updateNocFormSuccess,
   updatePackingListFailure,
   updatePackingListRequest,
   updatePackingListSuccess,
@@ -99,13 +104,16 @@ import { IGetOrdersRequest } from '../interface/order/IGetOrdersRequest';
 import { ISingleOrderRequest } from '../interface/order/ISingleOrderRequest';
 import { ISingleEnquiryResponse } from '../interface/enquiry/ISingleEnquiryResponse';
 import { IHtmlTemplateRequest, IHtmlTemplateResponse } from '../interface/order/templates/ITemplateResponse';
-import { ICreateNocRequest, ICreatePackingMaterialRequest, ICreatePackingMaterialResponse, IDeletePackingListItemResponse, IGetPackingListRequest, IPackingListResponse, IUpdatePackingListRequest, IUpdatePackingListResponse } from '../interface/order/IPackingMaterialResponse';
+import {  ICreatePackingMaterialRequest, ICreatePackingMaterialResponse, IDeletePackingListItemResponse, IGetPackingListRequest, IPackingListResponse, IUpdatePackingListRequest, IUpdatePackingListResponse } from '../interface/order/IPackingMaterialResponse';
 import { ICreateInvoiceRequest } from '../interface/order/ICreateInvoiceRequest';
 import { ICreateInvoiceResponse } from '../interface/order/ICreateInvoiceResponse';
 import { IGetInvoiceListResponse } from '../interface/order/IGetInvoiceListResponse';
 import { IPackingListTemplatePayload, IPackingListTemplateResponse } from '../interface/order/IPackingListTemplate';
 import { IUpdateInvoicePayload, IUpdateInvoiceResponse } from '../interface/order/IUpdateInvoiceResponse';
 import { IUpdateCarConditionPayload, IUpdateCarConditionResponse } from '../interface/order/IUpdateCarConditionResponse';
+import { IGetNocListResponse, INocFormTemplatePayload, INocPayload, INocTemplateResponse, IUpdateNocFormPayloadRequest, IUpdateNocFormResponse } from '../interface/order/IGetNocListResponse';
+import { ICreateNocFormRequest } from '../interface/order/ICreateNocFormRequest';
+import { ICreateNocFormResponse } from '../interface/order/ICreateNocFormResponse';
 
 export function* addOrderSaga(action: PayloadAction<IAddOrderRequest>) {
   try {
@@ -353,10 +361,10 @@ export function* createCarConditionSaga(
   }
 
   export function* createNocDocSaga(
-    action: PayloadAction<ICreateNocRequest>,
+    action: PayloadAction<ICreateNocFormRequest>,
   ) {
     try {
-      const response: ICreateNocResponse = yield call(
+      const response: ICreateNocFormResponse = yield call(
         OrderService.CreateNocService,
         action.payload,
       );
@@ -366,12 +374,36 @@ export function* createCarConditionSaga(
     }
   }
 
-  export function* getNocDocListSaga(action: PayloadAction<string>) {
+  export function* getNocDocListSaga(action: PayloadAction<INocPayload>) {
     try {
-        const response: IGetNocDocListResponse = yield call(OrderService.GetNocService, action.payload);
+        const response: IGetNocListResponse = yield call(OrderService.GetNocService, action.payload);
+        console.log("response",response)
         yield put(getNocDocSuccess(response));
     } catch (error) {
         yield put(getNocDocFailure(error));
+    }
+  }
+
+  //  Noc Template
+
+  export function* getNocFormTemplateSaga(action: PayloadAction<INocFormTemplatePayload>) {
+    try {
+        const response: INocTemplateResponse = yield call(OrderService.GetNocDocTemplateService, action.payload);
+        yield put(getNocFormTemplateSuccess(response));
+    } catch (error) {
+        yield put(getNocFormTemplateFailure(error));
+    }
+  }
+  // Noc update
+
+  export function* updateNocFormSaga(action: PayloadAction<IUpdateNocFormPayloadRequest>) {
+   
+    try {
+        const response: IUpdateNocFormResponse = yield call(OrderService.UpdateNocFormService, action.payload);
+        console.log("response1111",response)
+        yield put(updateNocFormSuccess(response));
+    } catch (error) {
+        yield put(updateCarConditionFailure(error));
     }
   }
 
@@ -403,6 +435,8 @@ export function* watcherOrderSaga() {
   yield takeLatest(updateCarConditionRequest.type, updateCarConditionSaga);
   yield takeLatest(createNocDocRequest.type, createNocDocSaga);
   yield takeLatest(getNocDocRequest.type, getNocDocListSaga);
+  yield takeLatest(getNocFormTemplateRequest.type, getNocFormTemplateSaga)
+  yield takeLatest(updateNocFormRequest.type, updateNocFormSaga)
 
 
 

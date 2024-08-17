@@ -1,11 +1,10 @@
 import React, {useEffect, useReducer, useRef, useState} from 'react';
-import {View, FlatList, Text, TouchableOpacity, Alert} from 'react-native';
+import {View, Text, TouchableOpacity, Alert} from 'react-native';
 import styles from './style';
-import AvoidSoftInputViewHOC from '../../../../../common/AvoidSoftInputViewHOC';
 import Spacer from '../../../../../common/Spacer';
 import Label from '../../../../../common/Label';
 import Input from '../../../../../common/Input';
-import {COLOR_BLACK} from '../../../../../utils/colors';
+import {COLOR_BLACK, COLOR_BLUE} from '../../../../../utils/colors';
 import DatePickerComponent from '../../../../../common/DatePickerComponent';
 import {
   ICreatePackingMaterialRequest,
@@ -18,106 +17,101 @@ import {TDropdownItem} from '../../../../../type/TDropdownItem';
 import Button from '../../../../../common/Button';
 import useAuthId from '../../../../../hooks/useAuthId';
 import {useAppDispatch, useAppSelector} from '../../../../../redux/hooks';
-import {createPackingMaterialsRequest, resetCreatePackingMaterialsRequest} from '../../../../../redux/slices/OrderSlice';
+import {
+  createPackingMaterialsRequest,
+  resetCreatePackingMaterialsRequest,
+} from '../../../../../redux/slices/OrderSlice';
 import {Shadow} from 'react-native-shadow-2';
 import Spinner from '../../../../../common/Spinner';
 import {IPackingType} from '../../../../../interface/common/common';
 import DeleteIcon from '../../../../../images/icons/delete.svg';
-import { ToastType, showToast } from '../../../../../utils/utility';
-import { getCurrentCompanyId } from '../../../../../utils/storage';
-import { DOCUMENT_TYPE, IGetSerialNoRequest } from '../../../../../interface/setting/serialNo/serialNo';
+import {ToastType, showToast} from '../../../../../utils/utility';
+import {getCurrentCompanyId} from '../../../../../utils/storage';
+import {
+  DOCUMENT_TYPE,
+  IGetSerialNoRequest,
+} from '../../../../../interface/setting/serialNo/serialNo';
 import useInitialValueHook from '../../../../../hooks/useInitialValueHook';
-import { getSerialNoRequest, resetGetSerialNoRequest } from '../../../../../redux/slices/SerialNoSettingSlice';
+import {
+  getSerialNoRequest,
+  resetGetSerialNoRequest,
+} from '../../../../../redux/slices/SerialNoSettingSlice';
 import useSerialNoHook from '../../../../../hooks/useSerialNo';
 import CollapsibleView from '../../../../../common/CollapsibleView';
-import SelectCheckBoxText from '../../../../../common/SelectCheckBoxText';
-import SurveyList from '../../../../../data/surveyList.json'
-import { getSurveyCategoryRequest, getSurveyMaterialRequest } from '../../../../../redux/slices/CommonSlice';
+import SurveyList from '../../../../../data/surveyList.json';
+import {
+  getSurveyCategoryRequest,
+  getSurveyMaterialRequest,
+} from '../../../../../redux/slices/CommonSlice';
 import SelectCheckBoxTextPackingList from '../../../../../common/SelectCheckBoxPackingList';
-
-
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import {
+  IGetSurvyeItemListByIdRequestPayload,
+  IGetSurvyeItemListRequestPayload,
+} from '../../../../../interface/enquiry/IGetSurveyItemListResponse';
+import {getSurveyItemListRequest} from '../../../../../redux/slices/EnquirySlice';
+import {ISurveyListItem} from '../../../../../interface/enquiry/IAddSurveyItemRequest';
+import { prepareSurveyItemFormList, TSurveyItemListGroup } from '../../../../enquiry/enquiryDetails/utility';
+import PackingListGroupItem from './PackingListGroupItem';
 
 interface Props {
   orderId: string;
   items: string[];
   item: string;
   quantity: number;
+  // enquiryId: string;
   onSuccess: () => void;
 }
 
 const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
-  const { electronicAppliancesItems, furnitureItems, otherLargeItems, vehiclesItems } = SurveyList;
   const [state, dispatch] = useReducer(packingReducer, initialState);
   const [itemName, setItemName] = useState<string>('');
   const [quantity, setQuantity] = useState<string>('');
   const [packingType, setPackingType] = useState<string>('');
   const [productCode, setProductCode] = useState<string>('');
   const [valueOfGoods, setValueOfGoods] = useState<string>('');
+  const [cftValue, setCftValue] = useState<string>('');
   const [description, setDescription] = useState<string>('');
+  const [surveyListNumber, setSurveyListNumber] = useState<string>('');
   const [items, setItems] = useState<IPackingItem[]>([]);
   const [transformedData, setTransformedData] = useState<TPackingMateiralItem[]>([]);
   const [packingOtherItemList, setPackingOtherItemList] = useState<IPackingItem[]>([]);
   const [checkboxPackingItems, setCheckboxPackingItems] = useState<IPackingItem[]>([]);
-
-
-  console.log('checkboxPackingItems',checkboxPackingItems)
-
+  const [packingGroupItems, setPackingGroupItems] = useState<IPackingItem[]>([]);
+  const [filterOtherItem, setFilterOtherItem] = useState<boolean>(false);
+  const [showSurveyDropdown, setShowSurveyDropdown] = useState<boolean>(false); // New state to control dropdown visibility
+  const [surveyDataFetch, setSurveyDataFetch] = useState<boolean>(false);
   const {
     createPackingMaterialRequesting,
     createPackingMaterialSuccess,
     createPackingMaterialFailure,
   } = useAppSelector(state => state.Order);
   const {packingTypes} = useAppSelector(state => state.Common);
-  // const [itemName, setItem] = useState<string>('');
-  const {surveyMaterial,surveyCategory, getSurveyMaterialRequesting} = useAppSelector(state => state.Common);
+  const {surveyMaterial, surveyCategory} = useAppSelector(state => state.Common);
   const {initialValue, prefix} = useInitialValueHook('658d3cc6585e3dde644da985');
-  const serialNo:number = useSerialNoHook();
+  const serialNo: number = useSerialNoHook();
+
+  const {surveyItemList} = useAppSelector(state => state.Enquiry);
+  const [initialPackingList, setInitialPackingLIst] = useState<boolean>(false);
 
   const itemNameInputRef = useRef(null);
   const quntityInputRef = useRef(null);
   const productCodeInputRef = useRef(null);
   const amountInputRef = useRef(null);
   const descriptionInputRef = useRef(null);
-
-  console.log("packingType",packingType)
-
+  const cftInputRef = useRef(null);
 
   type TPackingMateiralItem = {
     _id: string;
     surveyCategoryId: string;
     surveyMaterialItem: string;
     surveyCategoryName: string;
-  }
+  };
 
-  const transformSurveyData = () => {
-    let _data: TPackingMateiralItem[] = [];
-    const { data: surveyMaterials } = surveyMaterial || {};
-    const { data: surveyCategories } = surveyCategory || {}; 
-  
-    if (surveyMaterials && Array.isArray(surveyMaterials) && surveyMaterials.length > 0) {
-      const groupedData = surveyMaterials.reduce((acc, curr) => {
-        const { surveyCategoryId, surveyMaterialItem } = curr;
-        const category = surveyCategories?.find((cat: TPackingMateiralItem) => cat._id === surveyCategoryId);
-  
-        if (category) {
-          const surveyCategoryName = category.surveyCategoryName;
-  
-          if (!acc[surveyCategoryName]) {
-            acc[surveyCategoryName] = {
-              surveyCategoryName,
-              surveyMaterialItem: [],
-            };
-          }
-  
-          acc[surveyCategoryName].surveyMaterialItem.push(surveyMaterialItem);
-        }
-  
-        return acc;
-      }, {});
-  
-      _data = Object.values(groupedData);
-    }
-      setTransformedData(_data);
+  const transformSurveyData = ():TSurveyItemListGroup[] => {
+    const {data: surveyMaterials} = surveyMaterial || {};
+    const {data: surveyCategories} = surveyCategory || {};
+    return prepareSurveyItemFormList(surveyCategories, surveyMaterials);
   };
 
   const _getPackingTypes = () => {
@@ -155,46 +149,72 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
     setDescription('');
     //@ts-ignore
     descriptionInputRef && descriptionInputRef?.current?.reset();
-  }
+
+    setCftValue('');
+    //@ts-ignore
+    cftInputRef && cftInputRef?.current?.reset();
+  };
 
   const authId = useAuthId();
   const dispatch2 = useAppDispatch();
 
-  const handleItemSelect = (item, qty, packingType, valueOfGoods) => {
-    setCheckboxPackingItems(prevItems => [
-      ...prevItems.filter(i => i.itemName !== item),
-      { itemName: item, quantity: qty, packingType, valueOfGoods }
-    ]);
+  const handleItemSelect = (itemCollection: IPackingItem[]) => {
+    setCheckboxPackingItems(prevItems => {
+      const updatedItems = [...prevItems];
+
+      itemCollection.forEach(newItem => {
+        const existingItemIndex = updatedItems.findIndex(
+          item => item.itemName === newItem.itemName,
+        );
+
+        if (existingItemIndex > -1) {
+          updatedItems[existingItemIndex] = {
+            ...updatedItems[existingItemIndex],
+            ...newItem,
+          };
+        } else {
+          updatedItems.push({...newItem, productCode: 'NA', description: 'NA'});
+        }
+      });
+
+      return updatedItems;
+    });
   };
 
-  const handleItemDeselect = (item) => {
-    setCheckboxPackingItems(prevItems => prevItems.filter(i => i.itemName !== item));
+  const handleItemDeselect = (itemName: string) => {
+    setCheckboxPackingItems(prevItems => {
+      const updatedItems = prevItems.filter(
+        packingItem => packingItem.itemName !== itemName,
+      );
+      return updatedItems;
+    });
   };
-
-  console.log("checkboxPackingItems",checkboxPackingItems)
 
   const handleCreate = () => {
-    if(state.packing_no === '' || state.packing_no === null || state.packing_no === undefined) {
+    if (
+      state.packing_no === '' ||
+      state.packing_no === null ||
+      state.packing_no === undefined
+    ) {
       Alert.alert('Error', 'Please set serial NO# from Setting.');
       return;
     }
-    getCurrentCompanyId().then(id => {
-      const payload: ICreatePackingMaterialRequest = {
-        companyId: id as string,
-        enquiryId: orderId,
-        packingListNo: state.packing_no,
-        packingDate: state.packing_date,
-        packingItems: [...checkboxPackingItems, ...packingOtherItemList],
-        addedBy: authId,
-        isAuto:true,
-        isHeadOffice: true,
-      };
-
-      console.log("payloadPacking",payload)
-      dispatch2(createPackingMaterialsRequest(payload));
-    }).catch(err => console.log('error in getting company id'));
+    getCurrentCompanyId()
+      .then(id => {
+        const payload: ICreatePackingMaterialRequest = {
+          companyId: id as string,
+          enquiryId: orderId,
+          packingListNo: state.packing_no,
+          packingDate: state.packing_date,
+          packingItems: [...packingGroupItems, ...packingOtherItemList],
+          addedBy: authId,
+          isAuto: true,
+          isHeadOffice: true,
+        };
+        dispatch2(createPackingMaterialsRequest(payload));
+      })
+      .catch(err => console.log('error in getting company id'));
   };
-
   const addPackingItem = () => {
     // const clone = [...items];
     const item: IPackingItem = {
@@ -204,19 +224,18 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
       productCode,
       valueOfGoods,
       description,
+      cftValue,
     };
-  // clone.push(item);
-  setPackingOtherItemList([...packingOtherItemList,item]);
+    // clone.push(item);
+    setPackingOtherItemList([...packingOtherItemList, item]);
     _resetInputs();
   };
 
-  console.log("packingOtherItemList",packingOtherItemList)
-
-  const deletePackingItem = (index:number) => {
+  const deletePackingItem = (index: number) => {
     const clone = [...items];
-    const filter = clone.filter((_, indx:number) => indx !== index);
+    const filter = clone.filter((_, indx: number) => indx !== index);
     setItems(filter);
-  }
+  };
 
   const renderPackingListItem = () => {
     if (packingOtherItemList.length > 0) {
@@ -252,7 +271,8 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
                       </View>
                     </View>
                     <View style={styles.deleteIconContainer}>
-                      <TouchableOpacity onPress={() => deletePackingItem(index)}>
+                      <TouchableOpacity
+                        onPress={() => deletePackingItem(index)}>
                         <DeleteIcon width={30} height={30} />
                       </TouchableOpacity>
                     </View>
@@ -267,26 +287,68 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
     return null;
   };
 
+  const _getSurveyItemListRequest = () => {
+    getCurrentCompanyId()
+      .then(id => {
+        const payload: IGetSurvyeItemListRequestPayload = {
+          enquiryId: orderId,
+          // id: id as string,
+        };
+
+        dispatch2(getSurveyItemListRequest(payload));
+      })
+      .catch(err => console.log(err));
+  };
+
+  const getSurveyListNoData = () => {
+    const surveyData = surveyItemList.data.map((item: any) => {
+      return {label: item.surveyListNo, value: item._id};
+    });
+    return surveyData;
+  };
+
+  const handleSurveyDropdownSelect = (selectedValue: string) => {
+    const payload: IGetSurvyeItemListByIdRequestPayload = {
+      id: selectedValue,
+    };
+    //@ts-ignore
+    dispatch2(getSurveyItemListRequest(payload));
+    setInitialPackingLIst(true);
+  };
+
+  const handleCheckboxPress = () => {
+    setShowSurveyDropdown(!showSurveyDropdown);
+  };
+
+  useEffect(() => {
+    if (surveyListNumber) {
+      _getSurveyItemListRequest();
+    }
+  }, [surveyListNumber]);
+
   const _getSerialNoRequest = () => {
-    getCurrentCompanyId().then(id => {
-      const payload: IGetSerialNoRequest = {
-        document: DOCUMENT_TYPE.PACKING_LIST,
-        payload: {
-          activeCount: initialValue,
-          companyId: id as string,
-          isAuto: true,
-          isHeadOffice: true,
-        }
-      }
-      dispatch2(getSerialNoRequest(payload));
-    }).catch(err => console.log('err--', err));
-  }
+    getCurrentCompanyId()
+      .then(id => {
+        const payload: IGetSerialNoRequest = {
+          document: DOCUMENT_TYPE.PACKING_LIST,
+          payload: {
+            activeCount: initialValue,
+            companyId: id as string,
+            isAuto: true,
+            isHeadOffice: true,
+          },
+        };
+        dispatch2(getSerialNoRequest(payload));
+      })
+      .catch(err => console.log('err--', err));
+  };
 
   useEffect(() => {
     dispatch2(resetGetSerialNoRequest());
-    dispatch2(getSurveyMaterialRequest())
-    dispatch2(getSurveyCategoryRequest())
+    dispatch2(getSurveyMaterialRequest());
+    dispatch2(getSurveyCategoryRequest());
     _getSerialNoRequest();
+    _getSurveyItemListRequest();
   }, []);
 
   useEffect(() => {
@@ -298,30 +360,149 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
     }
   }, [serialNo]);
 
+  // useEffect(()=>{
+  //   if(!packingListTemplateRequesting && packingListTemplateSuccess){
+  //   }
+  // },[])
+
+  const collectPackingGroupItems = (isRequired: boolean, itemName: string, packingType: string, amount: string, cft: string, qty: string) => {
+    const copy = [...packingGroupItems];
+    const isItemExist = copy.find(it => it.itemName === itemName);
+    if(isItemExist && !isRequired) {
+      const filteredItems = copy.filter(it => it.itemName !== itemName);
+      setPackingGroupItems(filteredItems);
+    } else if (isItemExist && isRequired){
+      const itemIndex = copy.findIndex(it => it.itemName === itemName);
+      if(itemIndex !== -1) {
+        const updatedItem:IPackingItem = {
+          itemName: itemName,
+          quantity: qty,
+          cftValue: cft,
+          packingType: packingType,
+          productCode: 'NA',
+          valueOfGoods: amount,
+          description: 'NA',
+        }
+        copy[itemIndex] = updatedItem;
+        setPackingGroupItems(copy);
+      }
+    } else {
+      const newItem:IPackingItem = {
+        itemName: itemName,
+          quantity: qty,
+          cftValue: cft,
+          packingType: packingType,
+          productCode: 'NA',
+          valueOfGoods: amount,
+          description: 'NA',
+      }
+      copy.push(newItem);
+      setPackingGroupItems(copy);
+    }
+  }
+
   useEffect(() => {
-    if(!createPackingMaterialRequesting && createPackingMaterialSuccess) {
-      showToast("Packing Item List Created", ToastType.SUCCESS);
+    if (!createPackingMaterialRequesting && createPackingMaterialSuccess) {
+      showToast('Packing Item List Created', ToastType.SUCCESS);
       dispatch2(resetCreatePackingMaterialsRequest());
       dispatch2(resetGetSerialNoRequest());
       onSuccess && onSuccess();
-    } else if(!createPackingMaterialRequesting && createPackingMaterialFailure) {
-      showToast("Packing Item List Not Created", ToastType.ERROR);
-      dispatch2(resetCreatePackingMaterialsRequest())
+    } else if (
+      !createPackingMaterialRequesting &&
+      createPackingMaterialFailure
+    ) {
+      showToast('Packing Item List Not Created', ToastType.ERROR);
+      dispatch2(resetCreatePackingMaterialsRequest());
     }
-  }, [createPackingMaterialRequesting, createPackingMaterialSuccess, createPackingMaterialFailure]);
+  }, [
+    createPackingMaterialRequesting,
+    createPackingMaterialSuccess,
+    createPackingMaterialFailure,
+  ]);
 
   useEffect(() => {
     transformSurveyData();
   }, [surveyMaterial]);
 
+
+
+  useEffect(() => {
+    if (initialPackingList && surveyItemList) {
+      const transformedSurveyItemList = surveyItemList.data.flatMap(
+        (item: {surveyItems: any[]}) => {
+          return item.surveyItems.map(
+            (surveyItem: {
+              itemName: any;
+              productCode: any;
+              quantity: any;
+              valueOfGoods: any;
+              remarks: any;
+            }) => ({
+              itemName: surveyItem.itemName,
+              productCode: surveyItem.productCode,
+              quantity: surveyItem.quantity,
+              valueOfGoods: surveyItem.valueOfGoods,
+              remarks: surveyItem.remarks,
+            }),
+          );
+        },
+      );
+      const filteredOtherItemData = transformedData.flatMap(
+        item => item.surveyMaterialItem,
+      );
+      const otherItems = transformedSurveyItemList.filter(
+        (surveyItem: {itemName: string}) =>
+          !filteredOtherItemData.includes(surveyItem.itemName),
+      );
+      if(initialPackingList){
+        setPackingOtherItemList(otherItems);
+      }
+
+      // setInitialPackingLIst(false)
+      const filteredCheckBoxData = transformedSurveyItemList.filter(
+        (surveyItem: any) => !otherItems.includes(surveyItem),
+      );
+      setCheckboxPackingItems(filteredCheckBoxData);
+    }
+    else {
+      setCheckboxPackingItems([]);
+      setPackingOtherItemList([])
+    }
+  }, [surveyItemList, transformedData,initialPackingList]);
+
+
   return (
     <>
-    <CollapsibleView title ="Basic Details" collapsed={false}>
-    {/* <Spacer height={4} />
-        <Label text="Item / Particular Name" style={styles.labelHeading} />
-        <Spacer height={4} /> */}
-         <View>
-         <View style={styles.elementContainer}>
+      {surveyItemList && surveyItemList.data.length > 0 && (
+        <View style={styles.checkboxContainer}>
+          <BouncyCheckbox
+            fillColor={COLOR_BLUE}
+            size={35}
+            text="Convert Survey List to Packing List"
+            unfillColor="#FFFFFF"
+            iconStyle={styles.iconStyle}
+            innerIconStyle={styles.iconStyle}
+            textStyle={styles.textStyleCheck}
+            onPress={() => handleCheckboxPress()}
+          />
+        </View>
+      )}
+
+      {showSurveyDropdown && (
+        <View style={styles.itemContainerSurvey}>
+          <Label text="Select Survey No" style={styles.label} />
+          <DropdownComponent
+            data={getSurveyListNoData()}
+            onSelect={(item: TDropdownItem) => {
+              handleSurveyDropdownSelect(item.value);
+            }}
+            // onSelect={item => handleSurveyDropdownSelect(item.value)}
+          />
+        </View>
+      )}
+      <CollapsibleView title="Basic Details" collapsed={false}>
+        <View>
+          <View style={styles.elementContainer}>
             <View style={styles.itemContainer}>
               <Label text="Packing List No." style={styles.label} />
               <Input
@@ -350,134 +531,167 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
               />
             </View>
           </View>
-         </View>
-    </CollapsibleView>
-    <Spacer height={8} />
-    <View>
-      {transformedData.map((item, index) => (
-        <View key={index}>
-          <Spacer height={8} />
-          <CollapsibleView title={item.surveyCategoryName} collapsed={true}>
-            <View>
-            <SelectCheckBoxTextPackingList
-                items={Array.isArray(item.surveyMaterialItem) ? item.surveyMaterialItem : [item.surveyMaterialItem]}
-                selectedItems={checkboxPackingItems}
-                onItemSelect={handleItemSelect}
-                onItemDeselect={handleItemDeselect}
-                
-              />            
-              </View>
-          </CollapsibleView>
         </View>
-      ))}
-    </View>
-    <Spacer height={8} />
-   <CollapsibleView title ="Add Other Items" collapsed={true}>
-      <>
+      </CollapsibleView>
       <View>
-          <View style={styles.elementContainer2}>
-            <Label text="Item/Particulars Name" style={styles.label} />
-            <Input
-              onChangeText={setItemName}
-              containerStyle={styles.inputContainer}
-              inputStyle={styles.input}
-              value={itemName}
-              selectionColor={COLOR_BLACK}
-              placeholder="Enter item name"
-              //@ts-ignore
-              ref={itemNameInputRef}
-            />
+        {/* {transformedData.map((item, index) => (
+          <View key={index}>
+            <Spacer height={8} />
+            <CollapsibleView title={item.surveyCategoryName} collapsed={true}>
+              <View>
+                <SelectCheckBoxTextPackingList
+                  items={
+                    Array.isArray(item.surveyMaterialItem)
+                      ? item.surveyMaterialItem
+                      : [item.surveyMaterialItem]
+                  }
+                  onItemSelect={handleItemSelect}
+                  onItemDeselect={handleItemDeselect}
+                  initialValues={checkboxPackingItems}
+                  initialPackingList={initialPackingList}
+                />
+              </View>
+            </CollapsibleView>
           </View>
-          <Spacer height={4} />
-          <View style={styles.elementContainer}>
-            <View style={styles.itemContainer}>
-              <Label text="Quantity" style={styles.label} />
+        ))} */}
+        {transformSurveyData().map((it, index) => {
+          return (
+            <>
+              <Spacer height={8} />
+              <CollapsibleView
+                title={it.groupName}
+                collapsed={true}
+              >
+                <View>
+                  {it.items.map((cit, index) => (
+                    <PackingListGroupItem data={cit} key={index.toString()} onSelect={collectPackingGroupItems} />
+                  ))}
+                </View>
+              </CollapsibleView>
+            </>
+          );
+        })}
+      </View>
+      <Spacer height={8} />
+      <CollapsibleView title="Add Other Items" collapsed={true}>
+        <>
+          <View>
+            <View style={styles.elementContainer2}>
+              <Label text="Item/Particulars Name" style={styles.label} />
               <Input
-                onChangeText={setQuantity}
+                onChangeText={setItemName}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
-
+                value={itemName}
                 selectionColor={COLOR_BLACK}
-                placeholder="Enter quantity"
-                inputType="numeric"
+                placeholder="Enter item name"
                 //@ts-ignore
-                ref={quntityInputRef}
+                ref={itemNameInputRef}
               />
             </View>
-            <View style={styles.itemContainer}>
-              <Label text="Packing Type" style={styles.label} />
-              <DropdownComponent
-                data={_getPackingTypes()}
-                onSelect={(item: TDropdownItem) => {
-                  setPackingType(item.label);
-                }}
-              />
+            <Spacer height={4} />
+            <View style={styles.elementContainer}>
+              <View style={styles.itemContainer}>
+                <Label text="Quantity" style={styles.label} />
+                <Input
+                  onChangeText={setQuantity}
+                  containerStyle={styles.inputContainer}
+                  inputStyle={styles.input}
+                  selectionColor={COLOR_BLACK}
+                  placeholder="Enter quantity"
+                  inputType="numeric"
+                  //@ts-ignore
+                  ref={quntityInputRef}
+                />
+              </View>
+              <View style={styles.itemContainer}>
+                <Label text="Packing Type" style={styles.label} />
+                <DropdownComponent
+                  data={_getPackingTypes()}
+                  onSelect={(item: TDropdownItem) => {
+                    setPackingType(item.label);
+                  }}
+                />
+              </View>
             </View>
-          </View>
-          <Spacer height={4} />
-          <View style={styles.elementContainer}>
-            <View style={styles.itemContainer}>
-              <Label text="Product Code" style={styles.label} />
+            <Spacer height={4} />
+            <View style={styles.elementContainer}>
+              <View style={styles.itemContainer}>
+                <Label text="Product Code" style={styles.label} />
+                <Input
+                  onChangeText={setProductCode}
+                  containerStyle={styles.inputContainer}
+                  inputStyle={styles.input}
+                  selectionColor={COLOR_BLACK}
+                  placeholder="Enter code"
+                  autoCapitalize="characters"
+                  //@ts-ignore
+                  ref={productCodeInputRef}
+                />
+              </View>
+              <View style={styles.itemContainer}>
+                <Label text="Value Of goods" style={styles.label} />
+                <Input
+                  onChangeText={setValueOfGoods}
+                  containerStyle={styles.inputContainer}
+                  inputStyle={styles.input}
+                  value={valueOfGoods}
+                  selectionColor={COLOR_BLACK}
+                  placeholder="Enter amount"
+                  inputType="numeric"
+                  //@ts-ignore
+                  ref={amountInputRef}
+                />
+              </View>
+            </View>
+            <Spacer height={4} />
+            <View style={styles.elementContainer2}>
+              <Label text="CFT" style={styles.label} />
               <Input
-                onChangeText={setProductCode}
+                onChangeText={setDescription}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
-                placeholder="Enter code"
-                autoCapitalize="characters"
+                placeholder="Enter CFT value"
                 //@ts-ignore
-                ref={productCodeInputRef}
+                ref={cftInputRef}
               />
             </View>
-            <View style={styles.itemContainer}>
-              <Label text="Value Of goods" style={styles.label} />
+            <Spacer height={4} />
+            <View style={styles.elementContainer2}>
+              <Label text="Description" style={styles.label} />
               <Input
-                onChangeText={setValueOfGoods}
+                onChangeText={setDescription}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
-                placeholder="Enter amount"
-                inputType="numeric"
+                placeholder="Enter Description"
                 //@ts-ignore
-                ref={amountInputRef}
+                ref={descriptionInputRef}
               />
             </View>
           </View>
-          <Spacer height={4} />
-          <View style={styles.elementContainer2}>
-            <Label text="Description" style={styles.label} />
-            <Input
-              onChangeText={setDescription}
-              containerStyle={styles.inputContainer}
-              inputStyle={styles.input}
-              selectionColor={COLOR_BLACK}
-              placeholder="Enter Description"
-              //@ts-ignore
-              ref={descriptionInputRef}
-            />
-          </View>
-        </View>
-        <Spacer height={12} />
-        <Button
-          text="Add item/Particular"
-          onPress={addPackingItem}
-          disabled={itemName === ''}
-          style={styles.previewButtonStyle}
-          textStyle={styles.textStyle}
-        />
-        <Spacer height={20} />
-        {renderPackingListItem()}
-      </>
-    </CollapsibleView>
-    <Spacer height={12} />
-        <Button
-          text="Save"
-          onPress={handleCreate}
-          disabled={createPackingMaterialRequesting}
-          style={styles.previewButtonStyle}
-          textStyle={styles.textStyle}
-        />
-         <Spinner show={createPackingMaterialRequesting} />
+          <Spacer height={12} />
+          <Button
+            text="Add item/Particular"
+            onPress={addPackingItem}
+            disabled={itemName === ''}
+            style={styles.previewButtonStyle}
+            textStyle={styles.textStyle}
+          />
+          <Spacer height={20} />
+          {renderPackingListItem()}
+        </>
+      </CollapsibleView>
+      <Spacer height={12} />
+      <Button
+        text="Save"
+        onPress={handleCreate}
+        disabled={createPackingMaterialRequesting}
+        style={styles.previewButtonStyle}
+        textStyle={styles.textStyle}
+      />
+      <Spinner show={createPackingMaterialRequesting} />
     </>
   );
 };

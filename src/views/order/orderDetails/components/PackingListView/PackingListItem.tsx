@@ -29,6 +29,21 @@ interface IProps {
 
 const PackingListItem: FC<IProps> = ({item, index, onShare, onShowPreview, orderId}) => {
   const navigation = useNavigation();
+
+  const getTotalCFT = () => {
+    let cftCount:number = 0;
+    if(item.packingItems && item.packingItems.length > 0) {
+      cftCount = item.packingItems.reduce((acc, curr) => {
+        if(curr.cftValue) {
+          return acc + parseInt(curr?.cftValue as string);
+        } else {
+          return acc;
+        }
+      }, 0)
+    }
+    return cftCount;
+  }
+  
   return (
     <View style={styles.container}>
       <View style={styles.row}>
@@ -42,6 +57,11 @@ const PackingListItem: FC<IProps> = ({item, index, onShare, onShowPreview, order
         <Text style={styles.contentLabelText2}>PACKING NO#:</Text>
         <Spacer width={4} />
         <Text style={styles.contentLabelText}>{item.packingListNo}</Text>
+      </View>
+      <View style={styles.row}>
+        <Text style={styles.contentLabelText2}>TOTAL CFT:</Text>
+        <Spacer width={4} />
+        <Text style={styles.contentLabelText}>{getTotalCFT()}</Text>
       </View>
       <View style={styles.row}>
         <Text style={styles.contentLabelText2}>TOTAL ITEMS:</Text>
@@ -94,6 +114,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLOR_GRAY4,
     borderRadius: 5,
+    marginBottom: 6,
+
   },
   row: {
     width: width * 0.9,
