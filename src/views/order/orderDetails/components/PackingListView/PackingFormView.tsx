@@ -473,7 +473,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
 
   return (
     <>
-      {surveyItemList && surveyItemList.data.length > 0 && (
+      {/* {surveyItemList && surveyItemList.data.length > 0 && (
         <View style={styles.checkboxContainer}>
           <BouncyCheckbox
             fillColor={COLOR_BLUE}
@@ -486,7 +486,7 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
             onPress={() => handleCheckboxPress()}
           />
         </View>
-      )}
+      )} */}
 
       {showSurveyDropdown && (
         <View style={styles.itemContainerSurvey}>
@@ -522,9 +522,10 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
             <View style={styles.itemContainer}>
               <Label text="Date" style={styles.label} />
               <DatePickerComponent
-                onDateSelect={(date: Date) => {
+                onDateSelect={(date: Date|null) => {
                   dispatch({
                     type: ACTION.PACKING_DATE,
+                    //@ts-ignore
                     payload: formatDate4(date),
                   });
                 }}
@@ -648,10 +649,11 @@ const ListHeaderView: React.FC<Props> = ({orderId, onSuccess}) => {
             <View style={styles.elementContainer2}>
               <Label text="CFT" style={styles.label} />
               <Input
-                onChangeText={setDescription}
+                onChangeText={setCftValue}
                 containerStyle={styles.inputContainer}
                 inputStyle={styles.input}
                 selectionColor={COLOR_BLACK}
+                inputType="numeric"
                 placeholder="Enter CFT value"
                 //@ts-ignore
                 ref={cftInputRef}

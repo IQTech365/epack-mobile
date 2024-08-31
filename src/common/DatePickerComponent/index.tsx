@@ -12,7 +12,7 @@ export interface IDateMethods {
 }
 
 interface IDatePickerProps {
-  onDateSelect: (date: Date) => void;
+  onDateSelect: (date: Date|null) => void;
   style?: ViewStyle;
   error?: string | undefined | null;
   showTime?: boolean;
@@ -39,7 +39,7 @@ const DatePickerComponent = forwardRef<IDateMethods, IDatePickerProps>(
     },
     ref,
   ) => {
-    const [date, setDate] = useState<Date | null>(new Date());
+    const [date, setDate] = useState<Date|null>(new Date());
     const [open, setOpen] = useState<boolean>(false);
     const [refresh, setRefresh] = useState<boolean>(false);
 
@@ -112,6 +112,7 @@ const DatePickerComponent = forwardRef<IDateMethods, IDatePickerProps>(
             <DatePicker
               modal
               open={open}
+              //@ts-ignore
               date={date}
               mode={mode}
               androidVariant="nativeAndroid"

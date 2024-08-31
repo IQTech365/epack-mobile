@@ -335,8 +335,10 @@ const AddLorryView: React.FC<IProps> = ({onSuccess}) => {
             <View style={styles.textContainer}>
               <Label text="Renewal Date" style={styles.label} />
               <DatePickerComponent
-                onDateSelect={(date: Date) => {
-                  setPollutionRenewalDate(formatDate4(date));
+                onDateSelect={(date: Date|null) => {
+                  if(date) {
+                    setPollutionRenewalDate(formatDate4(date));
+                  }
                 }}
               />
             </View>
@@ -359,8 +361,10 @@ const AddLorryView: React.FC<IProps> = ({onSuccess}) => {
             <View style={styles.textContainer}>
               <Label text="Renewal Date" style={styles.label} />
               <DatePickerComponent
-                onDateSelect={(date: Date) => {
-                  setPermitNoRenewalDate(formatDate4(date));
+                onDateSelect={(date: Date|null) => {
+                  if(date) {
+                    setPermitNoRenewalDate(formatDate4(date));
+                  }
                 }}
               />
             </View>

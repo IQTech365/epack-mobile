@@ -71,8 +71,10 @@ const GeneralInfoView: FC<IProps> = ({}) => {
           <View style={styles.textContainer}>
             <Label text="Date of Moving" style={styles.label} />
             <DatePickerComponent
-              onDateSelect={(date: Date) => {
-                setDateOfMoving(formatDate4(date));
+              onDateSelect={(date: Date|null) => {
+                if(date) {
+                  setDateOfMoving(formatDate4(date));
+                }
               }}
             />
           </View>

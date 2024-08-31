@@ -100,8 +100,10 @@ const BasicDetails: React.FC<IProps> = ({item, isEdit}) => {
           <Label text="Date of Bilty/LR/CN No." style={styles.label} />
           <DatePickerComponent
             style={{width: '100%'}}
-            onDateSelect={(date: Date) => {
-              setDateOfBiltyLrCrNo(formatDate4(date));
+            onDateSelect={(date: Date|null) => {
+              if(date) {
+                setDateOfBiltyLrCrNo(formatDate4(date));
+              }
             }}
             ref={dateCompRef}
           />

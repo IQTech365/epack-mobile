@@ -34,11 +34,10 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
     let clientName = '';
     if (item.billingBy == 'by Individual') {
       clientName = item.partyName;
-    } else if (item.billingBy == 'by Company') {
+    } else if (item.billingBy == 'by Company' && item?.billingDetails) {
+      const billingDetails = item?.billingDetails as BillingDetails;
       //@ts-ignore
-      clientName =
-        item?.billingDetails?.companyName ||
-        item?.billingDetails?.authorityPersonName;
+      clientName = billingDetails.companyName || billingDetails.authorityPersonName;
     }
     return clientName;
   };
@@ -187,6 +186,7 @@ const OrderPageView: React.FC<IOrderPageViewProps> = ({navigation}) => {
         }
         renderItem={({item, index}) => (
           <OrderListItem
+            key={index.toString()}
             item={item}
             index={index}
             onPress={() => handleOrderDetailsClick(item, index)}

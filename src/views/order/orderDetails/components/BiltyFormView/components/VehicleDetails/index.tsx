@@ -229,8 +229,10 @@ const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
           <View style={styles.itemContainer}>
             <Label text="In Date" style={styles.label} />
             <DatePickerComponent
-              onDateSelect={(date: Date) => {
-                setInDate(date.toISOString());
+              onDateSelect={(date: Date|null) => {
+                if(date) {
+                  setInDate(date.toISOString());
+                }
               }}
               ref={inDateRef}
               datePickerType="date"
@@ -239,8 +241,10 @@ const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
           <View style={styles.itemContainer}>
             <Label text="Out Date" style={styles.label} />
             <DatePickerComponent
-              onDateSelect={(date: Date) => {
-                setOutDate(date.toISOString());
+              onDateSelect={(date: Date|null) => {
+                if(date) {
+                  setOutDate(date.toISOString());
+                }
               }}
               ref={outDateRef}
               datePickerType="date"
@@ -263,8 +267,10 @@ const VehicleDetails: React.FC<IProps> = ({item, isEdit}) => {
           <View style={styles.itemContainer}>
             <Label text="Expected Date of Delivery" style={styles.label} />
             <DatePickerComponent
-              onDateSelect={(date: Date) => {
-                setExpectedDateOfDelivery(date.toISOString());
+              onDateSelect={(date: Date|null) => {
+                if(date) {
+                  setExpectedDateOfDelivery(date.toISOString());
+                }
               }}
               ref={expectedDateofDeliveryRef}
               datePickerType="date"

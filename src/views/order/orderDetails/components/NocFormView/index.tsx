@@ -97,7 +97,8 @@ const NocFormView: React.FC<INocFormViewProps> = ({navigation, orderId}) => {
 
   const handleReset = () => {
     if(lrNumberRef){
-      lrNumberRef?.current.setValue("");
+      //@ts-ignore
+      lrNumberRef?.current?.setValue("");
       setLrNumber("");
     }
     
@@ -116,12 +117,16 @@ const NocFormView: React.FC<INocFormViewProps> = ({navigation, orderId}) => {
       .catch(err => console.log(err));
   };
 
-  const handleNocDate = (date: Date) => {
-    setDate(date.toISOString());
+  const handleNocDate = (date: Date|null) => {
+    if(date) {
+      setDate(date.toISOString());
+    }
   };
 
-  const handleLRDate = (date: Date) => {
-    setDate(date.toISOString());
+  const handleLRDate = (date: Date|null) => {
+    if(date) {
+      setDate(date.toISOString());
+    }
   };
 
   const handleNocFormView = () => {
@@ -222,7 +227,7 @@ const NocFormView: React.FC<INocFormViewProps> = ({navigation, orderId}) => {
                 <View style={styles.itemContainer}>
                   <Label text="LR Date" style={styles.label} />
                   <DatePickerComponent
-                    onDateSelect={(date: Date) => handleLRDate(date)}
+                    onDateSelect={(date: Date|null) => handleLRDate(date)}
                     disabled={isLRDateDisabled}
                     ref={dateofLr}
                   />

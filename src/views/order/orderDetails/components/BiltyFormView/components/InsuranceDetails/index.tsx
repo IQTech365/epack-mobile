@@ -126,8 +126,10 @@ const InsuranceDetails: React.FC<IProps> = ({item, isEdit}) => {
               <View style={styles.itemContainer}>
                 <Label text="Insurance Date" style={styles.label} />
                 <DatePickerComponent
-                  onDateSelect={(date: Date) => {
-                    setInsuranceDate(date.toISOString());
+                  onDateSelect={(date: Date|null) => {
+                    if(date){
+                      setInsuranceDate(date.toISOString());
+                    }
                   }}
                   ref={insuranceDateRef}
                 />

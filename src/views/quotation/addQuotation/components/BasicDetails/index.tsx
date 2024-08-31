@@ -280,8 +280,10 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item, enqui
           <View style={styles.compContainer}>
             <Label text="Date of Quotation" style={styles.label} />
             <DatePickerComponent
-              onDateSelect={(date: Date) => {
-                setDateOfQuotation(formatDate4(date));
+              onDateSelect={(date: Date|null) => {
+                if(date) {
+                  setDateOfQuotation(formatDate4(date));
+                }
               }}
               //@ts-ignore
               ref={dateOfQuotationCompRef}
@@ -290,8 +292,10 @@ const BasicDetails: React.FC<Props> = ({fromEnquiry = false, isEdit, item, enqui
           <View style={styles.compContainer}>
             <Label text="Date of Moving" style={styles.label} />
             <DatePickerComponent
-              onDateSelect={(date: Date) => {
-                setDateOfMoving(formatDate4(date));
+              onDateSelect={(date: Date|null) => {
+                if(date) {
+                  setDateOfMoving(formatDate4(date));
+                }
               }}
               //@ts-ignore
               ref={dateOfMovingCompRef}

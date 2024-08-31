@@ -77,16 +77,22 @@ const ShifingDetailForm: React.FC<IShiftingFormProps> = ({
     setShiftingType(item.label);
   };
 
-  const handleDateOfMoving = (date: Date) => {
-    setDateOfMoving(formatDate4(date));
+  const handleDateOfMoving = (date: Date|null) => {
+    if(date) {
+      setDateOfMoving(formatDate4(date));
+    }
   };
 
-  const handleDateOfDelivery = (date: Date) => {
-    setDateOfDelivery(formatDate4(date));
+  const handleDateOfDelivery = (date: Date|null) => {
+    if(date) {
+      setDateOfDelivery(formatDate4(date));
+    }
   };
 
-  const handleDateOfDelivered = (date: Date) => {
-    setDateOfDelivered(formatDate4(date));
+  const handleDateOfDelivered = (date: Date|null) => {
+    if(date) {
+      setDateOfDelivered(formatDate4(date));
+    }
   };
 
   const handleCarriageVehicleInputTextChange = (text: string) => {

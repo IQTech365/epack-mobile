@@ -542,8 +542,10 @@ const CarConditionFormView: React.FC<ICarConditionFormViewProps> = ({
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Date" style={styles.label} />
-                  <DatePickerComponent onDateSelect={(date: Date)=>{
-                    handleCarConditionDate(formatDate4(date))
+                  <DatePickerComponent onDateSelect={(date: Date|null)=>{
+                    if(date) {
+                      handleCarConditionDate(formatDate4(date));
+                    }
                   }}
                   ref={DateInputRef}
 

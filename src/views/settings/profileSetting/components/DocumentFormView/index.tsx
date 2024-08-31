@@ -77,8 +77,10 @@ const DocumentFormView: React.FC<IDocumentFormViewProps> = ({onSuccess, isEdit, 
     setIBACode(text);
   }
 
-  const handleValidTillDate = (date: Date) => {
-    setIBAValidTillDate(date.toDateString());
+  const handleValidTillDate = (date: Date|null) => {
+    if(date) {
+      setIBAValidTillDate(date.toDateString());
+    }
     setShowCalender(false);
   };
 

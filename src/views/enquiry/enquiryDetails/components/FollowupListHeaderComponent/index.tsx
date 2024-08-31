@@ -52,8 +52,10 @@ const FollowupListHeaderComponent: React.FC<IFollowupListHeaderComponentProps> =
   //@ts-ignore
   const authId = useAuthId();
 
-  const handleFollowupDate = (date: Date) => {
-    setDate(date);
+  const handleFollowupDate = (date: Date|null) => {
+    if(date){
+      setDate(date);
+    }
   };
 
   const handleCommentInputTextChange = (text: string) => {

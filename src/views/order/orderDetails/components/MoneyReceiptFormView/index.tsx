@@ -374,8 +374,10 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Receipt Date" style={styles.label} />
-                <DatePickerComponent onDateSelect={(date: Date)=>{
-                  handleReceiptDate(formatDate4(date))
+                <DatePickerComponent onDateSelect={(date: Date|null)=>{
+                  if(date) {
+                    handleReceiptDate(formatDate4(date))
+                  }
                 }}
                 ref={dateOfMoneyReceiptRef}
                  />
@@ -491,8 +493,10 @@ const MoneyReceiptFormView: React.FC<IMoneyReceiptFormViewProps> = ({
               </View>
               <View style={styles.itemContainer}>
                 <Label text="Date of Arrival" style={styles.label} />
-                <DatePickerComponent onDateSelect={(date: Date) =>{
-                  handleArivalDate(formatDate4(date))
+                <DatePickerComponent onDateSelect={(date: Date|null) =>{
+                  if(date) {
+                    handleArivalDate(formatDate4(date))
+                  }
                 }}
                 ref={dateOfArrivalRef}
                 />

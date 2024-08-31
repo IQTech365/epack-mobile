@@ -42,9 +42,6 @@ import SurveyGroupItem from './SurveyGroupItem';
 
 interface ISurveyListViewProps {
   enquiryId: string;
-  items: string[];
-  item: string;
-  quantity: number;
 }
 
 const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
@@ -107,9 +104,11 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
     setSurveyNo(text);
   };
 
-  const handleReceiptDate = (date: Date) => {
+  const handleReceiptDate = (date: Date|null) => {
     // setDate(formatDate2(date));
+    if(date){
     setDate(date.toISOString());
+    }
   };
 
   const handleParticularNameInputTextChange = (text: string) => {
@@ -143,6 +142,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
       quantity,
       valueOfGoods,
       remarks,
+      cftValue,
       groupID: "0", //README: groupID is `0` for other items only. As we don't have group id for other items.
     };
     setSurveyOtherItemList([...surveyOtherItemList, newItem]);
@@ -442,6 +442,7 @@ const SurveyListView: React.FC<ISurveyListViewProps> = ({enquiryId}) => {
                 value={cftValue}
                 selectionColor={COLOR_BLACK}
                 placeholder="Enter CFT value"
+                inputType="numeric"
                 //@ts-ignore
                 ref={cftCompRef}
               />

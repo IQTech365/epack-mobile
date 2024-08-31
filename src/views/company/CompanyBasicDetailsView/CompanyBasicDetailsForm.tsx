@@ -450,8 +450,10 @@ const CompanyBasicDetailsForm: FC<IProps> = ({navigation}) => {
                     required={true}
                   />
                   <DatePickerComponent
-                    onDateSelect={(date: Date) => {
-                      setIbaExpiryDate(formatDate4(date));
+                    onDateSelect={(date: Date|null) => {
+                      if(date){
+                        setIbaExpiryDate(formatDate4(date));
+                      }
                     }}
                     style={{width: '100%'}}
                     error={getError('IBA_EXPIRY_DATE', state, shouldValidate)}

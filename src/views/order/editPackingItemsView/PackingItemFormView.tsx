@@ -110,7 +110,7 @@ const UpdateSurveyItemView: FC<IProps> = ({
             <View style={styles.itemContainer}>
               <Label text="Date" style={styles.label} />
               <DatePickerComponent
-                onDateSelect={(date: Date) => {
+                onDateSelect={(date: Date|null) => {
                   // dispatch({
                   //   type: ACTION.PACKING_DATE,
                   //   payload: formatDate4(date),

@@ -47,6 +47,6 @@ export abstract class HttpClient {
   }; 
 
   private _handleError = (error: any) => {
-    return Promise.reject(error);
+    return Promise.reject(error?.response?.data);
   };
 }

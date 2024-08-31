@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Dimensions, StyleSheet} from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {COLOR_BLACK, COLOR_BLUE, COLOR_GRAY} from '../../../../../utils/colors';
@@ -24,7 +24,11 @@ const SurveyGroupItem: React.FC<TSurveyGroupItemProps> = ({data, onSelect, group
     setIsRequired(!isRequired);
   };
 
-  
+  useEffect(() => {
+    if(isRequired) {
+      onSelect(data.surveyMaterialItem, quantity, cftValue, groupID);
+    }
+  }, [isRequired]);
 
 
   return (
@@ -61,6 +65,7 @@ const SurveyGroupItem: React.FC<TSurveyGroupItemProps> = ({data, onSelect, group
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               value={cftValue}
+              inputType="numeric"
               selectionColor={COLOR_BLACK}
               placeholder="Enter CFT"
             />

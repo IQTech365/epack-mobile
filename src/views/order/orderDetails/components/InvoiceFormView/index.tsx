@@ -213,16 +213,17 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
       };
   
       const pickupAddress: IInvoicePickupAddress = {
-        shiftingFrom: state.same_as_client_address ? item.pickupAddress.city : state.city,
-        state: state.same_as_client_address ? item.pickupAddress.state : state.state,
-        city: state.same_as_client_address ? item.pickupAddress.city : state.city,
-        address: state.same_as_client_address ? item.pickupAddress.address : state.address,
-        pincode: state.same_as_client_address ? item.pickupAddress.pincode : state.pincode,
+        shiftingFrom: state.same_as_client_address ? item?.pickupAddress?.city : state.city,
+        state: state.same_as_client_address ? item?.pickupAddress?.state : state.state,
+        city: state.same_as_client_address ? item?.pickupAddress?.city : state.city,
+        address: state.same_as_client_address ? item?.pickupAddress?.address : state.address,
+        pincode: state.same_as_client_address ? item?.pickupAddress?.pincode : state.pincode,
         landmark: '',
         locality: '',
-        floor: item.pickupAddress.floor,
-        isLiftAvailable: item.pickupAddress.isLiftAvailable,
+        floor: item?.pickupAddress?.floor,
+        isLiftAvailable: item?.pickupAddress?.isLiftAvailable,
       };
+      console.log('Invoice-pickupAddress--', JSON.stringify(pickupAddress));
       const payload: ICreateInvoiceRequest = {
         enquiryId: orderId,
         companyId: id as string,
@@ -308,7 +309,7 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
       } else {  
         dispatch(createInvoiceRequest(payload));
       }
-    }).catch(err => console.log('err--', err));
+    }).catch(err => console.log('Invoice-Create-err--', err));
   };
 
   const _initFormValues = () => {
@@ -400,8 +401,10 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
                 <DatePickerComponent
                   //@ts-ignore
                   ref={invoiceDateRef}
-                  onDateSelect={(date:Date) => {
-                    setDateOfInvoice(formatDate4(date));
+                  onDateSelect={(date:Date|null) => {
+                    if(date) {
+                      setDateOfInvoice(formatDate4(date));
+                    }
                   }}
                 />
               </View>
@@ -421,8 +424,10 @@ const InvoiceFormView: React.FC<IInvoiceFormViewProps> = ({orderId, item, onSucc
                 <DatePickerComponent
                   //@ts-ignore
                   ref={dateOfDeliveryRef}
-                  onDateSelect={(date:Date) => {
-                  setDateOfDelivery(formatDate4(date));
+                  onDateSelect={(date:Date|null) => {
+                    if(date) {
+                      setDateOfDelivery(formatDate4(date));
+                    }
                 }}
                 />
               </View>

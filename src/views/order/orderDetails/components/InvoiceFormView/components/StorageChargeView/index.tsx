@@ -136,8 +136,10 @@ const StorageChargeView: React.FC<Props> = ({isEdit, invoiceData}) => {
                   <DatePickerComponent
                     //@ts-ignore
                     ref={fromDateRef}
-                    onDateSelect={(date: Date) => {
-                      setStorageFromDate(date.toISOString());
+                    onDateSelect={(date: Date|null) => {
+                      if(date){
+                        setStorageFromDate(date.toISOString());
+                      }
                     }}
                   />
                 </View>
@@ -146,8 +148,10 @@ const StorageChargeView: React.FC<Props> = ({isEdit, invoiceData}) => {
                   <DatePickerComponent
                     //@ts-ignore
                     ref={toDateRef}
-                    onDateSelect={(date: Date) => {
-                      setStorageToDate(date.toISOString());
+                    onDateSelect={(date: Date|null) => {
+                      if(date) {
+                        setStorageToDate(date.toISOString());
+                      }
                     }}
                   />
                 </View>

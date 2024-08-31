@@ -333,6 +333,7 @@ console.log('surveyItemList?.data?.[0]?.surveyItems-----', surveyItemList?.data?
                       inputStyle={styles.input}
                       value={cftValue}
                       selectionColor={COLOR_BLACK}
+                      inputType="numeric"
                       placeholder="Enter CFT Value"
                       //@ts-ignore
                       ref={cftCompRef}

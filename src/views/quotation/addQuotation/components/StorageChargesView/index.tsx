@@ -153,8 +153,10 @@ const StorageChargesView: React.FC<Props> = ({isEdit, item, quotationData}) => {
                   <View style={styles.compContainer}>
                     <Label text="From Date" style={styles.labelText} />
                     <DatePickerComponent
-                      onDateSelect={(date: Date) => {
-                        setStorageFromDate(date.toISOString());
+                      onDateSelect={(date: Date|null) => {
+                        if(date) {
+                          setStorageFromDate(date.toISOString());
+                        }
                       }}
                       //@ts-ignore
                       ref={fromDateDropdownCompRef}
@@ -163,8 +165,10 @@ const StorageChargesView: React.FC<Props> = ({isEdit, item, quotationData}) => {
                   <View style={styles.compContainer}>
                     <Label text="To Date" style={styles.labelText} />
                     <DatePickerComponent
-                      onDateSelect={(date: Date) => {
-                        setStorageToDate(date.toISOString());
+                      onDateSelect={(date: Date|null) => {
+                        if(date) {
+                          setStorageToDate(date.toISOString());
+                        }
                       }}
                       //@ts-ignore
                       ref={toDateDropdownCompRef}

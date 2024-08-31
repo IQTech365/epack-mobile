@@ -60,8 +60,10 @@ const EWayBillDetails: React.FC<IProps> = ({item, isEdit}) => {
           <View style={styles.itemContainer}>
             <Label text="Generated On" style={styles.label} />
             <DatePickerComponent
-              onDateSelect={(date: Date) => {
-                setGeneratedOn(date.toISOString());
+              onDateSelect={(date: Date|null) => {
+                if(date) {
+                  setGeneratedOn(date.toISOString());
+                }
               }}
               ref={generatedOnCompRef}
               datePickerType="date"
@@ -70,8 +72,10 @@ const EWayBillDetails: React.FC<IProps> = ({item, isEdit}) => {
           <View style={styles.itemContainer}>
             <Label text="Expiry Date" style={styles.label} />
             <DatePickerComponent
-              onDateSelect={(date: Date) => {
-                setExpiryDate(date.toISOString());
+              onDateSelect={(date: Date|null) => {
+                if(date) {
+                  setExpiryDate(date.toISOString());
+                }
               }}
               ref={expirayDateCompRef}
               datePickerType="date"
