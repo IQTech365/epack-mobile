@@ -44,6 +44,12 @@ const PackingListGroupItem: React.FC<PackingListGroupItemProps> = ({data, onSele
   };
 
   useEffect(() => {
+    if(isRequired) {
+      onSelect(isRequired, data.surveyMaterialItem , packingType, valueOfGoods, cftValue, quantity);
+    }
+  }, [isRequired]);
+
+  useEffect(() => {
     const item:TDropdownItem = _getPackingTypes().find(it => it.label === 'NA') as TDropdownItem;
     if(item) {
         packingTypeCompRef?.current?.setDefaultValue(item);
